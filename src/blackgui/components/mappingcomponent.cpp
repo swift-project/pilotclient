@@ -130,7 +130,7 @@ namespace BlackGui
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);
 
             // connect
-            connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::onModelSetChanged);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::onModelSetChanged, Qt::QueuedConnection);
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::tokenBucketUpdate);
@@ -149,8 +149,9 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
 
             // with external core models might be already available
+            // nevertheless, wait some time to allow to init
             QPointer<CMappingComponent> myself(this);
-            QTimer::singleShot(2500, this, [ = ]
+            QTimer::singleShot(10000, this, [ = ]
             {
                 if (!myself) { return; }
                 const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
@@ -180,8 +181,15 @@ namespace BlackGui
             return ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);
         }
 
-        void CMappingComponent::onModelSetChanged(const CSimulatorInfo &simulator)
+        void CMappingComponent::onModelSetChanged(const CSimulatorInfo &dummy)
         {
+            // change model set, which can be any model set
+            Q_UNUSED(dummy); // we do not use the passed simulator
+
+            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue()); // UI value
+            const bool changed = ui->completer_ModelStrings->setSimulator(simulator);
+            if (!changed) { return; }
+
             if (ui->tvp_AircraftModels->displayAutomatically())
             {
                 this->onModelsUpdateRequested();
@@ -190,9 +198,6 @@ namespace BlackGui
             {
                 CLogMessage(this).info("Model set loaded ('%1'), you can update the model view") << simulator.toQString(true);
             }
-
-            // change completer
-            ui->completer_ModelStrings->setSimulator(ui->comp_SimulatorSelector->getValue());
         }
 
         void CMappingComponent::onRowCountChanged(int count, bool withFilter)

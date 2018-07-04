@@ -13,8 +13,10 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextsimulator.h"
+
 #include <QRadioButton>
 #include <QStringListModel>
+#include <QPointer>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -107,7 +109,12 @@ namespace BlackGui
             if (this->getSimulator() == simulator) { return false; }
             m_currentSimulator = simulator;
             m_modelCaches.setCurrentSimulator(simulator); // all models
-            QTimer::singleShot(100, this, [ = ] { this->setCompleter(true); });
+            QPointer<CAircraftModelStringCompleter> myself(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->setCompleter(true);
+            });
             return true;
         }
 
