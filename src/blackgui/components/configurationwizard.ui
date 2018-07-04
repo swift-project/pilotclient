@@ -53,6 +53,38 @@
     </item>
    </layout>
   </widget>
+  <widget class="BlackGui::Components::CInitialDataLoadWizardPage" name="wp_DataLoad">
+   <property name="title">
+    <string>Data loading</string>
+   </property>
+   <property name="subTitle">
+    <string>Caches model and ICAO data</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_DataLoad">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CInitialDataLoadComponent" name="comp_DataLoad">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CCopyModelsFromOtherSwiftVersionsWizardPage" name="wp_CopyModels">
    <property name="title">
     <string>Copy models</string>
@@ -100,6 +132,26 @@
     </property>
     <item>
      <widget class="BlackGui::Components::CCopySettingsAndCachesComponent" name="comp_CopySettingsAndCachesComponen"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="BlackGui::Components::CFirstModelSetWizardPage" name="wp_FirstModelSet">
+   <property name="title">
+    <string>First model set</string>
+   </property>
+   <property name="subTitle">
+    <string>Create a simple model set (for a start)</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_FirstModelSet">
+    <item alignment="Qt::AlignRight">
+     <widget class="QPushButton" name="pb_SkipFirstModelSet">
+      <property name="text">
+       <string>I do this later / do not need this</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="BlackGui::Components::CFirstModelSetComponent" name="comp_FirstModelSet"/>
     </item>
    </layout>
   </widget>
@@ -244,77 +296,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="BlackGui::Components::CInitialDataLoadWizardPage" name="wp_DataLoad">
-   <property name="title">
-    <string>Data loading</string>
-   </property>
-   <property name="subTitle">
-    <string>Caches model and ICAO data</string>
-   </property>
-   <layout class="QVBoxLayout" name="vl_DataLoad">
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Components::CInitialDataLoadComponent" name="comp_DataLoad">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="BlackGui::Components::CFirstModelSetWizardPage" name="wp_FirstModelSet">
-   <property name="title">
-    <string>First model set</string>
-   </property>
-   <property name="subTitle">
-    <string>Configure a simple model set</string>
-   </property>
-   <layout class="QVBoxLayout" name="vl_FirstModelSet">
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <item alignment="Qt::AlignRight">
-     <widget class="QPushButton" name="pb_SkipFirstModelSet">
-      <property name="text">
-       <string> I will do that later (skip) </string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="BlackGui::Components::CFirstModelSetComponent" name="comp_FirstModelSet">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="BlackGui::Components::CConfigHotkeyWizardPage" name="wp_Hotkeys">
    <property name="title">
     <string>Hotkeys</string>
@@ -453,22 +434,6 @@
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>pb_SkipFirstModelSet</sender>
-   <signal>clicked()</signal>
-   <receiver>CConfigurationWizard</receiver>
-   <slot>next()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>749</x>
-     <y>70</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>804</x>
-     <y>75</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>pb_SkipXSwiftBus</sender>
    <signal>clicked()</signal>

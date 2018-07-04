@@ -33,14 +33,14 @@ namespace BlackGui
             enum Pages
             {
                 Legal,
-                CopySettingsAndCaches,
+                DataLoad,
                 CopyModels,
-                CopySettings,
-                CopyCaches,
+                CopySettingsAndCaches,
+                FirstModelSet,
+                CopySettings,  //!< deprecated
+                CopyCaches,    //!< deprecated
                 ConfigSimulator,
                 XSwiftBus,
-                DataLoad,
-                FirstModelSet,
                 ConfigHotkeys
             };
 
