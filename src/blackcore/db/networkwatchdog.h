@@ -13,8 +13,10 @@
 #define BLACKCORE_DB_NETWORKWATCHDOG_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/network/url.h"
+#include "blackmisc/worker.h"
+#include "blackmisc/logcategorylist.h"
+
 #include <atomic>
 #include <QReadWriteLock>
 #include <QNetworkAccessManager>
@@ -29,6 +31,9 @@ namespace BlackCore
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Ctor
             explicit CNetworkWatchdog(QObject *parent = nullptr);
 
@@ -73,12 +78,16 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Network::CUrl getWorkingSharedUrl() const;
 
+            //! Log.own status messages
+            //! \threadsafe
+            void setLogOwnMessages(bool log) { m_logOwnMessages = log; }
+
             //! Run a check
             int triggerCheck();
 
             //! Number of completed checks
             //! \threadsafe
-            int getCheckCount() const { return m_checkCount; }
+            int getCheckCount() const { return m_totalCheckCount; }
 
             //! Last URL used for ping /DB ping service)
             QString getLastPingDbUrl() const;
@@ -153,6 +162,7 @@ namespace BlackCore
             //! \remark depends on BlackCore::Application::getGlobalSetup()
             static BlackMisc::Network::CUrl workingSharedUrlFromSetup();
 
+            std::atomic_bool m_logOwnMessages { true };
             std::atomic_bool m_doDetailedCheck { true };
             std::atomic_bool m_networkAccessible { true };
             std::atomic_bool m_internetAccessible { true };
@@ -161,11 +171,12 @@ namespace BlackCore
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress
-            std::atomic_int  m_checkCount { 0 }; //!< counting number of checks
-            std::atomic_int  m_badCountDb { 0 }; //! Total number of DB failing counts (only real responses when tried)
-            std::atomic_int  m_badCountInternet { 0 }; //! Total number of Internet failing count (only when network is accessible)
-            std::atomic_int  m_goodCountDb { 0 };
-            std::atomic_int  m_goodCountInternet { 0 };
+            std::atomic_int  m_totalCheckCount { 0 }; //!< counting number of checks
+            std::atomic_int  m_totalBadCountDb { 0 }; //! Total number of DB failing counts (only real responses when tried)
+            std::atomic_int  m_totalBadCountInternet { 0 }; //! Total number of Internet failing count (only when network is accessible)
+            std::atomic_int  m_totalGoodCountDb { 0 };
+            std::atomic_int  m_totalGoodCountInternet { 0 };
+            std::atomic_int  m_consecutivePingBadCount { 0 }; //! Bad count of ping until a godd state is received
             QString m_lastPingUrl;
             BlackMisc::Network::CUrl m_workingSharedUrl;
             mutable QReadWriteLock m_lockUrl;

@@ -9,9 +9,12 @@
 
 #include "networkwatchdog.h"
 #include "application.h"
+#include "blackmisc/logmessage.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/networkutils.h"
+
 #include <QNetworkReply>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -21,6 +24,15 @@ namespace BlackCore
 {
     namespace Db
     {
+        const CLogCategoryList &CNetworkWatchdog::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats
+            (
+                CContinuousWorker::getLogCategories().join({ CLogCategory::swiftDbWebservice(), CLogCategory::webservice(), CLogCategory::network() })
+            );
+            return cats;
+        }
+
         CNetworkWatchdog::CNetworkWatchdog(QObject *parent) : CContinuousWorker(parent, "swift DB watchdog")
         {
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
@@ -42,6 +54,8 @@ namespace BlackCore
         {
             m_dbAccessible = accessible;
             m_internetAccessible = m_internetAccessible && m_networkAccessible;
+
+
             QTimer::singleShot(0, &m_updateTimer, [this] { m_updateTimer.start(); }); // restart timer
         }
 
@@ -64,7 +78,12 @@ namespace BlackCore
             if (m_checkInProgress) { return -1; }
 
             const int n = this->getCheckCount();
-            QTimer::singleShot(0, this, &CNetworkWatchdog::doWork);
+            const QPointer<CNetworkWatchdog> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->doWork();
+            });
             return n; // triggered
         }
 
@@ -80,8 +99,8 @@ namespace BlackCore
             const QString pUrl(this->getLastPingDbUrl());
             static const QString cct(QString::number(CanConnectTimeMs));
             return info.
-                   arg(boolToYesNo(this->isInternetAccessible())).arg(m_goodCountInternet).arg(m_badCountInternet).
-                   arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_goodCountDb).arg(m_badCountDb).
+                   arg(boolToYesNo(this->isInternetAccessible())).arg(m_totalGoodCountInternet).arg(m_totalBadCountInternet).
+                   arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_totalGoodCountDb).arg(m_totalBadCountDb).
                    arg(pUrl, cct); // cct has to be string, otherwise the % in the URL will be replaced
         }
 
@@ -114,16 +133,16 @@ namespace BlackCore
                 if (m_checkDbAccessibility && m_doDetailedCheck && canConnectDb)
                 {
                     // test against real HTTP response
-                    const bool lastHttpSuccess = m_lastClientPingSuccess;
-                    if (lastHttpSuccess && m_checkCount % 10 == 0)
+                    const bool lastHttpSuccess = m_lastClientPingSuccess; // ping result received in meantime
+                    if (lastHttpSuccess && m_totalCheckCount % 10 == 0)
                     {
                         // seems to be OK, from time to time ping
                         this->pingDbClientService(PingStarted);
                     }
-                    else if (!lastHttpSuccess && m_checkCount % 3 == 0)
+                    else if (!lastHttpSuccess && m_totalCheckCount % 3 == 0)
                     {
                         // not OK, retry more frequently
-                        this->pingDbClientService(PingStarted, true);
+                        this->pingDbClientService(PingStarted, true); // force
                     }
                     canConnectDb = lastHttpSuccess;
                 }
@@ -171,8 +190,8 @@ namespace BlackCore
                         static const QString testHost2("www.microsoft.com"); // secondary test
                         canConnectInternet = CNetworkUtils::canConnect(testHost2, 80, message, CanConnectTimeMs); // running in background worker
                     }
-                    if (canConnectInternet) { m_goodCountInternet++; }
-                    else { m_badCountInternet++; }
+                    if (canConnectInternet) { m_totalGoodCountInternet++; }
+                    else { m_totalBadCountInternet++; }
                 }
                 m_internetAccessible = networkAccess && canConnectInternet;
 
@@ -182,14 +201,13 @@ namespace BlackCore
             while (false);
 
             m_updateTimer.start(); // restart
-            m_checkCount++;
+            m_totalCheckCount++;
             m_checkInProgress = false;
         }
 
         bool CNetworkWatchdog::doWorkCheck() const
         {
-            if (!sApp) { return false; }
-            if (sApp->isShuttingDown()) { return false; }
+            if (!sApp || sApp->isShuttingDown()) { return false; }
             if (!this->isEnabled()) { return false; }
             return true;
         }
@@ -210,7 +228,12 @@ namespace BlackCore
             else
             {
                 m_networkAccessible = true;
-                QTimer::singleShot(0, this, &CNetworkWatchdog::doWork);
+                const QPointer<CNetworkWatchdog> myself(this);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    this->doWork();
+                });
             }
         }
 
@@ -223,7 +246,7 @@ namespace BlackCore
         void CNetworkWatchdog::pingDbClientService(CNetworkWatchdog::PingType type, bool force)
         {
             if (!force && !this->isSwiftDbAccessible()) { return; }
-            if (!sApp) { return; }
+            if (!sApp || sApp->isShuttingDown()) { return; }
             const CGlobalSetup gs = sApp->getGlobalSetup();
             if (!gs.wasLoaded()) { return; }
             CUrl pingUrl = gs.getDbClientPingServiceUrl();
@@ -242,6 +265,7 @@ namespace BlackCore
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nw(nwReply); // delete reply
             const bool ok = (nw->error() == QNetworkReply::NoError);
+            const QString errorString = nw->errorString();
             nw->close();
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_lastClientPingSuccess = ok;
@@ -251,8 +275,20 @@ namespace BlackCore
                 m_lastPingUrl = url;
             }
 
-            if (ok) { m_goodCountDb++; }
-            else { m_badCountDb++; }
+            if (ok)
+            {
+                m_totalGoodCountDb++;
+                m_consecutivePingBadCount = 0;
+            }
+            else
+            {
+                m_totalBadCountDb++;
+                m_consecutivePingBadCount++;
+                if (m_logOwnMessages)
+                {
+                    CStatusMessage(this).warning("Watchdog ping failed, error: '%1', total good/bad DB counts: %2/%3") << errorString << m_totalGoodCountDb << m_totalBadCountDb;
+                }
+            }
             this->setDbAccessibility(ok);
         }
 
@@ -261,14 +297,23 @@ namespace BlackCore
             if (!this->doWorkCheck()) { return; }
 
             // trigger really queued
+            const QPointer<CNetworkWatchdog> myself(this);
             if (oldDbAccessible != m_dbAccessible)
             {
                 const CUrl testUrl(this->dbTestUrl());
-                QTimer::singleShot(0, this, [ = ] { emit this->changedSwiftDbAccessibility(m_dbAccessible, testUrl); });
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    emit this->changedSwiftDbAccessibility(m_dbAccessible, testUrl);
+                });
             }
             if (oldInternetAccessible != m_internetAccessible)
             {
-                QTimer::singleShot(0, this, [this] { emit this->changedInternetAccessibility(m_internetAccessible); });
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    emit this->changedInternetAccessibility(m_internetAccessible);
+                });
             }
         }
 
