@@ -213,6 +213,7 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
+            if (!m_cgsPerCallsign.contains(callsign)) { return false; }
             return m_cgsPerCallsign[callsign] == cg;
         }
 
