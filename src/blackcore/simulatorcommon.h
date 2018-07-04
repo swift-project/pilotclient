@@ -262,6 +262,9 @@ namespace BlackCore
         //! Remember as last sent
         void rememberLastSent(const BlackMisc::Aviation::CAircraftParts &sent, const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Last sent situations
+        BlackMisc::Aviation::CAircraftSituationList getLastSentCanLikelySkipNearGroundInterpolation() const;
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 

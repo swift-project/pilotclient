@@ -741,6 +741,17 @@ namespace BlackCore
         m_lastSentParts.insert(callsign, sent);
     }
 
+    CAircraftSituationList CSimulatorCommon::getLastSentCanLikelySkipNearGroundInterpolation() const
+    {
+        const QList<CAircraftSituation> situations = m_lastSentSituations.values();
+        CAircraftSituationList skipped;
+        for (const CAircraftSituation &s : situations)
+        {
+            if (s.canLikelySkipNearGroundInterpolation()) { skipped.push_back(s); }
+        }
+        return skipped;
+    }
+
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (!snapshot.isValidSnapshot()) { return;}
