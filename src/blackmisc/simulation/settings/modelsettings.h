@@ -67,7 +67,7 @@ namespace BlackMisc
                 static const char *key() { return "Models"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
+                static const QString &humanReadable() { static const QString name("Model settings"); return name; }
             };
 
             //! Mapping preferences for model distributor list
