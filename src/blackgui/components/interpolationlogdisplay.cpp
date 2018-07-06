@@ -76,8 +76,8 @@ namespace BlackGui
             }
             m_simulatorCommon = simulatorCommon;
             if (!simulatorCommon) { return; }
-            connect(m_simulatorCommon, &CSimulatorCommon::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived);
-            connect(m_simulatorCommon, &CSimulatorCommon::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested);
+            connect(m_simulatorCommon, &CSimulatorCommon::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
+            connect(m_simulatorCommon, &CSimulatorCommon::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
             connect(m_simulatorCommon, &CSimulatorCommon::destroyed, this, &CInterpolationLogDisplay::onSimulatorUnloaded);
             connect(m_simulatorCommon, &CSimulatorCommon::simulatorStatusChanged, this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
         }
