@@ -113,7 +113,7 @@ namespace BlackCore
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
     }
 
-    bool CAirspaceMonitor::updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates)
+    bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
     {
         const bool r = CRemoteAircraftProvider::updateFastPositionEnabled(callsign, enableFastPositonUpdates);
         if (m_network && sApp && !sApp->isShuttingDown())
@@ -269,7 +269,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::requestDataUpdates()
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         const CSimulatedAircraftList aircraftInRange(this->getAircraftInRange());
         for (const CSimulatedAircraft &aircraft : aircraftInRange)
         {
@@ -288,7 +288,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::requestAtisUpdates()
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         const CAtcStationList stations(this->getAtcStationsOnline());
         for (const CAtcStation &station : stations)
         {
@@ -350,7 +350,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (!this->isConnected() || realname.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty()) { return; }
         int wasAtc = false;
 
         if (callsign.hasSuffix())
@@ -377,7 +377,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, int clientCaps)
     {
-        if (!this->isConnected() || callsign.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
         CClient::Capabilities caps = static_cast<CClient::Capabilities>(clientCaps);
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
@@ -390,7 +390,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onServerReplyReceived(const CCallsign &callsign, const QString &server)
     {
-        if (!this->isConnected() || callsign.isEmpty() || server.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty() || server.isEmpty()) { return; }
         const CPropertyIndexVariantMap vm(CClient::IndexServer, server);
         this->updateOrAddClient(callsign, vm);
     }
@@ -470,7 +470,7 @@ namespace BlackCore
     void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, int trial)
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -520,7 +520,7 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
 
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
@@ -583,7 +583,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAtisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        if (!this->isConnected() || callsign.isEmpty()) return;
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
         CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, CVariant::from(atisMessage));
         this->updateOnlineStation(callsign, vm);
 
@@ -595,7 +595,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAtisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         const QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
         const int changedOnline = this->updateOnlineStation(callsign, vm, true, true);
@@ -616,7 +616,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         if (zuluTime.length() == 4)
         {
             // Logic to set logoff time
@@ -644,7 +644,7 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const bool isAircraft = this->isAircraftInRange(callsign);
         const bool isAtc = m_atcStationsOnline.containsCallsign(callsign);
@@ -678,7 +678,7 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
@@ -843,7 +843,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
@@ -887,7 +887,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAircraftInterimUpdateReceived(const CAircraftSituation &situation)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
@@ -1034,7 +1034,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
         m_network->sendRealNameQuery(callsign);
         m_network->sendAtisQuery(callsign); // request ATIS and voice rooms
         m_network->sendCapabilitiesQuery(callsign);
@@ -1043,7 +1043,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withIcaoQuery, bool withFsInn)
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         if (withIcaoQuery) { m_network->sendIcaoCodesQuery(callsign); }
         if (withFsInn) { m_network->sendCustomFsinnQuery(callsign); }
@@ -1057,6 +1057,12 @@ namespace BlackCore
     bool CAirspaceMonitor::isConnected() const
     {
         return m_network && m_network->isConnected();
+    }
+
+    bool CAirspaceMonitor::isConnectedAndNotShuttingDown() const
+    {
+        if (!this->isConnected()) { return false; }
+        return (sApp && !sApp->isShuttingDown());
     }
 
     const CServer &CAirspaceMonitor::getConnectedServer() const

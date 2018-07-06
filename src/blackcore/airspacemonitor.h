@@ -201,6 +201,9 @@ namespace BlackCore
         //! Connected with network?
         bool isConnected() const;
 
+        //! Connected with server and not shutting down
+        bool isConnectedAndNotShuttingDown() const;
+
         //! Get the currently connected server
         const BlackMisc::Network::CServer &getConnectedServer() const;
 
