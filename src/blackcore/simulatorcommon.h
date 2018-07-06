@@ -85,6 +85,7 @@ namespace BlackCore
         virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
         virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
         virtual void clearAllRemoteAircraftData() override;
+        virtual void resetAircraftStatistics() override;
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
 
         //! \addtogroup swiftdotcommands
@@ -116,9 +117,6 @@ namespace BlackCore
 
         //! Register help
         static void registerHelp();
-
-        //! Reset the statistics counters
-        virtual void resetAircraftStatistics();
 
         //!  Counter added aircraft
         int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }

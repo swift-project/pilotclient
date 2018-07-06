@@ -201,6 +201,9 @@ namespace BlackCore
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return QString(); }
 
+        //! Reset the statistics
+        virtual void resetAircraftStatistics() {}
+
         //! \copydoc BlackMisc::IProvider::asQObject
         virtual QObject *asQObject() override { return this; }
 

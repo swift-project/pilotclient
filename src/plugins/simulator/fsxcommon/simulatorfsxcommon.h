@@ -131,6 +131,7 @@ namespace BlackSimPlugin
             virtual void clearAllRemoteAircraftData() override;
             virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
             virtual QString getStatisticsSimulatorSpecific() const override;
+            virtual void resetAircraftStatistics() override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -141,9 +142,6 @@ namespace BlackSimPlugin
 
             //! Set tracing on/off
             void setTractingSendId(bool trace);
-
-            //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
-            virtual void resetAircraftStatistics() override;
 
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
