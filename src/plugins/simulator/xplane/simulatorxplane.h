@@ -39,6 +39,8 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QHash>
+#include <QPair>
 #include <QTimer>
 
 class QDBusServiceWatcher;
@@ -117,6 +119,9 @@ namespace BlackSimPlugin
                              BlackMisc::Network::IClientProvider *clientProvider,
                              QObject *parent = nullptr);
 
+            //! Dtor
+            virtual ~CSimulatorXPlane();
+
             //! \name ISimulator implementations
             //! @{
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
@@ -133,6 +138,9 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void unload() override;
+            virtual QString getStatisticsSimulatorSpecific() const override;
+            virtual void resetAircraftStatistics() override;
+            virtual void clearAllRemoteAircraftData() override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -173,15 +181,43 @@ namespace BlackSimPlugin
             //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();
 
+            //! Update airports
+            void updateAirportsInRange();
+
+            //! Request elevation and CG from XPlane @{
             void requestRemoteAircraftDataFromXPlane();
+            void requestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            void triggerRequestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            //! @}
+
+            //! Adding new aircraft @{
+            void addNextPendingAircraft();
+            void triggerAddNextPendingAircraft();
+            //! @}
+
+            //! Detect timeouts on adding
+            int detectTimeoutAdding();
+
+            //! Trigger a removal of an aircraft
+            void triggerRemoveAircraft(const BlackMisc::Aviation::CCallsign &callsign, qint64 deferMs);
+
+            //! Timestamps of aircraft currently adding
+            QPair<qint64, qint64> minMaxTimestampsAddInProgress() const;
+
+            //! Can the next aircraft be added?
+            bool canAddAircraft() const;
+
+            //! Callbacks from simulator @{
+            void onRemoteAircraftAdded(const QString &callsign);
+            void onRemoteAircraftAddingFailed(const QString &callsign);
             void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
                                                    const QDoubleList &elevationsM, const QDoubleList &verticalOffsets);
-            void updateAirportsInRange();
-            void remoteAircraftAdded(const QString &callsign);
-            void remoteAircraftAddingFailed(const QString &callsign);
-            void remoteAircraftAddingTimeout();
+            //! @}
 
-            // XSwiftBus interpolation
+            //! Dsiconnect from DBus
+            void disconnectFromDBus();
+
+            static constexpr qint64 TimeoutAdding = 10000;
             QDBusConnection m_dBusConnection { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
@@ -190,15 +226,18 @@ namespace BlackSimPlugin
             QTimer m_fastTimer;
             QTimer m_slowTimer;
             QTimer m_airportUpdater;
-            BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
-            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
-
-            // Driver Interpolation
-            BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft;
-            CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
             QTimer m_pendingAddedTimer;
-
+            BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this }; //!< XPlane model set
+            BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
+            QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed; //! aircraft for which adding failed
+            CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
             XPlaneData m_xplaneData; //!< XPlane data
+
+            // statistics
+            qint64 m_statsAddMaxTimeMs = -1;
+            qint64 m_statsAddCurrentTimeMs = -1;
 
             //! Reset the XPlane data
             void resetXPlaneData()

@@ -47,6 +47,7 @@
 #include "blackmisc/pq/pressure.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/temperature.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/iterator.h"
@@ -57,6 +58,7 @@
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -101,21 +103,48 @@ namespace BlackSimPlugin
             connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
             connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
             connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
-            connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::remoteAircraftAddingTimeout);
+            connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::addNextPendingAircraft);
             m_fastTimer.start(100);
             m_slowTimer.start(1000);
-            m_airportUpdater.start(60000);
+            m_airportUpdater.start(60 * 1000);
+            m_pendingAddedTimer.start(5000);
 
             this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines", CAircraftModel::TypeModelMatchingDefaultModel,
                                     "A320 AUA", CAircraftIcaoCode("A320", "L2J")});
             this->resetXPlaneData();
         }
 
+        CSimulatorXPlane::~CSimulatorXPlane()
+        {
+            this->unload();
+        }
+
         void CSimulatorXPlane::unload()
         {
+            if (!this->isConnected()) { return; }
+
+            // will call disconnect from
             CSimulatorPluginCommon::unload();
             delete m_watcher;
             m_watcher = nullptr;
+        }
+
+        QString CSimulatorXPlane::getStatisticsSimulatorSpecific() const
+        {
+            static const QString s("Add-time: %1ms/%2ms");
+            return s.arg(m_statsAddCurrentTimeMs).arg(m_statsAddMaxTimeMs);
+        }
+
+        void CSimulatorXPlane::resetAircraftStatistics()
+        {
+            m_statsAddMaxTimeMs = -1;
+            m_statsAddCurrentTimeMs = -1;
+        }
+
+        void CSimulatorXPlane::clearAllRemoteAircraftData()
+        {
+            m_aircraftAddedFailed.clear();
+            CSimulatorPluginCommon::clearAllRemoteAircraftData();
         }
 
         bool CSimulatorXPlane::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
@@ -263,8 +292,8 @@ namespace BlackSimPlugin
                 connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
                 m_serviceProxy->updateAirportsInRange();
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::remoteAircraftAdded);
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::remoteAircraftAddingFailed);
+                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
+                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
                 if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
                 m_trafficProxy->removeAllPlanes();
                 this->loadCslPackages();
@@ -281,12 +310,7 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::disconnectFrom()
         {
             if (!this->isConnected()) { return true; } // avoid emit if already disconnected
-            if (m_trafficProxy)
-            {
-                m_trafficProxy->cleanup();
-            }
-
-            m_dBusConnection = QDBusConnection { "default" };
+            this->disconnectFromDBus();
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             delete m_serviceProxy;
             delete m_trafficProxy;
@@ -450,7 +474,8 @@ namespace BlackSimPlugin
             QList<Prefix> packages;
 
             Q_ASSERT(isConnected());
-            for (const auto &model : m_modelSet.getThreadLocal())
+            const CAircraftModelList models = m_modelSet.getThreadLocal();
+            for (const auto &model : models)
             {
                 const QString &modelFile = model.getFileName();
                 if (modelFile.isEmpty() || ! QFile::exists(modelFile)) { continue; }
@@ -493,18 +518,33 @@ namespace BlackSimPlugin
             Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
-            QString callsign = newRemoteAircraft.getCallsign().asString();
-            m_pendingToBeAddedAircraft.push_back(newRemoteAircraft);
-
-            if (m_pendingToBeAddedAircraft.size() == 1)
+            // crosscheck if still a valid aircraft
+            // it can happen that aircraft has been removed, timed out ...
+            if (!this->isAircraftInRange(newRemoteAircraft.getCallsign()))
             {
-                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
+                // next cycle will be called by callbacks or timer
+                CLogMessage(this).warning("Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
+                return false;
+            }
+
+            if (this->canAddAircraft())
+            {
+                // no aircraft pending, add
+                CLogMessage(this).info("Adding '%1' to XPlane") << newRemoteAircraft.getCallsign();
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                m_addingInProgressAircraft.insert(newRemoteAircraft.getCallsign(), now);
+                const QString callsign = newRemoteAircraft.getCallsign().asString();
+                const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+                const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
                 m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
                                          newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                          newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                          livery);
-                m_pendingAddedTimer.start(5000);
+            }
+            else
+            {
+                // add in queue
+                m_pendingToBeAddedAircraft.replaceOrAdd(newRemoteAircraft);
             }
             return true;
         }
@@ -531,7 +571,7 @@ namespace BlackSimPlugin
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
-                if (m_pendingToBeAddedAircraft.containsCallsign(callsign))
+                else if (m_pendingToBeAddedAircraft.containsCallsign(callsign))
                 {
                     CSimulatedAircraft aircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
                     aircraft.setRendered(false);
@@ -543,30 +583,16 @@ namespace BlackSimPlugin
             m_xplaneAircraftObjects.remove(callsign);
             m_pendingToBeAddedAircraft.removeByCallsign(callsign);
 
-            // Stop the timer if there is nothing left
-            if (m_pendingToBeAddedAircraft.empty())
-            {
-                m_pendingAddedTimer.stop();
-            }
-
             // bye
             return true;
         }
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
         {
-            Q_ASSERT(isConnected());
-            //! \todo XP driver obtain number of removed aircraft
-            resetHighlighting();
-
-            // remove one by one
-            int r = 0;
-            const CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
-            for (const CCallsign &cs : callsigns)
-            {
-                if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
-            }
-            return r;
+            if (!this->isConnected()) { return 0; }
+            m_pendingToBeAddedAircraft.clear();
+            m_addingInProgressAircraft.clear();
+            return CSimulatorPluginCommon::physicallyRemoveAllRemoteAircraft();
         }
 
         CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const
@@ -765,19 +791,35 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
         {
-            //! \todo KB 2018-07 It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
+            if (!isConnected()) { return; }
+
+            // It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
             // - we could use the elevation cache and CG cache to decide if we need to request
             // - if an aircraft is on ground but not moving, we do not need to request elevation if we already have it (it will not change
-            if (!isConnected()) { return; }
             CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
             const CCallsignSet remove = this->getLastSentCanLikelySkipNearGroundInterpolation().getCallsigns();
             callsigns.remove(remove);
-            if (callsigns.isEmpty()) { return; }
-            const QStringList csStrings = callsigns.getCallsignStrings();
+        }
 
+        void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
+        {
+            if (callsigns.isEmpty()) { return; }
+            if (this->isShuttingDown()) { return; }
+            const QStringList csStrings = callsigns.getCallsignStrings();
             m_trafficProxy->getRemoteAircraftsData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
             {
                 updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+            });
+        }
+
+        void CSimulatorXPlane::triggerRequestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
+        {
+            if (callsigns.isEmpty()) { return; }
+            QPointer<CSimulatorXPlane> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->requestRemoteAircraftDataFromXPlane(callsigns);
             });
         }
 
@@ -799,84 +841,170 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorXPlane::disconnectFromDBus()
+        {
+            if (m_dBusConnection.isConnected())
+            {
+                if (m_trafficProxy) { m_trafficProxy->cleanup(); }
+
+                // works for session/system bus
+                // see CCoreFacade::initDBusConnection for P2P
+                QDBusConnection::disconnectFromBus(m_dBusConnection.name());
+            }
+            m_dBusConnection = QDBusConnection { "default" };
+        }
+
         void CSimulatorXPlane::updateAirportsInRange()
         {
             if (this->isConnected()) { m_serviceProxy->updateAirportsInRange(); }
         }
 
-        void CSimulatorXPlane::remoteAircraftAdded(const QString &callsign)
+        void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)
         {
-            if (m_pendingToBeAddedAircraft.containsCallsign(callsign))
+            const CCallsign cs(callsign);
+            CSimulatedAircraft addedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
+
+            // statistics
+            bool wasPending = false;
+            if (m_addingInProgressAircraft.contains(cs))
             {
-                CSimulatedAircraft addedRemoteAircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
-                m_pendingToBeAddedAircraft.removeByCallsign(callsign);
-                m_xplaneAircraftObjects.insert(addedRemoteAircraft.getCallsign(), CXPlaneMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
-
-                CLogMessage(this).info("XP: Added aircraft '%1'") << addedRemoteAircraft.getCallsign().toQString();
-
-                bool rendered = true;
-                this->updateAircraftRendered(addedRemoteAircraft.getCallsign(), rendered);
-                addedRemoteAircraft.setRendered(rendered);
-                emit this->aircraftRenderingChanged(addedRemoteAircraft);
+                wasPending = true;
+                const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
+                const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
+                m_statsAddCurrentTimeMs = deltaTimeMs;
+                if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
+                m_addingInProgressAircraft.remove(cs);
             }
 
-            if (m_pendingToBeAddedAircraft.size() > 0)
+            if (!addedRemoteAircraft.hasCallsign())
             {
-                CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
-                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().toQString(), aircraftModel.getModelString(),
-                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                         livery);
-                m_pendingAddedTimer.start(5000);
+                CLogMessage(this).warning("Aircraft '%1' no longer in range, will be removed") << callsign;
+                this->triggerRemoveAircraft(cs, TimeoutAdding);
+                return;
+            }
+
+            CLogMessage(this).info("Added aircraft '%1'") << callsign;
+            if (!wasPending)
+            {
+                // timeout?
+                // slow adding?
+                CLogMessage(this).warning("Added callsign '%1' was not in progress anymore. Timeout?") << callsign;
+            }
+
+            const bool rendered = true;
+            addedRemoteAircraft.setRendered(rendered);
+            this->updateAircraftRendered(cs, rendered);
+            this->triggerRequestRemoteAircraftDataFromXPlane(cs);
+            this->triggerAddNextPendingAircraft();
+
+            m_xplaneAircraftObjects.insert(addedRemoteAircraft.getCallsign(), CXPlaneMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
+            emit this->aircraftRenderingChanged(addedRemoteAircraft);
+        }
+
+        void CSimulatorXPlane::onRemoteAircraftAddingFailed(const QString &callsign)
+        {
+
+            const CCallsign cs(callsign);
+            CSimulatedAircraft failedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
+
+            if (failedRemoteAircraft.hasCallsign())
+            {
+                CLogMessage(this).warning("Adding aircraft failed: '%1'") << callsign;
+                failedRemoteAircraft.setRendered(false);
             }
             else
             {
-                m_pendingAddedTimer.stop();
+                CLogMessage(this).warning("Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
             }
+
+            const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
+            Q_UNUSED(wasPending);
+
+            if (failedRemoteAircraft.hasCallsign() && !m_aircraftAddedFailed.containsCallsign(cs))
+            {
+                m_aircraftAddedFailed.push_back(failedRemoteAircraft);
+                m_pendingToBeAddedAircraft.replaceOrAdd(failedRemoteAircraft); // try a second time
+            }
+            this->triggerAddNextPendingAircraft();
         }
 
-        void CSimulatorXPlane::remoteAircraftAddingFailed(const QString &callsign)
+        void CSimulatorXPlane::addNextPendingAircraft()
         {
-            CLogMessage(this).info("XP: Adding aircraft failed: '%1'") << callsign;
-            m_pendingToBeAddedAircraft.removeByCallsign(callsign);
+            if (m_pendingToBeAddedAircraft.isEmpty()) { return; } // no more pending
 
-            if (m_pendingToBeAddedAircraft.size() > 0)
-            {
-                CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
-                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().toQString(), aircraftModel.getModelString(),
-                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                         livery);
-                m_pendingAddedTimer.start(5000);
-            }
-            else
-            {
-                m_pendingAddedTimer.stop();
-            }
+            // housekeeping
+            this->detectTimeoutAdding();
+
+            // check if can add
+            if (!this->canAddAircraft()) { return; }
+
+            // next add cycle
+            const CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
+            m_pendingToBeAddedAircraft.pop_front();
+            CLogMessage(this).info("Adding next pending aircraft '%1', pending %2, in progress %3") << newRemoteAircraft.getCallsignAsString() << m_pendingToBeAddedAircraft.size() << m_addingInProgressAircraft.size();
+            this->physicallyAddRemoteAircraft(newRemoteAircraft);
         }
 
-        void CSimulatorXPlane::remoteAircraftAddingTimeout()
+        void CSimulatorXPlane::triggerAddNextPendingAircraft()
         {
-            Q_ASSERT(m_pendingToBeAddedAircraft.size() > 0);
+            QPointer<CSimulatorXPlane> myself(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->addNextPendingAircraft();
+            });
+        }
 
-            CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
-            QString callsign = newRemoteAircraft.getCallsign().toQString();
+        int CSimulatorXPlane::detectTimeoutAdding()
+        {
+            if (m_addingInProgressAircraft.isEmpty()) { return 0; }
+            const qint64 timeout = QDateTime::currentMSecsSinceEpoch() + TimeoutAdding;
+            CCallsignSet timeoutCallsigns;
+            const QList<CCallsign> addingCallsigns = m_addingInProgressAircraft.keys();
+            for (const CCallsign &cs : addingCallsigns)
+            {
+                if (m_addingInProgressAircraft.value(cs) < timeout) { continue; }
+                timeoutCallsigns.push_back(cs);
+            }
 
-            CLogMessage(this).warning("XP: Adding aircraft timed out: %1. Trying again.") << callsign;
+            for (const CCallsign &cs : as_const(timeoutCallsigns))
+            {
+                m_addingInProgressAircraft.remove(cs);
+                CLogMessage(this).warning("Adding for '%1' timed out") << cs.asString();
+            }
 
-            m_trafficProxy->removePlane(callsign);
+            return timeoutCallsigns.size();
+        }
 
-            const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-            const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-            m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
-                                     newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                     livery);
-            m_pendingAddedTimer.start(5000);
+        void CSimulatorXPlane::triggerRemoveAircraft(const CCallsign &callsign, qint64 deferMs)
+        {
+            QPointer<CSimulatorXPlane> myself(this);
+            QTimer::singleShot(deferMs, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->physicallyRemoveRemoteAircraft(callsign);
+            });
+        }
+
+        QPair<qint64, qint64> CSimulatorXPlane::minMaxTimestampsAddInProgress() const
+        {
+            static const QPair<qint64, qint64> empty(-1, -1);
+            if (m_addingInProgressAircraft.isEmpty()) { return empty; }
+            const QList<qint64> ts = m_addingInProgressAircraft.values();
+            const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
+            return QPair<qint64, qint64>(*mm.first, *mm.second);
+        }
+
+        bool CSimulatorXPlane::canAddAircraft() const
+        {
+            if (m_addingInProgressAircraft.isEmpty()) { return true; }
+
+            // check
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            const QPair<qint64, qint64> tsMM = this->minMaxTimestampsAddInProgress();
+            const qint64 deltaLatest = now - tsMM.second;
+            const bool canAdd = (deltaLatest > TimeoutAdding);
+            return canAdd;
         }
 
         ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
