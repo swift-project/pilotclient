@@ -59,13 +59,14 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
-using namespace Aviation;
-using namespace Network;
-using namespace PhysicalQuantities;
-using namespace Simulation;
-using namespace Geo;
-using namespace Simulation;
-using namespace Weather;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
+using namespace BlackCore;
 
 namespace
 {
@@ -249,10 +250,10 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::connectTo()
         {
             if (isConnected()) { return true; }
-            m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            m_serviceProxy = new CXSwiftBusServiceProxy(m_conn, this);
-            m_trafficProxy = new CXSwiftBusTrafficProxy(m_conn, this);
-            m_weatherProxy = new CXSwiftBusWeatherProxy(m_conn, this);
+            m_dBusConnection = QDBusConnection::sessionBus(); // TODO make this configurable
+            m_serviceProxy = new CXSwiftBusServiceProxy(m_dBusConnection, this);
+            m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
+            m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
             if (m_serviceProxy->isValid() && m_trafficProxy->isValid() && m_weatherProxy->isValid() && m_trafficProxy->initialize())
             {
@@ -264,7 +265,7 @@ namespace BlackSimPlugin
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::remoteAircraftAdded);
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::remoteAircraftAddingFailed);
-                if (m_watcher) { m_watcher->setConnection(m_conn); }
+                if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
                 m_trafficProxy->removeAllPlanes();
                 this->loadCslPackages();
                 this->emitSimulatorCombinedStatus();
@@ -272,7 +273,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                disconnectFrom();
+                this->disconnectFrom();
                 return false;
             }
         }
@@ -285,29 +286,29 @@ namespace BlackSimPlugin
                 m_trafficProxy->cleanup();
             }
 
-            m_conn = QDBusConnection { "default" };
-            if (m_watcher) { m_watcher->setConnection(m_conn); }
+            m_dBusConnection = QDBusConnection { "default" };
+            if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             delete m_serviceProxy;
             delete m_trafficProxy;
             delete m_weatherProxy;
             m_serviceProxy = nullptr;
             m_trafficProxy = nullptr;
             m_weatherProxy = nullptr;
-            emitSimulatorCombinedStatus();
+            this->emitSimulatorCombinedStatus();
             return true;
         }
 
         void CSimulatorXPlane::serviceUnregistered()
         {
-            m_conn = QDBusConnection { "default" };
-            if (m_watcher) { m_watcher->setConnection(m_conn); }
+            m_dBusConnection = QDBusConnection { "default" };
+            if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             delete m_serviceProxy;
             delete m_trafficProxy;
             delete m_weatherProxy;
             m_serviceProxy = nullptr;
             m_trafficProxy = nullptr;
             m_weatherProxy = nullptr;
-            emitSimulatorCombinedStatus();
+            this->emitSimulatorCombinedStatus();
         }
 
         void CSimulatorXPlane::emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
@@ -367,9 +368,6 @@ namespace BlackSimPlugin
             auto altIt = alts.begin();
             for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() && altIt != alts.end(); ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
             {
-                using namespace PhysicalQuantities;
-                using namespace Geo;
-
                 m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CAltitude(*altIt, CLengthUnit::m()) }, *nameIt });
             }
         }
@@ -496,9 +494,9 @@ namespace BlackSimPlugin
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
             QString callsign = newRemoteAircraft.getCallsign().asString();
-            m_pendingAddedAircrafts.push_back(newRemoteAircraft);
+            m_pendingToBeAddedAircraft.push_back(newRemoteAircraft);
 
-            if (m_pendingAddedAircrafts.size() == 1)
+            if (m_pendingToBeAddedAircraft.size() == 1)
             {
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
@@ -520,7 +518,7 @@ namespace BlackSimPlugin
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
             // really remove from simulator
-            if (!m_xplaneAircraftObjects.contains(callsign) && !m_pendingAddedAircrafts.containsCallsign(callsign)) { return false; } // already fully removed or not yet added
+            if (!m_xplaneAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign)) { return false; } // already fully removed or not yet added
 
             // mark in provider
             const bool updated = this->updateAircraftRendered(callsign, false);
@@ -533,9 +531,9 @@ namespace BlackSimPlugin
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
-                if (m_pendingAddedAircrafts.containsCallsign(callsign))
+                if (m_pendingToBeAddedAircraft.containsCallsign(callsign))
                 {
-                    CSimulatedAircraft aircraft = m_pendingAddedAircrafts.findFirstByCallsign(callsign);
+                    CSimulatedAircraft aircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
@@ -543,10 +541,10 @@ namespace BlackSimPlugin
 
             m_trafficProxy->removePlane(callsign.asString());
             m_xplaneAircraftObjects.remove(callsign);
-            m_pendingAddedAircrafts.removeByCallsign(callsign);
+            m_pendingToBeAddedAircraft.removeByCallsign(callsign);
 
             // Stop the timer if there is nothing left
-            if (m_pendingAddedAircrafts.empty())
+            if (m_pendingToBeAddedAircraft.empty())
             {
                 m_pendingAddedTimer.stop();
             }
@@ -589,8 +587,9 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             m_weatherProxy->setUseRealWeather(false);
 
-            // todo: find the closest
-            CGridPoint gridPoint = weatherGrid.front();
+            //! TODO: find the closest
+            if (weatherGrid.isEmpty()) { return; }
+            const CGridPoint gridPoint = weatherGrid.front();
 
             // todo: find the closest
             auto visibilityLayers = gridPoint.getVisibilityLayers();
@@ -617,10 +616,10 @@ namespace BlackSimPlugin
             cloudLayers.sortBy(&CCloudLayer::getBase);
             // todo: Instead of truncate, find the 3 vertical closest cloud layers
             cloudLayers.truncate(3);
-            for (const auto &cloudLayer : cloudLayers)
+            for (const auto &cloudLayer : as_const(cloudLayers))
             {
-                int base = cloudLayer.getBase().value(CLengthUnit::m());
-                int top = cloudLayer.getTop().value(CLengthUnit::m());
+                const int base = cloudLayer.getBase().value(CLengthUnit::m());
+                const int top = cloudLayer.getTop().value(CLengthUnit::m());
 
                 int coverage = 0;
                 switch (cloudLayer.getCoverage())
@@ -630,7 +629,7 @@ namespace BlackSimPlugin
                 case CCloudLayer::Scattered: coverage = 3; break;
                 case CCloudLayer::Broken: coverage = 4; break;
                 case CCloudLayer::Overcast: coverage = 6; break;
-                default: coverage = 0;
+                default: coverage = 0; break;
                 }
 
                 // Clear = 0, High Cirrus = 1, Scattered = 2, Broken = 3, Overcast = 4, Stratus = 5
@@ -640,7 +639,7 @@ namespace BlackSimPlugin
                 case CCloudLayer::NoClouds: type = 0; break;
                 case CCloudLayer::Cirrus: type = 1; break;
                 case CCloudLayer::Stratus: type = 5; break;
-                default: type = 0;
+                default: type = 0; break;
                 }
 
                 m_weatherProxy->setCloudLayer(layerNumber, base, top, type, coverage);
@@ -807,23 +806,23 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::remoteAircraftAdded(const QString &callsign)
         {
-            if (m_pendingAddedAircrafts.containsCallsign(callsign))
+            if (m_pendingToBeAddedAircraft.containsCallsign(callsign))
             {
-                CSimulatedAircraft addedRemoteAircraft = m_pendingAddedAircrafts.findFirstByCallsign(callsign);
-                m_pendingAddedAircrafts.removeByCallsign(callsign);
+                CSimulatedAircraft addedRemoteAircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
+                m_pendingToBeAddedAircraft.removeByCallsign(callsign);
                 m_xplaneAircraftObjects.insert(addedRemoteAircraft.getCallsign(), CXPlaneMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
 
-                CLogMessage(this).info("XP: Added aircraft %1") << addedRemoteAircraft.getCallsign().toQString();
+                CLogMessage(this).info("XP: Added aircraft '%1'") << addedRemoteAircraft.getCallsign().toQString();
 
                 bool rendered = true;
-                updateAircraftRendered(addedRemoteAircraft.getCallsign(), rendered);
+                this->updateAircraftRendered(addedRemoteAircraft.getCallsign(), rendered);
                 addedRemoteAircraft.setRendered(rendered);
                 emit this->aircraftRenderingChanged(addedRemoteAircraft);
             }
 
-            if (m_pendingAddedAircrafts.size() > 0)
+            if (m_pendingToBeAddedAircraft.size() > 0)
             {
-                CSimulatedAircraft newRemoteAircraft = m_pendingAddedAircrafts.front();
+                CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
                 m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().toQString(), aircraftModel.getModelString(),
@@ -840,12 +839,12 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::remoteAircraftAddingFailed(const QString &callsign)
         {
-            CLogMessage(this).info("XP: Adding aircraft failed: %1") << callsign;
-            m_pendingAddedAircrafts.removeByCallsign(callsign);
+            CLogMessage(this).info("XP: Adding aircraft failed: '%1'") << callsign;
+            m_pendingToBeAddedAircraft.removeByCallsign(callsign);
 
-            if (m_pendingAddedAircrafts.size() > 0)
+            if (m_pendingToBeAddedAircraft.size() > 0)
             {
-                CSimulatedAircraft newRemoteAircraft = m_pendingAddedAircrafts.front();
+                CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
                 m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().toQString(), aircraftModel.getModelString(),
@@ -862,17 +861,17 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::remoteAircraftAddingTimeout()
         {
-            Q_ASSERT(m_pendingAddedAircrafts.size() > 0);
+            Q_ASSERT(m_pendingToBeAddedAircraft.size() > 0);
 
-            CSimulatedAircraft newRemoteAircraft = m_pendingAddedAircrafts.front();
+            CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
             QString callsign = newRemoteAircraft.getCallsign().toQString();
 
             CLogMessage(this).warning("XP: Adding aircraft timed out: %1. Trying again.") << callsign;
 
             m_trafficProxy->removePlane(callsign);
 
-            CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-            QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
+            const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+            const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
                                      newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                      newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
@@ -880,7 +879,7 @@ namespace BlackSimPlugin
             m_pendingAddedTimer.start(5000);
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
+        ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
                 IWeatherGridProvider *weatherGridProvider,

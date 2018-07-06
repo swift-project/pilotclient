@@ -75,7 +75,7 @@ namespace BlackSimPlugin
         struct XPlaneData
         {
             QString aircraftModelPath;          //!< Aircraft model path
-            QString aircraftIcaoCode;           //!< Aircraft model path
+            QString aircraftIcaoCode;           //!< Aircraft ICAO code
             double latitude;                    //!< Longitude [deg]
             double longitude;                   //!< Latitude [deg]
             double altitude;                    //!< Altitude [m]
@@ -142,23 +142,18 @@ namespace BlackSimPlugin
             static QDBusConnection connectionFromString(const QString &str);
 
         protected:
-            //! \copydoc BlackCore::ISimulator::isConnected
+            //! \name ISimulator implementations
+            //! @{
             virtual bool isConnected() const override;
-
-            //! \copydoc BlackCore::ISimulator::isPaused
+            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
+            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int physicallyRemoveAllRemoteAircraft() override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual bool isPaused() const override
             {
                 //! \todo XP: provide correct pause state
                 return false;
             }
-
-            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
-            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual int physicallyRemoveAllRemoteAircraft() override;
-
-            //! \name Base class overrides
-            //! @{
-            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
         private:
@@ -186,10 +181,8 @@ namespace BlackSimPlugin
             void remoteAircraftAddingFailed(const QString &callsign);
             void remoteAircraftAddingTimeout();
 
-            static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
-
             // XSwiftBus interpolation
-            QDBusConnection m_conn { "default" };
+            QDBusConnection m_dBusConnection { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
             CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
@@ -201,12 +194,13 @@ namespace BlackSimPlugin
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             // Driver Interpolation
-            BlackMisc::Simulation::CSimulatedAircraftList m_pendingAddedAircrafts;
+            BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft;
             CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
             QTimer m_pendingAddedTimer;
 
-            XPlaneData m_xplaneData;
+            XPlaneData m_xplaneData; //!< XPlane data
 
+            //! Reset the XPlane data
             void resetXPlaneData()
             {
                 m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
