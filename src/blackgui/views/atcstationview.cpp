@@ -56,36 +56,36 @@ namespace BlackGui
             if (BlackConfig::CBuildConfig::isDebugBuild())
             {
                 if (this->m_debugActions.isEmpty()) { this->m_actions = QList<QAction *>({nullptr, nullptr}); }
-                this->m_actions[0] = menuActions.addAction(this->m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_testRequest1kAtcOnlineDummies });
-                this->m_actions[1] = menuActions.addAction(this->m_actions[1], CIcons::tableSheet16(), "Test: 3k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_testRequest1kAtcOnlineDummies });
+                this->m_actions[0] = menuActions.addAction(this->m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
+                this->m_actions[1] = menuActions.addAction(this->m_actions[1], CIcons::tableSheet16(), "Test: 3k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest3kAtcOnlineDummies });
             }
 
             if (this->hasSelection())
             {
                 if (this->m_debugActions.isEmpty()) { this->m_debugActions = QList<QAction *>({nullptr, nullptr, nullptr}); }
 
-                this->m_debugActions[0] = menuActions.addAction(this->m_debugActions[0], CIcons::appCockpit16(), "Tune in COM1", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_tuneInAtcCom1 });
-                this->m_debugActions[1] = menuActions.addAction(this->m_debugActions[1], CIcons::appCockpit16(), "Tune in COM2", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_tuneInAtcCom2 });
-                this->m_debugActions[2] = menuActions.addAction(this->m_debugActions[2], CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_requestTextMessage });
+                this->m_debugActions[0] = menuActions.addAction(this->m_debugActions[0], CIcons::appCockpit16(), "Tune in COM1", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom1 });
+                this->m_debugActions[1] = menuActions.addAction(this->m_debugActions[1], CIcons::appCockpit16(), "Tune in COM2", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom2 });
+                this->m_debugActions[2] = menuActions.addAction(this->m_debugActions[2], CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CAtcStationView::requestTextMessage });
             }
             CViewBase::customMenu(menuActions);
         }
 
-        void CAtcStationView::ps_tuneInAtcCom1()
+        void CAtcStationView::tuneInAtcCom1()
         {
             const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestComFrequency(s.getFrequency(), CComSystem::Com1);
         }
 
-        void CAtcStationView::ps_tuneInAtcCom2()
+        void CAtcStationView::tuneInAtcCom2()
         {
             const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestComFrequency(s.getFrequency(), CComSystem::Com2);
         }
 
-        void CAtcStationView::ps_requestTextMessage()
+        void CAtcStationView::requestTextMessage()
         {
             const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }

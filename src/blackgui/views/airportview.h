@@ -28,12 +28,12 @@ namespace BlackGui
         //! Airports view
         class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>
         {
-
         public:
 
             //! Constructor
             explicit CAirportView(QWidget *parent = nullptr);
         };
     }
-}
+} // ns
+
 #endif // guard

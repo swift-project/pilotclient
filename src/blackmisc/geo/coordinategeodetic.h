@@ -83,7 +83,7 @@ namespace BlackMisc
             //! Normal vector with double precision
             virtual std::array<double, 3> normalVectorDouble() const = 0;
 
-            //! Is equal, epsilon considered?
+            //! Is equal? Epsilon considered.
             bool equalNormalVectorDouble(const std::array<double, 3> &otherVector) const;
 
             //! Is equal, epsilon considered?
@@ -120,7 +120,7 @@ namespace BlackMisc
             //! \copydoc Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! Compare by index
+            //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const;
 
             //! \copydoc Mixin::String::toQString
@@ -184,7 +184,7 @@ namespace BlackMisc
             //! \copydoc Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const;
 
             //! \copydoc Mixin::String::toQString

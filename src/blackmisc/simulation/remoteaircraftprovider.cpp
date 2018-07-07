@@ -246,10 +246,10 @@ namespace BlackMisc
             // list from new to old
             CAircraftSituationList updatedSituations; // copy of updated situations
             {
-                const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 QWriteLocker lock(&m_lockSituations);
                 m_situationsAdded++;
-                m_situationsLastModified[cs] = ts;
+                m_situationsLastModified[cs] = now;
                 CAircraftSituationList &newSituationsList = m_situationsByCallsign[cs];
                 newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
                 const int situations = newSituationsList.size();
@@ -469,7 +469,7 @@ namespace BlackMisc
             if (!this->isAircraftInRange(callsign)) { return 0; }
 
             // update aircraft situation
-            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
             const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
             CAircraftSituationChange change;
             int updated = 0;
@@ -479,11 +479,11 @@ namespace BlackMisc
                 if (situations.isEmpty()) { return 0; }
                 updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change);
                 if (updated < 1) { return 0; }
-                m_situationsLastModified[callsign] = ts;
-                const CAircraftSituation latest = situations.front();
-                if (info == CAircraftSituation::FromProvider && latest.isOnGround())
+                m_situationsLastModified[callsign] = now;
+                const CAircraftSituation latestSituation = situations.front();
+                if (info == CAircraftSituation::FromProvider && latestSituation.isOnGround())
                 {
-                    m_latestOnGroundProviderElevation[callsign] = latest;
+                    m_latestOnGroundProviderElevation[callsign] = latestSituation;
                 }
             }
 

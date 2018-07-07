@@ -69,7 +69,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc CViewBase::customMenu
-            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+            virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
         private:
             //! Request text message for selected aircraft

@@ -40,6 +40,7 @@ namespace BlackGui
             m_columns.addColumn(CColumn::standardString("gnd.elv.", CAircraftSituation::IndexGroundElevationPlusInfo));
             m_columns.addColumn(CColumn::standardString("gnd.elv.alt.", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexGeodeticHeightAsString }));
             m_columns.addColumn(CColumn("elv.radius", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexRadius }, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::m(), 1)));
+            m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAircraftSituation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAircraftSituation::IndexAdjustedMsWithOffset);

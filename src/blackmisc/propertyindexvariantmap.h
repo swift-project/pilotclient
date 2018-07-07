@@ -286,6 +286,11 @@ namespace BlackMisc
         int Index<Derived>::comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const
         {
             if (this == &compareValue) { return 0; }
+            if (index.isMyself()) {
+                // slow, only last resort
+                return derived()->toQString().compare(compareValue.toQString());
+            }
+
             const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -295,6 +300,8 @@ namespace BlackMisc
             default:
                 break;
             }
+
+            // slow, only last resort
             return derived()->toQString().compare(compareValue.toQString());
         }
     } // Mixin

@@ -31,7 +31,7 @@ namespace BlackMisc
 
         CAltitude CAltitude::withOffset(const CLength &offset) const
         {
-            if (this->isNull()) { return CAltitude(offset, CAltitude::MeanSeaLevel); }
+            if (this->isNull()) { return CAltitude::null(); }
             CAltitude copy(*this);
             if (!offset.isNull() && !offset.isZeroEpsilonConsidered())
             {

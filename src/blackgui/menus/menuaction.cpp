@@ -42,46 +42,46 @@ namespace BlackGui
 
         bool CMenuAction::isCheckableQAction() const
         {
-            if (!this->m_action) { return false; }
-            return this->m_action->isCheckable();
+            if (!m_action) { return false; }
+            return m_action->isCheckable();
         }
 
         void CMenuAction::setActionChecked(bool checked)
         {
-            if (this->m_action) { m_action->setChecked(checked); }
+            if (m_action) { m_action->setChecked(checked); }
         }
 
         bool CMenuAction::isActionEnabled() const
         {
-            if (!this->m_action) { return false; }
-            return this->m_action->isEnabled();
+            if (!m_action) { return false; }
+            return m_action->isEnabled();
         }
 
         void CMenuAction::setActionEnabled(bool enabled)
         {
-            if (this->m_action) { m_action->setEnabled(enabled); }
+            if (m_action) { m_action->setEnabled(enabled); }
         }
 
         bool CMenuAction::hasNoPathWithSeparator() const
         {
-            return this->m_separator && this->hasNoPath();
+            return m_separator && this->hasNoPath();
         }
 
         bool CMenuAction::hasNoPath() const
         {
-            return this->m_path.isEmpty() || this->m_path == pathNone();
+            return m_path.isEmpty() || m_path == pathNone();
         }
 
         QPixmap CMenuAction::getPixmap() const
         {
-            if (this->m_icon.isNull()) { return QPixmap(); }
-            return this->m_icon.pixmap(this->m_icon.actualSize(QSize(16, 16)));
+            if (m_icon.isNull()) { return QPixmap(); }
+            return m_icon.pixmap(m_icon.actualSize(QSize(16, 16)));
         }
 
         void CMenuAction::setEnabled(bool enabled)
         {
-            Q_ASSERT_X(this->m_action, Q_FUNC_INFO, "No action");
-            this->m_action->setEnabled(enabled);
+            Q_ASSERT_X(m_action, Q_FUNC_INFO, "No action");
+            m_action->setEnabled(enabled);
         }
 
         const CMenuAction &CMenuAction::subMenuDatabase()
@@ -104,18 +104,18 @@ namespace BlackGui
 
         QString CMenuAction::getLastPathPart() const
         {
-            if (this->m_path.contains('/'))
+            if (m_path.contains('/'))
             {
-                if (this->m_path.endsWith('/')) { return ""; }
-                const int i = this->m_path.lastIndexOf('/');
-                return this->m_path.mid(i + 1);
+                if (m_path.endsWith('/')) { return ""; }
+                const int i = m_path.lastIndexOf('/');
+                return m_path.mid(i + 1);
             }
             return "";
         }
 
         void CMenuActions::splitSubMenus(const QString &key, QList<CMenuAction> &actions, QList<CMenuAction> &menus) const
         {
-            QList<CMenuAction> myActions(this->m_actions.values(key));
+            QList<CMenuAction> myActions(m_actions.values(key));
             QList<CMenuAction> checkableActions;
             std::reverse(myActions.begin(), myActions.end()); // the order is reverse because of the insert multi value
             for (const CMenuAction &action : myActions)
@@ -163,8 +163,8 @@ namespace BlackGui
 
         CMenuActions CMenuActions::getMenuActions(const QString &path) const
         {
-            if (this->m_actions.contains(path)) { return QList<CMenuAction>(); };
-            const QList<CMenuAction> allActions(this->m_actions.values(path));
+            if (m_actions.contains(path)) { return QList<CMenuAction>(); };
+            const QList<CMenuAction> allActions(m_actions.values(path));
             QList<CMenuAction> menuActions;
             for (const CMenuAction &a : allActions)
             {
@@ -178,7 +178,7 @@ namespace BlackGui
 
         bool CMenuActions::containsMenu(const QString &path) const
         {
-            if (!this->m_actions.contains(path)) { return false; }
+            if (!m_actions.contains(path)) { return false; }
             return getMenuActions(path).size() > 0;
         }
 
@@ -218,7 +218,7 @@ namespace BlackGui
         CMenuAction CMenuActions::addAction(const CMenuAction &menuAction)
         {
             Q_ASSERT_X(!menuAction.getPath().isEmpty(), Q_FUNC_INFO, "Need path");
-            this->m_actions.insertMulti(menuAction.getPath(), menuAction);
+            m_actions.insertMulti(menuAction.getPath(), menuAction);
             return menuAction;
         }
 
@@ -323,8 +323,8 @@ namespace BlackGui
 
         void CMenuActions::toQMenu(QMenu &menu, bool separateGroups) const
         {
-            if (this->m_actions.isEmpty()) { return; }
-            const QStringList keys = this->m_actions.uniqueKeys(); // Sorted ascending
+            if (m_actions.isEmpty()) { return; }
+            const QStringList keys = m_actions.uniqueKeys(); // Sorted ascending
 
             QMap<QString, QMenu *> subMenus; // all sub menus
             for (const QString &key : keys)
@@ -399,7 +399,7 @@ namespace BlackGui
 
         QList<CMenuAction> CMenuActions::toQList() const
         {
-            return this->m_actions.values();
+            return m_actions.values();
         }
 
         CMenuActions::operator QList<QAction *>() const

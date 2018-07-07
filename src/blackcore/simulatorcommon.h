@@ -279,9 +279,9 @@ namespace BlackCore
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
-        BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
-        BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
-        BlackMisc::Aviation::CTimestampPerCallsign   m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
+        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
+        BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
+        BlackMisc::Aviation::CTimestampPerCallsign  m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
         BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situation sent to simulator
         BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
 

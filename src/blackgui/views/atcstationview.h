@@ -44,6 +44,9 @@ namespace BlackGui
             //! Set station mode
             void setStationMode(BlackGui::Models::CAtcStationListModel::AtcStationMode stationMode);
 
+            //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
+            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+
         signals:
             //! Request some dummy ATC stations
             void testRequestDummyAtcOnlineStations(int number);
@@ -54,25 +57,21 @@ namespace BlackGui
             //! Request a text message to
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-        public slots:
-            //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
-            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
-
         protected:
             //! \copydoc CViewBase::customMenu
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
-        private slots:
-            void ps_testRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
-            void ps_testRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
-            void ps_tuneInAtcCom1();
-            void ps_tuneInAtcCom2();
-            void ps_requestTextMessage();
-
         private:
+            void emitTestRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
+            void emitTestRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
+            void tuneInAtcCom1();
+            void tuneInAtcCom2();
+            void requestTextMessage();
+
             QList<QAction *> m_actions;
             QList<QAction *> m_debugActions;
         };
     }
-}
+} // ns
+
 #endif // guard

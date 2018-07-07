@@ -678,7 +678,7 @@ namespace BlackCore
         {
             static const BlackMisc::CLogCategoryList cats
             (
-                CThreadedReader::getLogCategories().join({ BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::webservice() })
+                CThreadedReader::getLogCategories().join({ CLogCategory::swiftDbWebservice(), CLogCategory::webservice() })
             );
             return cats;
         }

@@ -151,7 +151,7 @@ namespace BlackGui
             //! Client COM related
             static const QString &pathClientCom()  { static const QString p("Client.ATC"); return p; }
 
-            //! Client COM related
+            //! Client simulation related
             static const QString &pathClientSimulation()  { static const QString p("Client.Simulation"); return p; }
 
             // ---- standard view paths --------

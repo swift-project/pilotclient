@@ -19,7 +19,6 @@
 class QWidget;
 
 namespace BlackMisc { namespace Weather { class CWindLayer; } }
-
 namespace BlackGui
 {
     namespace Views
@@ -29,7 +28,6 @@ namespace BlackGui
         {
 
         public:
-
             //! Constructor
             explicit CWindLayerView(QWidget *parent = nullptr);
         };

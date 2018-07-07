@@ -20,7 +20,6 @@
 class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
-
 namespace BlackGui
 {
     namespace Views
@@ -28,7 +27,6 @@ namespace BlackGui
         //! Airports view
         class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>
         {
-
         public:
             //! Constructor
             explicit CTextMessageView(QWidget *parent = nullptr);
