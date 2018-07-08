@@ -13,6 +13,7 @@
 
 #include "testblacksimpluginfsxp3dmain.h"
 #include "testfsxp3dcommon.h"
+#include "testsimconnectsymbols.h"
 #include "blackmisc/test/test.h"
 #include <QStringList>
 #include <QTest>
@@ -25,6 +26,9 @@ namespace BlackSimPluginFsxP3D
 
         int status = 0;
         {
+            CTestSimconnectSymbols simconnectSymbolsTest;
+            status |= test.exec(&simconnectSymbolsTest, "blacksimpluginfsxp3d_simconnectsymbols");
+
             CTestFsxP3DCommon commonTest;
             status |= test.exec(&commonTest, "blacksimpluginfsxp3d_fsxp3dcommon");
         }

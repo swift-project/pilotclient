@@ -10,7 +10,7 @@ HEADERS += *.h
 FORMS += *.ui
 
 CONFIG += staticlib
-CONFIG += blackconfig blackmisc blackcore blackgui
+CONFIG += blackconfig blackmisc blackcore blackgui simconnect
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
@@ -18,9 +18,11 @@ DESTDIR = $$DestRoot/lib
 
 LIBS += -lsimulatorfscommon -lfsuipc -lsimulatorplugincommon
 
-include(../fsxp3d_include.pri)
-
 addStaticLibraryDependency(fsuipc)
 addStaticLibraryDependency(simulatorplugincommon)
+
+OTHER_FILES += \
+        *.manifest \
+        *.rc
 
 load(common_post)

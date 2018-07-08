@@ -8,6 +8,7 @@
  */
 
 #include "simulatorfsxcommon.h"
+#include "simconnectsymbols.h"
 #include "blackcore/application.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
@@ -2020,6 +2021,7 @@ namespace BlackSimPlugin
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer.setInterval(QueryInterval);
             m_timer.setObjectName(this->objectName().append(":m_timer"));
+            loadAndResolveSimConnect(true);
             connect(&m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
 

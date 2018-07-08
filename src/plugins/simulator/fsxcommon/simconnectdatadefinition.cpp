@@ -8,6 +8,7 @@
  */
 
 #include "simconnectdatadefinition.h"
+#include "simconnectsymbols.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/logmessage.h"
