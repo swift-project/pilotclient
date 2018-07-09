@@ -202,8 +202,8 @@ namespace BlackMisc
             if (!currentSituation.hasGroundElevation())
             {
                 // we still have no elevation
-                const CLength radius = currentSituation.getDistancePerTime250ms();
-                if (!m_lastSituation.transferGroundElevation(currentSituation, radius))
+                const CLength radius = currentSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius());
+                if (!m_lastSituation.transferGroundElevationFromThis(currentSituation, radius))
                 {
                     const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
                     m_lastSituation.setGroundElevationChecked(groundElevation, CAircraftSituation::FromCache);
