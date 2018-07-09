@@ -447,6 +447,12 @@ namespace BlackGui
             //! Settings have been changed
             void settingsChanged();
 
+            //! \name Change selection modes @{
+            void setMultiSelection();
+            void setExtendedSelection();
+            void setSingleSelection();
+            //! @}
+
             //! JSON directory
             //! \remark Default implementation, can be overridden with specifi implementation
             virtual void rememberLastJsonDirectory(const QString &selectedFileOrDir);
@@ -537,12 +543,6 @@ namespace BlackGui
             virtual void ps_toggleHighlightDbData() {}
 
         private:
-            //! \name Change selection modes @{
-            void setMultiSelection();
-            void setExtendedSelection();
-            void setSingleSelection();
-            //! @}
-
             //! Remove selected rows if enabled
             void removeSelectedRowsChecked();
 

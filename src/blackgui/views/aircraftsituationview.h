@@ -26,9 +26,28 @@ namespace BlackGui
         //! Aircraft situations view
         class BLACKGUI_EXPORT CAircraftSituationView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftSituationView(QWidget *parent = nullptr);
+
+            //! Enable menu
+            void setWithMenuRequestElevation(bool enable);
+
+        signals:
+            //! Request elevation
+            void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        protected:
+            //! \copydoc CViewBase::customMenu
+            virtual void customMenu(Menus::CMenuActions &menuActions) override;
+
+        private:
+            //! Request elevation
+            void emitRequestElevationForSituation();
+
+            bool m_withMenuRequestElevation = false;
         };
     } // ns
 } // ns
