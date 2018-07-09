@@ -303,12 +303,11 @@ namespace BlackCore
         m_bookingsRequested = true;
     }
 
-    void CAirspaceMonitor::enableWatchdog(bool enable)
+    bool CAirspaceMonitor::enableWatchdog(bool enable)
     {
-        if (this->analyzer())
-        {
-            this->analyzer()->setEnabled(enable);
-        }
+        if (!this->analyzer()) { return false; }
+        this->analyzer()->setEnabled(enable);
+        return true;
     }
 
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
@@ -976,10 +975,20 @@ namespace BlackCore
         if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
         {
             // fetch from cache or request
-            const CLength distance(correctedSituation.getDistancePerTime250ms()); // distnacee per ms
-            const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
-            Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
-            correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
+            const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
+            CElevationPlane ep = situations.findCLosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius()));
+            if (!ep.isNull())
+            {
+                correctedSituation.setGroundElevation(ep, CAircraftSituation::FromOtherSituations);
+            }
+            else
+            {
+                const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distnacee per ms
+                ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
+                Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
+                correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
+            }
+
             if (!correctedSituation.hasGroundElevation())
             {
                 // we have a new situation, so we try to get the elevation
