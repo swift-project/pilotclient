@@ -130,7 +130,7 @@
       </item>
       <item>
        <widget class="QFrame" name="fr_LogStatus">
-        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,1">
+        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,0,1">
          <property name="leftMargin">
           <number>3</number>
          </property>
@@ -184,9 +184,16 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pb_ShowInSimulator">
+          <widget class="QPushButton" name="pb_ShowLogInSimulator">
            <property name="text">
-            <string>show in sim.</string>
+            <string>log in sim.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_FollowInSimulator">
+           <property name="text">
+            <string>follow</string>
            </property>
           </widget>
          </item>
@@ -575,11 +582,49 @@
        <property name="bottomMargin">
         <number>4</number>
        </property>
-       <item alignment="Qt::AlignRight">
-        <widget class="QPushButton" name="pb_GetLastInterpolation">
-         <property name="text">
-          <string> last interpolation </string>
+       <item>
+        <widget class="QGroupBox" name="gb_Interpolation">
+         <property name="title">
+          <string>Interpolation</string>
          </property>
+         <layout class="QHBoxLayout" name="hl_Interpolation">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="le_InjectElevation"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_InjectElevation">
+            <property name="text">
+             <string> inject elv. </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_RequestElevation">
+            <property name="text">
+             <string> req.elevation </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_GetLastInterpolation">
+            <property name="text">
+             <string> last interpolation </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -720,7 +765,8 @@
   <tabstop>le_UpdateTime</tabstop>
   <tabstop>hs_UpdateTime</tabstop>
   <tabstop>pb_ResetStats</tabstop>
-  <tabstop>pb_ShowInSimulator</tabstop>
+  <tabstop>pb_ShowLogInSimulator</tabstop>
+  <tabstop>pb_FollowInSimulator</tabstop>
   <tabstop>pb_StartStop</tabstop>
   <tabstop>tw_LogTabs</tabstop>
   <tabstop>le_CG</tabstop>
@@ -737,12 +783,16 @@
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
   <tabstop>tvp_AircraftSituations</tabstop>
-  <tabstop>tvp_AircraftParts</tabstop>
+  <tabstop>tvp_Changes</tabstop>
+  <tabstop>le_InjectElevation</tabstop>
+  <tabstop>pb_InjectElevation</tabstop>
+  <tabstop>pb_RequestElevation</tabstop>
+  <tabstop>pb_GetLastInterpolation</tabstop>
   <tabstop>te_LastInterpolatedSituation</tabstop>
-  <tabstop>te_SituationChange</tabstop>
   <tabstop>te_TextLog</tabstop>
   <tabstop>te_LastInterpolatedParts</tabstop>
-  <tabstop>pb_GetLastInterpolation</tabstop>
+  <tabstop>tvp_AircraftParts</tabstop>
+  <tabstop>te_SituationChange</tabstop>
  </tabstops>
  <resources/>
  <connections/>

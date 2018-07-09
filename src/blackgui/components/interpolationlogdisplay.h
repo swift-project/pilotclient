@@ -81,6 +81,9 @@ namespace BlackGui
             //! Display log in simulator
             void showLogInSimulator();
 
+            //! Follow aircraft in simulator
+            void followInSimulator();
+
             //! Start displaying
             bool start();
 
@@ -111,6 +114,9 @@ namespace BlackGui
             //! \copydoc BlackCore::CSimulatorCommon::requestedElevation
             void onElevationRequested(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Call the callback of requested elevations as it would come from the simulator
+            void onInjectElevation();
+
             //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
             void resetStatistics();
 
@@ -126,13 +132,19 @@ namespace BlackGui
             //! Display elevation requested/receive
             void displayElevationRequestReceive();
 
+            //! Do request elevation
+            void requestElevationClicked();
+
+            //! Do request elevation
+            void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;
             QPointer<BlackCore::CSimulatorCommon> m_simulatorCommon; //!< related simulator
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
-            int m_elvRequested = 0;
-            int m_elvReceived = 0;
+            int m_elvRequested = 0; //!< counted via signal
+            int m_elvReceived = 0;  //!< counted via signal
 
             static const QString &startText();
             static const QString &stopText();

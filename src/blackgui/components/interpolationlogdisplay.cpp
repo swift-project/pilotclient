@@ -18,6 +18,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackGui::Views;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -50,14 +51,20 @@ namespace BlackGui
             ui->led_Updating->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Just updating", "Idle", 14);
 
             m_callsign = ui->comp_CallsignCompleter->getCallsign();
+            ui->tvp_AircraftSituations->setWithMenuRequestElevation(true);
 
             connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
-            connect(ui->pb_ShowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
+            connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
+            connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
+            connect(ui->pb_RequestElevation, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
+            connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->tvp_AircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
+            connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
 
@@ -212,6 +219,13 @@ namespace BlackGui
             sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
         }
 
+        void CInterpolationLogDisplay::followInSimulator()
+        {
+            if (m_callsign.isEmpty()) { return; }
+            if (!m_simulatorCommon) { return; }
+            m_simulatorCommon->followAircraft(m_callsign);
+        }
+
         bool CInterpolationLogDisplay::start()
         {
             if (m_updateTimer.isActive()) { return false; }
@@ -297,6 +311,22 @@ namespace BlackGui
             ui->led_Elevation->blink();
         }
 
+        void CInterpolationLogDisplay::onInjectElevation()
+        {
+            if (!m_simulatorCommon) { return; }
+            const QString elv = ui->le_InjectElevation->text().trimmed();
+            if (elv.isEmpty()) { return; }
+
+            const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(m_callsign);
+            if (situations.isEmpty()) { return; }
+
+            CAltitude alt;
+            alt.parseFromString(elv);
+            const CElevationPlane ep(situations.latestAdjustedObject(), alt, CElevationPlane::singlePointRadius());
+
+            m_simulatorCommon->callbackReceivedRequestedElevation(ep, m_callsign);
+        }
+
         void CInterpolationLogDisplay::resetStatistics()
         {
             if (m_simulatorCommon) { m_simulatorCommon->resetAircraftStatistics(); }
@@ -369,9 +399,24 @@ namespace BlackGui
         void CInterpolationLogDisplay::displayElevationRequestReceive()
         {
             if (!m_airspaceMonitor) { return; }
-            static const QString info("%1/%2 hits %3");
+            static const QString info("%1/%2 hits %3 times: %4");
             const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
-            ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed));
+            const QString reqTimes = m_airspaceMonitor->getElevationRequestTimesInfo();
+            ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed, reqTimes));
+        }
+
+        void CInterpolationLogDisplay::requestElevationClicked()
+        {
+            if (m_callsign.isEmpty()) { return; }
+            const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(m_callsign);
+            if (situations.isEmpty()) { return; }
+            this->requestElevation(situations.latestAdjustedObject());
+        }
+
+        void CInterpolationLogDisplay::requestElevation(const CAircraftSituation &situation)
+        {
+            if (!m_simulatorCommon) { return; }
+            m_simulatorCommon->requestElevationBySituation(situation);
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()
