@@ -39,6 +39,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
@@ -1017,7 +1018,12 @@ namespace BlackCore
             m_vatsimStatusReader->start(QThread::LowPriority);
 
             // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
-            QTimer::singleShot(100, this, [this]() { m_vatsimStatusReader->readInBackgroundThread(); });
+            const QPointer<CWebDataServices> myself(this);
+            QTimer::singleShot(100, this, [ = ]()
+            {
+                if (!myself) { return; }
+                m_vatsimStatusReader->readInBackgroundThread();
+            });
         }
 
         // ---- "normal data", triggerRead will start read, not starting directly
@@ -1119,7 +1125,12 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
-            QTimer::singleShot(0, this, &CWebDataServices::initDbInfoObjectReaderAndTriggerRead);
+            const QPointer<CWebDataServices> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->initDbInfoObjectReaderAndTriggerRead();
+            });
             return;
         }
 
@@ -1142,7 +1153,12 @@ namespace BlackCore
         // and trigger read
         if (sApp->isInternetAccessible())
         {
-            QTimer::singleShot(0, m_dbInfoDataReader, [this]() { m_dbInfoDataReader->read(); });
+            const QPointer<CWebDataServices> myself(this);
+            QTimer::singleShot(0, m_dbInfoDataReader, [ = ]()
+            {
+                if (!myself) { return; }
+                m_dbInfoDataReader->read();
+            });
         }
         else
         {
@@ -1156,7 +1172,12 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
-            QTimer::singleShot(0, this, &CWebDataServices::initSharedInfoObjectReaderAndTriggerRead);
+            const QPointer<CWebDataServices> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->initSharedInfoObjectReaderAndTriggerRead();
+            });
             return;
         }
 
@@ -1179,10 +1200,10 @@ namespace BlackCore
         // and trigger read
         if (sApp->isInternetAccessible())
         {
-            const QPointer<CWebDataServices> guard(this);
+            const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(0, m_sharedInfoDataReader, [ = ]()
             {
-                if (guard.isNull()) { return; }
+                if (!myself) { return; }
                 m_sharedInfoDataReader->read();
             });
         }
@@ -1328,8 +1349,10 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
+        const QPointer<CWebDataServices> myself(this);
         QTimer::singleShot(delayMs, [ = ]()
         {
+            if (!myself) { return; }
             this->readInBackground(entities); // deferred
         });
     }
