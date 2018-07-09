@@ -84,12 +84,11 @@ namespace BlackMisc
         bool IInterpolationSetupProvider::setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
         {
             {
-                QReadLocker l(&m_lockSetup);
+                QWriteLocker l(&m_lockSetup);
                 if (m_globalSetup == setup) { return false; }
+                m_globalSetup = setup;
             }
-
-            QWriteLocker l(&m_lockSetup);
-            m_globalSetup = setup;
+            this->emitInterpolationSetupChanged();
             return true;
         }
 
@@ -105,9 +104,23 @@ namespace BlackMisc
                     return false;
                 }
             }
-            QWriteLocker l(&m_lockSetup);
-            m_setups[callsign] = setup;
+            {
+                QWriteLocker l(&m_lockSetup);
+                m_setups[callsign] = setup;
+            }
+            this->emitInterpolationSetupChanged();
             return true;
+        }
+
+        bool IInterpolationSetupProvider::removeInterpolationSetupPerCallsign(const CCallsign &callsign)
+        {
+            bool removed = false;
+            {
+                QWriteLocker l(&m_lockSetup);
+                removed = m_setups.remove(callsign) > 0;
+            }
+            if (removed) { this->emitInterpolationSetupChanged(); }
+            return removed;
         }
 
         void IInterpolationSetupProvider::setLogCallsign(bool log, const CCallsign &callsign)
@@ -134,9 +147,24 @@ namespace BlackMisc
                 if (setup.isEqualToGlobal(global)) { continue; }
                 setupsToKeep.insert(cs, setup);
             }
+            {
+                QWriteLocker l(&m_lockSetup);
+                m_setups = setupsToKeep;
+            }
+            this->emitInterpolationSetupChanged();
+        }
 
-            QWriteLocker l(&m_lockSetup);
-            m_setups = setupsToKeep;
+        int IInterpolationSetupProvider::clearInterpolationSetupsPerCallsign()
+        {
+            int r = 0;
+            {
+                QWriteLocker l(&m_lockSetup);
+                r = m_setups.size();
+                m_setups.clear();
+            }
+
+            if (r > 0) { this->emitInterpolationSetupChanged(); }
+            return r;
         }
 
         bool IInterpolationSetupProvider::logAnyCallsign() const

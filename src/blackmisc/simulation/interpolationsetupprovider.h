@@ -63,7 +63,7 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup);
 
-            //! Insert specialized setup
+            //! Insert specialized setup per callsign
             //! \threadsafe
             virtual bool setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const Aviation::CCallsign &callsign, bool removeGlobalSetup = true);
 
@@ -71,9 +71,16 @@ namespace BlackMisc
             //! \threadsafe
             void setLogCallsign(bool log, const Aviation::CCallsign &callsign);
 
+            //! Remove specialized setup per callsign
+            bool removeInterpolationSetupPerCallsign(const Aviation::CCallsign &callsign);
+
             //! Clear all interpolation log callsigns
             //! \threadsafe
             void clearInterpolationLogCallsigns();
+
+            //! Clear all setups
+            //! \threadsafe
+            int clearInterpolationSetupsPerCallsign();
 
             //! Log any callsign?
             //! \threadsafe
@@ -82,6 +89,9 @@ namespace BlackMisc
             //! The setups per callsign
             //! \threadsafe
             SetupsPerCallsign getSetupsPerCallsign() const;
+
+            //! Pseudo signal, override to emit signal
+            virtual void emitInterpolationSetupChanged() {}
 
         private:
             CInterpolationAndRenderingSetupGlobal m_globalSetup;
