@@ -14,6 +14,7 @@
 #include <QFlag>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -55,9 +56,8 @@ namespace BlackCore
     {
         if (this->isShuttingDown()) { return; }
 
-        // CLogMessage(this).info("'%1' Received req. elevation") << callsign.asString();
-        this->rememberGroundElevation(plane);
-        const int updated = this->updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
+        ISimulationEnvironmentProvider::rememberGroundElevation(callsign, plane); // in simulator
+        const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
         if (updated < 1) { return; }
         emit this->receivedRequestedElevation(plane, callsign);
     }
@@ -113,8 +113,8 @@ namespace BlackCore
         if (!elevation.isNull())
         {
             const int aircraftCount = this->getAircraftInRangeCount();
-            this->setRememberMaxElevations(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
-            this->rememberGroundElevation(elevation);
+            this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
+            this->rememberGroundElevation(callsign, elevation);
         }
         if (!cg.isNull() && !this->hasSameCG(cg, callsign)) { this->insertCG(cg, modelString, callsign); }
     }
@@ -135,28 +135,24 @@ namespace BlackCore
         }
     }
 
+    void ISimulator::emitInterpolationSetupChanged()
+    {
+        QPointer<ISimulator> myself(this);
+        QTimer::singleShot(0, this, [ = ]
+        {
+            if (!myself) { return; }
+            emit this->interpolationAndRenderingSetupChanged();
+        });
+    }
+
+
     bool ISimulator::setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
     {
         if (!IInterpolationSetupProvider::setInterpolationSetupGlobal(setup)) { return false; }
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
-        emit this->interpolationAndRenderingSetupChanged();
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
-        return true;
-    }
-
-    bool ISimulator::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
-    {
-        if (!IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(setups, ignoreSameAsGlobal)) { return false; }
-        emit this->interpolationAndRenderingSetupChanged();
-        return true;
-    }
-
-    bool ISimulator::setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const CCallsign &callsign, bool removeGlobalSetup)
-    {
-        if (!IInterpolationSetupProvider::setInterpolationSetupPerCallsign(setup, callsign, removeGlobalSetup)) { return false; }
-        emit this->interpolationAndRenderingSetupChanged();
         return true;
     }
 

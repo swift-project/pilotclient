@@ -14,10 +14,13 @@
 
 #include "simulatorplugininfo.h"
 #include "aircraftmodel.h"
-#include "blackmisc/provider.h"
-#include "blackmisc/pq/length.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/percallsign.h"
 #include "blackmisc/geo/coordinategeodeticlist.h"
 #include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/provider.h"
+
 #include <QHash>
 #include <QObject>
 #include <QPair>
@@ -47,13 +50,25 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign) = 0;
 
+            //! Request elevation, there is no guarantee the requested elevation will be available in the provider
+            //! \threadsafe
+            bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
             //! Elevations found/missed statistics
             //! \threadsafe
             QPair<int, int> getElevationsFoundMissed() const;
 
+            //! The elevation request times
+            //! \threadsafe
+            QPair<qint64, qint64> getElevationRequestTimes() const;
+
             //! Elevations found/missed statistics info as string
             //! \threadsafe
             QString getElevationsFoundMissedInfo() const;
+
+            //! Elevation request times
+            //! \threadsafe
+            QString getElevationRequestTimesInfo() const;
 
             //! Get the represented plugin
             //! \threadsafe
@@ -85,11 +100,15 @@ namespace BlackMisc
 
             //! Set number of elevations kept
             //! \threadsafe
-            int setRememberMaxElevations(int max);
+            int setMaxElevationsRemembered(int max);
 
             //! Get number of max. number of elevations
             //! \threadsafe
-            int getRememberMaxElevations() const;
+            int getMaxElevationsRemembered() const;
+
+            //! Reset statistics
+            //! \threadsafe
+            void resetSimulationEnvironmentStatistics();
 
         protected:
             //! Ctor
@@ -145,11 +164,11 @@ namespace BlackMisc
 
             //! Remember a given elevation
             //! \threadsafe
-            bool rememberGroundElevation(const Geo::ICoordinateGeodetic &elevationCoordinate, const PhysicalQuantities::CLength &epsilon = Geo::CElevationPlane::singlePointRadius()) ;
+            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, const Geo::ICoordinateGeodetic &elevationCoordinate, const PhysicalQuantities::CLength &epsilon = Geo::CElevationPlane::singlePointRadius());
 
             //! Remember a given elevation
             //! \threadsafe
-            bool rememberGroundElevation(const Geo::CElevationPlane &elevationPlane) ;
+            bool rememberGroundElevation(const Aviation::CCallsign &requestedForCallsign, const Geo::CElevationPlane &elevationPlane) ;
 
             //! Insert or replace a CG
             //! \remark passing a NULL value will remove the CG
@@ -180,12 +199,15 @@ namespace BlackMisc
             QString m_simulatorVersion;    //!< Simulator version
             CAircraftModel m_defaultModel; //!< default model
             int m_maxElevations = 100;     //!< How many elevations we keep
-            Geo::CCoordinateGeodeticList m_elvCoordinates;
-            QHash<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgsPerCallsign; //! CGs per callsign
-            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel; //!< CGs per model string
+            Geo::CCoordinateGeodeticList m_elvCoordinates; //!< elevation cache
+            Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests
+            Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
+            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
+            qint64 m_statsMaxElevRequestTimeMs = -1;
+            qint64 m_statsCurrentElevRequestTimeMs = -1;
             mutable int m_elvFound  = 0;   //!< statistics only
             mutable int m_elvMissed = 0;   //!< statistics only
-            mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
+            mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates, m_pendingElevationRequests
             mutable QReadWriteLock m_lockCG;      //!< lock CGs
             mutable QReadWriteLock m_lockModel;   //!< lock models
             mutable QReadWriteLock m_lockSimInfo; //!< lock plugin info
@@ -212,6 +234,12 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissedInfo
             QString getElevationsFoundMissedInfo() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getElevationRequestTimes
+            QPair<qint64, qint64> getElevationRequestTimes() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getElevationRequestTimesInfo
+            QString getElevationRequestTimesInfo() const;
 
             //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
             CSimulatorPluginInfo getSimulatorPluginInfo() const;

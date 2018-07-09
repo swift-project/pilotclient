@@ -198,6 +198,10 @@ namespace BlackCore
         //! \sa ISimulator::callbackReceivedRequestedElevation
         virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
+        //! A requested elevation has been received
+        //! \remark public for testing purposes
+        virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return QString(); }
 
@@ -223,9 +227,6 @@ namespace BlackCore
 
         //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
         virtual bool setInterpolationSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
-
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
-        virtual bool setInterpolationSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal = true) override;
 
         //! Register help
         static void registerHelp();
@@ -295,16 +296,13 @@ namespace BlackCore
         //! Set elevation and CG in the providers
         void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
 
-        //! A requested elevation has been received
-        virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupPerCallsign
-        virtual bool setInterpolationSetupPerCallsign(const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, const BlackMisc::Aviation::CCallsign &callsign, bool removeGlobalSetup) override;
-
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus(SimulatorStatus oldStatus = Unspecified);
+
+        //! Emit the signal
+        virtual void emitInterpolationSetupChanged() override;
     };
 
     //! Interface to a simulator listener.
