@@ -68,6 +68,7 @@ namespace BlackMisc
                 IndexGroundSpeed,
                 IndexGroundElevationPlane,
                 IndexGroundElevationInfo,
+                IndexGroundElevationInfoTransferred,
                 IndexGroundElevationInfoString,
                 IndexGroundElevationPlusInfo,
                 IndexCallsign,
@@ -116,14 +117,14 @@ namespace BlackMisc
             {
                 // best info (most accurate) last
                 NoElevationInfo,
-                Test,                 //!< unit test
-                SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
-                Extrapolated,         //!< extrapolated ("guessing")
-                Average,              //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
-                Interpolated,         //!< interpolated between 2 elevations
-                TransferredElevation, //!< transferred from nearby situation
-                FromCache,            //!< from cache
-                FromProvider          //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
+                Test,                //!< unit test
+                SituationChange,     //!< from BlackMisc::Aviation::CAircraftSituationChange
+                Extrapolated,        //!< extrapolated ("guessing")
+                FromOtherSituations, //!< transferred from other situations ("sibling situations" same callsign)
+                Average,             //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
+                Interpolated,        //!< interpolated between 2 elevations
+                FromCache,           //!< from cache
+                FromProvider         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
             };
 
             //! Default constructor.
@@ -174,7 +175,7 @@ namespace BlackMisc
             virtual bool isNull() const override;
 
             //! Is better info (more accurate)?
-            bool isBetterInfo(GndElevationInfo info) const;
+            bool isBetterInfo(GndElevationInfo info, bool transferred) const;
 
             //! Equal pitch, bank heading
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
@@ -183,6 +184,10 @@ namespace BlackMisc
             //! Equal PBH and vector
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
             bool equalPbhAndVector(const CAircraftSituation &other) const;
+
+            //! Equal PBH and vector
+            //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
+            bool equalPbhVectorAltitude(const CAircraftSituation &other) const;
 
             //! Set to null
             void setNull();
@@ -245,7 +250,7 @@ namespace BlackMisc
             bool hasGroundDetailsForGndInterpolation() const;
 
             //! On ground reliability as string
-            const QString &getOnDetailsAsString() const;
+            const QString getOnGroundDetailsAsString() const;
 
             //! On ground details
             bool setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
@@ -278,22 +283,28 @@ namespace BlackMisc
             GndElevationInfo getGroundElevationInfo() const;
 
             //! How did we get gnd.elevation?
-            const QString &getGroundElevationInfoAsString() const { return gndElevationInfoToString(this->getGroundElevationInfo()); }
+            QString getGroundElevationInfoAsString() const;
 
             //! Ground elevation plus info
             QString getGroundElevationAndInfo() const;
+
+            //! Is the elv.info transferred?
+            bool isGroundElevationInfoTransferred() const { return m_isElvInfoTransferred; }
 
             //! How we did get gnd.elevation
             void setGroundElevationInfo(GndElevationInfo details) { m_elvInfo = static_cast<int>(details); }
 
             //! Can the elevation be transferred to another situation?
-            bool canTransferGroundElevation(const CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+            bool canTransferGroundElevation(const CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
 
             //! Transfer from "this" situation to \c otherSituation
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::interpolateGroundElevation
             //! \sa CAircraftSituation::interpolateElevation
-            bool transferGroundElevation(CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+            bool transferGroundElevationFromThis(CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+
+            //! Transfer ground elevation from given situation
+            void transferGroundElevation(const CAircraftSituation &fromSituation);
 
             //! Preset "this" elevation from the two adjacent positions
             //! \remark it is not required that the position of "this" is already known
@@ -327,14 +338,14 @@ namespace BlackMisc
             bool hasInboundGroundDetails() const;
 
             //! Elevation of the ground directly beneath at the given situation
-            void setGroundElevation(const Aviation::CAltitude &altitude, GndElevationInfo info);
+            void setGroundElevation(const Aviation::CAltitude &altitude, GndElevationInfo info, bool transferred = false);
 
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info);
+            void setGroundElevation(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
 
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
-            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info);
+            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
 
             //! Reset ground elevation
             void resetGroundElevation();
@@ -410,13 +421,13 @@ namespace BlackMisc
             bool canLikelySkipNearGroundInterpolation() const;
 
             //! Distance per time
-            PhysicalQuantities::CLength getDistancePerTime(const PhysicalQuantities::CTime &time) const;
+            PhysicalQuantities::CLength getDistancePerTime(const PhysicalQuantities::CTime &time, const PhysicalQuantities::CLength &min = PhysicalQuantities::CLength::null()) const;
 
             //! Distance per milliseconds
-            PhysicalQuantities::CLength getDistancePerTime(int milliseconds) const;
+            PhysicalQuantities::CLength getDistancePerTime(int milliseconds, const PhysicalQuantities::CLength &min = PhysicalQuantities::CLength::null()) const;
 
             //! Distance per milliseconds (250ms)
-            PhysicalQuantities::CLength getDistancePerTime250ms() const;
+            PhysicalQuantities::CLength getDistancePerTime250ms(const PhysicalQuantities::CLength &min = PhysicalQuantities::CLength::null()) const;
 
             //! Corresponding callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
@@ -522,14 +533,15 @@ namespace BlackMisc
         private:
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default
+            Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
             Aviation::CAltitude m_pressureAltitude { 0, nullptr };
             CHeading m_heading { 0, nullptr };
             PhysicalQuantities::CAngle m_pitch { 0, nullptr };
             PhysicalQuantities::CAngle m_bank  { 0, nullptr };
             PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
             PhysicalQuantities::CLength m_cg { 0, nullptr };
-            Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
-            bool m_isInterim = false;
+            bool m_isInterim = false; //!< interim situation?
+            bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
@@ -556,6 +568,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),
                 BLACK_METAMEMBER(elvInfo),
+                BLACK_METAMEMBER(isElvInfoTransferred),
                 BLACK_METAMEMBER(onGroundFactor),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),

@@ -347,6 +347,26 @@ namespace BlackMisc
             return found;
         }
 
+        CElevationPlane CAircraftSituationList::findCLosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        {
+            CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
+            CElevationPlane ep = CElevationPlane::null();
+
+            CLength bestDistance = CLength::null();
+            for (const CAircraftSituation &s : *this)
+            {
+                if (!s.hasGroundElevation()) { continue; }
+                const CLength distance = s.calculateGreatCircleDistance(coordinate);
+                if (distance > r) { continue; }
+                if (bestDistance.isNull() || bestDistance > distance)
+                {
+                    ep = s.getGroundElevationPlane();
+                    bestDistance = distance;
+                }
+            }
+            return ep;
+        }
+
         int CAircraftSituationList::setOnGround(CAircraftSituation::IsOnGround og)
         {
             int c = 0;
@@ -530,7 +550,7 @@ namespace BlackMisc
             {
                 const CAircraftSituation &oldSituation = (*this)[i];
                 CAircraftSituation &newSituation = (*this)[i - 1];
-                if (oldSituation.transferGroundElevation(newSituation, radius)) { c++; }
+                if (oldSituation.transferGroundElevationFromThis(newSituation, radius)) { c++; }
             }
             return c;
         }
