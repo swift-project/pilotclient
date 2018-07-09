@@ -500,8 +500,13 @@ namespace BlackMisc
         template <class MU, class PQ>
         int CPhysicalQuantity<MU, PQ>::compareImpl(const PQ &a, const PQ &b)
         {
-            if (a.isNull() > b.isNull()) { return -1; }
-            if (a.isNull() < b.isNull()) { return 1; }
+            // fetch "null" as we do not know how expensive it is
+            const bool aIsNull = a.isNull();
+            const bool bIsNull = b.isNull();
+
+            if (aIsNull && bIsNull) { return 0; }
+            if (aIsNull > bIsNull)  { return -1; }
+            if (aIsNull < bIsNull)  { return 1; }
 
             if (a < b) { return -1; }
             else if (a > b) { return 1; }

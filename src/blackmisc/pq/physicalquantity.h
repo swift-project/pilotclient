@@ -228,6 +228,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const PQ &pq) const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -237,14 +240,17 @@ namespace BlackMisc
             //! Parse value from string
             void parseFromString(const QString &value);
 
-            //! Compare
-            int comparePropertyByIndex(const CPropertyIndex &index, const PQ &pq) const;
+            //! Compare with other PQ
+            int compare(const PQ &other) const { return compareImpl(*this->derived(), other); }
 
             //! Maximum of 2 quantities
             static const PQ &maxValue(const PQ &pq1, const PQ &pq2);
 
             //! Minimum of 2 quantities
             static const PQ &minValue(const PQ &pq1, const PQ &pq2);
+
+            //! Implementation of compare
+            static int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
 
             //! NULL PQ
             static const PQ &null();
