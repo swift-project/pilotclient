@@ -728,11 +728,25 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>tw_Network</tabstop>
+  <tabstop>comp_VatsimServers</tabstop>
+  <tabstop>pb_OverrideCredentialsVatsim</tabstop>
+  <tabstop>le_SimulatorModel</tabstop>
+  <tabstop>tb_SimulatorIcaoReverseLookup</tabstop>
+  <tabstop>tb_MappingWizard</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
   <tabstop>selector_AirlineIcao</tabstop>
+  <tabstop>le_LoginAsAircaft</tabstop>
+  <tabstop>le_HomeBase</tabstop>
+  <tabstop>le_LoginSince</tabstop>
+  <tabstop>tb_Timeout</tabstop>
+  <tabstop>pb_Ok</tabstop>
+  <tabstop>pb_Cancel</tabstop>
   <tabstop>comp_OtherServers</tabstop>
+  <tabstop>pb_OtherServersGotoSettings</tabstop>
+  <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

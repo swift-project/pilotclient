@@ -442,13 +442,15 @@ namespace BlackGui
             if (simulating)
             {
                 model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
-                ui->le_SimulatorModel->setText(model.getModelStringAndDbKey());
+                const QString modelAndKey(model.getModelStringAndDbKey());
+                ui->le_SimulatorModel->setText(modelAndKey);
+                ui->le_SimulatorModel->home(false);
                 this->highlightModelField(model);
             }
             else
             {
                 model = this->getPrefillModel();
-                ui->le_SimulatorModel->setText("");
+                ui->le_SimulatorModel->clear();
                 this->highlightModelField();
             }
             ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
