@@ -57,11 +57,17 @@ namespace BlackMisc
             //! Radius
             const PhysicalQuantities::CLength &getRadius() const { return m_radius; }
 
+            //! Radius or minimum radius
+            const PhysicalQuantities::CLength &getRadiusOrMinimumRadius() const;
+
             //! Radius
             void setRadius(const PhysicalQuantities::CLength &radius) { m_radius = radius; }
 
             //! Radius or minimum CElevationPlane::singlePointRadius
-            void setRadiusOrMinimum(const PhysicalQuantities::CLength &radius);
+            void setRadiusOrMinimumRadius(const PhysicalQuantities::CLength &radius);
+
+            //! Set minimum radius if not having radius
+            void fixRadius();
 
             //! Add offset to altitude
             void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
@@ -106,7 +112,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString

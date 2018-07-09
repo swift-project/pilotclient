@@ -21,17 +21,21 @@ namespace BlackMisc
     {
         QString CElevationPlane::convertToQString(bool i18n) const
         {
-            static const QString s = "Geodetic: {%1, %2, %3} radius: %4";
-            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n),
-                         this->longitude().valueRoundedWithUnit(6, i18n),
-                         this->geodeticHeight().valueRoundedWithUnit(6, i18n),
+            static const QString s = "Geodetic: {%1/%2, %3/%4, %5} radius: %6";
+            const CLatitude lat = this->latitude();
+            const CLongitude lng = this->longitude();
+            return s.arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                         lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                         lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                         lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                         this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 6, i18n),
                          m_radius.valueRoundedWithUnit(2, i18n));
         }
 
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :
             CCoordinateGeodetic(coordinate)
         {
-            this->setRadiusOrMinimum(this->calculateGreatCircleDistance(rangeCoordinate));
+            this->setRadiusOrMinimumRadius(this->calculateGreatCircleDistance(rangeCoordinate));
         }
 
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) :
@@ -62,9 +66,23 @@ namespace BlackMisc
             Q_ASSERT_X(altitude.isMeanSeaLevel(), Q_FUNC_INFO, "Need MSL");
         }
 
-        void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
+        const CLength &CElevationPlane::getRadiusOrMinimumRadius() const
+        {
+            if (m_radius.isNull() || m_radius < CElevationPlane::singlePointRadius()) { return CElevationPlane::singlePointRadius(); }
+            return m_radius;
+        }
+
+        void CElevationPlane::setRadiusOrMinimumRadius(const CLength &radius)
         {
             m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;
+        }
+
+        void CElevationPlane::fixRadius()
+        {
+            if (m_radius.isNull() || m_radius < CElevationPlane::singlePointRadius())
+            {
+                m_radius = CElevationPlane::singlePointRadius();
+            }
         }
 
         void CElevationPlane::addAltitudeOffset(const CLength &offset)
@@ -157,7 +175,8 @@ namespace BlackMisc
 
         int CElevationPlane::comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const
         {
-            return this->getAltitude().comparePropertyByIndex(index, elevationPlane.getAltitude());
+            Q_UNUSED(index);
+            return this->getAltitude().compare(elevationPlane.getAltitude());
         }
 
         // 100km/h 27,8m/s
