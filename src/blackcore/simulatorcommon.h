@@ -203,6 +203,9 @@ namespace BlackCore
         //! Restore aircraft from the provider data
         void resetAircraftFromProvider(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Clear the related data as statistics etc.
+        virtual void clearData(const BlackMisc::Aviation::CCallsign &callsign);
+
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
 
@@ -313,7 +316,7 @@ namespace BlackCore
 
         // call with counters updated
         void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
-        void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
+        void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign, bool blinking = false);
 
         //! Display a logged situation in simulator
         void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 40);

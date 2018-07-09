@@ -147,7 +147,7 @@ namespace BlackCore
         // blink mode, toggle aircraft
         for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
         {
-            if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign()); }
+            if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign(), true); }
             else { this->callPhysicallyAddRemoteAircraft(aircraft);  }
         }
     }
@@ -168,6 +168,17 @@ namespace BlackCore
         {
             this->callPhysicallyRemoveRemoteAircraft(callsign);
         }
+    }
+
+    void CSimulatorCommon::clearData(const CCallsign &callsign)
+    {
+        m_highlightedAircraft.removeByCallsign(callsign);
+        m_statsPhysicallyRemovedAircraft++;
+        m_clampedLogMsg.clear();
+        m_lastSentParts.remove(callsign);
+        m_lastSentSituations.remove(callsign);
+        m_clampedLogMsg.remove(callsign);
+        this->removeInterpolationSetupPerCallsign(callsign);
     }
 
     void CSimulatorCommon::reloadWeatherSettings()
@@ -649,6 +660,7 @@ namespace BlackCore
         m_statsLastUpdateAircraftRequestedMs = 0;
         m_statsUpdateAircraftRequestedDeltaMs = 0;
         m_statsUpdateAircraftLimited = 0;
+        ISimulationEnvironmentProvider::resetSimulationEnvironmentStatistics();
     }
 
     CStatusMessageList CSimulatorCommon::debugVerifyStateAfterAllAircraftRemoved() const
@@ -719,7 +731,7 @@ namespace BlackCore
         Q_ASSERT_X(compare.hasCallsign(), Q_FUNC_INFO, "Need callsign");
         if (!m_lastSentSituations.contains(compare.getCallsign())) { return false; }
         if (compare.isNull()) { return false; }
-        return compare.equalPbhAndVector(m_lastSentSituations.value(compare.getCallsign()));
+        return compare.equalPbhVectorAltitude(m_lastSentSituations.value(compare.getCallsign()));
     }
 
     bool CSimulatorCommon::isEqualLastSent(const CAircraftParts &compare, const CCallsign &callsign) const
@@ -838,6 +850,7 @@ namespace BlackCore
         m_lastSentSituations.clear();
         m_updateRemoteAircraftInProgress = false;
 
+        this->clearInterpolationSetupsPerCallsign();
         this->resetHighlighting();
         this->resetAircraftStatistics();
     }
@@ -875,13 +888,9 @@ namespace BlackCore
         this->physicallyAddRemoteAircraft(remoteAircraft);
     }
 
-    void CSimulatorCommon::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign)
+    void CSimulatorCommon::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign, bool blinking)
     {
-        m_statsPhysicallyRemovedAircraft++;
-        m_clampedLogMsg.clear();
-        m_lastSentParts.remove(remoteCallsign);
-        m_lastSentSituations.remove(remoteCallsign);
-        m_clampedLogMsg.remove(remoteCallsign);
+        if (!blinking) { this->clearData(remoteCallsign); }
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
 
