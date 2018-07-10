@@ -337,6 +337,18 @@ namespace BlackCore
         return limInfo.arg(m_statsUpdateAircraftLimited).arg(m_limitUpdateAircraftBucket.getTokensPerSecond());
     }
 
+    void CSimulatorCommon::resetLastSentValues()
+    {
+        m_lastSentParts.clear();
+        m_lastSentSituations.clear();
+    }
+
+    void CSimulatorCommon::resetLastSentValues(const CCallsign &callsign)
+    {
+        m_lastSentParts.remove(callsign);
+        m_lastSentSituations.remove(callsign);
+    }
+
     void CSimulatorCommon::onSwiftDbAllDataRead()
     {
         // void, can be overridden in specialized drivers

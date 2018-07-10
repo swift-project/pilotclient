@@ -130,7 +130,7 @@
       </item>
       <item>
        <widget class="QFrame" name="fr_LogStatus">
-        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,0,1">
+        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,0,0,1">
          <property name="leftMargin">
           <number>3</number>
          </property>
@@ -180,6 +180,13 @@
           <widget class="QPushButton" name="pb_ResetStats">
            <property name="text">
             <string>reset stats.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_ResetLastSent">
+           <property name="text">
+            <string> reset last sent </string>
            </property>
           </widget>
          </item>
@@ -765,6 +772,7 @@
   <tabstop>le_UpdateTime</tabstop>
   <tabstop>hs_UpdateTime</tabstop>
   <tabstop>pb_ResetStats</tabstop>
+  <tabstop>pb_ResetLastSent</tabstop>
   <tabstop>pb_ShowLogInSimulator</tabstop>
   <tabstop>pb_FollowInSimulator</tabstop>
   <tabstop>pb_StartStop</tabstop>

@@ -57,6 +57,7 @@ namespace BlackGui
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
+            connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
             connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
             connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
             connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
@@ -330,6 +331,11 @@ namespace BlackGui
         void CInterpolationLogDisplay::resetStatistics()
         {
             if (m_simulatorCommon) { m_simulatorCommon->resetAircraftStatistics(); }
+        }
+
+        void CInterpolationLogDisplay::resetLastSentValues()
+        {
+            if (m_simulatorCommon) { m_simulatorCommon->resetLastSentValues(); }
         }
 
         void CInterpolationLogDisplay::clear()

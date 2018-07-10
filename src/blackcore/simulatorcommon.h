@@ -152,6 +152,12 @@ namespace BlackCore
         //! Info about update aircraft limitations
         QString updateAircraftLimitationInfo() const;
 
+        //! Reset the last sent values
+        void resetLastSentValues();
+
+        //! Reset the last sent values per callsign
+        void resetLastSentValues(const BlackMisc::Aviation::CCallsign &callsign);
+
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,

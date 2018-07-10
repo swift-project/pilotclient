@@ -120,6 +120,9 @@ namespace BlackGui
             //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
             void resetStatistics();
 
+            //! \copydoc BlackCore::CSimulatorCommon::resetLastSentValues
+            void resetLastSentValues();
+
             //! Clear
             void clear();
 
