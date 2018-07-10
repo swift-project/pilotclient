@@ -67,9 +67,9 @@ namespace BlackMisc
              */
             enum ReferenceDatum
             {
-                MeanSeaLevel = 0,   //!< MSL
-                AboveGround,        //!< AGL
-                FlightLevel         //!< Flight level
+                MeanSeaLevel = 0, //!< MSL
+                AboveGround,      //!< AGL
+                FlightLevel       //!< Flight level
             };
 
             //! Altitude type
@@ -184,6 +184,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
+
+            //! \copydoc PhysicalQuantities::CPhysicalQuantity::compare
+            int compare(const CAltitude &otherAltitude) const;
 
             //! Null altitude (MSL)
             static const CAltitude &null();

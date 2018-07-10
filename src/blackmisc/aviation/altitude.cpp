@@ -8,11 +8,12 @@
  */
 
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/pqstring.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
 
 #include <Qt>
 #include <QtGlobal>
@@ -335,6 +336,15 @@ namespace BlackMisc
         CIcon CAltitude::toIcon() const
         {
             return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
+        }
+
+        int CAltitude::compare(const CAltitude &otherAltitude) const
+        {
+            if (this->getReferenceDatum() != otherAltitude.getReferenceDatum())
+            {
+                return Compare::compare(static_cast<int>(this->getReferenceDatum()), static_cast<int>(otherAltitude.getReferenceDatum()));
+            }
+            return CLength::compare(*this, otherAltitude);
         }
 
         const CAltitude &CAltitude::null()
