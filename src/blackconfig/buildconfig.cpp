@@ -140,6 +140,7 @@ namespace BlackConfig
     {
         bool isLocalDeveloperBuildImpl()
         {
+            if (!CBuildConfig::isDebugBuild()) { return false; }
             const QString p = QCoreApplication::applicationDirPath().toLower();
 
             // guessing, feel free to add path checks
@@ -151,7 +152,6 @@ namespace BlackConfig
 
     bool CBuildConfig::isLocalDeveloperDebugBuild()
     {
-        if (!CBuildConfig::isDebugBuild()) { return false; }
         static const bool devBuild = Private::isLocalDeveloperBuildImpl();
         return devBuild;
     }

@@ -154,6 +154,6 @@ namespace BlackConfig
         //! Patch version
         static int versionMicro(); // defined in buildconfig_gen.cpp.in
     };
-}
+} // ns
 
 #endif // guard

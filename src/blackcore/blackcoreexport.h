@@ -29,4 +29,4 @@
 #  define BLACKCORE_EXPORT
 #endif
 
-#endif // BLACKCORE_MACROS_H
+#endif // guard
