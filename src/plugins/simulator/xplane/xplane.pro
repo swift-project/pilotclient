@@ -6,7 +6,7 @@ TARGET = simulatorxplane
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blackgui
+CONFIG += blackmisc blackcore blackgui blackconfig
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

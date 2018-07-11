@@ -40,6 +40,19 @@ namespace BlackSimPlugin
             //! Is empty?
             bool isEmpty() const { return callsigns.isEmpty(); }
 
+            //! Check function
+            bool hasSameSizes() const
+            {
+                const int s = callsigns.size();
+                if (s != latitudes.size())  { return false; }
+                if (s != longitudes.size()) { return false; }
+                if (s != altitudes.size())  { return false; }
+                if (s != pitches.size())    { return false; }
+                if (s != rolls.size())      { return false; }
+                if (s != headings.size())   { return false; }
+                return true;
+            }
+
             QStringList callsigns;      //!< List of callsigns
             QList<double> latitudes;    //!< List of latitudes
             QList<double> longitudes;   //!< List of longitudes

@@ -52,6 +52,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -60,6 +61,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -558,7 +560,11 @@ namespace BlackSimPlugin
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
             // really remove from simulator
-            if (!m_xplaneAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign)) { return false; } // already fully removed or not yet added
+            if (!m_xplaneAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign) && !m_addingInProgressAircraft.contains(callsign))
+            {
+                // not existing aircraft
+                return false;
+            }
 
             // mark in provider
             const bool updated = this->updateAircraftRendered(callsign, false);
@@ -576,6 +582,17 @@ namespace BlackSimPlugin
                     CSimulatedAircraft aircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
+                }
+                else if (m_addingInProgressAircraft.contains(callsign))
+                {
+                    // we are just about to add that aircraft
+                    QPointer<CSimulatorXPlane> myself(this);
+                    QTimer::singleShot(TimeoutAdding, this, [ = ]
+                    {
+                        if (!myself) { return; }
+                        m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
+                        this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
+                    });
                 }
             }
 
@@ -777,6 +794,10 @@ namespace BlackSimPlugin
 
             if (!planesPositions.isEmpty())
             {
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    Q_ASSERT_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
+                }
                 m_trafficProxy->setPlanesPositions(planesPositions);
             }
 
