@@ -241,7 +241,7 @@
    <item>
     <widget class="QTabWidget" name="tw_LogTabs">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_DataFlow">
       <attribute name="title">
@@ -404,6 +404,9 @@
           </item>
           <item row="0" column="8">
            <widget class="QLabel" name="lbl_SceneryOffsetCG">
+            <property name="toolTip">
+             <string>Scenery offset-CG</string>
+            </property>
             <property name="text">
              <string>Off-CG:</string>
             </property>
@@ -445,8 +448,11 @@
           </item>
           <item row="0" column="6">
            <widget class="QLabel" name="lbl_Offset">
+            <property name="toolTip">
+             <string>Scenery offset</string>
+            </property>
             <property name="text">
-             <string>Offset:</string>
+             <string>Off.:</string>
             </property>
            </widget>
           </item>

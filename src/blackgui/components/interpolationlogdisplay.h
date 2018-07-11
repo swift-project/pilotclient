@@ -14,7 +14,7 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/simulatorcommon.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/identifiable.h"
 #include <QFrame>
@@ -54,7 +54,7 @@ namespace BlackGui
             virtual ~CInterpolationLogDisplay();
 
             //! Set simulator
-            void setSimulator(BlackCore::CSimulatorCommon *simulatorCommon);
+            void setSimulator(BlackCore::ISimulator *simulator);
 
             //! Set corresponding airspace monitor
             void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
@@ -105,22 +105,22 @@ namespace BlackGui
             //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
             void onPartsAdded(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
-            //! \copydoc BlackCore::CSimulatorCommon::simulatorStatusChanged
+            //! \copydoc BlackCore::ISimulator::simulatorStatusChanged
             void onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
 
-            //! \copydoc BlackCore::CSimulatorCommon::receivedRequestedElevation
+            //! \copydoc BlackCore::ISimulator::receivedRequestedElevation
             void onElevationReceived(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! \copydoc BlackCore::CSimulatorCommon::requestedElevation
+            //! \copydoc BlackCore::ISimulator::requestedElevation
             void onElevationRequested(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Call the callback of requested elevations as it would come from the simulator
             void onInjectElevation();
 
-            //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
+            //! \copydoc BlackCore::ISimulator::resetAircraftStatistics
             void resetStatistics();
 
-            //! \copydoc BlackCore::CSimulatorCommon::resetLastSentValues
+            //! \copydoc BlackCore::ISimulator::resetLastSentValues
             void resetLastSentValues();
 
             //! Clear
@@ -143,7 +143,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;
-            QPointer<BlackCore::CSimulatorCommon> m_simulatorCommon; //!< related simulator
+            QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
             int m_elvRequested = 0; //!< counted via signal

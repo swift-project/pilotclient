@@ -18,7 +18,7 @@
 
 namespace BlackCore
 {
-    class CSimulatorCommon;
+    class ISimulator;
     class CAirspaceMonitor;
 }
 namespace Ui { class CInterpolationLogDisplayDialog; }
@@ -36,14 +36,14 @@ namespace BlackGui
         public:
             //! Constructor
             explicit CInterpolationLogDisplayDialog(
-                BlackCore::CSimulatorCommon *simulatorCommon, BlackCore::CAirspaceMonitor *airspaceMonitor,
+                BlackCore::ISimulator *simulator, BlackCore::CAirspaceMonitor *airspaceMonitor,
                 QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CInterpolationLogDisplayDialog();
 
             //! Set simulator
-            void setSimulator(BlackCore::CSimulatorCommon *simulatorCommon);
+            void setSimulator(BlackCore::ISimulator *simulator);
 
             //! Set airspace monitor
             void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
