@@ -420,7 +420,7 @@ namespace BlackMisc
             Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
             Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situation on ground with elevation from provider
             Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
             Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
             int m_partsAdded = 0;      //!< total number of parts added, thread safe access required

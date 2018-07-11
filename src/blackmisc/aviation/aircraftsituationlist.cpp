@@ -56,6 +56,7 @@ namespace BlackMisc
             if (elevationPlane.isNull()) { return 0; }
             if (this->isEmpty()) { return 0; }
 
+            // the change has the timestamps of the latest situation
             Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
             const CAircraftSituationChange simpleChange(*this, model.getCG(), model.isVtol(), true, false);
             int c = 0; // changed elevations

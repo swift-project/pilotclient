@@ -416,8 +416,9 @@ namespace BlackMisc
 
         void CRemoteAircraftProvider::storeChange(const CAircraftSituationChange &change)
         {
-            QWriteLocker lock(&m_lockChanges);
+            // a change with the same timestamp will be replaced
             const CCallsign cs(change.getCallsign());
+            QWriteLocker lock(&m_lockChanges);
             CAircraftSituationChangeList &changeList = m_changesByCallsign[cs];
             changeList.push_frontKeepLatestAdjustedFirst(change, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
         }

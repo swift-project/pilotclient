@@ -70,6 +70,7 @@ namespace BlackMisc
             CAircraftSituationChange();
 
             //! Ctor with n situations
+            //! \remark the timestamps of the latest situation will be used
             CAircraftSituationChange(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst = false, bool calcStdDeviations = false);
 
             //! Get callsign

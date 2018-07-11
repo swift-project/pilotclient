@@ -82,6 +82,7 @@ namespace BlackMisc
             const CAircraftSituationChangeList changes = this->remoteAircraftSituationChanges(m_callsign);
             m_pastSituationsChange = (changes.size() > 1) ? changes[1] : CAircraftSituationChange::null();
 
+            // fixing offset
             if (setup.isFixingSceneryOffset() && m_pastSituationsChange.hasSceneryDeviation() && m_model.hasCG())
             {
                 const CLength os = m_pastSituationsChange.getGuessedSceneryDeviationCG();
