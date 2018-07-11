@@ -13,6 +13,7 @@
 #define BLACKMISC_GEO_ELEVATIONPLANE_H
 
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
@@ -21,9 +22,16 @@ namespace BlackMisc
     {
         //! Plane of same elevation, can be a single point or larger area (e.g. airport)
         //! \remark 100km/h 1sec => 28m
-        class BLACKMISC_EXPORT CElevationPlane : public CCoordinateGeodetic
+        class BLACKMISC_EXPORT CElevationPlane :
+            public CCoordinateGeodetic,
+            public Mixin::String<CElevationPlane>
         {
         public:
+            //! Base type
+            using base_type = CCoordinateGeodetic;
+
+            BLACKMISC_DECLARE_USING_MIXIN_STRING(CElevationPlane)
+
             //! Properties by index
             enum ColumnIndex
             {
