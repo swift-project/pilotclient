@@ -311,7 +311,7 @@ namespace BlackMisc
                 do
                 {
                     if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround); break; }
-                    if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, WasOnGround); break; }
+                    if (this->wasConstNotOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, WasOnGround); break; }
                     if (!m_altStdDev.isNull() && m_altStdDev <= maxDeviation)
                     {
                         // small alt.deviation too!
