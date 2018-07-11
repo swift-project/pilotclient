@@ -21,15 +21,9 @@ namespace BlackMisc
     {
         QString CElevationPlane::convertToQString(bool i18n) const
         {
-            static const QString s = "Geodetic: {%1/%2, %3/%4, %5} radius: %6";
-            const CLatitude lat = this->latitude();
-            const CLongitude lng = this->longitude();
-            return s.arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                         lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                         lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                         lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                         this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 6, i18n),
-                         m_radius.valueRoundedWithUnit(2, i18n));
+            static const QString s = "%1 radius: %2";
+            const QString coordinate = CCoordinateGeodetic::toQString(i18n);
+            return s.arg(coordinate, m_radius.valueRoundedWithUnit(2, i18n));
         }
 
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :

@@ -148,13 +148,11 @@ namespace BlackMisc
             static const QString interpolated("interpolated");
             static const QString extrapolated("extrapolated");
             static const QString avg("average");
-            static const QString otherSituations("other situations");
 
             switch (details)
             {
             case NoElevationInfo: return noDetails;
             case FromProvider: return provider;
-            case FromOtherSituations: return otherSituations;
             case SituationChange: return change;
             case FromCache: return cache;
             case Test: return test;
@@ -394,13 +392,16 @@ namespace BlackMisc
             return this->isPositionNull();
         }
 
-        bool CAircraftSituation::isBetterInfo(CAircraftSituation::GndElevationInfo info, bool transferred) const
+        bool CAircraftSituation::isThisElevationInfoBetter(CAircraftSituation::GndElevationInfo info, bool transferred) const
         {
-            if (!transferred && info == FromProvider) { return true; } // always override with latest value from provider
             if (info == NoElevationInfo || info == Test) { return false; }
             const int i = static_cast<int>(info);
-            if (i > m_onGroundDetails)  { return true; }
-            if (i == m_onGroundDetails) { return !transferred; } // transferred elevations are not better
+            if (i > m_elvInfo)  { return true; }
+            if (i == m_elvInfo)
+            {
+                if (m_isElvInfoTransferred == transferred) { return false; } // not better (equal)
+                return !transferred; // if not transferred it is better
+            }
             return false;
         }
 
@@ -678,7 +679,7 @@ namespace BlackMisc
         QString CAircraftSituation::getGroundElevationInfoAsString() const
         {
             return m_isElvInfoTransferred ?
-                   gndElevationInfoToString(this->getGroundElevationInfo()) % QStringLiteral(" - tx") :
+                   QStringLiteral("tx: ") % gndElevationInfoToString(this->getGroundElevationInfo()) :
                    gndElevationInfoToString(this->getGroundElevationInfo());
         }
 
@@ -810,7 +811,7 @@ namespace BlackMisc
             if (elevationPlane.isNull()) { return false; }
             const CLength distance =  this->calculateGreatCircleDistance(elevationPlane);
             if (distance > elevationPlane.getRadiusOrMinimumRadius()) { return false; }
-            if (m_groundElevationPlane.isNull() || this->isBetterInfo(info, transferred))
+            if (m_groundElevationPlane.isNull() || this->isThisElevationInfoBetter(info, transferred))
             {
                 // better values
                 this->setGroundElevation(elevationPlane, info, transferred);

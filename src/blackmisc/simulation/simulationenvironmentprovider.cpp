@@ -362,6 +362,11 @@ namespace BlackMisc
             return this->provider()->requestElevation(reference, callsign);
         }
 
+        bool CSimulationEnvironmentAware::requestElevation(const CAircraftSituation &situation)
+        {
+            return this->requestElevation(situation, situation.getCallsign());
+        }
+
         QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const
         {
             if (!this->hasProvider()) { return QPair<int, int>(0, 0); }

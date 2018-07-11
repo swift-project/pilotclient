@@ -136,7 +136,7 @@ namespace BlackMisc
             CAircraftSituationList findOnGroundWithElevation(CAircraftSituation::IsOnGround og) const;
 
             //! CLosest elevation within given range
-            Geo::CElevationPlane findCLosestElevationWithinRange(const Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range = Geo::CElevationPlane::singlePointRadius()) const;
+            CAircraftSituation findCLosestElevationWithinRange(const Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range = Geo::CElevationPlane::singlePointRadius()) const;
 
             //! Set on ground
             int setOnGround(CAircraftSituation::IsOnGround og);

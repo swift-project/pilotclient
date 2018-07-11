@@ -222,12 +222,12 @@ namespace BlackMisc
             return c;
         }
 
-        void CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
+        CAircraftSituation CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
         {
             const CCallsign cs = situation.getCallsign();
-            if (cs.isEmpty()) { return; }
+            if (cs.isEmpty()) { return situation; }
 
-            // verify
+            // testing
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
@@ -261,7 +261,7 @@ namespace BlackMisc
                 {
                     newSituationsList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
                     newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
-                    newSituationsList.transferElevationForward(); // transfer elevations
+                    newSituationsList.transferElevationForward(); // transfer elevations, will do nothing if elevations already exist
 
                     // unify all inbound ground information
                     if (situation.hasInboundGroundDetails())
@@ -296,6 +296,8 @@ namespace BlackMisc
             this->storeChange(change);
 
             emit this->addedAircraftSituation(situationCorrected);
+
+            return situationCorrected;
         }
 
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdated)

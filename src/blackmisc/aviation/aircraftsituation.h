@@ -120,7 +120,6 @@ namespace BlackMisc
                 Test,                //!< unit test
                 SituationChange,     //!< from BlackMisc::Aviation::CAircraftSituationChange
                 Extrapolated,        //!< extrapolated ("guessing")
-                FromOtherSituations, //!< transferred from other situations ("sibling situations" same callsign)
                 Average,             //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
                 Interpolated,        //!< interpolated between 2 elevations
                 FromCache,           //!< from cache
@@ -174,8 +173,8 @@ namespace BlackMisc
             //! Null situation
             virtual bool isNull() const override;
 
-            //! Is better info (more accurate)?
-            bool isBetterInfo(GndElevationInfo info, bool transferred) const;
+            //! Is given info better (more accurate)?
+            bool isThisElevationInfoBetter(GndElevationInfo info, bool transferred) const;
 
             //! Equal pitch, bank heading
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble

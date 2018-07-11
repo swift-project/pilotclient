@@ -224,7 +224,7 @@ namespace BlackCore
         //! \threadsafe
         //! \remark sets gnd flag from parts if parts are available
         //! \remark uses gnd elevation if found
-        void storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        virtual BlackMisc::Aviation::CAircraftSituation storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation, bool allowTestOffset = true) override;
 
         //! Add or update aircraft
         BlackMisc::Simulation::CSimulatedAircraft addOrUpdateAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType modelType, BlackMisc::CStatusMessageList *log);

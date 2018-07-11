@@ -45,7 +45,7 @@ namespace BlackCore
         return setup;
     }
 
-    bool ISimulator::requestElevation(const Geo::ICoordinateGeodetic &reference, const CCallsign &callsign)
+    bool ISimulator::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
         Q_UNUSED(reference);
         Q_UNUSED(callsign);

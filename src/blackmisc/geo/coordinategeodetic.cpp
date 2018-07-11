@@ -27,8 +27,7 @@ namespace BlackMisc
     {
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
-            static const QString s = "Geodetic: {%1, %2, %3}";
-            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n), this->longitude().valueRoundedWithUnit(6, i18n), m_geodeticHeight.valueRoundedWithUnit(6, i18n));
+            return ICoordinateGeodetic::convertToQString(i18n);
         }
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
@@ -158,10 +157,14 @@ namespace BlackMisc
 
         QString ICoordinateGeodetic::convertToQString(bool i18n) const
         {
-            Q_UNUSED(i18n);
-            return this->latitudeAsString() % QLatin1Char(' ') %
-                   QStringLiteral(" | ") % this->longitudeAsString() % QLatin1Char(' ') %
-                   QStringLiteral(" | ") % this->geodeticHeightAsString();
+            static const QString s = "Geodetic: {%1/%2, %3/%4, %5}";
+            const CLatitude lat = this->latitude();
+            const CLongitude lng = this->longitude();
+            return s.arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                         lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                         lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                         lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                         this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
         }
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

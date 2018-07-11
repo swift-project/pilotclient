@@ -965,26 +965,29 @@ namespace BlackCore
         this->setOtherClient(client);
     }
 
-    void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)
+    CAircraftSituation CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
     {
         const CCallsign callsign(situation.getCallsign());
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty()) { return situation; }
 
-        CAircraftSituation correctedSituation(this->testAddAltitudeOffsetToSituation(situation));
-        if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
+        CAircraftSituation correctedSituation(allowTestOffset ? this->testAddAltitudeOffsetToSituation(situation) : situation);
+        bool haveRequestedElevation = false;
+        const bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
+        if (!correctedSituation.hasGroundElevation() && !canLikelySkipNearGround)
         {
             // fetch from cache or request
             const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
-            CElevationPlane ep = situations.findCLosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius()));
-            if (!ep.isNull())
+            const CAircraftSituation situationWithElv = situations.findCLosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius()));
+            if (!situationWithElv.getGroundElevation().isNull())
             {
-                correctedSituation.setGroundElevation(ep, CAircraftSituation::FromOtherSituations);
+                correctedSituation.transferGroundElevation(situationWithElv);
             }
             else
             {
                 const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distnacee per ms
-                ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
+                const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
+                haveRequestedElevation = ep.isNull();  // NULL means we requested
                 Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
                 correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
             }
@@ -1032,13 +1035,23 @@ namespace BlackCore
 
         // CG from provider
         const CLength cg = this->getCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
-        if (!cg.isNull())
-        {
-            correctedSituation.setCG(cg);
-        }
+        if (!cg.isNull()) { correctedSituation.setCG(cg); }
 
         // store change object
-        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
+        correctedSituation = CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
+
+        // check if we STILL want to request
+        if (!haveRequestedElevation && !canLikelySkipNearGround)
+        {
+            // we have not requested so far, but we are NEAR ground
+            // we expect at least not transferred cache or we are moving and have no provider elevation yet
+            if (correctedSituation.isThisElevationInfoBetter(CAircraftSituation::FromCache, false) || (correctedSituation.isMoving() && correctedSituation.isThisElevationInfoBetter(CAircraftSituation::FromProvider, false)))
+            {
+                haveRequestedElevation = this->requestElevation(correctedSituation);
+            }
+        }
+
+        return correctedSituation;
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

@@ -229,6 +229,9 @@ namespace BlackMisc
             //! \copydoc ISimulationEnvironmentProvider::requestElevation
             bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign);
 
+            //! \copydoc ISimulationEnvironmentProvider::requestElevation
+            bool requestElevation(const Aviation::CAircraftSituation &situation);
+
             //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissed
             QPair<int, int> getElevationsFoundMissed() const;
 

@@ -393,7 +393,7 @@ namespace BlackMisc
             //! Store an aircraft situation
             //! \remark latest situations are kept first
             //! \threadsafe
-            void storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestOffset = true);
+            virtual Aviation::CAircraftSituation storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestOffset = true);
 
             //! Store an aircraft part
             //! \remark latest parts are kept first
