@@ -89,31 +89,31 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString()); }
-            return CSimulatorCommon::logicallyAddRemoteAircraft(remoteAircraft);
+            return ISimulator::logicallyAddRemoteAircraft(remoteAircraft);
         }
 
         bool CSimulatorEmulated::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
-            return CSimulatorCommon::logicallyRemoveRemoteAircraft(callsign);
+            return ISimulator::logicallyRemoveRemoteAircraft(callsign);
         }
 
         int CSimulatorEmulated::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsigns.toQString());
-            return CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(callsigns);
+            return ISimulator::physicallyRemoveMultipleRemoteAircraft(callsigns);
         }
 
         bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
-            return CSimulatorCommon::changeRemoteAircraftEnabled(aircraft);
+            return ISimulator::changeRemoteAircraftEnabled(aircraft);
         }
 
         bool CSimulatorEmulated::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
-            return CSimulatorCommon::changeRemoteAircraftEnabled(aircraft);
+            return ISimulator::changeRemoteAircraftEnabled(aircraft);
         }
 
         bool CSimulatorEmulated::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
@@ -176,7 +176,7 @@ namespace BlackSimPlugin
         void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString()); }
-            CSimulatorCommon::highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
+            ISimulator::highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
         }
 
         bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
@@ -308,7 +308,7 @@ namespace BlackSimPlugin
         int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-            return CSimulatorCommon::physicallyRemoveAllRemoteAircraft();
+            return ISimulator::physicallyRemoveAllRemoteAircraft();
         }
 
         bool CSimulatorEmulated::parseDetails(const CSimpleCommandParser &parser)

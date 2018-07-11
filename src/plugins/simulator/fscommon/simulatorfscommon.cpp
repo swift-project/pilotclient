@@ -123,7 +123,7 @@ namespace BlackSimPlugin
         CAirportList CSimulatorFsCommon::getAirportsInRange() const
         {
             if (!m_airportsInRangeFromSimulator.isEmpty()) { return m_airportsInRangeFromSimulator; }
-            return CSimulatorCommon::getAirportsInRange();
+            return ISimulator::getAirportsInRange();
         }
 
         void CSimulatorFsCommon::onSwiftDbAirportsRead()
@@ -133,7 +133,7 @@ namespace BlackSimPlugin
             {
                 m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
             }
-            CSimulatorCommon::onSwiftDbAirportsRead();
+            ISimulator::onSwiftDbAirportsRead();
         }
     } // namespace
 } // namespace

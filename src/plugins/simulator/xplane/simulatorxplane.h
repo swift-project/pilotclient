@@ -15,8 +15,6 @@
 #include "xplanempaircraft.h"
 #include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "blackcore/simulator.h"
-#include "blackcore/simulatorcommon.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"

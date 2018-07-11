@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             IWeatherGridProvider *weatherGridProvider,
             IClientProvider *clientProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
+            ISimulator(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             CSimulatorPluginCommon::registerHelp();
         }
@@ -75,19 +75,19 @@ namespace BlackSimPlugin
                 this->showInterpolationDisplay();
                 return true;
             }
-            return CSimulatorCommon::parseDetails(parser);
+            return false;
         }
 
         void CSimulatorPluginCommon::unload()
         {
             this->deleteInterpolationDisplay();
-            CSimulatorCommon::unload();
+            ISimulator::unload();
         }
 
         bool CSimulatorPluginCommon::disconnectFrom()
         {
             this->deleteInterpolationDisplay();
-            return CSimulatorCommon::disconnectFrom();
+            return ISimulator::disconnectFrom();
         }
 
         void CSimulatorPluginCommon::registerHelp()

@@ -69,7 +69,7 @@ namespace BlackSimPlugin
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
 
-            // functions just logged
+            // ----- functions just logged -------
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
             virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -129,7 +129,7 @@ namespace BlackSimPlugin
             // just logged
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
-            //! \copydoc BlackCore::CSimulatorCommon::parseDetails
+            //! \copydoc BlackCore::ISimulator::parseDetails
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
         private:
