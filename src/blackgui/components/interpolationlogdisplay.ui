@@ -74,8 +74,11 @@
          </item>
          <item>
           <widget class="QLabel" name="lbl_Updating">
-           <property name="text">
+           <property name="toolTip">
             <string>Updating</string>
+           </property>
+           <property name="text">
+            <string>Upd.</string>
            </property>
           </widget>
          </item>
@@ -83,22 +86,63 @@
           <widget class="BlackGui::CLedWidget" name="led_Updating" native="true"/>
          </item>
          <item>
-          <spacer name="hs_LedBar">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>352</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
+          <widget class="QFrame" name="fr_Updating">
+           <layout class="QHBoxLayout" name="hl_UpdateTimes" stretch="1,4,0">
+            <property name="leftMargin">
+             <number>3</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="le_UpdateTime">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="hs_UpdateTime">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksBelow</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pb_StartStop">
+              <property name="text">
+               <string>start</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="lbl_SituationsLed">
-           <property name="text">
+           <property name="toolTip">
             <string>Situations</string>
+           </property>
+           <property name="text">
+            <string>Sit.:</string>
            </property>
           </widget>
          </item>
@@ -117,8 +161,11 @@
          </item>
          <item>
           <widget class="QLabel" name="lbl_ElevationLed">
+           <property name="toolTip">
+            <string>Elevations</string>
+           </property>
            <property name="text">
-            <string>Elevation</string>
+            <string>Elev.:</string>
            </property>
           </widget>
          </item>
@@ -130,7 +177,7 @@
       </item>
       <item>
        <widget class="QFrame" name="fr_LogStatus">
-        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,0,0,1">
+        <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,0,0,0,0,0">
          <property name="leftMargin">
           <number>3</number>
          </property>
@@ -147,32 +194,6 @@
           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
            <property name="focusPolicy">
             <enum>Qt::StrongFocus</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="le_UpdateTime">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSlider" name="hs_UpdateTime">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>10</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="tickPosition">
-            <enum>QSlider::TicksBelow</enum>
-           </property>
-           <property name="tickInterval">
-            <number>1</number>
            </property>
           </widget>
          </item>
@@ -198,16 +219,16 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pb_FollowInSimulator">
+          <widget class="QPushButton" name="pb_RequestElevation1">
            <property name="text">
-            <string>follow</string>
+            <string>req.elv.</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pb_StartStop">
+          <widget class="QPushButton" name="pb_FollowInSimulator">
            <property name="text">
-            <string>start</string>
+            <string>follow</string>
            </property>
           </widget>
          </item>
@@ -220,7 +241,7 @@
    <item>
     <widget class="QTabWidget" name="tw_LogTabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tb_DataFlow">
       <attribute name="title">
@@ -618,9 +639,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pb_RequestElevation">
+           <widget class="QPushButton" name="pb_RequestElevation2">
             <property name="text">
-             <string> req.elevation </string>
+             <string> req.elv.</string>
             </property>
            </widget>
           </item>
@@ -768,14 +789,15 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>comp_CallsignCompleter</tabstop>
   <tabstop>le_UpdateTime</tabstop>
   <tabstop>hs_UpdateTime</tabstop>
+  <tabstop>pb_StartStop</tabstop>
+  <tabstop>comp_CallsignCompleter</tabstop>
   <tabstop>pb_ResetStats</tabstop>
   <tabstop>pb_ResetLastSent</tabstop>
   <tabstop>pb_ShowLogInSimulator</tabstop>
+  <tabstop>pb_RequestElevation1</tabstop>
   <tabstop>pb_FollowInSimulator</tabstop>
-  <tabstop>pb_StartStop</tabstop>
   <tabstop>tw_LogTabs</tabstop>
   <tabstop>le_CG</tabstop>
   <tabstop>le_Parts</tabstop>
@@ -791,16 +813,16 @@
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
   <tabstop>tvp_AircraftSituations</tabstop>
+  <tabstop>tvp_AircraftParts</tabstop>
   <tabstop>tvp_Changes</tabstop>
   <tabstop>le_InjectElevation</tabstop>
   <tabstop>pb_InjectElevation</tabstop>
-  <tabstop>pb_RequestElevation</tabstop>
+  <tabstop>pb_RequestElevation2</tabstop>
   <tabstop>pb_GetLastInterpolation</tabstop>
   <tabstop>te_LastInterpolatedSituation</tabstop>
-  <tabstop>te_TextLog</tabstop>
-  <tabstop>te_LastInterpolatedParts</tabstop>
-  <tabstop>tvp_AircraftParts</tabstop>
   <tabstop>te_SituationChange</tabstop>
+  <tabstop>te_LastInterpolatedParts</tabstop>
+  <tabstop>te_TextLog</tabstop>
  </tabstops>
  <resources/>
  <connections/>

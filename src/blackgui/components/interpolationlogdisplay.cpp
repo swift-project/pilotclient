@@ -61,7 +61,8 @@ namespace BlackGui
             connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
             connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
             connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
-            connect(ui->pb_RequestElevation, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+            connect(ui->pb_RequestElevation1, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+            connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
             connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->tvp_AircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
