@@ -54,12 +54,14 @@ namespace BlackGui
             QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
+                if (!sGui || sGui->isShuttingDown()) { return; }
                 if (myself.isNull()) { return; }
                 this->onModeChanged();
             });
 
             QTimer::singleShot(30 * 1000, this, [ = ]
             {
+                if (!sGui || sGui->isShuttingDown()) { return; }
                 if (myself.isNull()) { return; }
                 this->onSetupChanged();
             });
@@ -85,6 +87,7 @@ namespace BlackGui
 
         void CInterpolationSetupComponent::onModeChanged()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             bool enableCallsign = false;
             if (this->getSetupMode() == CInterpolationSetupComponent::Global)
             {
@@ -237,6 +240,7 @@ namespace BlackGui
 
         void CInterpolationSetupComponent::onSetupChanged()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             this->displaySetupsPerCallsign();
         }
 
