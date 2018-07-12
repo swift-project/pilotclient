@@ -42,13 +42,14 @@ namespace XSwiftBus
         g_xplanePath = xplanePath;
     }
 
-    std::string getDirName(const string &filePath)
+    std::string getDirName(const std::string &filePath)
     {
         std::string seperator = "/\\";
         std::size_t sepPos = filePath.find_last_of(seperator);
-        if(sepPos != std::string::npos)
+        if (sepPos != std::string::npos)
         {
-            return filePath.substr(0, sepPos);
+            std::string dirPath = filePath.substr(0, sepPos);
+            return getFileName(dirPath);
         }
         else
         {
@@ -60,7 +61,7 @@ namespace XSwiftBus
     {
         std::string seperator = "/\\";
         std::size_t sepPos = filePath.find_last_of(seperator);
-        if(sepPos != std::string::npos)
+        if (sepPos != std::string::npos)
         {
             return filePath.substr(sepPos + 1, filePath.size() - 1);
         }
@@ -75,9 +76,9 @@ namespace XSwiftBus
         std::string seperator = ".";
         std::string fileName = getFileName(filePath);
         std::size_t sepPos = fileName.find(seperator);
-        if(sepPos != std::string::npos)
+        if (sepPos != std::string::npos)
         {
-             return fileName.substr(0, sepPos);
+            return fileName.substr(0, sepPos);
         }
         else
         {
@@ -113,7 +114,7 @@ namespace XSwiftBus
         ss << "xswiftbus";
         ss << ' ';
 
-    #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
+#if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
         switch (type)
         {
         case DebugMsg:
@@ -133,9 +134,9 @@ namespace XSwiftBus
 
         std::string seperator = "/\\";
         std::size_t sepPos = filePath.find_last_of(seperator);
-        if(sepPos != std::string::npos)
+        if (sepPos != std::string::npos)
         {
-             ss << filePath.substr(sepPos + 1, filePath.size() - 1);
+            ss << filePath.substr(sepPos + 1, filePath.size() - 1);
         }
         else
         {
@@ -145,7 +146,7 @@ namespace XSwiftBus
 
         ss << line;
         ss << " : ";
-    #endif
+#endif
 
         ss << message;
         ss << "\n";

@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIM_XSWIFTBUS_UTILS_H
 #define BLACKSIM_XSWIFTBUS_UTILS_H
 
@@ -20,10 +22,6 @@
 #include <cstdlib>
 #include <clocale>
 #include <string>
-
-/*!
- * \file
- */
 
 /*!
  * Install a Qt message handler which outputs to the X-Plane debug log.
