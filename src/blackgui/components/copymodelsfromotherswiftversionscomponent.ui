@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
+    <width>533</width>
     <height>495</height>
    </rect>
   </property>
@@ -89,7 +89,7 @@
       <item>
        <widget class="QCheckBox" name="cb_Silent">
         <property name="text">
-         <string>silent</string>
+         <string>silent mode</string>
         </property>
        </widget>
       </item>

@@ -156,7 +156,13 @@ namespace BlackGui
 
         bool CCopyModelsFromOtherSwiftVersionsComponent::confirmOverride(const QString &msg)
         {
-            if (ui->cb_Silent->isChecked()) { return true; }
+            if (!sApp || sApp->isShuttingDown()) { return false; }
+            if (ui->cb_Silent->isChecked())
+            {
+                // allow UI updates
+                sApp->processEventsFor(50);
+                return true;
+            }
             const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Confirm override"), withQUestionMark(msg), QMessageBox::Yes | QMessageBox::No);
             return reply == QMessageBox::Yes;
         }

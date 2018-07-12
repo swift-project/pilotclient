@@ -110,7 +110,7 @@ namespace BlackGui
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_settingsAudio { this };
             BlackMisc::CSetting<BlackCore::Audio::TInputDevice>  m_settingsAudioInputDevice { this };
             BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_settingsAudioOutputDevice { this };
-            BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_settingsTrafficNetworkServers { this };
+            BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_settingsNetworkServers { this };
             BlackMisc::CSetting<Settings::TGeneralGui> m_settingsGuiGeneral { this };
             BlackMisc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
             BlackMisc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };

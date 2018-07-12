@@ -58,7 +58,7 @@ namespace BlackGui
             readOnlyCheckbox(ui->cb_SettingsAudioInputDevice, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
             readOnlyCheckbox(ui->cb_SettingsAudioOutputDevice, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudioOutputDevice.getFilename()));
 
-            readOnlyCheckbox(ui->cb_SettingsNetworkTrafficServers, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsTrafficNetworkServers.getFilename()));
+            readOnlyCheckbox(ui->cb_SettingsNetworkTrafficServers, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsNetworkServers.getFilename()));
             readOnlyCheckbox(ui->cb_CacheLastNetworkServer, !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastNetworkServer.getFilename()));
             readOnlyCheckbox(ui->cb_CacheLastVatsimServer, !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastVatsimServer.getFilename()));
 
@@ -133,8 +133,11 @@ namespace BlackGui
 
         void CCopySettingsAndCachesComponent::copy()
         {
+            ui->le_Status->clear();
+
             const CApplicationInfo otherVersionInfo = ui->comp_OtherSwiftVersions->selectedOtherVersion();
             if (otherVersionInfo.isNull()) { return; }
+            ui->le_Status->setText("Starting to copy from '" + otherVersionInfo.toQString(true) + "'");
 
             // ------- audio -------
             if (ui->cb_SettingsAudio->isChecked())
@@ -168,6 +171,16 @@ namespace BlackGui
             }
 
             // ------- network -------
+            if (ui->cb_SettingsNetworkTrafficServers->isChecked())
+            {
+                const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsNetworkServers.getFilename());
+                if (!joStr.isEmpty())
+                {
+                    const CServerList networkServers = CServerList::fromJson(joStr, true);
+                    this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true));
+                }
+            }
+
             if (ui->cb_CacheLastNetworkServer->isChecked())
             {
                 const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(otherVersionInfo, m_cacheLastNetworkServer.getFilename());
