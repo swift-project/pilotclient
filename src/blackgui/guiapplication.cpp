@@ -55,6 +55,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QtGlobal>
+#include <QWhatsThis>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -721,6 +722,7 @@ namespace BlackGui
 
     void CGuiApplication::showHelp(const QString &context) const
     {
+        if (this->isShuttingDown()) { return; }
         const CGlobalSetup gs = this->getGlobalSetup();
         const CUrl helpPage = gs.getHelpPageUrl(context);
         if (helpPage.isEmpty())
@@ -733,8 +735,24 @@ namespace BlackGui
 
     void CGuiApplication::showHelp(const QObject *qObject) const
     {
+        if (this->isShuttingDown()) { return; }
         if (!qObject || qObject->objectName().isEmpty()) { return this->showHelp(); }
         return this->showHelp(qObject->objectName());
+    }
+
+    bool CGuiApplication::triggerShowHelp(const QWidget *widget, QEvent *event)
+    {
+        if (!widget) { return false; }
+        if (!event) { return false; }
+        if (event->type() != QEvent::EnterWhatsThisMode) { return false; }
+        QWhatsThis::leaveWhatsThisMode();
+        const QPointer<const QWidget> wp(widget);
+        QTimer::singleShot(0, sGui, [ = ]
+        {
+            if (wp.isNull() || !sGui || sGui->isShuttingDown()) { return; }
+            sGui->showHelp(widget);
+        });
+        return true;
     }
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const

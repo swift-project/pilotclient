@@ -50,6 +50,10 @@ namespace BlackGui
             //! \copydoc CCopyConfigurationComponent::setWithBootstrapFile
             void setWithBootstrapFile(bool withBootstrapFile);
 
+        protected:
+            //! \copydoc QObject::event
+            virtual bool event(QEvent *event) override;
+
         private:
             QScopedPointer<Ui::CCopyConfigurationDialog> ui;
         };

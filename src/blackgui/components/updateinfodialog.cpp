@@ -56,9 +56,8 @@ namespace BlackGui
 
         bool CUpdateInfoDialog::event(QEvent *event)
         {
-            if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
-            QTimer::singleShot(0, this, &CUpdateInfoDialog::requestHelp);
-            return true;
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
         }
 
         void CUpdateInfoDialog::onDontShowAgain(bool dontShowAgain)
@@ -70,11 +69,6 @@ namespace BlackGui
         {
             const bool nv = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
             ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setVisible(nv);
-        }
-
-        void CUpdateInfoDialog::requestHelp()
-        {
-            if (sGui) { sGui->showHelp(this); }
         }
     } // ns
 } // ns

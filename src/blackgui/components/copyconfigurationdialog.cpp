@@ -9,6 +9,7 @@
 
 #include "copyconfigurationdialog.h"
 #include "ui_copyconfigurationdialog.h"
+#include "blackgui/guiapplication.h"
 
 namespace BlackGui
 {
@@ -48,6 +49,12 @@ namespace BlackGui
         void CCopyConfigurationDialog::setWithBootstrapFile(bool withBootstrapFile)
         {
             ui->comp_CopyConfiguration->setWithBootstrapFile(withBootstrapFile);
+        }
+
+        bool CCopyConfigurationDialog::event(QEvent *event)
+        {
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
         }
     } // ns
 } // ns

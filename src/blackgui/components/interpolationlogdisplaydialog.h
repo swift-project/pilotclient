@@ -48,6 +48,10 @@ namespace BlackGui
             //! Set airspace monitor
             void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
 
+        protected:
+            //! \copydoc QObject::event
+            virtual bool event(QEvent *event) override;
+
         private:
             QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
         };

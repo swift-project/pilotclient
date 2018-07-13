@@ -62,6 +62,10 @@ namespace BlackGui
             //! Exec and display simulator
             virtual int exec() override;
 
+        protected:
+            //! \copydoc QObject::event
+            virtual bool event(QEvent *event) override;
+
         private:
             QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_modelSet;

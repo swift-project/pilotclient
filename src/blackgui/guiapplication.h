@@ -26,6 +26,7 @@
 #include <QCommandLineOption>
 #include <QDialog>
 #include <QObject>
+#include <QEvent>
 #include <QPixmap>
 #include <QScopedPointer>
 #include <QString>
@@ -158,6 +159,9 @@ namespace BlackGui
 
         //! Show help page (online help), use QObject::objectName as 2nd level context
         void showHelp(const QObject *qObject) const;
+
+        //! Static version used with dialogs
+        static bool triggerShowHelp(const QWidget *widget, QEvent *event);
 
         //! Style sheet handling
         const CStyleSheetUtility &getStyleSheetUtility() const;

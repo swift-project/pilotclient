@@ -9,6 +9,7 @@
 
 #include "interpolationlogdisplaydialog.h"
 #include "ui_interpolationlogdisplaydialog.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/simulator.h"
 
 using namespace BlackCore;
@@ -22,7 +23,6 @@ namespace BlackGui
             ui(new Ui::CInterpolationLogDisplayDialog)
         {
             ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->setSimulator(simulator);
 
             if (airspaceMonitor)
@@ -49,6 +49,12 @@ namespace BlackGui
         void CInterpolationLogDisplayDialog::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
         {
             ui->comp_InterpolationLogDisplay->setAirspaceMonitor(airspaceMonitor);
+        }
+
+        bool CInterpolationLogDisplayDialog::event(QEvent *event)
+        {
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
         }
     } // ns
 } // ns

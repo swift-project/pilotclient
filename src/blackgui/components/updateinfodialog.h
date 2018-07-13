@@ -41,6 +41,7 @@ namespace BlackGui
             //! \copydoc QDialog::exec
             virtual int exec() override;
 
+        protected:
             //! \copydoc QObject::event
             virtual bool event(QEvent *event) override;
 
@@ -53,9 +54,6 @@ namespace BlackGui
 
             //! Selection in distribution component changed
             void selectionChanged();
-
-            //! Request context help
-            void requestHelp();
         };
     } // ns
 } // ns

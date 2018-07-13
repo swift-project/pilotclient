@@ -11,6 +11,7 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/editors/ownmodelsetform.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -69,6 +70,12 @@ namespace BlackGui
             this->setSimulator(sim);
             this->checkData();
             return QDialog::exec();
+        }
+
+        bool CDbOwnModelSetFormDialog::event(QEvent *event)
+        {
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
         }
 
         void CDbOwnModelSetFormDialog::buttonClicked()
