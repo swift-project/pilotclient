@@ -25,16 +25,13 @@
 #include <QWizardPage>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSettingsHotkeyComponent; }
 namespace BlackGui
 {
     namespace Components
     {
         //! Configure hotkeys
-        class BLACKGUI_EXPORT CSettingsHotkeyComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CSettingsHotkeyComponent : public QFrame
         {
             Q_OBJECT
 
@@ -51,6 +48,9 @@ namespace BlackGui
             //! Create dummy/emtpy Ptt entry for wizard
             void registerDummyPttEntry();
 
+            //! Reload keys from settings
+            void reloadHotkeysFromSettings();
+
         private:
             void addEntry();
             void editEntry();
@@ -60,12 +60,11 @@ namespace BlackGui
             void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
             void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
-            void reloadHotkeysFromSettings();
             BlackMisc::CIdentifierList getAllIdentifiers() const;
 
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
-            BlackGui::Models::CActionHotkeyListModel m_model;
-            BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
+            Models::CActionHotkeyListModel m_model; //!< hotkeys model
+            BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
             BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::hotkeySlot };
         };
 
@@ -83,6 +82,9 @@ namespace BlackGui
 
             //! \copydoc QWizardPage::validatePage
             virtual bool validatePage() override;
+
+            //! \copydoc QWizardPage::initializePage
+            virtual void initializePage() override;
 
         private:
             CSettingsHotkeyComponent *m_config = nullptr;

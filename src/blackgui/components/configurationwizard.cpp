@@ -25,8 +25,6 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
-            ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
-            ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
             ui->wp_XSwiftBus->setConfigComponent(ui->comp_XSwiftBus);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
@@ -95,19 +93,11 @@ namespace BlackGui
             m_previousId = id; // update
             m_skipped = false; // reset
             Q_UNUSED(skipped);
+            Q_UNUSED(backward);
 
             this->setParentOpacity(0.5);
             const QWizardPage *page = this->currentPage();
-            if (backward && page == ui->wp_CopyCaches)
-            {
-                ui->comp_CopyCaches->setCacheMode();
-                ui->comp_CopyCaches->initCurrentDirectories(true);
-            }
-            else if (backward && page == ui->wp_CopySettings)
-            {
-                ui->comp_CopySettings->setSettingsMode();
-                ui->comp_CopySettings->initCurrentDirectories(true);
-            }
+            Q_UNUSED(page);
 
             this->setOption(HaveCustomButton1, id != m_maxId);
         }

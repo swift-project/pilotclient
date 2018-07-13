@@ -188,9 +188,16 @@ namespace BlackGui
 
         bool CConfigHotkeyWizardPage::validatePage()
         {
+            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing configuration");
             if (CConfigurationWizard::lastWizardStepSkipped(this->wizard())) { return true; }
             m_config->saveSettings();
             return true;
+        }
+
+        void CConfigHotkeyWizardPage::initializePage()
+        {
+            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing configuration");
+            m_config->reloadHotkeysFromSettings();
         }
     } // ns
 } // ns

@@ -8,7 +8,7 @@
  */
 
 #include "setuploadingdialog.h"
-#include "copyconfigurationdialog.h"
+#include "copymodelsfromotherswiftversionsdialog.h"
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/setupreader.h"
@@ -164,10 +164,8 @@ namespace BlackGui
         {
             if (!m_copyFromOtherSwiftVersion)
             {
-                CCopyConfigurationDialog *d = new CCopyConfigurationDialog(this);
-                d->setWithBootstrapFile(true);
+                CCopyModelsFromOtherSwiftVersionsDialog *d = new CCopyModelsFromOtherSwiftVersionsDialog(this);
                 d->setModal(true);
-                d->setCacheMode();
                 m_copyFromOtherSwiftVersion.reset(d);
             }
 

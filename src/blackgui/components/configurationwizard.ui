@@ -155,76 +155,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="BlackGui::Components::CCopyConfigurationWizardPage" name="wp_CopySettings">
-   <property name="title">
-    <string>Copy configuration from another installation</string>
-   </property>
-   <property name="subTitle">
-    <string>Copy settings</string>
-   </property>
-   <layout class="QVBoxLayout" name="vl_CopySettings">
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Components::CCopyConfigurationComponent" name="comp_CopySettings">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>100</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="BlackGui::Components::CCopyConfigurationWizardPage" name="wp_CopyCaches">
-   <property name="title">
-    <string>Copy configuration from another installation</string>
-   </property>
-   <property name="subTitle">
-    <string>Cache data</string>
-   </property>
-   <layout class="QVBoxLayout" name="vl_CopyCaches">
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Components::CCopyConfigurationComponent" name="comp_CopyCaches">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="BlackGui::Components::CConfigSimulatorWizardPage" name="wp_Simulator">
    <property name="title">
     <string>Simulator</string>
@@ -279,6 +209,12 @@
     </property>
     <item row="1" column="0">
      <widget class="BlackGui::Components::CInstallXSwiftBusComponent" name="comp_XSwiftBus">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -317,18 +253,27 @@
      <number>4</number>
     </property>
     <item>
-     <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_Hotkeys"/>
+     <widget class="QGroupBox" name="gb_Hotkeys">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Hotkeys</string>
+      </property>
+      <layout class="QVBoxLayout" name="vl_GroupBoxHotkey">
+       <item>
+        <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_Hotkeys"/>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>BlackGui::Components::CCopyConfigurationComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/copyconfigurationcomponent.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>BlackGui::Components::CConfigSimulatorComponent</class>
    <extends>QFrame</extends>
@@ -339,12 +284,6 @@
    <class>BlackGui::Components::CConfigSimulatorWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/configsimulatorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CCopyConfigurationWizardPage</class>
-   <extends>QWizardPage</extends>
-   <header>blackgui/components/copyconfigurationcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -20,10 +20,10 @@ namespace BlackGui
 {
     namespace Components
     {
-        class CCopyConfigurationDialog;
+        class CCopyModelsFromOtherSwiftVersionsDialog;
 
         /**
-         * Setup dialog, if something goes wrong
+         * Setup dialog, if something goes wrong allows to copy bootstrap file
          */
         class CSetupLoadingDialog : public QDialog
         {
@@ -41,7 +41,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSetupLoadingDialog> ui;
-            QScopedPointer<CCopyConfigurationDialog> m_copyFromOtherSwiftVersion;
+            QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromOtherSwiftVersion;
 
             //! Cached setup available?
             bool hasCachedSetup() const;

@@ -37,8 +37,6 @@ namespace BlackGui
                 CopyModels,
                 CopySettingsAndCaches,
                 FirstModelSet,
-                CopySettings,  //!< deprecated
-                CopyCaches,    //!< deprecated
                 ConfigSimulator,
                 XSwiftBus,
                 ConfigHotkeys
