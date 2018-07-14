@@ -33,4 +33,4 @@ namespace XSwiftBus
         XPLMLocalToWorld(probe.locationX, probe.locationY, probe.locationZ, &degreesLatitude, &degreesLongitude, &metersAltitude);
         return metersAltitude;
     }
-}
+} // ns
