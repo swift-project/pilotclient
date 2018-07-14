@@ -38,6 +38,7 @@ namespace BlackMisc
             // first connect is an internal connection to log info about load status
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished);
             connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::onCacheChanged);
+            connect(&m_settings, &CMultiSimulatorSettings::simulatorSettingsChanged, this, &IAircraftModelLoader::simulatorSettingsChanged);
         }
 
         QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)

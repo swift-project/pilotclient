@@ -162,11 +162,11 @@ namespace BlackSimPlugin
             auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2);
 
             // Request
-            m_trafficProxy->getEelevationAtPosition(callsign,
-                                                    pos.latitude().value(CAngleUnit::deg()),
-                                                    pos.longitude().value(CAngleUnit::deg()),
-                                                    pos.geodeticHeight().value(CLengthUnit::m()),
-                                                    callback);
+            m_trafficProxy->getElevationAtPosition(callsign,
+                                                   pos.latitude().value(CAngleUnit::deg()),
+                                                   pos.longitude().value(CAngleUnit::deg()),
+                                                   pos.geodeticHeight().value(CLengthUnit::m()),
+                                                   callback);
             emit this->requestedElevation(callsign);
             return true;
         }
@@ -827,7 +827,7 @@ namespace BlackSimPlugin
             if (callsigns.isEmpty()) { return; }
             if (this->isShuttingDown()) { return; }
             const QStringList csStrings = callsigns.getCallsignStrings();
-            m_trafficProxy->getRemoteAircraftsData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
+            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
             {
                 updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
             });

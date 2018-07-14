@@ -133,6 +133,7 @@ namespace BlackMisc
 
             QStringList CXPlaneUtil::modelDirectoriesFromSimDir(const QString &simulatorDir)
             {
+                if (simulatorDir.isEmpty()) { return QStringList(); }
                 return QStringList({ simulatorDir });
             }
 

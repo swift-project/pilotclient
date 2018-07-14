@@ -64,6 +64,9 @@ namespace BlackMisc
                 //! Set single model directory
                 void setModelDirectory(const QString &modelDirectory);
 
+                //! Add (if not exists) model directory
+                bool addModelDirectory(const QString &modelDirectory);
+
                 //! Model directory
                 const QStringList &getModelDirectories() const;
 
@@ -133,13 +136,13 @@ namespace BlackMisc
                 const QString &getSimulatorDirectoryOrDefault() const;
 
                 //! Model directories or default
-                const QStringList getModelDirectoriesOrDefault() const;
+                QStringList getModelDirectoriesOrDefault() const;
 
                 //! Model directories
-                const QStringList getModelDirectoriesFromSimulatorDirectoy() const;
+                QStringList getModelDirectoriesFromSimulatorDirectoy() const;
 
                 //! Model directories, then from simulator directory, then default
-                const QStringList getModelDirectoriesFromSimulatorDirectoryOrDefault() const;
+                QStringList getModelDirectoriesFromSimulatorDirectoryOrDefault() const;
 
                 //! Model directories or empty if default
                 const QStringList &getModelDirectoriesIfNotDefault() const;
@@ -148,7 +151,7 @@ namespace BlackMisc
                 const QStringList &getDefaultModelExcludeDirectoryPatterns() const;
 
                 //! First model directoy
-                const QString getFirstModelDirectoryOrDefault() const;
+                QString getFirstModelDirectoryOrDefault() const;
 
                 //! Model exclude patterns or empty if default
                 const QStringList &getDefaultModelDirectories() const;
@@ -247,6 +250,9 @@ namespace BlackMisc
                 //! Set settings per simulator
                 CStatusMessage setSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
+                //! Set model directory per simulator
+                CStatusMessage addModelDirectory(const QString &modelDirectory, const CSimulatorInfo &simulator);
+
                 //! Set settings per simulator
                 CStatusMessage setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
@@ -288,11 +294,20 @@ namespace BlackMisc
                 //! \deprecated use CSpecializedSimulatorSettings::defaultSimulatorDirectory
                 static const QString &defaultSimulatorDirectory(const CSimulatorInfo &simulator);
 
+            signals:
+                //! Simulator settings have been changed
+                void simulatorSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             private:
-                CSetting<Settings::TSimulatorFsx> m_simSettingsFsx {this}; //!< FSX settings
-                CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 {this}; //!< FS9 settings
-                CSetting<Settings::TSimulatorP3D> m_simSettingsP3D {this}; //!< P3D settings
-                CSetting<Settings::TSimulatorXP>  m_simSettingsXP  {this}; //!< XP settings
+                CSetting<Settings::TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
+                CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
+                CSetting<Settings::TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
+                CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
+
+                void onFsxSettingsChanged();
+                void onFs9SettingsChanged();
+                void onP3DSettingsChanged();
+                void onXPSettingsChanged();
             };
 
             //! Settings regarding message handling.

@@ -156,6 +156,9 @@ namespace BlackMisc
             //! Access to multi simulator settings
             const Settings::CMultiSimulatorSettings &multiSimulatorSettings() const { return m_settings; }
 
+            //! Access to multi simulator settings
+            Settings::CMultiSimulatorSettings &multiSimulatorSettings() { return m_settings; }
+
             //! \name Implementations of the model interfaces (allows to set models modified in utility functions)
             //! @{
             virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->getSimulator()); }
@@ -164,10 +167,6 @@ namespace BlackMisc
             virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
             //! @}
 
-            //! Create a loader and synchronize caches
-            static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-        public slots:
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
             //! Normally used to consoidate data with DB data and write them back
@@ -178,9 +177,15 @@ namespace BlackMisc
             //! Normally used to consoidate data with DB data and write them back
             BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
+            //! Create a loader and synchronize caches
+            static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         signals:
             //! Parsing is finished or cache has been loaded
             void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+
+            //! Corresponding Settings::CMultiSimulatorSettings::simulatorSettingsChange
+            void simulatorSettingsChanged(const CSimulatorInfo &simulator);
 
         protected:
             //! Constructor
@@ -207,12 +212,12 @@ namespace BlackMisc
             //! Get model directories from settings if empty, otherwise checked and UNC path fixed
             QStringList getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const;
 
-            std::atomic<bool> m_cancelLoading { false };           //!< flag, requesting to cancel loading
-            std::atomic<bool> m_loadingInProgress { false };       //!< Loading in progress
-            std::atomic<bool> m_skipLoadingEmptyModelDir { true }; //!< Loading empty model dirs might erase the cache, so normally we skip it
-            Data::CModelCaches m_caches { false, this };           //!< caches used with this loader
-            Settings::CMultiSimulatorSettings m_settings { this }; //!< settings
-            CStatusMessageList m_loadingMessages;                  //!< loading messages
+            std::atomic<bool>  m_cancelLoading { false };           //!< flag, requesting to cancel loading
+            std::atomic<bool>  m_loadingInProgress { false };       //!< loading in progress
+            std::atomic<bool>  m_skipLoadingEmptyModelDir { true }; //!< loading empty model dirs might erase the cache, so normally we skip it
+            CStatusMessageList m_loadingMessages;                   //!< loading messages
+            Data::CModelCaches m_caches { false, this };            //!< caches used with this loader
+            Settings::CMultiSimulatorSettings m_settings { this };  //!< settings
         };
     } // ns
 } // ns

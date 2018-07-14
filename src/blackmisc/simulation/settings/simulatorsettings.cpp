@@ -12,9 +12,10 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
 
-using namespace BlackMisc;
+using namespace BlackConfig;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
@@ -41,11 +42,23 @@ namespace BlackMisc
             void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
             {
                 m_modelDirectories = modelDirectories;
+                m_modelDirectories.removeAll({});
+                m_modelDirectories.removeDuplicates();
             }
 
             void CSimulatorSettings::setModelDirectory(const QString &modelDirectory)
             {
                 m_modelDirectories = QStringList({ modelDirectory });
+            }
+
+            bool CSimulatorSettings::addModelDirectory(const QString &modelDirectory)
+            {
+                const Qt::CaseSensitivity cs = CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
+                if (m_modelDirectories.contains(modelDirectory, cs)) { return false; }
+                m_modelDirectories.push_back(modelDirectory);
+                m_modelDirectories.removeAll({});
+                m_modelDirectories.removeDuplicates();
+                return true;
             }
 
             const QStringList &CSimulatorSettings::getModelDirectories() const
@@ -56,6 +69,8 @@ namespace BlackMisc
             void CSimulatorSettings::setModelExcludeDirectories(const QStringList &excludeDirectories)
             {
                 m_excludeDirectoryPatterns = excludeDirectories;
+                m_excludeDirectoryPatterns.removeAll({});
+                m_excludeDirectoryPatterns.removeDuplicates();
             }
 
             const QStringList &CSimulatorSettings::getModelExcludeDirectoryPatterns() const
@@ -153,6 +168,16 @@ namespace BlackMisc
                 return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, "wrong simulator");
             }
 
+            CStatusMessage CMultiSimulatorSettings::addModelDirectory(const QString &modelDirectory, const CSimulatorInfo &simulator)
+            {
+                CSimulatorSettings s = this->getSettings(simulator);
+                if (!s.addModelDirectory(modelDirectory))
+                {
+                    return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityInfo, "directory already existing");
+                }
+                return this->setSettings(s, simulator);
+            }
+
             CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -247,6 +272,26 @@ namespace BlackMisc
             const QString &CMultiSimulatorSettings::defaultSimulatorDirectory(const CSimulatorInfo &simulator)
             {
                 return CSpecializedSimulatorSettings::defaultSimulatorDirectory(simulator);
+            }
+
+            void CMultiSimulatorSettings::onFsxSettingsChanged()
+            {
+                emit this->simulatorSettingsChanged(CSimulatorInfo::fsx());
+            }
+
+            void CMultiSimulatorSettings::onP3DSettingsChanged()
+            {
+                emit this->simulatorSettingsChanged(CSimulatorInfo::p3d());
+            }
+
+            void CMultiSimulatorSettings::onFs9SettingsChanged()
+            {
+                emit this->simulatorSettingsChanged(CSimulatorInfo::fs9());
+            }
+
+            void CMultiSimulatorSettings::onXPSettingsChanged()
+            {
+                emit this->simulatorSettingsChanged(CSimulatorInfo::xplane());
             }
 
             void CSimulatorMessagesSettings::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
@@ -422,29 +467,33 @@ namespace BlackMisc
                        CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator);
             }
 
-            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesOrDefault() const
+            QStringList CSpecializedSimulatorSettings::getModelDirectoriesOrDefault() const
             {
                 return m_genericSettings.hasModelDirectories() ?
                        m_genericSettings.getModelDirectories() :
                        this->getModelDirectoriesFromSimulatorDirectoryOrDefault();
             }
 
-            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
+            QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
             {
                 if (!m_genericSettings.hasSimulatorDirectory()) { return QStringList(); }
                 const QString s(m_genericSettings.getSimulatorDirectory());
+                QStringList dirs;
                 switch (m_simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)});
-                case CSimulatorInfo::FSX: return QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)});
-                case CSimulatorInfo::P3D: return QStringList({CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)});
-                case CSimulatorInfo::XPLANE: return QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)});
+                case CSimulatorInfo::FS9: dirs = QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)}); break;
+                case CSimulatorInfo::FSX: dirs = QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)}); break;
+                case CSimulatorInfo::P3D: dirs = QStringList({CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)}); break;
+                case CSimulatorInfo::XPLANE: dirs = QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)}); break;
                 default: break;
                 }
-                return QStringList();
+
+                dirs.removeAll({}); // remove empty
+                dirs.removeDuplicates();
+                return dirs;
             }
 
-            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoryOrDefault() const
+            QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoryOrDefault() const
             {
                 if (!m_genericSettings.hasSimulatorDirectory()) { return CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator); }
                 return this->getModelDirectoriesFromSimulatorDirectoy();
@@ -466,7 +515,7 @@ namespace BlackMisc
                 return CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator);
             }
 
-            const QString CSpecializedSimulatorSettings::getFirstModelDirectoryOrDefault() const
+            QString CSpecializedSimulatorSettings::getFirstModelDirectoryOrDefault() const
             {
                 static const QString empty;
                 if (this->getModelDirectoriesOrDefault().isEmpty()) { return empty; }

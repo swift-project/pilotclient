@@ -158,6 +158,9 @@ namespace BlackMisc
         static bool isDirExisting(const QDir &dir);
         //! @}
 
+        //! Same existing directories
+        static bool isSameExistingDirectory(const QString &dir1, const QString &dir2);
+
         //! Result of directory comparison
         struct DirComparison
         {

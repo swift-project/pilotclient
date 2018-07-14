@@ -479,6 +479,15 @@ namespace BlackMisc
         return CDirectoryUtils::isDirExisting(dir.absolutePath());
     }
 
+    bool CDirectoryUtils::isSameExistingDirectory(const QString &dir1, const QString &dir2)
+    {
+        if (dir1.isEmpty() || dir2.isEmpty()) { return false; }
+        const QDir d1(dir1);
+        const QDir d2(dir2);
+        if (!d1.exists() || !d2.exists()) { return false; }
+        return d1.absolutePath() == d2.absolutePath();
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;
