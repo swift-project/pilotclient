@@ -383,8 +383,8 @@ namespace XSwiftBus
         else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
     }
 
-    void CTraffic::getRemoteAircraftsData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
-                                          std::vector<double> &elevationsM, std::vector<double> &verticalOffsets)
+    void CTraffic::getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
+                                         std::vector<double> &elevationsM, std::vector<double> &verticalOffsets) const
     {
         if (callsigns.empty() || m_planesByCallsign.empty()) { return; }
 
@@ -403,32 +403,32 @@ namespace XSwiftBus
             Plane *plane = planeIt->second;
             assert(plane);
 
-            double lat = plane->position.lat;
-            double lon = plane->position.lon;
-            double groundElevation = plane->terrainProbe.getElevation(lat, lon, plane->position.elevation);
+            double latDeg = plane->position.lat;
+            double lonDeg = plane->position.lon;
+            double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
             XPMPGetVerticalOffset(plane->id, &fudgeFactor);
 
             callsigns.push_back(requestedCallsign);
-            latitudesDeg.push_back(lat);
-            longitudesDeg.push_back(lon);
+            latitudesDeg.push_back(latDeg);
+            longitudesDeg.push_back(lonDeg);
             elevationsM.push_back(groundElevation);
             verticalOffsets.push_back(fudgeFactor);
         }
     }
 
-    double CTraffic::getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude)
+    double CTraffic::getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const
     {
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt != m_planesByCallsign.end())
         {
             Plane *plane = planeIt->second;
-            return plane->terrainProbe.getElevation(latitude, longitude, altitude);
+            return plane->terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters);
         }
         else
         {
-            return m_terrainProbe.getElevation(latitude, longitude, altitude);
+            return m_terrainProbe.getElevation(latitudeDeg, longitudeDeg, altitudeMeters);
         }
     }
 
@@ -659,7 +659,7 @@ namespace XSwiftBus
                     setPlaneTransponder(callsign, code, modeC, ident);
                 });
             }
-            else if (message.getMethodName() == "getRemoteAircraftsData")
+            else if (message.getMethodName() == "getRemoteAircraftData")
             {
                 std::vector<std::string> requestedcallsigns;
                 message.beginArgumentRead();
@@ -671,7 +671,7 @@ namespace XSwiftBus
                     std::vector<double> longitudesDeg;
                     std::vector<double> elevationsM;
                     std::vector<double> verticalOffsets;
-                    getRemoteAircraftsData(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                    getRemoteAircraftData(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsigns);
@@ -682,23 +682,23 @@ namespace XSwiftBus
                     sendDBusMessage(reply);
                 });
             }
-            else if (message.getMethodName() == "getEelevationAtPosition")
+            else if (message.getMethodName() == "getElevationAtPosition")
             {
                 std::string callsign;
-                double latitude;
-                double longitude;
-                double altitude;
+                double latitudeDeg;
+                double longitudeDeg;
+                double elevationMeters;
                 message.beginArgumentRead();
                 message.getArgument(callsign);
-                message.getArgument(latitude);
-                message.getArgument(longitude);
-                message.getArgument(altitude);
+                message.getArgument(latitudeDeg);
+                message.getArgument(longitudeDeg);
+                message.getArgument(elevationMeters);
                 queueDBusCall([ = ]()
                 {
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsign);
-                    reply.appendArgument(getEelevationAtPosition(callsign, latitude, longitude, altitude));
+                    reply.appendArgument(getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, elevationMeters));
                     ;                   sendDBusMessage(reply);
                 });
             }

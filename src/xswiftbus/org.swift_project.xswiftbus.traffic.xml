@@ -76,7 +76,7 @@ R"(<node>
       <arg name="modeC" type="b" direction="in"/>
       <arg name="ident" type="b" direction="in"/>
     </method>
-    <method name="getEelevationAtPosition">
+    <method name="getElevationAtPosition">
       <arg name="callsign" type="s" direction="in"/>
       <arg name="latitude" type="d" direction="in"/>
       <arg name="longitude" type="d" direction="in"/>

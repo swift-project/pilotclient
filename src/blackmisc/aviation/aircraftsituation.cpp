@@ -971,8 +971,8 @@ namespace BlackMisc
             if (this->hasGroundElevation())
             {
                 static const CLength threshold(400, CLengthUnit::m());
-                const CLength a = this->getHeightAboveGround();
-                if (!a.isNull() && a >= threshold) { return true; } // too high for ground
+                const CLength aboveGround = this->getHeightAboveGround();
+                if (!aboveGround.isNull() && aboveGround >= threshold) { return true; } // too high for ground
             }
             return false;
         }

@@ -97,24 +97,24 @@ namespace XSwiftBus
 
         //! Set the position of multiple traffic aircrafts
         void setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
-                               std::vector<double> pitches, std::vector<double> rolls, std::vector<double> headings);
+                                std::vector<double> pitches, std::vector<double> rolls, std::vector<double> headings);
 
         //! Set the flight control surfaces and lights of multiple traffic aircrafts
         void setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears, const std::vector<double> &flaps, const std::vector<double> &spoilers,
-                              const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
-                              const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
-                              const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns,
-                              const std::vector<bool> &onGrounds);
+                               const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
+                               const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
+                               const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns,
+                               const std::vector<bool> &onGrounds);
 
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
 
         //! Get remote aircrafts data (lat, lon, elevation and CG)
-        void getRemoteAircraftsData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
-									std::vector<double> &elevationsM, std::vector<double> &verticalOffsets);
+        void getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
+                                   std::vector<double> &elevationsM, std::vector<double> &verticalOffsets) const;
 
         //! Get the ground elevation at an arbitrary position
-        double getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude);
+        double getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters) const;
 
         //! Sets the aircraft with callsign to be followed in plane view
         void setFollowedAircraft(const std::string &callsign);
@@ -192,7 +192,7 @@ namespace XSwiftBus
             else { traffic->emitPlaneAddingFailed(planeIt->second->callsign); }
         }
     };
-}
+} // ns
 
 #endif // guard
 

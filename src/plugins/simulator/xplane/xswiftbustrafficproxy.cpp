@@ -112,7 +112,7 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setInterpolatorMode"), callsign, spline);
         }
 
-        void CXSwiftBusTrafficProxy::getRemoteAircraftsData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter)
+        void CXSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
@@ -128,11 +128,11 @@ namespace BlackSimPlugin
                 }
                 watcher->deleteLater();
             };
-            m_dbusInterface->callDBusAsync(QLatin1String("getRemoteAircraftsData"), callback, callsigns);
+            m_dbusInterface->callDBusAsync(QLatin1String("getRemoteAircraftData"), callback, callsigns);
         }
 
-        void CXSwiftBusTrafficProxy::getEelevationAtPosition(const CCallsign &callsign, double latitude, double longitude, double altitude,
-                const ElevationCallback &setter)
+        void CXSwiftBusTrafficProxy::getElevationAtPosition(const CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
+                const ElevationCallback &setter) const
         {
             std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
@@ -142,14 +142,14 @@ namespace BlackSimPlugin
                     const CCallsign cs(reply.argumentAt<0>());
                     const double elevationMeters = reply.argumentAt<1>();
                     const CAltitude elevationAlt(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
-                    const CElevationPlane elevation(CLatitude(latitude, CAngleUnit::deg()),
-                                                    CLongitude(longitude, CAngleUnit::deg()),
+                    const CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()),
+                                                    CLongitude(longitudeDeg, CAngleUnit::deg()),
                                                     elevationAlt, CElevationPlane::singlePointRadius());
                     setter(elevation, cs);
                 }
                 watcher->deleteLater();
             };
-            m_dbusInterface->callDBusAsync(QLatin1String("getEelevationAtPosition"), callback, callsign.asString(), latitude, longitude, altitude);
+            m_dbusInterface->callDBusAsync(QLatin1String("getElevationAtPosition"), callback, callsign.asString(), latitudeDeg, longitudeDeg, altitudeMeters);
         }
 
         void CXSwiftBusTrafficProxy::setFollowedAircraft(const QString &callsign)

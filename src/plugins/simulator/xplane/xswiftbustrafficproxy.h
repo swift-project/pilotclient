@@ -178,12 +178,12 @@ namespace BlackSimPlugin
             //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);
 
-            //! \copydoc XSwiftBus::CTraffic::getRemoteAircraftsData
-            void getRemoteAircraftsData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter);
+            //! \copydoc XSwiftBus::CTraffic::getRemoteAircraftData
+            void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
-            //! \copydoc XSwiftBus::CTraffic::getEelevationAtPosition
-            void getEelevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitude, double longitude, double altitude,
-                                         const ElevationCallback &setter);
+            //! \copydoc XSwiftBus::CTraffic::getElevationAtPosition
+            void getElevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
+                                        const ElevationCallback &setter) const;
 
             //! \copydoc XSwiftBus::CTraffic::setFollowedAircraft
             void setFollowedAircraft(const QString &callsign);

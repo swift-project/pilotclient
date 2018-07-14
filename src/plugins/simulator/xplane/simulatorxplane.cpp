@@ -820,6 +820,7 @@ namespace BlackSimPlugin
             CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
             const CCallsignSet remove = this->getLastSentCanLikelySkipNearGroundInterpolation().getCallsigns();
             callsigns.remove(remove);
+            if (!callsigns.isEmpty()) { this->requestRemoteAircraftDataFromXPlane(callsigns); }
         }
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
@@ -827,9 +828,9 @@ namespace BlackSimPlugin
             if (callsigns.isEmpty()) { return; }
             if (this->isShuttingDown()) { return; }
             const QStringList csStrings = callsigns.getCallsignStrings();
-            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
+            m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QDoubleList & verticalOffsetsMeters)
             {
-                updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, verticalOffsetsMeters);
             });
         }
 
@@ -846,18 +847,28 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(
             const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-            const QDoubleList &elevationsM, const QDoubleList &verticalOffsets)
+            const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters)
         {
-            for (int i = 0; i < callsigns.size(); i++)
+            const int size = callsigns.size();
+
+            // we skip if we are not near ground
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(elevationsMeters.size() == size, Q_FUNC_INFO, "Wrong elevations");
+                Q_ASSERT_X(latitudesDeg.size() == size, Q_FUNC_INFO, "Wrong latitudesDeg");
+                Q_ASSERT_X(longitudesDeg.size() == size, Q_FUNC_INFO, "Wrong longitudesDeg");
+                Q_ASSERT_X(verticalOffsetsMeters.size() == size, Q_FUNC_INFO, "Wrong CG");
+            }
+
+            for (int i = 0; i < size; i++)
             {
                 const CCallsign cs(callsigns[i]);
                 if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
 
-                // we skip if we are not near ground
                 const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
-                const CAltitude elevationAlt(elevationsM[i], CLengthUnit::m(), CLengthUnit::ft());
+                const CAltitude elevationAlt(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
-                const CLength cg(verticalOffsets[i], CLengthUnit::m(), CLengthUnit::ft());
+                const CLength cg(verticalOffsetsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 this->rememberElevationAndCG(cs, xpAircraft.getAircraftModelString(), elevation, cg);
             }
         }

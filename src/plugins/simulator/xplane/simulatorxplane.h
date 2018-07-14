@@ -209,7 +209,7 @@ namespace BlackSimPlugin
             void onRemoteAircraftAdded(const QString &callsign);
             void onRemoteAircraftAddingFailed(const QString &callsign);
             void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                                   const QDoubleList &elevationsM, const QDoubleList &verticalOffsets);
+                                                   const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters);
             //! @}
 
             //! Dsiconnect from DBus
