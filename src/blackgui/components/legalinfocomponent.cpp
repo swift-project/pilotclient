@@ -8,10 +8,12 @@
  */
 
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 #include "legalinfocomponent.h"
 #include "ui_legalinfocomponent.h"
 
 using namespace BlackMisc;
+using namespace BlackConfig;
 
 namespace BlackGui
 {
@@ -24,6 +26,7 @@ namespace BlackGui
             ui->setupUi(this);
             const bool cd = m_crashDumpUploadEnabled.get();
             ui->cb_CrashDumps->setChecked(cd);
+            ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
             connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
         }
 
