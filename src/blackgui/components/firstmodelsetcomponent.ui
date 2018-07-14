@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>480</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,113 +40,99 @@
      </layout>
     </widget>
    </item>
-   <item alignment="Qt::AlignLeft|Qt::AlignTop">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
    <item>
-    <widget class="QFrame" name="fr_Models">
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_ModelDirectories">
-        <property name="text">
-         <string>Model dir.:</string>
+    <widget class="QFrame" name="gl_Models">
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector"/>
+      </item>
+      <item row="4" column="1" colspan="4">
+       <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributors">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>200</height>
+         </size>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pb_ModelsTriggerReload">
+        <property name="text">
+         <string> reload </string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_ModelSetInfo">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>model set info</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_ModelSet">
+        <property name="text">
+         <string>Model set</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
        <widget class="QLineEdit" name="le_ModelDirectories">
         <property name="readOnly">
          <bool>true</bool>
         </property>
+        <property name="placeholderText">
+         <string>model directory from settings</string>
+        </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_ModelsInfo">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>model info</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="lbl_Models">
         <property name="text">
          <string>Models:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <layout class="QGridLayout" name="gl_Models">
-        <item row="1" column="0">
-         <widget class="QPushButton" name="pb_ModelSet">
-          <property name="text">
-           <string>set</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="pb_Models">
-          <property name="text">
-           <string>models</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QPushButton" name="pb_ModelsTriggerReload">
-          <property name="text">
-           <string>reload</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLineEdit" name="le_ModelsInfo">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="le_ModelSetInfo">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="1">
-       <widget class="QWidget" name="wi_OwnModels" native="true">
-        <layout class="QHBoxLayout" name="hl_OwnModels">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-        </layout>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QWidget" name="wi_ModelSet" native="true">
-        <layout class="QHBoxLayout" name="hl_ModelSet">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-        </layout>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_ModelDirectories">
+        <property name="text">
+         <string>Model dir.:</string>
+        </property>
        </widget>
       </item>
       <item row="4" column="0">
@@ -156,19 +142,37 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributors">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Simulator">
+        <property name="text">
+         <string>Simulator:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_Models">
+        <property name="text">
+         <string>display</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pb_ModelSet">
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>125</height>
+          <width>100</width>
+          <height>0</height>
          </size>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+        <property name="text">
+         <string>display</string>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pb_ChangeModelDir">
+        <property name="text">
+         <string>change</string>
         </property>
        </widget>
       </item>
@@ -191,6 +195,15 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_ModelDirectories</tabstop>
+  <tabstop>pb_ChangeModelDir</tabstop>
+  <tabstop>le_ModelsInfo</tabstop>
+  <tabstop>pb_Models</tabstop>
+  <tabstop>pb_ModelsTriggerReload</tabstop>
+  <tabstop>le_ModelSetInfo</tabstop>
+  <tabstop>pb_ModelSet</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -9,12 +9,16 @@
 
 #include "firstmodelsetcomponent.h"
 #include "ui_firstmodelsetcomponent.h"
+#include "blackmisc/directoryutils.h"
 #include "dbownmodelsdialog.h"
 #include "dbownmodelscomponent.h"
 #include "dbownmodelsetdialog.h"
 #include "dbownmodelsetcomponent.h"
-#include <QStringList>
 
+#include <QStringList>
+#include <QFileDialog>
+
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 
@@ -40,6 +44,8 @@ namespace BlackGui
             connect(ui->pb_ModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelSetDialog);
             connect(ui->pb_Models, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
             connect(ui->pb_ModelsTriggerReload, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
+            connect(ui->pb_ChangeModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
+            connect(this->modelLoader(), &IAircraftModelLoader::simulatorSettingsChanged, this, &CFirstModelSetComponent::onSimulatorChanged, Qt::QueuedConnection);
         }
 
         CFirstModelSetComponent::~CFirstModelSetComponent()
@@ -99,6 +105,13 @@ namespace BlackGui
 
         const CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings() const
         {
+            Q_ASSERT(this->modelLoader());
+            return this->modelLoader()->multiSimulatorSettings();
+        }
+
+        CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings()
+        {
+            Q_ASSERT(this->modelLoader());
             return this->modelLoader()->multiSimulatorSettings();
         }
 
@@ -106,7 +119,7 @@ namespace BlackGui
         {
             m_modelsDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
             m_modelsDialog->show();
-            bool const reload = QObject::sender() == ui->pb_ModelsTriggerReload;
+            bool const reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
             if (reload) { m_modelsDialog->requestModelsInBackground(ui->comp_SimulatorSelector->getValue(), true); }
         }
 
@@ -114,6 +127,19 @@ namespace BlackGui
         {
             m_modelSetDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
             m_modelSetDialog->show();
+        }
+
+        void CFirstModelSetComponent::changeModelDirectory()
+        {
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            const QString dirOld = this->simulatorSettings().getFirstModelDirectoryOrDefault(simulator);
+            const QString newDir = QFileDialog::getExistingDirectory(this->parentWidget(), tr("Open model directory"), dirOld, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir)) { return; }
+            CStatusMessage msg = this->simulatorSettings().addModelDirectory(newDir, simulator);
+            if (msg.isSuccess())
+            {
+                msg = this->simulatorSettings().saveSettings(simulator);
+            }
         }
 
         bool CFirstModelSetWizardPage::validatePage()

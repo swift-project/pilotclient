@@ -146,7 +146,7 @@
     <item alignment="Qt::AlignRight">
      <widget class="QPushButton" name="pb_SkipFirstModelSet">
       <property name="text">
-       <string>I do this later / do not need this</string>
+       <string>  I do this later / do not need this  </string>
       </property>
      </widget>
     </item>
@@ -275,6 +275,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CFirstModelSetComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/firstmodelsetcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Components::CConfigSimulatorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/configsimulatorcomponent.h</header>
@@ -320,12 +326,6 @@
    <class>BlackGui::Components::CInstallXSwiftBusWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/installxswiftbuscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CFirstModelSetComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/firstmodelsetcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

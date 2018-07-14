@@ -45,7 +45,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CFirstModelSetComponent> ui;
-            QScopedPointer<CDbOwnModelsDialog> m_modelsDialog;
+            QScopedPointer<CDbOwnModelsDialog>   m_modelsDialog;
             QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
 
             //! Simulator has been changed
@@ -66,11 +66,17 @@ namespace BlackGui
             //! Simulator settings
             const BlackMisc::Simulation::Settings::CMultiSimulatorSettings &simulatorSettings() const;
 
+            //! Simulator settings
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings &simulatorSettings();
+
             //! Open own models dialog
             void openOwnModelsDialog();
 
             //! Own model set dialog
             void openOwnModelSetDialog();
+
+            //! Change model directory
+            void changeModelDirectory();
         };
 
         //! Wizard page for CFirstModelSetComponent
