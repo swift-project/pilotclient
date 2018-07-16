@@ -155,13 +155,13 @@ namespace BlackGui
         QString CDbOwnModelsComponent::getInfoString() const
         {
             if (!m_modelLoader) { return ""; }
-            return m_modelLoader->getInfoString();
+            return m_modelLoader->getModelCacheInfoString();
         }
 
         QString CDbOwnModelsComponent::getInfoStringFsFamily() const
         {
             if (!m_modelLoader) { return ""; }
-            return m_modelLoader->getInfoStringFsFamily();
+            return m_modelLoader->getModelCacheInfoStringFsFamily();
         }
 
         CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
@@ -451,6 +451,9 @@ namespace BlackGui
                 return;
             }
 
+            // Do not check for empty models die here, as depending on mode we could still load
+            // will be checked in model loader
+
             CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
@@ -470,6 +473,8 @@ namespace BlackGui
                     // loading ok, but no data
                     CLogMessage(this).warning("Loading completed, but no models");
                 }
+
+                emit this->successfullyLoadedModels(simulator);
             }
             else
             {
@@ -477,7 +482,8 @@ namespace BlackGui
                 CLogMessage(this).error("Loading of models failed, simulator '%1'") << simulator.toQString();
             }
 
-            if (statusMessages.hasWarningOrErrorMessages()) {
+            if (statusMessages.hasWarningOrErrorMessages())
+            {
                 this->showOverlayMessages(statusMessages);
             }
 

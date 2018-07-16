@@ -46,6 +46,10 @@ namespace BlackGui
             //! \remark allows to use the powerful component class
             const CDbOwnModelsComponent *modelsComponent() const;
 
+        signals:
+            //! \copydoc CDbOwnModelsComponent::successfullyLoadedModels
+            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
             QScopedPointer<Ui::CDbOwnModelsDialog> ui;
         };

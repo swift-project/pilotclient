@@ -110,7 +110,9 @@ namespace BlackGui
             virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const override { return this->getModelSetSimulator(); }
             //! @}
 
-        public slots:
+            //! Enable buttons
+            void enableButtons(bool firstSet);
+
             //! Set the model set for a given simulator
             void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 

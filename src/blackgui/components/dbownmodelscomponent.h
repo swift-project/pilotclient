@@ -120,6 +120,10 @@ namespace BlackGui
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 
+        signals:
+            //! Models have been successfully loaded
+            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models, aka models on disk

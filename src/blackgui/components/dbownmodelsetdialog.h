@@ -41,6 +41,12 @@ namespace BlackGui
             //! Direct access to CDbOwnModelSetComponent
             const CDbOwnModelSetComponent *modelSetComponent() const;
 
+            //! Direct access to CDbOwnModelSetComponent
+            CDbOwnModelSetComponent *modelSetComponent();
+
+            //! Enable buttons
+            void enableButtons(bool firstSet);
+
         private:
             QScopedPointer<Ui::CDbOwnModelSetDialog> ui;
         };

@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QObject>
@@ -51,6 +52,12 @@ namespace BlackGui
 
             //! Filter by simulator
             void filterBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! The selected distributors
+            BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
+
+            //! Having selected distributors
+            bool hasSelectedDistributors() const;
 
         private:
             QScopedPointer<Ui::CDbDistributorComponent> ui;

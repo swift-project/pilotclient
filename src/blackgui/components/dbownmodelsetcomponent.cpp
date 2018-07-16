@@ -209,6 +209,11 @@ namespace BlackGui
             }
         }
 
+        void CDbOwnModelSetComponent::enableButtons(bool firstSet)
+        {
+            ui->pb_FirstSet->setEnabled(firstSet);
+        }
+
         void CDbOwnModelSetComponent::tabIndexChanged(int index)
         {
             Q_UNUSED(index);

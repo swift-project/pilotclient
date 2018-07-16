@@ -23,6 +23,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+            connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this, &CDbOwnModelsDialog::successfullyLoadedModels);
         }
 
         CDbOwnModelsDialog::~CDbOwnModelsDialog()

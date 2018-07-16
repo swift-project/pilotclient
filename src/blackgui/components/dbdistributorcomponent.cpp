@@ -57,6 +57,16 @@ namespace BlackGui
             ui->filter_Distributor->setSimulator(simulator);
         }
 
+        CDistributorList CDbDistributorComponent::getSelectedDistributors() const
+        {
+            return ui->tvp_Distributors->selectedObjects();
+        }
+
+        bool CDbDistributorComponent::hasSelectedDistributors() const
+        {
+            return ui->tvp_Distributors->hasSelection();
+        }
+
         void CDbDistributorComponent::distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
