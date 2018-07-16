@@ -123,7 +123,7 @@ namespace BlackMisc
                 if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
             {
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);

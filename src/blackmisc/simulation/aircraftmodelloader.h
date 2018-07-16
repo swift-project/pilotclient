@@ -51,6 +51,9 @@ namespace BlackMisc
             Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Parser mode
             enum LoadModeFlag
             {
@@ -87,14 +90,11 @@ namespace BlackMisc
 
             //! Callback to consolidate data, normally with DB data
             //! \remark this has to be a abstarct, as DB handling is subject of BlackCore
-            using ModelConsolidation = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
-
-            //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
+            using ModelConsolidationCallback = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
 
             //! Start the loading process from disk.
             //! Optional DB models can be passed and used for data consolidation.
-            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {}, const QStringList &modelDirectories = {});
+            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidationCallback &modelConsolidation = {}, const QStringList &modelDirectories = {});
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
@@ -145,12 +145,15 @@ namespace BlackMisc
             void gracefulShutdown();
 
             //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
-            QString getInfoString() const;
+            QString getModelCacheInfoString() const;
 
             //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
-            QString getInfoStringFsFamily() const;
+            QString getModelCacheInfoStringFsFamily() const;
 
-            //! Current simulator settings
+            //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::synchronizeCache
+            void synchronizeModelCache(const CSimulatorInfo &simulator);
+
+            //! \copydoc Settings::CMultiSimulatorSettings::getSpecializedSettings
             Settings::CSpecializedSimulatorSettings getCurrentSimulatorSettings() const;
 
             //! Access to multi simulator settings
@@ -201,13 +204,16 @@ namespace BlackMisc
             BlackMisc::CStatusMessage clearCache();
 
             //! Start the loading process from disk
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories) = 0;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) = 0;
 
             //! Loading finished, also logs messages
             void onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info);
 
             //! A cache has been changed
             void onCacheChanged(const CSimulatorInfo &simInfo);
+
+            //! A setting has been changed
+            void onSettingsChanged(const CSimulatorInfo &simInfo);
 
             //! Get model directories from settings if empty, otherwise checked and UNC path fixed
             QStringList getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const;
@@ -218,6 +224,9 @@ namespace BlackMisc
             CStatusMessageList m_loadingMessages;                   //!< loading messages
             Data::CModelCaches m_caches { false, this };            //!< caches used with this loader
             Settings::CMultiSimulatorSettings m_settings { this };  //!< settings
+
+        private:
+            void setObjectInfo(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
         };
     } // ns
 } // ns

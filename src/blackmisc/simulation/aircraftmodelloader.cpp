@@ -34,11 +34,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             m_caches.setCurrentSimulator(simulator);
+            this->setObjectInfo(simulator);
 
             // first connect is an internal connection to log info about load status
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished);
             connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::onCacheChanged);
-            connect(&m_settings, &CMultiSimulatorSettings::simulatorSettingsChanged, this, &IAircraftModelLoader::simulatorSettingsChanged);
+            connect(&m_settings, &CMultiSimulatorSettings::settingsChanged, this, &IAircraftModelLoader::onSettingsChanged);
         }
 
         QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
@@ -93,6 +94,7 @@ namespace BlackMisc
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
+            this->setObjectInfo(sim);
             return m_caches.setCachedModels(models, sim);
         }
 
@@ -100,6 +102,7 @@ namespace BlackMisc
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
+            this->setObjectInfo(sim);
             CAircraftModelList allModels(m_caches.getSynchronizedCachedModels(sim));
             const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
@@ -115,6 +118,7 @@ namespace BlackMisc
         void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info)
         {
             Q_UNUSED(info);
+            this->setObjectInfo(simulator);
 
             // remark: in the past status used to be bool, now it is CStatusMessage
             // so there is some redundancy here between status and m_loadingMessages
@@ -141,11 +145,21 @@ namespace BlackMisc
             emit this->loadingFinished(status, simInfo, CacheLoaded);
         }
 
+        void IAircraftModelLoader::onSettingsChanged(const CSimulatorInfo &simInfo)
+        {
+            emit this->simulatorSettingsChanged(simInfo);
+        }
+
         QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const
         {
             QStringList modelDirs = modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
             modelDirs = CFileUtils::fixWindowsUncPaths(modelDirs);
             return CDirectoryUtils::getExistingUnemptyDirectories(modelDirs);
+        }
+
+        void IAircraftModelLoader::setObjectInfo(const CSimulatorInfo &simulatorInfo)
+        {
+            this->setObjectName("Model loader for: '" + simulatorInfo.toQString(true) + "'");
         }
 
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
@@ -190,7 +204,7 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
-        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
         {
             if (m_loadingInProgress) { return; }
             m_loadingInProgress = true;
@@ -219,13 +233,14 @@ namespace BlackMisc
             if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
             {
                 const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning,
-                                              "Empty or not existing %1 directory '%2', skipping read")
+                                              "Empty or not existing '%1' directory '%2', skipping read")
                                               << simulator.toQString() << modelDirectories.join(", ");
                 m_loadingMessages.push_back(status);
                 emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
                 return;
             }
 
+            this->setObjectInfo(simulator);
             this->startLoadingFromDisk(mode, modelConsolidation, modelDirs);
         }
 
@@ -256,12 +271,12 @@ namespace BlackMisc
             m_loadingInProgress = true; // avoids further startups
         }
 
-        QString IAircraftModelLoader::getInfoString() const
+        QString IAircraftModelLoader::getModelCacheInfoString() const
         {
             return m_caches.getInfoString();
         }
 
-        QString IAircraftModelLoader::getInfoStringFsFamily() const
+        QString IAircraftModelLoader::getModelCacheInfoStringFsFamily() const
         {
             return m_caches.getInfoStringFsFamily();
         }
@@ -269,6 +284,11 @@ namespace BlackMisc
         CSpecializedSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
         {
             return m_settings.getSpecializedSettings(this->getSimulator());
+        }
+
+        void IAircraftModelLoader::synchronizeModelCache(const CSimulatorInfo &simulator)
+        {
+            m_caches.synchronizeCache(simulator);
         }
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)

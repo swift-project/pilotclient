@@ -250,12 +250,12 @@ namespace BlackMisc
                 IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
                 { }
 
-                //! \name Cache has been changed
+                //! \name Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes
                 //! @{
-                void changedFsx() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
-                void changedFs9() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
-                void changedP3D() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
-                void changedXP()  { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+                void changedFsx() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo::fsx()); }
+                void changedFs9() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo::fs9()); }
+                void changedP3D() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo::p3d()); }
+                void changedXP()  { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo::xplane()); }
                 //! @}
 
                 //! Void version of synchronizeCurrentCache
