@@ -128,6 +128,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models, aka models on disk
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection { this }; //!< last selection
+            BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
 
             //! Request own models
             void requestOwnModelsUpdate();

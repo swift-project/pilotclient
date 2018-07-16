@@ -53,19 +53,22 @@ namespace BlackGui
 
             // Last selection isPinned -> no sync needed
             const CSimulatorInfo simulator(m_simulatorSelection.get());
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const bool success = this->initModelLoader(simulator);
-            if (success)
+            if (simulator.isSingleSimulator())
             {
-                m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
-            }
-            else
-            {
-                CLogMessage(this).error("Init of model loader failed in component");
+                const bool success = this->initModelLoader(simulator);
+                if (success)
+                {
+                    m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
+                    m_simulator = simulator;
+                }
+                else
+                {
+                    CLogMessage(this).error("Init of model loader failed in component");
+                }
+                ui->comp_SimulatorSelector->setValue(simulator);
+                ui->le_Simulator->setText(simulator.toQString());
             }
 
-            ui->comp_SimulatorSelector->setValue(simulator);
-            ui->le_Simulator->setText(simulator.toQString());
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorChanged);
 
             // menu
@@ -102,7 +105,8 @@ namespace BlackGui
         {
             this->setSimulator(simulator);
             if (onlyIfNotEmpty && this->getOwnModelsCount() > 0) { return false; }
-            this->requestSimulatorModels(simulator, onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground);
+            const IAircraftModelLoader::LoadMode mode = onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground;
+            this->requestSimulatorModels(simulator, mode);
             return true;
         }
 
@@ -141,6 +145,10 @@ namespace BlackGui
         void CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            if (m_simulator == simulator) { return; }
+
+            // changed simulator
+            m_simulator = simulator;
             this->loadInstalledModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
             ui->comp_SimulatorSelector->setValue(simulator);
             ui->le_Simulator->setText(simulator.toQString());
@@ -246,6 +254,8 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
             // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
             const CSimulatorInfo sims =  CSimulatorInfo::allSimulators();
             const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
