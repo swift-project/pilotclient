@@ -13,11 +13,13 @@
 #define BLACKGUI_COMPONENTS_FIRSTMODELSETCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackcore/application/applicationsettings.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/logcategorylist.h"
 #include <QFrame>
 #include <QWizardPage>
 
@@ -32,11 +34,14 @@ namespace BlackGui
         class CDbOwnModelSetComponent;
 
         //! Create a first model set
-        class CFirstModelSetComponent : public QFrame
+        class CFirstModelSetComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CFirstModelSetComponent(QWidget *parent = nullptr);
 
@@ -47,9 +52,19 @@ namespace BlackGui
             QScopedPointer<Ui::CFirstModelSetComponent> ui;
             QScopedPointer<CDbOwnModelsDialog>   m_modelsDialog;
             QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
 
             //! Simulator has been changed
             void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Simulator settings changed
+            void onSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Models have been loaded
+            void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Asynchronously call onSettingsChanged
+            void triggerSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Direct access to component
             const CDbOwnModelsComponent *modelsComponent() const;
@@ -63,12 +78,6 @@ namespace BlackGui
             //! Model set loader
             const BlackMisc::Simulation::CAircraftModelSetLoader &modelSetLoader() const;
 
-            //! Simulator settings
-            const BlackMisc::Simulation::Settings::CMultiSimulatorSettings &simulatorSettings() const;
-
-            //! Simulator settings
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings &simulatorSettings();
-
             //! Open own models dialog
             void openOwnModelsDialog();
 
@@ -77,6 +86,9 @@ namespace BlackGui
 
             //! Change model directory
             void changeModelDirectory();
+
+            //! Create the model set
+            void createModelSet();
         };
 
         //! Wizard page for CFirstModelSetComponent

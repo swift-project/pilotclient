@@ -9,6 +9,8 @@
 
 #include "firstmodelsetcomponent.h"
 #include "ui_firstmodelsetcomponent.h"
+#include "blackgui/views/distributorview.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/directoryutils.h"
 #include "dbownmodelsdialog.h"
 #include "dbownmodelscomponent.h"
@@ -17,6 +19,7 @@
 
 #include <QStringList>
 #include <QFileDialog>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -26,13 +29,20 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CFirstModelSetComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::modelGui() };
+            return cats;
+        }
+
         CFirstModelSetComponent::CFirstModelSetComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CFirstModelSetComponent)
         {
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setRememberSelection(true);
+            ui->comp_Distributors->view()->setSelectionMode(QAbstractItemView::MultiSelection);
 
             // we use the powerful component to access own models
             m_modelsDialog.reset(new CDbOwnModelsDialog(this));
@@ -40,12 +50,19 @@ namespace BlackGui
 
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CFirstModelSetComponent::onSimulatorChanged);
+            bool s = connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CFirstModelSetComponent::onSimulatorChanged);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect selector signal");
+            connect(&m_simulatorSettings, &CMultiSimulatorSettings::settingsChanged, this, &CFirstModelSetComponent::onSettingsChanged);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect settings signal");
+            connect(m_modelsDialog.data(), &CDbOwnModelsDialog::successfullyLoadedModels, this, &CFirstModelSetComponent::onModelsLoaded);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect models signal");
+
             connect(ui->pb_ModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelSetDialog);
             connect(ui->pb_Models, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
             connect(ui->pb_ModelsTriggerReload, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
             connect(ui->pb_ChangeModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
-            connect(this->modelLoader(), &IAircraftModelLoader::simulatorSettingsChanged, this, &CFirstModelSetComponent::onSimulatorChanged, Qt::QueuedConnection);
+            connect(ui->pb_ClearModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
+            connect(ui->pb_CreateModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::createModelSet);
         }
 
         CFirstModelSetComponent::~CFirstModelSetComponent()
@@ -59,23 +76,46 @@ namespace BlackGui
             Q_ASSERT_X(m_modelSetDialog, Q_FUNC_INFO, "No model set dialog");
             m_modelSetDialog->setSimulator(simulator);
 
+            // distributor component
             ui->comp_Distributors->filterBySimulator(simulator);
+
+            const QStringList dirs = m_simulatorSettings.getModelDirectoriesOrDefault(simulator);
+            ui->le_ModelDirectories->setText(dirs.join(", "));
 
             // kind of hack, but simplest solution
             // we us the loader of the components directly,
             // avoid to fully init a loader logic here
-            const QStringList dirs = this->simulatorSettings().getModelDirectoriesOrDefault(simulator);
-            ui->le_ModelDirectories->setText(dirs.join(", "));
-
             static const QString modelInfo("Models already indexed: %1");
             static const QString modelsNo("No models so far");
-            const int models = this->modelLoader()->getAircraftModelsCount();
-            ui->le_ModelsInfo->setText(models > 0 ? modelInfo.arg(models) : modelsNo);
+            const int modelsCount = this->modelLoader()->getAircraftModelsCount();
+            ui->le_ModelsInfo->setText(modelsCount > 0 ? modelInfo.arg(modelsCount) : modelsNo);
+            ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
             static const QString modelSetInfo("Models in set: %1");
             static const QString modelsSetNo("Model set is empty");
             const int modelSet = this->modelSetLoader().getAircraftModelsCount();
-            ui->le_ModelSetInfo->setText(models > 0 ? modelSetInfo.arg(modelSet) : modelsSetNo);
+            ui->le_ModelSetInfo->setText(modelsCount > 0 ? modelSetInfo.arg(modelSet) : modelsSetNo);
+        }
+
+        void CFirstModelSetComponent::onSettingsChanged(const CSimulatorInfo &simulator)
+        {
+            this->onSimulatorChanged(simulator);
+        }
+
+        void CFirstModelSetComponent::onModelsLoaded(const CSimulatorInfo &simulator)
+        {
+            this->onSimulatorChanged(simulator);
+        }
+
+        void CFirstModelSetComponent::triggerSettingsChanged(const CSimulatorInfo &simulator)
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            QPointer<CFirstModelSetComponent> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                myself->onSettingsChanged(simulator);
+            });
         }
 
         const CDbOwnModelsComponent *CFirstModelSetComponent::modelsComponent() const
@@ -92,7 +132,7 @@ namespace BlackGui
             return m_modelSetDialog->modelSetComponent();
         }
 
-        BlackMisc::Simulation::IAircraftModelLoader *CFirstModelSetComponent::modelLoader() const
+        IAircraftModelLoader *CFirstModelSetComponent::modelLoader() const
         {
             Q_ASSERT_X(m_modelsDialog->modelsComponent()->modelLoader(), Q_FUNC_INFO, "No model loader");
             return m_modelsDialog->modelsComponent()->modelLoader();
@@ -103,43 +143,77 @@ namespace BlackGui
             return this->modelSetComponent()->modelSetLoader();
         }
 
-        const CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings() const
-        {
-            Q_ASSERT(this->modelLoader());
-            return this->modelLoader()->multiSimulatorSettings();
-        }
-
-        CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings()
-        {
-            Q_ASSERT(this->modelLoader());
-            return this->modelLoader()->multiSimulatorSettings();
-        }
-
         void CFirstModelSetComponent::openOwnModelsDialog()
         {
             m_modelsDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
             m_modelsDialog->show();
-            bool const reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
+            const bool reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
             if (reload) { m_modelsDialog->requestModelsInBackground(ui->comp_SimulatorSelector->getValue(), true); }
         }
 
         void CFirstModelSetComponent::openOwnModelSetDialog()
         {
             m_modelSetDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
+            m_modelSetDialog->enableButtons(false);
             m_modelSetDialog->show();
         }
 
         void CFirstModelSetComponent::changeModelDirectory()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-            const QString dirOld = this->simulatorSettings().getFirstModelDirectoryOrDefault(simulator);
-            const QString newDir = QFileDialog::getExistingDirectory(this->parentWidget(), tr("Open model directory"), dirOld, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-            if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir)) { return; }
-            CStatusMessage msg = this->simulatorSettings().addModelDirectory(newDir, simulator);
+            CSpecializedSimulatorSettings settings = m_simulatorSettings.getSpecializedSettings(simulator);
+            const bool clear = (QObject::sender() == ui->pb_ClearModelDir);
+
+            if (clear)
+            {
+                settings.clearModelDirectories();
+            }
+            else
+            {
+                QWidget *pw = sGui->mainApplicationWidget();
+                if (!pw) { pw = this; }
+                const QString dirOld = settings.getFirstModelDirectoryOrDefault();
+                const QString newDir = QFileDialog::getExistingDirectory(pw, tr("Open model directory"), dirOld, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir)) { return; }
+                settings.addModelDirectory(newDir);
+            }
+
+            const CStatusMessage msg = m_simulatorSettings.setAndSaveSettings(settings, simulator);
             if (msg.isSuccess())
             {
-                msg = this->simulatorSettings().saveSettings(simulator);
+                this->triggerSettingsChanged(simulator);
             }
+            else
+            {
+                this->showOverlayMessage(msg, 4000);
+            }
+        }
+
+        void CFirstModelSetComponent::createModelSet()
+        {
+            if (!ui->comp_Distributors->hasSelectedDistributors())
+            {
+                static const CStatusMessage msg = CStatusMessage(this).validationError("No distributors selected");
+                this->showOverlayMessage(msg, 4000);
+                return;
+            }
+
+            const int modelsCount = this->modelLoader()->getAircraftModelsCount();
+            if (modelsCount < 1)
+            {
+                static const CStatusMessage msg = CStatusMessage(this).validationError("No models indexed so far. Try 'reload'!");
+                this->showOverlayMessage(msg, 4000);
+                return;
+            }
+
+            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
+            const CDistributorList distributors = ui->comp_Distributors->getSelectedDistributors();
+            CAircraftModelList modelsForSet = this->modelLoader()->getAircraftModels();
+            modelsForSet = modelsForSet.findByDistributors(distributors);
+            m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, sim);
+
+            ui->pb_ModelSet->click();
         }
 
         bool CFirstModelSetWizardPage::validatePage()

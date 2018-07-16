@@ -176,6 +176,20 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_ClearModelDir">
+        <property name="text">
+         <string>clear</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="pb_CreateModelSet">
+        <property name="text">
+         <string>create</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -197,6 +211,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_ModelDirectories</tabstop>
+  <tabstop>pb_ClearModelDir</tabstop>
   <tabstop>pb_ChangeModelDir</tabstop>
   <tabstop>le_ModelsInfo</tabstop>
   <tabstop>pb_Models</tabstop>
