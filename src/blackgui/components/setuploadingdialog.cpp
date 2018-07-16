@@ -44,6 +44,7 @@ namespace BlackGui
             connect(ui->pb_Help, &QPushButton::clicked, this, &CSetupLoadingDialog::openHelpPage);
             connect(ui->pb_CopyFromSwift, &QPushButton::clicked, this, &CSetupLoadingDialog::copyFromOtherSwiftVersions);
             connect(ui->pb_OpemDirectory, &QPushButton::clicked, this, &CSetupLoadingDialog::openDirectory);
+            connect(ui->pb_TryToFix, &QPushButton::clicked, this, &CSetupLoadingDialog::tryToFix);
 
             QPushButton *retry = ui->bb_Dialog->button(QDialogButtonBox::Retry);
             retry->setDefault(true);
@@ -117,6 +118,14 @@ namespace BlackGui
             this->accept();
         }
 
+        void CSetupLoadingDialog::tryToFix()
+        {
+            this->prefillSetupCache();
+            QPushButton *retry = ui->bb_Dialog->button(QDialogButtonBox::Retry);
+            if (!retry) { return; }
+            retry->click();
+        }
+
         void CSetupLoadingDialog::prefillSetupCache()
         {
             if (!sApp || sApp->isShuttingDown()) { return; }
@@ -145,6 +154,7 @@ namespace BlackGui
             const bool hasCachedSetup = this->hasCachedSetup();
             ui->pb_LoadFromDisk->setEnabled(!hasCachedSetup);
             ui->pb_LoadFromDisk->setToolTip(hasCachedSetup ? "Cached setup already available" : "No cached setup");
+            ui->pb_TryToFix->setEnabled(!hasCachedSetup);
         }
 
         void CSetupLoadingDialog::displayOtherVersionsInfo()

@@ -64,6 +64,9 @@ namespace BlackGui
             //! Try again without explicit bootstrap URL
             void tryAgainWithoutBootstrapUrl();
 
+            //! Try to fix
+            void tryToFix();
+
             //! Prefill setup cache
             void prefillSetupCache();
 
