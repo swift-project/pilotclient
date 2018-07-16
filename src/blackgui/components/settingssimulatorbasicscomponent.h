@@ -84,6 +84,9 @@ namespace BlackGui
             //! Simulator has been changed
             void onSimulatorChanged();
 
+            //! Simulator settings did change
+            void onSimulatorSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! Optimize for small layout
             void setSmallLayout(bool small);
 

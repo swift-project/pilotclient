@@ -51,6 +51,7 @@ namespace BlackGui
             connect(ui->pb_AdjustModelDirectory, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::adjustModelDirectory);
             connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::simulatorDirectoryEntered);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::onSimulatorChanged);
+            connect(&m_settings, &CMultiSimulatorSettings::settingsChanged, this, &CSettingsSimulatorBasicsComponent::onSimulatorSettingsChanged);
 
             this->onSimulatorChanged();
         }
@@ -176,6 +177,15 @@ namespace BlackGui
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             this->displaySettings(simulator);
             this->displayDefaultValuesAsPlaceholder(simulator);
+        }
+
+        void CSettingsSimulatorBasicsComponent::onSimulatorSettingsChanged(const CSimulatorInfo &simulator)
+        {
+            const CSimulatorInfo selectedSimulator(ui->comp_SimulatorSelector->getValue());
+            if (selectedSimulator == simulator)
+            {
+                this->displaySettings(simulator);
+            }
         }
 
         QStringList CSettingsSimulatorBasicsComponent::parseModelDirectories() const
