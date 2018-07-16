@@ -27,7 +27,7 @@
       <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#ff0000;&quot;&gt;WORK IN PROGRESS (experimental) &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;br/&gt;&lt;br/&gt;1) Reload your models if not already done&lt;br/&gt;2) Create your model set and SAVE the model set&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>

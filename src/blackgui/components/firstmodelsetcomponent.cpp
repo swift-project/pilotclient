@@ -11,6 +11,7 @@
 #include "ui_firstmodelsetcomponent.h"
 #include "blackgui/views/distributorview.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/directoryutils.h"
 #include "dbownmodelsdialog.h"
 #include "dbownmodelscomponent.h"
@@ -85,7 +86,7 @@ namespace BlackGui
             // kind of hack, but simplest solution
             // we us the loader of the components directly,
             // avoid to fully init a loader logic here
-            static const QString modelInfo("Models already indexed: %1");
+            static const QString modelInfo("Models indexed: %1");
             static const QString modelsNo("No models so far");
             const int modelsCount = this->modelLoader()->getAircraftModelsCount();
             ui->le_ModelsInfo->setText(modelsCount > 0 ? modelInfo.arg(modelsCount) : modelsNo);
@@ -145,17 +146,37 @@ namespace BlackGui
 
         void CFirstModelSetComponent::openOwnModelsDialog()
         {
-            m_modelsDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
-            m_modelsDialog->show();
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             const bool reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
-            if (reload) { m_modelsDialog->requestModelsInBackground(ui->comp_SimulatorSelector->getValue(), true); }
+
+            if (reload)
+            {
+                if (!sGui->getWebDataServices()->hasDbModelData())
+                {
+                    const QMessageBox::StandardButton reply = QMessageBox::warning(this->mainWindow(), "DB data", "No DB data, models cannot be consolidated. Load anyway?", QMessageBox::Yes | QMessageBox::No);
+                    if (reply != QMessageBox::Yes) { return; }
+                }
+                const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+                m_modelsDialog->requestModelsInBackground(simulator, true);
+            }
+
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            m_modelsDialog->setSimulator(simulator);
+            m_modelsDialog->exec();
+
+            // force UI update
+            this->triggerSettingsChanged(simulator);
         }
 
         void CFirstModelSetComponent::openOwnModelSetDialog()
         {
-            m_modelSetDialog->setSimulator(ui->comp_SimulatorSelector->getValue());
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            m_modelSetDialog->setSimulator(simulator);
             m_modelSetDialog->enableButtons(false);
-            m_modelSetDialog->show();
+            m_modelSetDialog->exec();
+
+            // force UI update
+            this->triggerSettingsChanged(simulator);
         }
 
         void CFirstModelSetComponent::changeModelDirectory()
@@ -171,10 +192,8 @@ namespace BlackGui
             }
             else
             {
-                QWidget *pw = sGui->mainApplicationWidget();
-                if (!pw) { pw = this; }
                 const QString dirOld = settings.getFirstModelDirectoryOrDefault();
-                const QString newDir = QFileDialog::getExistingDirectory(pw, tr("Open model directory"), dirOld, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                const QString newDir = QFileDialog::getExistingDirectory(this->mainWindow(), tr("Open model directory"), dirOld, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
                 if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir)) { return; }
                 settings.addModelDirectory(newDir);
             }
@@ -192,13 +211,6 @@ namespace BlackGui
 
         void CFirstModelSetComponent::createModelSet()
         {
-            if (!ui->comp_Distributors->hasSelectedDistributors())
-            {
-                static const CStatusMessage msg = CStatusMessage(this).validationError("No distributors selected");
-                this->showOverlayMessage(msg, 4000);
-                return;
-            }
-
             const int modelsCount = this->modelLoader()->getAircraftModelsCount();
             if (modelsCount < 1)
             {
@@ -207,13 +219,37 @@ namespace BlackGui
                 return;
             }
 
-            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
-            const CDistributorList distributors = ui->comp_Distributors->getSelectedDistributors();
+            bool useAllModels = false;
+            if (!ui->comp_Distributors->hasSelectedDistributors())
+            {
+                const QMessageBox::StandardButton reply = QMessageBox::question(this->mainWindow(), "Models", "No distributors selected, use all model?", QMessageBox::Yes | QMessageBox::No);
+                if (reply == QMessageBox::Yes)
+                {
+                    useAllModels = true;
+                }
+                else
+                {
+                    static const CStatusMessage msg = CStatusMessage(this).validationError("No distributors selected");
+                    this->showOverlayMessage(msg, 4000);
+                    return;
+                }
+            }
             CAircraftModelList modelsForSet = this->modelLoader()->getAircraftModels();
-            modelsForSet = modelsForSet.findByDistributors(distributors);
-            m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, sim);
+            if (!useAllModels)
+            {
+                const CDistributorList distributors = ui->comp_Distributors->getSelectedDistributors();
+                modelsForSet = modelsForSet.findByDistributors(distributors);
+            }
 
+            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
+            m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, sim);
             ui->pb_ModelSet->click();
+        }
+
+        QWidget *CFirstModelSetComponent::mainWindow()
+        {
+            QWidget *pw = sGui->mainApplicationWidget();
+            return pw ? pw : this;
         }
 
         bool CFirstModelSetWizardPage::validatePage()

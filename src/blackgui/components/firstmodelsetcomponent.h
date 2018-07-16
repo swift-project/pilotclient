@@ -89,6 +89,9 @@ namespace BlackGui
 
             //! Create the model set
             void createModelSet();
+
+            //! Main window or this
+            QWidget *mainWindow();
         };
 
         //! Wizard page for CFirstModelSetComponent
