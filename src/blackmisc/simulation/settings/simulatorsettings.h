@@ -39,7 +39,7 @@ namespace BlackMisc
                 enum ColumnIndex
                 {
                     IndexSimulatorDirectory = CPropertyIndex::GlobalIndexCSimulatorSettings,
-                    IndexModelDirectory,
+                    IndexModelDirectories,
                     IndexModelExcludeDirectoryPatterns
                 };
 
@@ -60,6 +60,9 @@ namespace BlackMisc
 
                 //! Set model directories
                 void setModelDirectories(const QStringList &modelDirectories);
+
+                //! Clear the model directories
+                void clearModelDirectories();
 
                 //! Set single model directory
                 void setModelDirectory(const QString &modelDirectory);
@@ -98,7 +101,7 @@ namespace BlackMisc
                 void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                QString     m_simulatorDirectory;       //! Simulator directory
+                QString     m_simulatorDirectory;       //!< Simulator directory
                 QStringList m_modelDirectories;         //!< Model directory
                 QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
 
@@ -122,9 +125,6 @@ namespace BlackMisc
 
                 //! Ctor
                 CSpecializedSimulatorSettings(const QString &simulatorDir, const CSimulatorInfo &simulator) : m_genericSettings(CSimulatorSettings(simulatorDir)), m_simulator(simulator) {}
-
-                //! Alter simulator directory
-                void setSimulatorDirectory(const QString &simDir);
 
                 //! Default simulator path per simulator
                 const QString &getDefaultSimulatorDirectory() const;
@@ -161,6 +161,15 @@ namespace BlackMisc
 
                 //! Model exclude patterns or empty if default
                 const QStringList &getModelExcludeDirectoryPatternsOrDefault() const;
+
+                //! \copydoc CSimulatorSettings::clearModelDirectories
+                void clearModelDirectories() { m_genericSettings.clearModelDirectories(); }
+
+                //! \copydoc CSimulatorSettings::addModelDirectory
+                bool addModelDirectory(const QString &modelDirectory) { return m_genericSettings.addModelDirectory(modelDirectory); }
+
+                //! \copydoc CSimulatorSettings::setSimulatorDirectory
+                void setSimulatorDirectory(const QString &simDir) { m_genericSettings.setSimulatorDirectory(simDir); }
 
                 //! Default model path per simulator
                 static const QStringList &defaultModelDirectories(const CSimulatorInfo &simulator);
@@ -253,8 +262,14 @@ namespace BlackMisc
                 //! Set model directory per simulator
                 CStatusMessage addModelDirectory(const QString &modelDirectory, const CSimulatorInfo &simulator);
 
+                //! Clear the model directory
+                CStatusMessage clearModelDirectories(const CSimulatorInfo &simulator);
+
                 //! Set settings per simulator
                 CStatusMessage setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
+
+                //! Set settings per simulator
+                CStatusMessage setAndSaveSettings(const CSpecializedSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
                 CStatusMessage saveSettings(const CSimulatorInfo &simulator);
@@ -296,7 +311,7 @@ namespace BlackMisc
 
             signals:
                 //! Simulator settings have been changed
-                void simulatorSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                void settingsChanged(const CSimulatorInfo &simulator);
 
             private:
                 CSetting<Settings::TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
@@ -304,10 +319,15 @@ namespace BlackMisc
                 CSetting<Settings::TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
                 CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
 
+                //! Settings changed, this will only detect if settings are changed elsewhere @{
                 void onFsxSettingsChanged();
                 void onFs9SettingsChanged();
                 void onP3DSettingsChanged();
                 void onXPSettingsChanged();
+                //! @}
+
+                //! Emit the signal, allows breakpoint
+                void emitSettingsChanged(const CSimulatorInfo &simInfo);
             };
 
             //! Settings regarding message handling.

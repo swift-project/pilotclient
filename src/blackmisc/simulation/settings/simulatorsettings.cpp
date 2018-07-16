@@ -46,6 +46,11 @@ namespace BlackMisc
                 m_modelDirectories.removeDuplicates();
             }
 
+            void CSimulatorSettings::clearModelDirectories()
+            {
+                m_modelDirectories.clear();
+            }
+
             void CSimulatorSettings::setModelDirectory(const QString &modelDirectory)
             {
                 m_modelDirectories = QStringList({ modelDirectory });
@@ -107,7 +112,7 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexSimulatorDirectory: return CVariant::fromValue(m_simulatorDirectory);
-                case IndexModelDirectory: return CVariant::fromValue(m_modelDirectories);
+                case IndexModelDirectories: return CVariant::fromValue(m_modelDirectories);
                 case IndexModelExcludeDirectoryPatterns: return CVariant::fromValue(m_excludeDirectoryPatterns);
                 default: return CValueObject::propertyByIndex(index);
                 }
@@ -120,7 +125,7 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexSimulatorDirectory: this->setSimulatorDirectory(variant.toQString()); break;
-                case IndexModelDirectory: this->setSimulatorDirectory(variant.toQString()); break;
+                case IndexModelDirectories: this->setSimulatorDirectory(variant.toQString()); break;
                 case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
@@ -178,6 +183,13 @@ namespace BlackMisc
                 return this->setSettings(s, simulator);
             }
 
+            CStatusMessage CMultiSimulatorSettings::clearModelDirectories(const CSimulatorInfo &simulator)
+            {
+                CSimulatorSettings s = this->getSettings(simulator);
+                s.clearModelDirectories();
+                return this->setSettings(s, simulator);
+            }
+
             CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -192,6 +204,11 @@ namespace BlackMisc
                     break;
                 }
                 return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, "wrong simulator");
+            }
+
+            CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSpecializedSimulatorSettings &settings, const CSimulatorInfo &simulator)
+            {
+                return this->setAndSaveSettings(settings.getGenericSettings(), simulator);
             }
 
             CStatusMessage CMultiSimulatorSettings::saveSettings(const CSimulatorInfo &simulator)
@@ -276,22 +293,27 @@ namespace BlackMisc
 
             void CMultiSimulatorSettings::onFsxSettingsChanged()
             {
-                emit this->simulatorSettingsChanged(CSimulatorInfo::fsx());
+                this->emitSettingsChanged(CSimulatorInfo::fsx());
             }
 
             void CMultiSimulatorSettings::onP3DSettingsChanged()
             {
-                emit this->simulatorSettingsChanged(CSimulatorInfo::p3d());
+                this->emitSettingsChanged(CSimulatorInfo::p3d());
             }
 
             void CMultiSimulatorSettings::onFs9SettingsChanged()
             {
-                emit this->simulatorSettingsChanged(CSimulatorInfo::fs9());
+                this->emitSettingsChanged(CSimulatorInfo::fs9());
             }
 
             void CMultiSimulatorSettings::onXPSettingsChanged()
             {
-                emit this->simulatorSettingsChanged(CSimulatorInfo::xplane());
+                this->emitSettingsChanged(CSimulatorInfo::xplane());
+            }
+
+            void CMultiSimulatorSettings::emitSettingsChanged(const CSimulatorInfo &simInfo)
+            {
+                emit this->settingsChanged(simInfo);
             }
 
             void CSimulatorMessagesSettings::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
@@ -437,11 +459,6 @@ namespace BlackMisc
                 case IndexGloballyEnabled: this->setGloballyEnabled(variant.toBool()); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
-            }
-
-            void CSpecializedSimulatorSettings::setSimulatorDirectory(const QString &simDir)
-            {
-                m_genericSettings.setSimulatorDirectory(simDir);
             }
 
             const QString &CSpecializedSimulatorSettings::getDefaultSimulatorDirectory() const
