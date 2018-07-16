@@ -47,9 +47,6 @@ namespace BlackCore
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
 
-            //! Fill in missing data if only the id is provided, but no data
-            static int fillInMissingAircraftAndLiveryEntities(BlackMisc::Simulation::CAircraftModelList &models);
-
             //! Consolidate models with simulator model data (aka "models on disk")
             //! \remark kept here with the other consolidate functions, but actually DB independent
             static BlackMisc::Simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CAircraftModelList &simulatorModels, bool processEvents);
@@ -69,6 +66,9 @@ namespace BlackCore
 
             //! Consolidate model data with DB distributors
             static int consolidateModelsWithDbDistributor(BlackMisc::Simulation::CAircraftModelList &models, bool force);
+
+            //! Fill in missing data if only the id is provided, but no data
+            static int fillInMissingAircraftAndLiveryEntities(BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Create stash models if the DB models miss that simulator
             static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);

@@ -1599,4 +1599,25 @@ namespace BlackCore
         );
         return msgs;
     }
+
+    CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(CEntityFlags::Entity entities, bool inBackground)
+    {
+        CStatusMessageList msgs;
+        msgs.push_back(
+            m_icaoDataReader && m_icaoDataReader->supportsAnyOfEntities(entities) ?
+            m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
+            CStatusMessage(this).info("No ICAO reader or not supporting entities")
+        );
+        msgs.push_back(
+            m_modelDataReader && m_modelDataReader->supportsAnyOfEntities(entities) ?
+            m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
+            CStatusMessage(this).info("No model reader or not supporting entities")
+        );
+        msgs.push_back(
+            m_airportDataReader && m_airportDataReader->supportsAnyOfEntities(entities) ?
+            m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
+            CStatusMessage(this).info("No airport reader or not supporting entities")
+        );
+        return msgs;
+    }
 } // ns

@@ -266,6 +266,10 @@ namespace BlackCore
             //! \remark normally used after installation for a 1st time init
             BlackMisc::CStatusMessageList initFromLocalResourceFiles(bool inBackground);
 
+            //! Init from local resource file
+            //! \remark normally used after installation for a 1st time init
+            BlackMisc::CStatusMessageList initFromLocalResourceFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool inBackground);
+
             //! Data read from local data
             virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 

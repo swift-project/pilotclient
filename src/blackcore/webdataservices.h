@@ -474,11 +474,16 @@ namespace BlackCore
 
         //! Load DB data from disk (mainly for initial data load and testing scenarios)
         //! \remark if the DB readers are alred in aother thread reads in background
+        //! \sa CWebDataServices::initDbCachesFromLocalResourceFiles for reading from local resource file
         bool readDbDataFromDisk(const QString &dir, bool inBackground, bool overrideNewerOnly);
 
         //! Init caches from local DB files
         //! \remark the shared files coming with the installer
         BlackMisc::CStatusMessageList initDbCachesFromLocalResourceFiles(bool inBackground);
+
+        //! Init caches from local DB files per given entities
+        //! \remark the shared files coming with the installer
+        BlackMisc::CStatusMessageList initDbCachesFromLocalResourceFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool inBackground);
 
     signals:
         //! Combined read signal

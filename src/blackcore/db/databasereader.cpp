@@ -602,17 +602,24 @@ namespace BlackCore
 
         CStatusMessageList CDatabaseReader::initFromLocalResourceFiles(bool inBackground)
         {
+            return this->initFromLocalResourceFiles(this->getSupportedEntities(), inBackground);
+        }
+
+        CStatusMessageList CDatabaseReader::initFromLocalResourceFiles(CEntityFlags::Entity entities, bool inBackground)
+        {
             const bool overrideNewerOnly = true;
+            entities = this->maskBySupportedEntities(entities);
+
             if (inBackground || !CThreadUtils::isCurrentThreadObjectThread(this))
             {
-                const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), this->getSupportedEntities(), overrideNewerOnly);
+                const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
                 return s ?
-                       CStatusMessage(this).info("Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(this->getSupportedEntities()) :
-                       CStatusMessage(this).error("Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(this->getSupportedEntities());
+                       CStatusMessage(this).info("Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
+                       CStatusMessage(this).error("Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
             }
             else
             {
-                return this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), this->getSupportedEntities(), overrideNewerOnly);
+                return this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
             }
         }
 

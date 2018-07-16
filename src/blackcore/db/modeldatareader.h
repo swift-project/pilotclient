@@ -132,12 +132,12 @@ namespace BlackCore
             //! \threadsafe
             bool areAllDataRead() const;
 
-            // data read from local data
-            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
-            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
-
             //! Write to JSON file
             bool writeToJsonFiles(const QString &dir) const;
+
+            // Data read from local data
+            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
 
             // cache handling for base class
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
