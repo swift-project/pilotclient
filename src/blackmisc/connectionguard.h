@@ -50,10 +50,10 @@ namespace BlackMisc
         ~CConnectionGuard();
 
         //! Add connection
-        void append(const QMetaObject::Connection &connection);
+        bool append(const QMetaObject::Connection &connection);
 
         //! Add connections
-        void append(const QList<QMetaObject::Connection> &connections);
+        bool append(const QList<QMetaObject::Connection> &connections);
 
         //! Disconnect all
         int disconnectAll();
@@ -61,6 +61,6 @@ namespace BlackMisc
     private:
         QList<QMetaObject::Connection> m_connections;
     };
-} // BlackMisc
+} // ns
 
 #endif

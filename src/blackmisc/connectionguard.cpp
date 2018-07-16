@@ -17,14 +17,22 @@ namespace BlackMisc
         m_connections.append(connection);
     }
 
-    void CConnectionGuard::append(const QMetaObject::Connection &connection)
+    bool CConnectionGuard::append(const QMetaObject::Connection &connection)
     {
+        if (!connection) { return false; }
         m_connections.append(connection);
+        return true;
     }
 
-    void CConnectionGuard::append(const QList<QMetaObject::Connection> &connections)
+    bool CConnectionGuard::append(const QList<QMetaObject::Connection> &connections)
     {
-        m_connections.append(connections);
+        int c = 0;
+        for (const QMetaObject::Connection &connection : connections)
+        {
+            if (!connection) { continue; }
+            if (this->append(connection)) { c++; }
+        }
+        return c > 0;
     }
 
     CConnectionGuard::~CConnectionGuard()
