@@ -150,6 +150,12 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
             QString getModelCacheInfoStringFsFamily() const;
 
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            QString getModelCacheCountAndTimestamp() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            QString getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const;
+
             //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::synchronizeCache
             void synchronizeModelCache(const CSimulatorInfo &simulator);
 

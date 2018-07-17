@@ -21,6 +21,7 @@
 #include <QStringList>
 #include <QFileDialog>
 #include <QPointer>
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -53,9 +54,9 @@ namespace BlackGui
 
             bool s = connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CFirstModelSetComponent::onSimulatorChanged);
             Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect selector signal");
-            connect(&m_simulatorSettings, &CMultiSimulatorSettings::settingsChanged, this, &CFirstModelSetComponent::onSettingsChanged);
+            connect(&m_simulatorSettings, &CMultiSimulatorSettings::settingsChanged, this, &CFirstModelSetComponent::onSettingsChanged, Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect settings signal");
-            connect(m_modelsDialog.data(), &CDbOwnModelsDialog::successfullyLoadedModels, this, &CFirstModelSetComponent::onModelsLoaded);
+            connect(m_modelsDialog.data(), &CDbOwnModelsDialog::successfullyLoadedModels, this, &CFirstModelSetComponent::onModelsLoaded, Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect models signal");
 
             connect(ui->pb_ModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelSetDialog);
@@ -86,25 +87,27 @@ namespace BlackGui
             // kind of hack, but simplest solution
             // we us the loader of the components directly,
             // avoid to fully init a loader logic here
-            static const QString modelInfo("Models indexed: %1");
             static const QString modelsNo("No models so far");
             const int modelsCount = this->modelLoader()->getAircraftModelsCount();
-            ui->le_ModelsInfo->setText(modelsCount > 0 ? modelInfo.arg(modelsCount) : modelsNo);
+            ui->le_ModelsInfo->setText(modelsCount > 0 ? this->modelLoader()->getModelCacheCountAndTimestamp() : modelsNo);
             ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
-            static const QString modelSetInfo("Models in set: %1");
             static const QString modelsSetNo("Model set is empty");
-            const int modelSet = this->modelSetLoader().getAircraftModelsCount();
-            ui->le_ModelSetInfo->setText(modelsCount > 0 ? modelSetInfo.arg(modelSet) : modelsSetNo);
+            const int modelsSetCount = this->modelSetLoader().getAircraftModelsCount();
+            ui->le_ModelSetInfo->setText(modelsSetCount > 0 ? this->modelSetLoader().getModelCacheCountAndTimestamp(simulator) : modelsSetNo);
         }
 
         void CFirstModelSetComponent::onSettingsChanged(const CSimulatorInfo &simulator)
         {
+            const CSimulatorInfo currentSimulator = ui->comp_SimulatorSelector->getValue();
+            if (simulator != currentSimulator) { return; } // ignore changes not for my selected simulator
             this->onSimulatorChanged(simulator);
         }
 
         void CFirstModelSetComponent::onModelsLoaded(const CSimulatorInfo &simulator)
         {
+            const CSimulatorInfo currentSimulator = ui->comp_SimulatorSelector->getValue();
+            if (simulator != currentSimulator) { return; } // ignore changes not for my selected simulator
             this->onSimulatorChanged(simulator);
         }
 

@@ -160,5 +160,15 @@ namespace BlackMisc
         {
             return m_caches.getInfoStringFsFamily();
         }
+
+        QString CAircraftModelSetLoader::getModelCacheCountAndTimestamp() const
+        {
+            return m_caches.getCacheCountAndTimestamp(this->getSimulator());
+        }
+
+        QString CAircraftModelSetLoader::getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
+        {
+            return m_caches.getCacheCountAndTimestamp(simulator);
+        }
     } // ns
 } // ns

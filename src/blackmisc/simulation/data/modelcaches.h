@@ -238,6 +238,9 @@ namespace BlackMisc
                 //! Info string without XPlane (FSX,P3D, FS9)
                 QString getInfoStringFsFamily() const;
 
+                //! Cache count and timestamp
+                QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const;
+
                 //! Descriptive text
                 virtual QString getDescription() const = 0;
 

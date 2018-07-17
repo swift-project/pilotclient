@@ -64,7 +64,7 @@ namespace BlackMisc
             //! The loaded models for given simulator
             //! \threadsafe
             //! \remark non-const because it synchronizes cache
-            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const CSimulatorInfo &simulator);
 
             //! Count of loaded models
             //! \threadsafe
@@ -79,6 +79,7 @@ namespace BlackMisc
             BlackMisc::Simulation::CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Current simulator
+            //! \threadsafe
             CSimulatorInfo getSimulator() const;
 
             //! Supported simulators as string
@@ -102,6 +103,12 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
             QString getInfoStringFsFamily() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            QString getModelCacheCountAndTimestamp() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            QString getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const;
 
             //! \name Implementations of the models interfaces
             //! @{

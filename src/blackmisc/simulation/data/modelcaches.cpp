@@ -38,6 +38,12 @@ namespace BlackMisc
                 return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX)).arg(this->getCachedModelsCount(CSimulatorInfo::P3D)).arg(this->getCachedModelsCount(CSimulatorInfo::FS9));
             }
 
+            QString IMultiSimulatorModelCaches::getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
+            {
+                static const QString s("%1 models, ts: %2");
+                return s.arg(this->getCachedModelsCount(simulator)).arg(this->getCacheTimestamp(simulator).toString("yyyy-MM-dd HH:mm:ss"));
+            }
+
             void IMultiSimulatorModelCaches::onLastSelectionChanged()
             {
                 this->synchronizeCurrentCache();

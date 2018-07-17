@@ -281,6 +281,16 @@ namespace BlackMisc
             return m_caches.getInfoStringFsFamily();
         }
 
+        QString IAircraftModelLoader::getModelCacheCountAndTimestamp() const
+        {
+            return m_caches.getCacheCountAndTimestamp(this->getSimulator());
+        }
+
+        QString IAircraftModelLoader::getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
+        {
+            return m_caches.getCacheCountAndTimestamp(simulator);
+        }
+
         CSpecializedSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
         {
             return m_settings.getSpecializedSettings(this->getSimulator());
