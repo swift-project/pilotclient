@@ -22,6 +22,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/connectionguard.h"
 
 #include <QFrame>
 #include <QList>
@@ -127,6 +128,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models, aka models on disk
+            BlackMisc::CConnectionGuard m_loaderConnections;
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection { this }; //!< last selection
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
 

@@ -216,6 +216,7 @@ namespace BlackGui
             if (m_modelLoader)
             {
                 m_modelLoader->gracefulShutdown();
+                m_loaderConnections.disconnectAll();
             }
 
             // create loader, also synchronizes the caches
@@ -224,14 +225,14 @@ namespace BlackGui
             {
                 CLogMessage(this).error("Failed to init model loader %1") << simulator.toQString();
                 m_modelLoader.reset();
+                m_loaderConnections.disconnectAll();
                 return false;
             }
             else
             {
-                const bool c = connect(m_modelLoader.get(), &IAircraftModelLoader::loadingFinished,
-                                       this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
-                Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
-                Q_UNUSED(c);
+                const QMetaObject::Connection connection = connect(m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
+                Q_ASSERT_X(connection, Q_FUNC_INFO, "Failed connect for model loader");
+                m_loaderConnections.append(connection);
                 this->setSaveFileName(simulator);
                 return true;
             }

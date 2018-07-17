@@ -166,6 +166,7 @@ namespace BlackGui
             QScopedPointer<CDbOwnModelSetFormDialog>    m_modelSetFormDialog;
             QScopedPointer<CFirstModelSetDialog>        m_firstModelSet;
             QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwift;
+            BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently set simulator
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models

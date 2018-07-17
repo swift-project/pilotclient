@@ -370,6 +370,8 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::changeSimulator(const CSimulatorInfo &simulator)
         {
+            if (m_simulator == simulator) { return; } // avoid unnecessary signals
+            m_simulator = simulator;
             m_modelSetLoader.setSimulator(simulator);
             ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
             ui->le_Simulator->setText(simulator.toQString(true));
@@ -388,8 +390,6 @@ namespace BlackGui
         void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const CSimulatorInfo currentSimulator = m_modelSetLoader.getSimulator();
-            if (currentSimulator == simulator) { return; } // avoid unnecessary signals
             this->changeSimulator(simulator);
         }
 
