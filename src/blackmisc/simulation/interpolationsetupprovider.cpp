@@ -28,6 +28,12 @@ namespace BlackMisc
             return CInterpolationSetupList(setups.values());
         }
 
+        bool IInterpolationSetupProvider::hasSetupsPerCallsign() const
+        {
+            QReadLocker l(&m_lockSetup);
+            return !m_setups.isEmpty();
+        }
+
         bool IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
         {
             const CInterpolationAndRenderingSetupGlobal gs = this->getInterpolationSetupGlobal();
@@ -61,6 +67,13 @@ namespace BlackMisc
                 if (setups.value(cs).logInterpolation()) { callsigns.insert(cs); }
             }
             return callsigns;
+        }
+
+        bool IInterpolationSetupProvider::isLogCallsign(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockSetup);
+            if (!m_setups.contains(callsign)) { return false; }
+            return m_setups[callsign].logInterpolation();
         }
 
         bool IInterpolationSetupProvider::setInterpolationMode(const QString &modeAsString, const CCallsign &callsign)

@@ -36,11 +36,15 @@ namespace BlackMisc
 
             //! Get all setups per callsign
             //! \threadsafe
-            virtual CInterpolationSetupList getInterpolationSetupsPerCallsign() const;
+            CInterpolationSetupList getInterpolationSetupsPerCallsign() const;
+
+            //! Get all setups per callsign
+            //! \threadsafe
+            bool hasSetupsPerCallsign() const;
 
             //! Set all setups per callsign
             //! \threadsafe
-            virtual bool setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal = true);
+            bool setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal = true);
 
             //! The global setup
             //! \threadsafe
@@ -49,6 +53,10 @@ namespace BlackMisc
             //! All callsigns marked to be logged
             //! \threadsafe
             Aviation::CCallsignSet getLogCallsigns() const;
+
+            //! Is callsign marked for logging
+            //! \threadsafe
+            bool isLogCallsign(const Aviation::CCallsign &callsign) const;
 
             //! Set mode as string
             //! \threadsafe
