@@ -29,6 +29,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/clientprovider.h"
 #include "blackmisc/weather/weathergridprovider.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/statusmessage.h"
@@ -267,6 +268,9 @@ namespace BlackCore
         //! Time between two update requests
         qint64 getStatisticsAircraftUpdatedRequestedDeltaMs() const { return m_statsUpdateAircraftRequestedDeltaMs; }
 
+        //! The traced loopback situations
+        BlackMisc::Aviation::CAircraftSituationList getLoopbackSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Access to logger
         const BlackMisc::Simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
 
@@ -401,6 +405,12 @@ namespace BlackCore
         //! Clear the related data as statistics etc.
         virtual void clearData(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Add a loopback situation if logging is enabled
+        bool addLoopbackSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Add a loopback situation if logging is enabled
+        bool addLoopbackSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevationPlane, const BlackMisc::PhysicalQuantities::CLength &cg);
+
         //! Full reset of state
         //! \remark reset as it was unloaded without unloading
         //! \sa ISimulator::clearAllRemoteAircraftData
@@ -494,6 +504,9 @@ namespace BlackCore
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
+
+        // loopback situations, situations which are received from simulator for remote aircraft
+        BlackMisc::Aviation::CAircraftSituationListPerCallsign m_loopbackSituations; //!< traced loopback situations
 
         // limit the update aircraft to a maximum per second
         BlackMisc::CTokenBucket m_limitUpdateAircraftBucket { 5, 100, 5 }; //!< means 50 per second

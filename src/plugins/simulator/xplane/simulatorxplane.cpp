@@ -860,16 +860,23 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(verticalOffsetsMeters.size() == size, Q_FUNC_INFO, "Wrong CG");
             }
 
+            const CCallsignSet logCallsigns = this->getLogCallsigns();
             for (int i = 0; i < size; i++)
             {
                 const CCallsign cs(callsigns[i]);
                 if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
-
                 const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
+
                 const CAltitude elevationAlt(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
                 const CLength cg(verticalOffsetsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 this->rememberElevationAndCG(cs, xpAircraft.getAircraftModelString(), elevation, cg);
+
+                // loopback
+                if (logCallsigns.contains(cs))
+                {
+                    this->addLoopbackSituation(cs, elevation, cg);
+                }
             }
         }
 

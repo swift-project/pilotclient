@@ -296,7 +296,7 @@ namespace BlackSimPlugin
             else
             {
                 this->triggerAutoTraceSendId();
-                const CStatusMessage msg = CStatusMessage(this).error("Can not request AI position: '%1'") << callsign.asString();
+                const CStatusMessage msg = CStatusMessage(this).error("Cannot request AI position: '%1'") << callsign.asString();
                 CLogMessage::preformatted(msg);
             }
             return hr == S_OK;
@@ -659,9 +659,10 @@ namespace BlackSimPlugin
             // we only remember near ground
             if (remoteAircraftData.aboveGroundFt() < 250)
             {
-                CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
-                elevation.setSinglePointRadius();
-                this->rememberElevationAndCG(cs, simObject.getAircraftModelString(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
+                const CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
+                const CLength cg(remoteAircraftData.cgToGroundFt, CLengthUnit::ft());
+                this->rememberElevationAndCG(cs, simObject.getAircraftModelString(), elevation, cg);
+                this->addLoopbackSituation(cs, elevation, cg);
             }
         }
 

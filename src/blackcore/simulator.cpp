@@ -196,7 +196,30 @@ namespace BlackCore
         m_lastSentParts.remove(callsign);
         m_lastSentSituations.remove(callsign);
         m_clampedLogMsg.remove(callsign);
+        m_loopbackSituations.clear();
         this->removeInterpolationSetupPerCallsign(callsign);
+    }
+
+    bool ISimulator::addLoopbackSituation(const CAircraftSituation &situation)
+    {
+        const CCallsign cs = situation.getCallsign();
+        if (!this->isLogCallsign(cs)) { return false; }
+        CAircraftSituationList &situations = m_loopbackSituations[cs];
+        situations.push_frontKeepLatestAdjustedFirst(situation, true, 10);
+        return true;
+    }
+
+    bool ISimulator::addLoopbackSituation(const CCallsign &callsign, const CElevationPlane &elevationPlane, const CLength &cg)
+    {
+        if (!this->isLogCallsign(callsign)) { return false; }
+        CAircraftSituation situation(callsign, elevationPlane);
+        situation.setGroundElevation(elevationPlane, CAircraftSituation::FromProvider);
+        situation.setCG(cg);
+        situation.setCurrentUtcTime();
+        situation.setTimeOffsetMs(0);
+        CAircraftSituationList &situations = m_loopbackSituations[callsign];
+        situations.push_frontKeepLatestAdjustedFirst(situation, true, 10);
+        return true;
     }
 
     void ISimulator::reset()
@@ -747,6 +770,11 @@ namespace BlackCore
 
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
         return true;
+    }
+
+    CAircraftSituationList ISimulator::getLoopbackSituations(const CCallsign &callsign) const
+    {
+        return m_loopbackSituations.value(callsign);
     }
 
     CAirportList ISimulator::getAirportsInRange() const
