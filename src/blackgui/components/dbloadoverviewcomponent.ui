@@ -973,7 +973,7 @@
       <item>
        <widget class="QPushButton" name="pb_LoadAllFromShared">
         <property name="text">
-         <string>load from shared</string>
+         <string> load from shared </string>
         </property>
         <property name="icon">
          <iconset resource="../../blackmisc/blackmisc.qrc">
@@ -984,11 +984,22 @@
       <item>
        <widget class="QPushButton" name="pb_LoadAllFromDB">
         <property name="text">
-         <string>load from DB</string>
+         <string> load from DB </string>
         </property>
         <property name="icon">
          <iconset resource="../../blackmisc/blackmisc.qrc">
           <normaloff>:/pastel/icons/pastel/16/database.png</normaloff>:/pastel/icons/pastel/16/database.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_LoadAllFromResources">
+        <property name="text">
+         <string> load from disk </string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
         </property>
        </widget>
       </item>
@@ -1070,6 +1081,66 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tb_SharedReloadAircraft</tabstop>
+  <tabstop>tb_DbReloadAircraft</tabstop>
+  <tabstop>le_AircraftIcaoCacheCount</tabstop>
+  <tabstop>le_AircraftIcaoDbCount</tabstop>
+  <tabstop>le_AircraftIcaoSharedCount</tabstop>
+  <tabstop>le_AircraftIcaoCacheTs</tabstop>
+  <tabstop>le_AircraftIcaoDbTs</tabstop>
+  <tabstop>le_AircraftIcaoSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadAirlines</tabstop>
+  <tabstop>tb_DbReloadAirlines</tabstop>
+  <tabstop>le_AirlinesIcaoCacheCount</tabstop>
+  <tabstop>le_AirlinesIcaoDbCount</tabstop>
+  <tabstop>le_AirlinesIcaoSharedCount</tabstop>
+  <tabstop>le_AirlinesIcaoCacheTs</tabstop>
+  <tabstop>le_AirlinesIcaoDbTs</tabstop>
+  <tabstop>le_AirlinesIcaoSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadAirports</tabstop>
+  <tabstop>tb_DbReloadAirports</tabstop>
+  <tabstop>le_AirportsCacheCount</tabstop>
+  <tabstop>le_AirportsDbCount</tabstop>
+  <tabstop>le_AirportsSharedCount</tabstop>
+  <tabstop>le_AirportsCacheTs</tabstop>
+  <tabstop>le_AirportsDbTs</tabstop>
+  <tabstop>le_AirportsSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadLiveries</tabstop>
+  <tabstop>tb_DbReloadLiveries</tabstop>
+  <tabstop>le_LiveriesCacheCount</tabstop>
+  <tabstop>le_LiveriesDbCount</tabstop>
+  <tabstop>le_LiveriesSharedCount</tabstop>
+  <tabstop>le_LiveriesCacheTs</tabstop>
+  <tabstop>le_LiveriesDbTs</tabstop>
+  <tabstop>le_LiveriesSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadModels</tabstop>
+  <tabstop>tb_DbReloadModels</tabstop>
+  <tabstop>le_ModelsCacheCount</tabstop>
+  <tabstop>le_ModelsDbCount</tabstop>
+  <tabstop>le_ModelsSharedCount</tabstop>
+  <tabstop>le_ModelsCacheTs</tabstop>
+  <tabstop>le_ModelsDbTs</tabstop>
+  <tabstop>le_ModelsSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadCountries</tabstop>
+  <tabstop>tb_DbReloadCountries</tabstop>
+  <tabstop>le_CountriesCacheCount</tabstop>
+  <tabstop>le_CountriesDbCount</tabstop>
+  <tabstop>le_CountriesSharedCount</tabstop>
+  <tabstop>le_CountriesCacheTs</tabstop>
+  <tabstop>le_CountriesDbTs</tabstop>
+  <tabstop>le_CountriesSharedFileTs</tabstop>
+  <tabstop>tb_SharedReloadDistributors</tabstop>
+  <tabstop>tb_DbReloadDistributors</tabstop>
+  <tabstop>le_DistributorsCacheCount</tabstop>
+  <tabstop>le_DistributorsDbCount</tabstop>
+  <tabstop>le_DistributorsSharedCount</tabstop>
+  <tabstop>le_DistributorsCacheTs</tabstop>
+  <tabstop>le_DistributorsDbTs</tabstop>
+  <tabstop>le_DistributorsSharedFileTs</tabstop>
+  <tabstop>pb_LoadAllFromShared</tabstop>
+  <tabstop>pb_LoadAllFromDB</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>

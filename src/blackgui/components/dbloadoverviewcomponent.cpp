@@ -15,6 +15,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 
+#include <QPointer>
+#include <QMessageBox>
+
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -60,11 +63,17 @@ namespace BlackGui
 
             connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
             connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
+            connect(ui->pb_LoadAllFromResources, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromResourceFiles);
 
             if (sGui->hasWebDataServices())
             {
                 connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::dataLoaded);
-                QTimer::singleShot(10 * 1000, this, &CDbLoadOverviewComponent::loadInfoObjects);
+                QPointer<CDbLoadOverviewComponent> myself(this);
+                QTimer::singleShot(10 * 1000, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    this->loadInfoObjects();
+                });
             }
         }
 
@@ -110,12 +119,13 @@ namespace BlackGui
             QFrame::resizeEvent(event);
         }
 
-        void CDbLoadOverviewComponent::showVisibleLoadAllButtons(bool shared, bool db)
+        void CDbLoadOverviewComponent::showVisibleLoadAllButtons(bool shared, bool db, bool disk)
         {
             const bool widget = shared || db;
             ui->wi_LoadAllButtons->setVisible(widget);
             ui->pb_LoadAllFromDB->setVisible(db);
             ui->pb_LoadAllFromShared->setVisible(shared);
+            ui->pb_LoadAllFromResources->setVisible(disk);
         }
 
         void CDbLoadOverviewComponent::loadAllFromDb()
@@ -126,6 +136,15 @@ namespace BlackGui
         void CDbLoadOverviewComponent::loadAllFromShared()
         {
             this->triggerLoadingFromSharedFiles(CEntityFlags::AllDbEntitiesNoInfoObjects);
+        }
+
+        void CDbLoadOverviewComponent::loadAllFromResourceFiles()
+        {
+            if (m_loadInProgress) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+            const QMessageBox::StandardButton reply = QMessageBox::warning(this, "Load DB data", "You should only load DB from disk resources if loading from network does not work. Really load?", QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) { return; }
+            sGui->getWebDataServices()->initDbCachesFromLocalResourceFiles(true);
         }
 
         void CDbLoadOverviewComponent::setGuiValues()

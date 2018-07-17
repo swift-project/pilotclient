@@ -49,13 +49,19 @@ namespace BlackGui
             void showVisibleSharedRefreshButtons(bool visible);
 
             //! Show load all buttons
-            void showVisibleLoadAllButtons(bool shared, bool db);
+            void showVisibleLoadAllButtons(bool shared, bool db, bool disk);
 
             //! Load all from DB
             void loadAllFromDb();
 
             //! Load all from shared
             void loadAllFromShared();
+
+            //! Load all from disk (as of installation)
+            void loadAllFromResourceFiles();
+
+            //! Is loading in progress
+            bool isLoadInProgress() const { return m_loadInProgress; }
 
         protected:
             //! \copydoc QWidget::resizeEvent
