@@ -37,7 +37,7 @@ namespace BlackMisc
             this->setObjectInfo(simulator);
 
             // first connect is an internal connection to log info about load status
-            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished);
+            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
             connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::onCacheChanged);
             connect(&m_settings, &CMultiSimulatorSettings::settingsChanged, this, &IAircraftModelLoader::onSettingsChanged);
         }
@@ -141,13 +141,14 @@ namespace BlackMisc
 
         void IAircraftModelLoader::onCacheChanged(const CSimulatorInfo &simInfo)
         {
-            static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Cached changed");
-            emit this->loadingFinished(status, simInfo, CacheLoaded);
+            // this detects a loaded cache elsewhere
+            Q_UNUSED(simInfo);
         }
 
         void IAircraftModelLoader::onSettingsChanged(const CSimulatorInfo &simInfo)
         {
-            emit this->simulatorSettingsChanged(simInfo);
+            // this detects changed settings elsewhere
+            Q_UNUSED(simInfo);
         }
 
         QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const

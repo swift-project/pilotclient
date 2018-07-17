@@ -191,10 +191,8 @@ namespace BlackMisc
 
         signals:
             //! Parsing is finished or cache has been loaded
+            //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
             void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
-
-            //! Corresponding Settings::CMultiSimulatorSettings::simulatorSettingsChange
-            void simulatorSettingsChanged(const CSimulatorInfo &simulator);
 
         protected:
             //! Constructor
