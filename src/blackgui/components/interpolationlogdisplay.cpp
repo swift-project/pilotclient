@@ -13,7 +13,6 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/airspacemonitor.h"
-#include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/stringutils.h"
 
 using namespace BlackCore;
@@ -51,7 +50,7 @@ namespace BlackGui
             ui->led_Updating->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Just updating", "Idle", 14);
 
             m_callsign = ui->comp_CallsignCompleter->getCallsign();
-            ui->tvp_AircraftSituations->setWithMenuRequestElevation(true);
+            ui->tvp_InboundAircraftSituations->setWithMenuRequestElevation(true);
 
             connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
@@ -63,9 +62,9 @@ namespace BlackGui
             connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
             connect(ui->pb_RequestElevation1, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
             connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
-            connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
+            connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
             connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
-            connect(ui->tvp_AircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
+            connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
             connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
@@ -114,6 +113,9 @@ namespace BlackGui
                 return;
             }
 
+            const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
+            m_lastInterpolations.push_frontKeepLatestAdjustedFirst(sLog.situationCurrent, true, 10);
+
             // only display visible tab
             if (ui->tw_LogTabs->currentWidget() == ui->tb_TextLog)
             {
@@ -146,15 +148,24 @@ namespace BlackGui
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
 
                 this->displayElevationRequestReceive();
-                this->displayLastInterpolation();
+                this->displayLastInterpolation(sLog);
+            }
+            else if (ui->tw_LogTabs->currentWidget() == ui->tb_Loopback)
+            {
+                this->displayLoopback();
             }
         }
 
-        void CInterpolationLogDisplay::displayLastInterpolation()
+        void CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation()
+        {
+            const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
+            this->displayLastInterpolation(sLog);
+        }
+
+        void CInterpolationLogDisplay::displayLastInterpolation(const SituationLog &sLog)
         {
             if (!this->checkLogPrerequisites()) { return; }
 
-            const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
             ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
             ui->te_SituationChange->setText(sLog.change.toQString(true));
 
@@ -163,6 +174,13 @@ namespace BlackGui
 
             const PartsLog pLog = m_simulator->interpolationLogger().getLastPartsLog();
             ui->te_LastInterpolatedParts->setText(pLog.parts.toQString(true));
+        }
+
+        void CInterpolationLogDisplay::displayLoopback()
+        {
+            if (!m_simulator) { return; }
+            ui->tvp_LoopbackAircraftSituations->updateContainerAsync(m_simulator->getLoopbackSituations(m_callsign));
+            ui->tvp_InterpolatedAircraftSituations->updateContainerAsync(m_lastInterpolations);
         }
 
         void CInterpolationLogDisplay::onSliderChanged(int timeSecs)
@@ -282,7 +300,7 @@ namespace BlackGui
             if (!this->logCallsign(cs)) { return; }
             const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(cs);
             const CAircraftSituationChangeList changes = m_airspaceMonitor->remoteAircraftSituationChanges(cs);
-            ui->tvp_AircraftSituations->updateContainerAsync(situations);
+            ui->tvp_InboundAircraftSituations->updateContainerAsync(situations);
             ui->tvp_Changes->updateContainerMaybeAsync(changes);
             ui->led_Situation->blink();
         }
@@ -292,7 +310,7 @@ namespace BlackGui
             if (!this->logCallsign(callsign)) { return; }
             Q_UNUSED(parts);
             const CAircraftPartsList partsList = m_airspaceMonitor->remoteAircraftParts(callsign);
-            ui->tvp_AircraftParts->updateContainerAsync(partsList);
+            ui->tvp_InboundAircraftParts->updateContainerAsync(partsList);
             ui->led_Parts->blink();
         }
 
@@ -341,8 +359,8 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::clear()
         {
-            ui->tvp_AircraftParts->clear();
-            ui->tvp_AircraftSituations->clear();
+            ui->tvp_InboundAircraftParts->clear();
+            ui->tvp_InboundAircraftSituations->clear();
             ui->te_TextLog->clear();
             ui->le_CG->clear();
             ui->le_Elevation->clear();
@@ -352,6 +370,8 @@ namespace BlackGui
             ui->le_UpdateTimes->clear();
             ui->le_Limited->clear();
             m_elvReceived = m_elvRequested = 0;
+            m_lastInterpolations.clear();
+            m_lastLoopbackSituations.clear();
         }
 
         bool CInterpolationLogDisplay::checkLogPrerequisites()
@@ -376,7 +396,7 @@ namespace BlackGui
                     break;
                 }
 
-                if (!m_simulator->getLogCallsigns().contains(m_callsign))
+                if (!m_simulator->isLogCallsign(m_callsign))
                 {
                     static const CStatusMessage ms = CStatusMessage(this).validationError("No longer logging callsign");
                     m = ms;

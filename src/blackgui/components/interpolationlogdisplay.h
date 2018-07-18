@@ -15,6 +15,8 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/identifiable.h"
 #include <QFrame>
@@ -44,6 +46,7 @@ namespace BlackGui
                 TabFlow,
                 TabFlow2,
                 TabInterpolation,
+                TabLoopback,
                 TabTextLog
             };
 
@@ -67,7 +70,13 @@ namespace BlackGui
             void updateLog();
 
             //! Get last interpolation
-            void displayLastInterpolation();
+            void getLogAmdDisplayLastInterpolation();
+
+            //! Get last interpolation
+            void displayLastInterpolation(const BlackMisc::Simulation::SituationLog &sLog);
+
+            //! Display the loopback information
+            void displayLoopback();
 
             //! Slider interval
             void onSliderChanged(int timeSecs);
@@ -145,6 +154,8 @@ namespace BlackGui
             QTimer m_updateTimer;
             QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
+            BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations;
+            BlackMisc::Aviation::CAircraftSituationList m_lastLoopbackSituations;
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
             int m_elvRequested = 0; //!< counted via signal
             int m_elvReceived = 0;  //!< counted via signal

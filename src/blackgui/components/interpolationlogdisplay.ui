@@ -532,7 +532,7 @@
              </property>
              <layout class="QVBoxLayout" name="vl_InboundSituations">
               <item>
-               <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_AircraftSituations">
+               <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_InboundAircraftSituations">
                 <property name="selectionMode">
                  <enum>QAbstractItemView::NoSelection</enum>
                 </property>
@@ -552,7 +552,7 @@
              </property>
              <layout class="QVBoxLayout" name="vl_InboundParts">
               <item>
-               <widget class="BlackGui::Views::CAircraftPartsView" name="tvp_AircraftParts">
+               <widget class="BlackGui::Views::CAircraftPartsView" name="tvp_InboundAircraftParts">
                 <property name="selectionMode">
                  <enum>QAbstractItemView::NoSelection</enum>
                 </property>
@@ -603,7 +603,7 @@
       <attribute name="title">
        <string>Interpolation</string>
       </attribute>
-      <layout class="QVBoxLayout" name="vl_Interpolation" stretch="0,0,2,1">
+      <layout class="QVBoxLayout" name="vl_Interpolation">
        <property name="leftMargin">
         <number>4</number>
        </property>
@@ -747,6 +747,57 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tb_Loopback">
+      <attribute name="title">
+       <string>Loopback (Sim-&gt;Driver)</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Loopback">
+       <item>
+        <widget class="QGroupBox" name="gb_InterpolatedSituations">
+         <property name="title">
+          <string>Interpolated</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_InterpolatedGb">
+          <item>
+           <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_InterpolatedAircraftSituations">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_LoopbackSituations">
+         <property name="title">
+          <string>Loopback</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_LoopbackGb">
+          <item>
+           <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_LoopbackAircraftSituations">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tb_TextLog">
       <attribute name="title">
        <string>Text log.</string>
@@ -818,8 +869,8 @@
   <tabstop>le_ElevationReqRec</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
-  <tabstop>tvp_AircraftSituations</tabstop>
-  <tabstop>tvp_AircraftParts</tabstop>
+  <tabstop>tvp_InboundAircraftSituations</tabstop>
+  <tabstop>tvp_InboundAircraftParts</tabstop>
   <tabstop>tvp_Changes</tabstop>
   <tabstop>le_InjectElevation</tabstop>
   <tabstop>pb_InjectElevation</tabstop>
