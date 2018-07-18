@@ -306,7 +306,7 @@ namespace BlackCore
 
         ISimulationEnvironmentProvider::rememberGroundElevation(callsign, plane); // in simulator
         const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
-        if (updated < 1) { return; }
+        Q_UNUSED(updated);
         emit this->receivedRequestedElevation(plane, callsign);
     }
 
