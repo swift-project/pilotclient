@@ -47,7 +47,8 @@ namespace BlackGui
                 TabFlow2,
                 TabInterpolation,
                 TabLoopback,
-                TabTextLog
+                TabTextLog,
+                TabElevation
             };
 
             //! Constructor
@@ -118,7 +119,7 @@ namespace BlackGui
             void onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
 
             //! \copydoc BlackCore::ISimulator::receivedRequestedElevation
-            void onElevationReceived(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+            void onElevationReceived(const BlackMisc::Geo::CElevationPlane &elevationPlane, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc BlackCore::ISimulator::requestedElevation
             void onElevationRequested(const BlackMisc::Aviation::CCallsign &callsign);
@@ -144,18 +145,26 @@ namespace BlackGui
             //! Display elevation requested/receive
             void displayElevationRequestReceive();
 
+            //! Display arbitrary elevation
+            void displayArbitraryElevation(const BlackMisc::Geo::CElevationPlane &elevation);
+
             //! Do request elevation
             void requestElevationClicked();
 
             //! Do request elevation
             void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! Request arbitrary elevation
+            void requestElevationAtPosition();
+
+            //! Pseudo callsign for CInterpolationLogDisplay::requestElevationAtPosition
+            static const BlackMisc::Aviation::CCallsign &pseudoCallsignElevation();
+
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;
             QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
             BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations;
-            BlackMisc::Aviation::CAircraftSituationList m_lastLoopbackSituations;
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
             int m_elvRequested = 0; //!< counted via signal
             int m_elvReceived = 0;  //!< counted via signal

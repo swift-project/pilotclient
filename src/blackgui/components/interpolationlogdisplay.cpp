@@ -9,6 +9,7 @@
 
 #include "interpolationlogdisplay.h"
 #include "ui_interpolationlogdisplay.h"
+#include "blackgui/editors/coordinateform.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextsimulator.h"
@@ -18,6 +19,7 @@
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;
+using namespace BlackGui::Editors;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -66,6 +68,7 @@ namespace BlackGui
             connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
             connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
+            connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
 
@@ -178,7 +181,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::displayLoopback()
         {
-            if (!m_simulator) { return; }
+            if (!m_simulator || m_callsign.isEmpty()) { return; }
             ui->tvp_LoopbackAircraftSituations->updateContainerAsync(m_simulator->getLoopbackSituations(m_callsign));
             ui->tvp_InterpolatedAircraftSituations->updateContainerAsync(m_lastInterpolations);
         }
@@ -314,11 +317,17 @@ namespace BlackGui
             ui->led_Parts->blink();
         }
 
-        void CInterpolationLogDisplay::onElevationReceived(const CElevationPlane &plane, const CCallsign &callsign)
+        void CInterpolationLogDisplay::onElevationReceived(const CElevationPlane &elevationPlane, const CCallsign &callsign)
         {
-            if (!this->logCallsign(callsign)) { return; }
             m_elvReceived++;
-            ui->le_Elevation->setText(plane.toQString());
+            if (callsign == CInterpolationLogDisplay::pseudoCallsignElevation())
+            {
+                this->displayArbitraryElevation(elevationPlane);
+                return;
+            }
+
+            if (!this->logCallsign(callsign)) { return; }
+            ui->le_Elevation->setText(elevationPlane.toQString());
             this->displayElevationRequestReceive();
             ui->led_Elevation->blink();
         }
@@ -344,6 +353,7 @@ namespace BlackGui
             alt.parseFromString(elv);
             const CElevationPlane ep(situations.latestAdjustedObject(), alt, CElevationPlane::singlePointRadius());
 
+            // inject as received from simulator
             m_simulator->callbackReceivedRequestedElevation(ep, m_callsign);
         }
 
@@ -371,7 +381,6 @@ namespace BlackGui
             ui->le_Limited->clear();
             m_elvReceived = m_elvRequested = 0;
             m_lastInterpolations.clear();
-            m_lastLoopbackSituations.clear();
         }
 
         bool CInterpolationLogDisplay::checkLogPrerequisites()
@@ -407,7 +416,7 @@ namespace BlackGui
             while (false);
 
             this->stop();
-            if (!m.isEmpty()) { this->showOverlayMessage(m); }
+            if (!m.isEmpty()) { this->showOverlayMessage(m, 5000); }
             return false;
         }
 
@@ -432,6 +441,11 @@ namespace BlackGui
             ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed, reqTimes));
         }
 
+        void CInterpolationLogDisplay::displayArbitraryElevation(const CElevationPlane &elevation)
+        {
+            ui->pte_ElevationAtPosition->appendPlainText(elevation.toQString());
+        }
+
         void CInterpolationLogDisplay::requestElevationClicked()
         {
             if (m_callsign.isEmpty()) { return; }
@@ -444,6 +458,29 @@ namespace BlackGui
         {
             if (!m_simulator) { return; }
             m_simulator->requestElevationBySituation(situation);
+        }
+
+        void CInterpolationLogDisplay::requestElevationAtPosition()
+        {
+            if (!m_simulator) { return; }
+            const CCoordinateGeodetic coordinate = ui->editor_ElevationCoordinate->getCoordinate();
+            const bool ok = m_simulator->requestElevation(coordinate, CInterpolationLogDisplay::pseudoCallsignElevation());
+            if (ok)
+            {
+                static const QString info("Requesting elevation: %1");
+                ui->pte_ElevationAtPosition->setPlainText(info.arg(coordinate.toQString()));
+            }
+            else
+            {
+                static const QString info("Cannot request elevation");
+                ui->pte_ElevationAtPosition->setPlainText(info);
+            }
+        }
+
+        const CCallsign &CInterpolationLogDisplay::pseudoCallsignElevation()
+        {
+            static const CCallsign cs("SW1LOX");
+            return cs;
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()

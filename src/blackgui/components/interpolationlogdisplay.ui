@@ -241,7 +241,7 @@
    <item>
     <widget class="QTabWidget" name="tw_LogTabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tb_DataFlow">
       <attribute name="title">
@@ -812,6 +812,60 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tb_ElevationAtPosition">
+      <attribute name="title">
+       <string>Elevation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="gb_ElevationAtPositionCoordinates">
+         <property name="title">
+          <string>Coordinates</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_ElevationAtPositionCoordinates">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="BlackGui::Editors::CCoordinateForm" name="editor_ElevationCoordinate">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>170</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_ElevationAtPositionResult">
+         <property name="title">
+          <string>Result</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_ElevationAtPositionResult">
+          <item>
+           <widget class="QPlainTextEdit" name="pte_ElevationAtPosition">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -843,6 +897,12 @@
    <class>BlackGui::Views::CAircraftSituationChangeView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/aircraftsituationchangeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CCoordinateForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/coordinateform.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -879,7 +939,10 @@
   <tabstop>te_LastInterpolatedSituation</tabstop>
   <tabstop>te_SituationChange</tabstop>
   <tabstop>te_LastInterpolatedParts</tabstop>
+  <tabstop>tvp_InterpolatedAircraftSituations</tabstop>
+  <tabstop>tvp_LoopbackAircraftSituations</tabstop>
   <tabstop>te_TextLog</tabstop>
+  <tabstop>pte_ElevationAtPosition</tabstop>
  </tabstops>
  <resources/>
  <connections/>
