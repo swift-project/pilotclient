@@ -94,9 +94,10 @@ namespace BlackSimPlugin
             if (!this->isConnected()) { return false; }
 
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            const bool hasHeight = reference.hasMSLGeodeticHeight();
             const double latDeg = reference.latitude().value(CAngleUnit::deg());
             const double lngDeg = reference.longitude().value(CAngleUnit::deg());
-            const double maxAltFt = reference.geodeticHeight().value(CLengthUnit::ft());
+            const double maxAltFt = hasHeight ? reference.geodeticHeight().value(CLengthUnit::ft()) : 50000;
             const DWORD dwGridWidth = 1.0;
             const DWORD dwGridHeight = 1.0;
 
