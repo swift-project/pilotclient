@@ -70,6 +70,7 @@ namespace BlackGui
             void lngEntered();
             void lngCombinedEntered();
             void elvEntered();
+            void presetOwnAircraftPosition();
 
             BlackMisc::Geo::CCoordinateGeodetic m_coordinate;
         };

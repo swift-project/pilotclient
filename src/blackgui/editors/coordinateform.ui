@@ -14,13 +14,6 @@
    <string>Frame</string>
   </property>
   <layout class="QGridLayout" name="gl_CoordinateSelector">
-   <item row="2" column="5">
-    <widget class="QLineEdit" name="le_LngDeg">
-     <property name="placeholderText">
-      <string>deg.</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="2">
     <widget class="BlackGui::CTickLabel" name="lblp_ElvCheck">
      <property name="minimumSize">
@@ -31,6 +24,20 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QLineEdit" name="le_LngDeg">
+     <property name="placeholderText">
+      <string>deg.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QLineEdit" name="le_LngSecFrag">
+     <property name="placeholderText">
+      <string>fract.sec</string>
      </property>
     </widget>
    </item>
@@ -67,10 +74,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="8">
-    <widget class="QLineEdit" name="le_LngSecFrag">
+   <item row="3" column="5" colspan="4">
+    <widget class="QLineEdit" name="le_Location">
      <property name="placeholderText">
-      <string>fract.sec</string>
+      <string>ICAO, city</string>
      </property>
     </widget>
    </item>
@@ -81,20 +88,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="5" colspan="4">
-    <widget class="QLineEdit" name="le_Location">
-     <property name="placeholderText">
-      <string>ICAO, city</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="7">
-    <widget class="QLineEdit" name="le_LngSec">
-     <property name="placeholderText">
-      <string>sec</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="lbl_Latitude">
      <property name="text">
@@ -102,30 +95,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="BlackGui::CTickLabel" name="lblp_LngCheck">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="le_Longitude">
-     <property name="minimumSize">
-      <size>
-       <width>120</width>
-       <height>0</height>
-      </size>
-     </property>
+   <item row="2" column="7">
+    <widget class="QLineEdit" name="le_LngSec">
      <property name="placeholderText">
-      <string>WGS 0° 0' 0.000&quot; E/W</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_Longitude">
-     <property name="text">
-      <string>Longitude (0°-180°):</string>
+      <string>sec</string>
      </property>
     </widget>
    </item>
@@ -139,6 +112,33 @@
      </property>
      <property name="placeholderText">
       <string>WGS 0° 0' 0.000&quot; N/S</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="BlackGui::CTickLabel" name="lblp_LngCheck">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_Longitude">
+     <property name="text">
+      <string>Longitude (0°-180°):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="le_Longitude">
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>WGS 0° 0' 0.000&quot; E/W</string>
      </property>
     </widget>
    </item>
@@ -194,14 +194,11 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="4">
-    <widget class="QRadioButton" name="rb_W">
+   <item row="0" column="6">
+    <widget class="QLabel" name="lbl_Min">
      <property name="text">
-      <string>W</string>
+      <string>min</string>
      </property>
-     <attribute name="buttonGroup">
-      <string notr="true">bg_EW</string>
-     </attribute>
     </widget>
    </item>
    <item row="1" column="4">
@@ -214,24 +211,20 @@
      </attribute>
     </widget>
    </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="lbl_Min">
+   <item row="2" column="4">
+    <widget class="QRadioButton" name="rb_W">
      <property name="text">
-      <string>min</string>
+      <string>W</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">bg_EW</string>
+     </attribute>
     </widget>
    </item>
    <item row="0" column="5">
     <widget class="QLabel" name="lbl_Deg">
      <property name="text">
       <string>deg</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="7">
-    <widget class="QLabel" name="lbl_Sec">
-     <property name="text">
-      <string>sec</string>
      </property>
     </widget>
    </item>
@@ -242,11 +235,62 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="8">
-    <widget class="QPushButton" name="pb_Set">
+   <item row="0" column="7">
+    <widget class="QLabel" name="lbl_Sec">
      <property name="text">
-      <string>set</string>
+      <string>sec</string>
      </property>
+    </widget>
+   </item>
+   <item row="4" column="5" colspan="4">
+    <widget class="QFrame" name="fr_Buttons">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Buttons">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_OwnAircraft">
+        <property name="text">
+         <string> own aircraft </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Set">
+        <property name="text">
+         <string>set</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -275,11 +319,13 @@
   <tabstop>le_LngSecFrag</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_Location</tabstop>
+  <tabstop>pb_OwnAircraft</tabstop>
+  <tabstop>pb_Set</tabstop>
  </tabstops>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_NS"/>
   <buttongroup name="bg_EW"/>
+  <buttongroup name="bg_NS"/>
  </buttongroups>
 </ui>

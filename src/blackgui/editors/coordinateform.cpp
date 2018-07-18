@@ -8,8 +8,9 @@
  */
 
 #include "coordinateform.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackcore/db/airportdatareader.h"
+#include "blackcore/webdataservices.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/airport.h"
 #include "ui_coordinateform.h"
@@ -61,7 +62,9 @@ namespace BlackGui
             connect(ui->le_LngSecFrag, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
 
             connect(ui->le_Location, &QLineEdit::returnPressed, this, &CCoordinateForm::locationEntered);
+
             connect(ui->pb_Set, &QPushButton::pressed, this, &CCoordinateForm::changedCoordinate);
+            connect(ui->pb_OwnAircraft, &QPushButton::pressed, this, &CCoordinateForm::presetOwnAircraftPosition);
 
             const CCoordinateGeodetic c;
             this->setCoordinate(c);
@@ -258,13 +261,21 @@ namespace BlackGui
 
         void CCoordinateForm::elvEntered()
         {
-            const QString e = ui->le_Elevation->text();
+            const QString e = ui->le_Elevation->text().trimmed();
             CAltitude a;
             a.parseFromString(e);
             ui->lblp_ElvCheck->setTicked(!e.isNull());
             CCoordinateGeodetic c = m_coordinate;
             c.setGeodeticHeight(a);
             this->setCoordinate(c);
+        }
+
+        void CCoordinateForm::presetOwnAircraftPosition()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui->getIContextOwnAircraft()) { return; }
+            const CCoordinateGeodetic coordinate = sGui->getIContextOwnAircraft()->getOwnAircraft().getSituation();
+            this->setCoordinate(coordinate);
         }
     } // ns
 } // ns
