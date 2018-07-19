@@ -154,9 +154,17 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return false; }
             if (reference.isNull()) { return false; }
 
-            static const CAltitude alt(50000, CLengthUnit::ft());
             CCoordinateGeodetic pos(reference);
-            pos.setGeodeticHeight(alt);
+            if (!pos.hasMSLGeodeticHeight())
+            {
+                // testing showed: height has an influence on the returned result
+                // - the most accurate value seems to be returned if the height is close to the elevation
+                // - in normal scenarios there is no much difference of the results if 0 is used
+                // - in Lukla (9200ft MSL) the difference between 0 and 9200 is around 1ft
+                // - in the LOWW scenario using 50000ft MSL results in around 3ft too low elevation
+                static const CAltitude alt(0, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                pos.setGeodeticHeight(alt);
+            }
 
             using namespace std::placeholders;
             auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2);
