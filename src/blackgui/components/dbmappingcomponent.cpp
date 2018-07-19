@@ -153,11 +153,11 @@ namespace BlackGui
             {
                 m_vPilot1stInit = false;
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotDataChanged);
-                connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onVPilotDataChanged);
+                connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::onLoadVPilotDataFinished);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChanged);
-                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::ps_requestVPilotDataUpdate);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::requestVPilotDataUpdate);
 
                 ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
                 ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashToolsMenu(this, false));
@@ -175,8 +175,7 @@ namespace BlackGui
             {
                 // create / restore tab
                 ui->tw_ModelsToBeMapped->addTab(ui->tab_VPilot, tabName);
-                this->ps_onVPilotDataChanged(ui->tvp_AircraftModelsForVPilot->rowCount(),
-                                             ui->tvp_AircraftModelsForVPilot->hasFilter());
+                this->onVPilotDataChanged(ui->tvp_AircraftModelsForVPilot->rowCount(), ui->tvp_AircraftModelsForVPilot->hasFilter());
             }
             else
             {
@@ -518,7 +517,7 @@ namespace BlackGui
             ui->sp_MappingComponent->setSizes(sizes);
         }
 
-        void CDbMappingComponent::ps_loadVPilotData()
+        void CDbMappingComponent::loadVPilotData()
         {
             if (m_vPilotReader.readInBackground(true))
             {
@@ -531,7 +530,7 @@ namespace BlackGui
             }
         }
 
-        void CDbMappingComponent::ps_onLoadVPilotDataFinished(bool success)
+        void CDbMappingComponent::onLoadVPilotDataFinished(bool success)
         {
             if (!m_vPilotEnabled) { return; }
             if (success)
@@ -550,7 +549,7 @@ namespace BlackGui
             ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
         }
 
-        void CDbMappingComponent::ps_onVPilotCacheChanged()
+        void CDbMappingComponent::onVPilotCacheChanged()
         {
             if (ui->tvp_AircraftModelsForVPilot->displayAutomatically())
             {
@@ -562,9 +561,9 @@ namespace BlackGui
             }
         }
 
-        void CDbMappingComponent::ps_requestVPilotDataUpdate()
+        void CDbMappingComponent::requestVPilotDataUpdate()
         {
-            this->ps_onVPilotCacheChanged();
+            this->onVPilotCacheChanged();
         }
 
         void CDbMappingComponent::onStashedModelsChanged()
@@ -635,7 +634,7 @@ namespace BlackGui
             emit this->requestUpdatedData(CEntityFlags::ModelEntity);
         }
 
-        void CDbMappingComponent::ps_onVPilotDataChanged(int count, bool withFilter)
+        void CDbMappingComponent::onVPilotDataChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -668,7 +667,7 @@ namespace BlackGui
             CLogMessage::preformatted(m);
         }
 
-        void CDbMappingComponent::ps_mergeWithVPilotModels()
+        void CDbMappingComponent::mergeWithVPilotModels()
         {
             if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
             if (m_vPilotReader.getModelsCount() < 1) { return; }
@@ -681,7 +680,7 @@ namespace BlackGui
             ui->comp_OwnAircraftModels->updateViewAndCache(ownModels);
         }
 
-        void CDbMappingComponent::ps_mergeSelectedWithVPilotModels()
+        void CDbMappingComponent::mergeSelectedWithVPilotModels()
         {
             if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
             if (m_vPilotReader.getModelsCount() < 1) { return; }
@@ -900,7 +899,7 @@ namespace BlackGui
             const bool canUseVPilot = mappingComponent()->withVPilot();
             if (canUseVPilot)
             {
-                m_menuAction = menuActions.addAction(m_menuAction, CIcons::appMappings16(), "Load vPilot Rules", CMenuAction::pathVPilot(), this, { mapComp, &CDbMappingComponent::ps_loadVPilotData });
+                m_menuAction = menuActions.addAction(m_menuAction, CIcons::appMappings16(), "Load vPilot Rules", CMenuAction::pathVPilot(), this, { mapComp, &CDbMappingComponent::loadVPilotData });
             }
             this->nestedCustomMenu(menuActions);
         }
@@ -1028,10 +1027,10 @@ namespace BlackGui
 
             if (m_menuActions.isEmpty()) { m_menuActions = QList<QAction *>({ nullptr, nullptr }); }
             menuActions.addMenu("Merge with vPilot data", CMenuAction::pathVPilot());
-            m_menuActions[0] = menuActions.addAction(m_menuActions[0], "All", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::ps_mergeWithVPilotModels });
+            m_menuActions[0] = menuActions.addAction(m_menuActions[0], "All", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::mergeWithVPilotModels });
             if (mv->hasSelection())
             {
-                m_menuActions[1] = menuActions.addAction(m_menuActions[1], "Selected only", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::ps_mergeSelectedWithVPilotModels });
+                m_menuActions[1] = menuActions.addAction(m_menuActions[1], "Selected only", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::mergeSelectedWithVPilotModels });
             }
             this->nestedCustomMenu(menuActions);
         }

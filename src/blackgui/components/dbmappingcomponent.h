@@ -64,9 +64,9 @@ namespace BlackGui
          * Mapping component
          */
         class BLACKGUI_EXPORT CDbMappingComponent :
-            public BlackGui::COverlayMessagesFrame,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
+            public CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -225,31 +225,31 @@ namespace BlackGui
             void ps_digestStashedModelsChanged();
 
         private slots:
-            //! Load the vPilot rules
-            void ps_loadVPilotData();
-
-            //! Data for vPilot have been loaded
-            void ps_onLoadVPilotDataFinished(bool success);
-
-            //! vPilot cached models changed
-            void ps_onVPilotCacheChanged();
-
-            //! vPilot data changed
-            void ps_onVPilotDataChanged(int count, bool withFilter);
-
-            //! Request update of vPilot data
-            void ps_requestVPilotDataUpdate();
-
-            //! Merge with vPilot models
-            void ps_mergeWithVPilotModels();
-
-            //! Merge selected with vPilot models
-            void ps_mergeSelectedWithVPilotModels();
-
             //! Add to own model set
-            void ps_addToOwnModelSet();
+            void ps_addToOwnModelSet(); // still used with QShortcut
 
         private:
+            //! Data for vPilot have been loaded
+            void onLoadVPilotDataFinished(bool success);
+
+            //! Merge with vPilot models
+            void mergeWithVPilotModels();
+
+            //! vPilot cached models changed
+            void onVPilotCacheChanged();
+
+            //! Load the vPilot rules
+            void loadVPilotData();
+
+            //! Request update of vPilot data
+            void requestVPilotDataUpdate();
+
+            //! Merge selected with vPilot models
+            void mergeSelectedWithVPilotModels();
+
+            //! vPilot data changed
+            void onVPilotDataChanged(int count, bool withFilter);
+
             //! Tab index changed
             void onTabIndexChanged(int index);
 
