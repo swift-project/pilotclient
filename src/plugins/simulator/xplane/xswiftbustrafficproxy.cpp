@@ -62,7 +62,7 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setMaxPlanes"), planes);
         }
 
-        void CXSwiftBusTrafficProxy::setMaxDrawDistance(float nauticalMiles)
+        void CXSwiftBusTrafficProxy::setMaxDrawDistance(double nauticalMiles)
         {
             m_dbusInterface->callDBus(QLatin1String("setMaxDrawDistance"), nauticalMiles);
         }

@@ -155,7 +155,7 @@ namespace BlackSimPlugin
             void setMaxPlanes(int planes);
 
             //! \copydoc XSwiftBus::CTraffic::setMaxDrawDistance
-            void setMaxDrawDistance(float nauticalMiles);
+            void setMaxDrawDistance(double nauticalMiles);
 
             //! \copydoc XSwiftBus::CTraffic::addPlane
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
