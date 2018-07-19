@@ -113,7 +113,7 @@ namespace BlackGui
         CAircraftIcaoCode CAircraftIcaoForm::getValue() const
         {
             CAircraftIcaoCode icao(ui->aircraft_Selector->getAircraftIcao());
-            if (!icao.hasValidDbKey())
+            if (!icao.hasValidDbKey() && sGui && sGui->getWebDataServices())
             {
                 // not based on DB yet, do we have a DB key
                 int k = this->getDbKeyFromGui();
@@ -131,8 +131,8 @@ namespace BlackGui
 
             const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
             const QString modelDescription(ui->le_ModelDescription->text().trimmed());
-            const QString iata(ui->le_Family->text().trimmed().toUpper());
-            const QString family(ui->le_Iata->text().trimmed().toUpper());
+            const QString iata(ui->le_Iata->text().trimmed().toUpper());
+            const QString family(ui->le_Family->text().trimmed().toUpper());
             const QString wtc(ui->cb_Wtc->currentText().left(1));
             const QString combined(ui->combined_TypeSelector->getCombinedType());
             bool ok;
