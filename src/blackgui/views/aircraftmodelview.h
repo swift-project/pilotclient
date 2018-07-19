@@ -106,7 +106,7 @@ namespace BlackGui
             bool highlightModelStrings() const;
 
             //! Loading data will be restricted to simulator
-            void setSimulatorForLoading(const BlackMisc::Simulation::CSimulatorInfo &sim) { m_loadingRequiresSimulator = sim; }
+            void setSimulatorForLoading(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_loadingRequiresSimulator = simulator; }
 
         signals:
             //! Request to stash if applicable

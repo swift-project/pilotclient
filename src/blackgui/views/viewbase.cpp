@@ -271,7 +271,7 @@ namespace BlackGui
                     break;
                 }
             case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
-            case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_loadJsonAction }); break; }
+            case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction }); break; }
             case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews()); break; }
             case MenuCut:
                 {
@@ -609,7 +609,7 @@ namespace BlackGui
             m_filterWidget->show();
         }
 
-        void CViewBaseNonTemplate::ps_loadJsonAction()
+        void CViewBaseNonTemplate::loadJsonAction()
         {
             if (!m_menus.testFlag(MenuLoad)) { return; }
             const CStatusMessage m = this->ps_loadJson();

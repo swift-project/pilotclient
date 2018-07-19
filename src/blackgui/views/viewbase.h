@@ -438,8 +438,11 @@ namespace BlackGui
             //! Draw drop indicator
             virtual void drawDropIndicator(bool indicator) = 0;
 
-            //! Save JSON for action/menu, no return signatur
+            //! Save JSON for action/menu, void return signatur
             void saveJsonAction();
+
+            //! Load JSON for action/menu, void return signatur
+            void loadJsonAction();
 
             //! Display the filter dialog
             void displayFilterDialog();
@@ -514,9 +517,6 @@ namespace BlackGui
 
             //! Load JSON
             virtual BlackMisc::CStatusMessage ps_loadJson() = 0;
-
-            //! Load JSON for action/menu, no return signatur
-            void ps_loadJsonAction();
 
             //! Save JSON
             virtual BlackMisc::CStatusMessage ps_saveJson() = 0;
