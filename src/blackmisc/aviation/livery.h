@@ -158,10 +158,13 @@ namespace BlackMisc
             //! Livery representing airline
             bool isAirlineLivery() const;
 
+            //! Is airline operating?
+            bool isAirlineOperating() const;
+
             //! Livery representing airline standard livery
             bool isAirlineStandardLivery() const;
 
-            //! Color livery
+            //! Color livery?
             bool isColorLivery() const;
 
             //! Color distance 0..1 (0 is best)

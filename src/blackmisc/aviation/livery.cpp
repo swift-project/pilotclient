@@ -184,6 +184,11 @@ namespace BlackMisc
             return (m_airline.hasValidDesignator());
         }
 
+        bool CLivery::isAirlineOperating() const
+        {
+            return this->isAirlineLivery() && this->getAirlineIcaoCode().isOperating();
+        }
+
         bool CLivery::isAirlineStandardLivery() const
         {
             if (isColorLivery()) { return false; }

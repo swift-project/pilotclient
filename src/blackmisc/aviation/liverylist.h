@@ -12,11 +12,11 @@
 #ifndef BLACKMISC_AVIATION_LIVERYLIST_H
 #define BLACKMISC_AVIATION_LIVERYLIST_H
 
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -44,9 +44,11 @@ namespace BlackMisc
             CLiveryList(const CSequence<CLivery> &other);
 
             //! Find livery by airline
+            //! \remark try to use the version with CAirlineIcaoCode as it resolves ambiguities betters
             CLiveryList findByAirlineIcaoDesignator(const QString &icao) const;
 
             //! Find livery by airline
+            //! \remark try to use the version with CAirlineIcaoCode as it resolves ambiguities betters
             CLivery findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const;
 
             //! Find livery by airline
@@ -72,6 +74,9 @@ namespace BlackMisc
 
             //! All combined codes plus more info
             QStringList getCombinedCodesPlusInfo(bool sort = false) const;
+
+            //! All aircraft codes
+            CAirlineIcaoCodeList getAirlines() const;
 
             //! Find by multiple criteria
             CLivery smartLiverySelector(const CLivery &liveryPattern) const;

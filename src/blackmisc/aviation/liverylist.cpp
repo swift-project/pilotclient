@@ -30,19 +30,39 @@ namespace BlackMisc
 
         CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const
         {
-            QString i(icao.trimmed().toUpper());
-            if (i.isEmpty()) { return CLiveryList(); }
-            return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, i);
+            QString icaoCode(icao.trimmed().toUpper());
+            if (icaoCode.isEmpty()) { return CLiveryList(); }
+            return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, icaoCode);
+        }
+
+        CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const
+        {
+            if (this->isEmpty() || !icao.hasValidDesignator()) { return CLivery(); }
+            CLiveryList candidates;
+            for (const CLivery &livery : *this)
+            {
+                if (!livery.isAirlineStandardLivery()) { continue; }
+                const CAirlineIcaoCode livIcao = livery.getAirlineIcaoCode();
+                if (livIcao.isDbEqual(icao)) { return livery; }
+                if (livIcao.getVDesignator() != icao.getVDesignator()) { continue; }
+                if (icao.getName().size() > 5 && livery.getDescription().contains(icao.getName(), Qt::CaseInsensitive)) { return livery; }
+                candidates.push_back(livery);
+            }
+
+            if (candidates.size() < 2) { return candidates.frontOrDefault(); }
+            const CLiveryList operatingAirlines = candidates.findBy(&CLivery::isAirlineOperating, true);
+            if (!operatingAirlines.isEmpty()) { return operatingAirlines.frontOrDefault(); }
+            return candidates.frontOrDefault();
         }
 
         CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const
         {
-            QString i(icao.trimmed().toUpper());
-            if (i.isEmpty()) { return CLivery(); }
+            QString icaoDesignator(icao.trimmed().toUpper());
+            if (icaoDesignator.isEmpty()) { return CLivery(); }
             return this->findFirstByOrDefault([&](const CLivery & livery)
             {
                 if (!livery.isAirlineStandardLivery()) { return false; }
-                return livery.getAirlineIcaoCode().matchesVDesignator(i);
+                return livery.getAirlineIcaoCode().matchesVDesignator(icaoDesignator);
             });
         }
 
@@ -66,11 +86,6 @@ namespace BlackMisc
                 return livery.isAirlineStandardLivery() &&
                        livery.getAirlineIcaoCode().matchesNamesOrTelephonyDesignator(candidate);
             });
-        }
-
-        CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const
-        {
-            return this->findStdLiveryByAirlineIcaoVDesignator(icao.getVDesignator());
         }
 
         CLivery CLiveryList::findColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
@@ -125,6 +140,16 @@ namespace BlackMisc
             QStringList codes = this->transform(Predicates::MemberTransform(&CLivery::getCombinedCodePlusInfo));
             if (sort) { codes.sort(); }
             return codes;
+        }
+
+        CAirlineIcaoCodeList CLiveryList::getAirlines() const
+        {
+            CAirlineIcaoCodeList icaos;
+            for (const CLivery &livery : * this)
+            {
+                icaos.push_back(livery.getAirlineIcaoCode());
+            }
+            return icaos;
         }
 
         CLivery CLiveryList::smartLiverySelector(const CLivery &liveryPattern) const
