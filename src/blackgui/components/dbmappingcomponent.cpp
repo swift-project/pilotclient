@@ -100,17 +100,17 @@ namespace BlackGui
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
 
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onOwnModelsChanged);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChanged);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onStashedModelsDataChanged);
+            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::handleStashDropRequest);
-            connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::onStashedModelsChanged);
+            connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
 
-            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onModelSetChanged);
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onModelSetChangedDigest, Qt::QueuedConnection);
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
 
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::onTabIndexChanged);
@@ -119,9 +119,9 @@ namespace BlackGui
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
 
             // initial values
-            this->onModelSetChanged(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
-            this->onStashedModelsDataChanged(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
-            this->onOwnModelsChanged(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
+            this->onModelSetChangedDigest(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
+            this->onStashedModelsDataChangedDigest(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
+            this->onOwnModelsChangedDigest(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
 
             // how to display forms
             ui->editor_AircraftModel->setSelectOnly();
@@ -156,7 +156,7 @@ namespace BlackGui
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onVPilotDataChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::onLoadVPilotDataFinished);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChanged);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::requestVPilotDataUpdate);
 
                 ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
@@ -566,9 +566,9 @@ namespace BlackGui
             this->onVPilotCacheChanged();
         }
 
-        void CDbMappingComponent::onStashedModelsChanged()
+        void CDbMappingComponent::onStashedModelsChangedTriggerDigest()
         {
-            emit this->ps_digestStashedModelsChanged();
+            m_dsStashedModelsChanged.inputSignal(); // will call onStashedModelsChangedDigest
         }
 
         void CDbMappingComponent::onStashedModelsChangedDigest()
@@ -645,7 +645,7 @@ namespace BlackGui
             ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
-        void CDbMappingComponent::onOwnModelsChanged(int count, bool withFilter)
+        void CDbMappingComponent::onOwnModelsChangedDigest(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -709,7 +709,7 @@ namespace BlackGui
             Q_UNUSED(selectedItem);
         }
 
-        void CDbMappingComponent::onStashedModelsDataChanged(int count, bool withFilter)
+        void CDbMappingComponent::onStashedModelsDataChangedDigest(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -723,7 +723,7 @@ namespace BlackGui
             this->updateEditorsWhenApplicable();
         }
 
-        void CDbMappingComponent::onModelSetChanged(int count, bool withFilter)
+        void CDbMappingComponent::onModelSetChangedDigest(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);

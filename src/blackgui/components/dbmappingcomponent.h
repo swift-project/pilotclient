@@ -221,9 +221,6 @@ namespace BlackGui
             //! Tab index has been changed
             void tabIndexChanged(int index);
 
-            //! \private Just needed to trigger CDbMappingComponent::ps_onStashedModelsChangedDigest
-            void ps_digestStashedModelsChanged();
-
         private slots:
             //! Add to own model set
             void ps_addToOwnModelSet(); // still used with QShortcut
@@ -254,13 +251,13 @@ namespace BlackGui
             void onTabIndexChanged(int index);
 
             //! Stashed models changed
-            void onStashedModelsChanged();
+            void onStashedModelsChangedTriggerDigest();
 
             //! Stashed models changed
             void onStashedModelsChangedDigest();
 
             //! Stash has been changed
-            void onStashedModelsDataChanged(int count, bool withFilter);
+            void onStashedModelsDataChangedDigest(int count, bool withFilter);
 
             //! Models have been published successfully
             void onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models, bool directWrite);
@@ -269,10 +266,10 @@ namespace BlackGui
             void handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
 
             //! Model set has been changed
-            void onModelSetChanged(int count, bool withFilter);
+            void onModelSetChangedDigest(int count, bool withFilter);
 
             //! Own models have been changed
-            void onOwnModelsChanged(int count, bool withFilter);
+            void onOwnModelsChangedDigest(int count, bool withFilter);
 
             //! Row has been selected
             void onModelRowSelected(const QModelIndex &index);
@@ -316,7 +313,7 @@ namespace BlackGui
             QScopedPointer<CDbAutoSimulatorStashingComponent>   m_autoSimulatorDialog; //!< dialog auto simulator update
             QScopedPointer<CDbModelMappingModifyComponent>      m_modelModifyDialog;   //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;        //!< read vPilot rules
-            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
+            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
             BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
             const bool vPilotSupport   = true;   //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initalized?
