@@ -47,23 +47,23 @@ namespace BlackGui
             ui->comp_LiverySelector->withLiveryDescription(false);
 
             // Id
-            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CLiveryForm::ps_idEntered);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CLiveryForm::onIdEntered);
 
             // selector
             connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
 
             // drag and drop, paste
             connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::pasted);
-            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::ps_droppedLivery);
+            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::onDroppedLivery);
             ui->drop_DropData->setInfoText("<drop livery>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
 
             // embedded form
-            connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChanged, this, &CLiveryForm::ps_airlineChanged);
+            connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChanged, this, &CLiveryForm::onAirlineChanged);
 
             // Set as temp.livery or search color
-            connect(ui->pb_TempLivery, &QPushButton::pressed, this, &CLiveryForm::ps_setTemporaryLivery);
-            connect(ui->pb_SearchColor, &QPushButton::pressed, this, &CLiveryForm::ps_searchForColor);
+            connect(ui->pb_TempLivery, &QPushButton::pressed, this, &CLiveryForm::setTemporaryLivery);
+            connect(ui->pb_SearchColor, &QPushButton::pressed, this, &CLiveryForm::searchForColor);
         }
 
         CLiveryForm::~CLiveryForm() { }
@@ -209,7 +209,7 @@ namespace BlackGui
             this->setValue(m_originalLivery);
         }
 
-        void CLiveryForm::ps_droppedLivery(const BlackMisc::CVariant &variantDropped)
+        void CLiveryForm::onDroppedLivery(const BlackMisc::CVariant &variantDropped)
         {
             CLivery livery;
             if (variantDropped.canConvert<CLivery>())
@@ -226,7 +226,7 @@ namespace BlackGui
             this->setValue(livery);
         }
 
-        void CLiveryForm::ps_airlineChanged(const CAirlineIcaoCode &code)
+        void CLiveryForm::onAirlineChanged(const CAirlineIcaoCode &code)
         {
             if (!code.hasCompleteData()) { return; }
             if (!code.hasValidDbKey()) { return; }
@@ -238,7 +238,7 @@ namespace BlackGui
             }
         }
 
-        void CLiveryForm::ps_setTemporaryLivery()
+        void CLiveryForm::setTemporaryLivery()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
             const CLivery l = sGui->getWebDataServices()->getTempLiveryOrDefault();
@@ -248,7 +248,7 @@ namespace BlackGui
             }
         }
 
-        void CLiveryForm::ps_searchForColor()
+        void CLiveryForm::searchForColor()
         {
             if (!m_colorSearch)
             {
@@ -264,7 +264,7 @@ namespace BlackGui
             }
         }
 
-        void CLiveryForm::ps_idEntered()
+        void CLiveryForm::onIdEntered()
         {
             if (!sGui || !sGui->hasWebDataServices())
             {

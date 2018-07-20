@@ -69,34 +69,32 @@ namespace BlackGui
             //! Clear data
             void clear();
 
-            //! Reset value to current value
-            void resetValue();
-
-        public slots:
             //! Value
             bool setValue(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Reset value to current value
+            void resetValue();
 
         protected:
             //! \copydoc CForm::jsonPasted
             virtual void jsonPasted(const QString &json) override;
 
-        private slots:
+        private:
             //! Livery dropped
-            void ps_droppedLivery(const BlackMisc::CVariant &variantDropped);
+            void onDroppedLivery(const BlackMisc::CVariant &variantDropped);
 
             //! Airline of embedded form has changed
-            void ps_airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
-
-            //! Set data for a temp.livery
-            void ps_setTemporaryLivery();
-
-            //! Search for color
-            void ps_searchForColor();
+            void onAirlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
 
             //! Id entered
-            void ps_idEntered();
+            void onIdEntered();
 
-        private:
+            //! Set data for a temp.livery
+            void setTemporaryLivery();
+
+            //! Search for color
+            void searchForColor();
+
             QScopedPointer<Ui::CLiveryForm> ui;
             BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
             BlackGui::Components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
