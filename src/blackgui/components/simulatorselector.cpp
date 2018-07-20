@@ -16,6 +16,7 @@
 #include <QRadioButton>
 #include <QWidget>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc::Simulation;
 
@@ -175,6 +176,12 @@ namespace BlackGui
             ui->hl_CheckBoxes->setContentsMargins(m);
         }
 
+        void CSimulatorSelector::setRememberSelectionAndSetToLastSelection()
+        {
+            this->setRememberSelection(true);
+            this->setToLastSelection();
+        }
+
         void CSimulatorSelector::clear()
         {
             if (m_mode == CheckBoxes)
@@ -225,21 +232,31 @@ namespace BlackGui
         void CSimulatorSelector::changedLastSelection()
         {
             // force decoupled update
-            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
+            this->triggerSetToLastSelection();
         }
 
         void CSimulatorSelector::changedLastSelectionRb()
         {
             // force decoupled update
             if (m_mode != RadioButtons) { return; }
-            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
+            this->triggerSetToLastSelection();
         }
 
         void CSimulatorSelector::changedLastSelectionCb()
         {
             // force decoupled update
             if (m_mode != CheckBoxes) { return; }
-            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
+            this->triggerSetToLastSelection();
+        }
+
+        void CSimulatorSelector::triggerSetToLastSelection()
+        {
+            QPointer<CSimulatorSelector> myself(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->setToLastSelection();
+            });
         }
     } // ns
 } // ns

@@ -40,8 +40,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->setSmallLayout(true); // no disadvantage, so I always set it
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
-            ui->comp_SimulatorSelector->setRememberSelection(true);
-            ui->comp_SimulatorSelector->setToLastSelection();
+            ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
+
             connect(ui->pb_ExcludeFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::excludeFileDialog);
             connect(ui->pb_ModelFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::modelFileDialog);
             connect(ui->pb_SimulatorFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::simulatorFileDialog);

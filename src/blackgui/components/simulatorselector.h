@@ -81,6 +81,9 @@ namespace BlackGui
             //! Remember selection
             void setRememberSelection(bool remember) { m_rememberSelection = remember; }
 
+            //! Remember selection
+            void setRememberSelectionAndSetToLastSelection();
+
             //! Is rembering selection?
             bool isRememberingSelection() const { return m_rememberSelection; }
 
@@ -112,6 +115,9 @@ namespace BlackGui
 
             //! Last selection has been changed
             void changedLastSelectionCb();
+
+            //! Trigger CSimulatorSelector::setToLastSelection
+            void triggerSetToLastSelection();
 
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;

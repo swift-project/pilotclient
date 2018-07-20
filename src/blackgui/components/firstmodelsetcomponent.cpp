@@ -42,9 +42,9 @@ namespace BlackGui
             ui(new Ui::CFirstModelSetComponent)
         {
             ui->setupUi(this);
-            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
-            ui->comp_SimulatorSelector->setRememberSelection(true);
             ui->comp_Distributors->view()->setSelectionMode(QAbstractItemView::MultiSelection);
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
 
             // we use the powerful component to access own models
             m_modelsDialog.reset(new CDbOwnModelsDialog(this));

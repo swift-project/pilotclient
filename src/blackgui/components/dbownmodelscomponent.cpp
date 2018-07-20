@@ -52,7 +52,8 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
 
             // Last selection isPinned -> no sync needed
-            const CSimulatorInfo simulator(m_simulatorSelection.get());
+            ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             if (simulator.isSingleSimulator())
             {
                 const bool success = this->initModelLoader(simulator);

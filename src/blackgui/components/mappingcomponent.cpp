@@ -124,7 +124,7 @@ namespace BlackGui
             this->settingsChanged();
 
             // selector
-            ui->comp_SimulatorSelector->setRememberSelection(false);
+            ui->comp_SimulatorSelector->setRememberSelection(false); // pilot client UI
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             this->setSimulatorSelector();
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);

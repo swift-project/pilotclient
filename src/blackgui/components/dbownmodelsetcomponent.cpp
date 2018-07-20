@@ -89,14 +89,8 @@ namespace BlackGui
             const CSimulatorInfo simulator = m_modelSetLoader.getSimulator();
             if (simulator.isSingleSimulator())
             {
-                ui->comp_SimulatorSelector->setValue(simulator);
-                ui->le_Simulator->setText(simulator.toQString(true));
-                const QPointer<CDbOwnModelSetComponent> myself(this);
-                QTimer::singleShot(500, [ = ]()
-                {
-                    if (myself.isNull() || !sApp || sApp->isShuttingDown()) { return; }
-                    this->updateViewToCurrentModels();
-                });
+                this->setSimulator(simulator);
+                ui->comp_SimulatorSelector->setRememberSelection(true);
             }
         }
 
