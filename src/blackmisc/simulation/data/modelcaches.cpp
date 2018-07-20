@@ -218,6 +218,8 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CStatusMessage();
                 }
+
+                this->emitCacheChanged(simulator);
             }
 
             QDateTime IMultiSimulatorModelCaches::getCurrentCacheTimestamp() const
@@ -226,6 +228,28 @@ namespace BlackMisc
                 BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
                 if (!sim.isSingleSimulator()) { return QDateTime(); }
                 return this->getCacheTimestamp(sim);
+            }
+
+            CStatusMessage IMultiSimulatorModelCaches::clearCachedModels(const CSimulatorInfo &simulator)
+            {
+                static const CAircraftModelList models;
+                return this->setCachedModels(models, simulator);
+            }
+
+            void IMultiSimulatorModelCaches::synchronizeMultiCaches(const CSimulatorInfo &simulator)
+            {
+                for (const CSimulatorInfo &singleSimulator : simulator.asSingleSimulatorSet())
+                {
+                    this->synchronizeCache(singleSimulator);
+                }
+            }
+
+            void IMultiSimulatorModelCaches::admitMultiCaches(const CSimulatorInfo &simulator)
+            {
+                for (const CSimulatorInfo &singleSimulator : simulator.asSingleSimulatorSet())
+                {
+                    this->admitMultiCaches(singleSimulator);
+                }
             }
 
             QDateTime CModelCaches::getCacheTimestamp(const CSimulatorInfo &simulator) const
@@ -410,6 +434,8 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CStatusMessage();
                 }
+
+                this->emitCacheChanged(simulator);
             }
 
             QDateTime CModelSetCaches::getCacheTimestamp(const CSimulatorInfo &simulator) const

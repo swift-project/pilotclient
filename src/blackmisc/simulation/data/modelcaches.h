@@ -205,8 +205,13 @@ namespace BlackMisc
                 //! \threadsafe
                 QDateTime getCurrentCacheTimestamp() const;
 
-                //! Set cache
+                //! Set cached models
+                //! \threadsafe
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
+                //! Clear cached models
+                //! \threadsafe
+                virtual BlackMisc::CStatusMessage clearCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Synchronize for given simulator
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
@@ -264,7 +269,6 @@ namespace BlackMisc
                 //! Void version of synchronizeCurrentCache
                 void onLastSelectionChanged();
 
-            private:
                 //! Emit cacheChanged() utility function (allows breakpoint)
                 void emitCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };

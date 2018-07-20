@@ -77,13 +77,16 @@ namespace BlackMisc
             };
 
             //! Enum as string
-            static QString enumToString(LoadFinishedInfo info);
+            static const QString &enumToString(LoadFinishedInfo info);
 
             //! Enum as string
-            static QString enumToString(LoadModeFlag modeFlag);
+            static const QString &enumToString(LoadModeFlag modeFlag);
 
             //! Enum as string
             static QString enumToString(LoadMode mode);
+
+            //! Is that mode needing caches synchronized?
+            static bool needsCacheSynchronized(LoadMode mode);
 
             //! Destructor
             virtual ~IAircraftModelLoader();
@@ -159,6 +162,12 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::synchronizeCache
             void synchronizeModelCache(const CSimulatorInfo &simulator);
 
+            //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::clearCache
+            BlackMisc::CStatusMessage clearCache();
+
+            //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::clearCache
+            BlackMisc::CStatusMessage clearCache(const CSimulatorInfo &simulator);
+
             //! \copydoc Settings::CMultiSimulatorSettings::getSpecializedSettings
             Settings::CSpecializedSimulatorSettings getCurrentSimulatorSettings() const;
 
@@ -203,9 +212,6 @@ namespace BlackMisc
 
             //! Any cached data?
             bool hasCachedData() const;
-
-            //! Clear cache
-            BlackMisc::CStatusMessage clearCache();
 
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) = 0;

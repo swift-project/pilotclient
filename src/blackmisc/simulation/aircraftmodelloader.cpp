@@ -42,31 +42,46 @@ namespace BlackMisc
             connect(&m_settings, &CMultiSimulatorSettings::settingsChanged, this, &IAircraftModelLoader::onSettingsChanged);
         }
 
-        QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
+        const QString &IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
         {
+            static const QString loaded("cache loaded");
+            static const QString skipped("loading skipped");
+            static const QString parsed("parsed data");
+
             switch (info)
             {
-            case CacheLoaded: return "cache loaded";
-            case LoadingSkipped: return "loading skipped";
-            case ParsedData: return "parsed data";
+            case CacheLoaded: return loaded;
+            case LoadingSkipped: return skipped;
+            case ParsedData: return parsed;
             default: break;
             }
-            return "??";
+
+            static const QString unknown("??");
+            return unknown;
         }
 
-        QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadModeFlag modeFlag)
+        const QString &IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadModeFlag modeFlag)
         {
+            static const QString notSet("not set");
+            static const QString directly("load directly");
+            static const QString background("load in background");
+            static const QString cacheFirst("cache first");
+            static const QString cacheSkipped("cache skipped");
+            static const QString cacheOnly("cacheOnly");
+
             switch (modeFlag)
             {
-            case NotSet: return "not set";
-            case LoadDirectly: return "load directly";
-            case LoadInBackground: return "load in background";
-            case CacheFirst: return "cache first";
-            case CacheSkipped: return "cache skipped";
-            case CacheOnly: return "cache only";
+            case NotSet: return notSet;
+            case LoadDirectly: return directly;
+            case LoadInBackground: return background;
+            case CacheFirst: return cacheFirst;
+            case CacheSkipped: return cacheSkipped;
+            case CacheOnly: return cacheOnly;
             default: break;
             }
-            return "??";
+
+            static const QString unknown("??");
+            return unknown;
         }
 
         QString IAircraftModelLoader::enumToString(LoadMode mode)
@@ -78,6 +93,11 @@ namespace BlackMisc
             if (mode.testFlag(CacheFirst)) modes << enumToString(CacheFirst);
             if (mode.testFlag(CacheSkipped)) modes << enumToString(CacheSkipped);
             return modes.join(", ");
+        }
+
+        bool IAircraftModelLoader::needsCacheSynchronized(LoadMode mode)
+        {
+            return mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly);
         }
 
         IAircraftModelLoader::~IAircraftModelLoader()
@@ -93,9 +113,9 @@ namespace BlackMisc
 
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
-            this->setObjectInfo(sim);
-            return m_caches.setCachedModels(models, sim);
+            const CSimulatorInfo usedSimulator = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
+            this->setObjectInfo(usedSimulator);
+            return m_caches.setCachedModels(models, usedSimulator);
         }
 
         CStatusMessage IAircraftModelLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
@@ -202,7 +222,12 @@ namespace BlackMisc
 
         CStatusMessage IAircraftModelLoader::clearCache()
         {
-            return this->setCachedModels(CAircraftModelList());
+            return m_caches.clearCachedModels(m_caches.getCurrentSimulator());
+        }
+
+        CStatusMessage IAircraftModelLoader::clearCache(const CSimulatorInfo &simulator)
+        {
+            return m_caches.clearCachedModels(simulator);
         }
 
         void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
@@ -210,6 +235,10 @@ namespace BlackMisc
             if (m_loadingInProgress) { return; }
             m_loadingInProgress = true;
             m_loadingMessages.clear();
+
+            const CSimulatorInfo simulator = this->getSimulator();
+            const bool needsCacheSynced = IAircraftModelLoader::needsCacheSynchronized(mode);
+            if (needsCacheSynced) { m_caches.synchronizeCache(simulator); }
 
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
@@ -229,7 +258,6 @@ namespace BlackMisc
             }
 
             // really load from disk?
-            const CSimulatorInfo simulator = this->getSimulator();
             const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
             if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
             {
