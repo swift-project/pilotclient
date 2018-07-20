@@ -81,7 +81,7 @@ namespace BlackGui
             connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::changeSimulator, Qt::QueuedConnection);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded);
@@ -362,9 +362,12 @@ namespace BlackGui
             m_copyFromAnotherSwift->show();
         }
 
-        void CDbOwnModelSetComponent::changeSimulator(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
         {
             if (m_simulator == simulator) { return; } // avoid unnecessary signals
+            if (simulator.isNoSimulator()) { return; }
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+
             m_simulator = simulator;
             m_modelSetLoader.setSimulator(simulator);
             ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
@@ -379,12 +382,6 @@ namespace BlackGui
             const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, CGuiApplication::getTemporaryDirectory());
             if (file.isEmpty()) { return; }
             QDesktopServices::openUrl(QUrl::fromLocalFile(file));
-        }
-
-        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
-        {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->changeSimulator(simulator);
         }
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)

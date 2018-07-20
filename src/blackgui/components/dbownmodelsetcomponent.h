@@ -153,9 +153,6 @@ namespace BlackGui
             //! Copy from another swift version
             void copyFromAnotherSwift();
 
-            //! Unchecked version of setSimulator
-            void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
             //! Show the airline/aircraft matrix
             void showAirlineAircraftMatrix() const;
 

@@ -66,11 +66,9 @@ namespace BlackGui
                 {
                     CLogMessage(this).error("Init of model loader failed in component");
                 }
-                ui->comp_SimulatorSelector->setValue(simulator);
-                ui->le_Simulator->setText(simulator.toQString());
             }
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorChanged);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
 
             // menu
             ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
@@ -150,9 +148,16 @@ namespace BlackGui
 
             // changed simulator
             m_simulator = simulator;
-            this->loadInstalledModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
+            this->requestSimulatorModelsWithCacheInBackground(simulator);
             ui->comp_SimulatorSelector->setValue(simulator);
             ui->le_Simulator->setText(simulator.toQString());
+            ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
+        }
+
+        void CDbOwnModelsComponent::onSimulatorSelectorChanged()
+        {
+            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+            this->setSimulator(simulator);
         }
 
         int CDbOwnModelsComponent::getOwnModelsCount() const
@@ -276,7 +281,7 @@ namespace BlackGui
                         connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FSX));
+                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fsx());
                         });
                     }
                     menuActions.addAction(m_loadActions[0], CMenuAction::pathSimulator());
@@ -289,7 +294,7 @@ namespace BlackGui
                         connect(m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::P3D));
+                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::p3d());
                         });
                     }
                     menuActions.addAction(m_loadActions[1], CMenuAction::pathSimulator());
@@ -302,7 +307,7 @@ namespace BlackGui
                         connect(m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FS9));
+                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fs9());
                         });
                     }
                     menuActions.addAction(m_loadActions[2], CMenuAction::pathSimulator());
@@ -315,15 +320,15 @@ namespace BlackGui
                         connect(m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::XPLANE));
+                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::xplane());
                         });
                     }
                     menuActions.addAction(m_loadActions[3], CMenuAction::pathSimulator());
                 }
 
                 // with models loaded I allow a refresh reload
-                // I need those models because I want to merge with DM data in the loader
-                if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
+                // I need those models because I want to merge with DB data in the loader
+                if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
                     if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
                     menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
@@ -335,7 +340,7 @@ namespace BlackGui
                             connect(m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
-                                ownModelsComp->requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
+                                ownModelsComp->requestSimulatorModels(CSimulatorInfo::fsx(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
                             m_reloadActions[1] = new QAction(CIcons::appModels16(), "FSX models from directory", this);
@@ -361,7 +366,7 @@ namespace BlackGui
                             connect(m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
-                                ownModelsComp->requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
+                                ownModelsComp->requestSimulatorModels(CSimulatorInfo::p3d(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
                             m_reloadActions[3] = new QAction(CIcons::appModels16(), "P3D models from directoy", this);
@@ -387,7 +392,7 @@ namespace BlackGui
                             connect(m_reloadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
-                                ownModelsComp->requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundNoCache);
+                                ownModelsComp->requestSimulatorModels(CSimulatorInfo::fs9(), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
                             m_reloadActions[5] = new QAction(CIcons::appModels16(), "FS9 models from directoy", this);
@@ -413,7 +418,7 @@ namespace BlackGui
                             connect(m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
-                                ownModelsComp->requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
+                                ownModelsComp->requestSimulatorModels(CSimulatorInfo::xplane(), IAircraftModelLoader::InBackgroundNoCache);
                             });
                             m_reloadActions[7] = new QAction(CIcons::appModels16(), "XPlane models from directoy", this);
                             connect(m_reloadActions[7], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
@@ -430,12 +435,68 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[6], CMenuAction::pathSimulatorModelsReload());
                         menuActions.addAction(m_reloadActions[7], CMenuAction::pathSimulatorModelsReload());
                     }
+
                 }
                 else
                 {
                     // dummy action grayed out
                     CMenuAction a = menuActions.addAction(CIcons::refresh16(), "Force model reload impossible, no DB data", CMenuAction::pathSimulator());
                     a.setActionEnabled(false); // gray out
+                }
+
+                if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
+                if (sims.isFSX())
+                {
+                    if (!m_clearCacheActions[0])
+                    {
+                        m_clearCacheActions[0] = new QAction(CIcons::appModels16(), "Clear FSX cache", this);
+                        connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->clearSimulatorCache(CSimulatorInfo::fsx());
+                        });
+                    }
+                    menuActions.addAction(m_clearCacheActions[0], CMenuAction::pathSimulatorModelsClearCache());
+                }
+                if (sims.isP3D())
+                {
+                    if (!m_clearCacheActions[1])
+                    {
+                        m_clearCacheActions[1] = new QAction(CIcons::appModels16(), "Clear P3D cache", this);
+                        connect(m_clearCacheActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->clearSimulatorCache(CSimulatorInfo::p3d());
+                        });
+                    }
+                    menuActions.addAction(m_clearCacheActions[1], CMenuAction::pathSimulatorModelsClearCache());
+                }
+                if (sims.isFS9())
+                {
+                    if (!m_clearCacheActions[2])
+                    {
+                        m_clearCacheActions[2] = new QAction(CIcons::appModels16(), "Clear FS9 cache", this);
+                        connect(m_clearCacheActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->clearSimulatorCache(CSimulatorInfo::fs9());
+                        });
+                    }
+                    menuActions.addAction(m_clearCacheActions[2], CMenuAction::pathSimulatorModelsClearCache());
+                }
+                if (sims.isXPlane())
+                {
+                    if (!m_clearCacheActions[3])
+                    {
+                        m_clearCacheActions[3] = new QAction(CIcons::appModels16(), "Clear XPlane cache", this);
+                        connect(m_clearCacheActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->clearSimulatorCache(CSimulatorInfo::xplane());
+                        });
+                    }
+                    menuActions.addAction(m_clearCacheActions[3], CMenuAction::pathSimulatorModelsClearCache());
                 }
             }
             this->nestedCustomMenu(menuActions);
@@ -517,12 +578,9 @@ namespace BlackGui
             this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
         }
 
-        void CDbOwnModelsComponent::onSimulatorChanged()
+        void CDbOwnModelsComponent::clearSimulatorCache(const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
-            this->requestSimulatorModelsWithCacheInBackground(simulator);
-            ui->le_Simulator->setText(simulator.toQString());
+            m_modelLoader->clearCache(simulator);
         }
     } // ns
 } // ns

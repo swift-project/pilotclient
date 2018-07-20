@@ -130,6 +130,9 @@ namespace BlackGui
             //! Simulator sub menu reload models
             static const QString &pathSimulatorModelsReload()  { static const QString p("Custom.11.Simulator/Simulator/Reload models"); return p; }
 
+            //! Simulator sub menu reload models
+            static const QString &pathSimulatorModelsClearCache()  { static const QString p("Custom.11.Simulator/Simulator/Clear model caches"); return p; }
+
             //! Stash sub menu
             static const QString &pathStash()  { static const QString p("Custom.12.Stash/Stash"); return p; }
 
