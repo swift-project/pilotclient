@@ -30,16 +30,10 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator)
+        const CLogCategoryList &IAircraftModelLoader::getLogCategories()
         {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            m_caches.setCurrentSimulator(simulator);
-            this->setObjectInfo(simulator);
-
-            // first connect is an internal connection to log info about load status
-            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
-            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::onCacheChanged);
-            connect(&m_settings, &CMultiSimulatorSettings::settingsChanged, this, &IAircraftModelLoader::onSettingsChanged);
+            static const CLogCategoryList cats({ CLogCategory::modelLoader() });
+            return cats;
         }
 
         const QString &IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
@@ -100,152 +94,33 @@ namespace BlackMisc
             return mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly);
         }
 
-        IAircraftModelLoader::~IAircraftModelLoader()
+        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent) :
+            CCentralMultiSimulatorModelCachesProvider(parent),
+            m_simulator(simulator)
         {
-            this->gracefulShutdown();
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
         }
 
-        const CLogCategoryList &IAircraftModelLoader::getLogCategories()
-        {
-            static const CLogCategoryList cats({ CLogCategory::modelLoader() });
-            return cats;
-        }
+        IAircraftModelLoader::~IAircraftModelLoader() { }
 
-        CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
-        {
-            const CSimulatorInfo usedSimulator = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
-            this->setObjectInfo(usedSimulator);
-            return m_caches.setCachedModels(models, usedSimulator);
-        }
-
-        CStatusMessage IAircraftModelLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
-        {
-            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
-            this->setObjectInfo(sim);
-            CAircraftModelList allModels(m_caches.getSynchronizedCachedModels(sim));
-            const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
-            if (c > 0)
-            {
-                return this->setCachedModels(allModels, sim);
-            }
-            else
-            {
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data changed");
-            }
-        }
-
-        void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info)
-        {
-            Q_UNUSED(info);
-            this->setObjectInfo(simulator);
-
-            // remark: in the past status used to be bool, now it is CStatusMessage
-            // so there is some redundancy here between status and m_loadingMessages
-            m_loadingInProgress = false;
-
-            const QMap<int, int> counts = statusMsgs.countSeverities();
-            const int errors = counts.value(SeverityError);
-            const int warnings = counts.value(SeverityWarning);
-
-            if (statusMsgs.hasWarningOrErrorMessages())
-            {
-                CLogMessage(this).log(m_loadingMessages.worstSeverity(),
-                                      "Message loading produced %1 error and %2 warning messages") << errors << warnings;
-            }
-            else
-            {
-                CLogMessage(this).info("Loading finished, success for '%1'") << simulator.toQString();
-            }
-        }
-
-        void IAircraftModelLoader::onCacheChanged(const CSimulatorInfo &simInfo)
-        {
-            // this detects a loaded cache elsewhere
-            Q_UNUSED(simInfo);
-        }
-
-        void IAircraftModelLoader::onSettingsChanged(const CSimulatorInfo &simInfo)
-        {
-            // this detects changed settings elsewhere
-            Q_UNUSED(simInfo);
-        }
-
-        QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const
-        {
-            QStringList modelDirs = modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
-            modelDirs = CFileUtils::fixWindowsUncPaths(modelDirs);
-            return CDirectoryUtils::getExistingUnemptyDirectories(modelDirs);
-        }
-
-        void IAircraftModelLoader::setObjectInfo(const CSimulatorInfo &simulatorInfo)
-        {
-            this->setObjectName("Model loader for: '" + simulatorInfo.toQString(true) + "'");
-        }
-
-        QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
-        {
-            const QStringList mdirs = m_settings.getModelDirectoriesOrDefault(this->getSimulator());
-            return mdirs;
-        }
-
-        QString IAircraftModelLoader::getFirstModelDirectoryOrDefault() const
-        {
-            const QString md = m_settings.getFirstModelDirectoryOrDefault(this->getSimulator());
-            return md;
-        }
-
-        QStringList IAircraftModelLoader::getModelExcludeDirectoryPatterns() const
-        {
-            return m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator());
-        }
-
-        CAircraftModelList IAircraftModelLoader::getAircraftModels() const
-        {
-            return m_caches.getCurrentCachedModels();
-        }
-
-        CAircraftModelList IAircraftModelLoader::getCachedAircraftModels(const CSimulatorInfo &simulator) const
-        {
-            return m_caches.getCachedModels(simulator);
-        }
-
-        QDateTime IAircraftModelLoader::getCacheTimestamp() const
-        {
-            return m_caches.getCurrentCacheTimestamp();
-        }
-
-        bool IAircraftModelLoader::hasCachedData() const
-        {
-            return !m_caches.getCurrentCachedModels().isEmpty();
-        }
-
-        CStatusMessage IAircraftModelLoader::clearCache()
-        {
-            return m_caches.clearCachedModels(m_caches.getCurrentSimulator());
-        }
-
-        CStatusMessage IAircraftModelLoader::clearCache(const CSimulatorInfo &simulator)
-        {
-            return m_caches.clearCachedModels(simulator);
-        }
-
-        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
         {
             if (m_loadingInProgress) { return; }
+            if (mode == NotSet) { return; }
             m_loadingInProgress = true;
             m_loadingMessages.clear();
 
             const CSimulatorInfo simulator = this->getSimulator();
             const bool needsCacheSynced = IAircraftModelLoader::needsCacheSynchronized(mode);
-            if (needsCacheSynced) { m_caches.synchronizeCache(simulator); }
+            if (needsCacheSynced) { this->synchronizeCache(simulator); }
 
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
                 // we just just cache data
                 static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Using cached data");
-                emit loadingFinished(status, this->getSimulator(), CacheLoaded);
+                emit this->loadingFinished(status, simulator, CacheLoaded);
                 return;
             }
             if (mode.testFlag(CacheOnly))
@@ -273,83 +148,113 @@ namespace BlackMisc
             this->startLoadingFromDisk(mode, modelConsolidation, modelDirs);
         }
 
-        const CSimulatorInfo IAircraftModelLoader::getSimulator() const
+        QString IAircraftModelLoader::getFirstModelDirectoryOrDefault() const
         {
-            return m_caches.getCurrentSimulator();
+            const QString md = m_settings.getFirstModelDirectoryOrDefault(m_simulator);
+            return md;
         }
 
-        QString IAircraftModelLoader::getSimulatorAsString() const
+        void IAircraftModelLoader::setModels(const CAircraftModelList &models)
         {
-            return this->getSimulator().toQString();
+            this->setModelsForSimulator(models, m_simulator);
         }
 
-        bool IAircraftModelLoader::supportsSimulator(const CSimulatorInfo &simulator)
+        int IAircraftModelLoader::updateModels(const CAircraftModelList &models)
         {
-            return getSimulator().matchesAny(simulator);
+            return this->updateModelsForSimulator(models, m_simulator);
         }
 
-        void IAircraftModelLoader::cancelLoading()
-        {
-            if (!m_loadingInProgress) { return; }
-            m_cancelLoading = true;
-        }
-
-        void IAircraftModelLoader::gracefulShutdown()
-        {
-            this->cancelLoading();
-            m_loadingInProgress = true; // avoids further startups
-        }
-
-        QString IAircraftModelLoader::getModelCacheInfoString() const
-        {
-            return m_caches.getInfoString();
-        }
-
-        QString IAircraftModelLoader::getModelCacheInfoStringFsFamily() const
-        {
-            return m_caches.getInfoStringFsFamily();
-        }
-
-        QString IAircraftModelLoader::getModelCacheCountAndTimestamp() const
-        {
-            return m_caches.getCacheCountAndTimestamp(this->getSimulator());
-        }
-
-        QString IAircraftModelLoader::getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
-        {
-            return m_caches.getCacheCountAndTimestamp(simulator);
-        }
-
-        CSpecializedSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
-        {
-            return m_settings.getSpecializedSettings(this->getSimulator());
-        }
-
-        void IAircraftModelLoader::synchronizeModelCache(const CSimulatorInfo &simulator)
-        {
-            m_caches.synchronizeCache(simulator);
-        }
-
-        std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)
+        IAircraftModelLoader *IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator, QObject *parent)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
-            std::unique_ptr<IAircraftModelLoader> loader;
-            if (simulator.isXPlane())
+            if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
+            return CAircraftCfgParser::createModelLoader(simulator, parent);
+        }
+
+        QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const
+        {
+            QStringList modelDirs = modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
+            modelDirs = CFileUtils::fixWindowsUncPaths(modelDirs);
+            return CDirectoryUtils::getExistingUnemptyDirectories(modelDirs);
+        }
+
+        bool IAircraftModelLoader::hasCachedData() const
+        {
+            return !this->getCachedModels(m_simulator).isEmpty();
+        }
+
+        void IAircraftModelLoader::setObjectInfo(const CSimulatorInfo &simulatorInfo)
+        {
+            this->setObjectName("Model loader for: '" + simulatorInfo.toQString(true) + "'");
+        }
+
+        void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
+        {
+            Q_UNUSED(info);
+            if (!this->supportsSimulator(simulator)) { return; } // none of my business
+            this->setObjectInfo(simulator);
+
+            // remark: in the past status used to be bool, now it is CStatusMessage
+            // so there is some redundancy here between status and m_loadingMessages
+            m_loadingInProgress = false;
+
+            const QMap<int, int> counts = statusMsgs.countSeverities();
+            const int errors = counts.value(SeverityError);
+            const int warnings = counts.value(SeverityWarning);
+
+            if (statusMsgs.hasWarningOrErrorMessages())
             {
-                loader = std::make_unique<CAircraftModelLoaderXPlane>();
+                CLogMessage(this).log(m_loadingMessages.worstSeverity(),
+                                      "Message loading produced %1 error and %2 warning messages") << errors << warnings;
             }
             else
             {
-                loader = CAircraftCfgParser::createModelLoader(simulator);
+                CLogMessage(this).info("Loading finished, success for '%1'") << simulator.toQString();
             }
+        }
 
-            if (!loader) { return loader; }
-
-            // make sure the cache is really available, normally this happens in the constructor
-            if (loader->getSimulator() != simulator)
+        IAircraftModelLoader *CMultiAircraftModelLoaderProvider::loaderInstance(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+            switch (simulator.getSimulator())
             {
-                loader->m_caches.setCurrentSimulator(simulator); // mark current simulator and sync caches
+            case CSimulatorInfo::FSX:
+                {
+                    if (!m_loaderFsx) { m_loaderFsx = this->initLoader(CSimulatorInfo::fsx()); }
+                    return m_loaderFsx;
+                }
+            case CSimulatorInfo::P3D:
+                {
+                    if (!m_loaderP3D) { m_loaderP3D = this->initLoader(CSimulatorInfo::p3d()); }
+                    return m_loaderP3D;
+                }
+            case CSimulatorInfo::XPLANE:
+                {
+                    if (!m_loaderXP) { m_loaderXP = this->initLoader(CSimulatorInfo::xplane()); }
+                    return m_loaderXP;
+                }
+            case CSimulatorInfo::FS9:
+                {
+                    if (!m_loaderFS9) { m_loaderFS9 = this->initLoader(CSimulatorInfo::fs9()); }
+                    return m_loaderFS9;
+                }
+            default:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
+                break;
             }
+            return nullptr;
+        }
+
+        CMultiAircraftModelLoaderProvider &CMultiAircraftModelLoaderProvider::multiModelLoaderInstance()
+        {
+            static CMultiAircraftModelLoaderProvider loader;
+            return loader;
+        }
+
+        IAircraftModelLoader *CMultiAircraftModelLoaderProvider::initLoader(const CSimulatorInfo &simulator)
+        {
+            IAircraftModelLoader *loader = IAircraftModelLoader::createModelLoader(simulator, this);
+            connect(loader, &IAircraftModelLoader::loadingFinished, this, &CMultiAircraftModelLoaderProvider::loadingFinished);
             return loader;
         }
     } // ns
