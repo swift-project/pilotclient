@@ -492,60 +492,6 @@ namespace BlackMisc
                     break;
                 }
             }
-
-            CCentralMultiSimulatorModelCachesProvider &CCentralMultiSimulatorModelCachesProvider::modelCachesInstance()
-            {
-                static CCentralMultiSimulatorModelCachesProvider c;
-                return c;
-            }
-
-            CAircraftModelList CCentralMultiSimulatorModelCachesProvider::getCachedModels(const CSimulatorInfo &simulator) const
-            {
-                return instanceCaches().getCachedModels(simulator);
-            }
-
-            CStatusMessage CCentralMultiSimulatorModelCachesProvider::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
-            {
-                return instanceCaches().setCachedModels(models, simulator);
-            }
-
-            QDateTime CCentralMultiSimulatorModelCachesProvider::getCacheTimestamp(const CSimulatorInfo &simulator) const
-            {
-                return instanceCaches().getCacheTimestamp(simulator);
-            }
-
-            CStatusMessage CCentralMultiSimulatorModelCachesProvider::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
-            {
-                return instanceCaches().setCacheTimestamp(ts, simulator);
-            }
-
-            void CCentralMultiSimulatorModelCachesProvider::synchronizeCache(const CSimulatorInfo &simulator)
-            {
-                return instanceCaches().synchronizeCache(simulator);
-            }
-
-            void CCentralMultiSimulatorModelCachesProvider::admitCache(const CSimulatorInfo &simulator)
-            {
-                return instanceCaches().admitCache(simulator);
-            }
-
-            QString CCentralMultiSimulatorModelCachesProvider::getFilename(const CSimulatorInfo &simulator) const
-            {
-                return instanceCaches().getFilename(simulator);
-            }
-
-            bool CCentralMultiSimulatorModelCachesProvider::isSaved(const CSimulatorInfo &simulator) const
-            {
-                return instanceCaches().isSaved(simulator);
-            }
-
-            QString CCentralMultiSimulatorModelCachesProvider::getDescription() const
-            {
-                return instanceCaches().getDescription();
-            }
-
-            CCentralMultiSimulatorModelCachesProvider::CCentralMultiSimulatorModelCachesProvider(QObject *parent) : IMultiSimulatorModelCaches(parent)
-            { }
         } // ns
     } // ns
 } // ns

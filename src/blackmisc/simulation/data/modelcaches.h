@@ -157,6 +157,12 @@ namespace BlackMisc
                 Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
 
             public:
+                //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
+                virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
+
+                //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
+                virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
+
                 //! Models for simulator
                 //! \threadsafe
                 virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const = 0;
@@ -187,6 +193,7 @@ namespace BlackMisc
                 virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const = 0;
 
                 //! Set cache timestamp
+                //! \threadsafe
                 virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) = 0;
 
                 //! Cache saved?
@@ -198,6 +205,7 @@ namespace BlackMisc
                 CSimulatorInfo simulatorsWithInitializedCache() const;
 
                 //! Timestamp
+                //! \threadsafe
                 QDateTime getSynchronizedTimestamp(const CSimulatorInfo &simulator);
 
                 //! Set cached models
@@ -209,17 +217,12 @@ namespace BlackMisc
                 virtual CStatusMessage clearCachedModels(const CSimulatorInfo &simulator);
 
                 //! Synchronize for given simulator
+                //! \threadsafe
                 virtual void synchronizeCache(const CSimulatorInfo &simulator) = 0;
 
                 //! Admit the cache for given simulator
                 //! \threadsafe
                 virtual void admitCache(const CSimulatorInfo &simulator) = 0;
-
-                //! \copydoc IModelsForSimulatorSetable::setModels
-                virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
-
-                //! \copydoc IModelsForSimulatorUpdatable::updateModels
-                virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
 
                 //! Info string about models in cache
                 QString getInfoString() const;
@@ -284,10 +287,10 @@ namespace BlackMisc
                 //! @}
 
             private:
-                CData<Data::TModelCacheFsx> m_modelCacheFsx {this, &CModelCaches::changedFsx }; //!< FSX cache
-                CData<Data::TModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 }; //!< FS9 cache
-                CData<Data::TModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
-                CData<Data::TModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
+                CData<Data::TModelCacheFsx> m_modelCacheFsx { this, &CModelCaches::changedFsx }; //!< FSX cache
+                CData<Data::TModelCacheFs9> m_modelCacheFs9 { this, &CModelCaches::changedFs9 }; //!< FS9 cache
+                CData<Data::TModelCacheP3D> m_modelCacheP3D { this, &CModelCaches::changedP3D }; //!< P3D cache
+                CData<Data::TModelCacheXP>  m_modelCacheXP  { this, &CModelCaches::changedXP };  //!< XP cache
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const CSimulatorInfo &simulator);
@@ -324,10 +327,10 @@ namespace BlackMisc
                 //! @}
 
             private:
-                CData<Data::TModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::changedFsx };  //!< FSX cache
-                CData<Data::TModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
-                CData<Data::TModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
-                CData<Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
+                CData<Data::TModelSetCacheFsx> m_modelCacheFsx { this, &CModelSetCaches::changedFsx };  //!< FSX cache
+                CData<Data::TModelSetCacheFs9> m_modelCacheFs9 { this, &CModelSetCaches::changedFs9};   //!< FS9 cache
+                CData<Data::TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D };  //!< P3D cache
+                CData<Data::TModelSetCacheXP>  m_modelCacheXP  { this, &CModelSetCaches::changedXP };   //!< XP cache
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const CSimulatorInfo &simulator);
@@ -337,8 +340,42 @@ namespace BlackMisc
                 void admitCacheImpl(const CSimulatorInfo &simulator);
             };
 
-            //! One central instance of the caches
-            class BLACKMISC_EXPORT CCentralMultiSimulatorModelCachesProvider : public IMultiSimulatorModelCaches
+            //! One central instance of the caches base class
+            template <class TCaches, class Derived> class CCentralMultiSimulatorModelCachesProviderBase : public IMultiSimulatorModelCaches
+            {
+            public:
+                //! \name Interface implementations
+                //! @{
+                virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override { return instanceCaches().getCachedModels(simulator); }
+                virtual CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { return instanceCaches().setCachedModels(models, simulator); }
+                virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override { return instanceCaches().getCacheTimestamp(simulator); }
+                virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override { return instanceCaches().setCacheTimestamp(ts, simulator); }
+                virtual void synchronizeCache(const CSimulatorInfo &simulator) override { return instanceCaches().synchronizeCache(simulator); }
+                virtual void admitCache(const CSimulatorInfo &simulator) override { return instanceCaches().admitCache(simulator); }
+                virtual QString getFilename(const CSimulatorInfo &simulator) const override { return instanceCaches().getFilename(simulator); }
+                virtual bool isSaved(const CSimulatorInfo &simulator) const override { return instanceCaches().isSaved(simulator); }
+                virtual QString getDescription() const override { return instanceCaches().getDescription(); }
+                //! @}
+
+            protected:
+                //! Ctor
+                CCentralMultiSimulatorModelCachesProviderBase(QObject *parent = nullptr) : IMultiSimulatorModelCaches(parent) { }
+
+            private:
+                TCaches m_caches { false, this }; //!< used caches
+
+                //! Singleton caches
+                TCaches &instanceCaches() { return this->isInstance() ? m_caches : Derived::modelCachesInstance().m_caches; }
+
+                //! Singleton caches
+                const TCaches &instanceCaches() const { return this->isInstance() ? m_caches : Derived::modelCachesInstance().m_caches; }
+
+                //! Is this object the central instance?
+                bool isInstance() const { return this == &Derived::modelCachesInstance(); }
+            };
+
+            //! One central instance of the model caches
+            class BLACKMISC_EXPORT CCentralMultiSimulatorModelCachesProvider : public CCentralMultiSimulatorModelCachesProviderBase<CModelCaches, CCentralMultiSimulatorModelCachesProvider>
             {
                 Q_OBJECT
                 Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
@@ -346,37 +383,64 @@ namespace BlackMisc
 
             public:
                 //! Central instance
-                static CCentralMultiSimulatorModelCachesProvider &modelCachesInstance();
-
-                //! \name Interface implementations
-                //! @{
-                virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override;
-                virtual CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
-                virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override;
-                virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
-                virtual void synchronizeCache(const CSimulatorInfo &simulator) override;
-                virtual void admitCache(const CSimulatorInfo &simulator) override;
-                virtual QString getFilename(const CSimulatorInfo &simulator) const override;
-                virtual bool isSaved(const CSimulatorInfo &simulator) const override;
-                virtual QString getDescription() const override;
-                //! @}
+                static CCentralMultiSimulatorModelCachesProvider &modelCachesInstance()
+                {
+                    static CCentralMultiSimulatorModelCachesProvider c;
+                    return c;
+                }
 
             protected:
                 //! Ctor
-                CCentralMultiSimulatorModelCachesProvider(QObject *parent = nullptr);
-
-            private:
-                CModelCaches m_caches { this }; //!< the caches
-
-                //! Singleton caches
-                CModelCaches &instanceCaches() { return this->isInstance() ? m_caches : modelCachesInstance().m_caches; }
-
-                //! Singleton caches
-                const CModelCaches &instanceCaches() const { return this->isInstance() ? m_caches : modelCachesInstance().m_caches; }
-
-                //! Is this object the central instance?
-                bool isInstance() const { return this == &modelCachesInstance(); }
+                CCentralMultiSimulatorModelCachesProvider(QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(parent) {}
             };
+
+            //! One central instance of the model set caches
+            class BLACKMISC_EXPORT CCentralMultiSimulatorModelSetCachesProvider : public CCentralMultiSimulatorModelCachesProviderBase<CModelSetCaches, CCentralMultiSimulatorModelSetCachesProvider>
+            {
+                Q_OBJECT
+                Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
+                Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
+
+            public:
+                //! Central instance
+                static CCentralMultiSimulatorModelSetCachesProvider &modelCachesInstance()
+                {
+                    static CCentralMultiSimulatorModelSetCachesProvider c;
+                    return c;
+                }
+
+            protected:
+                //! Ctor
+                CCentralMultiSimulatorModelSetCachesProvider(QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(parent) {}
+            };
+
+            //! Basically a QObject free (delegate based) version of CCentralMultiSimulatorModelSetCachesProvider
+            class BLACKMISC_EXPORT CCentralMultiSimulatorModelSetCachesAware:
+                public IModelsForSimulatorSetable,
+                public IModelsForSimulatorUpdatable
+            {
+            public:
+                //! \name Look like IMultiSimulatorModelCaches interface
+                //! @{
+                CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator); }
+                int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
+                CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCachedModels(models, simulator); }
+                QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCacheTimestamp(simulator); }
+                CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCacheTimestamp(ts, simulator); }
+                void synchronizeCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
+                void admitCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().admitCache(simulator); }
+                QString getFilename(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getFilename(simulator); }
+                bool isSaved(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().isSaved(simulator); }
+                QString getDescription() const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getDescription(); }
+                //! @}
+
+                //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
+                virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setModelsForSimulator(models, simulator); }
+
+                //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
+                virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().updateModelsForSimulator(models, simulator); }
+            };
+
         } // ns
     } // ns
 } // ns
