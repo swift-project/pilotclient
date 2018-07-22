@@ -44,22 +44,21 @@ namespace BlackGui
             connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
             connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator, Qt::QueuedConnection);
 
-            CSimulatorInfo sim = CSimulatorInfo(CSimulatorInfo::P3D); // default
+            CSimulatorInfo simulator = CSimulatorInfo(CSimulatorInfo::P3D); // default
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected);
-                sim = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
-                if (sim.isSingleSimulator())
+                CSimulatorInfo pluginSimulator = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
+                if (pluginSimulator.isSingleSimulator())
                 {
-                    m_modelCaches.setCurrentSimulator(sim);
+                    simulator = pluginSimulator;
                 }
                 else
                 {
-                    this->setSourceVisible(OwnModels, false);
-                    sim = m_modelCaches.getCurrentSimulator();
+                    this->setSourceVisible(OwnModels, false); // hide own models
                 }
             }
-            this->setSimulator(sim);
+            this->setSimulator(simulator);
         }
 
         CAircraftModelStringCompleter::~CAircraftModelStringCompleter()
@@ -106,9 +105,9 @@ namespace BlackGui
 
         bool CAircraftModelStringCompleter::setSimulator(const CSimulatorInfo &simulator)
         {
+            if (simulator.isSingleSimulator()) { return false; }
             if (this->getSimulator() == simulator) { return false; }
             m_currentSimulator = simulator;
-            m_modelCaches.setCurrentSimulator(simulator); // all models
             QPointer<CAircraftModelStringCompleter> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
@@ -150,7 +149,7 @@ namespace BlackGui
             else if (ui->rb_OwnModels->isChecked())
             {
                 if (!simChanged && m_currentDataSource == OwnModels) { return; }
-                modelStrings = m_modelCaches.getCurrentCachedModels().toCompleterStrings();
+                modelStrings = m_modelCaches.getCachedModels(this->getSimulator()).toCompleterStrings();
                 dataSource = OwnModels;
             }
 

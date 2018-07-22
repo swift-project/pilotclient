@@ -15,6 +15,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QDialogButtonBox>
 #include <QModelIndexList>
+#include <QPointer>
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
@@ -39,13 +40,11 @@ namespace BlackGui
             ui->bb_loadDataDialog->button(QDialogButtonBox::Apply)->setText("Load");
             ui->wi_WorkStatus->setVisible(false);
             ui->wi_Consolidate->setVisible(false);
-            ui->comp_SimulatorSelector->setValue(m_sets.getCurrentSimulator());
+            ui->comp_SimulatorSelector->setRememberSelection(true);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadDataDialog::onDataRead, Qt::QueuedConnection);
             connect(ui->bb_loadDataDialog, &QDialogButtonBox::clicked, this, &CDbLoadDataDialog::onButtonClicked);
             connect(ui->pb_Consolidate, &QPushButton::clicked, this, &CDbLoadDataDialog::consolidate);
             connect(this, &CDbLoadDataDialog::rejected, this, &CDbLoadDataDialog::onRejected);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, &m_sets, &CModelSetCaches::setCurrentSimulator, Qt::QueuedConnection);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, &m_models, &CModelCaches::setCurrentSimulator, Qt::QueuedConnection);
         }
 
         CDbLoadDataDialog::~CDbLoadDataDialog()
@@ -124,8 +123,10 @@ namespace BlackGui
                 m_pendingEntitiesCount = -1;
                 const bool defaultConsolidate = !ui->cb_AllModels->isChecked() && ui->cb_ModelSet->isChecked();
 
+                QPointer<CDbLoadDataDialog> myself(this);
                 QTimer::singleShot(2000, this, [ = ]
                 {
+                    if (!myself) { return; }
                     ui->wi_Consolidate->setVisible(true);
                     ui->wi_WorkStatus->setVisible(false);
                     if (defaultConsolidate)
@@ -154,31 +155,35 @@ namespace BlackGui
             ui->wi_WorkStatus->setVisible(true);
             ui->pb_Loading->setValue(0);
             ui->pb_Loading->setMaximum(0); // 0/0 causing busy indicator
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
 
             do
             {
                 if (set)
                 {
                     ui->le_Info->setText("Model set");
-                    CAircraftModelList models = m_sets.getCurrentCachedModels();
+                    CAircraftModelList models = m_sets.getCachedModels(simulator);
                     const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-                    if (c > 0) { m_sets.setCachedModels(models, m_sets.getCurrentSimulator()); }
+                    if (c > 0) { m_sets.setCachedModels(models, simulator); }
                 }
 
                 if (!this->isVisible()) { break; } // dialog closed?
                 if (all)
                 {
                     ui->le_Info->setText("All models");
-                    CAircraftModelList models = m_models.getCurrentCachedModels();
+                    CAircraftModelList models = m_models.getCachedModels(simulator);
                     const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-                    if (c > 0) { m_models.setCachedModels(models, m_models.getCurrentSimulator()); }
+                    if (c > 0) { m_models.setCachedModels(models, simulator); }
                 }
             }
             while (false);
 
             m_consolidating = false;
+
+            QPointer<CDbLoadDataDialog> myself(this);
             QTimer::singleShot(2000, this, [ = ]
             {
+                if (!myself) { return; }
                 ui->pb_Loading->setMaximum(100);
                 ui->wi_WorkStatus->setVisible(false);
                 if (m_autoConsolidate)

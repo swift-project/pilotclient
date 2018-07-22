@@ -164,10 +164,13 @@
          <item>
           <widget class="QCheckBox" name="cb_SelectedOnly">
            <property name="toolTip">
-            <string>selected models only</string>
+            <string>publish selected models only</string>
            </property>
            <property name="text">
             <string>selected</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

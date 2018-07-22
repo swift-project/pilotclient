@@ -88,8 +88,8 @@ namespace BlackGui
             // we us the loader of the components directly,
             // avoid to fully init a loader logic here
             static const QString modelsNo("No models so far");
-            const int modelsCount = this->modelLoader()->getAircraftModelsCount();
-            ui->le_ModelsInfo->setText(modelsCount > 0 ? this->modelLoader()->getModelCacheCountAndTimestamp() : modelsNo);
+            const int modelsCount = this->modelLoader()->getCachedModelsCount(simulator);
+            ui->le_ModelsInfo->setText(modelsCount > 0 ? this->modelLoader()->getCacheCountAndTimestamp(simulator) : modelsNo);
             ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
             static const QString modelsSetNo("Model set is empty");
@@ -214,7 +214,8 @@ namespace BlackGui
 
         void CFirstModelSetComponent::createModelSet()
         {
-            const int modelsCount = this->modelLoader()->getAircraftModelsCount();
+            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
+            const int modelsCount = this->modelLoader()->getCachedModelsCount(sim);
             if (modelsCount < 1)
             {
                 static const CStatusMessage msg = CStatusMessage(this).validationError("No models indexed so far. Try 'reload'!");
@@ -237,14 +238,13 @@ namespace BlackGui
                     return;
                 }
             }
-            CAircraftModelList modelsForSet = this->modelLoader()->getAircraftModels();
+            CAircraftModelList modelsForSet = this->modelLoader()->getCachedModels(sim);
             if (!useAllModels)
             {
                 const CDistributorList distributors = ui->comp_Distributors->getSelectedDistributors();
                 modelsForSet = modelsForSet.findByDistributors(distributors);
             }
 
-            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
             m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, sim);
             ui->pb_ModelSet->click();
         }

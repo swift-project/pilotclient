@@ -125,21 +125,22 @@ namespace BlackGui
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
         }
 
-        void CDbOwnModelSetComponent::replaceOrAddModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        int CDbOwnModelSetComponent::replaceOrAddModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (models.isEmpty()) { return; }
+            if (models.isEmpty()) { return 0; }
             CAircraftModelList cleanModelList(models.matchesSimulator(simulator)); // remove those not matching the simulator
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
                 CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
             }
-            if (cleanModelList.isEmpty()) { return; }
+            if (cleanModelList.isEmpty()) { return 0; }
             CAircraftModelList updatedModels(ui->tvp_OwnModelSet->container());
             updatedModels.replaceOrAddModelsWithString(cleanModelList, Qt::CaseInsensitive);
             updatedModels.resetOrder();
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
+            return diff;
         }
 
         const CAircraftModelList &CDbOwnModelSetComponent::getModelSetFromView() const
@@ -233,7 +234,7 @@ namespace BlackGui
                 const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
                 if (!ml.isEmpty())
                 {
-                    const CStatusMessage m = m_modelSetLoader.setCachedModels(ml);
+                    const CStatusMessage m = m_modelSetLoader.setCachedModels(ml, this->getSelectedSimulator());
                     CLogMessage::preformatted(m);
                 }
                 return;
@@ -392,7 +393,7 @@ namespace BlackGui
             const CDistributorList distributors = preferences.getDistributors(simulator);
             if (distributors.isEmpty()) { return; }
             modelSet.updateDistributorOrder(distributors);
-            m_modelSetLoader.setModels(modelSet, simulator);
+            m_modelSetLoader.setModelsForSimulator(modelSet, simulator);
 
             // display?
             const CSimulatorInfo currentSimulator(this->getModelSetSimulator());

@@ -75,8 +75,7 @@ namespace BlackGui
                 if (set)
                 {
                     // inits current version cache
-                    m_modelSetCaches.setCurrentSimulator(sim);
-                    m_modelSetCaches.synchronizeCurrentCache();
+                    m_modelSetCaches.synchronizeCache(sim);
 
                     // get file name
                     CAircraftModelList otherSet;
@@ -86,7 +85,7 @@ namespace BlackGui
                         CApplication::processEventsFor(250);
                         if (this->confirmOverride(QString("Override model set for '%1'").arg(sim.toQString())))
                         {
-                            m_modelSetCaches.setModels(otherSet, sim);
+                            m_modelSetCaches.setModelsForSimulator(otherSet, sim);
                         }
                     }
                 } // set
@@ -94,8 +93,7 @@ namespace BlackGui
                 if (cache)
                 {
                     // inits current version cache
-                    m_modelCaches.setCurrentSimulator(sim);
-                    m_modelCaches.synchronizeCurrentCache();
+                    m_modelCaches.synchronizeCache(sim);
 
                     // get file name
                     CAircraftModelList otherCache;
@@ -105,7 +103,7 @@ namespace BlackGui
                         CApplication::processEventsFor(250);
                         if (this->confirmOverride(QString("Override model cache for '%1'").arg(sim.toQString())))
                         {
-                            m_modelCaches.setModels(otherCache, sim);
+                            m_modelCaches.setModelsForSimulator(otherCache, sim);
                         }
                     }
                 }
