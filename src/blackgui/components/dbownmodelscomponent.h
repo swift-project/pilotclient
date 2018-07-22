@@ -49,14 +49,14 @@ namespace BlackGui
             public COverlayMessagesFrame,
             public BlackMisc::Simulation::IModelsSetable,
             public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
-            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
+            public BlackMisc::Simulation::IModelsForSimulatorSetable,
+            public BlackMisc::Simulation::IModelsForSimulatorUpdatable
         {
             Q_OBJECT
             Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
             Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -105,7 +105,7 @@ namespace BlackGui
             Models::CAircraftModelListModel *model() const;
 
             //! Access to model loader
-            BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
+            BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const { return m_modelLoader; }
 
             //! Forced read for given simulator
             bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
@@ -115,10 +115,10 @@ namespace BlackGui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModels(models, this->getOwnModelsSimulator()); }
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->updateModels(models, this->getOwnModelsSimulator()); }
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 
         signals:
@@ -127,8 +127,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models, aka models on disk
-            BlackMisc::CConnectionGuard m_loaderConnections;
+            BlackMisc::Simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
 
             //! Request own models
@@ -153,7 +152,7 @@ namespace BlackGui
             void onSimulatorSelectorChanged();
 
             //! Init or change model loader
-            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode load = BlackMisc::Simulation::IAircraftModelLoader::NotSet);
 
             //! File name for saving as file
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);

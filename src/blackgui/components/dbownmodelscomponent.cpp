@@ -50,25 +50,21 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             if (simulator.isSingleSimulator())
             {
-                const bool success = this->initModelLoader(simulator);
-                if (success)
-                {
-                    m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
-                    m_simulator = simulator;
-                }
-                else
+                m_simulator = simulator;
+                const bool success = this->initModelLoader(simulator, IAircraftModelLoader::CacheOnly);
+                if (!success)
                 {
                     CLogMessage(this).error("Init of model loader failed in component");
                 }
             }
-
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
 
             // menu
             ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
@@ -95,11 +91,6 @@ namespace BlackGui
             return ui->tvp_OwnAircraftModels->derivedModel();
         }
 
-        IAircraftModelLoader *CDbOwnModelsComponent::modelLoader() const
-        {
-            return m_modelLoader.get();
-        }
-
         bool CDbOwnModelsComponent::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
         {
             this->setSimulator(simulator);
@@ -111,22 +102,19 @@ namespace BlackGui
 
         CAircraftModel CDbOwnModelsComponent::getOwnModelForModelString(const QString &modelString) const
         {
-            if (!m_modelLoader) { return CAircraftModel(); }
-            return m_modelLoader->getAircraftModels().findFirstByModelStringOrDefault(modelString);
+            return this->getOwnModels().findFirstByModelStringOrDefault(modelString);
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnModels() const
         {
-            static const CAircraftModelList empty;
-            if (!m_modelLoader) { return empty; }
-            return m_modelLoader->getAircraftModels();
+            return this->getOwnCachedModels(this->getOwnModelsSimulator());
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
         {
             static const CAircraftModelList empty;
             if (!m_modelLoader) { return empty; }
-            return m_modelLoader->getCachedAircraftModels(simulator);
+            return m_modelLoader->getCachedModels(simulator);
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnSelectedModels() const
@@ -136,9 +124,7 @@ namespace BlackGui
 
         const CSimulatorInfo CDbOwnModelsComponent::getOwnModelsSimulator() const
         {
-            static const CSimulatorInfo noSim;
-            if (!m_modelLoader) { return noSim; }
-            return m_modelLoader->getSimulator();
+            return ui->comp_SimulatorSelector->getValue();
         }
 
         void CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator)
@@ -163,19 +149,19 @@ namespace BlackGui
         int CDbOwnModelsComponent::getOwnModelsCount() const
         {
             if (!m_modelLoader) { return 0; }
-            return m_modelLoader->getAircraftModelsCount();
+            return m_modelLoader->getCachedModelsCount(this->getOwnModelsSimulator());
         }
 
         QString CDbOwnModelsComponent::getInfoString() const
         {
             if (!m_modelLoader) { return ""; }
-            return m_modelLoader->getModelCacheInfoString();
+            return m_modelLoader->getInfoString();
         }
 
         QString CDbOwnModelsComponent::getInfoStringFsFamily() const
         {
             if (!m_modelLoader) { return ""; }
-            return m_modelLoader->getModelCacheInfoStringFsFamily();
+            return m_modelLoader->getInfoStringFsFamily();
         }
 
         CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
@@ -190,58 +176,38 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::gracefulShutdown()
         {
-            if (m_modelLoader) { m_modelLoader->gracefulShutdown(); }
+            // void
         }
 
-        void CDbOwnModelsComponent::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        void CDbOwnModelsComponent::setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            this->modelLoader()->setCachedModels(models, simulator);
+            if (!m_modelLoader) { return; }
+            m_modelLoader->setCachedModels(models, simulator);
             ui->tvp_OwnAircraftModels->replaceOrAddModelsWithString(models);
         }
 
-        void CDbOwnModelsComponent::updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        int CDbOwnModelsComponent::updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            this->modelLoader()->replaceOrAddCachedModels(models, simulator);
-            const CAircraftModelList allModels(m_modelLoader->getAircraftModels());
+            if (!m_modelLoader) { return 0; }
+            const int c = m_modelLoader->updateModelsForSimulator(models, simulator);
+            const CAircraftModelList allModels(m_modelLoader->getCachedModels(simulator));
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(allModels);
+            return c;
         }
 
-        bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simulator)
+        bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode load)
         {
             // called when simulator is changed / init
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
             // already loaded
-            if (m_modelLoader && m_modelLoader->supportsSimulator(simulator))
-            {
-                this->setSaveFileName(simulator);
-                return true;
-            }
-
-            // mismatching loader
-            if (m_modelLoader)
-            {
-                m_modelLoader->gracefulShutdown();
-                m_loaderConnections.disconnectAll();
-            }
-
-            // create loader, also synchronizes the caches
-            m_modelLoader = IAircraftModelLoader::createModelLoader(simulator); // last selected simulator or explicit given
             if (!m_modelLoader || !m_modelLoader->supportsSimulator(simulator))
             {
-                CLogMessage(this).error("Failed to init model loader %1") << simulator.toQString();
-                m_modelLoader.reset();
-                m_loaderConnections.disconnectAll();
-                return false;
+                m_modelLoader = CMultiAircraftModelLoaderProvider::multiModelLoaderInstance().loaderInstance(simulator);
+                if (m_modelLoader) { m_modelLoader->startLoading(load); }
             }
-            else
-            {
-                const QMetaObject::Connection connection = connect(m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
-                Q_ASSERT_X(connection, Q_FUNC_INFO, "Failed connect for model loader");
-                m_loaderConnections.append(connection);
-                this->setSaveFileName(simulator);
-                return true;
-            }
+            this->setSaveFileName(simulator);
+            return m_modelLoader && m_modelLoader->supportsSimulator(simulator);
         }
 
         void CDbOwnModelsComponent::setSaveFileName(const CSimulatorInfo &sim)
@@ -505,28 +471,26 @@ namespace BlackGui
         void CDbOwnModelsComponent::requestOwnModelsUpdate()
         {
             if (!m_modelLoader) { return; }
-            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(
-                m_modelLoader->getAircraftModels()
-            );
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->getOwnModels());
         }
 
         void CDbOwnModelsComponent::loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
         {
-            if (!this->initModelLoader(simulator))
-            {
-                CLogMessage(this).error("Cannot init model loader for %1") << simulator.toQString();
-                return;
-            }
-
+            if (!m_modelLoader) { return; }
             if (m_modelLoader->isLoadingInProgress())
             {
                 CLogMessage(this).info("Loading for '%1' already in progress") << simulator.toQString();
                 return;
             }
 
+            if (!this->initModelLoader(simulator))
+            {
+                CLogMessage(this).error("Cannot init model loader for %1") << simulator.toQString();
+                return;
+            }
+
             // Do not check for empty models die here, as depending on mode we could still load
             // will be checked in model loader
-
             CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
@@ -538,13 +502,13 @@ namespace BlackGui
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
             if (statusMessages.isSuccess() && m_modelLoader)
             {
-                const CAircraftModelList models(m_modelLoader->getAircraftModels());
+                const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
                 const int modelsLoaded = models.size();
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
                 if (modelsLoaded < 1)
                 {
                     // loading ok, but no data
-                    CLogMessage(this).warning("Loading completed, but no models");
+                    CLogMessage(this).warning("Loading completed for simulator '%1', but no models") << simulator;
                 }
 
                 emit this->successfullyLoadedModels(simulator);
@@ -580,7 +544,8 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::clearSimulatorCache(const CSimulatorInfo &simulator)
         {
-            m_modelLoader->clearCache(simulator);
+            if (!m_modelLoader) { return; }
+            m_modelLoader->clearCachedModels(simulator);
         }
     } // ns
 } // ns
