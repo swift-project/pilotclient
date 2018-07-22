@@ -21,9 +21,19 @@ namespace BlackMisc
     {
         namespace Data
         {
-            void IMultiSimulatorModelCaches::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            void IMultiSimulatorModelCaches::setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 this->setCachedModels(models, simulator);
+            }
+
+            int IMultiSimulatorModelCaches::updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            {
+                if (models.isEmpty()) { return 0; }
+                CAircraftModelList allModels(this->getSynchronizedCachedModels(simulator));
+                const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+                if (c < 1) { return 0; }
+                this->setCachedModels(allModels, simulator);
+                return allModels.size();
             }
 
             QString IMultiSimulatorModelCaches::getInfoString() const
@@ -44,10 +54,9 @@ namespace BlackMisc
                 return s.arg(this->getCachedModelsCount(simulator)).arg(this->getCacheTimestamp(simulator).toString("yyyy-MM-dd HH:mm:ss"));
             }
 
-            void IMultiSimulatorModelCaches::onLastSelectionChanged()
+            void IMultiSimulatorModelCaches::gracefulShutdown()
             {
-                this->synchronizeCurrentCache();
-                this->emitCacheChanged(this->getCurrentSimulator());
+                // void
             }
 
             void IMultiSimulatorModelCaches::emitCacheChanged(const CSimulatorInfo &simulator)
@@ -113,37 +122,11 @@ namespace BlackMisc
                 return this->getCachedModels(simulator);
             }
 
-            CAircraftModelList IMultiSimulatorModelCaches::getCurrentCachedModels() const
-            {
-                const CSimulatorInfo sim(this->getCurrentSimulator());
-                BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-                if (!sim.isSingleSimulator()) { return CAircraftModelList(); }
-                return this->getCachedModels(sim);
-            }
-
             QDateTime IMultiSimulatorModelCaches::getSynchronizedTimestamp(const CSimulatorInfo &simulator)
             {
                 BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
                 this->synchronizeCache(simulator);
                 return this->getCacheTimestamp(simulator);
-            }
-
-            bool IMultiSimulatorModelCaches::synchronizeCurrentCache()
-            {
-                const CSimulatorInfo sim(this->getCurrentSimulator());
-                BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-                if (!sim.isSingleSimulator()) { return false; }
-                this->synchronizeCache(sim);
-                return true;
-            }
-
-            bool IMultiSimulatorModelCaches::admitCurrentCache()
-            {
-                const CSimulatorInfo sim(this->getCurrentSimulator());
-                BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-                if (!sim.isSingleSimulator()) { return false; }
-                this->admitCache(sim);
-                return true;
             }
 
             CSimulatorInfo IMultiSimulatorModelCaches::simulatorsWithInitializedCache() const
@@ -163,14 +146,7 @@ namespace BlackMisc
 
             CModelCaches::CModelCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
-                m_currentSimulator.synchronize();
-                CSimulatorInfo sim(m_currentSimulator.get());
-                if (!sim.isSingleSimulator())
-                {
-                    sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
-                    m_currentSimulator.set(sim);
-                    CLogMessage(this).warning("Invalid simulator, reseting");
-                }
+                const CSimulatorInfo sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
                 const QString simStr(sim.toQString(true));
                 if (synchronizeCache)
                 {
@@ -222,14 +198,6 @@ namespace BlackMisc
                 this->emitCacheChanged(simulator);
             }
 
-            QDateTime IMultiSimulatorModelCaches::getCurrentCacheTimestamp() const
-            {
-                const CSimulatorInfo sim(this->getCurrentSimulator());
-                BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-                if (!sim.isSingleSimulator()) { return QDateTime(); }
-                return this->getCacheTimestamp(sim);
-            }
-
             CStatusMessage IMultiSimulatorModelCaches::clearCachedModels(const CSimulatorInfo &simulator)
             {
                 static const CAircraftModelList models;
@@ -278,7 +246,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
                 case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
                 return CStatusMessage();
@@ -292,16 +260,6 @@ namespace BlackMisc
             void CModelCaches::admitCache(const CSimulatorInfo &simulator)
             {
                 this->admitCacheImpl(simulator);
-            }
-
-            CStatusMessage CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
-            {
-                static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
-                const CSimulatorInfo s = m_currentSimulator.get();
-                if (s == simulator) { return sameSimMsg; }
-                const BlackMisc::CStatusMessage m = m_currentSimulator.set(simulator);
-                this->synchronizeCache(simulator);
-                return m;
             }
 
             QString CModelCaches::getFilename(const CSimulatorInfo &simulator) const
@@ -368,24 +326,17 @@ namespace BlackMisc
 
             CModelSetCaches::CModelSetCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
-                m_currentSimulator.synchronize();
-                CSimulatorInfo sim(m_currentSimulator.get());
-                if (!sim.isSingleSimulator())
-                {
-                    sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
-                    m_currentSimulator.set(sim);
-                    CLogMessage(this).warning("Invalid simulator, reseting");
-                }
+                CSimulatorInfo simulator = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
+                const QString simStr(simulator.toQString(true));
 
-                const QString simStr(sim.toQString(true));
                 if (synchronizeCache)
                 {
-                    this->synchronizeCacheImpl(sim);
+                    this->synchronizeCacheImpl(simulator);
                     CLogMessage(this).info("Initialized model caches (%1) for %2") << this->getDescription() << simStr;
                 }
                 else
                 {
-                    this->admitCacheImpl(sim);
+                    this->admitCacheImpl(simulator);
                     CLogMessage(this).info("Admit model (%1) caches for %2") << this->getDescription() << simStr;
                 }
             }
@@ -448,7 +399,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: return m_modelCacheP3D.getAvailableTimestamp();
                 case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     return QDateTime();
                 }
             }
@@ -464,7 +415,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
                 case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
                 return CStatusMessage();
@@ -480,16 +431,6 @@ namespace BlackMisc
                 this->admitCacheImpl(simulator);
             }
 
-            CStatusMessage CModelSetCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
-            {
-                static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
-                const CSimulatorInfo s = m_currentSimulator.get();
-                if (s == simulator) { return sameSimMsg; }
-                const BlackMisc::CStatusMessage m = m_currentSimulator.set(simulator);
-                this->synchronizeCache(simulator);
-                return m;
-            }
-
             QString CModelSetCaches::getFilename(const CSimulatorInfo &simulator) const
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -500,7 +441,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: return m_modelCacheP3D.getFilename();
                 case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
                 return {};
@@ -516,7 +457,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: return m_modelCacheP3D.isSaved();
                 case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
                 return false;
@@ -532,7 +473,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
                 case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
             }
@@ -547,10 +488,64 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
                 case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
                 default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
             }
+
+            CCentralMultiSimulatorModelCachesProvider &CCentralMultiSimulatorModelCachesProvider::modelCachesInstance()
+            {
+                static CCentralMultiSimulatorModelCachesProvider c;
+                return c;
+            }
+
+            CAircraftModelList CCentralMultiSimulatorModelCachesProvider::getCachedModels(const CSimulatorInfo &simulator) const
+            {
+                return instanceCaches().getCachedModels(simulator);
+            }
+
+            CStatusMessage CCentralMultiSimulatorModelCachesProvider::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            {
+                return instanceCaches().setCachedModels(models, simulator);
+            }
+
+            QDateTime CCentralMultiSimulatorModelCachesProvider::getCacheTimestamp(const CSimulatorInfo &simulator) const
+            {
+                return instanceCaches().getCacheTimestamp(simulator);
+            }
+
+            CStatusMessage CCentralMultiSimulatorModelCachesProvider::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
+            {
+                return instanceCaches().setCacheTimestamp(ts, simulator);
+            }
+
+            void CCentralMultiSimulatorModelCachesProvider::synchronizeCache(const CSimulatorInfo &simulator)
+            {
+                return instanceCaches().synchronizeCache(simulator);
+            }
+
+            void CCentralMultiSimulatorModelCachesProvider::admitCache(const CSimulatorInfo &simulator)
+            {
+                return instanceCaches().admitCache(simulator);
+            }
+
+            QString CCentralMultiSimulatorModelCachesProvider::getFilename(const CSimulatorInfo &simulator) const
+            {
+                return instanceCaches().getFilename(simulator);
+            }
+
+            bool CCentralMultiSimulatorModelCachesProvider::isSaved(const CSimulatorInfo &simulator) const
+            {
+                return instanceCaches().isSaved(simulator);
+            }
+
+            QString CCentralMultiSimulatorModelCachesProvider::getDescription() const
+            {
+                return instanceCaches().getDescription();
+            }
+
+            CCentralMultiSimulatorModelCachesProvider::CCentralMultiSimulatorModelCachesProvider(QObject *parent) : IMultiSimulatorModelCaches(parent)
+            { }
         } // ns
     } // ns
 } // ns
