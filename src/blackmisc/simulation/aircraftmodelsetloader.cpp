@@ -30,40 +30,22 @@ namespace BlackMisc
 
         CStatusMessage CAircraftModelSetLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : m_caches.getCurrentSimulator();
-            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simulator"); }
-            const CStatusMessage m(m_caches.setCachedModels(models, sim));
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const CStatusMessage m(m_caches.setCachedModels(models, simulator));
             return m;
-        }
-
-        CStatusMessage CAircraftModelSetLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
-        {
-            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : m_caches.getCurrentSimulator();
-            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
-            m_caches.synchronizeCache(sim);
-            CAircraftModelList allModels(m_caches.getSynchronizedCachedModels(sim));
-            const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
-            if (c > 0)
-            {
-                return this->setCachedModels(models, sim);
-            }
-            else
-            {
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data changed");
-            }
         }
 
         void CAircraftModelSetLoader::changeSimulator(const CSimulatorInfo &simulator)
         {
-            m_caches.setCurrentSimulator(simulator);
-            m_caches.synchronizeCurrentCache();
+            if (m_currentSimulator == simulator) { return; }
+            m_currentSimulator = simulator;
+            m_caches.synchronizeCache(simulator);
             emit this->simulatorChanged(simulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels() const
         {
-            return m_caches.getCurrentCachedModels();
+            return m_caches.getCachedModels(m_currentSimulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator)
@@ -90,38 +72,33 @@ namespace BlackMisc
 
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
         {
-            return m_caches.getCurrentCacheTimestamp();
+            return m_caches.getCacheTimestamp(m_currentSimulator);
         }
 
-        bool CAircraftModelSetLoader::synchronizeCache()
+        void CAircraftModelSetLoader::synchronizeCache()
         {
-            return m_caches.synchronizeCurrentCache();
+            m_caches.synchronizeCache(m_currentSimulator);
         }
 
-        bool CAircraftModelSetLoader::admitCache()
+        void CAircraftModelSetLoader::admitCache()
         {
-            return m_caches.admitCurrentCache();
+            m_caches.admitCache(m_currentSimulator);
         }
 
         bool CAircraftModelSetLoader::hasCachedData() const
         {
-            return !m_caches.getCurrentCachedModels().isEmpty();
+            return !m_caches.getCachedModels(m_currentSimulator).isEmpty();
         }
 
         CStatusMessage CAircraftModelSetLoader::clearCache()
         {
-            return this->setCachedModels(CAircraftModelList());
+            return m_caches.clearCachedModels(this->getSimulator());
         }
 
         void CAircraftModelSetLoader::onModelsCacheChanged(const CSimulatorInfo &simulator)
         {
             this->changeSimulator(simulator);
             emit this->cacheChanged(simulator);
-        }
-
-        CSimulatorInfo CAircraftModelSetLoader::getSimulator() const
-        {
-            return m_caches.getCurrentSimulator();
         }
 
         QString CAircraftModelSetLoader::getSimulatorAsString() const

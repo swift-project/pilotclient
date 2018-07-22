@@ -33,16 +33,16 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CAircraftModelSetLoader :
             public QObject,
-            public BlackMisc::Simulation::IModelsSetable,
-            public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
-            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
+            public IModelsSetable,
+            public IModelsUpdatable,
+            public IModelsForSimulatorSetable,
+            public IModelsForSimulatorUpdatable
         {
             Q_OBJECT
             Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
             Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -52,19 +52,19 @@ namespace BlackMisc
             virtual ~CAircraftModelSetLoader();
 
             //! Make sure cache is synchronized
-            bool synchronizeCache();
+            void synchronizeCache();
 
             //! Admit current cache
-            bool admitCache();
+            void admitCache();
 
             //! The loaded models
             //! \threadsafe
-            BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
+            CAircraftModelList getAircraftModels() const;
 
             //! The loaded models for given simulator
             //! \threadsafe
             //! \remark non-const because it synchronizes cache
-            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const CSimulatorInfo &simulator);
+            CAircraftModelList getAircraftModels(const CSimulatorInfo &simulator);
 
             //! Count of loaded models
             //! \threadsafe
@@ -72,25 +72,25 @@ namespace BlackMisc
 
             //! Model for given model string
             //! \threadsafe
-            BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+            CAircraftModel getModelForModelString(const QString &modelString) const;
 
             //! Models from cache
             //! \threadsafe
-            BlackMisc::Simulation::CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const;
 
             //! Current simulator
             //! \threadsafe
-            CSimulatorInfo getSimulator() const;
+            CSimulatorInfo getSimulator() const { return m_currentSimulator; }
 
             //! Supported simulators as string
             QString getSimulatorAsString() const;
 
             //! Set simulator
             //! \remark checked version, does nothing if simulator is alread set
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void setSimulator(const CSimulatorInfo &simulator);
 
             //! Is the given simulator supported?
-            bool supportsSimulator(const BlackMisc::Simulation::CSimulatorInfo &info);
+            bool supportsSimulator(const CSimulatorInfo &info);
 
             //! Simulators with initialized caches
             CSimulatorInfo simulatorsWithInitializedModelSet() const;
@@ -98,51 +98,47 @@ namespace BlackMisc
             //! Shutdown
             void gracefulShutdown();
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            //! \copydoc Data::CModelCaches::getInfoString
             QString getInfoString() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            //! \copydoc Data::CModelCaches::getInfoStringFsFamily
             QString getInfoStringFsFamily() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            //! \copydoc Data::CModelCaches::getCacheCountAndTimestamp
             QString getModelCacheCountAndTimestamp() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getCacheCountAndTimestamp
+            //! \copydoc Data::CModelCaches::getCacheCountAndTimestamp
             QString getModelCacheCountAndTimestamp(const CSimulatorInfo &simulator) const;
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setCachedModels(models, this->getSimulator()); }
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->getSimulator()); }
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
+            virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->getSimulator()); }
+            virtual int updateModels(const CAircraftModelList &models) override  { return m_caches.updateModelsForSimulator(models, this->getSimulator()); }
+            virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
+            virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { return m_caches.updateModelsForSimulator(models, simulator); }
             //! @}
 
-            //! Set cache from outside, this should only be used in special cases.
-            //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
-
-            //! Set cache from outside, this should only be used in special cases.
-            //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            //! Set cached models
+            CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator);
 
         signals:
             //! Simulator has been changed
-            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void simulatorChanged(const CSimulatorInfo &simulator);
 
             //! Cache changed
-            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void cacheChanged(const CSimulatorInfo &simulator);
 
         protected:
-            BlackMisc::Simulation::Data::CModelSetCaches m_caches { true, this }; //!< caches
+            Data::CModelSetCaches m_caches { true, this }; //!< caches
+            CSimulatorInfo m_currentSimulator = CSimulatorInfo::guessDefaultSimulator();
 
         private:
             //! Change the simulator
             //! \remark unckecked, does not check if simulator is the same
-            void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void changeSimulator(const CSimulatorInfo &simulator);
 
             //! Model cache has changed
-            void onModelsCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onModelsCacheChanged(const CSimulatorInfo &simulator);
 
             //! Any cached data?
             bool hasCachedData() const;
