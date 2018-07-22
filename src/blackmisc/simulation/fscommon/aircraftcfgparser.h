@@ -41,7 +41,7 @@ namespace BlackMisc
 
             public:
                 //! Constructor
-                CAircraftCfgParser(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+                CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgParser();
@@ -55,7 +55,7 @@ namespace BlackMisc
                 //! @}
 
                 //! Create an parser object for given simulator
-                static std::unique_ptr<CAircraftCfgParser> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+                static CAircraftCfgParser *createModelLoader(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
 
             protected:
                 //! \name Interface functions

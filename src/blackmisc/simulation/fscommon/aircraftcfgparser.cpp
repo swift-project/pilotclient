@@ -46,13 +46,12 @@ namespace BlackMisc
             // response for async. loading
             using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, BlackMisc::CStatusMessageList, bool>;
 
-            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo) :
-                IAircraftModelLoader(simInfo)
+            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent) : IAircraftModelLoader(simInfo, parent)
             { }
 
-            std::unique_ptr<CAircraftCfgParser> CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
+            CAircraftCfgParser *CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo, QObject *parent)
             {
-                return std::make_unique<CAircraftCfgParser>(simInfo);
+                return new CAircraftCfgParser(simInfo, parent);
             }
 
             CAircraftCfgParser::~CAircraftCfgParser()
@@ -98,7 +97,7 @@ namespace BlackMisc
                             const bool hasData = !models.isEmpty();
                             if (hasData)
                             {
-                                this->setCachedModels(models, simulator); // not thread safe
+                                this->setModelsForSimulator(models, this->getSimulator());
                             }
                             // currently I treat no data as error
                             emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
@@ -119,7 +118,7 @@ namespace BlackMisc
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {
-                        this->setCachedModels(models);
+                        this->setCachedModels(models, this->getSimulator());
                     }
                     // currently I treat no data as error
                     emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
@@ -392,8 +391,8 @@ namespace BlackMisc
                 QString content(line.midRef(index + 1).trimmed().toString());
 
                 // fix "" strings, some are malformed and just contain " at beginning, not at the end
-                if (content.endsWith('"')) { content.remove(content.size() - 1 , 1); }
-                if (content.startsWith('"')) { content.remove(0 , 1); }
+                if (content.endsWith('"')) { content.remove(content.size() - 1, 1); }
+                if (content.startsWith('"')) { content.remove(0, 1); }
 
                 // fix C style linebreaks
                 content.replace("\\n", " ");

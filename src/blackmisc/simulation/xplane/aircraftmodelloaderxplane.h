@@ -41,7 +41,7 @@ namespace BlackMisc
 
             public:
                 //! Constructor
-                CAircraftModelLoaderXPlane();
+                CAircraftModelLoaderXPlane(QObject *parent = nullptr);
 
                 //! Virtual destructor
                 virtual ~CAircraftModelLoaderXPlane();
@@ -51,12 +51,11 @@ namespace BlackMisc
                 virtual bool isLoadingFinished() const override;
                 //! @}
 
-                //! Extract from an acf file (flyable plane) the properties needed to generate model string.
-                static BlackMisc::Simulation::CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
-
-            public slots:
                 //! Parsed or injected models
-                void updateInstalledModels(const BlackMisc::Simulation::CAircraftModelList &models);
+                void updateInstalledModels(const CAircraftModelList &models);
+
+                //! Extract from an acf file (flyable plane) the properties needed to generate model string.
+                static CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
 
             protected:
                 //! \name Interface functions
@@ -65,6 +64,7 @@ namespace BlackMisc
                 //! @}
 
             private:
+                //! CSL Plane data
                 struct CSLPlane
                 {
                     QString getModelName() const;
@@ -80,6 +80,7 @@ namespace BlackMisc
                     QString livery;   //!< Livery identifier. Can be empty.
                 };
 
+                //! CSL package
                 struct CSLPackage
                 {
                     bool hasValidHeader() const
@@ -92,9 +93,9 @@ namespace BlackMisc
                     QVector<CSLPlane> planes;
                 };
 
-                BlackMisc::Simulation::CAircraftModelList performParsing(const QString &rootDirectory, const QStringList &excludeDirectories);
-                BlackMisc::Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
-                BlackMisc::Simulation::CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
+                CAircraftModelList performParsing(const QString &rootDirectory, const QStringList &excludeDirectories);
+                CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
+                CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
 
                 bool doPackageSub(QString &ioPath);
 
@@ -114,8 +115,8 @@ namespace BlackMisc
                 CSLPackage parsePackageHeader(const QString &path, const QString &content);
                 void parseFullPackage(const QString &content, CSLPackage &package);
 
-                QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
-                QVector<CSLPackage> m_cslPackages;              //!< Parsed Packages. No lock required since accessed only from one thread
+                QPointer<CWorker> m_parserWorker;  //!< worker will destroy itself, so weak pointer
+                QVector<CSLPackage> m_cslPackages; //!< Parsed Packages. No lock required since accessed only from one thread
 
                 static const QString &fileFilterFlyable();
                 static const QString &fileFilterCsl();

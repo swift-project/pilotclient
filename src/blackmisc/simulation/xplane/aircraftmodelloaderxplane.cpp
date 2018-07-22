@@ -114,7 +114,7 @@ namespace BlackMisc
                 return QStringLiteral("[ACF]");
             }
 
-            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane() : IAircraftModelLoader(CSimulatorInfo::XPLANE)
+            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(QObject *parent) : IAircraftModelLoader(CSimulatorInfo::xplane(), parent)
             { }
 
             CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
@@ -125,13 +125,13 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
             {
-                const CSimulatorInfo simulator = this->getSimulator();
+                const CSimulatorInfo simulator = CSimulatorInfo::xplane();
                 const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
                 const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (modelDirs.isEmpty())
                 {
-                    this->clearCache();
+                    this->clearCachedModels(CSimulatorInfo::xplane());
                     emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
                     return;
                 }
@@ -169,8 +169,8 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
-                this->setCachedModels(models);
-                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator(), ParsedData);
+                this->setModelsForSimulator(models, CSimulatorInfo::xplane());
+                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "XPlane updated '%1' models") << models.size(), CSimulatorInfo::xplane(), ParsedData);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
@@ -217,7 +217,7 @@ namespace BlackMisc
 
                     CAircraftModel model = extractAcfProperties(aircraftIt.filePath(), aircraftIt.fileInfo());
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                    model.setSimulator(this->getSimulator());
+                    model.setSimulator(CSimulatorInfo::xplane());
                     model.setFileName(aircraftIt.filePath());
                     const QDateTime lastModifiedTs(aircraftIt.fileInfo().lastModified());
                     model.setUtcTimestamp(lastModifiedTs);
@@ -358,7 +358,7 @@ namespace BlackMisc
                         CDistributor distributor(package.name);
                         model.setDistributor(distributor);
 
-                        model.setSimulator(this->getSimulator());
+                        model.setSimulator(CSimulatorInfo::xplane());
                         model.setDescription("[CSL]");
                         installedModels.push_back(model);
                     }
