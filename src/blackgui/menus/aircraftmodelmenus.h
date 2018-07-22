@@ -140,8 +140,8 @@ namespace BlackGui
             //! Simulator
             BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
 
-            BlackMisc::Simulation::IModelsPerSimulatorSetable   *modelsTargetSetable() const;
-            BlackMisc::Simulation::IModelsPerSimulatorUpdatable *modelsTargetUpdatable() const;
+            BlackMisc::Simulation::IModelsForSimulatorSetable   *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsForSimulatorUpdatable *modelsTargetUpdatable() const;
             BlackMisc::Simulation::ISimulatorSelectable *simulatorSelectable() const;
             BlackGui::Components::CDbMappingComponent *getMappingComponent() const;
 

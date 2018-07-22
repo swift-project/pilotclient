@@ -32,23 +32,23 @@ namespace BlackMisc
         {
         public:
             //! Update models
-            virtual void updateModels(const CAircraftModelList &models) = 0;
+            virtual int updateModels(const CAircraftModelList &models) = 0;
         };
 
         //! Interface to "something" backing models, which can be set
-        class BLACKMISC_EXPORT IModelsPerSimulatorSetable
+        class BLACKMISC_EXPORT IModelsForSimulatorSetable
         {
         public:
             //! Set models
-            virtual void setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+            virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
         };
 
         //! Interface to "something" backing models, which can be modified (updated)
-        class BLACKMISC_EXPORT IModelsPerSimulatorUpdatable
+        class BLACKMISC_EXPORT IModelsForSimulatorUpdatable
         {
         public:
             //! Set models
-            virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+            virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
         };
 
         //! Interface to "something" allowing a simulator selection
@@ -63,8 +63,8 @@ namespace BlackMisc
 
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsSetable, "org.swift-project.blackmisc.simulation.imodelssetable")
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsUpdatable, "org.swift-project.blackmisc.simulation.imodelsupdateable")
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsPerSimulatorSetable, "org.swift-project.blackmisc.simulation.imodelspersimulatorsetable")
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsPerSimulatorUpdatable, "org.swift-project.blackmisc.simulation.imodelspersimulatorupdatabale")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsForSimulatorSetable, "org.swift-project.blackmisc.simulation.IModelsForSimulatorSetable")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsForSimulatorUpdatable, "org.swift-project.blackmisc.simulation.imodelspersimulatorupdatabale")
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::ISimulatorSelectable, "org.swift-project.blackmisc.simulation.isimulatorselectable")
 
 #endif // guard

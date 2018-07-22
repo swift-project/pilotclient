@@ -307,7 +307,7 @@ namespace BlackGui
 
             if (!filtered)
             {
-                this->modelsTargetSetable()->setModels(consolidated, sim);
+                this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
             }
             else
             {
@@ -317,7 +317,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    this->modelsTargetUpdatable()->updateModels(consolidated, sim);
+                    this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
                 }
             }
             this->modelView()->hideLoadIndicator(i);
@@ -338,7 +338,7 @@ namespace BlackGui
             const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), true);
             const CSimulatorInfo sim(this->getSimulator());
 
-            this->modelsTargetUpdatable()->updateModels(consolidated, sim);
+            this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
             this->modelView()->hideLoadIndicator(i);
         }
 
@@ -360,14 +360,14 @@ namespace BlackGui
             return sim;
         }
 
-        IModelsPerSimulatorSetable *CConsolidateWithSimulatorModels::modelsTargetSetable() const
+        IModelsForSimulatorSetable *CConsolidateWithSimulatorModels::modelsTargetSetable() const
         {
-            return qobject_cast<IModelsPerSimulatorSetable *>(m_modelsTarget);
+            return qobject_cast<IModelsForSimulatorSetable *>(m_modelsTarget);
         }
 
-        IModelsPerSimulatorUpdatable *CConsolidateWithSimulatorModels::modelsTargetUpdatable() const
+        IModelsForSimulatorUpdatable *CConsolidateWithSimulatorModels::modelsTargetUpdatable() const
         {
-            return qobject_cast<IModelsPerSimulatorUpdatable *>(m_modelsTarget);
+            return qobject_cast<IModelsForSimulatorUpdatable *>(m_modelsTarget);
         }
 
         ISimulatorSelectable *CConsolidateWithSimulatorModels::simulatorSelectable() const
