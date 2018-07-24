@@ -220,9 +220,17 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual void synchronizeCache(const CSimulatorInfo &simulator) = 0;
 
+                //! Synchronize multiple simulators
+                //! \threadsafe
+                virtual void synchronizeMultiCaches(const CSimulatorInfo &simulator);
+
                 //! Admit the cache for given simulator
                 //! \threadsafe
                 virtual void admitCache(const CSimulatorInfo &simulator) = 0;
+
+                //! Synchronize multiple simulators
+                //! \threadsafe
+                virtual void admitMultiCaches(const CSimulatorInfo &simulator);
 
                 //! Info string about models in cache
                 QString getInfoString() const;

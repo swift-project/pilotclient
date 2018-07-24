@@ -139,6 +139,7 @@ namespace BlackMisc
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
+                    emit this->diskLoadingStarted(simulator, mode);
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                      [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
@@ -157,8 +158,9 @@ namespace BlackMisc
                 }
                 else if (mode.testFlag(LoadDirectly))
                 {
-                    CAircraftModelList models(performParsing(this->getFirstModelDirectoryOrDefault(), excludedDirectoryPatterns));
-                    updateInstalledModels(models);
+                    emit this->diskLoadingStarted(simulator, mode);
+                    CAircraftModelList models(this->performParsing(this->getFirstModelDirectoryOrDefault(), excludedDirectoryPatterns));
+                    this->updateInstalledModels(models);
                 }
             }
 

@@ -72,6 +72,7 @@ namespace BlackMisc
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
+                    emit this->diskLoadingStarted(simulator, mode);
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
                                      [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
                     {
@@ -110,6 +111,8 @@ namespace BlackMisc
                 }
                 else if (mode == LoadDirectly)
                 {
+                    emit this->diskLoadingStarted(simulator, mode);
+
                     bool ok;
                     CStatusMessageList msgs;
                     m_parsedCfgEntriesList = performParsing(modelDirs, excludedDirectoryPatterns, msgs, &ok);
