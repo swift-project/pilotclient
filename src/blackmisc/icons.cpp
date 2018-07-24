@@ -1222,20 +1222,20 @@ namespace BlackMisc
         return rotate(rotateDegrees, pixmapByIndex(index));
     }
 
-    const QPixmap &CIcons::pixmapByResourceFileName(const QString &fileName)
+    const QPixmap &CIcons::pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath)
     {
         //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added thread assert.
-        Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
+        Q_ASSERT_X(!relativeFileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "not thread safe");
 
-        if (!getResourceFileCache().contains(fileName))
+        fullFilePath = CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), relativeFileName);
+        if (!getResourceFileCache().contains(relativeFileName))
         {
-            const QString path = CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), fileName);
             QPixmap pm;
-            const bool s = pm.load(path);
-            getResourceFileCache().insert(fileName, s ? pm : CIcons::empty());
+            const bool s = pm.load(fullFilePath);
+            CIcons::getResourceFileCache().insert(relativeFileName, s ? pm : CIcons::empty());
         }
-        return getResourceFileCache()[fileName];
+        return CIcons::getResourceFileCache()[relativeFileName];
     }
 
     QImage CIcons::changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor)

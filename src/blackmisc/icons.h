@@ -718,7 +718,7 @@ namespace BlackMisc
         // -------------------------------------------------------------
 
         //! Pixmap by given index
-        static const QPixmap &pixmapByResourceFileName(const QString &fileName);
+        static const QPixmap &pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath);
 
         // -------------------------------------------------------------
         // Utility functions

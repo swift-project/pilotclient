@@ -15,6 +15,7 @@
 
 #include <QStringBuilder>
 #include <QtGlobal>
+#include <QDir>
 
 namespace BlackMisc
 {
@@ -26,8 +27,12 @@ namespace BlackMisc
     { }
 
     CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
-        m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText), m_pixmap(CIcons::pixmapByResourceFileName(resourceFilePath))
-    {}
+        m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText)
+    {
+        QString fullPath;
+        m_pixmap = CIcons::pixmapByResourceFileName(QDir::cleanPath(resourceFilePath), fullPath);
+        m_fileResourcePath = fullPath;
+    }
 
     CIcons::IconIndex CIcon::getIndex() const
     {

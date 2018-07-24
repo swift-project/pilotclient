@@ -89,7 +89,13 @@ namespace BlackMisc
         CIcon(const QString &resourceFilePath, const QString &descriptiveText);
 
         //! Get descriptive text
-        const QString &getDescriptiveText() const { return this->m_descriptiveText; }
+        const QString &getDescriptiveText() const { return m_descriptiveText; }
+
+        //! Resource path if any
+        const QString &getFileResourcePath() const { return m_fileResourcePath; }
+
+        //! Resource path available?
+        bool hasFileResourcePath() const { return !m_fileResourcePath.isEmpty(); }
 
         //! Index
         CIcons::IconIndex getIndex() const;
@@ -113,13 +119,13 @@ namespace BlackMisc
         QIcon toQIcon() const;
 
         //! Rotate by n degrees
-        void setRotation(int degrees) { this->m_rotateDegrees = degrees; }
+        void setRotation(int degrees) { m_rotateDegrees = degrees; }
 
         //! Rotate by given degrees
         void setRotation(const BlackMisc::PhysicalQuantities::CAngle &rotate);
 
         //! Set descriptive text
-        void setDescriptiveText(const QString &text) { this->m_descriptiveText = text; }
+        void setDescriptiveText(const QString &text) { m_descriptiveText = text; }
 
         //! Implicit conversion
         operator QPixmap() const { return this->toPixmap(); }
@@ -137,13 +143,15 @@ namespace BlackMisc
         CIcons::IconIndex m_index = CIcons::NotSet;
         int m_rotateDegrees = 0;    //!< Rotation
         QString m_descriptiveText;  //!< what does it represent?
+        QString m_fileResourcePath; //!< file resource path
         QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index
 
         BLACK_METACLASS(
             CIcon,
             BLACK_METAMEMBER(index),
             BLACK_METAMEMBER(rotateDegrees, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(descriptiveText)
+            BLACK_METAMEMBER(descriptiveText),
+            BLACK_METAMEMBER(fileResourcePath)
         );
     };
 
