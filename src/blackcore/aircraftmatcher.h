@@ -159,19 +159,19 @@ namespace BlackCore
 
         //! Set the models we want to use
         //! \note uses a set from "somewhere else" so it can also be used with arbitrary sets for testing
-        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulatorHint = {});
+        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         //! Default model
-        const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const;
+        const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const { return m_defaultModel; }
 
         //! Set default model, can be set by driver specific for simulator
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
         //! The current statistics
-        BlackMisc::Simulation::CMatchingStatistics getCurrentStatistics() const;
+        BlackMisc::Simulation::CMatchingStatistics getCurrentStatistics() const { return m_statistics; }
 
         //! Clear the statistics
-        void clearMatchingStatistics();
+        void clearMatchingStatistics() { m_statistics.clear(); }
 
         //! Evaluate if a statistics entry makes sense and add it
         void evaluateStatisticsEntry(const QString &sessionId, const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);

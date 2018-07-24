@@ -490,7 +490,7 @@ namespace BlackCore
         return icao;
     }
 
-    int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulatorHint)
+    int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();
@@ -503,37 +503,22 @@ namespace BlackCore
         }
         if (modelsCleaned.isEmpty())
         {
-            CLogMessage(this).error("No models for matching, swift without a model set will not work!");
+            CLogMessage(this).error("No models for matching ('%1'), swift without a model set will not work!") << simulator.toQString();
         }
         else
         {
-            CLogMessage(this).info("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulatorHint.toQString();
+            CLogMessage(this).info("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulator.toQString();
         }
         m_modelSet = modelsCleaned;
-        m_simulator = simulatorHint;
-        m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulatorHint.toQString()).arg(modelsCleaned.size());
+        m_simulator = simulator;
+        m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulator.toQString()).arg(modelsCleaned.size());
         return models.size();
-    }
-
-    const CAircraftModel &CAircraftMatcher::getDefaultModel() const
-    {
-        return m_defaultModel;
     }
 
     void CAircraftMatcher::setDefaultModel(const CAircraftModel &defaultModel)
     {
         m_defaultModel = defaultModel;
         m_defaultModel.setModelType(CAircraftModel::TypeModelMatchingDefaultModel);
-    }
-
-    CMatchingStatistics CAircraftMatcher::getCurrentStatistics() const
-    {
-        return m_statistics;
-    }
-
-    void CAircraftMatcher::clearMatchingStatistics()
-    {
-        m_statistics.clear();
     }
 
     void CAircraftMatcher::evaluateStatisticsEntry(const QString &sessionId, const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
