@@ -16,15 +16,12 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace Ui { class CModelMatcherComponent; }
 namespace BlackGui
@@ -67,15 +64,20 @@ namespace BlackGui
             //! Init
             void redisplay();
 
+            //! The current model set models
+            BlackMisc::Simulation::CAircraftModelList getModelSetModels() const;
+
+            //! The current model set models size
+            int getModelSetModelsCount() const;
+
             //! Pseudo aircraft created from entries
             BlackMisc::Simulation::CSimulatedAircraft createAircraft() const;
 
             //! Pseudo default aircraft
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
-            QScopedPointer<Ui::CModelMatcherComponent>     ui;
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackCore::CAircraftMatcher                    m_matcher { BlackCore::CAircraftMatcher::All, this };
+            QScopedPointer<Ui::CModelMatcherComponent> ui;
+            BlackCore::CAircraftMatcher m_matcher { BlackCore::CAircraftMatcher::All, this };
         };
     } // ns
 } // ns

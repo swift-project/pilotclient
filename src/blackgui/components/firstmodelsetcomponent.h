@@ -16,7 +16,6 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/logcategorylist.h"
@@ -74,9 +73,6 @@ namespace BlackGui
 
             //! Direct access to component's loader
             BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
-
-            //! Model set loader
-            const BlackMisc::Simulation::CAircraftModelSetLoader &modelSetLoader() const;
 
             //! Open own models dialog
             void openOwnModelsDialog();

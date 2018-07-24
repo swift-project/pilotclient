@@ -12,16 +12,13 @@
 #ifndef BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 
-#include "blackmisc/settingscache.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/settingscache.h"
 
-#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace Ui { class CDistributorPreferencesComponent; }
 namespace BlackGui
@@ -33,7 +30,7 @@ namespace BlackGui
         /*!
          * Set and order distributors (to be used for model set)
          */
-        class CDistributorPreferencesComponent : public QFrame
+        class CDistributorPreferencesComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -44,33 +41,31 @@ namespace BlackGui
             //! Destructor
             virtual ~CDistributorPreferencesComponent();
 
-        private slots:
+        private:
             //! Changed preferences
-            void ps_preferencesChanged();
+            void onPreferencesChanged();
 
             //! Load all distributors
-            void ps_loadAll();
+            void loadAllDistributors();
 
             //! Load all distributors for current simulator
-            void ps_loadAllForSimulator();
+            void loadDistributorsForSimulator();
 
             //! Load distributors from set
-            void ps_loadDistributorsFromSet();
+            void loadDistributorsFromSet();
 
             //! Save the preferences
-            void ps_save();
+            void save();
 
             //! Simulator has been changed
-            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             // Init
-            void ps_deferredInit();
+            void triggerDeferredSimulatorChange();
 
         private:
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
-            BlackGui::COverlayMessagesFrame *m_overlayMessageFrame = nullptr;
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::onPreferencesChanged };
 
             //! Update
             void updateContainerMaybeAsync(const BlackMisc::Simulation::CDistributorList &models, bool sortByOrder = true);

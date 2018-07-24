@@ -93,8 +93,8 @@ namespace BlackGui
             ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
             static const QString modelsSetNo("Model set is empty");
-            const int modelsSetCount = this->modelSetLoader().getAircraftModelsCount();
-            ui->le_ModelSetInfo->setText(modelsSetCount > 0 ? this->modelSetLoader().getModelCacheCountAndTimestamp(simulator) : modelsSetNo);
+            const int modelsSetCount = m_modelSetDialog->modelSetComponent()->getModelSetCount();
+            ui->le_ModelSetInfo->setText(modelsSetCount > 0 ? m_modelSetDialog->modelSetComponent()->getModelCacheCountAndTimestamp() : modelsSetNo);
         }
 
         void CFirstModelSetComponent::onSettingsChanged(const CSimulatorInfo &simulator)
@@ -140,11 +140,6 @@ namespace BlackGui
         {
             Q_ASSERT_X(m_modelsDialog->modelsComponent()->modelLoader(), Q_FUNC_INFO, "No model loader");
             return m_modelsDialog->modelsComponent()->modelLoader();
-        }
-
-        const CAircraftModelSetLoader &CFirstModelSetComponent::modelSetLoader() const
-        {
-            return this->modelSetComponent()->modelSetLoader();
         }
 
         void CFirstModelSetComponent::openOwnModelsDialog()
@@ -214,8 +209,8 @@ namespace BlackGui
 
         void CFirstModelSetComponent::createModelSet()
         {
-            const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
-            const int modelsCount = this->modelLoader()->getCachedModelsCount(sim);
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            const int modelsCount = this->modelLoader()->getCachedModelsCount(simulator);
             if (modelsCount < 1)
             {
                 static const CStatusMessage msg = CStatusMessage(this).validationError("No models indexed so far. Try 'reload'!");
@@ -238,14 +233,14 @@ namespace BlackGui
                     return;
                 }
             }
-            CAircraftModelList modelsForSet = this->modelLoader()->getCachedModels(sim);
+            CAircraftModelList modelsForSet = this->modelLoader()->getCachedModels(simulator);
             if (!useAllModels)
             {
                 const CDistributorList distributors = ui->comp_Distributors->getSelectedDistributors();
                 modelsForSet = modelsForSet.findByDistributors(distributors);
             }
 
-            m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, sim);
+            m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, simulator);
             ui->pb_ModelSet->click();
         }
 

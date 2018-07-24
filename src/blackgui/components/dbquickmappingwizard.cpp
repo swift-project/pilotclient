@@ -49,9 +49,9 @@ namespace BlackGui
             connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::onPublishedModels, Qt::QueuedConnection);
 
             connect(this, &CDbQuickMappingWizard::currentIdChanged, this, &CDbQuickMappingWizard::currentWizardPageChanged);
-            connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CDbQuickMappingWizard::onAircraftSelected);
-            connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected);
-            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected);
+            connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CDbQuickMappingWizard::onAircraftSelected, Qt::QueuedConnection);
+            connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
+            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
 
             ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
 

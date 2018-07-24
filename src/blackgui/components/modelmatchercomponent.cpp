@@ -14,11 +14,12 @@
 #include "blackgui/components/dbliveryselectorcomponent.h"
 #include "blackgui/components/modelmatchercomponent.h"
 #include "blackgui/components/simulatorselector.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/models/statusmessagelistmodel.h"
-#include "blackgui/uppercasevalidator.h"
-#include "blackgui/views/statusmessageview.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
@@ -40,6 +41,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Models;
 using namespace BlackCore;
@@ -57,6 +59,7 @@ namespace BlackGui
 
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
             ui->comp_AirlineSelector->displayWithIcaoDescription(false);
             ui->comp_AircraftSelector->displayWithIcaoDescription(false);
             ui->comp_LiverySelector->withLiveryDescription(false);
@@ -72,8 +75,6 @@ namespace BlackGui
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRed);
 
-            const CSimulatorInfo sim(m_modelSetLoader.getSimulator());
-            ui->comp_SimulatorSelector->setValue(sim);
             this->redisplay();
         }
 
@@ -91,11 +92,11 @@ namespace BlackGui
             this->redisplay();
         }
 
-        void CModelMatcherComponent::onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator)
+        void CModelMatcherComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            m_modelSetLoader.setSimulator(simulator);
-            m_matcher.setModelSet(m_modelSetLoader.getAircraftModels(), simulator);
+            const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+            m_matcher.setModelSet(models, simulator);
             this->redisplay();
         }
 
@@ -147,8 +148,22 @@ namespace BlackGui
 
         void CModelMatcherComponent::redisplay()
         {
-            const int c = m_modelSetLoader.getAircraftModelsCount();
+            const int c = this->getModelSetModelsCount();
             ui->le_ModelSetCount->setText(QString::number(c));
+        }
+
+        CAircraftModelList CModelMatcherComponent::getModelSetModels() const
+        {
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+            return models;
+        }
+
+        int CModelMatcherComponent::getModelSetModelsCount() const
+        {
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            const int modelCount = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator);
+            return modelCount;
         }
 
         CSimulatedAircraft CModelMatcherComponent::createAircraft() const
