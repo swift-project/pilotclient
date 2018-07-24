@@ -20,9 +20,9 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/weathermanager.h"
 #include "blackcore/network.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
@@ -34,7 +34,6 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/settingscache.h"
-
 #include "blackmisc/worker.h"
 
 #include <QObject>
@@ -243,17 +242,17 @@ namespace BlackCore
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
             CWeatherManager m_weatherManager { this };
             CAircraftMatcher m_aircraftMatcher; //!< Model matcher
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
 
             // settings
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetSimulator  { this }; //!< current simulator (used with radio buttons)
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
             BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
-            QString m_networkSessionId; //! Network session of CServer::getServerSessionId, if not connected empty
+            QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty
         };
     } // namespace
 } // namespace

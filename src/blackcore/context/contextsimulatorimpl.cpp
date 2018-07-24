@@ -51,6 +51,7 @@ using namespace BlackMisc::Simulation::XPlane;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
+using namespace BlackMisc::Simulation::Data;
 
 namespace BlackCore
 {
@@ -71,10 +72,7 @@ namespace BlackCore
             this->restoreSimulatorPlugins();
 
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::modelSetChanged);
-
-            // seems to be redundant, as changed simulator will cause changed cache
-            // connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDigestSignal::modelSetChanged);
+            connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
             // deferred init of last model set, if no other data are set in meantime
             const QPointer<CContextSimulator> myself(this);
@@ -172,13 +170,14 @@ namespace BlackCore
         CAircraftModelList CContextSimulator::getModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_aircraftMatcher.getModelSet();
+            const CSimulatorInfo simulator = m_modelSetSimulator.get();
+            return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
         }
 
         CSimulatorInfo CContextSimulator::getModelSetLoaderSimulator() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_modelSetLoader.getSimulator();
+            return m_modelSetSimulator.get();
         }
 
         void CContextSimulator::setModelSetLoaderSimulator(const CSimulatorInfo &simulator)
@@ -186,14 +185,15 @@ namespace BlackCore
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (this->isSimulatorAvailable()) { return; }
-            m_modelSetLoader.setSimulator(simulator);
-            m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simulator);
+            m_modelSetSimulator.set(simulator);
+            const CAircraftModelList models = this->getModelSet();
+            m_aircraftMatcher.setModelSet(models, simulator);
         }
 
         CSimulatorInfo CContextSimulator::simulatorsWithInitializedModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_modelSetLoader.simulatorsWithInitializedModelSet();
+            return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().simulatorsWithInitializedCache();
         }
 
         CStatusMessageList CContextSimulator::verifyPrerequisites() const
@@ -368,8 +368,10 @@ namespace BlackCore
             // use simulator info from ISimulator as it can access the emulated driver settings
             const CSimulatorInfo simInfo = simulator->getSimulatorInfo();
             Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-            m_modelSetLoader.setSimulator(simInfo);
-            m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simInfo);
+
+            m_modelSetSimulator.set(simInfo);
+            const CAircraftModelList modelSetModels = this->getModelSet();
+            m_aircraftMatcher.setModelSet(modelSetModels, simInfo);
             m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
@@ -713,10 +715,10 @@ namespace BlackCore
         {
             if (m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
             Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
-            const CAircraftModel model(m_modelSetLoader.getModelForModelString(modelString));
 
             // load from file
             CStatusMessage msg;
+            const CAircraftModel model(this->getModelSet().findFirstByModelStringOrDefault(modelString));
             const CPixmap pm(model.loadIcon(msg));
             if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;
@@ -874,18 +876,11 @@ namespace BlackCore
         void CContextSimulator::initByLastUsedModelSet()
         {
             // no models in matcher, but in cache, we can set them as default
-            const CSimulatorInfo sim(m_modelSetLoader.getSimulator());
-            if (!m_aircraftMatcher.hasModels() && m_modelSetLoader.getAircraftModelsCount() > 0)
-            {
-                const CAircraftModelList models(m_modelSetLoader.getAircraftModels());
-                CLogMessage(this).info("Init aircraft matcher with %1 models from set for '%2'") << models.size() << sim.toQString();
-                m_aircraftMatcher.setModelSet(models, sim);
-            }
-            else
-            {
-                CLogMessage(this).info("Start loading of model set for '%1'") << sim.toQString();
-                m_modelSetLoader.admitCache(); // when ready chache change signal
-            }
+            const CSimulatorInfo simulator(m_modelSetSimulator.get());
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
+            const CAircraftModelList models(this->getModelSet());
+            CLogMessage(this).info("Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
+            m_aircraftMatcher.setModelSet(models, simulator);
         }
     } // namespace
 } // namespace
