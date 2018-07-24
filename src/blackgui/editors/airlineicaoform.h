@@ -75,12 +75,11 @@ namespace BlackGui
             //! \copydoc CForm::jsonPasted
             virtual void jsonPasted(const QString &json) override;
 
-        private slots:
             //! Variant has been dropped
-            void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
+            void onDroppedCode(const BlackMisc::CVariant &variantDropped);
 
             //! Id entered
-            void ps_idEntered();
+            void onIdEntered();
 
         private:
             QScopedPointer<Ui::CAirlineIcaoForm>  ui;

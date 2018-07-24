@@ -23,6 +23,7 @@
 #include <QMetaType>
 #include <QPalette>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackGui;
 using namespace BlackCore;
@@ -46,11 +47,14 @@ namespace BlackGui
 
             // when we already have data, init completers. This can not be done directly in the
             // constructor due to virtual functions
-            const int c =  sGui->getWebDataServices()->getAirlineIcaoCodesCount();
+            const int c = sGui->getWebDataServices()->getAirlineIcaoCodesCount();
             if (c > 0)
             {
-                QTimer::singleShot(500, [this, c]()
+                QPointer<CDbAirlineIcaoSelectorBase> myself(this);
+                QTimer::singleShot(500, [ = ]()
                 {
+                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    if (!myself) { return; }
                     this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
                 });
             }
@@ -77,15 +81,9 @@ namespace BlackGui
         bool CDbAirlineIcaoSelectorBase::setAirlineIcao(int key)
         {
             CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(key));
-            if (icao.hasCompleteData())
-            {
-                this->setAirlineIcao(icao);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (!icao.hasCompleteData()) { return false; }
+            this->setAirlineIcao(icao);
+            return true;
         }
 
         bool CDbAirlineIcaoSelectorBase::isSet() const
@@ -97,7 +95,7 @@ namespace BlackGui
         void CDbAirlineIcaoSelectorBase::dragEnterEvent(QDragEnterEvent *event)
         {
             if (!event || !acceptDrop(event->mimeData())) { return; }
-            setBackgroundRole(QPalette::Highlight);
+            this->setBackgroundRole(QPalette::Highlight);
             event->acceptProposedAction();
         }
 
@@ -116,12 +114,12 @@ namespace BlackGui
         void CDbAirlineIcaoSelectorBase::dropEvent(QDropEvent *event)
         {
             if (!event || !acceptDrop(event->mimeData())) { return; }
-            CVariant valueVariant(toCVariant(event->mimeData()));
+            const CVariant valueVariant(toCVariant(event->mimeData()));
             if (valueVariant.isValid())
             {
                 if (valueVariant.canConvert<CAirlineIcaoCode>())
                 {
-                    CAirlineIcaoCode icao(valueVariant.value<CAirlineIcaoCode>());
+                    const CAirlineIcaoCode icao(valueVariant.value<CAirlineIcaoCode>());
                     if (!icao.hasValidDbKey()) { return; }
                     this->setAirlineIcao(icao);
                 }

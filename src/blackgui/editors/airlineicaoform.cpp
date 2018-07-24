@@ -45,15 +45,15 @@ namespace BlackGui
             ui->lai_Id->set(CIcons::appAirlineIcao16(), "Id:");
 
             ui->selector_AirlineDesignator->displayWithIcaoDescription(false);
-            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
-            connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
+            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
+            connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
 
             // Id
-            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::ps_idEntered);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::onIdEntered);
 
             // drag and drop, paste
             connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::pasted);
-            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::ps_droppedCode);
+            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::onDroppedCode);
             ui->drop_DropData->setInfoText("<drop airline ICAO code>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
         }
@@ -61,10 +61,10 @@ namespace BlackGui
         CAirlineIcaoForm::~CAirlineIcaoForm()
         { }
 
-        void CAirlineIcaoForm::setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
+        void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
         {
-            if (this->m_originalCode == icao) { return; }
-            this->m_originalCode = icao;
+            if (m_originalCode == icao) { return; }
+            m_originalCode = icao;
 
             ui->selector_AirlineDesignator->setAirlineIcao(icao);
             ui->selector_AirlineName->setAirlineIcao(icao);
@@ -74,14 +74,24 @@ namespace BlackGui
             ui->cb_Va->setChecked(icao.isVirtualAirline());
             ui->cb_Military->setChecked(icao.isMilitary());
             ui->country_Selector->setCountry(icao.getCountry());
-            ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+
+            const QPixmap pm = icao.toPixmap();
+            if (pm.width() < 125)
+            {
+                ui->lbl_AirlineIcon->setPixmap(pm);
+            }
+            else
+            {
+                ui->lbl_AirlineIcon->setTextFormat(Qt::RichText);
+                ui->lbl_AirlineIcon->setText(CGuiUtility::asSimpleHtmlImageHeight(icao.toIcon(), 25));
+            }
 
             // sometimes artefacts when icon is displayed
             this->repaint();
 
-            if (this->m_originalCode.hasCompleteData())
+            if (m_originalCode.hasCompleteData())
             {
-                emit airlineChanged(this->m_originalCode);
+                emit airlineChanged(m_originalCode);
             }
         }
 
@@ -177,7 +187,7 @@ namespace BlackGui
             }
         }
 
-        void CAirlineIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)
+        void CAirlineIcaoForm::onDroppedCode(const BlackMisc::CVariant &variantDropped)
         {
             CAirlineIcaoCode icao;
             if (variantDropped.canConvert<CAirlineIcaoCode>())
@@ -197,7 +207,7 @@ namespace BlackGui
             this->setValue(icao);
         }
 
-        void CAirlineIcaoForm::ps_idEntered()
+        void CAirlineIcaoForm::onIdEntered()
         {
             if (!sGui || !sGui->hasWebDataServices())
             {
