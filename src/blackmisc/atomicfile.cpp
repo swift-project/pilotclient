@@ -34,7 +34,6 @@ int qt_ntfs_permission_lookup = 0;
 
 namespace BlackMisc
 {
-
     //! \private
     bool checkPermissions(CAtomicFile::OpenMode mode, const QFileInfo &fileInfo)
     {

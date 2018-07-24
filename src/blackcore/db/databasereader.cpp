@@ -605,6 +605,7 @@ namespace BlackCore
             return this->initFromLocalResourceFiles(this->getSupportedEntities(), inBackground);
         }
 
+        //! \cond PRIVATE
         CStatusMessageList CDatabaseReader::initFromLocalResourceFiles(CEntityFlags::Entity entities, bool inBackground)
         {
             const bool overrideNewerOnly = true;
@@ -622,6 +623,7 @@ namespace BlackCore
                 return this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
             }
         }
+        //! \endcond
 
         void CDatabaseReader::setReplyStatus(QNetworkReply::NetworkError status, const QString &message)
         {

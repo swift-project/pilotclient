@@ -1600,6 +1600,7 @@ namespace BlackCore
         return msgs;
     }
 
+    //! \cond PRIVATE
     CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(CEntityFlags::Entity entities, bool inBackground)
     {
         CStatusMessageList msgs;
@@ -1620,4 +1621,5 @@ namespace BlackCore
         );
         return msgs;
     }
+    //! \endcond
 } // ns

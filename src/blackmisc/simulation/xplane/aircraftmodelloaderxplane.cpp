@@ -132,7 +132,7 @@ namespace BlackMisc
                 if (modelDirs.isEmpty())
                 {
                     this->clearCachedModels(CSimulatorInfo::xplane());
-                    emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
+                    emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "XPlane model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
                     return;
                 }
 
@@ -142,7 +142,7 @@ namespace BlackMisc
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                      [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
-                        //! \todo KB/MS 2017-09 not high prio, but still needed: according to meeting XP needs to support multiple directories
+                        //! \todo KB/MS 2017-09 not high prio, but still needed: according to meet XP needs to support multiple directories
                         //! \todo KB with T118 now model directories are passed (changed signatures) but the code below needs to support multiple dirs
                         const QString modelDirectory = modelDirs.front();
                         auto models = performParsing(modelDirectory, excludedDirectoryPatterns);
@@ -196,7 +196,7 @@ namespace BlackMisc
             {
                 if (models.containsModelString(model.getModelString()))
                 {
-                    CLogMessage(static_cast<CAircraftModelLoaderXPlane *>(nullptr)).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+                    CLogMessage(static_cast<CAircraftModelLoaderXPlane *>(nullptr)).warning("XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
                 }
                 models.push_back(model);
             }
@@ -337,7 +337,7 @@ namespace BlackMisc
                     {
                         if (installedModels.containsModelString(plane.getModelName()))
                         {
-                            const CStatusMessage msg = CStatusMessage(this).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
+                            const CStatusMessage msg = CStatusMessage(this).warning("XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
                             m_loadingMessages.push_back(msg);
                             continue;
                         }
@@ -384,7 +384,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: EXPORT_NAME command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': EXPORT_NAME command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -397,7 +397,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).warning("WARNING: Package name %1 already in use by %2 reqested by use by %3") << tokens[1] << p->path << path;
+                    CLogMessage(this).warning("XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
                     return false;
                 }
             }
@@ -407,13 +407,13 @@ namespace BlackMisc
                 Q_UNUSED(package);
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: DEPENDENCY command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("'%1' - '%2': DEPENDENCY command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
                 if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; }) == 0)
                 {
-                    CLogMessage(this).warning("WARNING: required package %1 not found. Aborting processing of this package.") << tokens[1];
+                    CLogMessage(this).warning("XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
                     return false;
                 }
 
@@ -437,7 +437,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: OBJECT command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJECT command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -446,7 +446,7 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2: package not found.") << path << lineNum;
                     return false;
                 }
 
@@ -454,7 +454,7 @@ namespace BlackMisc
                 QFile objFile(fullPath);
                 if (!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
-                    CLogMessage(this).warning("Object %1 does not exist.") << fullPath;
+                    CLogMessage(this).warning("XPlane object '%1' does not exist.") << fullPath;
                     return false;
                 }
                 QTextStream ts(&objFile);
@@ -499,7 +499,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: TEXTURE command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': TEXTURE command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -510,14 +510,14 @@ namespace BlackMisc
 
                 if (!doPackageSub(absoluteTexPath))
                 {
-                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
                     return false;
                 }
 
                 QFileInfo fileInfo(absoluteTexPath);
                 if (!fileInfo.exists())
                 {
-                    CLogMessage(this).warning("Texture %1 does not exist.") << absoluteTexPath;
+                    CLogMessage(this).warning("XPlane texture '%1' does not exist.") << absoluteTexPath;
                     return false;
                 }
 
@@ -531,7 +531,7 @@ namespace BlackMisc
                 // AIRCAFT <min> <max> <path>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).warning("%1 - %2: AIRCRAFT command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': AIRCRAFT command requires 3 arguments.") << path << lineNum;
                 }
 
                 // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
@@ -545,7 +545,7 @@ namespace BlackMisc
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
                 }
 
                 package.planes.push_back(CSLPlane());
@@ -559,7 +559,7 @@ namespace BlackMisc
                 // OBJ8 <group> <animate YES|NO> <filename> {<texture filename> {<lit texture filename>}}
                 if (tokens.size() < 4 || tokens.size() > 6)
                 {
-                    CLogMessage(this).warning("%1 - %2: OBJ8 command takes 3-5 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJ8 command takes 3-5 arguments.") << path << lineNum;
                 }
 
                 if (tokens[1] != "SOLID") { return true; }
@@ -569,7 +569,7 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
                     return false;
                 }
 
@@ -595,14 +595,14 @@ namespace BlackMisc
 
                     if (!doPackageSub(absoluteTexPath))
                     {
-                        CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                        CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
                         return false;
                     }
 
                     QFileInfo fileInfo(absoluteTexPath);
                     if (!fileInfo.exists())
                     {
-                        CLogMessage(this).warning("Texture %1 does not exist.") << absoluteTexPath;
+                        CLogMessage(this).warning("XPlane texture '%1' does not exist.") << absoluteTexPath;
                         return false;
                     }
 
@@ -625,7 +625,7 @@ namespace BlackMisc
                 // ICAO <code>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("%1 - %2: ICAO command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': ICAO command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -639,7 +639,7 @@ namespace BlackMisc
                 // AIRLINE <code> <airline>
                 if (tokens.size() != 3)
                 {
-                    CLogMessage(this).warning("%1 - %2: AIRLINE command requires 2 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': AIRLINE command requires 2 arguments.") << path << lineNum;
                     return false;
                 }
 
@@ -655,7 +655,7 @@ namespace BlackMisc
                 // LIVERY <code> <airline> <livery>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).warning("%1 - %2: LIVERY command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("XPlane '%1' - '%2': LIVERY command requires 3 arguments.") << path << lineNum;
                     return false;
                 }
 
@@ -747,14 +747,14 @@ namespace BlackMisc
                             bool result = it.value()(tokens, package, package.path, lineNum);
                             if (!result)
                             {
-                                const CStatusMessage m = CStatusMessage(this).warning("Ignoring CSL package %1") << package.name;
+                                const CStatusMessage m = CStatusMessage(this).warning("XPlane ignoring CSL package '%1'") << package.name;
                                 m_loadingMessages.push_back(m);
                                 break;
                             }
                         }
                         else
                         {
-                            const CStatusMessage m = CStatusMessage(this).warning("Unrecognized command %1 in %2") << tokens[0] << package.name;
+                            const CStatusMessage m = CStatusMessage(this).warning("XPlane unrecognized command '%1' in '%2'") << tokens[0] << package.name;
                             m_loadingMessages.push_back(m);
                             break;
                         }

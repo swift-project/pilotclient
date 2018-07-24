@@ -27,7 +27,6 @@
 #include <QScopedPointer>
 
 class QAction;
-class QWidget;
 
 namespace Ui { class CDbOwnModelSetComponent; }
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
