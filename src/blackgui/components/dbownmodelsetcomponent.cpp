@@ -38,6 +38,7 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
 #include <QDesktopServices>
 
 using namespace BlackMisc;
@@ -70,6 +71,8 @@ namespace BlackGui
             ui->tvp_OwnModelSet->initAsOrderable();
             ui->tvp_OwnModelSet->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
 
             //! \fixme maybe it would be better to set those in stylesheet file
             ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
@@ -81,17 +84,11 @@ namespace BlackGui
             connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded);
 
-            const CSimulatorInfo simulator = m_modelSetLoader.getSimulator();
-            if (simulator.isSingleSimulator())
-            {
-                this->setSimulator(simulator);
-                ui->comp_SimulatorSelector->setRememberSelection(true);
-            }
+            this->triggerSetSimulatorDeferred(simulator);
         }
 
         CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
@@ -151,11 +148,6 @@ namespace BlackGui
         int CDbOwnModelSetComponent::getModelSetCountFromView() const
         {
             return ui->tvp_OwnModelSet->container().size();
-        }
-
-        CSimulatorInfo CDbOwnModelSetComponent::getModelSetSimulator() const
-        {
-            return m_modelSetLoader.getSimulator();
         }
 
         CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModel &model, const CSimulatorInfo &simulator)
@@ -231,10 +223,10 @@ namespace BlackGui
 
             if (sender == ui->pb_SaveAsSetForSimulator)
             {
-                const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
-                if (!ml.isEmpty())
+                const CAircraftModelList ownModelSet(ui->tvp_OwnModelSet->container());
+                if (!ownModelSet.isEmpty())
                 {
-                    const CStatusMessage m = m_modelSetLoader.setCachedModels(ml, this->getSelectedSimulator());
+                    const CStatusMessage m = this->setCachedModels(ownModelSet, this->getSelectedSimulator());
                     CLogMessage::preformatted(m);
                 }
                 return;
@@ -310,7 +302,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::updateViewToCurrentModels()
         {
-            const CAircraftModelList models(m_modelSetLoader.getAircraftModels());
+            const CAircraftModelList models(this->getModelSet());
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
         }
 
@@ -370,11 +362,24 @@ namespace BlackGui
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
             m_simulator = simulator;
-            m_modelSetLoader.setSimulator(simulator);
+            ui->comp_SimulatorSelector->setValue(simulator);
             ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
             ui->le_Simulator->setText(simulator.toQString(true));
-            ui->comp_SimulatorSelector->setValue(simulator);
+            this->synchronizeCache(simulator);
             this->updateViewToCurrentModels();
+        }
+
+        void CDbOwnModelSetComponent::triggerSetSimulatorDeferred(const CSimulatorInfo &simulator)
+        {
+            this->admitCache(simulator);
+
+            QPointer<CDbOwnModelSetComponent> myself(this);
+            QTimer::singleShot(1000, this, [ = ]
+            {
+                if (!sApp || sApp->isShuttingDown()) { return; }
+                if (!myself) { return; }
+                this->setSimulator(simulator);
+            });
         }
 
         void CDbOwnModelSetComponent::showAirlineAircraftMatrix() const
@@ -387,13 +392,13 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
         {
-            CAircraftModelList modelSet = m_modelSetLoader.getAircraftModels(simulator);
+            CAircraftModelList modelSet = this->getCachedModels(simulator);
             if (modelSet.isEmpty()) { return; }
             const CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
             const CDistributorList distributors = preferences.getDistributors(simulator);
             if (distributors.isEmpty()) { return; }
             modelSet.updateDistributorOrder(distributors);
-            m_modelSetLoader.setModelsForSimulator(modelSet, simulator);
+            this->setCachedModels(modelSet, simulator);
 
             // display?
             const CSimulatorInfo currentSimulator(this->getModelSetSimulator());

@@ -14,10 +14,10 @@
 
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menus/menudelegate.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 
@@ -48,10 +48,9 @@ namespace BlackGui
         class CDbOwnModelSetComponent :
             public QFrame,
             public CDbMappingComponentAware,
+            public BlackMisc::Simulation::Data::CCentralMultiSimulatorModelSetCachesAware,
             public BlackMisc::Simulation::IModelsSetable,
             public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsForSimulatorSetable,
-            public BlackMisc::Simulation::IModelsForSimulatorUpdatable,
             public BlackMisc::Simulation::ISimulatorSelectable
         {
             Q_OBJECT
@@ -86,27 +85,31 @@ namespace BlackGui
             //! \remark this the set from the container, which can be different from cache while updating
             int getModelSetCountFromView() const;
 
-            //! \copydoc BlackMisc::Simulation::CAircraftModelSetLoader::getCachedModels
-            BlackMisc::Simulation::CAircraftModelList getModelSetFromLoader() const { return m_modelSetLoader.getCachedModels(this->getModelSetSimulator()); }
+            //! Cached models for current simulator
+            BlackMisc::Simulation::CAircraftModelList getModelSet() const { return this->getCachedModels(m_simulator); }
 
-            //! Model set is for simulator
-            BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const;
+            //! Cached models count for current simulator
+            int getModelSetCount() const { return this->getCachedModelsCount(m_simulator); }
+
+            //! Count and cache timestamp
+            QString getModelCacheCountAndTimestamp() const { return QString::number(getModelSetCount()); }
 
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Used model set loader
-            const BlackMisc::Simulation::CAircraftModelSetLoader &modelSetLoader() const { return m_modelSetLoader; }
+            //! Deferred init of simulator
+            void triggerSetSimulatorDeferred(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
 
+            //! Model set is for simulator
+            BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const { return m_simulator; }
+
             //! \name Implementations of the models interfaces
             //! @{
             virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelSet(models, this->getModelSetSimulator()); }
-            virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setModelSet(models, simulator); }
             virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { return this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
-            virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { return this->replaceOrAddModelSet(models, simulator); }
             virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const override { return this->getModelSetSimulator(); }
             //! @}
 
@@ -160,11 +163,10 @@ namespace BlackGui
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
-            QScopedPointer<CDbOwnModelSetFormDialog>    m_modelSetFormDialog;
-            QScopedPointer<CFirstModelSetDialog>        m_firstModelSet;
+            QScopedPointer<CDbOwnModelSetFormDialog> m_modelSetFormDialog;
+            QScopedPointer<CFirstModelSetDialog>     m_firstModelSet;
             QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwift;
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently set simulator
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
 
