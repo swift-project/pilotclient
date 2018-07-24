@@ -67,11 +67,10 @@ namespace BlackGui
         //! \copydoc QWidget::dropEvent
         virtual void dropEvent(QDropEvent *event) override;
 
-    private slots:
-        //! Style has been changed
-        void ps_onStyleSheetsChanged();
-
     private:
+        //! Style has been changed
+        void onStyleSheetsChanged();
+
         //! Clear
         void resetText();
 

@@ -162,7 +162,7 @@ namespace BlackGui
                         this->m_leOrder->setValidator(this->m_validator);
                         QWidgetAction *orderAction = new QWidgetAction(this);
                         orderAction->setDefaultWidget(this->m_frame);
-                        QObject::connect(this->m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit);
+                        QObject::connect(this->m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToLineEdit);
                         this->m_menuActions[0] = orderAction;
                     }
                 }
@@ -171,9 +171,9 @@ namespace BlackGui
                 this->m_leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
 
                 menuActions.addAction(this->m_menuActions[0], CMenuAction::pathViewOrder());
-                this->m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop });
-                this->m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom });
-                this->m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder });
+                this->m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToTop });
+                this->m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToBottom });
+                this->m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::freezeCurrentOrder });
             }
             CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menuActions);
         }
@@ -197,13 +197,13 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop()
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToTop()
         {
             this->moveSelectedItems(0);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom()
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToBottom()
         {
             int c = this->model()->rowCount() - 1;
             if (c >= 0)
@@ -213,7 +213,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit()
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToLineEdit()
         {
             if (this->isEmpty()) { return; }
             QLineEdit *le = qobject_cast<QLineEdit *>(QObject::sender());
@@ -223,7 +223,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder()
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::freezeCurrentOrder()
         {
             ContainerType objects = this->container();
             objects.freezeOrder();

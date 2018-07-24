@@ -12,6 +12,7 @@
 
 #include <QMetaType>
 #include <QtGlobal>
+#include <QUrl>
 
 using namespace BlackMisc;
 
@@ -30,24 +31,22 @@ namespace BlackGui
         m_acceptedMetaTypes.append(id);
     }
 
-    bool CDropBase::isDropAllowed() const
-    {
-        return m_allowDrop;
-    }
-
-    void CDropBase::allowDrop(bool allowed)
-    {
-        this->m_allowDrop = allowed;
-    }
-
     bool CDropBase::acceptDrop(const QMimeData *mime) const
     {
-        Q_ASSERT_X(!this->m_acceptedMetaTypes.isEmpty(), Q_FUNC_INFO, "no accepted meta type ids");
+        if (!mime) { return false; }
+        if (!m_allowDrop) { return false; }
         if (m_acceptedMetaTypes.isEmpty()) { return false; }
-        if (!m_allowDrop || !CGuiUtility::hasSwiftVariantMimeType(mime)) { return false; }
+
+        if (m_acceptJsonFile && CGuiUtility::isMimeRepresentingReadableJsonFile(mime))
+        {
+            // further checks could go here
+            return true;
+        }
+
+        if (!CGuiUtility::hasSwiftVariantMimeType(mime)) { return false; }
         const int metaTypeId = CGuiUtility::metaTypeIdFromSwiftDragAndDropData(mime);
         if (metaTypeId == QMetaType::UnknownType) { return false; }
-        const bool accept =  m_acceptedMetaTypes.contains(metaTypeId);
+        const bool accept = m_acceptedMetaTypes.contains(metaTypeId);
         return accept;
     }
 
@@ -55,5 +54,4 @@ namespace BlackGui
     {
         return CGuiUtility::fromSwiftDragAndDropData(mime);
     }
-
 } // ns

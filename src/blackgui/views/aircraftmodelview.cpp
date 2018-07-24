@@ -277,7 +277,11 @@ namespace BlackGui
                         emit requestHandlingOfStashDrop(airline); // I need to convert to stanard livery, which I can`t do here
                     }
                 }
-            } // valid mime?
+            }
+            else
+            {
+                CViewBase::dropEvent(event);
+            }
         }
 
         void CAircraftModelView::customMenu(CMenuActions &menuActions)

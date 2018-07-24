@@ -56,10 +56,6 @@ namespace BlackGui
             ui(new Ui::CDbStashComponent)
         {
             ui->setupUi(this);
-            ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
-            ui->tvp_StashAircraftModels->allowDragDrop(false, true);
-            ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
-            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
 
             connect(ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::onUnstashPressed);
             connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::onValidatePressed);
@@ -75,6 +71,10 @@ namespace BlackGui
             connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
             connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
 
+            ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
+            ui->tvp_StashAircraftModels->allowDragDrop(false, true, true);
+            ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
+            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
@@ -381,6 +381,7 @@ namespace BlackGui
             ui->pb_Validate->setEnabled(e);
             ui->pb_RemoveInvalid->setEnabled(e);
             ui->pb_Model->setEnabled(e);
+            ui->pb_Publish->setEnabled(e);
             this->onUserChanged();
         }
 

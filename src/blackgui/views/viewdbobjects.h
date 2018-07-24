@@ -80,18 +80,17 @@ namespace BlackGui
             //! Move selected items
             void moveSelectedItems(int order);
 
-        protected slots:
             //! Order to top
-            void ps_orderToTop();
+            void orderToTop();
 
             //! Order to bottom
-            void ps_orderToBottom();
+            void orderToBottom();
 
             //! Order to line edit
-            void ps_orderToLineEdit();
+            void orderToLineEdit();
 
             //! Current order set as order
-            void ps_freezeCurrentOrder();
+            void freezeCurrentOrder();
 
         private:
             QList<QAction *> m_menuActions;

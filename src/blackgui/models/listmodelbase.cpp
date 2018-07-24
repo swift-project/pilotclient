@@ -10,13 +10,14 @@
 // Drag and drop docu:
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
-#include "blackgui/guiutility.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/listmodelbase.h"
 #include "blackgui/models/allmodelcontainers.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -27,6 +28,7 @@
 #include <QList>
 #include <QMimeData>
 #include <QtGlobal>
+#include <QFileInfo>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -193,7 +195,7 @@ namespace BlackGui
             this->setObjectName(translationContext);
 
             // connect
-            connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::ps_onDataChanged);
+            connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::onDataChanged);
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -221,12 +223,13 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+        bool CListModelBase<ObjectType, ContainerType, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
         {
             Q_UNUSED(row);
             Q_UNUSED(column);
-            if (!this->isOrderable() || !this->acceptDrop(data)) { return false; }
-            const CVariant valueVariant(this->toCVariant(data));
+
+            if (!this->isOrderable() || !this->acceptDrop(mimeData)) { return false; }
+            const CVariant valueVariant(this->toCVariant(mimeData));
             if (valueVariant.isValid())
             {
                 if (action == Qt::MoveAction)
@@ -621,7 +624,7 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
         {
             // underlying base class changed
             Q_UNUSED(topLeft);
@@ -631,7 +634,7 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::ps_onChangedDigest()
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::onChangedDigest()
         {
             const int n = this->containerOrFilteredContainer().size();
             emit this->changedDigest();

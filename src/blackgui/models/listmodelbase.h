@@ -152,14 +152,13 @@ namespace BlackGui
             //! Template free information, that object changed
             void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
 
-        protected slots:
+        protected:
             //! Feedback when QStandardItemModel::dataChanged was called
-            virtual void ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) = 0;
+            virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) = 0;
 
             //! Digest signal
-            virtual void ps_onChangedDigest() = 0;
+            virtual void onChangedDigest() = 0;
 
-        protected:
             //! Constructor
             //! \param translationContext I18N context
             //! \param parent
@@ -172,7 +171,7 @@ namespace BlackGui
             Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
 
         private:
-            BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::ps_onChangedDigest, 500, 10 };
+            BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
         };
 
         //! List model
@@ -190,7 +189,7 @@ namespace BlackGui
             virtual void sort(int column, Qt::SortOrder order) final override;
             virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const final override;
             virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const final override;
-            virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) final override;
+            virtual bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) final override;
             //! @}
 
             //! \name Functions from CListModelBaseNonTemplate
@@ -295,10 +294,7 @@ namespace BlackGui
             void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter);
 
             //! Set the selection model
-            void setSelectionModel(BlackGui::Models::ISelectionModel<ContainerType> *selectionModel)
-            {
-                m_selectionModel = selectionModel;
-            }
+            void setSelectionModel(BlackGui::Models::ISelectionModel<ContainerType> *selectionModel) { m_selectionModel = selectionModel; }
 
         protected:
             //! Constructor
@@ -306,8 +302,8 @@ namespace BlackGui
 
             //! \name Base class overrides
             //! @{
-            virtual void ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft, const QVector<int> &roles) override;
-            virtual void ps_onChangedDigest() override;
+            virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft, const QVector<int> &roles) override;
+            virtual void onChangedDigest() override;
             //! @}
 
             //! Update filtered container

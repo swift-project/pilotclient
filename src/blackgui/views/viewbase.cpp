@@ -1264,7 +1264,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::allowDragDrop(bool allowDrag, bool allowDrop)
+        void CViewBase<ModelClass, ContainerType, ObjectType>::allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile)
         {
             Q_ASSERT(m_model);
 
@@ -1273,6 +1273,7 @@ namespace BlackGui
             this->setDragEnabled(allowDrag);
             this->setDropIndicatorShown(allowDrag || allowDrop);
             m_model->allowDrop(allowDrop);
+            m_model->allowFileDrop(allowDropJsonFile);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1280,6 +1281,19 @@ namespace BlackGui
         {
             Q_ASSERT(m_model);
             return m_model->isDropAllowed();
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::dropEvent(QDropEvent *event)
+        {
+            if (m_model && m_model->isJsonFileDropAllowed() && CGuiUtility::isMimeRepresentingReadableJsonFile(event->mimeData()))
+            {
+                const QFileInfo fi = CGuiUtility::representedMimeFile(event->mimeData());
+                const CStatusMessage msgs = this->loadJsonFile(fi.absoluteFilePath());
+                Q_UNUSED(msgs);
+                return;
+            }
+            CViewBaseNonTemplate::dropEvent(event);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1500,15 +1514,12 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
+        template<class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::loadJsonFile(const QString &fileName)
         {
             CStatusMessage m;
             do
             {
-                const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                         tr("Load data file"), this->getFileDialogFileName(true),
-                                         tr("swift (*.json *.txt)"));
                 if (fileName.isEmpty())
                 {
                     m = CStatusMessage(this).error("Load canceled, no file name");
@@ -1567,6 +1578,15 @@ namespace BlackGui
 
             emit this->jsonLoadCompleted(m);
             return m;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
+        {
+            const QString fileName = QFileDialog::getOpenFileName(nullptr,
+                                     tr("Load data file"), this->getFileDialogFileName(true),
+                                     tr("swift (*.json *.txt)"));
+            return this->loadJsonFile(fileName);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

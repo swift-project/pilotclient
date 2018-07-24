@@ -33,6 +33,7 @@ class QMimeData;
 class QTabWidget;
 class QGraphicsOpacityEffect;
 
+namespace BlackMisc { class CIcon; }
 namespace BlackGui
 {
     class CEnableForFramelessWindow;
@@ -91,6 +92,15 @@ namespace BlackGui
 
         //! Meta type id from dropped data
         static int metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime);
+
+        //! Represented file if any
+        static QFileInfo representedMimeFile(const QMimeData *mime);
+
+        //! Is representing existing file
+        static bool isMimeRepresentingReadableFile(const QMimeData *mime);
+
+        //! Is representing existing JSON file
+        static bool isMimeRepresentingReadableJsonFile(const QMimeData *mime);
 
         //! Find next BlackGui::COverlayMessages QFrame
         static COverlayMessagesFrame *nextOverlayMessageFrame(QWidget *widget, int maxLevels = 10);
@@ -172,6 +182,12 @@ namespace BlackGui
 
         //! Make sure that the min.sizes to not exceed the screen resolution
         static void superviseMainWindowMinSizes(qreal wRatio = 0.85, qreal hRatio = 0.85);
+
+        //! CIcon as simple HTML image code segment
+        static QString asSimpleHtmlImageWidth(const BlackMisc::CIcon &icon, int width = -1);
+
+        //! CIcon as simple HTML image code segment
+        static QString asSimpleHtmlImageHeight(const BlackMisc::CIcon &icon, int height = -1);
 
     private:
         //! No constructor, use static functions only

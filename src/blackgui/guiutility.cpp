@@ -10,6 +10,7 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/verify.h"
 
 #include <QApplication>
@@ -223,6 +224,31 @@ namespace BlackGui
     {
         static const QString m("text/json/swift");
         return m;
+    }
+
+    QFileInfo CGuiUtility::representedMimeFile(const QMimeData *mime)
+    {
+        if (!mime->hasText()) { return QFileInfo(); }
+        const QString candidate = mime->text();
+        if (candidate.isEmpty()) { return QFileInfo(); }
+        if (!candidate.contains("://")) { return QFileInfo(candidate); }
+        QUrl url(candidate);
+        const QString localFile = url.toLocalFile();
+        return QFileInfo(localFile);
+    }
+
+    bool CGuiUtility::isMimeRepresentingReadableFile(const QMimeData *mime)
+    {
+        const QFileInfo fi = CGuiUtility::representedMimeFile(mime);
+        return fi.isReadable();
+    }
+
+    bool CGuiUtility::isMimeRepresentingReadableJsonFile(const QMimeData *mime)
+    {
+        const QFileInfo fi = CGuiUtility::representedMimeFile(mime);
+        if (!fi.isReadable()) { return false; }
+        const QString fn = fi.fileName();
+        return fn.endsWith("json", Qt::CaseInsensitive);
     }
 
     void CGuiUtility::checkBoxReadOnly(QCheckBox *checkBox, bool readOnly)
@@ -518,5 +544,27 @@ namespace BlackGui
         const int minH = hRatio * s.height();
         w->setMinimumWidth(qMin(minW, w->minimumWidth()));
         w->setMinimumHeight(qMin(minH, w->minimumHeight()));
+    }
+
+    QString CGuiUtility::asSimpleHtmlImageWidth(const CIcon &icon, int width)
+    {
+        if (!icon.hasFileResourcePath()) return QStringLiteral("");
+        const QString p = icon.getFileResourcePath();
+
+        static const QString htmlNoWidth("<img src=\"%1\">");
+        static const QString htmlWidth("<img src=\"%1\" width=%2>");
+
+        if (width < 0) { return htmlNoWidth.arg(p); }
+        return htmlWidth.arg(p, QString::number(width));
+    }
+
+    QString CGuiUtility::asSimpleHtmlImageHeight(const CIcon &icon, int height)
+    {
+        if (height < 0) { return CGuiUtility::asSimpleHtmlImageWidth(icon); }
+        if (!icon.hasFileResourcePath()) return QStringLiteral("");
+        const QString p = icon.getFileResourcePath();
+
+        static const QString htmlHeight("<img src=\"%1\" height=%2>");
+        return htmlHeight.arg(p, QString::number(height));
     }
 } // ns

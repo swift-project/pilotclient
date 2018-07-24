@@ -32,13 +32,13 @@ namespace BlackGui
         this->setAcceptDrops(true);
         this->setTextFormat(Qt::RichText);
         this->setInfoText("drop data here");
-        this->ps_onStyleSheetsChanged();
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::ps_onStyleSheetsChanged);
+        this->onStyleSheetsChanged();
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::onStyleSheetsChanged);
     }
 
     void CDropSite::setInfoText(const QString &dropSiteText)
     {
-        this->m_infoText = dropSiteText;
+        m_infoText = dropSiteText;
         this->resetText();
     }
 
@@ -51,7 +51,7 @@ namespace BlackGui
 
     void CDropSite::resetText()
     {
-        const QString html = "<img src=':/own/icons/own/drophere16.png'>&nbsp;&nbsp;" + this->m_infoText.toHtmlEscaped();
+        const QString html = "<img src=':/own/icons/own/drophere16.png'>&nbsp;&nbsp;" + m_infoText.toHtmlEscaped();
         setText(html);
     }
 
@@ -87,7 +87,7 @@ namespace BlackGui
         this->resetText();
     }
 
-    void CDropSite::ps_onStyleSheetsChanged()
+    void CDropSite::onStyleSheetsChanged()
     {
         // style sheet changes go here
     }

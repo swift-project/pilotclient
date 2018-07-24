@@ -13,8 +13,8 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/variant.h"
 #include <QList>
-
-class QMimeData;
+#include <QFileInfo>
+#include <QMimeData>
 
 namespace BlackGui
 {
@@ -30,11 +30,17 @@ namespace BlackGui
         //! Accepted ids
         void addAcceptedMetaTypeId(int id);
 
-        //! Drop allowed
-        virtual bool isDropAllowed() const;
+        //! Drop allowed?
+        virtual bool isDropAllowed() const { return m_allowDrop; }
+
+        //! File drop allowed?
+        virtual bool isJsonFileDropAllowed() const { return m_acceptJsonFile; }
 
         //! Drop allowed
-        virtual void allowDrop(bool allowed);
+        virtual void allowDrop(bool allowed) { m_allowDrop = allowed; }
+
+        //! Allow JSON file drop
+        virtual void allowFileDrop(bool allow) { m_acceptJsonFile = allow; }
 
         //! Accept drop?
         bool acceptDrop(const QMimeData *mime) const;
@@ -42,12 +48,17 @@ namespace BlackGui
         //! Mime data to CVariant (normally encapsulating a value object)
         BlackMisc::CVariant toCVariant(const QMimeData *mime) const;
 
+        //! Dtor
+        virtual ~CDropBase() {}
+
     protected:
+        //! Ctor
         CDropBase();
 
     private:
-        bool       m_allowDrop = true;   //!< dropping allowed?
-        QList<int> m_acceptedMetaTypes;  //!< accepted meta types
+        bool m_allowDrop = true;        //!< dropping allowed?
+        bool m_acceptJsonFile = false;  //!< accept JSON files
+        QList<int> m_acceptedMetaTypes; //!< accepted meta types
     };
 } // ns
 

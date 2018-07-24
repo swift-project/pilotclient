@@ -74,7 +74,7 @@ namespace BlackGui
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
         class BLACKGUI_EXPORT CViewBaseNonTemplate :
             public QTableView,
-            public BlackGui::Components::CEnableForDockWidgetInfoArea
+            public Components::CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -164,7 +164,7 @@ namespace BlackGui
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! Allow to drag and/or drop value objects
-            virtual void allowDragDrop(bool allowDrag, bool allowDrop) = 0;
+            virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) = 0;
 
             //! Drop allowed?
             virtual bool isDropAllowed() const = 0;
@@ -444,6 +444,9 @@ namespace BlackGui
             //! Load JSON for action/menu, void return signatur
             void loadJsonAction();
 
+            //! Load JSON file
+            virtual BlackMisc::CStatusMessage loadJsonFile(const QString &filePath) = 0;
+
             //! Display the filter dialog
             void displayFilterDialog();
 
@@ -667,8 +670,9 @@ namespace BlackGui
             virtual int rowCount() const override;
             virtual bool isEmpty() const override;
             virtual bool isOrderable() const override;
-            virtual void allowDragDrop(bool allowDrag, bool allowDrop) override;
+            virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) override;
             virtual bool isDropAllowed() const override;
+            virtual void dropEvent(QDropEvent *event) override;
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
@@ -738,6 +742,9 @@ namespace BlackGui
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
+
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
+            virtual BlackMisc::CStatusMessage loadJsonFile(const QString &fileName) override;
 
             // --------------------------------------------- SLOTS start here -----------------------------------------
 
