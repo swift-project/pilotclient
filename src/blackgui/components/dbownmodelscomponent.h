@@ -136,6 +136,9 @@ namespace BlackGui
             //! Load the models
             void loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
+            //! On disk loading started
+            void onOwnModelsDiskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+
             //! Model loading finished
             void onOwnModelsLoadingFinished(const BlackMisc::CStatusMessageList &statusMessages, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 

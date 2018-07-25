@@ -52,6 +52,7 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
             connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onOwnModelsDiskLoadingStarted, Qt::QueuedConnection);
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
@@ -477,24 +478,42 @@ namespace BlackGui
         void CDbOwnModelsComponent::loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
         {
             if (!m_modelLoader) { return; }
+
+            // here m_modelLoader is still the "current" loader
             if (m_modelLoader->isLoadingInProgress())
             {
-                CLogMessage(this).info("Loading for '%1' already in progress") << simulator.toQString();
-                return;
+                if (m_modelLoader->supportsSimulator(simulator))
+                {
+                    const CStatusMessage msg = CLogMessage(this).warning("Loading for '%1' already in progress, will NOT load.") << simulator.toQString();
+                    this->showOverlayMessage(msg);
+                    return;
+                }
+                else
+                {
+                    const CStatusMessage msg = CLogMessage(this).warning("Loading for another simulator '%1' already in progress. Loading might be slow.") << simulator.toQString();
+                    this->showOverlayMessage(msg);
+                }
             }
 
             if (!this->initModelLoader(simulator))
             {
-                CLogMessage(this).error("Cannot init model loader for %1") << simulator.toQString();
+                const CStatusMessage msg = CLogMessage(this).error("Cannot init model loader for %1") << simulator.toQString();
+                this->showOverlayMessage(msg);
                 return;
             }
 
             // Do not check for empty models die here, as depending on mode we could still load
             // will be checked in model loader
-            CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
+            CLogMessage(this).info("Starting loading for '%1' in mode '%2'") << simulator.toQString() << IAircraftModelLoader::enumToString(mode);
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
             m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), modelDirectories);
+        }
+
+        void CDbOwnModelsComponent::onOwnModelsDiskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
+        {
+            const CStatusMessage msg = CLogMessage(this).info("Started disk loading for '%1' in mode '%2'") << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
+            this->showOverlayMessage(msg, 5000);
         }
 
         void CDbOwnModelsComponent::onOwnModelsLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)

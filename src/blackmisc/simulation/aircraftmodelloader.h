@@ -129,6 +129,10 @@ namespace BlackMisc
             static IAircraftModelLoader *createModelLoader(const CSimulatorInfo &simulator, QObject *parent = nullptr);
 
         signals:
+            //! Disk loading started
+            //! \remark will only indicate loading from disk, not cache loading
+            void diskLoadingStarted(const CSimulatorInfo &simulator, LoadMode loadMode);
+
             //! Parsing is finished or cache has been loaded
             //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
             void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
@@ -185,6 +189,9 @@ namespace BlackMisc
         signals:
             //! \copydoc IAircraftModelLoader::loadingFinished
             void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
+
+            //! \copydoc IAircraftModelLoader::diskLoadingStarted
+            void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode);
 
         private:
             IAircraftModelLoader *m_loaderFsx = nullptr;

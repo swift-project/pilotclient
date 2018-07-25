@@ -255,6 +255,7 @@ namespace BlackMisc
         {
             IAircraftModelLoader *loader = IAircraftModelLoader::createModelLoader(simulator, this);
             connect(loader, &IAircraftModelLoader::loadingFinished, this, &CMultiAircraftModelLoaderProvider::loadingFinished);
+            connect(loader, &IAircraftModelLoader::diskLoadingStarted, this, &CMultiAircraftModelLoaderProvider::diskLoadingStarted);
             return loader;
         }
     } // ns
