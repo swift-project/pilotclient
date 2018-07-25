@@ -21,7 +21,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
 namespace Ui { class CDistributorForm; }
 namespace BlackGui
 {
@@ -30,8 +29,7 @@ namespace BlackGui
         /*!
          * Distributor form
          */
-        class BLACKGUI_EXPORT CDistributorForm :
-            public CForm
+        class BLACKGUI_EXPORT CDistributorForm : public CForm
         {
             Q_OBJECT
 
@@ -61,7 +59,6 @@ namespace BlackGui
             //! Clear
             void clear();
 
-        public slots:
             //! Set value
             bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
 
@@ -69,12 +66,15 @@ namespace BlackGui
             //! \copydoc CForm::jsonPasted
             virtual void jsonPasted(const QString &json) override;
 
-        private slots:
-            //! Variant has been dropped
-            void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
-
         private:
+            //! Variant has been dropped
+            void onDroppedCode(const BlackMisc::CVariant &variantDropped);
+
+            //! Any UI values in the details fields
+            bool hasAnyUiDetailsValues() const;
+
             QScopedPointer<Ui::CDistributorForm> ui;
+            BlackMisc::Simulation::CDistributor m_currentDistributor;
             bool m_readOnly = false;
         };
     } // ns

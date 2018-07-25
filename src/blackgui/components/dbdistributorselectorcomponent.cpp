@@ -51,9 +51,11 @@ namespace BlackGui
             this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
             ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
-            bool c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::onDataChanged);
+            bool c = connect(ui->le_Distributor, &QLineEdit::editingFinished, this, &CDbDistributorSelectorComponent::onDataChanged, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::onDistributorsRead);
+            // c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::returnPressed, Qt::QueuedConnection);
+            // Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::onDistributorsRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             Q_UNUSED(c);
 
@@ -127,6 +129,7 @@ namespace BlackGui
         void CDbDistributorSelectorComponent::clear()
         {
             ui->le_Distributor->clear();
+            m_currentDistributor = CDistributor();
         }
 
         void CDbDistributorSelectorComponent::dragEnterEvent(QDragEnterEvent *event)
@@ -197,11 +200,11 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::onDataChanged()
         {
-            if (!sGui) { return; }
-            QString keyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+            const QString keyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
             if (keyOrAlias.isEmpty()) { return; }
-            CDistributor d(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
-            this->setDistributor(d);
+            const CDistributor distributor(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
+            this->setDistributor(distributor);
         }
 
         void CDbDistributorSelectorComponent::onCompleterActivated(const QString &distributorKeyOrAlias)

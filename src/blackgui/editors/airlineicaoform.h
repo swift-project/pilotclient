@@ -15,13 +15,12 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
 #include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace Ui { class CAirlineIcaoForm; }
 namespace BlackGui
@@ -71,6 +70,9 @@ namespace BlackGui
             //! Airline has been changed
             void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
+            //! Airline has been changed
+            void airlineChangedDigest(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+
         protected:
             //! \copydoc CForm::jsonPasted
             virtual void jsonPasted(const QString &json) override;
@@ -81,9 +83,13 @@ namespace BlackGui
             //! Id entered
             void onIdEntered();
 
+            //! Emit the digest signal
+            void emitAirlineChangedDigest();
+
         private:
             QScopedPointer<Ui::CAirlineIcaoForm>  ui;
-            BlackMisc::Aviation::CAirlineIcaoCode m_originalCode; //!< object allowing to override values
+            BlackMisc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
+            BlackMisc::Aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
         };
     } // ns
 } //ns

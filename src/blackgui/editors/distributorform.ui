@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>297</width>
-    <height>200</height>
+    <width>254</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -114,7 +114,7 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="distributor_Selector">
+       <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -173,7 +173,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>distributor_Selector</tabstop>
+  <tabstop>comp_DistributorSelector</tabstop>
   <tabstop>le_Description</tabstop>
   <tabstop>le_Alias1</tabstop>
   <tabstop>le_Alias2</tabstop>

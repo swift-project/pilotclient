@@ -50,7 +50,7 @@ namespace BlackGui
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CLiveryForm::onIdEntered);
 
             // selector
-            connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
+            connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue, Qt::QueuedConnection);
 
             // drag and drop, paste
             connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::pasted);
@@ -59,7 +59,7 @@ namespace BlackGui
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
 
             // embedded form
-            connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChanged, this, &CLiveryForm::onAirlineChanged);
+            connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChangedDigest, this, &CLiveryForm::onAirlineChanged, Qt::QueuedConnection);
 
             // Set as temp.livery or search color
             connect(ui->pb_TempLivery, &QPushButton::pressed, this, &CLiveryForm::setTemporaryLivery);
@@ -228,6 +228,7 @@ namespace BlackGui
 
         void CLiveryForm::onAirlineChanged(const CAirlineIcaoCode &code)
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (!code.hasCompleteData()) { return; }
             if (!code.hasValidDbKey()) { return; }
 

@@ -63,8 +63,8 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
         {
-            if (m_originalCode == icao) { return; }
-            m_originalCode = icao;
+            if (m_currentCode == icao) { return; }
+            m_currentCode = icao;
 
             ui->selector_AirlineDesignator->setAirlineIcao(icao);
             ui->selector_AirlineName->setAirlineIcao(icao);
@@ -89,15 +89,15 @@ namespace BlackGui
             // sometimes artefacts when icon is displayed
             this->repaint();
 
-            if (m_originalCode.hasCompleteData())
+            if (m_currentCode.hasCompleteData())
             {
-                emit airlineChanged(m_originalCode);
+                emit this->airlineChanged(m_currentCode);
             }
         }
 
         CAirlineIcaoCode CAirlineIcaoForm::getValue() const
         {
-            CAirlineIcaoCode code(m_originalCode);
+            CAirlineIcaoCode code(m_currentCode);
             code.setVirtualAirline(ui->cb_Va->isChecked());
             code.setMilitary(ui->cb_Military->isChecked());
             code.setCountry(ui->country_Selector->getCountry());
@@ -164,7 +164,7 @@ namespace BlackGui
 
         void CAirlineIcaoForm::resetValue()
         {
-            this->setValue(m_originalCode);
+            this->setValue(m_currentCode);
         }
 
         void CAirlineIcaoForm::jsonPasted(const QString &json)
@@ -209,11 +209,7 @@ namespace BlackGui
 
         void CAirlineIcaoForm::onIdEntered()
         {
-            if (!sGui || !sGui->hasWebDataServices())
-            {
-                ui->le_Id->undo();
-                return;
-            }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
 
             const int id = ui->le_Id->text().toInt();
             const CAirlineIcaoCode icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(id);
@@ -223,6 +219,11 @@ namespace BlackGui
                 return;
             }
             this->setValue(icao);
+        }
+
+        void CAirlineIcaoForm::emitAirlineChangedDigest()
+        {
+            emit this->airlineChangedDigest(m_currentCode);
         }
     } // ns
 } // ns
