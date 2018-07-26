@@ -12,6 +12,7 @@
 #include "blackmisc/verify.h"
 
 #include <future>
+#include <QPointer>
 
 #ifdef Q_OS_WIN32
 #include <windows.h>
@@ -67,7 +68,7 @@ namespace BlackMisc
 
         if (typeId != QMetaType::Void) { worker->m_result = CVariant(typeId, nullptr); }
 
-        QString ownerName = owner->objectName().isEmpty() ? owner->metaObject()->className() : owner->objectName();
+        const QString ownerName = owner->objectName().isEmpty() ? owner->metaObject()->className() : owner->objectName();
         thread->setObjectName(ownerName + ":" + name);
         worker->setObjectName(name);
 
@@ -126,7 +127,7 @@ namespace BlackMisc
         m_owner(owner), m_name(name)
     {
         Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "Empty name");
-        setObjectName(m_name);
+        this->setObjectName(m_name);
         m_updateTimer.setObjectName(m_name + ":timer");
     }
 
@@ -137,7 +138,7 @@ namespace BlackMisc
 
         // avoid message "QObject: Cannot create children for a parent that is in a different thread"
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_owner), Q_FUNC_INFO, "Needs to be started in owner thread");
-        emit aboutToStart();
+        emit this->aboutToStart();
         setStarted();
         auto *thread = new CRegularThread(m_owner);
 
@@ -193,8 +194,10 @@ namespace BlackMisc
             // shift in correct thread
             if (!this->isFinished())
             {
-                QTimer::singleShot(0, this, [this, updateTimeSecs]
+                QPointer<CContinuousWorker> myself(this);
+                QTimer::singleShot(0, this, [ = ]
                 {
+                    if (!myself) { return; }
                     if (this->isFinished()) { return; }
                     this->startUpdating(updateTimeSecs);
                 });
@@ -205,19 +208,19 @@ namespace BlackMisc
         // here in correct timer thread
         if (updateTimeSecs < 0)
         {
-            setEnabled(false);
+            this->setEnabled(false);
             m_updateTimer.stop();
         }
         else
         {
-            setEnabled(true);
+            this->setEnabled(true);
             m_updateTimer.start(1000 * updateTimeSecs);
         }
     }
 
     void CContinuousWorker::finish()
     {
-        setFinished();
+        this->setFinished();
 
         auto *ownThread = thread();
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion

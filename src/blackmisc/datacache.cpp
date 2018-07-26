@@ -129,7 +129,7 @@ namespace BlackMisc
         constexpr auto ready = std::future_status::ready;
         constexpr auto zero = std::chrono::seconds::zero();
 
-        auto future = m_revision.promiseLoadedValue(key, getTimestampSync(key));
+        std::future<void> future = m_revision.promiseLoadedValue(key, getTimestampSync(key));
         if (future.valid())
         {
             std::future_status s {};
@@ -137,6 +137,10 @@ namespace BlackMisc
             while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
             if (s != ready) { s = future.wait_for(zero); }
             if (s != ready) { return false; }
+
+            //! \todo KB 2018-07 In datastore with consolidation "on" I see many of these exceptions. Is that a normal state?
+            //  maybe this happens if a cache is written and this takes a while, maybe we can
+            //  use a write in prgress flag or such?
             try { future.get(); }
             catch (const std::future_error &) { return false; }   // broken promise
             return true;
