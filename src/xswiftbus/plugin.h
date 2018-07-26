@@ -23,6 +23,7 @@
 
 #include "dbusconnection.h"
 #include "dbusdispatcher.h"
+#include "dbusserver.h"
 #include "datarefs.h"
 #include "XPLM/XPLMCamera.h"
 #include "menus.h"
@@ -55,6 +56,7 @@ namespace XSwiftBus
 
     private:
         CDBusDispatcher m_dbusDispatcher;
+        std::unique_ptr<CDBusServer> m_dbusP2PServer;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;
         std::unique_ptr<CTraffic> m_traffic;
@@ -71,6 +73,8 @@ namespace XSwiftBus
 
         std::thread m_dbusThread;
         bool m_shouldStop = false;
+
+        bool m_useDBusP2P = true;
 
         void startServer(CDBusConnection::BusType bus);
         void switchToOwnAircraftView();

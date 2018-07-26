@@ -162,10 +162,18 @@ namespace BlackSimPlugin
             }
             //! @}
 
+        private slots:
+            void serviceUnregistered();
+
         private:
+            enum DBusMode
+            {
+                Session,
+                P2P
+            };
+
             using QDoubleList = QList<double>;
 
-            void serviceUnregistered();
             void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
                                              const QString &modelString, const QString &name, const QString &description);
@@ -215,6 +223,8 @@ namespace BlackSimPlugin
             //! Dsiconnect from DBus
             void disconnectFromDBus();
 
+            DBusMode m_dbusMode;
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
             static constexpr qint64 TimeoutAdding = 10000;
             QDBusConnection m_dBusConnection { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
@@ -264,12 +274,16 @@ namespace BlackSimPlugin
             virtual void stopImpl() override;
 
         private:
-            //! Check if XSwiftBus service is already registered
-            bool isXSwiftBusRunning() const;
+            //! Check if XSwiftBus service is already registered on the bus
+            void checkConnectionViaBus(const QString &address);
+
+            //! Check if XSwiftBus service is available via P2P address
+            void checkConnectionViaPeer();
 
             void serviceRegistered(const QString &serviceName);
             void xSwiftBusServerSettingChanged();
 
+            QTimer m_timer { this };
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::xSwiftBusServerSettingChanged };

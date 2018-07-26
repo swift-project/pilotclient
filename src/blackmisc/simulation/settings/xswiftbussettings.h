@@ -34,10 +34,10 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("XSwiftBus"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static QString defaultValue() { return BlackMisc::CDBusServer::sessionBusAddress(); }
+                static QString defaultValue() { return "tcp:host=127.0.0.1,port=45001"; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static bool isValid(const QString &dBusAddress) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress); }
+                static bool isValid(const QString &dBusAddress) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
             };
         } // ns
     } // ns

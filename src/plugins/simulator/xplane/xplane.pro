@@ -11,6 +11,11 @@ CONFIG += blackmisc blackcore blackgui blackconfig
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
+unix:!macx {
+    INCLUDEPATH *= /usr/include/dbus-1.0
+    INCLUDEPATH *= /usr/lib/x86_64-linux-gnu/dbus-1.0/include
+}
+
 SOURCES += *.cpp
 HEADERS += *.h
 DISTFILES += simulatorxplane.json

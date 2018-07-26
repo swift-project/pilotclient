@@ -34,8 +34,11 @@ namespace XSwiftBus
         //! Bus type
         enum BusType { SessionBus };
 
-        //! Constructor
+        //! Default constructor
         CDBusConnection();
+
+        //! Constructor
+        CDBusConnection(DBusConnection *connection);
 
         //! Destructor
         ~CDBusConnection();

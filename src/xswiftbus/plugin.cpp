@@ -36,13 +36,13 @@ namespace XSwiftBus
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
-        m_dbusThread = std::thread([this]()
+        /*m_dbusThread = std::thread([this]()
         {
             while(!m_shouldStop)
             {
                 m_dbusConnection->runBlockingEventLoop();
             }
-        });
+        });*/
 
         XPLMRegisterFlightLoopCallback(flightLoopCallback, -1, this);
     }
@@ -67,25 +67,47 @@ namespace XSwiftBus
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
-        // Todo: retry if it fails
-        bool success = m_dbusConnection->connect(CDBusConnection::SessionBus);
-
-        if (!success)
+        if (m_useDBusP2P)
         {
-            // Print error
-            return;
+            m_dbusP2PServer = std::make_unique<CDBusServer>();
+
+            // FIXME: make listen address configurable
+            m_dbusP2PServer->listen("tcp:host=127.0.0.1,port=45000");
+            m_dbusP2PServer->setDispatcher(&m_dbusDispatcher);
+
+            m_dbusP2PServer->setNewConnectionFunc([this](const std::shared_ptr<CDBusConnection> &conn)
+            {
+                m_dbusConnection = conn;
+                m_dbusConnection->setDispatcher(&m_dbusDispatcher);
+                m_service->setDBusConnection(m_dbusConnection);
+                m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
+                m_traffic->setDBusConnection(m_dbusConnection);
+                m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
+                m_weather->setDBusConnection(m_dbusConnection);
+                m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
+            });
         }
+        else
+        {
+            // Todo: retry if it fails
+            bool success = m_dbusConnection->connect(CDBusConnection::SessionBus);
 
-        m_dbusConnection->setDispatcher(&m_dbusDispatcher);
-        m_dbusConnection->requestName(xswiftbusServiceName());
+            if (!success)
+            {
+                // Print error
+                return;
+            }
 
-        m_service->setDBusConnection(m_dbusConnection);
-        m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
-        m_traffic->setDBusConnection(m_dbusConnection);
-        m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
-        m_weather->setDBusConnection(m_dbusConnection);
-        m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
+            m_dbusConnection->setDispatcher(&m_dbusDispatcher);
+            m_dbusConnection->requestName(xswiftbusServiceName());
 
+            m_service->setDBusConnection(m_dbusConnection);
+            m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
+            m_traffic->setDBusConnection(m_dbusConnection);
+            m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
+            m_weather->setDBusConnection(m_dbusConnection);
+            m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
+        }
 
         INFO_LOG("XSwiftBus started.");
     }

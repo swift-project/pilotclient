@@ -24,6 +24,12 @@ namespace XSwiftBus
         dbus_threads_init_default();
     }
 
+    CDBusConnection::CDBusConnection(DBusConnection *connection)
+    {
+        dbus_connection_ref(connection);
+        // Don't exit application, if the connection is disconnected
+        dbus_connection_set_exit_on_disconnect(connection, false);
+        m_connection.reset(connection);
     }
 
     CDBusConnection::~CDBusConnection()
