@@ -22,6 +22,7 @@
 
 #include <QDateTime>
 #include <QObject>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -220,6 +221,10 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual void synchronizeCache(const CSimulatorInfo &simulator) = 0;
 
+                //! Is the cache already synchronized?
+                //! \threadsafe
+                bool isCacheAlreadySynchronized(const CSimulatorInfo &simulator) const;
+
                 //! Synchronize multiple simulators
                 //! \threadsafe
                 virtual void synchronizeMultiCaches(const CSimulatorInfo &simulator);
@@ -233,12 +238,15 @@ namespace BlackMisc
                 virtual void admitMultiCaches(const CSimulatorInfo &simulator);
 
                 //! Info string about models in cache
+                //! \threadsafe
                 QString getInfoString() const;
 
                 //! Info string without XPlane (FSX,P3D, FS9)
+                //! \threadsafe
                 QString getInfoStringFsFamily() const;
 
                 //! Cache count and timestamp
+                //! \threadsafe
                 QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const;
 
                 //! Graceful shutdown
@@ -257,16 +265,26 @@ namespace BlackMisc
                 IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
                 { }
 
-                //! \name Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes
-                //! @{
+                //! \name Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes @{
                 void changedFsx() { this->emitCacheChanged(CSimulatorInfo::fsx()); }
                 void changedFs9() { this->emitCacheChanged(CSimulatorInfo::fs9()); }
                 void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
                 void changedXP()  { this->emitCacheChanged(CSimulatorInfo::xplane()); }
                 //! @}
 
+                //! Is the cache already synchronized?
+                //! \threadsafe
+                void markCacheAsAlreadySynchronized(const CSimulatorInfo &simulator, bool synchronized);
+
                 //! Emit cacheChanged() utility function (allows breakpoint)
                 void emitCacheChanged(const CSimulatorInfo &simulator);
+
+                //! Cache synchronized flag @{
+                std::atomic_bool m_syncFsx { false };
+                std::atomic_bool m_syncP3D { false };
+                std::atomic_bool m_syncFS9 { false };
+                std::atomic_bool m_syncXPlane { false };
+                //! @}
             };
 
             //! Bundle of caches for all simulators

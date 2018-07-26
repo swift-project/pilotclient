@@ -59,6 +59,21 @@ namespace BlackMisc
                 // void
             }
 
+            void IMultiSimulatorModelCaches::markCacheAsAlreadySynchronized(const CSimulatorInfo &simulator, bool synchronized)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: m_syncFS9 = synchronized; break;
+                case CSimulatorInfo::FSX: m_syncFsx = synchronized; break;;
+                case CSimulatorInfo::P3D: m_syncP3D = synchronized; break;;
+                case CSimulatorInfo::XPLANE: m_syncXPlane = synchronized; break;;
+                default:
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
+                    break;
+                }
+            }
+
             void IMultiSimulatorModelCaches::emitCacheChanged(const CSimulatorInfo &simulator)
             {
                 emit this->cacheChanged(simulator);
@@ -205,6 +220,22 @@ namespace BlackMisc
                 return this->setCachedModels(models, simulator);
             }
 
+            bool IMultiSimulatorModelCaches::isCacheAlreadySynchronized(const CSimulatorInfo &simulator) const
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: return m_syncFS9;
+                case CSimulatorInfo::FSX: return m_syncFsx;
+                case CSimulatorInfo::P3D: return m_syncP3D;
+                case CSimulatorInfo::XPLANE: return m_syncXPlane;
+                default:
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
+                    break;
+                }
+                return false;
+            }
+
             void IMultiSimulatorModelCaches::synchronizeMultiCaches(const CSimulatorInfo &simulator)
             {
                 for (const CSimulatorInfo &singleSimulator : simulator.asSingleSimulatorSet())
@@ -298,6 +329,8 @@ namespace BlackMisc
             void CModelCaches::synchronizeCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+
+                if (this->isCacheAlreadySynchronized(simulator)) { return; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: m_modelCacheFs9.synchronize(); break;
@@ -308,12 +341,15 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     break;
                 }
+                this->markCacheAsAlreadySynchronized(simulator, true);
                 this->emitCacheChanged(simulator); // sync
             }
 
             void CModelCaches::admitCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+
+                if (this->isCacheAlreadySynchronized(simulator)) { return; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: m_modelCacheFs9.admit(); break;
@@ -328,7 +364,7 @@ namespace BlackMisc
 
             CModelSetCaches::CModelSetCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
-                CSimulatorInfo simulator = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
+                CSimulatorInfo simulator = CSimulatorInfo::guessDefaultSimulator();
                 const QString simStr(simulator.toQString(true));
 
                 if (synchronizeCache)
@@ -469,6 +505,8 @@ namespace BlackMisc
             void CModelSetCaches::synchronizeCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+
+                if (this->isCacheAlreadySynchronized(simulator)) { return; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: m_modelCacheFs9.synchronize(); break;
@@ -479,12 +517,15 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
+                this->markCacheAsAlreadySynchronized(simulator, true);
                 this->emitCacheChanged(simulator); // sync
             }
 
             void CModelSetCaches::admitCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+
+                if (this->isCacheAlreadySynchronized(simulator)) { return; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: m_modelCacheFs9.admit(); break;
