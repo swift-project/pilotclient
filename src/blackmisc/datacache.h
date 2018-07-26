@@ -34,6 +34,7 @@
 #include <QMutex>
 #include <QObject>
 #include <QSet>
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QUuid>
@@ -312,7 +313,7 @@ namespace BlackMisc
      * \tparam Trait A subclass of BlackMisc::TDataTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
-    class CData : public BlackMisc::CCached<typename Trait::type>
+    class CData : public CCached<typename Trait::type>
     {
     public:
         //! Constructor.
@@ -327,9 +328,9 @@ namespace BlackMisc
                 return;
             }
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
-            if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
+            if (Trait::isPinned())   { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
-            if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
+            if (Trait::isSession())  { CDataCache::instance()->sessionValue(this->getKey()); }
             static_assert(!(Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
@@ -382,7 +383,7 @@ namespace BlackMisc
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
         {
-            // does not compile on gcc without this -> this->m_page
+            // does not compile on gcc without "this" -> this->m_page
             auto *queue = this->m_page->template findChild<Private::CDataPageQueue *>();
             Q_ASSERT(queue);
             this->admit();
@@ -393,7 +394,15 @@ namespace BlackMisc
             // run in page thread
             //! \todo KB 2018-01 is this OK or should it go to CValuePage::setValuesFromCache?
             if (CThreadUtils::isCurrentThreadObjectThread(this->m_page)) { queue->setQueuedValueFromCache(key); }
-            else { QTimer::singleShot(0, queue, [ = ] { queue->setQueuedValueFromCache(key); }); }
+            else
+            {
+                QPointer<QObject> myself(queue);
+                QTimer::singleShot(0, queue, [ = ]
+                {
+                    if (!myself) { return; }
+                    queue->setQueuedValueFromCache(key);
+                });
+            }
         }
 
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
