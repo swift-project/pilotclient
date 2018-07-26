@@ -165,6 +165,9 @@ namespace BlackCore
             BlackMisc::CData<BlackCore::Data::TDbLiveryCache>      m_liveryCache { this, &CModelDataReader::liveryCacheChanged };
             BlackMisc::CData<BlackCore::Data::TDbModelCache>       m_modelCache  { this, &CModelDataReader::modelCacheChanged };
             BlackMisc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache { this, &CModelDataReader::distributorCacheChanged };
+            std::atomic_bool m_syncedLiveryCache { false }; //!< already synchronized?
+            std::atomic_bool m_syncedModelCache  { false }; //!< already synchronized?
+            std::atomic_bool m_syncedDistributorCache { false }; //!< already synchronized?
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CModelDataReader::baseUrlCacheChanged };

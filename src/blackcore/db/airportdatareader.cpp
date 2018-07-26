@@ -152,7 +152,7 @@ namespace BlackCore
 
         void CAirportDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::AirportEntity)) { m_airportCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::AirportEntity)) { if (m_syncedAirportCache) { return; } m_syncedAirportCache = true; m_airportCache.synchronize(); }
         }
 
         void CAirportDataReader::admitCaches(CEntityFlags::Entity entities)

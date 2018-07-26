@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
+#include <atomic>
 
 class QDateTime;
 class QNetworkReply;
@@ -162,6 +163,9 @@ namespace BlackCore
             BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
             BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>  m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
             BlackMisc::CData<BlackCore::Data::TDbCountryCache>      m_countryCache      {this, &CIcaoDataReader::countryCacheChanged };
+            std::atomic_bool m_syncedAircraftIcaoCache { false }; //!< already synchronized?
+            std::atomic_bool m_syncedAirlineIcaoCache  { false }; //!< already synchronized?
+            std::atomic_bool m_syncedCountryCache      { false }; //!< already synchronized?
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::baseUrlCacheChanged };

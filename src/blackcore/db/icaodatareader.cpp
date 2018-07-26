@@ -576,9 +576,9 @@ namespace BlackCore
 
         void CIcaoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { m_aircraftIcaoCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { m_airlineIcaoCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::CountryEntity)) { m_countryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { if (m_syncedAircraftIcaoCache) { return; } m_syncedAircraftIcaoCache = true; m_aircraftIcaoCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))  { if (m_syncedAirlineIcaoCache) { return; } m_syncedAirlineIcaoCache = true; m_airlineIcaoCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::CountryEntity)) { if (m_syncedCountryCache) { return; } m_syncedCountryCache = true; m_countryCache.synchronize(); }
         }
 
         void CIcaoDataReader::admitCaches(CEntityFlags::Entity entities)

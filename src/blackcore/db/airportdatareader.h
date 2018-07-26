@@ -17,7 +17,9 @@
 #include "blackcore/db/databasereader.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QNetworkAccessManager>
+#include <atomic>
 
 namespace BlackCore
 {
@@ -73,7 +75,8 @@ namespace BlackCore
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
         private:
-            BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::airportCacheChanged};
+            BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::airportCacheChanged}; //!< cache file
+            std::atomic_bool m_syncedAirportCache { false }; //!< already synchronized?
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::baseUrlCacheChanged };

@@ -579,9 +579,9 @@ namespace BlackCore
 
         void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::LiveryEntity)) { m_liveryCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity))  { m_modelCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::DistributorEntity)) { m_distributorCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { if (m_syncedLiveryCache) { return; } m_syncedLiveryCache = true; m_liveryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { if (m_syncedModelCache) { return; } m_syncedModelCache = true;  m_modelCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { if (m_syncedDistributorCache) { return; } m_syncedDistributorCache = true; m_distributorCache.synchronize(); }
         }
 
         void CModelDataReader::admitCaches(CEntityFlags::Entity entities)
