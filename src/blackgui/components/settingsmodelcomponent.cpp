@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/db/backgrounddataupdater.h"
 #include "blackmisc/logmessage.h"
+
 #include <QValidator>
 
 using namespace BlackMisc;
@@ -38,7 +39,12 @@ namespace BlackGui
             connect(ui->cb_AllowExcludeModels, &QCheckBox::toggled, this, &CSettingsModelComponent::allowExcludedModelsChanged);
 
             // start updater if not yet done
-            QTimer::singleShot(2500, this, &CSettingsModelComponent::consolidationEntered);
+            QPointer<CSettingsModelComponent> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->consolidationEntered();
+            });
         }
 
         CSettingsModelComponent::~CSettingsModelComponent()
