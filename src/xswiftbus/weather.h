@@ -33,7 +33,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CWeather(CDBusConnection *dbusConnection);
+        CWeather();
 
         //! DBus interface name
         static const std::string &InterfaceName()

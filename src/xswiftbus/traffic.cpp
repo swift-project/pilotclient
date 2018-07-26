@@ -43,12 +43,11 @@ namespace XSwiftBus
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
     }
 
-    CTraffic::CTraffic(CDBusConnection *dbusConnection) :
-        CDBusObject(dbusConnection),
+    CTraffic::CTraffic() :
+        CDBusObject(),
         m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
-        registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
     }
 

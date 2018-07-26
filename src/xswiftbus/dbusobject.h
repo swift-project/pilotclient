@@ -22,10 +22,18 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CDBusObject(CDBusConnection *dbusConnection);
+        CDBusObject();
 
         //! Destructor
         virtual ~CDBusObject();
+
+        //! Set the assigned DBus connection.
+        //! \remark Currently one object can only manage one connection at a time
+        void setDBusConnection(const std::shared_ptr<CDBusConnection> &dbusConnection);
+
+        //! Register itself with interfaceName and objectPath
+        //! \warning Before calling this method, make sure that a valid DBus connection was set.
+        void registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath);
 
         //! Process DBus messages. Needs to be implemented by deriving classes
         virtual int processDBus() = 0;
@@ -33,9 +41,6 @@ namespace XSwiftBus
     protected:
         //! DBus message handler
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) = 0;
-
-        //! Register itself with interfaceName and objectPath
-        void registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath);
 
         //! Send DBus signal
         void sendDBusSignal(const std::string &name);
@@ -76,7 +81,7 @@ namespace XSwiftBus
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);
         static DBusHandlerResult dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message, void *data);
 
-        CDBusConnection *m_dbusConnection;
+        std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::string m_interfaceName;
         std::string m_objectPath;
 

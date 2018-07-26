@@ -39,7 +39,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CService(CDBusConnection *connection);
+        CService();
 
         //! Destructor
         ~CService() override = default;

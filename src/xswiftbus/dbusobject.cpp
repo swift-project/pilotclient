@@ -8,17 +8,23 @@
  */
 
 #include "dbusobject.h"
+#include <cassert>
 
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject(CDBusConnection *dbusConnection)
-        : m_dbusConnection(dbusConnection)
+    CDBusObject::CDBusObject()
     { }
 
     CDBusObject::~CDBusObject() = default;
 
+    void CDBusObject::setDBusConnection(const std::shared_ptr<CDBusConnection> &dbusConnection)
+    {
+        m_dbusConnection = dbusConnection;
+    }
+
     void CDBusObject::registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath)
     {
+        assert(m_dbusConnection);
         m_interfaceName = interfaceName;
         m_objectPath = objectPath;
         m_dbusConnection->registerObjectPath(this, interfaceName, objectPath, m_dbusObjectPathVTable);
@@ -26,12 +32,14 @@ namespace XSwiftBus
 
     void CDBusObject::sendDBusSignal(const std::string &name)
     {
+        if (! m_dbusConnection) { return; }
         CDBusMessage signal = CDBusMessage::createSignal(m_objectPath, m_interfaceName, name);
         m_dbusConnection->sendMessage(signal);
     }
 
     void CDBusObject::sendDBusMessage(const CDBusMessage &message)
     {
+        if (! m_dbusConnection) { return; }
         m_dbusConnection->sendMessage(message);
     }
 
@@ -71,6 +79,7 @@ namespace XSwiftBus
         (void)connection; // unused
 
         auto *obj = static_cast<CDBusObject *>(data);
+
         DBusError err;
         dbus_error_init(&err);
 

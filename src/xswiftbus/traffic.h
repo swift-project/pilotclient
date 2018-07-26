@@ -37,7 +37,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        CTraffic(CDBusConnection *dbusConnection);
+        CTraffic();
 
         //! Destructor
         ~CTraffic() override;

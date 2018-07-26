@@ -53,10 +53,10 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
-        std::unique_ptr<CDBusConnection> m_dbusConnection;
-        CService *m_service = nullptr;
-        CTraffic *m_traffic = nullptr;
-        CWeather *m_weather = nullptr;
+        std::shared_ptr<CDBusConnection> m_dbusConnection;
+        std::unique_ptr<CService> m_service;
+        std::unique_ptr<CTraffic> m_traffic;
+        std::unique_ptr<CWeather> m_weather;
         CMenu m_menu;
         CMenuItem m_startServerMenuItem;
         CMenuItem m_toggleMessageWindowMenuItem;

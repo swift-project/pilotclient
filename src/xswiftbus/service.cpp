@@ -18,9 +18,8 @@
 namespace XSwiftBus
 {
 
-    CService::CService(CDBusConnection *connection) : CDBusObject(connection)
+    CService::CService() : CDBusObject()
     {
-        registerDBusObjectPath(XSWIFTBUS_SERVICE_INTERFACENAME, XSWIFTBUS_SERVICE_OBJECTPATH);
         m_messages.addMessage({ "xswiftbus started.", 0, 255, 255 });
         updateAirportsInRange();
     }

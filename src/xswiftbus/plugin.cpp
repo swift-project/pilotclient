@@ -27,7 +27,7 @@ namespace XSwiftBus
 {
 
     CPlugin::CPlugin()
-        : m_dbusConnection(std::make_unique<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
+        : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
         m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
         m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
@@ -61,6 +61,12 @@ namespace XSwiftBus
         // for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
         m_startServerMenuItem.setEnabled(false);
 
+        m_service = std::make_unique<CService>();
+        m_traffic = std::make_unique<CTraffic>();
+        m_weather = std::make_unique<CWeather>();
+
+        m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
+
         // Todo: retry if it fails
         bool success = m_dbusConnection->connect(CDBusConnection::SessionBus, xswiftbusServiceName());
 
@@ -70,11 +76,12 @@ namespace XSwiftBus
             return;
         }
 
-        m_service = new CService(m_dbusConnection.get());
-        m_traffic = new CTraffic(m_dbusConnection.get());
-        m_weather = new CWeather(m_dbusConnection.get());
-
-        m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
+        m_service->setDBusConnection(m_dbusConnection);
+        m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
+        m_traffic->setDBusConnection(m_dbusConnection);
+        m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
+        m_weather->setDBusConnection(m_dbusConnection);
+        m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
 
         INFO_LOG("XSwiftBus started.");
     }

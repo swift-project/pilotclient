@@ -14,10 +14,8 @@
 
 namespace XSwiftBus
 {
-    CWeather::CWeather(CDBusConnection *dbusConnection)
-        : CDBusObject(dbusConnection)
+    CWeather::CWeather()
     {
-        registerDBusObjectPath(InterfaceName(), ObjectPath());
     }
 
     //! Set cloud layer
