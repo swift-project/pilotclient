@@ -155,16 +155,20 @@ namespace BlackCore
             if (!this->doWorkCheck()) { return; }
             const QDateTime latestCacheTs = sApp->getWebDataServices()->getCacheTimestamp(entity);
             if (!latestCacheTs.isValid()) { return; }
+
             const QDateTime latestDbTs = sApp->getWebDataServices()->getLatestDbEntityTimestamp(entity);
+            const QString entityStr = CEntityFlags::flagToString(entity);
+            const QString latestCacheTsStr = latestCacheTs.toString(Qt::ISODate);
+
             if (!latestDbTs.isValid()) { return; }
             if (latestDbTs <= latestCacheTs)
             {
-                this->addHistory(CLogMessage(this).info("No auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << CEntityFlags::flagToString(entity) << latestDbTs.toString(Qt::ISODate) << latestCacheTs.toString(Qt::ISODate));
+                this->addHistory(CLogMessage(this).info("No auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
                 return;
             }
 
-            this->addHistory(CLogMessage(this).info("Triggering read of '%1' since '%2'") << CEntityFlags::flagToString(entity) << latestCacheTs.toString(Qt::ISODate));
-            sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, latestCacheTs);
+            this->addHistory(CLogMessage(this).info("Triggering read of '%1' since '%2'") << entityStr << latestCacheTsStr);
+            sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(entity, latestCacheTs);
         }
 
         bool CBackgroundDataUpdater::doWorkCheck() const
