@@ -74,14 +74,7 @@ namespace BlackMisc
 
     void ITimestampBased::setUtcTimestamp(const QDateTime &timestamp)
     {
-        if (timestamp.isValid())
-        {
-            m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
-        }
-        else
-        {
-            m_timestampMSecsSinceEpoch = -1; // invalid
-        }
+        m_timestampMSecsSinceEpoch = timestamp.isValid() ? timestamp.toMSecsSinceEpoch() : -1;
     }
 
     bool ITimestampBased::isNewerThan(const ITimestampBased &otherTimestampObj) const
@@ -264,6 +257,14 @@ namespace BlackMisc
     {
         Q_UNUSED(index);
         return Compare::compare(m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);
+    }
+
+    void ITimestampBased::updateMissingParts(const ITimestampBased &other)
+    {
+        if (m_timestampMSecsSinceEpoch < 0)
+        {
+            m_timestampMSecsSinceEpoch = other.m_timestampMSecsSinceEpoch;
+        }
     }
 
     QString ITimestampWithOffsetBased::getTimestampAndOffset(bool formatted) const

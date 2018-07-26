@@ -40,6 +40,7 @@
 #include <QString>
 #include <QStringList>
 #include <Qt>
+#include <QFileInfo>
 #include <tuple>
 
 namespace BlackMisc
@@ -396,6 +397,9 @@ namespace BlackMisc
 
             //! Set file timestamp
             void setFileTimestamp(qint64 timestamp);
+
+            //! Set file timestamp, timestamp and file name
+            void setFileDetailsAndTimestamp(const QFileInfo &fileInfo);
 
             //! Load icon from disk
             CPixmap loadIcon(CStatusMessage &success) const;

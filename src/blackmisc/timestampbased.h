@@ -143,6 +143,9 @@ namespace BlackMisc
         //! Compare for index
         int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const;
 
+        //! Update missing parts
+        void updateMissingParts(const ITimestampBased &other);
+
         qint64 m_timestampMSecsSinceEpoch = -1; //!< timestamp value
     };
 

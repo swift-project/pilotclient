@@ -449,12 +449,29 @@ namespace BlackMisc
 
         void CAircraftModel::setFileTimestamp(const QDateTime &timestampUtc)
         {
-            m_fileTimestamp = timestampUtc.toMSecsSinceEpoch();
+            m_fileTimestamp = timestampUtc.isValid() ? timestampUtc.toMSecsSinceEpoch() : -1;
         }
 
         void CAircraftModel::setFileTimestamp(qint64 timestamp)
         {
-            m_fileTimestamp = timestamp;
+            m_fileTimestamp = (timestamp < 0) ? -1 : timestamp;
+        }
+
+        void CAircraftModel::setFileDetailsAndTimestamp(const QFileInfo &fileInfo)
+        {
+            this->setFileName(fileInfo.absoluteFilePath());
+            const QDateTime modified = fileInfo.lastModified();
+            if (modified.isValid())
+            {
+                this->setFileTimestamp(modified);
+                this->setUtcTimestamp(modified);
+            }
+            else
+            {
+                const QDateTime created = fileInfo.lastModified();
+                this->setFileTimestamp(created);
+                this->setUtcTimestamp(created);
+            }
         }
 
         CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
@@ -504,6 +521,7 @@ namespace BlackMisc
                 this->setSimulator(otherModel.getSimulator());
             }
 
+            ITimestampBased::updateMissingParts(otherModel);
             m_livery.updateMissingParts(otherModel.getLivery());
             m_aircraftIcao.updateMissingParts(otherModel.getAircraftIcaoCode());
             m_distributor.updateMissingParts(otherModel.getDistributor());
