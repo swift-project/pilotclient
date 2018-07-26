@@ -597,11 +597,6 @@ namespace BlackGui
             }
         }
 
-        int CViewBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort, bool resize)
-        {
-            return this->performUpdateContainer(variant, sort, resize);
-        }
-
         void CViewBaseNonTemplate::displayFilterDialog()
         {
             if (!m_menus.testFlag(MenuFilter)) { return; }

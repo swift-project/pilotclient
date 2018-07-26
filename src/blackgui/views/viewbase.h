@@ -497,9 +497,6 @@ namespace BlackGui
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         protected slots:
-            //! Helper method with template free signature serving as callback from threaded worker
-            int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize);
-
             //! Remove filter
             virtual void ps_removeFilter() = 0;
 

@@ -274,20 +274,21 @@ namespace BlackCore
 
     QString CApplication::getExecutableForApplication(CApplicationInfo::Application application) const
     {
-        QString search;
+        QString searchFor;
         switch (application)
         {
-        case CApplicationInfo::PilotClientCore: search = "core"; break;
-        case CApplicationInfo::Laucher: search = "launcher"; break;
-        case CApplicationInfo::MappingTool: search = "data"; break;
-        case CApplicationInfo::PilotClientGui: search = "gui"; break;
+        case CApplicationInfo::PilotClientCore: searchFor = "core"; break;
+        case CApplicationInfo::Laucher:         searchFor = "launcher"; break;
+        case CApplicationInfo::MappingTool:     searchFor = "data"; break;
+        case CApplicationInfo::PilotClientGui:  searchFor = "gui"; break;
         default: break;
         }
-        if (search.isEmpty()) { return ""; }
+        if (searchFor.isEmpty()) { return ""; }
+
         for (const QString &executable : CFileUtils::getSwiftExecutables())
         {
             if (!executable.contains("swift", Qt::CaseInsensitive)) { continue; }
-            if (executable.contains(search, Qt::CaseInsensitive)) { return executable; }
+            if (executable.contains(searchFor, Qt::CaseInsensitive)) { return executable; }
         }
         return "";
     }

@@ -204,12 +204,12 @@ namespace BlackCore
             {
                 msgs.push_back(CStatusMessage(this).error("No network interface, simulation will not work properly"));
             }
-            const CSimulatorInfo sims = this->simulatorsWithInitializedModelSet();
-            if (sims.isNoSimulator())
+            const CSimulatorInfo simulators = this->simulatorsWithInitializedModelSet();
+            if (simulators.isNoSimulator())
             {
                 msgs.push_back(CStatusMessage(this).error("No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
             }
-            else if (sims.isXPlane() || CSimulatorInfo(m_enabledSimulators.get()).isXPlane())
+            else if (simulators.isXPlane() || CSimulatorInfo(m_enabledSimulators.get()).isXPlane())
             {
                 // ever used with XPlane
                 const QString pluginDir = CXPlaneUtil::pluginDirFromRootDir(m_simulatorSettings.getSimulatorDirectoryOrDefault(CSimulatorInfo::XPLANE));

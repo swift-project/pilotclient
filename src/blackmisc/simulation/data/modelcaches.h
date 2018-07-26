@@ -258,10 +258,10 @@ namespace BlackMisc
 
                 //! \name Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes
                 //! @{
-                void changedFsx() { emitCacheChanged(CSimulatorInfo::fsx()); }
-                void changedFs9() { emitCacheChanged(CSimulatorInfo::fs9()); }
-                void changedP3D() { emitCacheChanged(CSimulatorInfo::p3d()); }
-                void changedXP()  { emitCacheChanged(CSimulatorInfo::xplane()); }
+                void changedFsx() { this->emitCacheChanged(CSimulatorInfo::fsx()); }
+                void changedFs9() { this->emitCacheChanged(CSimulatorInfo::fs9()); }
+                void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
+                void changedXP()  { this->emitCacheChanged(CSimulatorInfo::xplane()); }
                 //! @}
 
                 //! Emit cacheChanged() utility function (allows breakpoint)

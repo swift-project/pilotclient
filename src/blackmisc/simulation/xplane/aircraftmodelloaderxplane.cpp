@@ -140,13 +140,13 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     emit this->diskLoadingStarted(simulator, mode);
-                    m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
+                    m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
+                                                       [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
                         //! \todo KB/MS 2017-09 not high prio, but still needed: according to meet XP needs to support multiple directories
                         //! \todo KB with T118 now model directories are passed (changed signatures) but the code below needs to support multiple dirs
                         const QString modelDirectory = modelDirs.front();
-                        auto models = performParsing(modelDirectory, excludedDirectoryPatterns);
+                        auto models = this->performParsing(modelDirectory, excludedDirectoryPatterns);
                         if (modelConsolidation) { modelConsolidation(models, true); }
                         return models;
                     });
@@ -239,7 +239,7 @@ namespace BlackMisc
                 return installedModels;
             }
 
-            BlackMisc::Simulation::CAircraftModel CAircraftModelLoaderXPlane::extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo)
+            CAircraftModel CAircraftModelLoaderXPlane::extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo)
             {
                 BlackMisc::Simulation::CAircraftModel model;
                 QFile file(filePath);

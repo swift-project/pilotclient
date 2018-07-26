@@ -81,11 +81,11 @@ namespace BlackMisc
         QString IAircraftModelLoader::enumToString(LoadMode mode)
         {
             QStringList modes;
-            if (mode.testFlag(NotSet)) modes << enumToString(NotSet);
-            if (mode.testFlag(LoadDirectly)) modes << enumToString(LoadDirectly);
-            if (mode.testFlag(LoadInBackground)) modes << enumToString(LoadInBackground);
-            if (mode.testFlag(CacheFirst)) modes << enumToString(CacheFirst);
-            if (mode.testFlag(CacheSkipped)) modes << enumToString(CacheSkipped);
+            if (mode.testFlag(NotSet))           { modes << enumToString(NotSet); }
+            if (mode.testFlag(LoadDirectly))     { modes << enumToString(LoadDirectly); }
+            if (mode.testFlag(LoadInBackground)) { modes << enumToString(LoadInBackground); }
+            if (mode.testFlag(CacheFirst))       { modes << enumToString(CacheFirst); }
+            if (mode.testFlag(CacheSkipped))     { modes << enumToString(CacheSkipped); }
             return modes.join(", ");
         }
 

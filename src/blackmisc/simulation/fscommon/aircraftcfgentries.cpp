@@ -38,11 +38,10 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::convertToQString(bool) const
             {
-                QString s = "{%1, %2, %3, %4, %5, %6}";
-                s = s.
-                    arg(this->m_fileName).arg(this->m_index).
-                    arg(this->m_title, this->m_atcModel, this->m_atcType, this->m_atcParkingCode);
-                return s;
+                static const QString s = "{%1, %2, %3, %4, %5, %6}";
+                return s.
+                       arg(m_fileName).arg(m_index).
+                       arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
             }
 
             CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index) :
@@ -51,14 +50,14 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::getFileDirectory() const
             {
-                if (this->m_fileName.isEmpty()) { return ""; }
-                const QFileInfo fileInfo(this->m_fileName);
+                if (m_fileName.isEmpty()) { return ""; }
+                const QFileInfo fileInfo(m_fileName);
                 return fileInfo.absolutePath();
             }
 
             QString CAircraftCfgEntries::getUiCombinedDescription() const
             {
-                QString d(this->m_uiManufacturer);
+                QString d(m_uiManufacturer);
                 if (!this->getUiType().isEmpty())
                 {
                     d += " ";
@@ -74,69 +73,69 @@ namespace BlackMisc
 
             void CAircraftCfgEntries::setFileName(const QString &filePath)
             {
-                this->m_fileName = filePath.trimmed();
+                m_fileName = filePath.trimmed();
             }
 
             void CAircraftCfgEntries::setTitle(const QString &title)
             {
-                this->m_title = title.trimmed();
+                m_title = title.trimmed();
             }
 
             void CAircraftCfgEntries::setAtcModel(const QString &atcModel)
             {
-                this->m_atcModel = atcModel.trimmed();
+                m_atcModel = atcModel.trimmed();
             }
 
             void CAircraftCfgEntries::setAtcType(const QString &atcType)
             {
-                this->m_atcType = atcType.trimmed();
+                m_atcType = atcType.trimmed();
             }
 
             void CAircraftCfgEntries::setAtcParkingCode(const QString &parkingCode)
             {
-                this->m_atcParkingCode = parkingCode.trimmed();
+                m_atcParkingCode = parkingCode.trimmed();
             }
 
             void CAircraftCfgEntries::setAtcAirline(const QString &airline)
             {
-                this->m_atcAirline = airline.trimmed();
+                m_atcAirline = airline.trimmed();
             }
 
             void CAircraftCfgEntries::setSimName(const QString &simName)
             {
-                this->m_simName = simName.trimmed();
+                m_simName = simName.trimmed();
             }
 
             void CAircraftCfgEntries::setDescription(const QString &description)
             {
-                this->m_description = description.trimmed();
+                m_description = description.trimmed();
             }
 
             void CAircraftCfgEntries::setCreatedBy(const QString &createdBy)
             {
-                this->m_createdBy = createdBy.trimmed();
+                m_createdBy = createdBy.trimmed();
             }
 
             void CAircraftCfgEntries::setTexture(const QString &texture)
             {
-                this->m_texture = texture.trimmed();
+                m_texture = texture.trimmed();
             }
 
             void CAircraftCfgEntries::setUiType(const QString &type)
             {
-                this->m_uiType = type.trimmed();
+                m_uiType = type.trimmed();
             }
 
             CAircraftModel CAircraftCfgEntries::toAircraftModel() const
             {
                 // creates raw, unconsolidated data
+                Q_ASSERT_X(m_timestampMSecsSinceEpoch >= 0, Q_FUNC_INFO, "Missing file timestamp");
                 CAircraftModel model(this->getTitle(), CAircraftModel::TypeOwnSimulatorModel);
                 model.setDescription(this->getUiCombinedDescription()); // Manufacturer, variation, type
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
-                Q_ASSERT_X(this->m_timestampMSecsSinceEpoch >= 0, Q_FUNC_INFO, "Missing file timestamp");
-                model.setMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch); // aircraft.cfg file timestamp
-                model.setFileTimestamp(this->m_timestampMSecsSinceEpoch);
+                model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch); // aircraft.cfg file timestamp
+                model.setFileTimestamp(m_timestampMSecsSinceEpoch);
                 model.setIconPath(this->getThumbnailFileNameChecked());
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
@@ -169,9 +168,9 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::getThumbnailFileNameGuess() const
             {
-                if (this->m_texture.isEmpty()) { return ""; }
-                if (this->m_fileName.isEmpty()) { return ""; }
-                QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + this->m_texture + QDir::separator() + "thumbnail.jpg");
+                if (m_texture.isEmpty()) { return ""; }
+                if (m_fileName.isEmpty()) { return ""; }
+                QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + m_texture + QDir::separator() + "thumbnail.jpg");
                 return fn;
             }
 
@@ -190,22 +189,22 @@ namespace BlackMisc
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexEntryIndex: return CVariant::from(this->m_index);
-                case IndexFileName: return CVariant::from(this->m_fileName);
-                case IndexTitle: return CVariant::from(this->m_title);
-                case IndexAirline: return CVariant::from(this->m_atcAirline);
-                case IndexAtcType: return CVariant::from(this->m_atcType);
-                case IndexAtcModel: return CVariant::from(this->m_atcModel);
-                case IndexAtcIdColor: return CVariant::from(this->m_atcIdColor);
-                case IndexParkingCode: return CVariant::from(this->m_atcParkingCode);
-                case IndexDescription: return CVariant::from(this->m_description);
-                case IndexUiType: return CVariant::from(this->m_uiType);
-                case IndexUiManufacturer: return CVariant::from(this->m_uiManufacturer);
-                case IndexUiVariation: return CVariant::from(this->m_uiVariation);
-                case IndexTexture: return CVariant::from(this->m_texture);
-                case IndexSimulatorName: return CVariant::from(this->m_simName);
-                case IndexCreatedBy: return CVariant::from(this->m_createdBy);
-                case IndexRotorcraft: return CVariant::from(this->m_rotorcraft);
+                case IndexEntryIndex: return CVariant::from(m_index);
+                case IndexFileName: return CVariant::from(m_fileName);
+                case IndexTitle: return CVariant::from(m_title);
+                case IndexAirline: return CVariant::from(m_atcAirline);
+                case IndexAtcType: return CVariant::from(m_atcType);
+                case IndexAtcModel: return CVariant::from(m_atcModel);
+                case IndexAtcIdColor: return CVariant::from(m_atcIdColor);
+                case IndexParkingCode: return CVariant::from(m_atcParkingCode);
+                case IndexDescription: return CVariant::from(m_description);
+                case IndexUiType: return CVariant::from(m_uiType);
+                case IndexUiManufacturer: return CVariant::from(m_uiManufacturer);
+                case IndexUiVariation: return CVariant::from(m_uiVariation);
+                case IndexTexture: return CVariant::from(m_texture);
+                case IndexSimulatorName: return CVariant::from(m_simName);
+                case IndexCreatedBy: return CVariant::from(m_createdBy);
+                case IndexRotorcraft: return CVariant::from(m_rotorcraft);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
@@ -220,7 +219,7 @@ namespace BlackMisc
                 case IndexEntryIndex: this->setIndex(variant.toInt()); break;
                 case IndexFileName: this->setFileName(variant.toQString()); break;
                 case IndexTitle: this->setTitle(variant.toQString()); break;
-                case IndexAirline: this->setTitle(this->m_atcAirline); break;
+                case IndexAirline: this->setTitle(m_atcAirline); break;
                 case IndexAtcType: this->setAtcType(variant.toQString()); break;
                 case IndexAtcModel: this->setAtcModel(variant.toQString()); break;
                 case IndexAtcIdColor: this->setAtcIdColor(variant.toQString()); break;
