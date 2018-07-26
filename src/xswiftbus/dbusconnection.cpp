@@ -89,7 +89,7 @@ namespace XSwiftBus
 
     bool CDBusConnection::isConnected() const
     {
-        return static_cast<bool>(m_connection);
+        return m_connection && dbus_connection_get_is_connected(m_connection.get());
     }
 
     void CDBusConnection::registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath, const DBusObjectPathVTable &dbusObjectPathVTable)
