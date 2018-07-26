@@ -24,7 +24,21 @@ namespace BlackSimPlugin
         CXSwiftBusTrafficProxy::CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-            if (!dummy) { m_dbusInterface->relayParentSignals(); }
+            if (!dummy)
+            {
+                bool s;
+                s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
+                                       "simFrame", this, SIGNAL(simFrame()));
+                Q_ASSERT(s);
+
+                s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
+                                       "remoteAircraftAdded", this, SIGNAL(remoteAircraftAdded(QString)));
+                Q_ASSERT(s);
+
+                s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
+                                       "remoteAircraftAddingFailed", this, SIGNAL(remoteAircraftAddingFailed(QString)));
+                Q_ASSERT(s);
+            }
         }
 
         bool CXSwiftBusTrafficProxy::initialize()

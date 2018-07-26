@@ -24,7 +24,19 @@ namespace BlackSimPlugin
         CXSwiftBusServiceProxy::CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-            if (!dummy) { m_dbusInterface->relayParentSignals(); }
+            if (!dummy)
+            {
+                bool s;
+                s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
+                                       "aircraftModelChanged", this,
+                                       SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+                Q_ASSERT(s);
+
+                s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
+                                       "airportsInRangeUpdated", this,
+                                       SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
+                Q_ASSERT(s);
+            }
         }
 
         void CXSwiftBusServiceProxy::getOwnAircraftSituationData(XPlaneData *o_xplaneData)
