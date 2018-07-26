@@ -41,8 +41,14 @@ namespace BlackCore
             m_updateTimer.setInterval(60 * 1000);
             if (sApp && sApp->hasWebDataServices())
             {
-                connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this, &CBackgroundDataUpdater::onModelsPublished);
+                connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this, &CBackgroundDataUpdater::onModelsPublished, Qt::QueuedConnection);
             }
+        }
+
+        CStatusMessageList CBackgroundDataUpdater::getMessageHistory() const
+        {
+            QReadLocker l(&m_lockMsg);
+            return m_messageHistory;
         }
 
         void CBackgroundDataUpdater::doWork()
@@ -57,26 +63,30 @@ namespace BlackCore
             case 0:
                 // normally redundant, will be read in other places as well
                 // new metadata for next comparison
+                this->addHistory(CLogMessage(this).info("Triggered info reads from DB"));
                 this->triggerInfoReads();
                 break;
             case 1:
+                this->addHistory(CLogMessage(this).info("Synchronize DB entities"));
+                this->syncDbEntity(CEntityFlags::AirlineIcaoEntity);
+                this->syncDbEntity(CEntityFlags::LiveryEntity);
                 this->syncDbEntity(CEntityFlags::ModelEntity);
                 this->syncDbEntity(CEntityFlags::DistributorEntity);
+                this->syncDbEntity(CEntityFlags::AircraftIcaoEntity);
                 break;
             case 2:
+                this->addHistory(CLogMessage(this).info("Synchronize %1") << m_modelCaches.getDescription());
                 this->syncModelOrModelSetCacheWithDbData(m_modelCaches);
                 break;
             case 3:
+                this->addHistory(CLogMessage(this).info("Synchronize %1") << m_modelSetCaches.getDescription());
                 this->syncModelOrModelSetCacheWithDbData(m_modelSetCaches);
-                break;
-            case 4:
-                this->syncDbEntity(CEntityFlags::AircraftIcaoEntity);
-                this->syncDbEntity(CEntityFlags::AirlineIcaoEntity);
                 break;
             default:
                 break;
             }
-            ++m_cycle %= 5;
+            ++m_cycle %= 4;
+
             m_inWork = false;
             emit this->consolidating(false);
         }
@@ -96,43 +106,51 @@ namespace BlackCore
                                                dbModelsConsidered.latestTimestamp();
             if (!latestDbModelsTs.isValid()) { return; }
 
+            // newer DB models as cache
             const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(cache.getDescription());
             if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync) { return; }
 
             m_syncedModelsLatestChange[cache.getDescription()] = latestDbModelsTs;
-            const CSimulatorInfo sims = cache.simulatorsWithInitializedCache(); // sims ever used
-            if (sims.isNoSimulator()) { return; }
+            const CSimulatorInfo simulators = cache.simulatorsWithInitializedCache(); // simulators ever used
+            if (simulators.isNoSimulator()) { return; }
 
             const CAircraftModelList dbModels = dbModelsConsidered.isEmpty() ?
                                                 sApp->getWebDataServices()->getModels() :
                                                 dbModelsConsidered;
             if (dbModels.isEmpty()) { return; }
-            const QSet<CSimulatorInfo> simSet = sims.asSingleSimulatorSet();
-            for (const CSimulatorInfo &singleInfo : simSet)
+            const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
+            for (const CSimulatorInfo &singleSimulator : simulatorsSet)
             {
                 if (!this->doWorkCheck()) { return; }
-                CAircraftModelList simModels = cache.getSynchronizedCachedModels(singleInfo);
-                if (simModels.isEmpty()) { continue; }
-                const CAircraftModelList dbModelsForSim = dbModels.matchesSimulator(singleInfo);
-                if (dbModelsForSim.isEmpty()) { continue; }
+                CAircraftModelList simulatorModels = cache.getSynchronizedCachedModels(singleSimulator);
+                if (simulatorModels.isEmpty()) { continue; }
+                const CAircraftModelList dbModelsForSimulator = dbModels.matchesSimulator(singleSimulator);
+                if (dbModelsForSimulator.isEmpty()) { continue; }
 
                 // time consuming part
-                const int c = CDatabaseUtils::consolidateModelsWithDbData(dbModelsForSim, simModels, true);
+                const int c = CDatabaseUtils::consolidateModelsWithDbData(dbModelsForSimulator, simulatorModels, true);
                 if (c > 0)
                 {
-                    CLogMessage(this).info("Consolidated %1 models for '%2'") << c << singleInfo.convertToQString();
-                    const CStatusMessage m = cache.setCachedModels(simModels, singleInfo);
+                    this->addHistory(CLogMessage(this).info("Consolidated %1 models for '%2'") << c << singleSimulator.convertToQString());
+                    const CStatusMessage m = cache.setCachedModels(simulatorModels, singleSimulator);
                     CLogMessage::preformatted(m);
+                    this->addHistory(m);
                 }
                 else
                 {
-                    CLogMessage(this).info("Synchronized, no changes for '%1'") << singleInfo.convertToQString();
+                    this->addHistory(CLogMessage(this).info("Synchronized, no changes for '%1'") << singleSimulator.convertToQString());
                 }
-                if (simSet.size() > 1) { CEventLoop::processEventsFor(5000); } // just give the system some time to relax, consolidation is time consuming
+
+                if (simulatorsSet.size() > 1)
+                {
+                    // just give the system some time to relax, consolidation is time consuming
+                    if (!this->doWorkCheck()) { return; }
+                    CEventLoop::processEventsFor(1000);
+                }
             }
         }
 
-        void CBackgroundDataUpdater::syncDbEntity(CEntityFlags::Entity entity) const
+        void CBackgroundDataUpdater::syncDbEntity(CEntityFlags::Entity entity)
         {
             if (!this->doWorkCheck()) { return; }
             const QDateTime latestCacheTs = sApp->getWebDataServices()->getCacheTimestamp(entity);
@@ -141,18 +159,18 @@ namespace BlackCore
             if (!latestDbTs.isValid()) { return; }
             if (latestDbTs <= latestCacheTs)
             {
-                CLogMessage(this).info("No auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << CEntityFlags::flagToString(entity) << latestDbTs.toString(Qt::ISODate) << latestCacheTs.toString(Qt::ISODate);
+                this->addHistory(CLogMessage(this).info("No auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << CEntityFlags::flagToString(entity) << latestDbTs.toString(Qt::ISODate) << latestCacheTs.toString(Qt::ISODate));
                 return;
             }
 
-            CLogMessage(this).info("Triggering read of '%1' since '%2'") << CEntityFlags::flagToString(entity) << latestCacheTs.toString(Qt::ISODate);
+            this->addHistory(CLogMessage(this).info("Triggering read of '%1' since '%2'") << CEntityFlags::flagToString(entity) << latestCacheTs.toString(Qt::ISODate));
             sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, latestCacheTs);
         }
 
         bool CBackgroundDataUpdater::doWorkCheck() const
         {
             if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
-            if (!isEnabled()) { return false; }
+            if (!this->isEnabled()) { return false; }
             return true;
         }
 
@@ -167,6 +185,12 @@ namespace BlackCore
             this->syncModelOrModelSetCacheWithDbData(m_modelCaches, modelsPublished);
             this->syncModelOrModelSetCacheWithDbData(m_modelSetCaches, modelsPublished);
             emit this->consolidating(false);
+        }
+
+        void CBackgroundDataUpdater::addHistory(const CStatusMessage &msg)
+        {
+            QWriteLocker l(&m_lockMsg);
+            m_messageHistory.push_frontMaxElements(msg, 100); // latest
         }
     } // ns
 } // ns

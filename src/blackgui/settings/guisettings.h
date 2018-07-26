@@ -96,10 +96,10 @@ namespace BlackGui
             static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
             //! \copydoc BlackCore::TSettingTrait::defaultValue
-            static const int &defaultValue() { static const int i = 240; return i; }
+            static const int &defaultValue() { static const int i = 60; return i; }
 
             //! Minimum
-            static int minSecs() { return 60; }
+            static int minSecs() { return 30; }
 
             //! Maximum
             static int maxSecs() { return 3600; }
