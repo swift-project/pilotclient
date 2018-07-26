@@ -184,18 +184,19 @@ namespace BlackMisc
             CStatusMessage CModelCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                CStatusMessage msg;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return m_modelCacheFs9.set(models);
-                case CSimulatorInfo::FSX: return m_modelCacheFsx.set(models);
-                case CSimulatorInfo::P3D: return m_modelCacheP3D.set(models);
-                case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(models);
+                case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(models); break;
+                case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(models); break;
+                case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(models); break;
+                case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(models); break;
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CStatusMessage();
                 }
-
-                this->emitCacheChanged(simulator);
+                this->emitCacheChanged(simulator); // set
+                return msg;
             }
 
             CStatusMessage IMultiSimulatorModelCaches::clearCachedModels(const CSimulatorInfo &simulator)
@@ -307,6 +308,7 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     break;
                 }
+                this->emitCacheChanged(simulator); // sync
             }
 
             void CModelCaches::admitCacheImpl(const CSimulatorInfo &simulator)
@@ -375,18 +377,19 @@ namespace BlackMisc
                     orderedModels.sortAscendingByOrder();
                 }
 
+                CStatusMessage msg;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return m_modelCacheFs9.set(orderedModels);
-                case CSimulatorInfo::FSX: return m_modelCacheFsx.set(orderedModels);
-                case CSimulatorInfo::P3D: return m_modelCacheP3D.set(orderedModels);
-                case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(orderedModels);
+                case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(orderedModels); break;
+                case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(orderedModels); break;
+                case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(orderedModels); break;
+                case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels); break;
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CStatusMessage();
                 }
-
-                this->emitCacheChanged(simulator);
+                this->emitCacheChanged(simulator); // set
+                return msg;
             }
 
             QDateTime CModelSetCaches::getCacheTimestamp(const CSimulatorInfo &simulator) const
@@ -476,6 +479,7 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
+                this->emitCacheChanged(simulator); // sync
             }
 
             void CModelSetCaches::admitCacheImpl(const CSimulatorInfo &simulator)

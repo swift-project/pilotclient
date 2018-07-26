@@ -249,6 +249,7 @@ namespace BlackMisc
 
             signals:
                 //! Cache has been changed
+                //! \note this detects caches changed elsewhere or set here (the normal caches detect only "elsewhere"
                 void cacheChanged(const CSimulatorInfo &simulator);
 
             protected:
@@ -367,7 +368,11 @@ namespace BlackMisc
 
             protected:
                 //! Ctor
-                CCentralMultiSimulatorModelCachesProviderBase(QObject *parent = nullptr) : IMultiSimulatorModelCaches(parent) { }
+                CCentralMultiSimulatorModelCachesProviderBase(const QString &name, QObject *parent = nullptr) : IMultiSimulatorModelCaches(parent)
+                {
+                    this->setObjectName(name);
+                    connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &CCentralMultiSimulatorModelCachesProviderBase::cacheChanged);
+                }
 
             private:
                 TCaches m_caches { false, this }; //!< used caches
@@ -379,6 +384,7 @@ namespace BlackMisc
                 const TCaches &instanceCaches() const { return this->isInstance() ? m_caches : Derived::modelCachesInstance().m_caches; }
 
                 //! Is this object the central instance?
+                //! \remark would also allow do direct inherit this class
                 bool isInstance() const { return this == &Derived::modelCachesInstance(); }
             };
 
@@ -393,13 +399,44 @@ namespace BlackMisc
                 //! Central instance
                 static CCentralMultiSimulatorModelCachesProvider &modelCachesInstance()
                 {
-                    static CCentralMultiSimulatorModelCachesProvider c;
+                    static CCentralMultiSimulatorModelCachesProvider c("Central model caches provider");
                     return c;
                 }
 
             protected:
                 //! Ctor
-                CCentralMultiSimulatorModelCachesProvider(QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(parent) {}
+                CCentralMultiSimulatorModelCachesProvider(const QString &name, QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(name, parent) {}
+            };
+
+            //! Basically a QObject free (delegate based) version of CCentralMultiSimulatorModelCachesProvider
+            class BLACKMISC_EXPORT CCentralMultiSimulatorModelCachesAware:
+                public IModelsForSimulatorSetable,
+                public IModelsForSimulatorUpdatable
+            {
+            public:
+                //! \name Look like IMultiSimulatorModelCaches interface
+                //! @{
+                CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModels(simulator); }
+                int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
+                QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheCountAndTimestamp(simulator); }
+                CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setCachedModels(models, simulator); }
+                CStatusMessage clearCachedModels(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().clearCachedModels(simulator); }
+                QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheTimestamp(simulator); }
+                CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setCacheTimestamp(ts, simulator); }
+                void synchronizeCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
+                void admitCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().admitCache(simulator); }
+                QString getFilename(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getFilename(simulator); }
+                bool isSaved(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().isSaved(simulator); }
+                QString getDescription() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getDescription(); }
+                QString getInfoString() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getInfoString(); }
+                QString getInfoStringFsFamily() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getInfoStringFsFamily(); }
+                //! @}
+
+                //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
+                virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setModelsForSimulator(models, simulator); }
+
+                //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
+                virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().updateModelsForSimulator(models, simulator); }
             };
 
             //! One central instance of the model set caches
@@ -413,13 +450,13 @@ namespace BlackMisc
                 //! Central instance
                 static CCentralMultiSimulatorModelSetCachesProvider &modelCachesInstance()
                 {
-                    static CCentralMultiSimulatorModelSetCachesProvider c;
+                    static CCentralMultiSimulatorModelSetCachesProvider c("Central model sets provider");
                     return c;
                 }
 
             protected:
                 //! Ctor
-                CCentralMultiSimulatorModelSetCachesProvider(QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(parent) {}
+                CCentralMultiSimulatorModelSetCachesProvider(const QString &name, QObject *parent = nullptr) : CCentralMultiSimulatorModelCachesProviderBase(name, parent) {}
             };
 
             //! Basically a QObject free (delegate based) version of CCentralMultiSimulatorModelSetCachesProvider
@@ -432,7 +469,9 @@ namespace BlackMisc
                 //! @{
                 CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator); }
                 int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
+                QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheCountAndTimestamp(simulator); }
                 CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCachedModels(models, simulator); }
+                CStatusMessage clearCachedModels(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().clearCachedModels(simulator); }
                 QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCacheTimestamp(simulator); }
                 CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCacheTimestamp(ts, simulator); }
                 void synchronizeCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
@@ -440,6 +479,8 @@ namespace BlackMisc
                 QString getFilename(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getFilename(simulator); }
                 bool isSaved(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().isSaved(simulator); }
                 QString getDescription() const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getDescription(); }
+                QString getInfoString() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getInfoString(); }
+                QString getInfoStringFsFamily() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getInfoStringFsFamily(); }
                 //! @}
 
                 //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator

@@ -39,7 +39,8 @@ namespace BlackMisc
          * \remark all model loaders share the same model caches of Data::CCentralMultiSimulatorModelCachesProvider
          */
         class BLACKMISC_EXPORT IAircraftModelLoader :
-            public Data::CCentralMultiSimulatorModelCachesProvider,
+            public QObject,
+            public Data::CCentralMultiSimulatorModelCachesAware,
             public IModelsSetable,
             public IModelsUpdatable
         {
@@ -137,6 +138,10 @@ namespace BlackMisc
             //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
             void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
 
+            //! Relayed from centralized caches
+            //! \remark this can result from loading, the cache changed elsewhere or clearing data
+            void cacheChanged(const CSimulatorInfo &simulator);
+
         protected:
             //! Constructor
             IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent = nullptr);
@@ -163,6 +168,9 @@ namespace BlackMisc
 
             //! Loading completed
             void onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+
+            //! Cache has been changed
+            void onCacheChanged(const CSimulatorInfo &simulator);
         };
 
         /*!
@@ -192,6 +200,9 @@ namespace BlackMisc
 
             //! \copydoc IAircraftModelLoader::diskLoadingStarted
             void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode);
+
+            //! \copydoc IAircraftModelLoader::cacheChanged
+            void cacheChanged(const CSimulatorInfo &simulator);
 
         private:
             IAircraftModelLoader *m_loaderFsx = nullptr;

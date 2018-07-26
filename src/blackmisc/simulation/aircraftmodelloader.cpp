@@ -95,11 +95,15 @@ namespace BlackMisc
         }
 
         IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent) :
-            CCentralMultiSimulatorModelCachesProvider(parent),
+            QObject(parent),
             m_simulator(simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
+
+            CCentralMultiSimulatorModelCachesProvider *centralCaches = &CCentralMultiSimulatorModelCachesProvider::modelCachesInstance();
+            connect(centralCaches, &CCentralMultiSimulatorModelCachesProvider::cacheChanged, this, &IAircraftModelLoader::onCacheChanged, Qt::QueuedConnection);
+            this->setObjectInfo(simulator);
         }
 
         IAircraftModelLoader::~IAircraftModelLoader() { }
@@ -190,7 +194,6 @@ namespace BlackMisc
 
         void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
-            Q_UNUSED(info);
             if (!this->supportsSimulator(simulator)) { return; } // none of my business
             this->setObjectInfo(simulator);
 
@@ -209,8 +212,15 @@ namespace BlackMisc
             }
             else
             {
-                CLogMessage(this).info("Loading finished, success for '%1'") << simulator.toQString();
+                CLogMessage(this).info("Loading '%1' finished, success for '%2'") << IAircraftModelLoader::enumToString(info) << simulator.toQString();
             }
+        }
+
+        void IAircraftModelLoader::onCacheChanged(const CSimulatorInfo &simulator)
+        {
+            if (m_loadingInProgress) { return; } // this change signal is redundant as it will be handled by onLoadingFinished
+            if (!this->supportsSimulator(simulator)) { return; } // none of my business
+            emit this->cacheChanged(simulator);
         }
 
         IAircraftModelLoader *CMultiAircraftModelLoaderProvider::loaderInstance(const CSimulatorInfo &simulator)
@@ -256,6 +266,7 @@ namespace BlackMisc
             IAircraftModelLoader *loader = IAircraftModelLoader::createModelLoader(simulator, this);
             connect(loader, &IAircraftModelLoader::loadingFinished, this, &CMultiAircraftModelLoaderProvider::loadingFinished);
             connect(loader, &IAircraftModelLoader::diskLoadingStarted, this, &CMultiAircraftModelLoaderProvider::diskLoadingStarted);
+            connect(loader, &IAircraftModelLoader::cacheChanged, this, &CMultiAircraftModelLoaderProvider::cacheChanged);
             return loader;
         }
     } // ns

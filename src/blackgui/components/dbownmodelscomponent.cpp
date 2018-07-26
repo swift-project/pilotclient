@@ -53,6 +53,7 @@ namespace BlackGui
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
             connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
             connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onOwnModelsDiskLoadingStarted, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
@@ -546,9 +547,14 @@ namespace BlackGui
             // cache loads may occur in background, do not adjust UI settings
             if (info == IAircraftModelLoader::CacheLoaded) { return; }
 
-            // parsed loads normally explicit
-            ui->le_Simulator->setText(simulator.toQString());
-            ui->comp_SimulatorSelector->setValue(simulator);
+            // parsed loads normally explicit displaying this simulator
+            this->setSimulator(simulator);
+        }
+
+        void CDbOwnModelsComponent::onCacheChanged(const CSimulatorInfo &simulator)
+        {
+            const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
         }
 
         void CDbOwnModelsComponent::requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
