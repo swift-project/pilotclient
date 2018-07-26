@@ -68,7 +68,7 @@ namespace XSwiftBus
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
         // Todo: retry if it fails
-        bool success = m_dbusConnection->connect(CDBusConnection::SessionBus, xswiftbusServiceName());
+        bool success = m_dbusConnection->connect(CDBusConnection::SessionBus);
 
         if (!success)
         {
@@ -76,12 +76,16 @@ namespace XSwiftBus
             return;
         }
 
+        m_dbusConnection->setDispatcher(&m_dbusDispatcher);
+        m_dbusConnection->requestName(xswiftbusServiceName());
+
         m_service->setDBusConnection(m_dbusConnection);
         m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
         m_traffic->setDBusConnection(m_dbusConnection);
         m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
         m_weather->setDBusConnection(m_dbusConnection);
         m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
+
 
         INFO_LOG("XSwiftBus started.");
     }
@@ -117,6 +121,7 @@ namespace XSwiftBus
     float CPlugin::flightLoopCallback(float, float, int, void *refcon)
     {
         auto *plugin = static_cast<CPlugin *>(refcon);
+        plugin->m_dbusDispatcher.runOnce();
         if (plugin->m_service) { plugin->m_service->processDBus(); }
         if (plugin->m_weather) { plugin->m_weather->processDBus(); }
         if (plugin->m_traffic) { plugin->m_traffic->processDBus(); }

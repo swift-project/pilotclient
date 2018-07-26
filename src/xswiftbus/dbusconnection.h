@@ -13,6 +13,7 @@
 #include "dbusmessage.h"
 #include "dbuserror.h"
 #include "dbuscallbacks.h"
+#include "dbusdispatcher.h"
 
 #include <event2/event.h>
 #include <dbus/dbus.h>
@@ -24,12 +25,10 @@
 namespace XSwiftBus
 {
 
-    class WatchHandler;
-    class TimeoutHandler;
     class CDBusObject;
 
     //! DBus connection
-    class CDBusConnection
+    class CDBusConnection : public IDispatchable
     {
     public:
         //! Bus type
@@ -47,7 +46,13 @@ namespace XSwiftBus
         CDBusConnection &operator=(const CDBusConnection &) = delete;
 
         //! Connect to bus
-        bool connect(BusType type, const std::string &service);
+        bool connect(BusType type);
+
+        //! Set dispatcher
+        void setDispatcher(CDBusDispatcher *dispatcher);
+
+        //! Request name to the bus
+        void requestName(const std::string &name);
 
         //! Is connected?
         bool isConnected() const;
@@ -65,58 +70,24 @@ namespace XSwiftBus
         //! Close connection
         void close();
 
-        //! Run DBus event loop (non-blocking)
-        void runEventLoop();
-
-        //! Run DBus event loop (blocking)
-        void runBlockingEventLoop();
-
         //! Get the last error
         CDBusError lastError() const { return m_lastError; }
 
+    protected:
+        virtual void dispatch();
+
     private:
-        friend class WatchHandler;
-        friend class TimeoutHandler;
-        friend class Timer;
-
-        using WatchCallbacks = DBusAsyncCallbacks<DBusWatch>;
-        using TimeoutCallbacks = DBusAsyncCallbacks<DBusTimeout>;
-
-        bool setupMainloop();
-
-        dbus_bool_t dbusAddWatch(DBusWatch *watch);
-        void dbusRemoveWatch(DBusWatch *watch);
-        void dbusWatchToggled(DBusWatch *watch);
-
-        dbus_bool_t dbusAddTimeout(DBusTimeout *timeout);
-        void dbusRemoveTimeout(DBusTimeout *timeout);
-        void dbusTimeoutToggled(DBusTimeout *timeout);
-
-        void scheduleDBusDispatch();
-        void handleSocketReady(evutil_socket_t fd, short event);
-        void dbusDispatch();
-        void dbusUpdateDispatchStatus(DBusConnection *connection, DBusDispatchStatus newStatus);
-
-        static void dbusUpdateDispatchStatus(DBusConnection *connection, DBusDispatchStatus newStatus, void *data);
-
-        struct EventBaseDeleter
-        {
-            void operator()(event_base *obj) const { event_base_free(obj); }
-        };
+        void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status);
+        static void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status, void *data);
 
         struct DBusConnectionDeleter
         {
             void operator()(DBusConnection *obj) const { dbus_connection_unref(obj); }
         };
 
-        std::unique_ptr<event_base, EventBaseDeleter> m_eventBase;
+        CDBusDispatcher *m_dispatcher = nullptr;
         std::unique_ptr<DBusConnection, DBusConnectionDeleter> m_connection;
         CDBusError m_lastError;
-        WatchCallbacks m_watchCallbacks;
-        TimeoutCallbacks m_timeoutCallbacks;
-
-        std::unordered_multimap<evutil_socket_t, std::unique_ptr<WatchHandler>> m_watchers;
-        std::vector<std::unique_ptr<TimeoutHandler>> m_timeouts;
     };
 
 }

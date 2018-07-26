@@ -22,6 +22,7 @@
 #endif
 
 #include "dbusconnection.h"
+#include "dbusdispatcher.h"
 #include "datarefs.h"
 #include "XPLM/XPLMCamera.h"
 #include "menus.h"
@@ -53,6 +54,7 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
+        CDBusDispatcher m_dbusDispatcher;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;
         std::unique_ptr<CTraffic> m_traffic;
