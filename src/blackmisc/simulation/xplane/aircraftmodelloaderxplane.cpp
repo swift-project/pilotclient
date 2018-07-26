@@ -217,13 +217,10 @@ namespace BlackMisc
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
 
-                    CAircraftModel model = extractAcfProperties(aircraftIt.filePath(), aircraftIt.fileInfo());
+                    CAircraftModel model = this->extractAcfProperties(aircraftIt.filePath(), aircraftIt.fileInfo());
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(CSimulatorInfo::xplane());
-                    model.setFileName(aircraftIt.filePath());
-                    const QDateTime lastModifiedTs(aircraftIt.fileInfo().lastModified());
-                    model.setUtcTimestamp(lastModifiedTs);
-                    model.setFileTimestamp(lastModifiedTs);
+                    model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
                     model.setModelMode(CAircraftModel::Exclude);
                     addUniqueModel(model, installedModels);
 
@@ -345,10 +342,9 @@ namespace BlackMisc
                         }
 
                         CAircraftModel model(plane.getModelName(), CAircraftModel::TypeOwnSimulatorModel);
-                        model.setFileName(plane.filePath);
-                        model.setUtcTimestamp(QFileInfo(plane.filePath).lastModified());
-
-                        CAircraftIcaoCode icao(plane.icao);
+                        const CAircraftIcaoCode icao(plane.icao);
+                        const QFileInfo modelFileInfo(plane.filePath);
+                        model.setFileDetailsAndTimestamp(modelFileInfo);
                         model.setAircraftIcaoCode(icao);
 
                         CLivery livery;
@@ -357,7 +353,7 @@ namespace BlackMisc
                         livery.setAirlineIcaoCode(airline);
                         model.setLivery(livery);
 
-                        CDistributor distributor(package.name);
+                        const CDistributor distributor(package.name);
                         model.setDistributor(distributor);
 
                         model.setSimulator(CSimulatorInfo::xplane());
