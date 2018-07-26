@@ -155,14 +155,6 @@ namespace BlackCore
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
-            //! Liveries have been read
-            void ps_parseLiveryData(QNetworkReply *nwReply);
-
-            //! Distributors have been read
-            void ps_parseDistributorData(QNetworkReply *nwReply);
-
-            //! Models have been read
-            void ps_parseModelData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
@@ -170,16 +162,32 @@ namespace BlackCore
                          const QDateTime &newerThan = QDateTime());
 
         private:
-            BlackMisc::CData<BlackCore::Data::TDbLiveryCache>      m_liveryCache {this, &CModelDataReader::liveryCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbModelCache>       m_modelCache  {this, &CModelDataReader::modelCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache {this, &CModelDataReader::distributorCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbLiveryCache>      m_liveryCache { this, &CModelDataReader::liveryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbModelCache>       m_modelCache  { this, &CModelDataReader::modelCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache { this, &CModelDataReader::distributorCacheChanged };
 
             //! Reader URL (we read from where?) used to detect changes of location
-            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CModelDataReader::baseUrlCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CModelDataReader::baseUrlCacheChanged };
 
+            //! Liveries have been read
+            void parseLiveryData(QNetworkReply *nwReply);
+
+            //! Distributors have been read
+            void parseDistributorData(QNetworkReply *nwReply);
+
+            //! Models have been read
+            void parseModelData(QNetworkReply *nwReply);
+
+            //! Livery cache changed elsewhere
             void liveryCacheChanged();
+
+            //! Model cache changed elsewhere
             void modelCacheChanged();
+
+            //! Distributor cache changed elsewhere
             void distributorCacheChanged();
+
+            //! Base URL cache changed
             void baseUrlCacheChanged();
 
             //! Update reader URL

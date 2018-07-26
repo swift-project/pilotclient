@@ -154,15 +154,6 @@ namespace BlackCore
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
-            //! Aircraft have been read
-            void ps_parseAircraftIcaoData(QNetworkReply *nwReply);
-
-            //! Airlines have been read
-            void ps_parseAirlineIcaoData(QNetworkReply *nwReply);
-
-            //! Countries have been read
-            void ps_parseCountryData(QNetworkReply *nwReply);
-
             //! Read / re-read data
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan);
@@ -175,9 +166,25 @@ namespace BlackCore
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::baseUrlCacheChanged };
 
+            //! Aircraft have been read
+            void parseAircraftIcaoData(QNetworkReply *nwReply);
+
+            //! Airlines have been read
+            void parseAirlineIcaoData(QNetworkReply *nwReply);
+
+            //! Countries have been read
+            void parseCountryData(QNetworkReply *nwReply);
+
+            //! Cache has changed elsewhere
             void aircraftIcaoCacheChanged();
+
+            //! Cache has changed elsewhere
             void airlineIcaoCacheChanged();
+
+            //! Cache has changed elsewhere
             void countryCacheChanged();
+
+            //! Cache has changed elsewhere
             void baseUrlCacheChanged();
 
             //! Update reader URL

@@ -178,7 +178,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseAircraftIcaoData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAircraftIcaoData });
                     entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
                 }
                 else
@@ -193,7 +193,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseAirlineIcaoData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAirlineIcaoData });
                     entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
                 }
                 else
@@ -208,7 +208,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseCountryData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseCountryData });
                     entitiesTriggered |= CEntityFlags::CountryEntity;
                 }
                 else
@@ -254,7 +254,7 @@ namespace BlackCore
             }
         }
 
-        void CIcaoDataReader::ps_parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
+        void CIcaoDataReader::parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
@@ -307,7 +307,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::AircraftIcaoEntity, n, res);
         }
 
-        void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
+        void CIcaoDataReader::parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (!this->doWorkCheck()) { return; }
@@ -358,7 +358,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::AirlineIcaoEntity, n, res);
         }
 
-        void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
+        void CIcaoDataReader::parseCountryData(QNetworkReply *nwReplyPtr)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());

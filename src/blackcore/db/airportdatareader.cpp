@@ -15,6 +15,7 @@
 
 #include <QNetworkReply>
 #include <QFileInfo>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -38,12 +39,12 @@ namespace BlackCore
 
         CAirport CAirportDataReader::getAirportForIcaoDesignator(const QString &designator) const
         {
-            return getAirports().findFirstByIcao(CAirportIcaoCode(designator));
+            return this->getAirports().findFirstByIcao(CAirportIcaoCode(designator));
         }
 
         CAirport CAirportDataReader::getAirportForNameOrLocation(const QString &nameOrLocation) const
         {
-            return getAirports().findFirstByNameOrLocation(nameOrLocation);
+            return this->getAirports().findFirstByNameOrLocation(nameOrLocation);
         }
 
         int CAirportDataReader::getAirportsCount() const
@@ -54,8 +55,11 @@ namespace BlackCore
         bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+
+            QPointer<CAirportDataReader> myself(this);
             QTimer::singleShot(0, this, [ = ]()
             {
+                if (!myself) { return; }
                 const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {
@@ -179,7 +183,7 @@ namespace BlackCore
             return this->getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirportEntity, mode));
         }
 
-        void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReplyPtr)
+        void CAirportDataReader::parseAirportData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
@@ -190,7 +194,7 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
 
@@ -247,7 +251,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CAirportDataReader::ps_parseAirportData });
+                    this->getFromNetworkAndLog(url, { this, &CAirportDataReader::parseAirportData });
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::StartRead, 0);
                 }
                 else

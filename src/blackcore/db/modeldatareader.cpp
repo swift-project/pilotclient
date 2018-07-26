@@ -196,7 +196,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseLiveryData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseLiveryData});
                     triggeredRead |= CEntityFlags::LiveryEntity;
                 }
                 else
@@ -211,7 +211,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseDistributorData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseDistributorData});
                     triggeredRead |= CEntityFlags::DistributorEntity;
                 }
                 else
@@ -226,7 +226,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseModelData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseModelData});
                     triggeredRead |= CEntityFlags::ModelEntity;
                 }
                 else
@@ -272,7 +272,7 @@ namespace BlackCore
             }
         }
 
-        void CModelDataReader::ps_parseLiveryData(QNetworkReply *nwReplyPtr)
+        void CModelDataReader::parseLiveryData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
@@ -315,7 +315,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::LiveryEntity, n, res);
         }
 
-        void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
+        void CModelDataReader::parseDistributorData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
@@ -358,7 +358,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::DistributorEntity, n, res);
         }
 
-        void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
+        void CModelDataReader::parseModelData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread

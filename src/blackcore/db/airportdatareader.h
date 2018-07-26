@@ -68,9 +68,6 @@ namespace BlackCore
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
-            //! Parse downloaded JSON file
-            void ps_parseAirportData(QNetworkReply *nwReplyPtr);
-
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
@@ -80,6 +77,9 @@ namespace BlackCore
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::baseUrlCacheChanged };
+
+            //! Parse downloaded JSON file
+            void parseAirportData(QNetworkReply *nwReplyPtr);
 
             //! Airport cache changed
             void airportCacheChanged();
