@@ -8,8 +8,10 @@
  */
 
 #include "blackgui/components/simulatorselector.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/compare.h"
+#include "blackcore/context/contextsimulator.h"
 #include "ui_simulatorselector.h"
 
 #include <QCheckBox>
@@ -19,6 +21,7 @@
 #include <QPointer>
 
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -84,7 +87,7 @@ namespace BlackGui
 
         void CSimulatorSelector::setValue(const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo current(getValue());
+            const CSimulatorInfo current(this->getValue());
             if (simulator == current) { return; } // avoid unnecessary signals
 
             // checkboxes
@@ -106,6 +109,49 @@ namespace BlackGui
                                              m_currentSimulator.get() :
                                              m_currentSimulators.get();
             this->setValue(simulator);
+        }
+
+        void CSimulatorSelector::setToConnectedSimulator(bool makeReadOnly)
+        {
+            if (sGui && sGui->supportsContexts() && sGui->getIContextSimulator())
+            {
+                const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
+                if (pluginInfo.isValid())
+                {
+                    this->setMode(RadioButtons);
+                    this->setReadOnly(makeReadOnly);
+                    this->setValue(pluginInfo.getSimulator());
+                }
+                else
+                {
+                    if (makeReadOnly) { this->setReadOnly(false); }
+                    const CSimulatorInfo simulator = sGui->getIContextSimulator()->getModelSetLoaderSimulator();
+                    if (simulator.isSingleSimulator())
+                    {
+                        this->setValue(simulator);
+                    }
+                }
+            }
+            else
+            {
+                if (makeReadOnly) { this->setReadOnly(false); }
+            }
+        }
+
+        void CSimulatorSelector::setToConnectedSimulator(int deferredMs, bool makeReadOnly)
+        {
+            if (deferredMs < 1)
+            {
+                this->setToConnectedSimulator(makeReadOnly);
+                return;
+            }
+
+            QPointer<CSimulatorSelector> myself(this);
+            QTimer::singleShot(deferredMs, this, [ = ]
+            {
+                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+                this->setToConnectedSimulator(makeReadOnly);
+            });
         }
 
         void CSimulatorSelector::checkAll()
@@ -204,16 +250,14 @@ namespace BlackGui
         {
             if (m_mode != RadioButtons) { return; }
             if (!checked) { return; } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
-            this->rememberSelection();
-            emit this->changed(this->getValue());
+            m_digestButtonsChanged.inputSignal();
         }
 
         void CSimulatorSelector::checkBoxChanged(bool checked)
         {
             if (m_mode != CheckBoxes) { return; }
             Q_UNUSED(checked);
-            this->rememberSelection();
-            emit this->changed(this->getValue());
+            m_digestButtonsChanged.inputSignal();
         }
 
         void CSimulatorSelector::rememberSelection()
@@ -257,6 +301,13 @@ namespace BlackGui
                 if (!myself) { return; }
                 this->setToLastSelection();
             });
+        }
+
+        void CSimulatorSelector::emitChangedSignal()
+        {
+            const CSimulatorInfo simulator(this->getValue());
+            this->rememberSelection();
+            emit this->changed(simulator);
         }
     } // ns
 } // ns

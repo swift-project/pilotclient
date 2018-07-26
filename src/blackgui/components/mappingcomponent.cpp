@@ -120,13 +120,14 @@ namespace BlackGui
 
             // Updates
             connect(&m_updateTimer, &QTimer::timeout, this, &CMappingComponent::timerUpdate);
+            m_updateTimer.setObjectName(this->objectName() + "::updateTimer");
             ui->tvp_AircraftModels->setDisplayAutomatically(false);
             this->settingsChanged();
 
             // selector
             ui->comp_SimulatorSelector->setRememberSelection(false); // pilot client UI
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
-            this->setSimulatorSelector();
+            ui->comp_SimulatorSelector->setToConnectedSimulator();
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);
 
             // connect
@@ -146,7 +147,7 @@ namespace BlackGui
             connect(ui->tw_SpecializedViews, &QTabWidget::currentChanged, this, &CMappingComponent::onTabWidgetChanged);
 
             // requires simulator context
-            connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
+            connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView, Qt::QueuedConnection);
 
             // with external core models might be already available
             // nevertheless, wait some time to allow to init
@@ -279,35 +280,9 @@ namespace BlackGui
             return callsign;
         }
 
-        void CMappingComponent::setSimulatorSelector()
-        {
-            if (sGui && sGui->supportsContexts() && sGui->getIContextSimulator())
-            {
-                const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
-                if (pluginInfo.isValid())
-                {
-                    ui->comp_SimulatorSelector->setReadOnly(true);
-                    ui->comp_SimulatorSelector->setValue(pluginInfo.getSimulator());
-                }
-                else
-                {
-                    ui->comp_SimulatorSelector->setReadOnly(false);
-                    const CSimulatorInfo simulator = sGui->getIContextSimulator()->getModelSetLoaderSimulator();
-                    if (simulator.isSingleSimulator())
-                    {
-                        ui->comp_SimulatorSelector->setValue(simulator);
-                    }
-                }
-            }
-            else
-            {
-                ui->comp_SimulatorSelector->setReadOnly(false);
-            }
-        }
-
         void CMappingComponent::onModelSetSimulatorChanged(const CSimulatorInfo &simulator)
         {
-            if (this->isSimulatorAvailable()) { return; }
+            if (!sGui || this->isSimulatorAvailable()) { return; }
             sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
 
             // completer will be changed in onModelSetChanged
@@ -316,12 +291,7 @@ namespace BlackGui
         void CMappingComponent::onSimulatorPluginChanged(const CSimulatorPluginInfo &pluginInfo)
         {
             Q_UNUSED(pluginInfo);
-            QPointer<CMappingComponent> myself(this);
-            QTimer::singleShot(25, this, [ = ]
-            {
-                if (myself.isNull()) { return; }
-                myself->setSimulatorSelector();
-            });
+            ui->comp_SimulatorSelector->setToConnectedSimulator(50);
         }
 
         void CMappingComponent::onSaveAircraft()

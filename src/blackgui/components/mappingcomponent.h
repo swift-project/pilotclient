@@ -33,7 +33,6 @@
 
 class QCompleter;
 class QModelIndex;
-class QWidget;
 
 namespace BlackMisc
 {
@@ -173,9 +172,6 @@ namespace BlackGui
 
             //! Check callsign entered
             BlackMisc::Aviation::CCallsign validateRenderedCallsign();
-
-            //! Set the status of the simulator
-            void setSimulatorSelector();
 
             //! Changed selector
             void onModelSetSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
