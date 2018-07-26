@@ -55,7 +55,7 @@ namespace XSwiftBus
     {
         const char *sender = nullptr;
         sender = dbus_message_get_sender(m_message);
-        return std::string(sender);
+        return sender ? std::string(sender) : std::string();
     }
 
     dbus_uint32_t CDBusMessage::getSerial() const
@@ -244,7 +244,7 @@ namespace XSwiftBus
     {
         DBusMessage *reply = dbus_message_new(DBUS_MESSAGE_TYPE_METHOD_RETURN);
         dbus_message_set_no_reply(reply, TRUE);
-        dbus_message_set_destination(reply, destination.c_str());
+        if (! destination.empty()) { dbus_message_set_destination(reply, destination.c_str()); }
         dbus_message_set_reply_serial(reply, serial);
         CDBusMessage msg(reply);
         dbus_message_unref(reply);
