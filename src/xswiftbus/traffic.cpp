@@ -687,19 +687,20 @@ namespace XSwiftBus
                 std::string callsign;
                 double latitudeDeg;
                 double longitudeDeg;
-                double elevationMeters;
+                double altitudeMeters;
                 message.beginArgumentRead();
                 message.getArgument(callsign);
                 message.getArgument(latitudeDeg);
                 message.getArgument(longitudeDeg);
-                message.getArgument(elevationMeters);
+                message.getArgument(altitudeMeters);
                 queueDBusCall([ = ]()
                 {
+                    double elevation = getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
                     reply.appendArgument(callsign);
-                    reply.appendArgument(getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, elevationMeters));
-                    ;                   sendDBusMessage(reply);
+                    reply.appendArgument(elevation);
+                    sendDBusMessage(reply);
                 });
             }
             else if (message.getMethodName() == "setFollowedAircraft")
