@@ -467,20 +467,20 @@ namespace BlackCore
     {
         if (this->isDeveloperFlagSet() && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionString() + " [dev,DEVDBG]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() + " [dev,DEVDBG]");
             return s;
         }
         if (isDeveloperFlagSet())
         {
-            static const QString s(CBuildConfig::getVersionString() + " [dev]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() + " [dev]");
             return s;
         }
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionString() + " [DEVDBG]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() + " [DEVDBG]");
             return s;
         }
-        return CBuildConfig::getVersionString();
+        return CBuildConfig::getVersionStringPlatform();
     }
 
     const QString &CApplication::swiftVersionString() const

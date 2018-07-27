@@ -131,6 +131,9 @@ namespace BlackConfig
         //! Version as QVersionNumber
         static const QString &getVersionString();
 
+        //! Version as QVersionNumber plus platform info
+        static const QString &getVersionStringPlatform();
+
         //! Turns last commit timestamp into a version number
         static int lastCommitTimestampAsVersionSegment(const QDateTime &lastCommitTimestamp);
 

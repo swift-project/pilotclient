@@ -609,19 +609,19 @@ namespace BlackCore
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
-        QNetworkAccessManager                 *m_accessManager = nullptr;   //!< single network access manager
-        BlackMisc::CApplicationInfo            m_applicationInfo;           //!< Application if specified
-        QScopedPointer<CCoreFacade>            m_coreFacade;                //!< core facade if any
-        QScopedPointer<CSetupReader>           m_setupReader;               //!< setup reader
-        QScopedPointer<CWebDataServices>       m_webDataServices;           //!< web data services
-        QScopedPointer<Db::CNetworkWatchdog>   m_networkWatchDog;           //!< checking DB/internet access
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;                //!< file logger
-        QPointer<CCookieManager>               m_cookieManager;             //!< single cookie manager for our access manager
-        const QString                          m_applicationName;           //!< application name
-        QReadWriteLock                         m_accessManagerLock;         //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                      m_coreFacadeConfig;          //!< Core facade config if any
-        CWebReaderFlags::WebReader             m_webReadersUsed;            //!< Readers to be used
-        Db::CDatabaseReaderConfigList          m_dbReaderConfig;            //!< Load or used caching?
+        QNetworkAccessManager                 *m_accessManager = nullptr; //!< single network access manager
+        BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
+        QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
+        QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
+        QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
+        QScopedPointer<Db::CNetworkWatchdog>   m_networkWatchDog;         //!< checking DB/internet access
+        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
+        QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager
+        const QString                          m_applicationName;         //!< application name
+        QReadWriteLock                         m_accessManagerLock;       //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig                      m_coreFacadeConfig;        //!< Core facade config if any
+        CWebReaderFlags::WebReader             m_webReadersUsed;          //!< Readers to be used
+        Db::CDatabaseReaderConfigList          m_dbReaderConfig;          //!< Load or used caching?
         bool m_useContexts = false;            //!< use contexts
         bool m_useWebData = false;             //!< use web data
         bool m_signalStartup = true;           //!< signal startup automatically

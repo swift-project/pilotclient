@@ -226,6 +226,12 @@ namespace BlackConfig
         return s;
     }
 
+    const QString &CBuildConfig::getVersionStringPlatform()
+    {
+        static const QString s = getVersionString() + " " + getPlatformString();
+        return s;
+    }
+
     namespace Private
     {
         const QDateTime buildTimestampImpl()
