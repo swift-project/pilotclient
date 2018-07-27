@@ -504,9 +504,7 @@ namespace BlackCore
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            BLACK_VERIFY_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
-            if (!sApp) { return CUrl(); }
-
+            if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
             switch (mode)
             {
             case CDbFlags::DbReading:

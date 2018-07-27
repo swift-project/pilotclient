@@ -247,7 +247,7 @@ namespace BlackCore
 
             if (entity.testFlag(CEntityFlags::AirportEntity))
             {
-                CUrl url = getAirportsUrl(mode);
+                CUrl url = this->getAirportsUrl(mode);
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
