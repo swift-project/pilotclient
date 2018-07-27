@@ -68,6 +68,12 @@ namespace BlackMisc
             //! Set simulator name
             void setSimulatorName(const QString &name);
 
+            //! Plugin name
+            QString getSimulatorSwiftPluginName() const;
+
+            //! Set plugin name
+            void setSwiftPluginName(const QString &name);
+
             //! Simulator version info, something like "10.3.2"
             QString getSimulatorVersion() const;
 

@@ -32,6 +32,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
@@ -612,6 +613,10 @@ namespace BlackCore
 
         connect(sApp, &CApplication::aboutToShutdown, this, &ISimulator::unload, Qt::QueuedConnection);
 
+        // info data
+        m_simulatorInternals.setSimulatorName(this->getSimulatorName());
+        m_simulatorInternals.setSwiftPluginName(this->getSimulatorPluginInfo().toQString());
+
         // info
         CLogMessage(this).info("Initialized simulator driver: '%1'") << this->getSimulatorInfo().toQString();
     }
@@ -722,6 +727,14 @@ namespace BlackCore
     void ISimulator::onSwiftDbAirportsRead()
     {
         // void, can be overridden in specialized drivers
+    }
+
+    void ISimulator::initSimulatorInternals()
+    {
+        const CSimulatorSettings s = this->getSimulatorSettings();
+        m_simulatorInternals.setSimulatorName(this->getSimulatorName());
+        m_simulatorInternals.setSwiftPluginName(this->getSimulatorPluginInfo().toQString());
+        m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectory());
     }
 
     void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const Geo::CElevationPlane &elevation, const CLength &cg)

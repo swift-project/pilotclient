@@ -73,6 +73,12 @@
     </property>
     <item>
      <widget class="BlackGui::Views::CNameVariantPairView" name="tvp_Internals">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::NoSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>

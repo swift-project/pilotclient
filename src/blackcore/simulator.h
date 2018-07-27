@@ -172,6 +172,9 @@ namespace BlackCore
         //! Reload weather settings
         void reloadWeatherSettings();
 
+        //! Settings for current simulator
+        BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const { return m_settings.getSettings(this->getSimulatorInfo()); }
+
         //! Driver will be unloaded
         virtual void unload();
 
@@ -346,6 +349,9 @@ namespace BlackCore
         virtual void onSwiftDbAirportsRead();
         //! @}
 
+        //! Init the internals info
+        virtual void initSimulatorInternals();
+
         //! Parsed in derived classes
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) = 0;
 
@@ -511,6 +517,9 @@ namespace BlackCore
         // limit the update aircraft to a maximum per second
         BlackMisc::CTokenBucket m_limitUpdateAircraftBucket { 5, 100, 5 }; //!< means 50 per second
         bool m_limitUpdateAircraft = false; //!< limit the update frequency by using BlackMisc::CTokenBucket
+
+        // general settings
+        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this }; //!< simulator settings for all simulators
 
         // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?

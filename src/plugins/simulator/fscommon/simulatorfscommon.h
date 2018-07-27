@@ -56,7 +56,7 @@ namespace BlackSimPlugin
                                QObject *parent = nullptr);
 
             //! Init the internal objects
-            virtual void initSimulatorInternals();
+            virtual void initSimulatorInternals() override;
 
             //! \name When swift DB data are read
             //! @{

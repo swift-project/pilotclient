@@ -294,6 +294,7 @@ namespace BlackSimPlugin
             m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
             m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
+            bool ok = false;
             if (m_serviceProxy->isValid() && m_trafficProxy->isValid() && m_weatherProxy->isValid() && m_trafficProxy->initialize())
             {
                 emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
@@ -308,13 +309,15 @@ namespace BlackSimPlugin
                 m_trafficProxy->removeAllPlanes();
                 this->loadCslPackages();
                 this->emitSimulatorCombinedStatus();
-                return true;
+                ok = true;
             }
             else
             {
                 this->disconnectFrom();
-                return false;
             }
+
+            if (ok) { this->initSimulatorInternals(); }
+            return ok;
         }
 
         bool CSimulatorXPlane::disconnectFrom()

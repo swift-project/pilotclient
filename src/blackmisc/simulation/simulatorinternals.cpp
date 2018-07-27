@@ -19,7 +19,7 @@ namespace BlackMisc
     {
         void CSimulatorInternals::setValue(const QString &name, const QString &value)
         {
-            this->m_data.addOrReplaceValue(name, value);
+            m_data.addOrReplaceValue(name, value);
         }
 
         CVariant CSimulatorInternals::getVariantValue(const QString &name) const
@@ -57,6 +57,16 @@ namespace BlackMisc
             this->setValue("all/simulatorName", name);
         }
 
+        QString CSimulatorInternals::getSimulatorSwiftPluginName() const
+        {
+            return this->getStringValue("all/pluginName");
+        }
+
+        void CSimulatorInternals::setSwiftPluginName(const QString &name)
+        {
+            this->setValue("all/pluginName", name);
+        }
+
         QString CSimulatorInternals::getSimulatorVersion() const
         {
             return this->getStringValue("all/versionInfo");
@@ -82,30 +92,23 @@ namespace BlackMisc
         CVariant CSimulatorInternals::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexData:
-                return CVariant::from(m_data);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexData: return CVariant::from(m_data);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
         void CSimulatorInternals::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CSimulatorInternals>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexData:
-                this->m_data = variant.to<CNameVariantPairList>();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexData: m_data = variant.to<CNameVariantPairList>(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
-
     } // ns
 } // ns

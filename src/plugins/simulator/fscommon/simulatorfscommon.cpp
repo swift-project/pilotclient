@@ -45,17 +45,15 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::initSimulatorInternals()
         {
-            CSimulatorInternals s;
-            s.setSimulatorName(this->getSimulatorName());
-            s.setSimulatorVersion(this->getSimulatorVersion());
-            s.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
+            CSimulatorPluginCommon::initSimulatorInternals();
+            m_simulatorInternals.setSimulatorVersion(this->getSimulatorVersion());
+            m_simulatorInternals.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
             if (m_fsuipc)
             {
                 const QString v(m_fsuipc->getVersion());
-                if (!v.isEmpty()) { s.setValue("fscommon/fsuipcversion", v); }
-                s.setValue("fscommon/fsuipcconnect", boolToYesNo(m_fsuipc->isConnected()));
+                if (!v.isEmpty()) { m_simulatorInternals.setValue("fscommon/fsuipcversion", v); }
+                m_simulatorInternals.setValue("fscommon/fsuipcconnect", boolToYesNo(m_fsuipc->isConnected()));
             }
-            m_simulatorInternals = s;
         }
 
         bool CSimulatorFsCommon::parseDetails(const CSimpleCommandParser &parser)
