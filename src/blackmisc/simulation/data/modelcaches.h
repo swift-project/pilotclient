@@ -18,6 +18,7 @@
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
@@ -415,9 +416,11 @@ namespace BlackMisc
 
             public:
                 //! Central instance
+                //! \remark can only be used in the thread created
                 static CCentralMultiSimulatorModelCachesProvider &modelCachesInstance()
                 {
                     static CCentralMultiSimulatorModelCachesProvider c("Central model caches provider");
+                    Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&c), Q_FUNC_INFO, "Wrong thread");
                     return c;
                 }
 
@@ -466,9 +469,11 @@ namespace BlackMisc
 
             public:
                 //! Central instance
+                //! \remark can only be used in the thread created
                 static CCentralMultiSimulatorModelSetCachesProvider &modelCachesInstance()
                 {
                     static CCentralMultiSimulatorModelSetCachesProvider c("Central model sets provider");
+                    Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(&c), Q_FUNC_INFO, "Wrong thread");
                     return c;
                 }
 
