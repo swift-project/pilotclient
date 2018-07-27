@@ -151,7 +151,8 @@ namespace XSwiftBus
         if (dbus_message_iter_get_arg_type(&m_messageIterator) != DBUS_TYPE_BOOLEAN) { return; }
         dbus_bool_t v;
         dbus_message_iter_get_basic(&m_messageIterator, &v);
-        value = v == TRUE ? true : false;
+        if (v == TRUE) { value = true; }
+        else { value = false; }
         dbus_message_iter_next(&m_messageIterator);
     }
 
@@ -196,8 +197,8 @@ namespace XSwiftBus
             if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_BOOLEAN) { return; }
             dbus_bool_t b;
             dbus_message_iter_get_basic(&arrayIterator, &b);
-            bool v = b == TRUE ? true : false;
-            value.push_back(v);
+            if (b == TRUE) { value.push_back(true); }
+            else { value.push_back(false); }
         }
         while (dbus_message_iter_next(&arrayIterator));
         dbus_message_iter_next(&m_messageIterator);
