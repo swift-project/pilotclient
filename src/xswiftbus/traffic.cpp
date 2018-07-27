@@ -258,17 +258,20 @@ namespace XSwiftBus
             id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
         }
 
-        if (id)
+        if (!id)
         {
-            Plane *plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
-            m_planesByCallsign[callsign] = plane;
-            m_planesById[id] = plane;
-
-            // Create view menu item
-            CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { enableFollowPlaneView(callsign); });
-            m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
-            m_followPlaneViewSequence.push_back(callsign);
+            emitPlaneAddingFailed(callsign);
+            return;
         }
+
+        Plane *plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
+        m_planesByCallsign[callsign] = plane;
+        m_planesById[id] = plane;
+
+        // Create view menu item
+        CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { enableFollowPlaneView(callsign); });
+        m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
+        m_followPlaneViewSequence.push_back(callsign);
     }
 
     void CTraffic::removePlane(const std::string &callsign)
