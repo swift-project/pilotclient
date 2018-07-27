@@ -88,8 +88,8 @@ namespace BlackMisc
 
         auto *ownThread = thread();
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        QMetaObject::invokeMethod(ownThread, "deleteLater");
-        QMetaObject::invokeMethod(this, "deleteLater");
+        QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater);
+        QMetaObject::invokeMethod(this, &CWorker::deleteLater);
     }
 
     const CLogCategoryList &CWorkerBase::getLogCategories()
