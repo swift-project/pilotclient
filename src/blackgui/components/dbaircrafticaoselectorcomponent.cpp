@@ -191,7 +191,7 @@ namespace BlackGui
         void CDbAircraftIcaoSelectorComponent::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
                 {

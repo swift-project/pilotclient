@@ -51,11 +51,11 @@ namespace BlackGui
 
             ui->le_Livery->setValidator(new CUpperCaseValidator(this));
 
-            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::ps_dataChanged);
-            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::ps_dataChanged);
+            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
+            connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::ps_liveriesRead);
-            this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);
+            this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 
         CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
@@ -87,7 +87,7 @@ namespace BlackGui
             s = liveryCode.indexOf('(');
             if (s >= 1) { liveryCode = liveryCode.left(s).trimmed(); }
 
-            if (this->m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
+            if (m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
             CLivery d(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
             if (d.hasCompleteData())
             {
@@ -114,7 +114,7 @@ namespace BlackGui
             }
             else
             {
-                return this->m_currentLivery;
+                return m_currentLivery;
             }
         }
 
@@ -147,7 +147,7 @@ namespace BlackGui
         void CDbLiverySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
         {
             if (!event || !acceptDrop(event->mimeData())) { return; }
-            setBackgroundRole(QPalette::Highlight);
+            this->setBackgroundRole(QPalette::Highlight);
             event->acceptProposedAction();
         }
 
@@ -171,23 +171,23 @@ namespace BlackGui
             {
                 if (valueVariant.canConvert<CLivery>())
                 {
-                    CLivery livery(valueVariant.value<CLivery>());
+                    const CLivery livery(valueVariant.value<CLivery>());
                     if (!livery.hasValidDbKey()) { return; }
                     this->setLivery(livery);
                 }
                 else if (valueVariant.canConvert<CLiveryList>())
                 {
-                    CLiveryList liveries(valueVariant.value<CLiveryList>());
+                    const CLiveryList liveries(valueVariant.value<CLiveryList>());
                     if (liveries.isEmpty()) { return; }
                     this->setLivery(liveries.front());
                 }
             }
         }
 
-        void CDbLiverySelectorComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbLiverySelectorComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!sApp) { return; }
-            if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
                 {
@@ -196,21 +196,21 @@ namespace BlackGui
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
-                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbLiverySelectorComponent::ps_completerActivated);
+                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbLiverySelectorComponent::onCompleterActivated);
 
                     ui->le_Livery->setCompleter(c);
                     m_completerLiveries.reset(c); // deletes any old completer
                 }
                 else
                 {
-                    this->m_completerLiveries.reset(nullptr);
+                    m_completerLiveries.reset(nullptr);
                 }
             }
         }
 
-        void CDbLiverySelectorComponent::ps_dataChanged()
+        void CDbLiverySelectorComponent::onDataChanged()
         {
-            if (!sApp) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             const QString code(
                 this->stripExtraInfo(ui->le_Livery->text())
             );
@@ -219,7 +219,7 @@ namespace BlackGui
             this->setLivery(livery);
         }
 
-        void CDbLiverySelectorComponent::ps_completerActivated(const QString &liveryCode)
+        void CDbLiverySelectorComponent::onCompleterActivated(const QString &liveryCode)
         {
             this->setlivery(liveryCode);
         }

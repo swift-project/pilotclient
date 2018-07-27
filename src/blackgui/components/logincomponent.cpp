@@ -304,7 +304,7 @@ namespace BlackGui
 
         void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
-            if (state != CEntityFlags::ReadFinished) { return; }
+            if (!CEntityFlags::isFinishedReadState(state)) { return; }
             Q_UNUSED(number);
 
             if (entity == CEntityFlags::VatsimDataFile)

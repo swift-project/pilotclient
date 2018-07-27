@@ -40,8 +40,8 @@ namespace BlackGui
             ui->tvp_Distributors->setFilterWidget(ui->filter_Distributor);
 
             connect(ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::distributorsRead);
-            this->distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
+            this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
         }
 
         CDbDistributorComponent::~CDbDistributorComponent()
@@ -67,10 +67,11 @@ namespace BlackGui
             return ui->tvp_Distributors->hasSelection();
         }
 
-        void CDbDistributorComponent::distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbDistributorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
             }
@@ -78,7 +79,7 @@ namespace BlackGui
 
         void CDbDistributorComponent::reload()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::DistributorEntity);
         }
     } // ns

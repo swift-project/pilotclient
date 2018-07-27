@@ -58,12 +58,12 @@ namespace BlackGui
             //! Filter by airline ICAO
             void filterByAirline(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
-        private slots:
+        private:
             //! Liveries codes have been read
-            void ps_liveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
-            void ps_reload();
+            void onReload();
 
         private:
             QScopedPointer<Ui::CDbLiveryComponent> ui;

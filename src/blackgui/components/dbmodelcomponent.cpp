@@ -44,16 +44,16 @@ namespace BlackGui
             ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
             ui->tvp_AircraftModel->menuAddItems(CViewBaseNonTemplate::MenuCopy);
             ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
-            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
+            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::onReload);
             connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged);
 
             // configure view
             ui->tvp_AircraftModel->setFilterWidget(ui->filter_AircraftModelFilter);
             ui->tvp_AircraftModel->allowDragDrop(true, false);
 
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::ps_modelsRead);
-            this->ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::onModelsRead);
+            this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
         }
 
         CDbModelComponent::~CDbModelComponent()
@@ -77,37 +77,29 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, ts);
         }
 
-        void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbModelComponent::onModelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::ModelEntity))
             {
-                if (readState == CEntityFlags::ReadFinished || readState == CEntityFlags::ReadFinishedRestricted)
+                if (CEntityFlags::isFinishedReadState(readState))
                 {
                     ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
                 }
             }
         }
 
-        void CDbModelComponent::ps_reload()
+        void CDbModelComponent::onReload()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity);
         }
 
-        void CDbModelComponent::ps_onStyleSheetChanged()
+        void CDbModelComponent::onStyleSheetChanged()
         {
             // code goes here
         }
 
-        void CDbModelComponent::ps_stashSelectedModels()
-        {
-            if (!ui->tvp_AircraftModel->hasSelection()) { return; }
-            const CAircraftModelList models(ui->tvp_AircraftModel->selectedObjects());
-            if (!models.isEmpty())
-            {
-                emit requestStash(models);
-            }
-        }
     } // ns
 } // ns

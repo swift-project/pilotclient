@@ -45,12 +45,12 @@ namespace BlackGui
             //! Destructor
             virtual ~CDbCountryComponent();
 
-        private slots:
+        private:
             //! Countries have been read
-            void ps_countriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
-            void ps_reload();
+            void onReload();
 
         private:
             QScopedPointer<Ui::CDbCountryComponent> ui;

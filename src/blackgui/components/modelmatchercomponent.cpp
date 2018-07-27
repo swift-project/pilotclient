@@ -73,7 +73,7 @@ namespace BlackGui
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
             connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRed);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead);
 
             this->redisplay();
         }
@@ -137,9 +137,9 @@ namespace BlackGui
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
 
-        void CModelMatcherComponent::onWebDataRed(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CModelMatcherComponent::onWebDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
-            if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && state == CEntityFlags::ReadFinished)
+            if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && CEntityFlags::isFinishedReadState(state))
             {
                 const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings(true));
                 ui->le_ModelString->setCompleter(new QCompleter(modelStrings, this));

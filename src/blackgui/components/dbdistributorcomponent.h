@@ -21,8 +21,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CDbDistributorComponent; }
 namespace BlackMisc { namespace Simulation { class CSimulatorInfo; }}
 namespace BlackGui
@@ -63,7 +61,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbDistributorComponent> ui;
 
             //! Distributors have been read
-            void distributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
             void reload();

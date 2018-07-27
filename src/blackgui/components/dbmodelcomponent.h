@@ -59,22 +59,19 @@ namespace BlackGui
             //! Request to stash the selected models
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
 
-        public slots:
+        public:
             //! Load new data
             void requestUpdatedData();
 
-        private slots:
+        private:
             //! Models have been read
-            void ps_modelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onModelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
-            void ps_reload();
+            void onReload();
 
             //! Style sheet changed
-            void ps_onStyleSheetChanged();
-
-            //! Stash the selected models
-            void ps_stashSelectedModels();
+            void onStyleSheetChanged();
 
         private:
             QScopedPointer<Ui::CDbModelComponent> ui;

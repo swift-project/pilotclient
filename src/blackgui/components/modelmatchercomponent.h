@@ -53,7 +53,7 @@ namespace BlackGui
             void onCacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Web data have been read
-            void onWebDataRed(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void onWebDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
             //! Run the matcher
             void testModelMatching();

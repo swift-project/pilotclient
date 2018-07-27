@@ -36,14 +36,14 @@ namespace BlackGui
             ui->setupUi(this);
             this->setViewWithIndicator(ui->tvp_AircraftIcao);
             ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
-            connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
+            connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::onReload);
 
             ui->tvp_AircraftIcao->allowDragDrop(true, false);
             ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
             ui->tvp_AircraftIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::ps_icaoRead);
-            this->ps_icaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead);
+            this->onIcaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 
         CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent()
@@ -59,18 +59,19 @@ namespace BlackGui
             ui->filter_AircraftIcao->filter(icao);
         }
 
-        void CDbAircraftIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAircraftIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
             }
         }
 
-        void CDbAircraftIcaoComponent::ps_reload()
+        void CDbAircraftIcaoComponent::onReload()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftIcaoEntity, QDateTime());
         }
     } // ns

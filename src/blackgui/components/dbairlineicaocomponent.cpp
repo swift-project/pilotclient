@@ -41,9 +41,9 @@ namespace BlackGui
             ui->tvp_AirlineIcao->setFilterWidget(ui->filter_AirlineIcao);
             ui->tvp_AirlineIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-            connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::ps_icaoRead);
-            this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
+            connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::onReload);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::onIcaoRead);
+            this->onIcaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
         }
 
         CDbAirlineIcaoComponent::~CDbAirlineIcaoComponent()
@@ -54,18 +54,19 @@ namespace BlackGui
             return ui->tvp_AirlineIcao;
         }
 
-        void CDbAirlineIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAirlineIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 ui->tvp_AirlineIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAirlineIcaoCodes());
             }
         }
 
-        void CDbAirlineIcaoComponent::ps_reload()
+        void CDbAirlineIcaoComponent::onReload()
         {
-            if (!sGui || !sGui->hasWebDataServices()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AirlineIcaoEntity, QDateTime());
         }
     } // ns

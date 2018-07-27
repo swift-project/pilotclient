@@ -31,15 +31,15 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setViewWithIndicator(ui->tvp_Liveries);
-            connect(ui->tvp_Liveries, &CLiveryView::requestNewBackendData, this, &CDbLiveryComponent::ps_reload);
+            connect(ui->tvp_Liveries, &CLiveryView::requestNewBackendData, this, &CDbLiveryComponent::onReload);
 
             // filter and drag and drop
             ui->tvp_Liveries->setFilterWidget(ui->filter_Livery);
             ui->tvp_Liveries->allowDragDrop(true, false);
             ui->tvp_Liveries->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::ps_liveriesRead);
-            this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::onLiveriesRead);
+            this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 
         CDbLiveryComponent::~CDbLiveryComponent()
@@ -60,18 +60,19 @@ namespace BlackGui
             ui->filter_Livery->filter(icao);
         }
 
-        void CDbLiveryComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbLiveryComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 ui->tvp_Liveries->updateContainerMaybeAsync(sGui->getWebDataServices()->getLiveries());
             }
         }
 
-        void CDbLiveryComponent::ps_reload()
+        void CDbLiveryComponent::onReload()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::LiveryEntity);
         }
     } // ns

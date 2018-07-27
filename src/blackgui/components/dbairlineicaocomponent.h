@@ -21,8 +21,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CDbAirlineIcaoComponent; }
 namespace BlackGui
 {
@@ -35,7 +33,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbAirlineIcaoComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
+            public CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -44,17 +42,17 @@ namespace BlackGui
             explicit CDbAirlineIcaoComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbAirlineIcaoComponent();
+            virtual ~CDbAirlineIcaoComponent();
 
             //! Get the view
             BlackGui::Views::CAirlineIcaoCodeView *view() const;
 
-        private slots:
+        private:
             //! ICAO codes have been read
-            void ps_icaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onIcaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
-            void ps_reload();
+            void onReload();
 
         private:
             QScopedPointer<Ui::CDbAirlineIcaoComponent> ui;

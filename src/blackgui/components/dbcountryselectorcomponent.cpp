@@ -156,8 +156,8 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!sGui) { return; }
-            if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
                 {
@@ -168,18 +168,18 @@ namespace BlackGui
                     connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbCountrySelectorComponent::onCompleterActivated);
 
                     ui->le_CountryName->setCompleter(c);
-                    this->m_completerCountryNames.reset(c); // deletes any old completer
+                    m_completerCountryNames.reset(c); // deletes any old completer
                 }
                 else
                 {
-                    this->m_completerCountryNames.reset(nullptr);
+                    m_completerCountryNames.reset(nullptr);
                 }
             }
         }
 
         void CDbCountrySelectorComponent::onDataChanged()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             QObject *sender = this->sender();
             if (sender == ui->le_CountryIso)
             {

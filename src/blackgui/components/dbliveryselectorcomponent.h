@@ -50,7 +50,7 @@ namespace BlackGui
             explicit CDbLiverySelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbLiverySelectorComponent();
+            virtual ~CDbLiverySelectorComponent();
 
             //! Current livery
             void setLivery(const BlackMisc::Aviation::CLivery &livery);
@@ -93,17 +93,16 @@ namespace BlackGui
             //! \copydoc QWidget::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
-        private slots:
+        private:
             //! Data have been changed
-            void ps_dataChanged();
+            void onDataChanged();
 
             //! Completer activated
-            void ps_completerActivated(const QString &liveryCode);
+            void onCompleterActivated(const QString &liveryCode);
 
             //! Distributors have been read
-            void ps_liveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-        private:
             //! Strip extra info from livery code
             QString stripExtraInfo(const QString &liveryCode) const;
 

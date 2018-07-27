@@ -54,12 +54,12 @@ namespace BlackGui
             //! Filter by ICAO as default
             void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
-        private slots:
+        private:
             //! ICAO codes have been read
-            void ps_icaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onIcaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
-            void ps_reload();
+            void onReload();
 
         private:
             QScopedPointer<Ui::CDbAircraftIcaoComponent> ui;

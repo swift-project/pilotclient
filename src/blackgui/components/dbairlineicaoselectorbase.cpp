@@ -125,7 +125,7 @@ namespace BlackGui
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
                 {
-                    CAirlineIcaoCodeList icaos(valueVariant.value<CAirlineIcaoCodeList>());
+                    const CAirlineIcaoCodeList icaos(valueVariant.value<CAirlineIcaoCodeList>());
                     if (icaos.isEmpty()) { return; }
                     this->setAirlineIcao(icaos.front());
                 }
@@ -135,7 +135,7 @@ namespace BlackGui
         void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!sGui) { return; }
-            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
                 {

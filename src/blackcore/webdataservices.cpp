@@ -1326,7 +1326,7 @@ namespace BlackCore
         }
 
         // individual signals
-        if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
+        if (CEntityFlags::isFinishedReadState(state))
         {
             if (entities.testFlag(CEntityFlags::AirportEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirportEntity)) { emit swiftDbAirportsRead(); }
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity)) { emit swiftDbAirlineIcaoRead(); }
