@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>184</width>
-    <height>66</height>
+    <width>273</width>
+    <height>191</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>X-Plane plugin settings</string>
   </property>
   <layout class="QGridLayout" name="gl_ConfigWindow">
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>2</number>
+   </property>
    <item row="1" column="0">
     <widget class="QDialogButtonBox" name="bb_OkCancel">
      <property name="standardButtons">
@@ -25,7 +40,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="BlackGui::Components::CSettingsXSwiftBusComponent" name="comp_SettingsXSwiftBus">
+    <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -38,9 +53,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CSettingsXSwiftBusComponent</class>
+   <class>BlackGui::Components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/settingsxswiftbuscomponent.h</header>
+   <header>blackgui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

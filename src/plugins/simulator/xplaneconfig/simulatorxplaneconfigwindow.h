@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "simulatorxplaneconfig.h"
 #include <QObject>
 #include <QScopedPointer>
@@ -39,7 +40,10 @@ namespace BlackSimPlugin
             virtual ~CSimulatorXPlaneConfigWindow();
 
         private:
+            void settingsAccepted();
+
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
         };
     } // ns
 } // ns
