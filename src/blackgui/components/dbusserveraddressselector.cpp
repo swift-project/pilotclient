@@ -31,11 +31,7 @@ namespace BlackGui
             Q_ASSERT(sGui);
             ui->setupUi(this);
 
-            // normally no system Bus on Windows
-            if (CBuildConfig::isRunningOnWindowsNtPlatform() || !sGui->isDeveloperFlagSet())
-            {
-                this->setSystemDBusVisible(false);
-            }
+            this->setSystemDBusVisible(false);
 
             ui->cb_DBusServerAddress->addItems(CNetworkUtils::getKnownLocalIpV4Addresses());
             ui->cb_DBusServerAddress->setCurrentIndex(0);
