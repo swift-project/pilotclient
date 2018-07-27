@@ -78,9 +78,9 @@ R"(<node>
     </method>
     <method name="getElevationAtPosition">
       <arg name="callsign" type="s" direction="in"/>
-      <arg name="latitude" type="d" direction="in"/>
-      <arg name="longitude" type="d" direction="in"/>
-      <arg name="altitude" type="d" direction="in"/>
+      <arg name="latitudeDeg" type="d" direction="in"/>
+      <arg name="longitudeDeg" type="d" direction="in"/>
+      <arg name="altitudeMeters" type="d" direction="in"/>
       <arg type="s" direction="out"/>
       <arg type="d" direction="out"/>
     </method>
