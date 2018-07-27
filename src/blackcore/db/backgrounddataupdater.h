@@ -14,12 +14,14 @@
 
 #include "blackcore/data/dbcaches.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
+
 #include <QMap>
 #include <QReadWriteLock>
+#include <atomic>
 
 namespace BlackCore
 {
@@ -46,15 +48,16 @@ namespace BlackCore
             void consolidating(bool running);
 
         private:
-            int  m_cycle = 0;      //!< cycle
-            bool m_inWork = false; //!< indicates a running update
-            bool m_updatePublishedModels = true; //!< update when models have been updated
             mutable QReadWriteLock m_lockMsg;    //!< lock snapshot
-
-            BlackMisc::Simulation::Data::CModelCaches    m_modelCaches    { false, this }; //!< caches
-            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches
+            std::atomic_int  m_cycle  { 0 };     //!< cycle
+            std::atomic_bool m_inWork { false }; //!< indicates a running update
+            std::atomic_bool m_updatePublishedModels { true };   //!< update when models have been updated
             QMap<QString, QDateTime> m_syncedModelsLatestChange; //! timestamp per cache when last synced
             BlackMisc::CStatusMessageList m_messageHistory;
+
+            // set/caches as member as we are in own thread, central instance will not work
+            BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };
+            BlackMisc::Simulation::Data::CModelSetCaches m_modelSets   { false, this };
 
             //! Do the update checks
             void doWork();
@@ -63,9 +66,9 @@ namespace BlackCore
             void triggerInfoReads();
 
             //! Sync the model cache, normally model set or simulator models cache
-            //! \remark if no DB models are passed all DB models are used
-            void syncModelOrModelSetCacheWithDbData(BlackMisc::Simulation::Data::IMultiSimulatorModelCaches &cache,
-                                                    const BlackMisc::Simulation::CAircraftModelList &dbModelsConsidered = {});
+            //! \param modelSetFlag true means model set, false means model cach
+            //! \param dbModelsConsidered if no DB models are passed all DB models are used
+            void syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const BlackMisc::Simulation::CAircraftModelList &dbModelsConsidered = {});
 
             //! Sync DB entity
             void syncDbEntity(BlackMisc::Network::CEntityFlags::Entity entity);
@@ -75,6 +78,9 @@ namespace BlackCore
 
             //! Models have been published
             void onModelsPublished(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
+
+            //! Model or model set instance
+            BlackMisc::Simulation::Data::IMultiSimulatorModelCaches &modelCaches(bool modelSetFlag);
 
             //! Add history message
             //! \threadsafe

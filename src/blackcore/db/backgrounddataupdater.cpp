@@ -54,10 +54,13 @@ namespace BlackCore
         void CBackgroundDataUpdater::doWork()
         {
             if (!this->doWorkCheck()) { return; }
+            if (m_inWork) { return; }
             m_inWork = true;
 
             emit this->consolidating(true);
-            const int cycle = m_cycle;
+            int cycle = m_cycle;
+            this->addHistory(CLogMessage(this).info("Background consolidation cycle %1") << cycle);
+
             switch (cycle)
             {
             case 0:
@@ -75,18 +78,19 @@ namespace BlackCore
                 this->syncDbEntity(CEntityFlags::AircraftIcaoEntity);
                 break;
             case 2:
-                this->addHistory(CLogMessage(this).info("Synchronize %1") << m_modelCaches.getDescription());
-                this->syncModelOrModelSetCacheWithDbData(m_modelCaches);
+                this->addHistory(CLogMessage(this).info("Synchronize %1") << this->modelCaches(true).getDescription());
+                this->syncModelOrModelSetCacheWithDbData(true); // set
                 break;
             case 3:
-                this->addHistory(CLogMessage(this).info("Synchronize %1") << m_modelSetCaches.getDescription());
-                this->syncModelOrModelSetCacheWithDbData(m_modelSetCaches);
+                this->addHistory(CLogMessage(this).info("Synchronize %1") << this->modelCaches(false).getDescription());
+                this->syncModelOrModelSetCacheWithDbData(false);
                 break;
             default:
                 break;
             }
-            ++m_cycle %= 4;
 
+            ++cycle %= 4;
+            m_cycle = cycle;
             m_inWork = false;
             emit this->consolidating(false);
         }
@@ -98,20 +102,21 @@ namespace BlackCore
             sApp->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
-        void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(IMultiSimulatorModelCaches &cache, const CAircraftModelList &dbModelsConsidered)
+        void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const CAircraftModelList &dbModelsConsidered)
         {
             if (!this->doWorkCheck()) { return; }
+            IMultiSimulatorModelCaches &modelCaches = this->modelCaches(modelSetFlag);
             const QDateTime latestDbModelsTs = dbModelsConsidered.isEmpty() ?
                                                sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
                                                dbModelsConsidered.latestTimestamp();
             if (!latestDbModelsTs.isValid()) { return; }
 
             // newer DB models as cache
-            const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(cache.getDescription());
+            const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(modelCaches.getDescription());
             if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync) { return; }
 
-            m_syncedModelsLatestChange[cache.getDescription()] = latestDbModelsTs;
-            const CSimulatorInfo simulators = cache.simulatorsWithInitializedCache(); // simulators ever used
+            m_syncedModelsLatestChange[modelCaches.getDescription()] = latestDbModelsTs;
+            const CSimulatorInfo simulators = modelCaches.simulatorsWithInitializedCache(); // simulators ever used
             if (simulators.isNoSimulator()) { return; }
 
             const CAircraftModelList dbModels = dbModelsConsidered.isEmpty() ?
@@ -122,7 +127,7 @@ namespace BlackCore
             for (const CSimulatorInfo &singleSimulator : simulatorsSet)
             {
                 if (!this->doWorkCheck()) { return; }
-                CAircraftModelList simulatorModels = cache.getSynchronizedCachedModels(singleSimulator);
+                CAircraftModelList simulatorModels = modelCaches.getSynchronizedCachedModels(singleSimulator);
                 if (simulatorModels.isEmpty()) { continue; }
                 const CAircraftModelList dbModelsForSimulator = dbModels.matchesSimulator(singleSimulator);
                 if (dbModelsForSimulator.isEmpty()) { continue; }
@@ -132,7 +137,7 @@ namespace BlackCore
                 if (c > 0)
                 {
                     this->addHistory(CLogMessage(this).info("Consolidated %1 models for '%2'") << c << singleSimulator.convertToQString());
-                    const CStatusMessage m = cache.setCachedModels(simulatorModels, singleSimulator);
+                    const CStatusMessage m = modelCaches.setCachedModels(simulatorModels, singleSimulator);
                     CLogMessage::preformatted(m);
                     this->addHistory(m);
                 }
@@ -184,11 +189,18 @@ namespace BlackCore
             if (modelsPublished.isEmpty()) { return; }
             if (!m_updatePublishedModels)  { return; }
             if (!directWrite) { return; } // those models are CRs and have to be released first
+            if (m_inWork) { return; } // no 2 updates at the same time
 
             emit this->consolidating(true);
-            this->syncModelOrModelSetCacheWithDbData(m_modelCaches, modelsPublished);
-            this->syncModelOrModelSetCacheWithDbData(m_modelSetCaches, modelsPublished);
+            this->syncModelOrModelSetCacheWithDbData(true, modelsPublished);
+            this->syncModelOrModelSetCacheWithDbData(false, modelsPublished);
             emit this->consolidating(false);
+        }
+
+        IMultiSimulatorModelCaches &CBackgroundDataUpdater::modelCaches(bool modelSetFlag)
+        {
+            if (modelSetFlag) { return m_modelSets; }
+            return m_modelCaches;
         }
 
         void CBackgroundDataUpdater::addHistory(const CStatusMessage &msg)
