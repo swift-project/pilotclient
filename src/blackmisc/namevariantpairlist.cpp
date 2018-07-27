@@ -48,7 +48,7 @@ namespace BlackMisc
     QString CNameVariantPairList::getValueAsString(const QString &name) const
     {
         if (name.isEmpty()) { return QString(); }
-        CVariant cs(getValue(name).getVariant());
+        const CVariant cs(getValue(name).getVariant());
         if (cs.isNull() || !cs.canConvert<QString>()) { return QString(); }
         return cs.value<QString>();
     }

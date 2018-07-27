@@ -21,8 +21,6 @@
 
 #include <QString>
 
-class QWidget;
-
 namespace BlackMisc { class CNameVariantPair; }
 namespace BlackGui
 {

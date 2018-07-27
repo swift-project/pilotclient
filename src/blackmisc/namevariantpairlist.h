@@ -28,7 +28,7 @@ namespace BlackMisc
     //! \note Currently name must be unique
     class BLACKMISC_EXPORT CNameVariantPairList :
         public CSequence<CNameVariantPair>,
-        public BlackMisc::Mixin::MetaType<CNameVariantPairList>
+        public Mixin::MetaType<CNameVariantPairList>
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNameVariantPairList)
