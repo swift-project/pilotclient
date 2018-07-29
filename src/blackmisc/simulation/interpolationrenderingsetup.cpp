@@ -11,8 +11,10 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -22,7 +24,9 @@ namespace BlackMisc
     namespace Simulation
     {
         CInterpolationAndRenderingSetupBase::CInterpolationAndRenderingSetupBase()
-        { }
+        {
+            m_fixSceneryOffset = CBuildConfig::isLocalDeveloperDebugBuild();
+        }
 
         bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
         {

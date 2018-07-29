@@ -126,7 +126,7 @@ namespace BlackMisc
             bool m_forceVtolInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
             bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
-            bool m_fixSceneryOffset       = true;  //!< Fix. scenery offset
+            bool m_fixSceneryOffset       = false; //!< Fix. scenery offset
             int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
         };
 
