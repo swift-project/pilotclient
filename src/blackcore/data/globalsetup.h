@@ -13,11 +13,12 @@
 #define BLACKCORE_DATA_GLOBALSETUP_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/metaclass.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
@@ -34,6 +35,7 @@ namespace BlackCore
         //! \note also called the bootstrap file as it is required once to get information where all the data are located
         class BLACKCORE_EXPORT CGlobalSetup :
             public BlackMisc::CValueObject<CGlobalSetup>,
+            public BlackMisc::CIdentifiable,
             public BlackMisc::ITimestampBased
         {
         public:
@@ -60,6 +62,17 @@ namespace BlackCore
                 IndexSharedUrls,
                 IndexMappingMinimumVersion
             };
+
+            //! Add info when pinging
+            enum PingTypeFlag
+            {
+                PingUnspecific = 0,
+                PingLogoff     = 1 << 0,
+                PingStarted    = 1 << 1,
+                PingShutdown   = 1 << 2,
+                PingCompleteShutdown = PingLogoff | PingShutdown
+            };
+            Q_DECLARE_FLAGS(PingType, PingTypeFlag)
 
             //! Default constructor
             CGlobalSetup();
@@ -125,6 +138,9 @@ namespace BlackCore
             //! DB ping service
             //! \remark based on getDbRootDirectoryUrl
             BlackMisc::Network::CUrl getDbClientPingServiceUrl() const;
+
+            //! Ping the DB server, fire and forget (no feedback etc)
+            BlackMisc::Network::CUrl getDbClientPingServiceUrl(PingType type) const;
 
             //! alpha XSwiftBus files available
             BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
@@ -275,5 +291,8 @@ namespace BlackCore
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
+Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup::PingTypeFlag)
+Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup::PingType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::Data::CGlobalSetup::PingType)
 
 #endif // guard

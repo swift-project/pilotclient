@@ -31,6 +31,7 @@ namespace BlackCore
     namespace Data
     {
         CGlobalSetup::CGlobalSetup() :
+            CIdentifiable("CGlobalSetup"),
             ITimestampBased(0)
         {
             this->initDefaultValues();
@@ -46,7 +47,7 @@ namespace BlackCore
             m_vatsimDataFileUrls = CUrlList({ "http://info.vroute.net/vatsim-data.txt" });
             m_sharedUrls = CUrlList(
             {
-                "https://datastore.swift-project.org/shared",
+                "https://datastore.swift-project.net/shared/",
                 "http://www.siliconmind.de/datastore/shared/",
                 "http://swift-project.org/datastore/shared/"
             });
@@ -141,6 +142,19 @@ namespace BlackCore
             return getDbRootDirectoryUrl().
                    withAppendedPath("/service/clientping.php").
                    withSwitchedScheme("https", m_dbHttpsPort);
+        }
+
+        CUrl CGlobalSetup::getDbClientPingServiceUrl(PingType type) const
+        {
+            CUrl pingUrl = this->getDbClientPingServiceUrl();
+            if (pingUrl.isEmpty()) { CUrl(); }
+
+            pingUrl.appendQuery("uuid", this->identifier().toUuidString());
+            pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
+            if (type.testFlag(PingLogoff)) { pingUrl.appendQuery("logoff", "true"); }
+            if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
+            if (type.testFlag(PingStarted)) { pingUrl.appendQuery("started", "true"); }
+            return pingUrl;
         }
 
         CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
