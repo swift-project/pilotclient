@@ -21,6 +21,7 @@
 #include "blackmisc/db/updateinfo.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
@@ -91,7 +92,9 @@ namespace BlackCore
      *
      * \sa BlackGui::CGuiApplication for the GUI version of application
      */
-    class BLACKCORE_EXPORT CApplication : public QObject
+    class BLACKCORE_EXPORT CApplication :
+        public QObject,
+        public BlackMisc::CIdentifiable
     {
         Q_OBJECT
 
@@ -386,11 +389,14 @@ namespace BlackCore
         static constexpr int NoLogRequestId = -1;     //!< network request without logging
         static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
 
+        //! The network reply callback when request is completed
+        using CallbackSlot = BlackMisc::CSlot<void(QNetworkReply *)>;
+
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
 
         //! Get the watchdog
-        //! \remark mostly for UNIT tests etc, normally not meant to be used directly
+        //! \private mostly for UNIT tests etc, normally not meant to be used directly
         Db::CNetworkWatchdog *getNetworkWatchdog() const;
 
         //! Allows to mark the DB as "up" or "down"
@@ -398,7 +404,7 @@ namespace BlackCore
         void setSwiftDbAccessibility(bool accessible);
 
         //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
-        int triggerNetworkChecks();
+        int triggerNetworkWatchdogChecks();
 
         //! Is network accessible
         bool isNetworkAccessible() const;
@@ -430,43 +436,39 @@ namespace BlackCore
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url, int logId,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Post to network
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data,
-                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CallbackSlot &callback);
 
         //! Post to network
         //! \note This method takes ownership over \c multiPart.
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart,
-                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CallbackSlot &callback);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
-        QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = NoRedirects);
+        QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url, const CallbackSlot &callback, int maxRedirects = NoRedirects);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
-        QNetworkReply *headerFromNetwork(const QNetworkRequest &request,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = NoRedirects);
+        QNetworkReply *headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects = NoRedirects);
 
         //! Download file from network and store it as passed
         //! \threadsafe
@@ -598,13 +600,22 @@ namespace BlackCore
         //! Async. start when setup is loaded
         BlackMisc::CStatusMessageList asyncWebAndContextStart();
 
+        using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
+
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
-                                       int logId,
-                                       const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
-                                       int maxRedirects,
-                                       std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
+                                       int logId, const CallbackSlot &callback,
+                                       int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
+
+        //! Call httpRequestImpl in correct thread
+        void httpRequestImplInQAMThread(const QNetworkRequest &request,
+                                        int logId, const CallbackSlot &callback,
+                                        int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
+
+        //! Triggers a check of the network accessibility
+        //! \remark this is a check that will double check that the watchdog will receive the correct QNetworkAccessManager::NetworkAccessibility
+        void triggerNetworkAccessibilityCheck(int deferredMs);
 
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();

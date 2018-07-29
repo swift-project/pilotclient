@@ -38,7 +38,7 @@ namespace BlackCoreTest
         QVERIFY2(sApp, "sApp not available");
         QVERIFY2(sApp->getNetworkWatchdog(), "No network watchdog");
 
-        const int n = sApp->triggerNetworkChecks();
+        const int n = sApp->triggerNetworkWatchdogChecks();
         QVERIFY2(n >= 0, "Cannot trigger setup reader");
         m_networkCheckCount = n;
         qDebug() << "Initial network check count:" << n;

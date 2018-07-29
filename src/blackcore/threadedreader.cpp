@@ -136,7 +136,7 @@ namespace BlackCore
     void CThreadedReader::threadAssertCheck() const
     {
         Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
-        Q_ASSERT_X(QObject::thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
+        Q_ASSERT_X(this->thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
     }
 
     void CThreadedReader::setInitialAndPeriodicTime(int initialTime, int periodicTime)

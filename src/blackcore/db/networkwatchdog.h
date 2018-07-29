@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_DB_NETWORKWATCHDOG_H
 #define BLACKCORE_DB_NETWORKWATCHDOG_H
 
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/worker.h"
@@ -35,7 +36,11 @@ namespace BlackCore
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Ctor
-            explicit CNetworkWatchdog(QObject *parent = nullptr);
+            explicit CNetworkWatchdog(bool networkAccessible, QObject *parent);
+
+            //! Network status changed, use this function to inform the watchdog
+            //! \threadsafe
+            void setNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessibility);
 
             //! DB available?
             //! \threadsafe
@@ -100,25 +105,11 @@ namespace BlackCore
             //! \threadsafe
             void setWorkingSharedUrl(const BlackMisc::Network::CUrl &workingUrl);
 
-            //! Network status changed, use this function to inform the watchdog
-            void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);
-
             //! Graceful shutdown
             void gracefulShutdown();
 
-            //! Add info when pinging
-            enum PingTypeFlag
-            {
-                PingUnspecific = 0,
-                PingLogoff     = 1 << 0,
-                PingStarted    = 1 << 1,
-                PingShutdown   = 1 << 2,
-                PingCompleteShutdown = PingLogoff | PingShutdown
-            };
-            Q_DECLARE_FLAGS(PingType, PingTypeFlag)
-
             //! Ping the DB server, fire and forget (no feedback etc)
-            void pingDbClientService(PingType type = PingUnspecific, bool force = false);
+            void pingDbClientService(Data::CGlobalSetup::PingType type = Data::CGlobalSetup::PingUnspecific, bool force = false);
 
             //! URL referring to the DB
             //! \remark depends on BlackCore::Application::getGlobalSetup()
@@ -136,6 +127,10 @@ namespace BlackCore
             //! Internet was available, but not longer is and vice versa
             void changedInternetAccessibility(bool available);
 
+            //! Cleaned version of QNetworkAccessManager::networkAccessibleChanged
+            //! \remark does only fire if the accessibility changed
+            void changedNetworkAccessible(QNetworkAccessManager::NetworkAccessibility accessible);
+
         private:
             static constexpr int CanConnectTimeMs = 5000;
 
@@ -145,7 +140,7 @@ namespace BlackCore
             //! Do check
             bool doWorkCheck() const;
 
-            //! Trigger the changed signals
+            //! Trigger the changed signals and avoid unneccessary signals
             void triggerChangedSignals(bool oldDbAccessible, bool oldInternetAccessible);
 
             //! Init a working shared URL
@@ -171,21 +166,18 @@ namespace BlackCore
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress
+            std::atomic_int  m_networkAccessibility { QNetworkAccessManager::Accessible }; //!< last state
             std::atomic_int  m_totalCheckCount { 0 }; //!< counting number of checks
-            std::atomic_int  m_totalBadCountDb { 0 }; //! Total number of DB failing counts (only real responses when tried)
-            std::atomic_int  m_totalBadCountInternet { 0 }; //! Total number of Internet failing count (only when network is accessible)
+            std::atomic_int  m_totalBadCountDb { 0 }; //!< Total number of DB failing counts (only real responses when tried)
+            std::atomic_int  m_totalBadCountInternet { 0 }; //!< Total number of Internet failing count (only when network is accessible)
             std::atomic_int  m_totalGoodCountDb { 0 };
             std::atomic_int  m_totalGoodCountInternet { 0 };
-            std::atomic_int  m_consecutivePingBadCount { 0 }; //! Bad count of ping until a godd state is received
+            std::atomic_int  m_consecutivePingBadCount { 0 }; //!< Bad count of ping until a godd state is received
             QString m_lastPingUrl;
             BlackMisc::Network::CUrl m_workingSharedUrl;
             mutable QReadWriteLock m_lockUrl;
         };
     } // ns
 } // ns
-
-Q_DECLARE_METATYPE(BlackCore::Db::CNetworkWatchdog::PingTypeFlag)
-Q_DECLARE_METATYPE(BlackCore::Db::CNetworkWatchdog::PingType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::Db::CNetworkWatchdog::PingType)
 
 #endif // guard

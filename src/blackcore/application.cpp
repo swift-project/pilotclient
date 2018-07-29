@@ -104,6 +104,7 @@ namespace BlackCore
     { }
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
+        CIdentifiable(this),
         m_accessManager(new QNetworkAccessManager(this)),
         m_applicationInfo(application),
         m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
@@ -156,17 +157,19 @@ namespace BlackCore
             // Init network
             sApp = this;
             Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
-            m_networkWatchDog.reset(new CNetworkWatchdog(this)); // not yet started
+            CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(this->isNetworkAccessible(), this);
+            m_networkWatchDog.reset(nwWatchdog); // not yet started
             m_cookieManager = new CCookieManager({}, this);
             m_cookieManager->setParent(m_accessManager);
             m_accessManager->setCookieJar(m_cookieManager);
-            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::changedInternetAccessibility, Qt::QueuedConnection);
-            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
-            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::onChangedNetworkAccessibility, Qt::QueuedConnection);
+
+            // in to watchdog
+            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setNetworkAccessibility);
+
+            // out from watchdog to application
+            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedNetworkAccessible, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
             connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
             connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
-            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::changedInternetAccessibility, Qt::QueuedConnection);
-            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::changedSwiftDbAccessibility, Qt::QueuedConnection);
 
             CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
             m_networkWatchDog->start(QThread::LowestPriority);
@@ -359,10 +362,9 @@ namespace BlackCore
             // crashpad dump
             if (this->isSet(m_cmdTestCrashpad))
             {
-                QPointer<CApplication> myself(this);
                 QTimer::singleShot(10 * 1000, [ = ]
                 {
-                    if (!myself) { return; }
+                    if (!sApp || sApp->isShuttingDown()) { return; }
 #ifdef BLACK_USE_CRASHPAD
                     CRASHPAD_SIMULATE_CRASH();
 #else
@@ -630,7 +632,7 @@ namespace BlackCore
         return getFromNetwork(request, NoLogRequestId, callback, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId, const CallbackSlot &callback, int maxRedirects)
     {
         return httpRequestImpl(request, logId, callback, maxRedirects, [](QNetworkAccessManager & qam, const QNetworkRequest & request)
         {
@@ -651,7 +653,7 @@ namespace BlackCore
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (!this->isNetworkAccessible()) { return nullptr; }
-        if (QThread::currentThread() != m_accessManager->thread())
+        if (multiPart->thread() != m_accessManager->thread())
         {
             multiPart->moveToThread(m_accessManager->thread());
         }
@@ -668,17 +670,17 @@ namespace BlackCore
         });
     }
 
-    QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CallbackSlot &callback, int maxRedirects)
     {
         return headerFromNetwork(url.toNetworkRequest(), callback, maxRedirects);
     }
 
-    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects)
     {
         return httpRequestImpl(request, NoLogRequestId, callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
     }
 
-    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const BlackMisc::CSlot<void (const CStatusMessage &)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const CSlot<void (const CStatusMessage &)> &callback, int maxRedirects)
     {
         // upfront checks
         if (url.isEmpty()) { return nullptr; }
@@ -686,7 +688,7 @@ namespace BlackCore
         const QFileInfo fi(saveAsFileName);
         if (!fi.dir().exists()) { return nullptr; }
 
-        CSlot<void (QNetworkReply *)> slot([ = ](QNetworkReply * reply)
+        CallbackSlot slot([ = ](QNetworkReply * reply)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
             CStatusMessage msg;
@@ -702,7 +704,11 @@ namespace BlackCore
                       CStatusMessage(this, CStatusMessage::SeverityError, "Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
             }
             nwReply->close();
-            QTimer::singleShot(0, callback.object(), [ = ] { callback(msg); });
+            QTimer::singleShot(0, callback.object(), [ = ]
+            {
+                if (!sApp || sApp->isShuttingDown()) { return; }
+                callback(msg);
+            });
         });
         slot.setObject(this); // object for thread
         QNetworkReply *reply = this->getFromNetwork(url, slot, maxRedirects);
@@ -725,7 +731,7 @@ namespace BlackCore
         m_networkWatchDog->setDbAccessibility(accessible);
     }
 
-    int CApplication::triggerNetworkChecks()
+    int CApplication::triggerNetworkWatchdogChecks()
     {
         if (!m_networkWatchDog) { return -1; }
         return m_networkWatchDog->triggerCheck();
@@ -1073,14 +1079,10 @@ namespace BlackCore
 
     void CApplication::onChangedInternetAccessibility(bool accessible)
     {
-        if (accessible)
-        {
-            CLogMessage(this).info("Internet reported accessible");
-        }
-        else
-        {
-            CLogMessage(this).warning("Internet not accessible");
-        }
+        if (accessible) { CLogMessage(this).info("Internet reported accessible"); }
+        else { CLogMessage(this).warning("Internet not accessible"); }
+
+        emit this->changedInternetAccessibility(accessible);
     }
 
     void CApplication::onChangedSwiftDbAccessibility(bool accessible, const CUrl &url)
@@ -1096,7 +1098,10 @@ namespace BlackCore
             {
                 CLogMessage(this).warning(m_networkWatchDog->getCheckInfo());
             }
+            this->triggerNetworkAccessibilityCheck(10 * 1000); // crosscheck after some time
         }
+
+        emit this->changedSwiftDbAccessibility(accessible, url);
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()
@@ -1544,22 +1549,48 @@ namespace BlackCore
 #endif
     }
 
+    void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
+    {
+        // run in QAM thread
+        if (this->isShuttingDown()) { return; }
+        QTimer::singleShot(0, m_accessManager, [ = ]
+        {
+            // should be now in QAM thread
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
+            this->httpRequestImpl(request, logId, callback, maxRedirects, requestOrPostMethod);
+        });
+    }
+
+    void CApplication::triggerNetworkAccessibilityCheck(int deferredMs)
+    {
+        if (this->isShuttingDown()) { return; }
+        if (!m_networkWatchDog) { return; }
+        QTimer::singleShot(deferredMs, m_accessManager, [ = ]
+        {
+            // should be now in QAM thread
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
+            const QNetworkAccessManager::NetworkAccessibility accessibility = m_accessManager->networkAccessible();
+            m_networkWatchDog->setNetworkAccessibility(accessibility);
+        });
+    }
+
     QNetworkReply *CApplication::httpRequestImpl(
         const QNetworkRequest &request, int logId,
-        const BlackMisc::CSlot<void (QNetworkReply *)> &callback, int maxRedirects, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod)
+        const CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
     {
         if (this->isShuttingDown()) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != m_accessManager->thread())
+        Q_ASSERT_X(CThreadUtils::isApplicationThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (!CThreadUtils::isCurrentThreadObjectThread(m_accessManager))
         {
-            // run in QAM thread
-            QTimer::singleShot(0, m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, logId, callback, maxRedirects, requestOrPostMethod));
-            return nullptr; // not yet started
+            this->httpRequestImplInQAMThread(request, logId, callback, maxRedirects, requestOrPostMethod);
+            return nullptr; // not yet started, will be called again in QAM thread
         }
 
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager thread mismatch");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest copiedRequest = CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
 
         // If URL is one of the shared URLs, add swift client SSL certificate to request
@@ -1584,7 +1615,7 @@ namespace BlackCore
                     {
                         QNetworkRequest redirectRequest(redirectUrl);
                         const int redirectsLeft = maxRedirects - 1;
-                        QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, redirectRequest, logId, callback, redirectsLeft, requestOrPostMethod));
+                        this->httpRequestImplInQAMThread(redirectRequest, logId, callback, redirectsLeft, requestOrPostMethod);
                         return;
                     }
                 }
