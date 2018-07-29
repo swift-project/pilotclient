@@ -84,17 +84,19 @@ namespace BlackMisc
     {
         m_result = m_task();
 
-        setFinished();
+        this->setFinished();
 
         auto *ownThread = thread();
-        moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater);
-        QMetaObject::invokeMethod(this, &CWorker::deleteLater);
+        this->moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+
+        //! \todo KB 2018-97 new syntax not yet supported on Jenkins QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater)
+        QMetaObject::invokeMethod(ownThread, "deleteLater");
+        QMetaObject::invokeMethod(this, "deleteLater");
     }
 
     const CLogCategoryList &CWorkerBase::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::worker() };
+        static const BlackMisc::CLogCategoryList cats { CLogCategory::worker() };
         return cats;
     }
 
