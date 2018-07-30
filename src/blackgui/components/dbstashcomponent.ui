@@ -87,14 +87,14 @@
       <item row="0" column="2">
        <widget class="QPushButton" name="pb_Validate">
         <property name="text">
-         <string>Validate</string>
+         <string>&amp;Validate</string>
         </property>
        </widget>
       </item>
       <item row="0" column="4">
        <widget class="QPushButton" name="pb_Publish">
         <property name="text">
-         <string>Publish</string>
+         <string>&amp;Publish</string>
         </property>
        </widget>
       </item>
