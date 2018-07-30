@@ -1140,4 +1140,8 @@ namespace BlackCore
         this->stopImpl();
         m_isRunning = false;
     }
+
+    ISimulatorFactory::~ISimulatorFactory()
+    { }
+
 } // namespace
