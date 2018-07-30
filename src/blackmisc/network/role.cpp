@@ -10,6 +10,7 @@
 #include "blackmisc/network/role.h"
 #include <QJsonValue>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -22,8 +23,8 @@ namespace BlackMisc
         QString CRole::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return "Role: " + m_name +
-                   " description: " + m_description +
+            return "Role: " % m_name %
+                   " description: " % m_description %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
@@ -31,34 +32,28 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName:
-                return CVariant::fromValue(this->m_name);
-            case IndexDescription:
-                return CVariant::fromValue(this->m_description);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexName: return CVariant::fromValue(m_name);
+            case IndexDescription: return CVariant::fromValue(m_description);
+            default: break;
             }
+            return CValueObject::propertyByIndex(index);
         }
 
         void CRole::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CRole>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName:
-                this->setName(variant.value<QString>());
-                break;
-            case IndexDescription:
-                this->setDescription(variant.value<QString>());
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexName: this->setName(variant.value<QString>()); break;
+            case IndexDescription: this->setDescription(variant.value<QString>()); break;
+            default: break;
             }
+            CValueObject::setPropertyByIndex(index, variant);
         }
 
         CRole CRole::fromDatabaseJson(const QJsonObject &json)

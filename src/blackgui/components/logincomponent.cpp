@@ -241,9 +241,7 @@ namespace BlackGui
                 {
                 case INetwork::LoginStealth: CLogMessage(this).info("login in stealth mode"); break;
                 case INetwork::LoginAsObserver: CLogMessage(this).info("login in observer mode"); break;
-                case INetwork::LoginNormal:
-                default:
-                    break;
+                default: break; // INetwork::LoginNormal
                 }
 
                 // Server

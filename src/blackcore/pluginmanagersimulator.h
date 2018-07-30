@@ -32,8 +32,7 @@ namespace BlackCore
     /*!
      * Manages plugins for the simulator context.
      */
-    class BLACKCORE_EXPORT CPluginManagerSimulator :
-        public BlackCore::IPluginManager
+    class BLACKCORE_EXPORT CPluginManagerSimulator : public BlackCore::IPluginManager
     {
         Q_OBJECT
 

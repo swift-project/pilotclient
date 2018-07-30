@@ -36,18 +36,16 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsVatsimReadersComponent();
 
-        private slots:
-            void ps_settingsChanged();
-            void ps_save();
-            void ps_reload();
-
         private:
+            void onSettingsChanged();
+            void save();
+            void reload();
             void initValues();
 
             QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
-            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
         };
     } // ns
 } // ns

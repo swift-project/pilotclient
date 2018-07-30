@@ -19,17 +19,13 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QModelIndex;
-class QWidget;
-
 namespace Ui { class CSettingsNetworkServersComponent; }
 namespace BlackGui
 {
     namespace Components
     {
         //! Settings for network servers
-        class BLACKGUI_EXPORT CSettingsNetworkServersComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CSettingsNetworkServersComponent : public QFrame
         {
             Q_OBJECT
 

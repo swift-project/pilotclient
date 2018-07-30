@@ -19,17 +19,13 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSettingsNetworkComponent; }
-
 namespace BlackGui
 {
     namespace Components
     {
         //! General settings for network
-        class BLACKGUI_EXPORT CSettingsNetworkComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CSettingsNetworkComponent : public QFrame
         {
             Q_OBJECT
 
@@ -38,7 +34,7 @@ namespace BlackGui
             explicit CSettingsNetworkComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsNetworkComponent();
+            virtual ~CSettingsNetworkComponent();
 
         private:
             QScopedPointer<Ui::CSettingsNetworkComponent> ui;

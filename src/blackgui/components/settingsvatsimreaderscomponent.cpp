@@ -24,52 +24,52 @@ namespace BlackGui
             ui(new Ui::CSettingsVatsimReadersComponent)
         {
             ui->setupUi(this);
-            connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::ps_save);
-            connect(ui->pb_Reload, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::ps_reload);
+            connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::save);
+            connect(ui->pb_Reload, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::reload);
             this->initValues();
         }
 
         CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent()
         { }
 
-        void CSettingsVatsimReadersComponent::ps_settingsChanged()
+        void CSettingsVatsimReadersComponent::onSettingsChanged()
         {
             this->initValues();
         }
 
-        void CSettingsVatsimReadersComponent::ps_save()
+        void CSettingsVatsimReadersComponent::save()
         {
-            const int metarSec = this->m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
-            const int bookingsSec = this->m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
-            const int dataFileSec = this->m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
+            const int metarSec = m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
+            const int bookingsSec = m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
+            const int dataFileSec = m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
 
             const int newMetarSec = ui->sb_Metar->value();
             if (newMetarSec != metarSec)
             {
-                this->m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newMetarSec), CTimeUnit::s()}));
+                m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newMetarSec), CTimeUnit::s()}));
             }
             const int newBookingsSec = ui->sb_Bookings->value();
             if (newBookingsSec != bookingsSec)
             {
-                this->m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newBookingsSec), CTimeUnit::s()}));
+                m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newBookingsSec), CTimeUnit::s()}));
             }
             const int newDataFileSec = ui->sb_DataFile->value();
             if (newDataFileSec != dataFileSec)
             {
-                this->m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newDataFileSec), CTimeUnit::s()}));
+                m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newDataFileSec), CTimeUnit::s()}));
             }
         }
 
-        void CSettingsVatsimReadersComponent::ps_reload()
+        void CSettingsVatsimReadersComponent::reload()
         {
             this->initValues();
         }
 
         void CSettingsVatsimReadersComponent::initValues()
         {
-            const int metarSec = this->m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
-            const int bookingsSec = this->m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
-            const int dataFileSec = this->m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
+            const int metarSec = m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
+            const int bookingsSec = m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
+            const int dataFileSec = m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
 
             ui->sb_Metar->setValue(metarSec);
             ui->sb_Bookings->setValue(bookingsSec);

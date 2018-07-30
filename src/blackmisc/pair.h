@@ -25,9 +25,9 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        using CAnglePair = QPair<CAngle, CAngle>;     //!< Pair of angle
-        using CLengthPair = QPair<CLength, CLength>;  //!< Pair of length
-        using CSpeedPair = QPair<CSpeed, CSpeed>;     //!< Pair of speed
+        using CAnglePair  = QPair<CAngle, CAngle>;   //!< Pair of angle
+        using CLengthPair = QPair<CLength, CLength>; //!< Pair of length
+        using CSpeedPair  = QPair<CSpeed, CSpeed>;   //!< Pair of speed
     }
     namespace Aviation
     {
