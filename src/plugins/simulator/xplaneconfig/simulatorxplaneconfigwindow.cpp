@@ -26,7 +26,7 @@ namespace BlackSimPlugin
             ui(new Ui::CSimulatorXPlaneConfigWindow)
         {
             ui->setupUi(this);
-
+            ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xswiftbusServerSetting.getDefault());
             ui->comp_SettingsXSwiftBus->set(m_xswiftbusServerSetting.getThreadLocal());
 
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::settingsAccepted);
