@@ -182,6 +182,7 @@ void SwiftGuiStd::init()
 
 void SwiftGuiStd::initStyleSheet()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     const QString s = sGui->getStyleSheetUtility().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
@@ -189,6 +190,7 @@ void SwiftGuiStd::initStyleSheet()
         CStyleSheetUtility::fileNameSwiftStandardGui()
     }
     );
+    this->setStyleSheet(""); //! \todo KB 2018-07 without clearing the stylesheet I see a crash here for the 2nd update
     this->setStyleSheet(s);
 }
 
