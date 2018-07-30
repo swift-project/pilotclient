@@ -45,6 +45,9 @@ namespace BlackGui
             //! P2P DBus address
             bool isP2P() const;
 
+            //! Set default P2P address
+            void setDefaultP2PAddress(const QString &address);
+
             //! Set values
             void set(const QString &dBus);
 

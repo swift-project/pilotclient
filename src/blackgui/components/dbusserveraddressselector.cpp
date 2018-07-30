@@ -74,6 +74,22 @@ namespace BlackGui
             return ui->rb_DBusP2P->isChecked();
         }
 
+        void CDBusServerAddressSelector::setDefaultP2PAddress(const QString &dBus)
+        {
+            const QString dBusLc = dBus.toLower().trimmed();
+            QString host, port;
+            CDBusServer::dBusAddressToHostAndPort(dBusLc, host, port);
+            if (!host.isEmpty())
+            {
+                if (ui->cb_DBusServerAddress->findText(host) < 0)
+                {
+                    ui->cb_DBusServerAddress->addItem(host);
+                }
+                ui->cb_DBusServerAddress->setCurrentText(host);
+                ui->le_DBusServerPort->setText(port);
+            }
+        }
+
         void CDBusServerAddressSelector::set(const QString &dBus)
         {
             const QString dBusLc = dBus.toLower().trimmed();
