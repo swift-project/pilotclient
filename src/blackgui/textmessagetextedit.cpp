@@ -57,7 +57,7 @@ namespace BlackGui
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::showContextMenuForTextEdit);
 
         // style sheet
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::onStyleSheetChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::onStyleSheetChanged, Qt::QueuedConnection);
         onStyleSheetChanged();
     }
 

@@ -54,7 +54,7 @@ namespace BlackGui
     {
         this->init(w, h);
         this->showKillButton(false);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged, Qt::QueuedConnection);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
         connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);

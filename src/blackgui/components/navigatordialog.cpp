@@ -60,7 +60,7 @@ namespace BlackGui
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this->m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::ps_menuChangeMargins);
             connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::ps_showContextMenu);
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged, Qt::QueuedConnection);
             this->ps_onStyleSheetsChanged();
         }
 

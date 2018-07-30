@@ -64,7 +64,7 @@ namespace BlackGui
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged);
     }
 

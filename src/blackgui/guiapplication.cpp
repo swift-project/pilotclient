@@ -101,8 +101,8 @@ namespace BlackGui
             this->settingsChanged();
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
-            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged);
-            connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes);
+            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
+            connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes, Qt::QueuedConnection);
         }
     }
 
@@ -995,13 +995,13 @@ namespace BlackGui
 
     void CGuiApplication::onStyleSheetsChanged()
     {
-        emit this->styleSheetsChanged();
         const QFont f = CGuiUtility::currentFont();
         if (f.pointSize() != m_fontPointSize || f.family() != m_fontFamily)
         {
             emit this->fontChanged();
             CLogMessage(this).info(this->getFontInfo());
         }
+        emit this->styleSheetsChanged();
     }
 
     void CGuiApplication::setCurrentFontValues()

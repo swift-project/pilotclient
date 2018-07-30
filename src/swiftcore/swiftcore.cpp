@@ -57,7 +57,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaStatusBar = nullptr;
 
     connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
 
     this->initLogDisplay();
     this->initStyleSheet();

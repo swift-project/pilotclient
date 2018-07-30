@@ -22,7 +22,7 @@ namespace BlackGui
         {
             this->setWindowTitle("Filter dialog");
             this->onStyleSheetChanged();
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged, Qt::QueuedConnection);
         }
 
         CFilterDialog::~CFilterDialog()

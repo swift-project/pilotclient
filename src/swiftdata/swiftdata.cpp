@@ -106,7 +106,7 @@ void CSwiftData::init()
     m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::onStyleSheetsChanged, Qt::QueuedConnection);
     this->initMenu();
 
     // update title

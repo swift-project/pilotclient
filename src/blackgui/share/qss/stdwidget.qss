@@ -17,6 +17,14 @@ QFrame {
   border-width: 1px;
 }
 
+QCheckBox {
+  border: 0px solid green; /* also borders label */
+  background: transparent;
+}
+
+/* CGuiUtility::checkBoxReadOnly */
+/* used for read-only checkboxes */
+
 QCheckBox::indicator {
   color: #b1b1b1;
   border: 1px solid #7f7f7f;
@@ -303,11 +311,6 @@ QLineEdit {
 QLineEdit[readOnly="true"] {
   background: rgba(40,40,40);
   border: 1px solid rgba(50,50,50);
-}
-
-QCheckBox {
-  border: 0px solid green; /* also borders label */
-  background: transparent;
 }
 
 QTextEdit {

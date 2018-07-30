@@ -44,8 +44,7 @@ namespace BlackGui
     {
     public:
         //! Destructor
-        virtual ~COverlayMessagesBase()
-        { }
+        virtual ~COverlayMessagesBase() override { }
 
         //! Show the inner frame
         void showStatusMessagesFrame()
@@ -58,7 +57,7 @@ namespace BlackGui
         {
             m_widthFactor = widthFactor;
             m_heightFactor = heightFactor;
-            if (middleFactor >=0) { m_middleFactor = middleFactor; }
+            if (middleFactor >= 0) { m_middleFactor = middleFactor; }
         }
 
         //! \copydoc BlackGui::COverlayMessages::showKillButton
@@ -194,7 +193,7 @@ namespace BlackGui
             const int w = inner.width();
             const int h = inner.height();
             const int x = middle.x() - w / 2;
-            const int y = middle.y() - h / m_middleFactor;
+            const int y = qRound(middle.y() - h / m_middleFactor);
             m_overlayMessages->setGeometry(x, y, w, h);
         }
 
@@ -230,8 +229,8 @@ namespace BlackGui
             const int w = std::max(WIDGET::width(),  WIDGET::minimumWidth());
             const int h = std::max(WIDGET::height(), WIDGET::minimumHeight());
 
-            int wInner = m_widthFactor * w;
-            int hInner = m_heightFactor * h;
+            int wInner = qRound(m_widthFactor * w);
+            int hInner = qRound(m_heightFactor * h);
             if (wInner > WIDGET::maximumWidth())  { wInner = WIDGET::maximumWidth();  }
             if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
             return QSize(wInner, hInner);

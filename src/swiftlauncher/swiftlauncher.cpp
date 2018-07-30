@@ -68,7 +68,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
 
     connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::updateInfoAvailable, this, &CSwiftLauncher::updateInfoAvailable);
     connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished, this, &CSwiftLauncher::onDBusEditingFinished);
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
 

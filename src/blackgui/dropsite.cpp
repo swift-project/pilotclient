@@ -33,7 +33,7 @@ namespace BlackGui
         this->setTextFormat(Qt::RichText);
         this->setInfoText("drop data here");
         this->onStyleSheetsChanged();
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::onStyleSheetsChanged, Qt::QueuedConnection);
     }
 
     void CDropSite::setInfoText(const QString &dropSiteText)

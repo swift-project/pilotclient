@@ -66,7 +66,7 @@ namespace BlackGui
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CInfoArea::customContextMenuRequested, this, &CInfoArea::showContextMenu);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::onStyleSheetChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::onStyleSheetChanged, Qt::QueuedConnection);
 
         // initial style sheet setting
         this->onStyleSheetChanged();
