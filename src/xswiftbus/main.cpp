@@ -15,6 +15,8 @@
 #include "traffic.h"
 #include "service.h"
 #include <XPLM/XPLMPlanes.h>
+#include <XPLM/XPLMPlugin.h>
+#include <cstring>
 
 #if ! defined(XPLM210)
 #define XPLM_MSG_LIVERY_LOADED 108
