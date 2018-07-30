@@ -214,6 +214,7 @@ namespace XSwiftBus
     //! @{
     #define DEBUG_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::DebugMsg, msg)
     #define INFO_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::InfoMsg, msg)
+    #define WARNING_LOG(msg) Logger::print(__FILE__, __LINE__, Logger::WarningMsg, msg)
     //! @}
 }
 
