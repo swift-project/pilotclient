@@ -76,15 +76,14 @@ namespace BlackGui
 
         void CFsdSetupForm::showEnableInfo(bool visible)
         {
-            ui->cb_Override->setVisible(visible);
-            ui->lbl_FsdSetup->setVisible(visible);
-            ui->pb_SetDefaults->setVisible(visible);
+            m_visibleEnableInfo = visible;
+            this->visibleEnableInfo(visible);
         }
 
         void CFsdSetupForm::setReadOnly(bool readonly)
         {
-            this->showEnableInfo(!readonly);
-            ui->le_TextCodec->setReadOnly(!readonly);
+            ui->le_TextCodec->setReadOnly(readonly);
+            ui->pb_SetDefaults->setEnabled(!readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsReceive, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsSend, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionReceive, readonly);
@@ -111,10 +110,13 @@ namespace BlackGui
         {
             Q_UNUSED(enabled);
             this->setReadOnly(!enabled);
-            if (!enabled)
-            {
-                this->setValue(CFsdSetup());
-            }
+        }
+
+        void CFsdSetupForm::visibleEnableInfo(bool visible)
+        {
+            ui->cb_Override->setVisible(visible);
+            ui->lbl_FsdSetup->setVisible(visible);
+            ui->pb_SetDefaults->setVisible(visible);
         }
 
         void CFsdSetupForm::resetToDefaultValues()

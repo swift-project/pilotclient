@@ -34,7 +34,7 @@ namespace BlackGui
             explicit CFsdSetupForm(QWidget *parent = nullptr);
 
             //! Constructor
-            virtual ~CFsdSetupForm();
+            virtual ~CFsdSetupForm() override;
 
             //! FSD setup from GUI
             BlackMisc::Network::CFsdSetup getValue() const;
@@ -67,7 +67,11 @@ namespace BlackGui
             //! Enable / disable
             void enabledToggled(bool enabled);
 
+            //! Show / hide visible "enable" info
+            void visibleEnableInfo(bool visible);
+
             QScopedPointer<Ui::CFsdSetupForm> ui;
+            bool m_visibleEnableInfo = true;
         };
     } // ns
 } // ns
