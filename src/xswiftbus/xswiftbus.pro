@@ -10,7 +10,8 @@ INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 LIBS += -levent_core -ldbus-1
 
 OTHER_FILES += \
-    org.swift_project.xswiftbus.*.xml
+    org.swift_project.xswiftbus.*.xml \
+    xswiftbus.conf
 
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
@@ -158,7 +159,12 @@ win32-g++ {
     dep_target.files *= $$[QT_INSTALL_BINS]/libstdc++-6.dll
 }
 
+conf_target.path = $$PREFIX/xswiftbus
+conf_target.files *= xswiftbus.conf
+
+
 INSTALLS += dep_target
 INSTALLS += legacy_data_target
+INSTALLS += conf_target
 
 load(common_post)

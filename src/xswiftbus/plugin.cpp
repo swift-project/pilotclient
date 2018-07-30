@@ -36,6 +36,8 @@ namespace XSwiftBus
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
+        readConfig();
+
         /*m_dbusThread = std::thread([this]()
         {
             while(!m_shouldStop)
@@ -55,6 +57,15 @@ namespace XSwiftBus
         if (m_dbusThread.joinable()) { m_dbusThread.join(); }
     }
 
+    void CPlugin::readConfig()
+    {
+        initXPlanePath();
+        auto configFilePath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "xswiftbus.conf";
+        m_pluginConfig.setFilePath(configFilePath);
+        m_pluginConfig.parse();
+        m_pluginConfig.print();
+    }
+
     void CPlugin::startServer(CDBusConnection::BusType bus)
     {
         (void) bus;
@@ -67,12 +78,13 @@ namespace XSwiftBus
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
-        if (m_useDBusP2P)
+        if (m_pluginConfig.getDBusMode() == CConfig::DBusP2P)
         {
             m_dbusP2PServer = std::make_unique<CDBusServer>();
 
             // FIXME: make listen address configurable
-            m_dbusP2PServer->listen("tcp:host=127.0.0.1,port=45000");
+            std::string listenAddress = "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
+            m_dbusP2PServer->listen(listenAddress);
             m_dbusP2PServer->setDispatcher(&m_dbusDispatcher);
 
             m_dbusP2PServer->setNewConnectionFunc([this](const std::shared_ptr<CDBusConnection> &conn)

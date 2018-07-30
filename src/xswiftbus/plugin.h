@@ -27,6 +27,7 @@
 #include "datarefs.h"
 #include "XPLM/XPLMCamera.h"
 #include "menus.h"
+#include "config.h"
 #include <memory>
 #include <thread>
 
@@ -55,6 +56,7 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
+        CConfig m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
         std::unique_ptr<CDBusServer> m_dbusP2PServer;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
@@ -74,8 +76,7 @@ namespace XSwiftBus
         std::thread m_dbusThread;
         bool m_shouldStop = false;
 
-        bool m_useDBusP2P = true;
-
+        void readConfig();
         void startServer(CDBusConnection::BusType bus);
         void switchToOwnAircraftView();
 
