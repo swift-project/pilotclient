@@ -257,15 +257,18 @@ namespace BlackGui
         BLACK_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
         if (!checkBox) { return; }
 
+        static const QString background("background: rgba(40,40,40)"); //! \todo hardcoded, should come from stylesheet
         if (readOnly)
         {
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
             checkBox->setFocusPolicy(Qt::NoFocus);
+            checkBox->setStyleSheet(background);
         }
         else
         {
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, defaultBox.testAttribute(Qt::WA_TransparentForMouseEvents));
             checkBox->setFocusPolicy(defaultBox.focusPolicy());
+            checkBox->setStyleSheet("");
         }
     }
 
