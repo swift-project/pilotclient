@@ -1037,7 +1037,7 @@ namespace BlackCore
         const CLength cg = this->getCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
         if (!cg.isNull()) { correctedSituation.setCG(cg); }
 
-        // store change object
+        // store corrected situation
         correctedSituation = CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
 
         // check if we STILL want to request
@@ -1045,7 +1045,7 @@ namespace BlackCore
         {
             // we have not requested so far, but we are NEAR ground
             // we expect at least not transferred cache or we are moving and have no provider elevation yet
-            if (correctedSituation.isThisElevationInfoBetter(CAircraftSituation::FromCache, false) || (correctedSituation.isMoving() && correctedSituation.isThisElevationInfoBetter(CAircraftSituation::FromProvider, false)))
+            if (correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromCache, false) || (correctedSituation.isMoving() && correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromProvider, false)))
             {
                 haveRequestedElevation = this->requestElevation(correctedSituation);
             }

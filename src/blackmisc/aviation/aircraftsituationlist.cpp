@@ -38,6 +38,24 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(il)
         { }
 
+        CAircraftSituation CAircraftSituationList::frontOrNull() const
+        {
+            if (this->isEmpty()) { return CAircraftSituation::null(); }
+            return this->front();
+        }
+
+        CAircraftSituation CAircraftSituationList::backOrNull() const
+        {
+            if (this->isEmpty()) { return CAircraftSituation::null(); }
+            return this->back();
+        }
+
+        CAircraftSituation CAircraftSituationList::indexOrNull(int index) const
+        {
+            if (this->size() > index) { return (*this)[index]; }
+            return CAircraftSituation::null();
+        }
+
         int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs)
         {
             if (elevationPlane.isNull()) { return 0; }

@@ -19,8 +19,6 @@
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/variant.h"
 
-#include <QMetaType>
-
 namespace BlackMisc
 {
     namespace Aviation
@@ -42,6 +40,15 @@ namespace BlackMisc
 
             //! Construct from initializer list.
             CAircraftSituationChangeList(std::initializer_list<CAircraftSituationChange> il);
+
+            //! Front or NULL
+            CAircraftSituationChange frontOrNull() const;
+
+            //! Back or NULL
+            CAircraftSituationChange backOrNull() const;
+
+            //! Index or NULL
+            CAircraftSituationChange indexOrNull(int index) const;
         };
 
         //! Change per callsign

@@ -80,7 +80,7 @@ namespace BlackMisc
             // get the changes, we need the second value as we want to look in the past
             // the first value is already based on the latest situation
             const CAircraftSituationChangeList changes = this->remoteAircraftSituationChanges(m_callsign);
-            m_pastSituationsChange = (changes.size() > 1) ? changes[1] : CAircraftSituationChange::null();
+            m_pastSituationsChange = changes.indexOrNull(1);
 
             // fixing offset
             if (setup.isFixingSceneryOffset() && m_pastSituationsChange.hasSceneryDeviation() && m_model.hasCG())

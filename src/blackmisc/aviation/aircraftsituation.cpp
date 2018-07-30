@@ -65,6 +65,8 @@ namespace BlackMisc
                    (m_onGroundGuessingDetails.isEmpty() ? QStringLiteral("") : QStringLiteral(" ") % m_onGroundGuessingDetails) %
                    QStringLiteral(" | cg: ") %
                    (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
+                   QStringLiteral(" | offset: ") %
+                   (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                    QStringLiteral(" | factor [0..1]: ") % QString::number(m_onGroundFactor, 'f', 2) %
                    QStringLiteral(" | skip ng: ") % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
                    QStringLiteral(" | bank: ") % m_bank.toQString(i18n) %
@@ -303,6 +305,7 @@ namespace BlackMisc
             case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
+            case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
@@ -331,6 +334,7 @@ namespace BlackMisc
             case IndexPitch: m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexBank: m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSceneryOffset: m_sceneryOffset.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -356,6 +360,7 @@ namespace BlackMisc
             case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
             case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
             case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
+            case IndexSceneryOffset: return m_sceneryOffset.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSceneryOffset());
             case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
             case IndexGroundElevationPlane:
             case IndexGroundElevationPlusInfo:
@@ -392,12 +397,12 @@ namespace BlackMisc
             return this->isPositionNull();
         }
 
-        bool CAircraftSituation::isThisElevationInfoBetter(CAircraftSituation::GndElevationInfo info, bool transferred) const
+        bool CAircraftSituation::isOtherElevationInfoBetter(CAircraftSituation::GndElevationInfo otherInfo, bool transferred) const
         {
-            if (info == NoElevationInfo || info == Test) { return false; }
-            const int i = static_cast<int>(info);
-            if (i > m_elvInfo)  { return true; }
-            if (i == m_elvInfo)
+            if (otherInfo == NoElevationInfo || otherInfo == Test) { return false; }
+            const int otherInfoInt = static_cast<int>(otherInfo);
+            if (otherInfoInt > m_elvInfo)  { return true; }
+            if (otherInfoInt == m_elvInfo)
             {
                 if (m_isElvInfoTransferred == transferred) { return false; } // not better (equal)
                 return !transferred; // if not transferred it is better
@@ -434,6 +439,8 @@ namespace BlackMisc
             m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
             m_elvInfo = NoElevationInfo;
             m_isElvInfoTransferred = false;
+            m_cg.setNull();
+            m_sceneryOffset.setNull();
         }
 
         bool CAircraftSituation::isOnGroundFromParts() const
@@ -811,7 +818,7 @@ namespace BlackMisc
             if (elevationPlane.isNull()) { return false; }
             const CLength distance =  this->calculateGreatCircleDistance(elevationPlane);
             if (distance > elevationPlane.getRadiusOrMinimumRadius()) { return false; }
-            if (m_groundElevationPlane.isNull() || this->isThisElevationInfoBetter(info, transferred))
+            if (m_groundElevationPlane.isNull() || this->isOtherElevationInfoBetter(info, transferred))
             {
                 // better values
                 this->setGroundElevation(elevationPlane, info, transferred);
@@ -928,10 +935,10 @@ namespace BlackMisc
 
         CAircraftSituation::AltitudeCorrection CAircraftSituation::correctAltitude(const CLength &centerOfGravity, bool enableDragToGround)
         {
-            CAircraftSituation::AltitudeCorrection altCor = CAircraftSituation::UnknownCorrection;
-            this->setAltitude(this->getCorrectedAltitude(centerOfGravity, enableDragToGround, &altCor));
+            CAircraftSituation::AltitudeCorrection altitudeCorrection = CAircraftSituation::UnknownCorrection;
+            this->setAltitude(this->getCorrectedAltitude(centerOfGravity, enableDragToGround, &altitudeCorrection));
             this->setCG(centerOfGravity);
-            return altCor;
+            return altitudeCorrection;
         }
 
         void CAircraftSituation::setAltitude(const CAltitude &altitude)
@@ -1016,6 +1023,17 @@ namespace BlackMisc
         void CAircraftSituation::setCG(const CLength &cg)
         {
             m_cg = cg.switchedUnit(this->getAltitudeOrDefaultUnit());
+        }
+
+        const CLength &CAircraftSituation::getSceneryOffsetOrZero() const
+        {
+            static const CLength zero(0, CLengthUnit::ft());
+            return this->hasSceneryOffset() ? m_sceneryOffset : zero;
+        }
+
+        void CAircraftSituation::setSceneryOffset(const CLength &sceneryOffset)
+        {
+            m_sceneryOffset = sceneryOffset.switchedUnit(this->getAltitudeOrDefaultUnit());
         }
 
         bool CAircraftSituation::adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor, qint64 *differenceMs)

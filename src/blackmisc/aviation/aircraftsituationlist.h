@@ -56,6 +56,15 @@ namespace BlackMisc
             //! Construct from initializer list.
             CAircraftSituationList(std::initializer_list<CAircraftSituation> il);
 
+            //! Front or NULL
+            CAircraftSituation frontOrNull() const;
+
+            //! Back or NULL
+            CAircraftSituation backOrNull() const;
+
+            //! Index or NULL
+            CAircraftSituation indexOrNull(int index) const;
+
             //! Set ground elevation from elevation plane
             int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs = -1);
 

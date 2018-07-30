@@ -48,7 +48,8 @@ namespace BlackMisc
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
-            public Geo::ICoordinateGeodetic, public ITimestampWithOffsetBased
+            public Geo::ICoordinateGeodetic,
+            public ITimestampWithOffsetBased
         {
         public:
             //! Properties by index
@@ -73,6 +74,7 @@ namespace BlackMisc
                 IndexGroundElevationPlusInfo,
                 IndexCallsign,
                 IndexCG,
+                IndexSceneryOffset,
                 IndexCanLikelySkipNearGroundInterpolation
             };
 
@@ -174,7 +176,7 @@ namespace BlackMisc
             virtual bool isNull() const override;
 
             //! Is given info better (more accurate)?
-            bool isThisElevationInfoBetter(GndElevationInfo info, bool transferred) const;
+            bool isOtherElevationInfoBetter(GndElevationInfo otherInfo, bool transferred) const;
 
             //! Equal pitch, bank heading
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
@@ -446,6 +448,18 @@ namespace BlackMisc
             //! Has CG set?
             bool hasCG() const { return !m_cg.isNull(); }
 
+            //! Get scenery offset if any
+            const PhysicalQuantities::CLength &getSceneryOffset() const { return m_sceneryOffset; }
+
+            //! Get scenery offset if any or zero ("0")
+            const PhysicalQuantities::CLength &getSceneryOffsetOrZero() const;
+
+            //! Set scenery offset
+            void setSceneryOffset(const PhysicalQuantities::CLength &sceneryOffset);
+
+            //! Has scenery offset?
+            bool hasSceneryOffset() const { return !m_sceneryOffset.isNull(); }
+
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }
 
@@ -539,6 +553,7 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_bank  { 0, nullptr };
             PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
             PhysicalQuantities::CLength m_cg { 0, nullptr };
+            PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
             bool m_isInterim = false; //!< interim situation?
             bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
@@ -563,6 +578,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(cg),
+                BLACK_METAMEMBER(sceneryOffset),
                 BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),

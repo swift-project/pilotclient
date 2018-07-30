@@ -12,14 +12,11 @@
 #ifndef BLACKGUI_MODELS_AIRCRAFTSITUATIONLISTMODEL_H
 #define BLACKGUI_MODELS_AIRCRAFTSITUATIONLISTMODEL_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 
 #include <QVariant>
-
-class QModelIndex;
-class QObject;
 
 namespace BlackGui
 {

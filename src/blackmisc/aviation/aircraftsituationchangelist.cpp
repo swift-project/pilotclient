@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
-
 #include <tuple>
 
 namespace BlackMisc
@@ -24,5 +23,23 @@ namespace BlackMisc
         CAircraftSituationChangeList::CAircraftSituationChangeList(std::initializer_list<CAircraftSituationChange> il) :
             CSequence<CAircraftSituationChange>(il)
         { }
+
+        CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
+        {
+            if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+            return this->front();
+        }
+
+        CAircraftSituationChange CAircraftSituationChangeList::backOrNull() const
+        {
+            if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+            return this->back();
+        }
+
+        CAircraftSituationChange CAircraftSituationChangeList::indexOrNull(int index) const
+        {
+            if (this->size() > index) { return (*this)[index]; }
+            return CAircraftSituationChange::null();
+        }
     } // namespace
 } // namespace

@@ -138,7 +138,7 @@ namespace BlackMisc
             PhysicalQuantities::CLengthPair getMinMaxGroundDistance() const { return PhysicalQuantities::CLengthPair(m_minGroundDistance, m_maxGroundDistance); }
 
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
-            //! This is without CG, so substract CG to get deviation
+            //! \remark This is without CG, so substract CG to get deviation
             const PhysicalQuantities::CLength &getGuessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
 
             //! Get scenery deviation under consideration of CG
