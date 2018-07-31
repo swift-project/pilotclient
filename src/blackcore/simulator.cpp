@@ -97,7 +97,7 @@ namespace BlackCore
         m_highlightedAircraft.removeByCallsign(cs);
         if (enableHighlight)
         {
-            const qint64 deltaT = displayTime.valueRounded(CTimeUnit::ms(), 0);
+            const qint64 deltaT = displayTime.valueInteger(CTimeUnit::ms());
             m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
             m_highlightedAircraft.push_back(aircraftToHighlight);
         }
@@ -457,7 +457,7 @@ namespace BlackCore
                     this->clearAllRemoteAircraftData();
                     if (!msgs.isEmpty()) { emit this->driverMessages(msgs); }
                     const CSimulatedAircraftList aircraft = this->getAircraftInRange();
-                    for (const CSimulatedAircraft a : aircraft)
+                    for (const CSimulatedAircraft &a : aircraft)
                     {
                         if (a.isEnabled()) { this->logicallyAddRemoteAircraft(a); }
                     }
@@ -833,13 +833,13 @@ namespace BlackCore
             return false;
         }
 
-        int tokens = 0.1 * numberPerSecond; // 100ms
+        int tokens = qRound(0.1 * numberPerSecond); // 100ms
         do
         {
             if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(100); break; }
-            tokens = 0.25 * numberPerSecond; // 250ms
+            tokens = qRound(0.25 * numberPerSecond); // 250ms
             if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(250); break; }
-            tokens = 0.5 * numberPerSecond; // 500ms
+            tokens = qRound(0.5 * numberPerSecond); // 500ms
             if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(500); break; }
             tokens = numberPerSecond;
             m_limitUpdateAircraftBucket.setInterval(1000);

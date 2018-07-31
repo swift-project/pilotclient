@@ -241,7 +241,7 @@
    <item>
     <widget class="QTabWidget" name="tw_LogTabs">
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_DataFlow">
       <attribute name="title">
@@ -528,7 +528,7 @@
             </property>
             <widget class="QGroupBox" name="gb_InboundSituations">
              <property name="title">
-              <string>Inbound situations</string>
+              <string>Inbound situations from network</string>
              </property>
              <layout class="QVBoxLayout" name="vl_InboundSituations">
               <item>
@@ -548,7 +548,7 @@
             </widget>
             <widget class="QGroupBox" name="gb_InboundParts">
              <property name="title">
-              <string>Inbound parts</string>
+              <string>Inbound parts from network</string>
              </property>
              <layout class="QVBoxLayout" name="vl_InboundParts">
               <item>
@@ -755,7 +755,7 @@
        <item>
         <widget class="QGroupBox" name="gb_InterpolatedSituations">
          <property name="title">
-          <string>Interpolated</string>
+          <string>Interpolated (from interpolation logger)</string>
          </property>
          <layout class="QVBoxLayout" name="vl_InterpolatedGb">
           <item>
@@ -777,7 +777,7 @@
        <item>
         <widget class="QGroupBox" name="gb_LoopbackSituations">
          <property name="title">
-          <string>Loopback</string>
+          <string>Loopback from simulator</string>
          </property>
          <layout class="QVBoxLayout" name="vl_LoopbackGb">
           <item>

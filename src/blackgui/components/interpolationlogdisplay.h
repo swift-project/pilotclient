@@ -164,7 +164,7 @@ namespace BlackGui
             QTimer m_updateTimer;
             QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
             QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
-            BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations;
+            BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations; //!< list of last interpolations
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
             int m_elvRequested = 0; //!< counted via signal
             int m_elvReceived = 0;  //!< counted via signal

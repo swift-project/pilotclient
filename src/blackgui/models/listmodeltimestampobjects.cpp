@@ -29,7 +29,7 @@ namespace BlackGui
         void CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>::addTimestampColumns()
         {
             CListModelBaseNonTemplate::m_columns.addColumn(CColumn::standardString("timestamp", ObjectType::IndexUtcTimestampFormattedMdhmsz));
-            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("ms", ObjectType::IndexMSecsSinceEpoch, new CIntegerFormatter()));
+            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("timestamp ms", "milliseconds since epoch", ObjectType::IndexMSecsSinceEpoch, new CIntegerFormatter()));
         }
 
         template class CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
@@ -54,8 +54,8 @@ namespace BlackGui
         void CListModelTimestampWithOffsetObjects<ObjectType, ContainerType, UseCompare>::addTimestampOffsetColumns()
         {
             CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>::addTimestampColumns();
-            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("ms adj.", ObjectType::IndexAdjustedMsWithOffset, new CIntegerFormatter()));
-            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("offset", ObjectType::IndexOffsetMs, new CIntegerFormatter()));
+            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("ms adj.", "milliseconds adjusted", ObjectType::IndexAdjustedMsWithOffset, new CIntegerFormatter()));
+            CListModelBaseNonTemplate::m_columns.addColumn(CColumn("t.os.", "time offset", ObjectType::IndexOffsetMs, new CIntegerFormatter()));
         }
 
         template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;

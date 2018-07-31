@@ -56,7 +56,7 @@ using namespace BlackCore;
 
 namespace BlackSample
 {
-    void ServiceTool::dataTransferTestServer(BlackMisc::CDBusServer *dBusServer, bool verbose)
+    void ServiceTool::dataTransferTestServer(CDBusServer *dBusServer, bool verbose)
     {
         QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();
         if (sessionBusConnection.interface()->isServiceRegistered(CTestService::InterfaceName()))
