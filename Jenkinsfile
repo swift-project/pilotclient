@@ -28,8 +28,7 @@ builders['Build swift Linux'] = {
                 sh 'cppcheck --xml --xml-version=2 --inline-suppr --std=c++11 -ibuild --enable=style,unusedFunction -i externals ' +
                         '--suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> cppcheck.xml'
 
-                // Pipeline support for CppCheck publisher is not yet released.
-                // step([$class: 'CppcheckPublisher', allowNoReport: true, pattern: 'cppcheck.xml'])
+                publishCppcheck allowNoReport: true, pattern: 'cppcheck.xml'
             }
 
             stage('Linux Archive') {
