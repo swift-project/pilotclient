@@ -765,7 +765,9 @@ namespace XSwiftBus
             {
                 const auto now = std::chrono::system_clock::now();
 
-                if (plane->surfaces.gearPosition != plane->targetGearPosition)
+                static const float epsilon = std::numeric_limits<float>::epsilon();
+                const float f = plane->surfaces.gearPosition - plane->targetGearPosition;
+                if (std::abs(f) > epsilon)
                 {
                     // interpolate gear position
                     constexpr float gearMoveTimeMs = 5000;
