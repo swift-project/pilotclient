@@ -53,6 +53,7 @@ SOURCES +=  *.cpp \
             $$PWD/input/*.cpp \
             $$PWD/math/*.cpp \
             $$PWD/network/*.cpp \
+            $$PWD/network/settings/*.cpp \
             $$PWD/pq/*.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/data/*.cpp \

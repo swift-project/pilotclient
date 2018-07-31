@@ -42,6 +42,7 @@ namespace BlackMisc
             CUser::registerMetadata();
             CUserList::registerMetadata();
             CVoiceCapabilities::registerMetadata();
+            Settings::CNetworkSettings::registerMetadata();
         }
     } // ns
 } // ns

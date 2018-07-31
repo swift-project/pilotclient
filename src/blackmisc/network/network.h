@@ -41,5 +41,6 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/network/settings/networksettings.h"
 
 #endif // guard
