@@ -69,6 +69,7 @@ namespace BlackMisc
                     less = less && ! greater && (a.*member)() < (b.*member)();
                     greater = (b.*member)() < (a.*member)();
                 });
+                Q_UNUSED(greater); // CPP style check
                 return less;
             };
         }

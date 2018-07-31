@@ -658,9 +658,10 @@ namespace BlackCore
     {
         Q_UNUSED(mode);
         CAircraftModelList usedModelSet;
-        static const bool NoZeroScores = true;
-        static const bool PreferColorLiveries = true;
-        static const bool DoNotMindAboutColorLiveries = false;
+        // cppcheck-suppress variableScope
+        static constexpr bool DoNotMindAboutColorLiveries = false;
+        static constexpr bool NoZeroScores = true;
+        static constexpr bool PreferColorLiveries = true;
 
         // VTOL
         ScoredModels map;

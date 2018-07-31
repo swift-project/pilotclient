@@ -167,10 +167,10 @@ namespace BlackMisc
         //! \copydoc BlackMisc::StatusSeverity
         //! @{
         using StatusSeverity = BlackMisc::StatusSeverity;
-        constexpr static auto SeverityDebug = BlackMisc::SeverityDebug;
-        constexpr static auto SeverityInfo = BlackMisc::SeverityInfo;
+        constexpr static auto SeverityDebug   = BlackMisc::SeverityDebug;
+        constexpr static auto SeverityInfo    = BlackMisc::SeverityInfo;
         constexpr static auto SeverityWarning = BlackMisc::SeverityWarning;
-        constexpr static auto SeverityError = BlackMisc::SeverityError;
+        constexpr static auto SeverityError   = BlackMisc::SeverityError;
         //! @}
 
         //! Properties by index

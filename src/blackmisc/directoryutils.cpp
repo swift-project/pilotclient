@@ -144,11 +144,11 @@ namespace BlackMisc
         return dirs;
     }
 
-    const QMap<QString, CApplicationInfo> &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
+    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
     {
-        static const QMap<QString, CApplicationInfo> dirs = [ = ]
+        static const FilePerApplication dirs = [ = ]() -> FilePerApplication
         {
-            QMap<QString, CApplicationInfo> directories;
+            FilePerApplication directories;
             for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
             {
                 if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
@@ -170,6 +170,8 @@ namespace BlackMisc
                 appInfo.setApplicationDataDirectory(info.filePath());
                 directories.insert(info.filePath(), appInfo);
             }
+            // https://stackoverflow.com/q/51635959/356726
+            // cppcheck-suppress returnReference
             return directories;
         }();
         return dirs;

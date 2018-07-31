@@ -29,6 +29,9 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CDirectoryUtils
     {
     public:
+        //! File path and swift application
+        using FilePerApplication = QMap<QString, CApplicationInfo>;
+
         //! Returns the bin directory. On Windows/Linux this is the same directory as
         //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
         //! located deeper in the hierarchy of the bundles
@@ -59,7 +62,7 @@ namespace BlackMisc
         static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool decodedDirName = false);
 
         //! swift application data sub directories with info if available
-        static const QMap<QString, CApplicationInfo> &applicationDataDirectoryMapWithoutCurrentVersion();
+        static const FilePerApplication &applicationDataDirectoryMapWithoutCurrentVersion();
 
         //! Other swift data directories
         static bool hasOtherSwiftDataDirectories();

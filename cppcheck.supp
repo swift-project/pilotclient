@@ -21,6 +21,9 @@ passedByValue:src/blackmisc/logcategorylist.h
 passedByValue:src/blackmisc/platformset.cpp
 passedByValue:src/blackmisc/geo/coordinategeodeticlist.cpp
 
+// variableHidingEnum for status message
+variableHidingEnum:src/blackmisc/statusmessage.h
+
 // Shared pointers should be passed by value
 passedByValue:src/blackmisc/lockfree.h
 

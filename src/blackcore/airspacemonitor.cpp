@@ -1051,6 +1051,7 @@ namespace BlackCore
             }
         }
 
+        Q_UNUSED(haveRequestedElevation);
         return correctedSituation;
     }
 

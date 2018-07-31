@@ -18,6 +18,7 @@
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QTest>
@@ -26,6 +27,7 @@
 #include <QDebug>
 
 using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -215,6 +217,11 @@ namespace BlackMiscTest
         const int hint = time.elapsed();
         const double ratio = static_cast<double>(hint) / static_cast<double>(noHint); // expected <0
 
+        qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
+        qDebug() << "Access without hint" << noHint << "ms";
+        qDebug() << "Access with hint" << hint << "ms";
+        qDebug() << "Access ratio" << ratio;
+
         // remark On Win/Linux access with hint is faster
         // on MacOS the times are the same, maybe with hint it is even slightly slower
         if (noHint >= hint)
@@ -227,9 +234,6 @@ namespace BlackMiscTest
             }
         }
 
-        qDebug() << "Access without hint" << noHint << "ms";
-        qDebug() << "Access with hint" << hint << "ms";
-        qDebug() << "Access ratio" << ratio;
         QVERIFY2(hint <= noHint, "Expected hinted sort being faster");
     }
 
@@ -240,8 +244,8 @@ namespace BlackMiscTest
         // "CFB Bagotville","Bagotville","Canada","YBG","CYBG",48.33060073852539,-70.99639892578125,522,-5,"A","America/Toronto","airport","OurAirports"
 
         CAircraftSituationList situations;
-        qint64 ts = QDateTime::currentSecsSinceEpoch();
-        qint64 os = CFsdSetup::c_positionTimeOffsetMsec;
+        const qint64 ts = QDateTime::currentSecsSinceEpoch();
+        const qint64 os = CFsdSetup::c_positionTimeOffsetMsec;
         CAltitude alt(10000, CAltitude::MeanSeaLevel, CLengthUnit::m());
         static const CCoordinateGeodetic dummyPos(48.33060073852539, -70.99639892578125, 522);
 
