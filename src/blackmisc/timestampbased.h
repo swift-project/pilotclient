@@ -49,6 +49,15 @@ namespace BlackMisc
         //! Time difference in ms
         qint64 getTimeDifferenceMs(qint64 compareTime) const { return compareTime - this->getMSecsSinceEpoch(); }
 
+        //! Time difference in ms
+        qint64 getTimeDifferenceMs(const ITimestampBased &compare) const { return compare.getMSecsSinceEpoch() - this->getMSecsSinceEpoch(); }
+
+        //! Time difference in ms
+        qint64 getAbsTimeDifferenceMs(qint64 compareTime) const { return qAbs(this->getTimeDifferenceMs(compareTime)); }
+
+        //! Time difference in ms
+        qint64 getAbsTimeDifferenceMs(const ITimestampBased &compare) const { return qAbs(this->getTimeDifferenceMs(compare)); }
+
         //! Set to null
         void setTimestampToNull();
 

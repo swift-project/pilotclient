@@ -37,6 +37,7 @@
 #include <limits>
 #include <iterator>
 #include <type_traits>
+#include <numeric>
 
 using namespace BlackConfig;
 
@@ -328,6 +329,45 @@ namespace BlackMisc
         {
             obj.addMsecs(msToAdd);
         }
+    }
+
+    template<class OBJ, class CONTAINER>
+    MillisecondsMinMaxMean ITimestampObjectList<OBJ, CONTAINER>::getTimestampDifferenceMinMaxMean() const
+    {
+        MillisecondsMinMaxMean mmm;
+        mmm.reset();
+        if (this->container().size() < 2) { return mmm; }
+
+        if (m_tsSortHint == NoTimestampSortHint)
+        {
+            CONTAINER copy(this->container());
+            copy.sortLatestFirst();
+            copy.m_tsSortHint = TimestampLatestFirst;
+            return copy.getTimestampDifferenceMinMaxMean();
+        }
+
+        mmm.max = std::numeric_limits<qint64>::min();
+        mmm.min = std::numeric_limits<qint64>::max();
+        qint64 mean = 0;
+        int c = 0;
+        OBJ last;
+
+        for (const OBJ &object : this->container())
+        {
+            c++;
+            last = object;
+            if (c < 2) { continue; }
+
+            const ITimestampBased &l = last;
+            const ITimestampBased &o = object;
+            const qint64 diff = l.getAbsTimeDifferenceMs(o);
+            if (diff > mmm.max) { mmm.max  = diff; }
+            if (diff < mmm.min) { mmm.min = diff;  }
+            mean += diff;
+        }
+
+        mmm.mean = mean / c;
+        return mmm;
     }
 
     template <class OBJ, class CONTAINER>

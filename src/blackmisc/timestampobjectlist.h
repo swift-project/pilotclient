@@ -21,6 +21,23 @@ class QDateTime;
 
 namespace BlackMisc
 {
+    //! Milliseconds minimum/maximum/mean
+    struct MillisecondsMinMaxMean
+    {
+        qint64 min;  //!< Minimum
+        qint64 max;  //!< Maximum
+        double mean; //!< Mean (average)
+
+        //! Valid?
+        bool isValid() const { return min >= 0 && max >= 0; }
+
+        //! Reset the values
+        void reset() { min = -1; max = -1; mean = -1;}
+
+        //! As string
+        QString asString() const { static const QString s("Min: %1 Max: %2 Mean: %3"); return s.arg(min).arg(max).arg(mean, 0, 'f', 2); }
+    };
+
     //! List of objects with timestamp.
     //! Such objects should implement \sa ITimestampBased
     template<class OBJ, class CONTAINER> class ITimestampObjectList
@@ -30,7 +47,8 @@ namespace BlackMisc
         enum HintTimestampSort
         {
             NoTimestampSortHint,
-            TimestampLatestFirst
+            TimestampLatestFirst,
+            TimestampLatestLast
         };
 
         //! List of objects before dateTime (older)
@@ -124,6 +142,10 @@ namespace BlackMisc
 
         //! Adds a time to all values
         void addMsecs(qint64 msToAdd);
+
+        //! Difference of timestamp values
+        //! \cond timestamp list has to be sorted to get meaninful values
+        MillisecondsMinMaxMean getTimestampDifferenceMinMaxMean() const;
 
         //! Set the hint
         void setSortHint(HintTimestampSort hint) { m_tsSortHint = hint; }
