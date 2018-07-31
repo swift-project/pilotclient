@@ -44,6 +44,7 @@ R"(<node>
       <arg name="pitches" type="ad" direction="in"/>
       <arg name="rolls" type="ad" direction="in"/>
       <arg name="headings" type="ad" direction="in"/>
+      <arg name="onGrounds" type="ab" direction="in"/>
     </method>
     <method name="setPlanesSurfaces">
       <arg name="callsigns" type="as" direction="in"/>
@@ -62,7 +63,6 @@ R"(<node>
       <arg name="strobeLights" type="ab" direction="in"/>
       <arg name="navLights" type="ab" direction="in"/>
       <arg name="lightPatterns" type="ai" direction="in"/>
-      <arg name="onGrounds" type="ab" direction="in"/>
     </method>
     <method name="setPlaneTransponder">
       <arg name="callsign" type="s" direction="in"/>

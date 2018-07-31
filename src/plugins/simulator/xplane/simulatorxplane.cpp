@@ -787,6 +787,7 @@ namespace BlackSimPlugin
                         planesPositions.pitches.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
                         planesPositions.rolls.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
                         planesPositions.headings.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                        planesPositions.onGrounds.push_back(interpolatedSituation.getOnGround() == CAircraftSituation::OnGround);
                     }
                 }
                 else
@@ -816,7 +817,6 @@ namespace BlackSimPlugin
                         planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
                         planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
                         planesSurfaces.lightPatterns.push_back(0);
-                        planesSurfaces.onGrounds.push_back(parts.isOnGround());
                     }
                 }
 

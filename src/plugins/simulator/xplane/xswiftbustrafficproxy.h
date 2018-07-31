@@ -60,6 +60,7 @@ namespace BlackSimPlugin
             QList<double> pitches;      //!< List of pitches
             QList<double> rolls;        //!< List of rolls
             QList<double> headings;     //!< List of headings
+            QList<bool> onGrounds;      //!< List of onGrounds
         };
 
         //! Planes surfaces
@@ -84,7 +85,6 @@ namespace BlackSimPlugin
             QList<bool> strobeLights;   //!< List of strobeLights
             QList<bool> navLights;      //!< List of navLights
             QList<int> lightPatterns;   //!< List of lightPatterns
-            QList<bool> onGrounds;      //!< List of onGrounds
         };
 
         /*!
