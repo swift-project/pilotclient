@@ -234,7 +234,7 @@ namespace BlackMisc
             }
 
             // add offset (for testing only)
-            CAircraftSituation situationCorrected(allowTestOffset ? this->testAddAltitudeOffsetToSituation(situation) : situation);
+            CAircraftSituation situationCorrected(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
 
             // CG, model
             const CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(cs);
@@ -608,7 +608,7 @@ namespace BlackMisc
             return m_testOffset.contains(callsign);
         }
 
-        CAircraftSituation CRemoteAircraftProvider::testAddAltitudeOffsetToSituation(const CAircraftSituation &situation) const
+        CAircraftSituation CRemoteAircraftProvider::addTestAltitudeOffsetToSituation(const CAircraftSituation &situation) const
         {
             // for global offset testing set "true"
             constexpr bool globalOffsetTest = false;

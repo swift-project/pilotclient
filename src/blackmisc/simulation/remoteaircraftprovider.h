@@ -408,7 +408,7 @@ namespace BlackMisc
             bool guessOnGroundAndUpdateModelCG(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const CAircraftModel &aircraftModel);
 
             //! Add an offset for testing
-            Aviation::CAircraftSituation testAddAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
+            Aviation::CAircraftSituation addTestAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
 
         private:
             //! Store the latest changes

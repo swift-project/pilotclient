@@ -971,7 +971,7 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return situation; }
 
-        CAircraftSituation correctedSituation(allowTestOffset ? this->testAddAltitudeOffsetToSituation(situation) : situation);
+        CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
         bool haveRequestedElevation = false;
         const bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
         if (!correctedSituation.hasGroundElevation() && !canLikelySkipNearGround)
