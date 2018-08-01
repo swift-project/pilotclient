@@ -122,7 +122,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextSimulator();
+            virtual ~CContextSimulator() override;
 
             //! Gracefully shut down, e.g. for plugin unloading
             void gracefulShutdown();
@@ -238,12 +238,12 @@ namespace BlackCore
             void initByLastUsedModelSet();
 
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
-            CPluginManagerSimulator *m_plugins = nullptr;
-            BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
-            CWeatherManager m_weatherManager { this };
-            CAircraftMatcher m_aircraftMatcher; //!< Model matcher
+            CPluginManagerSimulator *m_plugins = nullptr; //!< plugin manager
+            BlackMisc::CRegularThread m_listenersThread;  //!< waiting for plugin
+            CWeatherManager m_weatherManager   { this };  //!< weather management
+            CAircraftMatcher m_aircraftMatcher { this };  //!< model matcher
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
-            bool m_initallyAddAircrafts = false;
+            bool m_initallyAddAircraft = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
 

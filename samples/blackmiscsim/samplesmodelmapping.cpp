@@ -67,10 +67,10 @@ namespace BlackSample
         streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
 
         // sync definitions, remove redundant ones
-        CAircraftMatcher matcher(CAircraftMatcher::All);
+        CAircraftMatcher matcher;
         matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::FSX);
 
-        CAircraftIcaoCode icao("C172");
+        const CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;
         streamOut << matcher.getModelSet().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
 

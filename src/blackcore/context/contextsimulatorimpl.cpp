@@ -66,7 +66,6 @@ namespace BlackCore
             CContextSimulator::registerHelp();
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-            // m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ||  sApp->isDeveloperFlagSet();
             m_enableMatchingMessages = true; // there seems to be no big disadavantage in always enabling it
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
@@ -403,7 +402,7 @@ namespace BlackCore
             Q_UNUSED(c);
 
             // Once the simulator signaled it is ready to simulate, add all known aircraft
-            m_initallyAddAircrafts = true;
+            m_initallyAddAircraft = true;
             m_matchingMessages.clear();
 
             // try to connect to simulator
@@ -548,7 +547,7 @@ namespace BlackCore
 
         void CContextSimulator::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
         {
-            if (m_initallyAddAircrafts && status.testFlag(ISimulator::Simulating))
+            if (m_initallyAddAircraft && status.testFlag(ISimulator::Simulating))
             {
                 // use network to initally add aircraft
                 IContextNetwork *networkContext = this->getIContextNetwork();
@@ -562,7 +561,7 @@ namespace BlackCore
                     BLACK_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
                     this->xCtxAddedRemoteAircraftReadyForModelMatching(simulatedAircraft);
                 }
-                m_initallyAddAircrafts = false;
+                m_initallyAddAircraft = false;
             }
             if (!status.testFlag(ISimulator::Connected))
             {
