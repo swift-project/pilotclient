@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
@@ -40,6 +42,8 @@
 #include <numeric>
 
 using namespace BlackConfig;
+
+
 
 namespace BlackMisc
 {
@@ -635,7 +639,6 @@ namespace BlackMisc
 
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-    //! \cond PRIVATE
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
@@ -659,6 +662,7 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList>;
-    //! \endcond
 
 } // namespace
+
+//! \endcond
