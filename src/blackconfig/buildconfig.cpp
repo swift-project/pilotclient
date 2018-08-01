@@ -18,6 +18,7 @@
 #include <QLocale>
 #include <QStandardPaths>
 #include <QStringList>
+#include <QStringBuilder>
 #include <QtGlobal>
 #include <QSysInfo>
 
@@ -228,7 +229,7 @@ namespace BlackConfig
 
     const QString &CBuildConfig::getVersionStringPlatform()
     {
-        static const QString s = getVersionString() + " " + getPlatformString();
+        static const QString s = getPlatformString() % QStringLiteral(" ") % getVersionString();
         return s;
     }
 
@@ -262,7 +263,7 @@ namespace BlackConfig
             // max 2147483647 (2^31 - 1)
             //      1MMddHHmm (years since 2010)
             const long long yearOffset = 201000000000;
-            const int lctsInt = lctsll - yearOffset;
+            const int lctsInt = static_cast<int>(lctsll - yearOffset);
             return lctsInt;
         }
         return 0; // intentionally 0 => 0.7.3.0 <-
@@ -281,7 +282,7 @@ namespace BlackConfig
             //     yyMMddHHmm (years since 2010)
             //                           yyyyMMddHHmm
             const long long yearOffset = 201000000000;
-            const int btsInt = btsll - yearOffset;
+            const int btsInt = static_cast<int>(btsll - yearOffset);
             return btsInt;
         }
         return 0; // intentionally 0 => 0.7.3.0 <-
