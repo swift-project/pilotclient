@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/registermetadata.h"
+#include "registermetadata.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/data/globalsetup.h"
@@ -17,6 +17,7 @@
 #include "blackcore/network.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/webreaderflags.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/network/network.h"
 #include "blackmisc/valueobject.h"
@@ -35,6 +36,8 @@ namespace BlackCore
         qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
         qRegisterMetaType<CWebReaderFlags::WebReader>();
         qRegisterMetaType<CWebReaderFlags::WebReaderFlag>();
+        qRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingMode>();
+        qRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingModeFlag>();
 
         qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
@@ -42,12 +45,15 @@ namespace BlackCore
         qDBusRegisterMetaType<INetwork::ConnectionStatus>();
         qDBusRegisterMetaType<INetwork::LoginMode>();
         qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
+        // qDBusRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingMode>();
+        qDBusRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingModeFlag>();
 
         Db::CDatabaseReaderConfig::registerMetadata();
         Db::CDatabaseReaderConfigList::registerMetadata();
         Data::CGlobalSetup::registerMetadata();
         Data::CVatsimSetup::registerMetadata();
         Data::CLauncherSetup::registerMetadata();
+        Settings::CAircraftMatcherSetup::registerMetadata();
         Vatsim::CReaderSettings::registerMetadata();
         Vatsim::CRawFsdMessageSettings::registerMetadata();
     }

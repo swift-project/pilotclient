@@ -30,6 +30,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Settings;
 
 namespace BlackCore
 {
@@ -39,9 +40,12 @@ namespace BlackCore
         return cats;
     }
 
-    CAircraftMatcher::CAircraftMatcher(MatchingMode matchingMode, QObject *parent) :
+    CAircraftMatcher::CAircraftMatcher(const CAircraftMatcherSetup &setup, QObject *parent) :
         QObject(parent),
-        m_matchingMode(matchingMode)
+        m_setup(setup)
+    { }
+
+    CAircraftMatcher::CAircraftMatcher(QObject *parent) : CAircraftMatcher(CAircraftMatcherSetup(), parent)
     { }
 
     CAircraftMatcher::~CAircraftMatcher()
@@ -89,7 +93,7 @@ namespace BlackCore
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
         const CAircraftModelList modelSet(m_modelSet); // Models for this matching
-        const MatchingMode mode = m_matchingMode;
+        const CAircraftMatcherSetup::MatchingMode mode = m_setup.getMatchingMode();
 
         static const QString format("hh:mm:ss.zzz");
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
@@ -122,7 +126,7 @@ namespace BlackCore
         else if (remoteAircraft.hasModelString())
         {
             // try to find in installed models by model string
-            if (mode.testFlag(ByModelString))
+            if (mode.testFlag(CAircraftMatcherSetup::ByModelString))
             {
                 matchedModel = matchByExactModelString(remoteAircraft, modelSet, log);
                 if (matchedModel.hasModelString())
@@ -168,8 +172,7 @@ namespace BlackCore
 
     CAircraftModel CAircraftMatcher::reverseLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftModel(); }
 
         // already DB model?
         CAircraftModel model(modelToLookup); // copy
@@ -279,8 +282,8 @@ namespace BlackCore
 
         if (log)
         {
-            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").
-                                                arg(model.getAircraftIcaoCode().getCombinedIcaoStringWithKey(),
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").arg(
+                                                    model.getAircraftIcaoCode().getCombinedIcaoStringWithKey(),
                                                     model.getLivery().getCombinedCodePlusInfo(),
                                                     model.getModelString(), model.getModelTypeAsString()));
         }
@@ -289,8 +292,7 @@ namespace BlackCore
 
     CAircraftIcaoCode CAircraftMatcher::reverseLookupAircraftIcao(const CAircraftIcaoCode &icaoCandidate, const CCallsign &logCallsign, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftIcaoCode(); }
 
         const QString designator(icaoCandidate.getDesignator());
         CAircraftIcaoCodeList foundIcaos = sApp->getWebDataServices()->getAircraftIcaoCodesForDesignator(designator);
@@ -359,9 +361,7 @@ namespace BlackCore
 
     CAirlineIcaoCode CAircraftMatcher::reverseLookupAirlineIcao(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
-
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirlineIcaoCode(); }
         const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(icaoPattern, callsign);
         if (log)
         {
@@ -373,9 +373,7 @@ namespace BlackCore
 
     CLivery CAircraftMatcher::reverseLookupStandardLivery(const CAirlineIcaoCode &airline, const CCallsign &callsign, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
-
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CLivery(); }
         if (!airline.hasValidDesignator())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, "Reverse lookup of standard livery skipped, no airline designator", CAircraftMatcher::getLogCategories(), CStatusMessage::SeverityWarning); }
@@ -393,8 +391,7 @@ namespace BlackCore
 
     QString CAircraftMatcher::reverseLookupAirlineName(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return ""; }
         if (candidate.isEmpty()) { return ""; }
         const QStringList names = sApp->getWebDataServices()->getAirlineNames();
         if (names.contains(candidate, Qt::CaseInsensitive))
@@ -409,9 +406,7 @@ namespace BlackCore
 
     QString CAircraftMatcher::reverseLookupTelephonyDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
-
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return ""; }
         if (candidate.isEmpty()) { return ""; }
         const QStringList designators = sApp->getWebDataServices()->getTelephonyDesignators();
         if (designators.contains(candidate, Qt::CaseInsensitive))
@@ -426,14 +421,12 @@ namespace BlackCore
 
     bool CAircraftMatcher::isKnowAircraftDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
         if (!CAircraftIcaoCode::isValidDesignator(candidate))
         {
             CMatchingUtils::addLogDetailsToList(log, callsign, QString("No valid ICAO designator '%1'").arg(candidate));
             return false;
         }
-
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
 
         const bool known = sApp->getWebDataServices()->containsAircraftIcaoDesignator(candidate);
         static const QString sKnown("Known ICAO '%1'");
@@ -444,13 +437,13 @@ namespace BlackCore
 
     CAircraftIcaoCode CAircraftMatcher::searchAmongAirlineAircraft(const QString &candidateString, const CAirlineIcaoCode &airline, const CCallsign &callsign, CStatusMessageList *log)
     {
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAircraftIcaoCode(); }
         if (!airline.isLoadedFromDb())
         {
             CMatchingUtils::addLogDetailsToList(log, callsign, QString("No valid airline from DB '%1'").arg(airline.getDesignator()));
             return CAircraftIcaoCode();
         }
 
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
 
         const CAircraftIcaoCodeList aircraft = sApp->getWebDataServices()->getAircraftIcaoCodesForAirline(airline);
@@ -563,7 +556,7 @@ namespace BlackCore
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(CAircraftMatcherSetup::MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
         CAircraftModelList matchedModels(modelSet);
         CAircraftModel matchedModel(remoteAircraft.getModel());
@@ -572,7 +565,7 @@ namespace BlackCore
         do
         {
             // by livery, then by ICAO
-            if (mode.testFlag(ByLivery))
+            if (mode.testFlag(CAircraftMatcherSetup::ByLivery))
             {
                 matchedModels = ifPossibleReduceByLiveryAndIcaoCode(remoteAircraft, matchedModels, reduced, log);
                 if (reduced) { break; }
@@ -583,7 +576,7 @@ namespace BlackCore
             }
 
             // by ICAO data from set
-            if (mode.testFlag(ByIcaoData))
+            if (mode.testFlag(CAircraftMatcherSetup::ByIcaoData))
             {
                 // if already matched by livery skip
                 matchedModels = ifPossibleReduceByIcaoData(remoteAircraft, matchedModels, false, reduced, log);
@@ -595,7 +588,7 @@ namespace BlackCore
             }
 
             // family
-            if (mode.testFlag(ByFamily))
+            if (mode.testFlag(CAircraftMatcherSetup::ByFamily))
             {
                 QString family = remoteAircraft.getAircraftIcaoCode().getFamily();
                 matchedModels = ifPossibleReduceByFamily(remoteAircraft, family, matchedModels, "real family", reduced, log);
@@ -612,7 +605,7 @@ namespace BlackCore
             }
 
             // combined code
-            if (mode.testFlag(ByCombinedType))
+            if (mode.testFlag(CAircraftMatcherSetup::ByCombinedType))
             {
                 matchedModels = ifPossibleReduceByCombinedCode(remoteAircraft, matchedModels, reduced, log);
                 if (reduced) { break; }
@@ -625,7 +618,7 @@ namespace BlackCore
         while (false);
 
         // the last resort is to use the combined type
-        if (mode.testFlag(ByCombinedType) && matchedModels.isEmpty() && remoteAircraft.getModel().getAircraftIcaoCode().hasValidCombinedType())
+        if (mode.testFlag(CAircraftMatcherSetup::ByCombinedType) && matchedModels.isEmpty() && remoteAircraft.getModel().getAircraftIcaoCode().hasValidCombinedType())
         {
             const CAircraftModel defaultModel = getCombinedTypeDefaultModel(modelSet, remoteAircraft, log);
             matchedModels.push_back(defaultModel);
@@ -654,7 +647,7 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(CAircraftMatcherSetup::MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
         Q_UNUSED(mode);
         CAircraftModelList usedModelSet;
@@ -1082,4 +1075,70 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return true; }
         return (sApp->getWebDataServices()->containsAirlineIcaoDesignator(designator));
     }
+
+    const QString &CAircraftMatcherSetup::modeFlagToString(MatchingModeFlag modeFlag)
+    {
+        static const QString ms("by model string");
+        static const QString icao("by ICAO");
+        static const QString family("by family");
+        static const QString livery("by livery");
+        static const QString combined("by combined combined");
+
+        switch (modeFlag)
+        {
+        case ByModelString:  return ms;
+        case ByIcaoData:     return icao;
+        case ByFamily:       return family;
+        case ByLivery:       return livery;
+        case ByCombinedType: return combined;
+        default: break;
+        }
+
+        static const QString unknown("unknown");
+        return unknown;
+    }
+
+    QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
+    {
+        if (mode == ModeAll) { return "all"; }
+
+        QStringList modes;
+        if (mode.testFlag(ByModelString)) { modes << modeFlagToString(ByModelString); }
+        if (mode.testFlag(ByIcaoData)) { modes << modeFlagToString(ByIcaoData); }
+        if (mode.testFlag(ByFamily)) { modes << modeFlagToString(ByFamily); }
+        if (mode.testFlag(ByLivery)) { modes << modeFlagToString(ByLivery); }
+        if (mode.testFlag(ByCombinedType)) { modes << modeFlagToString(ByCombinedType); }
+        return modes.join(", ");
+    }
+
+    QString CAircraftMatcherSetup::convertToQString(bool i18n) const
+    {
+        Q_UNUSED(i18n);
+        return modeToString(this->getMatchingMode());
+    }
+
+    CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return CVariant::from(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexMatchingMode: return CVariant::fromValue(m_mode);
+        default: break;
+        }
+        return CValueObject::propertyByIndex(index);
+    }
+
+    void CAircraftMatcherSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.to<CAircraftMatcherSetup>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexMatchingMode: m_mode = variant.toInt(); break;
+        default: break;
+        }
+        CValueObject::setPropertyByIndex(index, variant);
+    }
+
 } // namespace
