@@ -303,6 +303,7 @@ namespace BlackMisc
             case IndexAltitude: return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
             case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
+            case IndexPBHInfo: return CVariant::fromValue(this->getPBHInfo());
             case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
             case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
@@ -357,6 +358,7 @@ namespace BlackMisc
             {
             case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
             case IndexAltitude: return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
+            case IndexPBHInfo: // fall through
             case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
             case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
             case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
@@ -381,7 +383,7 @@ namespace BlackMisc
                 {
                     const int c =  Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
                     if (c != 0) { return c; }
-                    // fall thrue, compare flag
+                    // fall through, compare flag
                 }
             case IndexGroundElevationInfoTransferred: return Compare::compare(m_isElvInfoTransferred, compareValue.m_isElvInfoTransferred);
             case IndexCanLikelySkipNearGroundInterpolation: return Compare::compare(this->canLikelySkipNearGroundInterpolation(), compareValue.canLikelySkipNearGroundInterpolation());
@@ -958,6 +960,16 @@ namespace BlackMisc
         {
             Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
             m_pressureAltitude = altitude;
+        }
+
+        QString CAircraftSituation::getPBHInfo() const
+        {
+            static const QString pbh("P: %1 %2 B: %3 %4 H: %5 %6");
+            return pbh.arg(
+                       this->getPitch().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getPitch().valueRoundedWithUnit(CAngleUnit::rad(), 5, true),
+                       this->getBank().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getBank().valueRoundedWithUnit(CAngleUnit::rad(), 5, true),
+                       this->getHeading().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getHeading().valueRoundedWithUnit(CAngleUnit::rad(), 5, true)
+                   );
         }
 
         bool CAircraftSituation::isMoving() const

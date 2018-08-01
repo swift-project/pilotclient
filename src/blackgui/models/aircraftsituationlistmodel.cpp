@@ -36,6 +36,7 @@ namespace BlackGui
             m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexLatitude, new CLatLonFormatter()));
             m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexLongitude, new CLatLonFormatter()));
             m_columns.addColumn(CColumn("gs.", CAircraftSituation::IndexGroundSpeed, new CSpeedKtsFormatter()));
+            m_columns.addColumn(CColumn::standardString("PBH", "pitch bank heading", CAircraftSituation::IndexPBHInfo));
             m_columns.addColumn(CColumn("on gnd.", "is on gnd.", CAircraftSituation::IndexIsOnGround, new CBoolIconFormatter("yes", "no"), true));
             m_columns.addColumn(CColumn::standardString("reliability", CAircraftSituation::IndexOnGroundReliabilityString));
             m_columns.addColumn(CColumn::standardString("gnd.elv.", CAircraftSituation::IndexGroundElevationPlusInfo));

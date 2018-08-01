@@ -66,6 +66,7 @@ namespace BlackMisc
                 IndexOnGroundReliability,
                 IndexOnGroundReliabilityString,
                 IndexPitch,
+                IndexPBHInfo,
                 IndexGroundSpeed,
                 IndexGroundElevationPlane,
                 IndexGroundElevationInfo,
@@ -408,6 +409,9 @@ namespace BlackMisc
 
             //! Set bank (angle)
             void setBank(const PhysicalQuantities::CAngle &bank) { m_bank = bank; }
+
+            //! Get PBH info (all together)
+            QString getPBHInfo() const;
 
             //! Get ground speed
             const PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_groundSpeed; }
