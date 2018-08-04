@@ -416,14 +416,69 @@ namespace BlackMisc
                 const QNetworkConfiguration c = am->configuration();
                 static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
 
-                const QString msg = QString("Accessible: %1 (%2) bearer: %3 %4").arg(
+                const QString msg = QString("Accessible: %1 (%2) config: %3").arg(
                                         boolToYesNo(accessible),
                                         enumAccessible.valueToKey(am->networkAccessible()),
-                                        c.bearerTypeName(), c.identifier());
+                                        networkConfigurationToString(c));
                 msgs.push_back(CStatusMessage(cats, accessible ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, msg));
             }
 
             return msgs;
+        }
+
+        QString CNetworkUtils::networkConfigurationToString(const QNetworkConfiguration &configuration)
+        {
+            static const QString s("%1 %2 valid: %3 %4 %5");
+            const QString stateFlagsStr = networkStatesToString(configuration.state());
+            return s.arg(configuration.name(), configuration.identifier(), boolToYesNo(configuration.isValid()), stateFlagsStr, networkTypeToString(configuration.type()));
+        }
+
+        const QString &CNetworkUtils::networkTypeToString(QNetworkConfiguration::Type type)
+        {
+            static const QString iap("InternetAccessPoint");
+            static const QString sn("ServiceNetwork");
+            static const QString i("Invalid");
+            static const QString uc("UserChoice");
+
+            switch (type)
+            {
+            case QNetworkConfiguration::InternetAccessPoint: return iap;
+            case QNetworkConfiguration::ServiceNetwork: return sn;
+            case QNetworkConfiguration::UserChoice: return uc;
+            default:
+            case QNetworkConfiguration::Invalid: break;
+            }
+
+            return i;
+        }
+
+        const QString &CNetworkUtils::networkStateToString(QNetworkConfiguration::StateFlag state)
+        {
+            static const QString disco("Discovered");
+            static const QString a("Active");
+            static const QString u("Undefined");
+            static const QString d("Defined");
+
+            switch (state)
+            {
+            case QNetworkConfiguration::Defined: return d;
+            case QNetworkConfiguration::Active: return a;
+            case QNetworkConfiguration::Discovered: return disco;
+            default:
+            case QNetworkConfiguration::Undefined: break;
+            }
+
+            return u;
+        }
+
+        QString CNetworkUtils::networkStatesToString(QNetworkConfiguration::StateFlags states)
+        {
+            QStringList statesSl;
+            if (states.testFlag(QNetworkConfiguration::Active)) { statesSl << networkStateToString(QNetworkConfiguration::Active); }
+            if (states.testFlag(QNetworkConfiguration::Discovered)) { statesSl << networkStateToString(QNetworkConfiguration::Discovered); }
+            if (states.testFlag(QNetworkConfiguration::Defined)) { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
+            if (states.testFlag(QNetworkConfiguration::Undefined)) { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
+            return statesSl.join(", ");
         }
     } // namespace
 } // namespace
