@@ -29,7 +29,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         QString CPqString::convertToQString(bool /** i18n **/) const
         {
             return this->m_string;
@@ -40,7 +39,7 @@ namespace BlackMisc
             CVariant v;
 
             // fine tuning of the string
-            QString vs = value.trimmed().simplified();
+            const QString vs = value.trimmed().simplified();
 
             // check
             if (vs.isEmpty()) { return v; }

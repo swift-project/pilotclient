@@ -24,7 +24,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Represents a physical quantity by a string
          * \details Used to parse strings into physical quantities, validate strings
@@ -63,15 +62,16 @@ namespace BlackMisc
             //! Parse into concrete type
             template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorsCLocale)
             {
-                PQ invalid;
-                invalid.setNull();
-                if (value.isEmpty()) return invalid;
-                CVariant qv = parseToVariant(value, mode);
+                PQ null;
+                null.setNull();
+                if (value.isEmpty()) {return null; }
+                if (value.contains("null", Qt::CaseInsensitive)) { return null; }
+                const CVariant qv = parseToVariant(value, mode);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
                 }
-                return invalid;
+                return null;
             }
 
             //! Locale aware parsing
@@ -85,9 +85,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(string)
             );
         };
-
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPqString)
 
