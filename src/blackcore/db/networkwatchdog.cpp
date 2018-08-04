@@ -34,15 +34,11 @@ namespace BlackCore
 
         CNetworkWatchdog::CNetworkWatchdog(bool networkAccessible, QObject *parent) : CContinuousWorker(parent, "swift DB watchdog")
         {
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+            Q_ASSERT_X(parent, Q_FUNC_INFO, "Need parent (normally sApp)");
+
             m_networkAccessible = networkAccessible;
             m_internetAccessible = networkAccessible;
             m_dbAccessible = networkAccessible && m_checkDbAccessibility;
-
-            if (networkAccessible)
-            {
-                this->initWorkingSharedUrlFromSetup();
-            }
 
             m_updateTimer.setInterval(10 * 1000);
             connect(&m_updateTimer, &QTimer::timeout, this, &CNetworkWatchdog::doWork);
@@ -51,7 +47,7 @@ namespace BlackCore
         void CNetworkWatchdog::setDbAccessibility(bool accessible)
         {
             m_dbAccessible = accessible;
-            m_internetAccessible = m_internetAccessible && m_networkAccessible;
+            m_internetAccessible = m_internetAccessible && this->isNetworkkAccessibleOrCheckDisabled();
 
             // restart timer
             QPointer<CNetworkWatchdog> myself(this);
@@ -64,13 +60,13 @@ namespace BlackCore
 
         bool CNetworkWatchdog::hasWorkingSharedUrl() const
         {
-            if (!m_networkAccessible) { return false; }
+            if (!this->isNetworkkAccessibleOrCheckDisabled()) { return false; }
             return !this->getWorkingSharedUrl().isEmpty();
         }
 
         CUrl CNetworkWatchdog::getWorkingSharedUrl() const
         {
-            if (!m_networkAccessible) { return CUrl(); }
+            if (!this->isNetworkkAccessibleOrCheckDisabled()) { return CUrl(); }
             QReadLocker l(&m_lockUrl);
             return m_workingSharedUrl;
         }
@@ -125,11 +121,18 @@ namespace BlackCore
             if (m_checkInProgress) { return; }
             m_checkInProgress = true;
 
+            // lazy init
+            if (!this->hasWorkingSharedUrl())
+            {
+                this->initWorkingSharedUrlFromSetup();
+            }
+
+            // checks
             do
             {
                 const bool wasDbAvailable = m_dbAccessible;
                 const bool wasInternetAvailable = m_internetAccessible;
-                const bool networkAccessible = m_networkAccessible;
+                const bool networkAccessible = this->isNetworkkAccessibleOrCheckDisabled();
                 const CUrl testUrl(CNetworkWatchdog::dbTestUrl());
                 bool canConnectDb = m_checkDbAccessibility && networkAccessible &&
                                     CNetworkUtils::canConnect(testUrl, CanConnectTimeMs); // running here in background worker
@@ -260,6 +263,16 @@ namespace BlackCore
             emit this->changedNetworkAccessible(accessibility);
         }
 
+        void CNetworkWatchdog::networkConfigurationsUpdateCompleted()
+        {
+            // void
+        }
+
+        void CNetworkWatchdog::setOnline(bool online)
+        {
+            m_online = online;
+        }
+
         void CNetworkWatchdog::gracefulShutdown()
         {
             this->pingDbClientService(CGlobalSetup::PingCompleteShutdown);
@@ -274,6 +287,13 @@ namespace BlackCore
             if (!gs.wasLoaded()) { return; }
             const CUrl pingUrl = gs.getDbClientPingServiceUrl(type);
             sApp->getFromNetwork(pingUrl, { this, &CNetworkWatchdog::replyPingClientService });
+        }
+
+        bool CNetworkWatchdog::disableNetworkAccessibilityCheck(bool disable)
+        {
+            if (disable == m_disableNetworkCheck) { return false; }
+            m_disableNetworkCheck = disable;
+            return true;
         }
 
         void CNetworkWatchdog::replyPingClientService(QNetworkReply *nwReply)

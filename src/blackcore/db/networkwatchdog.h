@@ -42,6 +42,13 @@ namespace BlackCore
             //! \threadsafe
             void setNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessibility);
 
+            //! Configuration updates completed as reported by QNetworkConfigurationManager::updateCompleted
+            void networkConfigurationsUpdateCompleted();
+
+            //! Set online as reported by QNetworkConfigurationManager::onlineStateChanged
+            //! \threadsafe
+            void setOnline(bool online);
+
             //! DB available?
             //! \threadsafe
             bool isSwiftDbAccessible() const { return m_dbAccessible; }
@@ -74,6 +81,9 @@ namespace BlackCore
             //! Internet available?
             //! \threadsafe
             bool isInternetAccessible() const { return m_internetAccessible; }
+
+            //! Accesible or check disabled?
+            bool isNetworkkAccessibleOrCheckDisabled() const { return m_networkAccessible || m_disableNetworkCheck; }
 
             //! Has working shared URL?
             //! \threadsafe
@@ -110,6 +120,15 @@ namespace BlackCore
 
             //! Ping the DB server, fire and forget (no feedback etc)
             void pingDbClientService(Data::CGlobalSetup::PingType type = Data::CGlobalSetup::PingUnspecific, bool force = false);
+
+            //! Disable the network check
+            //! \remark if disabled network reports always accessible
+            //! \threadsafe
+            bool disableNetworkAccessibilityCheck(bool disable);
+
+            //! Has network check been disabled?
+            //! \threadsafe
+            bool isNetworkAccessibilityCheckDisabled() const { return m_disableNetworkCheck; }
 
             //! URL referring to the DB
             //! \remark depends on BlackCore::Application::getGlobalSetup()
@@ -160,6 +179,8 @@ namespace BlackCore
             std::atomic_bool m_logOwnMessages { true };
             std::atomic_bool m_doDetailedCheck { true };
             std::atomic_bool m_networkAccessible { true };
+            std::atomic_bool m_disableNetworkCheck { false }; //!< if this is true, network accessible always reports true/accessible
+            std::atomic_bool m_online { true };
             std::atomic_bool m_internetAccessible { true };
             std::atomic_bool m_dbAccessible { true };
             std::atomic_bool m_lastClientPingSuccess { true };
@@ -171,7 +192,7 @@ namespace BlackCore
             std::atomic_int  m_totalBadCountDb { 0 }; //!< Total number of DB failing counts (only real responses when tried)
             std::atomic_int  m_totalBadCountInternet { 0 }; //!< Total number of Internet failing count (only when network is accessible)
             std::atomic_int  m_totalGoodCountDb { 0 };
-            std::atomic_int  m_totalGoodCountInternet { 0 };
+            std::atomic_int  m_totalGoodCountInternet  { 0 };
             std::atomic_int  m_consecutivePingBadCount { 0 }; //!< Bad count of ping until a godd state is received
             QString m_lastPingUrl;
             BlackMisc::Network::CUrl m_workingSharedUrl;

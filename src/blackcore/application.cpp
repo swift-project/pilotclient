@@ -50,6 +50,7 @@
 #include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QNetworkConfigurationManager>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QSslSocket>
@@ -105,6 +106,7 @@ namespace BlackCore
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         CIdentifiable(this),
+        m_networkConfigManager(new QNetworkConfigurationManager(this)),
         m_accessManager(new QNetworkAccessManager(this)),
         m_applicationInfo(application),
         m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
@@ -154,26 +156,11 @@ namespace BlackCore
             if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
             QCoreApplication::instance()->installTranslator(&translator);
 
-            // Init network
+            // main app
             sApp = this;
-            Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
-            CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(this->isNetworkAccessible(), this);
-            m_networkWatchDog.reset(nwWatchdog); // not yet started
-            m_cookieManager = new CCookieManager({}, this);
-            m_cookieManager->setParent(m_accessManager);
-            m_accessManager->setCookieJar(m_cookieManager);
 
-            // in to watchdog
-            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setNetworkAccessibility);
+            this->initNetwork();
 
-            // out from watchdog to application
-            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedNetworkAccessible, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
-            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
-            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
-
-            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
-            m_networkWatchDog->start(QThread::LowestPriority);
-            m_networkWatchDog->startUpdating(10);
 
             // global setup
             m_setupReader.reset(new CSetupReader(this));
@@ -739,7 +726,10 @@ namespace BlackCore
 
     bool CApplication::isNetworkAccessible() const
     {
-        if (!m_accessManager) { return false; }
+        // skip test if there is no proper network config
+        if (m_networkWatchDog && m_networkWatchDog->isNetworkAccessibilityCheckDisabled()) { return true; }
+
+        Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "no access manager");
         const QNetworkAccessManager::NetworkAccessibility a = m_accessManager->networkAccessible();
         if (a == QNetworkAccessManager::Accessible) { return true; }
 
@@ -749,19 +739,16 @@ namespace BlackCore
 
     bool CApplication::isInternetAccessible() const
     {
-        if (!this->isNetworkAccessible()) { return false; }
         return m_networkWatchDog && m_networkWatchDog->isInternetAccessible();
     }
 
     bool CApplication::isSwiftDbAccessible() const
     {
-        if (!this->isNetworkAccessible()) { return false; }
         return m_networkWatchDog && m_networkWatchDog->isSwiftDbAccessible();
     }
 
     bool CApplication::hasWorkingSharedUrl() const
     {
-        if (!this->isNetworkAccessible()) { return false; }
         return m_networkWatchDog && m_networkWatchDog->hasWorkingSharedUrl();
     }
 
@@ -1102,6 +1089,88 @@ namespace BlackCore
         }
 
         emit this->changedSwiftDbAccessibility(accessible, url);
+    }
+
+    void CApplication::onNetworkConfigurationsUpdateCompleted()
+    {
+        const QNetworkConfiguration config = m_networkConfigManager->defaultConfiguration();
+        const QList<QNetworkConfiguration> allConfigurations = m_networkConfigManager->allConfigurations();
+
+        /** testing only
+        for (const QNetworkConfiguration &config : allConfigurations)
+        {
+            const QString cs = CNetworkUtils::networkConfigurationToString(config);
+            CLogMessage(this).info("Network config: '%1'") << cs;
+        }
+        if (m_accessManager)
+        {
+            const QString cs = CNetworkUtils::networkConfigurationToString(m_accessManager->configuration());
+            CLogMessage(this).info("Network access manager config: '%1'") << cs;
+        }
+        **/
+
+        if (allConfigurations.isEmpty())
+        {
+            // this is an odd situation we cannot handle, network check will be disabled
+            if (!m_networkWatchDog->isNetworkAccessibilityCheckDisabled())
+            {
+                m_networkWatchDog->disableNetworkAccessibilityCheck(true);
+                m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
+                CLogMessage(this).warning("No network configurations found, disabling network accessibility checks");
+            }
+        }
+        else
+        {
+            const bool isOnline = m_networkConfigManager->isOnline();
+            const bool canStartIAP = (m_networkConfigManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
+            m_networkWatchDog->disableNetworkAccessibilityCheck(!isOnline);
+
+            // Is there default access point, use it
+            if (!config.isValid() || (!canStartIAP && config.state() != QNetworkConfiguration::Active))
+            {
+                CLogMessage(this).error("No network access point found");
+            }
+        }
+    }
+
+    void CApplication::initNetwork()
+    {
+        if (!m_accessManager) { m_accessManager = new QNetworkAccessManager(this); }
+        if (!m_networkConfigManager) { m_networkConfigManager = new QNetworkConfigurationManager(this); }
+
+        if (!m_networkWatchDog)
+        {
+            // CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(this->isNetworkAccessible(), this);
+            CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(true, this); // WLAN bug, default to true
+            m_networkWatchDog.reset(nwWatchdog); // not yet started
+            m_cookieManager = new CCookieManager({}, this);
+            m_cookieManager->setParent(m_accessManager);
+            m_accessManager->setCookieJar(m_cookieManager);
+        }
+
+        // Init network
+        Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
+        Q_ASSERT_X(m_networkConfigManager, Q_FUNC_INFO, "Need config manager");
+
+        // into watchdog
+        connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setNetworkAccessibility, Qt::QueuedConnection);
+        connect(m_networkConfigManager, &QNetworkConfigurationManager::onlineStateChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setOnline, Qt::QueuedConnection);
+        connect(m_networkConfigManager, &QNetworkConfigurationManager::updateCompleted, m_networkWatchDog.data(), &CNetworkWatchdog::networkConfigurationsUpdateCompleted, Qt::QueuedConnection);
+        connect(m_networkConfigManager, &QNetworkConfigurationManager::updateCompleted, this, &CApplication::onNetworkConfigurationsUpdateCompleted, Qt::QueuedConnection);
+        m_networkConfigManager->updateConfigurations();
+
+        // out from watchdog to application
+        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedNetworkAccessible, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
+        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
+        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
+
+        CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
+        m_networkWatchDog->start(QThread::LowestPriority);
+        m_networkWatchDog->startUpdating(10);
+
+        // enable by setting accessible
+        // http://doc.qt.io/qt-5/qnetworkaccessmanager.html#setNetworkAccessible
+        m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()

@@ -30,6 +30,7 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QNetworkAccessManager>
+#include <QNetworkConfigurationManager>
 #include <QReadWriteLock>
 #include <QStringList>
 #include <QString>
@@ -542,7 +543,7 @@ namespace BlackCore
 
         //! Severe issue during startup, most likely it does not make sense to continue
         //! \note call this here if the parsing stage is over and reaction to a runtime issue is needed
-        void severeStartupProblem(const BlackMisc::CStatusMessage &message);
+        [[ noreturn ]] void severeStartupProblem(const BlackMisc::CStatusMessage &message);
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
@@ -585,6 +586,12 @@ namespace BlackCore
         //! Changed swift DB accessibility
         void onChangedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &url);
 
+        //! Network configurations update completed
+        void onNetworkConfigurationsUpdateCompleted();
+
+        //! Init network
+        void initNetwork();
+
         //! init logging system
         void initLogging();
 
@@ -620,6 +627,7 @@ namespace BlackCore
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
+        QNetworkConfigurationManager   *m_networkConfigManager = nullptr; //!< configuration
         QNetworkAccessManager                 *m_accessManager = nullptr; //!< single network access manager
         BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
         QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
