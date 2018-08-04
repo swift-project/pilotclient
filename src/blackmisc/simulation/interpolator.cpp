@@ -219,6 +219,16 @@ namespace BlackMisc
                 altCorrection = currentSituation.correctAltitude(true); // we have CG set
             }
 
+            // correct pitch on ground
+            if (currentSituation.isOnGround())
+            {
+                const CAngle correctedPitchOnGround = m_currentSetup.getPitchOnGround();
+                if (!correctedPitchOnGround.isNull())
+                {
+                    currentSituation.setPitch(correctedPitchOnGround);
+                }
+            }
+
             // status
             Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
             m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
