@@ -34,7 +34,7 @@ namespace BlackGui
             explicit CInterpolationSetupForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationSetupForm();
+            virtual ~CInterpolationSetupForm() override;
 
             //! Set value
             void setValue(const BlackMisc::Simulation::CInterpolationAndRenderingSetupBase &setup);
@@ -61,6 +61,9 @@ namespace BlackGui
 
             //! Interpolator mode
             void onInterpolatorModeChanged(bool checked);
+
+            //! Pitch entry
+            void onPitchChanged();
 
             //! Mode from UI
             BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;

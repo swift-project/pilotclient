@@ -6,37 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>223</width>
-    <height>91</height>
+    <width>277</width>
+    <height>88</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <layout class="QGridLayout" name="gl_InterpolationSetupForm">
+  <layout class="QGridLayout" name="hl_PitchOnGround_2">
    <property name="leftMargin">
-    <number>4</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>4</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>4</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>4</number>
+    <number>0</number>
    </property>
-   <item row="3" column="1">
-    <widget class="QCheckBox" name="cb_DebugDriver">
-     <property name="text">
-      <string>driver dbg. msgs.</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QCheckBox" name="cb_LogInterpolation">
      <property name="text">
       <string>log.interpolation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="cb_DebugDriver">
+     <property name="text">
+      <string>driver dbg. msgs.</string>
      </property>
     </widget>
    </item>
@@ -75,6 +75,44 @@
      <property name="checked">
       <bool>true</bool>
      </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QFrame" name="fr_PitchOnGround">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="hl_PitchOnGround">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_PitchOnGround">
+        <property name="text">
+         <string>pitch on gnd.:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_PitchOnGround">
+        <property name="placeholderText">
+         <string>pitch on gnd.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item row="0" column="0">
@@ -129,12 +167,13 @@
  </widget>
  <tabstops>
   <tabstop>rb_Spline</tabstop>
+  <tabstop>rb_Linear</tabstop>
   <tabstop>cb_EnableParts</tabstop>
   <tabstop>cb_SendGndFlagToSim</tabstop>
   <tabstop>cb_FixSceneryOffset</tabstop>
   <tabstop>cb_ForceVtolInterpolation</tabstop>
-  <tabstop>cb_DebugDriver</tabstop>
   <tabstop>cb_LogInterpolation</tabstop>
+  <tabstop>cb_DebugDriver</tabstop>
  </tabstops>
  <resources/>
  <connections/>

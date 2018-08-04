@@ -12,6 +12,7 @@
 #include "blackgui/guiutility.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
 namespace BlackGui
@@ -29,8 +30,11 @@ namespace BlackGui
                 connect(cb, &QCheckBox::stateChanged, this, &CInterpolationSetupForm::onCheckboxChanged);
             }
 
-            // one conect is enough, otherwise 2 change signals
+            // one connect is enough, otherwise 2 change signals
             connect(ui->rb_Linear, &QRadioButton::toggled, this, &CInterpolationSetupForm::onInterpolatorModeChanged);
+
+            // pitch
+            connect(ui->le_PitchOnGround, &QLineEdit::editingFinished, this, &CInterpolationSetupForm::onPitchChanged);
         }
 
         CInterpolationSetupForm::~CInterpolationSetupForm()
@@ -44,6 +48,7 @@ namespace BlackGui
             ui->cb_ForceVtolInterpolation->setChecked(setup.isForcingVtolInterpolation());
             ui->cb_SendGndFlagToSim->setChecked(setup.isSendingGndFlagToSimulator());
             ui->cb_FixSceneryOffset->setChecked(setup.isFixingSceneryOffset());
+            ui->le_PitchOnGround->setText(setup.getPitchOnGround().valueRoundedWithUnit(CAngleUnit::deg()));
             this->setInterpolatorMode(setup.getInterpolatorMode());
         }
 
@@ -106,6 +111,13 @@ namespace BlackGui
         {
             Q_UNUSED(checked);
             emit this->valueChanged();
+        }
+
+        void CInterpolationSetupForm::onPitchChanged()
+        {
+            const QString p = ui->le_PitchOnGround->text().trimmed();
+            CAngle pitch;
+            pitch.parseFromString(p);
         }
     } // ns
 } // ns
