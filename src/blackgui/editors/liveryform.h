@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CLiveryForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CLiveryForm();
+            virtual ~CLiveryForm() override;
 
             //! Value
             BlackMisc::Aviation::CLivery getValue() const;

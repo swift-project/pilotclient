@@ -47,7 +47,7 @@ namespace BlackMisc
         CLogHandler();
 
         //! \private Destructor.
-        ~CLogHandler();
+        virtual ~CLogHandler();
 
         //! Return pointer to the CLogHandler singleton.
         //! \warning This can not be called from within a plugin, because the returned instance will be wrong.

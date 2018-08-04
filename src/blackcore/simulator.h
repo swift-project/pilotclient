@@ -87,7 +87,7 @@ namespace BlackCore
         const int MaxAircraftInfinite = 100;
 
         //! Destructor
-        virtual ~ISimulator();
+        virtual ~ISimulator() override;
 
         //! Combined status
         virtual SimulatorStatus getSimulatorStatus() const;

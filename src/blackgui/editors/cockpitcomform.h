@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CCockpitComForm(QWidget *parent = nullptr);
 
             //! Destrutor
-            virtual ~CCockpitComForm();
+            virtual ~CCockpitComForm() override;
 
             //! COM frequencies displayed
             void setFrequencies(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);

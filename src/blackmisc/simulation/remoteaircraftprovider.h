@@ -448,6 +448,9 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CRemoteAircraftAware : public IProviderAware<IRemoteAircraftProvider>
         {
         public:
+            //! Destructor
+            virtual ~CRemoteAircraftAware() {}
+
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
             CSimulatedAircraftList getAircraftInRange() const;
 

@@ -39,7 +39,7 @@ namespace BlackGui
             explicit CAirlineIcaoForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAirlineIcaoForm();
+            virtual ~CAirlineIcaoForm() override;
 
             //! Set value
             void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());

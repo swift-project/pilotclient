@@ -32,10 +32,8 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexAllowExclude:
-                    return CVariant::fromValue(this->m_allowExcludeModels);
-                default:
-                    return CValueObject::propertyByIndex(index);
+                case IndexAllowExclude: return CVariant::fromValue(this->m_allowExcludeModels);
+                default: return CValueObject::propertyByIndex(index);
                 }
             }
 
@@ -45,12 +43,8 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexAllowExclude:
-                    this->setAllowExcludedModels(variant.toBool());
-                    break;
-                default:
-                    CValueObject::setPropertyByIndex(index, variant);
-                    break;
+                case IndexAllowExclude: this->setAllowExcludedModels(variant.toBool()); break;
+                default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
             }
         } // ns

@@ -13,7 +13,6 @@
 #define BLACKGUI_EDITORS_AIRCRAFTMODELFORM_H
 
 #include "form.h"
-#include <QFrame>
 
 namespace Ui { class CAircraftModelForm; }
 namespace BlackGui
@@ -32,7 +31,7 @@ namespace BlackGui
             explicit CAircraftModelForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftModelForm();
+            virtual ~CAircraftModelForm() override;
 
             //! Allow to drop data
             void allowDrop(bool allowDrop);

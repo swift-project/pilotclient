@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CCoordinateForm(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CCoordinateForm();
+            virtual ~CCoordinateForm() override;
 
             //! Get the coordinate
             BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
@@ -47,7 +47,6 @@ namespace BlackGui
             //! \name Form class implementations
             //! @{
             virtual void setReadOnly(bool readonly) override;
-            virtual void setSelectOnly() override;
             virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
             //! @}
 

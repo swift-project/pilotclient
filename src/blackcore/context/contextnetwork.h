@@ -97,7 +97,7 @@ namespace BlackCore
             static IContextNetwork *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
-            virtual ~IContextNetwork() {}
+            virtual ~IContextNetwork() override {}
 
         signals:
             //! An aircraft disappeared

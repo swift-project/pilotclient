@@ -20,8 +20,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CModelMappingForm; }
 namespace BlackGui
 {
@@ -39,7 +37,7 @@ namespace BlackGui
             explicit CModelMappingForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelMappingForm();
+            virtual ~CModelMappingForm() override;
 
             //! Value
             BlackMisc::Simulation::CAircraftModel getValue() const;

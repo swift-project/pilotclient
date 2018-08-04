@@ -20,7 +20,6 @@
 #include <QScopedPointer>
 
 class QCheckBox;
-class QWidget;
 
 namespace Ui { class CModelMappingModifyForm; }
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CModelMappingModifyForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelMappingModifyForm();
+            virtual ~CModelMappingModifyForm() override;
 
             //! Get the values
             BlackMisc::CPropertyIndexVariantMap getValues() const;

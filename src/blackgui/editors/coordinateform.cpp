@@ -141,12 +141,7 @@ namespace BlackGui
             this->forceStyleSheetUpdate();
         }
 
-        void CCoordinateForm::setSelectOnly()
-        {
-            this->setReadOnly(true);
-        }
-
-        BlackMisc::CStatusMessageList CCoordinateForm::validate(bool nested) const
+        CStatusMessageList CCoordinateForm::validate(bool nested) const
         {
             Q_UNUSED(nested);
             CStatusMessageList ml;

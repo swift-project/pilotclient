@@ -23,6 +23,9 @@ namespace BlackMisc
     class IProvider
     {
     public:
+        //! Dtor
+        virtual ~IProvider() {}
+
         //! Return as QObject
         virtual QObject *asQObject() { return nullptr; }
     };
@@ -33,6 +36,9 @@ namespace BlackMisc
     protected:
         //! Ctor
         IProviderAware(PROVIDER *provider = nullptr) { this->setProvider(provider); }
+
+        //! Dtor
+        virtual ~IProviderAware() {}
 
         //! Has provider?
         bool hasProvider() const { return m_provider; }

@@ -424,7 +424,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading VATSIM data file failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning("Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
             }
