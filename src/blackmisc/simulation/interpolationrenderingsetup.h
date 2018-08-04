@@ -14,6 +14,7 @@
 
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/pq/angle.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/valueobject.h"
@@ -38,7 +39,8 @@ namespace BlackMisc
                 IndexEnabledAircraftParts,
                 IndexInterpolatorMode,
                 IndexInterpolatorModeAsString,
-                IndexFixSceneryOffset
+                IndexFixSceneryOffset,
+                IndexPitchOnGround
             };
 
             //! Interpolator type
@@ -87,6 +89,12 @@ namespace BlackMisc
             //! Enable fix scenery offset if it has been detected
             void setFixingSceneryOffset(bool fix) { m_fixSceneryOffset = fix; }
 
+            //! Force a given pitch on ground
+            const PhysicalQuantities::CAngle &getPitchOnGround() const { return m_pitchOnGround; }
+
+            //! Force a given pitch on ground
+            bool setPitchOnGround(const PhysicalQuantities::CAngle &pitchOnGround);
+
             //! Consolidate with a network client
             void consolidateWithClient(const Network::CClient &client);
 
@@ -128,6 +136,7 @@ namespace BlackMisc
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
             bool m_fixSceneryOffset       = false; //!< Fix. scenery offset
             int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
+            PhysicalQuantities::CAngle m_pitchOnGround = PhysicalQuantities::CAngle::null(); //!< pitch angle on ground
         };
 
         //! Value object for interpolator and rendering

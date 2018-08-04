@@ -35,6 +35,13 @@ namespace BlackMisc
             return true;
         }
 
+        bool CInterpolationAndRenderingSetupBase::setPitchOnGround(const CAngle &pitchOnGround)
+        {
+            if (pitchOnGround == m_pitchOnGround) { return false; }
+            m_pitchOnGround = pitchOnGround;
+            return true;
+        }
+
         void CInterpolationAndRenderingSetupBase::consolidateWithClient(const CClient &client)
         {
             m_enabledAircraftParts &= client.hasAircraftPartsCapability();
@@ -101,6 +108,7 @@ namespace BlackMisc
             case IndexInterpolatorMode: return CVariant::fromValue(m_interpolatorMode);
             case IndexInterpolatorModeAsString: return CVariant::fromValue(this->getInterpolatorModeAsString());
             case IndexFixSceneryOffset: return CVariant::fromValue(m_fixSceneryOffset);
+            case IndexPitchOnGround: return CVariant::fromValue(m_pitchOnGround);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -120,6 +128,7 @@ namespace BlackMisc
             case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
             case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toQString()); return;
             case IndexFixSceneryOffset: m_fixSceneryOffset = variant.toBool(); return;
+            case IndexPitchOnGround: m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -135,7 +144,8 @@ namespace BlackMisc
                 QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceVtolInterpolation) %
                 QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
                 QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
-                QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset);
+                QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset) %
+                QStringLiteral(" | pitch on gnd.: ") % m_pitchOnGround.valueRoundedWithUnit(CAngleUnit::deg(), 1, true);
         }
 
         bool CInterpolationAndRenderingSetupBase::canHandleIndex(int index)
