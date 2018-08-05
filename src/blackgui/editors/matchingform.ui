@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CMatchingForm</class>
+ <widget class="QFrame" name="CMatchingForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>287</width>
+    <height>87</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_MatchingForm">
+   <item>
+    <widget class="QGroupBox" name="gb_Mode">
+     <property name="title">
+      <string>Mode</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Mode">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cb_ByModelString">
+        <property name="text">
+         <string>by model string</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cb_ByICAOdata">
+        <property name="text">
+         <string>by ICAO data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cb_ByFamily">
+        <property name="text">
+         <string>by family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string>by livery</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

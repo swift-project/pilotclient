@@ -38,14 +38,15 @@ namespace BlackGui
             {
                 SettingTabOverview,
                 SettingTabServers,
+                SettingTabGui,
                 SettingTabNetwork,
+                SettingTabHotkeys,
                 SettingTabAudio,
+                SettingTabDataAndCaches,
                 SettingTabSimulator,
                 SettingTabSimulatorBasics,
                 SettingTabSimulatorMessages,
-                SettingTabGui,
-                SettingTabHotkeys,
-                SettingTabDataAndCaches,
+                SettingTabMatching,
                 SettingTabAdvanced
             };
 

@@ -62,8 +62,9 @@ namespace BlackGui
             connect(ui->pb_Servers, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
             connect(ui->pb_Simulator, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
             connect(ui->pb_SimulatorBasics, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
-            connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
             connect(ui->pb_SimulatorMessages, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Matching, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
 
             this->initActions();
         }
@@ -122,6 +123,13 @@ namespace BlackGui
             ui->pb_Simulator->setToolTip(a->shortcut().toString());
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
+
+            a = new QAction(this);
+            a->setObjectName("matching");
+            a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_M));
+            ui->pb_Matching->setToolTip(a->shortcut().toString());
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
+            this->addAction(a);
         }
 
         bool CSettingsComponent::playNotificationSounds() const
@@ -162,6 +170,7 @@ namespace BlackGui
             if (sender == ui->pb_SimulatorBasics) { this->setCurrentIndex(SettingTabSimulatorBasics); return; }
             if (sender == ui->pb_DataLoadAndCaches) { this->setCurrentIndex(SettingTabDataAndCaches); return; }
             if (sender == ui->pb_SimulatorMessages) { this->setCurrentIndex(SettingTabSimulatorMessages); return; }
+            if (sender == ui->pb_Matching) { this->setCurrentIndex(SettingTabMatching); return; }
             this->setCurrentIndex(SettingTabOverview);
         }
 
@@ -176,6 +185,8 @@ namespace BlackGui
             if (a.contains("network")) { this->setCurrentIndex(SettingTabNetwork); return; }
             if (a.contains("overview")) { this->setCurrentIndex(SettingTabOverview); return; }
             if (a.contains("simulator")) { this->setCurrentIndex(SettingTabSimulator); return; }
+            if (a.contains("matching")) { this->setCurrentIndex(SettingTabMatching); return; }
+            if (a.contains("advanced")) { this->setCurrentIndex(SettingTabAdvanced); return; }
         }
     }
 } // namespace
