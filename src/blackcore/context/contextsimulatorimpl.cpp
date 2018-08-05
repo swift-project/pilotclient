@@ -752,6 +752,18 @@ namespace BlackCore
                    statistics;
         }
 
+        void CContextSimulator::setMatchingSetup(const CAircraftMatcherSetup &setup)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup.toQString(); }
+            m_aircraftMatcher.setSetup(setup);
+        }
+
+        CAircraftMatcherSetup CContextSimulator::getMatchingSetup() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_aircraftMatcher.getSetup();
+        }
+
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             Q_UNUSED(originator);

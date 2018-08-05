@@ -290,6 +290,18 @@ namespace BlackCore
                 Q_UNUSED(missingOnly);
                 return BlackMisc::Simulation::CMatchingStatistics();
             }
+
+            //! \copydoc IContextSimulator::setMatchingSetup
+            virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override
+            {
+                Q_UNUSED(setup);
+            }
+
+            //! \copydoc IContextSimulator::setMatchingSetup
+            virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override
+            {
+                return BlackMisc::Simulation::CAircraftMatcherSetup();
+            }
         };
     } // namespace
 } // namespace

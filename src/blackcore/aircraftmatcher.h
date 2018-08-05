@@ -57,6 +57,9 @@ namespace BlackCore
         //! Set the setup
         void setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) { m_setup = setup; }
 
+        //! Get the setup
+        BlackMisc::Simulation::CAircraftMatcherSetup getSetup() const { return m_setup; }
+
         //! Get the closest matching aircraft model from set.
         //! Result depends on enabled modes.
         //! \sa MatchingModeFlag

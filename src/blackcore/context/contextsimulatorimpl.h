@@ -103,7 +103,9 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
-            BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
+            virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
+            virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
+            virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
             //! @}
 
             //! \addtogroup swiftdotcommands

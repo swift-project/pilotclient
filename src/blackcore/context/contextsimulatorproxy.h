@@ -48,7 +48,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextSimulatorProxy() {}
+            virtual ~CContextSimulatorProxy() override {}
 
             //! Unit test relay signals
             //! \private
@@ -92,17 +92,19 @@ namespace BlackCore
             virtual void enableMatchingMessages(bool enabled) override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
+            virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
+            virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
             //! @}
 
         private:
-            BlackMisc::CGenericDBusInterface *m_dBusInterface;
+            BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr;
 
             //! Relay connection signals to local signals
             void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
         protected:
             //! Constructor
-            CContextSimulatorProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(0) {}
+            CContextSimulatorProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime) {}
 
             //! DBus version constructor
             CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);

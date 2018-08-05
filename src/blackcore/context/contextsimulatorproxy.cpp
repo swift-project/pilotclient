@@ -263,5 +263,15 @@ namespace BlackCore
         {
             return m_dBusInterface->callDBusRet<CMatchingStatistics>(QLatin1String("getCurrentMatchingStatistics"), missingOnly);
         }
+
+        void CContextSimulatorProxy::setMatchingSetup(const CAircraftMatcherSetup &setup)
+        {
+            m_dBusInterface->callDBus(QLatin1String("setMatchingSetup"), setup);
+        }
+
+        CAircraftMatcherSetup CContextSimulatorProxy::getMatchingSetup() const
+        {
+            return m_dBusInterface->callDBusRet<CAircraftMatcherSetup>(QLatin1String("getMatchingSetup"));
+        }
     } // namespace
 } // namespace

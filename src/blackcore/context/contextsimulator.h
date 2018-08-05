@@ -31,6 +31,7 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
@@ -239,6 +240,12 @@ namespace BlackCore
 
             //! Current matching statistics
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const = 0;
+
+            //! Set matching setup
+            virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) = 0;
+
+            //! Get matching setup
+            virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
 
         protected:
             //! Constructor
