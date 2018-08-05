@@ -15,6 +15,7 @@
  * \brief Generic simulation related class, but not OS or driver dependent
  */
 
+#include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/distributorlist.h"

@@ -13,6 +13,7 @@
 #define BLACKCORE_AIRCRAFTMATCHER_H
 
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/statusmessage.h"
@@ -33,64 +34,6 @@ namespace BlackMisc
 
 namespace BlackCore
 {
-    namespace Settings
-    {
-        //! Matcher settings
-        class BLACKCORE_EXPORT CAircraftMatcherSetup : public BlackMisc::CValueObject<CAircraftMatcherSetup>
-        {
-        public:
-            //! Enabled matching mode flags
-            enum MatchingModeFlag
-            {
-                ByModelString    = 1 << 0,
-                ByIcaoData       = 1 << 1,
-                ByFamily         = 1 << 2,
-                ByLivery         = 1 << 3,
-                ByCombinedType   = 1 << 4,
-                ModeAll          = ByModelString | ByIcaoData | ByFamily | ByLivery | ByCombinedType
-            };
-            Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
-
-            //! Enumeration as string
-            static const QString &modeFlagToString(MatchingModeFlag modeFlag);
-
-            //! Enumeration as string
-            static QString modeToString(MatchingMode mode);
-
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexMatchingMode = BlackMisc::CPropertyIndex::GlobalIndexCAircraftMatcherSetup
-            };
-
-            //! Constructor
-            CAircraftMatcherSetup() {}
-
-            //! Matching mode
-            MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
-
-            //! Dynamic offset values?
-            void setMatchingMode(MatchingMode mode) { m_mode = static_cast<int>(mode); }
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
-
-        private:
-            int m_mode = static_cast<int>(ModeAll);
-
-            BLACK_METACLASS(
-                CAircraftMatcherSetup,
-                BLACK_METAMEMBER(mode)
-            );
-        };
-    } // ns
-
     //! Matcher for all models.
     //! \details Reads the model set (ie the models the user wants to use).
     //!          Also Allows to reverse lookup a model (from network to DB data).
@@ -103,7 +46,7 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CAircraftMatcher(const Settings::CAircraftMatcherSetup &setup, QObject *parent = nullptr);
+        CAircraftMatcher(const BlackMisc::Simulation::CAircraftMatcherSetup &setup, QObject *parent = nullptr);
 
         //! Constructor
         CAircraftMatcher(QObject *parent = nullptr);
@@ -111,8 +54,8 @@ namespace BlackCore
         //! Destructor
         virtual ~CAircraftMatcher();
 
-        //! Set the enabled matching modes
-        void setSetup(const Settings::CAircraftMatcherSetup matchingModes);
+        //! Set the setup
+        void setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) { m_setup = setup; }
 
         //! Get the closest matching aircraft model from set.
         //! Result depends on enabled modes.
@@ -228,11 +171,11 @@ namespace BlackCore
     private:
         //! The search based implementation
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getClosestMatchSearchImplementation(Settings::CAircraftMatcherSetup::MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+        BlackMisc::Simulation::CAircraftModel getClosestMatchSearchImplementation(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
 
         //! The score based implementation
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getClosestMatchScoreImplementation(Settings::CAircraftMatcherSetup::MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+        BlackMisc::Simulation::CAircraftModel getClosestMatchScoreImplementation(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
 
         //! Get combined type default model, i.e. get a default model under consideration of the combined code such as "L2J"
         //! \see BlackMisc::Simulation::CSimulatedAircraft::getAircraftIcaoCombinedType
@@ -288,18 +231,13 @@ namespace BlackCore
         //! \threadsafe
         static bool isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb);
 
-        Settings::CAircraftMatcherSetup            m_setup;         //!< setup
-        BlackMisc::Simulation::CAircraftModel      m_defaultModel;  //!< model to be used as default model
-        BlackMisc::Simulation::CAircraftModelList  m_modelSet;      //!< models used for model matching
-        BlackMisc::Simulation::CSimulatorInfo      m_simulator;     //!< simulator (optional)
-        BlackMisc::Simulation::CMatchingStatistics m_statistics;    //!< matching statistics
-        QString                                    m_modelSetInfo;  //!< info string
+        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;         //!< setup
+        BlackMisc::Simulation::CAircraftModel        m_defaultModel;  //!< model to be used as default model
+        BlackMisc::Simulation::CAircraftModelList    m_modelSet;      //!< models used for model matching
+        BlackMisc::Simulation::CSimulatorInfo        m_simulator;     //!< simulator (optional)
+        BlackMisc::Simulation::CMatchingStatistics   m_statistics;    //!< matching statistics
+        QString                                      m_modelSetInfo;  //!< info string
     };
 } // namespace
-
-Q_DECLARE_METATYPE(BlackCore::Settings::CAircraftMatcherSetup)
-Q_DECLARE_METATYPE(BlackCore::Settings::CAircraftMatcherSetup::MatchingMode)
-Q_DECLARE_METATYPE(BlackCore::Settings::CAircraftMatcherSetup::MatchingModeFlag)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::Settings::CAircraftMatcherSetup::MatchingMode)
 
 #endif // guard

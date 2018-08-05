@@ -30,7 +30,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
-using namespace BlackCore::Settings;
 
 namespace BlackCore
 {
@@ -1075,70 +1074,4 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return true; }
         return (sApp->getWebDataServices()->containsAirlineIcaoDesignator(designator));
     }
-
-    const QString &CAircraftMatcherSetup::modeFlagToString(MatchingModeFlag modeFlag)
-    {
-        static const QString ms("by model string");
-        static const QString icao("by ICAO");
-        static const QString family("by family");
-        static const QString livery("by livery");
-        static const QString combined("by combined combined");
-
-        switch (modeFlag)
-        {
-        case ByModelString:  return ms;
-        case ByIcaoData:     return icao;
-        case ByFamily:       return family;
-        case ByLivery:       return livery;
-        case ByCombinedType: return combined;
-        default: break;
-        }
-
-        static const QString unknown("unknown");
-        return unknown;
-    }
-
-    QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
-    {
-        if (mode == ModeAll) { return "all"; }
-
-        QStringList modes;
-        if (mode.testFlag(ByModelString)) { modes << modeFlagToString(ByModelString); }
-        if (mode.testFlag(ByIcaoData)) { modes << modeFlagToString(ByIcaoData); }
-        if (mode.testFlag(ByFamily)) { modes << modeFlagToString(ByFamily); }
-        if (mode.testFlag(ByLivery)) { modes << modeFlagToString(ByLivery); }
-        if (mode.testFlag(ByCombinedType)) { modes << modeFlagToString(ByCombinedType); }
-        return modes.join(", ");
-    }
-
-    QString CAircraftMatcherSetup::convertToQString(bool i18n) const
-    {
-        Q_UNUSED(i18n);
-        return modeToString(this->getMatchingMode());
-    }
-
-    CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
-    {
-        if (index.isMyself()) { return CVariant::from(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
-        {
-        case IndexMatchingMode: return CVariant::fromValue(m_mode);
-        default: break;
-        }
-        return CValueObject::propertyByIndex(index);
-    }
-
-    void CAircraftMatcherSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
-    {
-        if (index.isMyself()) { (*this) = variant.to<CAircraftMatcherSetup>(); return; }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
-        {
-        case IndexMatchingMode: m_mode = variant.toInt(); break;
-        default: break;
-        }
-        CValueObject::setPropertyByIndex(index, variant);
-    }
-
 } // namespace

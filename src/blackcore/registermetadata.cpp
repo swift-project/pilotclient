@@ -36,8 +36,6 @@ namespace BlackCore
         qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
         qRegisterMetaType<CWebReaderFlags::WebReader>();
         qRegisterMetaType<CWebReaderFlags::WebReaderFlag>();
-        qRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingMode>();
-        qRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingModeFlag>();
 
         qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
         qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
@@ -45,15 +43,12 @@ namespace BlackCore
         qDBusRegisterMetaType<INetwork::ConnectionStatus>();
         qDBusRegisterMetaType<INetwork::LoginMode>();
         qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
-        // qDBusRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingMode>();
-        qDBusRegisterMetaType<Settings::CAircraftMatcherSetup::MatchingModeFlag>();
 
         Db::CDatabaseReaderConfig::registerMetadata();
         Db::CDatabaseReaderConfigList::registerMetadata();
         Data::CGlobalSetup::registerMetadata();
         Data::CVatsimSetup::registerMetadata();
         Data::CLauncherSetup::registerMetadata();
-        Settings::CAircraftMatcherSetup::registerMetadata();
         Vatsim::CReaderSettings::registerMetadata();
         Vatsim::CRawFsdMessageSettings::registerMetadata();
     }
