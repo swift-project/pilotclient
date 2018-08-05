@@ -606,7 +606,7 @@
      <number>1</number>
     </property>
     <item>
-     <widget class="BlackGui::Editors::CMatchingForm" name="editor_MatchingSetup">
+     <widget class="BlackGui::Components::CSettingsMatchingComponent" name="comp_SettingsMatching">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -731,9 +731,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Editors::CMatchingForm</class>
+   <class>BlackGui::Components::CSettingsMatchingComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/editors/matchingform.h</header>
+   <header>blackgui/components/settingsmatchingcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
