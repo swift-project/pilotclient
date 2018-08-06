@@ -79,6 +79,7 @@ namespace BlackCore
             {
                 if (!myself) { return; }
                 this->initByLastUsedModelSet();
+                m_aircraftMatcher.setSetup(m_matchingSettings.get());
             });
         }
 
@@ -756,6 +757,8 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup.toQString(); }
             m_aircraftMatcher.setSetup(setup);
+            const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
+            CLogMessage::preformatted(msg);
         }
 
         CAircraftMatcherSetup CContextSimulator::getMatchingSetup() const

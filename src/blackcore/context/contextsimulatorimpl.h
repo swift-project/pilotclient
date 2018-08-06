@@ -21,6 +21,7 @@
 #include "blackcore/weathermanager.h"
 #include "blackcore/network.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
@@ -244,7 +245,9 @@ namespace BlackCore
             BlackMisc::CRegularThread m_listenersThread;  //!< waiting for plugin
             CWeatherManager m_weatherManager   { this };  //!< weather management
             CAircraftMatcher m_aircraftMatcher { this };  //!< model matcher
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList>  m_matchingMessages; //!< all matching log messages per callsign
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+
             bool m_initallyAddAircraft = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
