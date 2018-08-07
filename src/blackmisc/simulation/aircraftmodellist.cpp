@@ -863,10 +863,12 @@ namespace BlackMisc
                 const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
                 if (ignoreZeroScores && score < 1) { continue; }
 
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Calculating #%1 '%2'---").arg(c++).arg(model.getModelStringAndDbKey()));
+                static const QString bMsg("--- Calculating #%1 '%2'---");
+                static const QString eMsg("--- End calculating #%1 ---");
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), bMsg.arg(c).arg(model.getModelStringAndDbKey()));
                 if (log) { log->push_back(subMsgs); }
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- End calculating #%1 ---").arg(c));
-
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), eMsg.arg(c));
+                c++;
                 scoreMap.insertMulti(score, model);
             }
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End scoring ---"));

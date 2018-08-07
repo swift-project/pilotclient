@@ -83,7 +83,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             static const QString s("%1 %2 %3");
-            return s.arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc());
+            return s.arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
         }
 
         void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)

@@ -482,7 +482,9 @@ namespace BlackCore
 
         if (trial < 5 && !complete)
         {
-            this->addReverseLookupMessage(callsign, "Wait for further data");
+            static const QString ws("Wait for further data, trial %1 ts %2");
+            static const QString format("hh:mm:ss.zzz");
+            this->addReverseLookupMessage(callsign, ws.arg(trial).arg(QDateTime::currentDateTimeUtc().toString(format)));
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(1500, this, [ = ]()
             {
@@ -744,8 +746,8 @@ namespace BlackCore
             if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
         }
 
-        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Quality of aircraft ICAO: %1").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Quality of airline ICAO: %1").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
         return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }
 

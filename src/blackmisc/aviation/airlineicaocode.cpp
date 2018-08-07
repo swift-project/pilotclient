@@ -90,10 +90,9 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getDesignatorNameCountry() const
         {
-            QString s(this->getDesignator());
-            if (this->hasName()) { s = s.append(" ").append(this->getName()); }
-            if (this->hasValidCountry()) { s = s.append(" ").append(this->getCountryIso()); }
-            return s.trimmed();
+            return this->getDesignator() %
+                   (this->hasName() ? (QStringLiteral(" ") % this->getName()) : QStringLiteral("")) %
+                   (this->hasValidCountry() ? (QStringLiteral(" ") % this->getCountryIso()) : QStringLiteral(""));
         }
 
         QString CAirlineIcaoCode::getSimplifiedName() const
