@@ -66,7 +66,7 @@ namespace BlackCore
             CContextSimulator::registerHelp();
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-            m_enableMatchingMessages = true; // there seems to be no big disadavantage in always enabling it
+            m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild(); // can be slow with huge model sets
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
@@ -75,11 +75,15 @@ namespace BlackCore
 
             // deferred init of last model set, if no other data are set in meantime
             const QPointer<CContextSimulator> myself(this);
-            QTimer::singleShot(1250, this, [ = ]
+            QTimer::singleShot(2500, this, [ = ]
             {
                 if (!myself) { return; }
                 this->initByLastUsedModelSet();
                 m_aircraftMatcher.setSetup(m_matchingSettings.get());
+                if (m_aircraftMatcher.getModelSetCount() <= MatchingLogMaxModelSetSize)
+                {
+                    this->enableMatchingMessages(true);
+                }
             });
         }
 
@@ -567,16 +571,11 @@ namespace BlackCore
             if (!status.testFlag(ISimulator::Connected))
             {
                 // we got disconnected, plugin no longer needed
-                unloadSimulatorPlugin();
-                restoreSimulatorPlugins();
+                this->unloadSimulatorPlugin();
+                this->restoreSimulatorPlugins();
             }
-            emit simulatorStatusChanged(status);
-        }
 
-        void CContextSimulator::onModelSetChanged(const CSimulatorInfo &simulator)
-        {
-            Q_UNUSED(simulator);
-            emit this->modelSetChanged(simulator);
+            emit this->simulatorStatusChanged(status);
         }
 
         void CContextSimulator::xCtxTextMessagesReceived(const Network::CTextMessageList &textMessages)
@@ -853,13 +852,27 @@ namespace BlackCore
 
         void CContextSimulator::onSimulatorStarted(const CSimulatorPluginInfo &info)
         {
-            stopSimulatorListeners();
-            loadSimulatorPlugin(info);
+            this->stopSimulatorListeners();
+            this->loadSimulatorPlugin(info);
+
+            // if we have enabled messages, we will disable if size getting too high
+            if (m_enableMatchingMessages)
+            {
+                const QPointer<CContextSimulator> myself(this);
+                QTimer::singleShot(5000, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    if (m_aircraftMatcher.getModelSetCount() > MatchingLogMaxModelSetSize)
+                    {
+                        this->enableMatchingMessages(false);
+                    }
+                });
+            }
         }
 
         void CContextSimulator::stopSimulatorListeners()
         {
-            for (const auto &info : getAvailableSimulatorPlugins())
+            for (const CSimulatorPluginInfo &info : getAvailableSimulatorPlugins())
             {
                 ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
                 if (listener)

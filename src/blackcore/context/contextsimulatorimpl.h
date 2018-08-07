@@ -159,6 +159,8 @@ namespace BlackCore
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
+            static constexpr int MatchingLogMaxModelSetSize = 125; //!< default value for switching matching log on
+
             //  ------------ slots connected with network or other contexts ---------
             //! \ingroup crosscontextfunction
             //! @{
@@ -194,9 +196,6 @@ namespace BlackCore
 
             //! Handle new connection status of simulator
             void onSimulatorStatusChanged(ISimulator::SimulatorStatus status);
-
-            //! Model set from model set loader changed
-            void onModelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Listener reports the simulator has started
             void onSimulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
