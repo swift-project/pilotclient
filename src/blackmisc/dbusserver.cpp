@@ -367,7 +367,7 @@ namespace BlackMisc
         QString p = port.toLower().trimmed();
         if (!p.isEmpty())
         {
-            p.toInt(&ok);
+            p.toShort(&ok);
             if (!ok)
             {
                 p = ""; // was not a number
