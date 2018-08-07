@@ -79,13 +79,18 @@ namespace BlackGui
 
         void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, const CIcon &icon)
         {
-            bool resize = this->currentWidget() == ui->tb_LiveData; // simulator live data selected?
+            const bool resize = this->currentWidget() == ui->tb_LiveData; // simulator live data selected?
             ui->tvp_LiveData->addOrUpdateByName(name, value, icon, resize, false);
         }
 
         void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
         {
             this->addOrUpdateLiveDataByName(name, value, CIcon::iconByIndex(iconIndex));
+        }
+
+        void CSimulatorComponent::removeLiveDataByName(const QString &name)
+        {
+            ui->tvp_LiveData->removeByName(name);
         }
 
         int CSimulatorComponent::rowCount() const
@@ -101,30 +106,25 @@ namespace BlackGui
         void CSimulatorComponent::update()
         {
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
-            if (!sGui->getIContextOwnAircraft()) return;
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) return;
 
-            int simualtorStatus = sGui->getIContextSimulator()->getSimulatorStatus();
-            if (simualtorStatus == 0)
+            ISimulator::SimulatorStatus simulatorStatus = static_cast<ISimulator::SimulatorStatus>(sGui->getIContextSimulator()->getSimulatorStatus());
+            if (simulatorStatus == ISimulator::Unspecified || simulatorStatus == ISimulator::Disconnected)
             {
-                addOrUpdateLiveDataByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
+                static const QString s("No simulator available");
+                addOrUpdateLiveDataByName("info", s, CIcons::StandardIconWarning16);
                 return;
             }
 
-            if (!(simualtorStatus & ISimulator::Simulating))
+            if (!(simulatorStatus & ISimulator::Simulating))
             {
-                this->addOrUpdateLiveDataByName("info",
-                                                tr("Simulator (%1) not yet running").arg(
-                                                    sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
-                                                ),
-                                                CIcons::StandardIconWarning16);
+                static const QString s("Simulator (%1) not yet running");
+                this->addOrUpdateLiveDataByName("info", s.arg(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()), CIcons::StandardIconWarning16);
                 return;
             }
 
             // clear old warnings / information
-            if (this->rowCount() < 5)
-            {
-                this->clear();
-            }
+            if (this->rowCount() < 5) { this->clear(); }
 
             const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
             const CAircraftSituation s = ownAircraft.getSituation();
@@ -156,7 +156,9 @@ namespace BlackGui
 
         void CSimulatorComponent::onSimulatorStatusChanged(int status)
         {
-            if (status & ISimulator::Connected)
+            ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+            this->clear(); // clean up, will be refreshed
+            if (simStatus.testFlag(ISimulator::Connected))
             {
                 const int intervalMs = getUpdateIntervalMs();
                 m_updateTimer.start(intervalMs);
@@ -165,7 +167,6 @@ namespace BlackGui
             else
             {
                 m_updateTimer.stop();
-                this->clear();
                 this->update();
             }
         }

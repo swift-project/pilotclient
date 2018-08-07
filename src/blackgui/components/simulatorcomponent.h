@@ -24,8 +24,6 @@
 #include <QTabWidget>
 #include <QtGlobal>
 
-class QWidget;
-
 namespace BlackMisc
 {
     class CIcon;
@@ -88,6 +86,9 @@ namespace BlackGui
 
             //! Simple add or update name / value pair
             void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
+
+            //! Remove name
+            void removeLiveDataByName(const QString &name);
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
             QTimer m_updateTimer;
