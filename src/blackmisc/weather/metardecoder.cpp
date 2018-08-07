@@ -48,6 +48,8 @@ namespace BlackMisc
 
         class IMetarDecoderPart
         {
+        public:
+            virtual ~IMetarDecoderPart();
         protected:
             virtual bool isRepeatable() const { return false; }
             virtual const QRegularExpression &getRegExp() const = 0;
@@ -91,6 +93,9 @@ namespace BlackMisc
                 return isValid;
             }
         };
+
+        IMetarDecoderPart::~IMetarDecoderPart()
+        { }
 
         class CMetarDecoderReportType : public IMetarDecoderPart
         {
