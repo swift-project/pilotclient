@@ -49,8 +49,10 @@ namespace BlackMisc
             CSwiftPluginSettings::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
+            qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingMode>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
             CAircraftMatcherSetup::registerMetadata();
         }

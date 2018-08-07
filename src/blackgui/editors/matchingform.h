@@ -49,6 +49,9 @@ namespace BlackGui
             void clear();
 
         private:
+            //! Algorithm
+            BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm algorithm() const;
+
             //! Mode
             BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
 

@@ -9,10 +9,10 @@
 
 #include "settingsmatchingcomponent.h"
 #include "ui_settingsmatchingcomponent.h"
-
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
+#include <QPointer>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
@@ -28,6 +28,7 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->pb_Save, &QPushButton::released, this, &CSettingsMatchingComponent::onSavePressed);
             connect(ui->pb_Reload, &QPushButton::released, this, &CSettingsMatchingComponent::onReloadPressed);
+            this->deferredReload(5000);
         }
 
         CSettingsMatchingComponent::~CSettingsMatchingComponent()
@@ -43,10 +44,27 @@ namespace BlackGui
 
         void CSettingsMatchingComponent::onReloadPressed()
         {
-            IContextSimulator *simContext = simulatorContext();
-            if (!simContext) { return; }
-            const CAircraftMatcherSetup setup = simContext->getMatchingSetup();
-            ui->editor_MatchingForm->setValue(setup);
+            this->deferredReload(0);
+        }
+
+        void CSettingsMatchingComponent::deferredReload(int deferMs)
+        {
+            if (deferMs < 1)
+            {
+                IContextSimulator *simContext = simulatorContext();
+                if (!simContext) { return; }
+                const CAircraftMatcherSetup setup = simContext->getMatchingSetup();
+                ui->editor_MatchingForm->setValue(setup);
+            }
+            else
+            {
+                QPointer<CSettingsMatchingComponent> myself(this);
+                QTimer::singleShot(deferMs, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    this->deferredReload(0);
+                });
+            }
         }
 
         IContextSimulator *CSettingsMatchingComponent::simulatorContext()

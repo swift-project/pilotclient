@@ -8,15 +8,23 @@
  */
 
 #include "aircraftmatchersetup.h"
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
     namespace Simulation
     {
+        CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm, MatchingMode mode)
+        {
+            this->setMatchingAlgorithm(algorithm);
+            this->setMatchingMode(mode);
+        }
+
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return modeToString(this->getMatchingMode());
+            return QStringLiteral("algorithm: '") % this->getMatchingAlgorithmAsString() %
+                   QStringLiteral("' mode: ") % this->getMatchingModeAsString();
         }
 
         CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
@@ -25,6 +33,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexMatchingAlgorithm: return CVariant::fromValue(m_algorithm);
             case IndexMatchingMode: return CVariant::fromValue(m_mode);
             default: break;
             }
@@ -37,19 +46,37 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
             case IndexMatchingMode: m_mode = variant.toInt(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
         }
 
+        const QString &CAircraftMatcherSetup::algorithmToString(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
+        {
+            static const QString s("score based");
+            static const QString r("stepwise reduce");
+            switch (algorithm)
+            {
+            case MatchingStepwiseReduce: return r;
+            case MatchingScoreBased:
+            default: break;
+            }
+            return s;
+        }
+
         const QString &CAircraftMatcherSetup::modeFlagToString(MatchingModeFlag modeFlag)
         {
             static const QString ms("by model string");
             static const QString icao("by ICAO");
+            static const QString icaoAircraft("by ICAO, aircraft first");
+            static const QString icaoAirline("by ICAO, airline first");
             static const QString family("by family");
             static const QString livery("by livery");
             static const QString combined("by combined combined");
+            static const QString noZeros("scoring, ignore zero scores");
+            static const QString preferColorLiveries("scoring, prefer color liveries");
 
             switch (modeFlag)
             {
@@ -58,6 +85,10 @@ namespace BlackMisc
             case ByFamily:       return family;
             case ByLivery:       return livery;
             case ByCombinedType: return combined;
+            case ByIcaoOrderAircraftFirst: return icaoAircraft;
+            case ByIcaoOrderAirlineFirst: return icaoAirline;
+            case ScoreIgnoreZeros: return noZeros;
+            case ScorePreferColorLiveries: return preferColorLiveries;
             default: break;
             }
 
@@ -67,24 +98,31 @@ namespace BlackMisc
 
         QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
         {
-            if (mode == ModeAll) { return "all"; }
-
             QStringList modes;
             if (mode.testFlag(ByModelString))  { modes << modeFlagToString(ByModelString); }
             if (mode.testFlag(ByIcaoData))     { modes << modeFlagToString(ByIcaoData); }
-            if (mode.testFlag(ByFamily))       { modes << modeFlagToString(ByFamily); }
-            if (mode.testFlag(ByLivery))       { modes << modeFlagToString(ByLivery); }
-            if (mode.testFlag(ByCombinedType)) { modes << modeFlagToString(ByCombinedType); }
+            if (mode.testFlag(ByIcaoOrderAircraftFirst)) { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
+            if (mode.testFlag(ByIcaoOrderAirlineFirst))  { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
+            if (mode.testFlag(ByFamily))         { modes << modeFlagToString(ByFamily); }
+            if (mode.testFlag(ByLivery))         { modes << modeFlagToString(ByLivery); }
+            if (mode.testFlag(ByCombinedType))   { modes << modeFlagToString(ByCombinedType); }
+            if (mode.testFlag(ScoreIgnoreZeros)) { modes << modeFlagToString(ScoreIgnoreZeros); }
+            if (mode.testFlag(ScorePreferColorLiveries)) { modes << modeFlagToString(ScorePreferColorLiveries); }
             return modes.join(", ");
         }
 
-        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(bool byModelString, bool byIcaoData, bool byFamily, bool byLivery, bool byCombinedType)
+        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
+            bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
+            bool scoreIgnoreZeros, bool scorePreferColorLiveries)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
-            if (byIcaoData)     { mode |= ByIcaoData; }
-            if (byFamily)       { mode |= ByFamily; }
-            if (byLivery)       { mode |= ByLivery; }
-            if (byCombinedType) { mode |= ByCombinedType; }
+            if (byIcaoDataAircraft1st) { mode |= ByIcaoOrderAircraftFirst; }
+            if (byIcaoDataAirline1st)  { mode |= ByIcaoOrderAirlineFirst; }
+            if (byFamily)         { mode |= ByFamily; }
+            if (byLivery)         { mode |= ByLivery; }
+            if (byCombinedType)   { mode |= ByCombinedType; }
+            if (scoreIgnoreZeros) { mode |= ScoreIgnoreZeros; }
+            if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }
             return mode;
         }
     } // namespace

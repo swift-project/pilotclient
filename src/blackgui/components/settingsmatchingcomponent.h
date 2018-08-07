@@ -42,6 +42,9 @@ namespace BlackGui
             //! Reload pressed
             void onReloadPressed();
 
+            //! Deferred reload
+            void deferredReload(int deferMs);
+
             //! Network context
             static BlackCore::Context::IContextSimulator *simulatorContext();
         };

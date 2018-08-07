@@ -6,20 +6,69 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>287</width>
-    <height>87</height>
+    <width>243</width>
+    <height>239</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
   <layout class="QVBoxLayout" name="vl_MatchingForm">
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
    <item>
-    <widget class="QGroupBox" name="gb_Mode">
+    <widget class="QGroupBox" name="gb_Algorithm">
      <property name="title">
-      <string>Mode</string>
+      <string>Algorithm</string>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Algorithm">
+      <item>
+       <widget class="QRadioButton" name="rb_ScoreBased">
+        <property name="text">
+         <string>reduction, then score based</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rb_Reduction">
+        <property name="text">
+         <string>reduction</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Reduction">
+     <property name="title">
+      <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="cb_ByFamily">
+        <property name="text">
+         <string>by family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="cb_ByModelString">
         <property name="text">
@@ -27,28 +76,21 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="cb_ByICAOdata">
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="cb_ByIcaoDataAirline1st">
         <property name="text">
-         <string>by ICAO data</string>
+         <string>by ICAO: airline first</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_ByFamily">
+       <widget class="QCheckBox" name="cb_ByIcaoDataAircraft1st">
         <property name="text">
-         <string>by family</string>
+         <string>by ICAO: aircraft first</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="cb_ByCombinedCode">
-        <property name="text">
-         <string>combined code</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
+      <item row="2" column="1">
        <widget class="QCheckBox" name="cb_ByLivery">
         <property name="text">
          <string>by livery</string>
@@ -58,8 +100,43 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Scoring">
+     <property name="title">
+      <string>Scoring</string>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Scoring">
+      <item>
+       <widget class="QCheckBox" name="cb_ScorePreferColorLiveries">
+        <property name="text">
+         <string>prefer color liveries</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_ScoreIgnoreZeros">
+        <property name="text">
+         <string>ignore 0 (zero) scores</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>rb_ScoreBased</tabstop>
+  <tabstop>rb_Reduction</tabstop>
+  <tabstop>cb_ByModelString</tabstop>
+  <tabstop>cb_ByIcaoDataAircraft1st</tabstop>
+  <tabstop>cb_ByIcaoDataAirline1st</tabstop>
+  <tabstop>cb_ByFamily</tabstop>
+  <tabstop>cb_ByLivery</tabstop>
+  <tabstop>cb_ByCombinedCode</tabstop>
+  <tabstop>cb_ScorePreferColorLiveries</tabstop>
+  <tabstop>cb_ScoreIgnoreZeros</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
