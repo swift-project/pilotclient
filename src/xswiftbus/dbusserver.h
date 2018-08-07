@@ -73,9 +73,9 @@ namespace XSwiftBus
             void operator()(DBusServer *obj) const { dbus_server_unref(obj); }
         };
 
+        CDBusDispatcher *m_dispatcher = nullptr;
         std::unique_ptr<DBusServer, DBusServerDeleter> m_server;
         CDBusError m_lastError;
-        CDBusDispatcher *m_dispatcher;
         NewConnectionFunc m_newConnectionFunc;
     };
 
