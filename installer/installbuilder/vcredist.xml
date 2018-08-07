@@ -31,7 +31,7 @@
                         </fileExists>
                         <compareVersions>
                             <logic>greater</logic>
-                            <version1>14.11.25325.0</version1>
+                            <version1>v14.15.26706.0</version1>
                             <version2>${vcruntimeversionx86}</version2>
                         </compareVersions>
                     </ruleList>
@@ -46,7 +46,7 @@
                         </fileExists>
                         <compareVersions>
                             <logic>greater</logic>
-                            <version1>v14.11.25325.0</version1>
+                            <version1>v14.15.26706.0</version1>
                             <version2>${vcruntimeversionx64}</version2>
                         </compareVersions>
                     </ruleList>

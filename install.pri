@@ -144,13 +144,13 @@ unix:!macx {
 
 ############### Install VC runtime ##############
 
-win32-msvc* {
+win32-msvc {
     PROGRAM_FILES = $$getenv(programfiles(x86))
     equals(WORD_SIZE,64) {
-        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.11.25325/vcredist_x64.exe)
+        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.14.26405/vcredist_x64.exe)
     }
     equals(WORD_SIZE,32) {
-        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.11.25325/vcredist_x86.exe)
+        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.14.26405/vcredist_x86.exe)
     }
     vc_redist_target.path *= $${PREFIX}/vcredist
     INSTALLS += vc_redist_target
