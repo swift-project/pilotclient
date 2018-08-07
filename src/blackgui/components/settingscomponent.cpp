@@ -141,14 +141,14 @@ namespace BlackGui
             return ui->comp_SettingsSimulatorBasics->getSimulatorSettings(simulator);
         }
 
-        void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
+        void CSettingsComponent::setTab(CSettingsComponent::SettingTab tab)
         {
             this->setCurrentIndex(static_cast<int>(tab));
         }
 
         void CSettingsComponent::setSettingsOverviewTab()
         {
-            this->setSettingsTab(SettingTabOverview);
+            this->setTab(SettingTabOverview);
         }
 
         void CSettingsComponent::setGuiOpacity(double value)

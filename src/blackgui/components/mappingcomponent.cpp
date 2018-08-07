@@ -176,6 +176,12 @@ namespace BlackGui
             return ui->tvp_AircraftModels->rowCount();
         }
 
+        void CMappingComponent::setTab(CMappingComponent::TabWidget tab)
+        {
+            const int tabIndex = static_cast<int>(tab);
+            ui->tw_SpecializedViews->setCurrentIndex(tabIndex);
+        }
+
         CAircraftModelList CMappingComponent::findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs)
         {
             Q_ASSERT(ui->tvp_AircraftModels);

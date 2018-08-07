@@ -104,13 +104,13 @@ namespace BlackGui
         {
             QPushButton *senderButton = static_cast<QPushButton *>(QObject::sender());
             Q_ASSERT_X(senderButton, Q_FUNC_INFO, "No sender button");
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+            if (!sGui || sGui->isShuttingDown()) { return; }
             if (!senderButton) { return; }
-            const CMainInfoAreaComponent::InfoArea ia = buttonToMainInfoArea(senderButton);
-            if (ia != CMainInfoAreaComponent::InfoAreaNone)
+            const CMainInfoAreaComponent::InfoArea infoArea = buttonToMainInfoArea(senderButton);
+            if (infoArea != CMainInfoAreaComponent::InfoAreaNone)
             {
                 Q_ASSERT(senderButton->isCheckable());
-                emit this->selectedMainInfoAreaDockWidget(ia);
+                emit this->selectedMainInfoAreaDockWidget(infoArea);
                 senderButton->setChecked(true); // re-check if got unchecked, we use checked buttons like normal buttons
                 return;
             }
@@ -137,11 +137,11 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_Connect)
             {
-                emit connectPressed();
+                emit this->connectPressed();
             }
             else if (senderButton == ui->pb_Audio)
             {
-                emit audioPressed();
+                emit this->audioPressed();
             }
         }
 

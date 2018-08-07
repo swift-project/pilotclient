@@ -45,6 +45,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CMainKeypadAreaComponent();
 
+            //! Main info area changed
+            void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
+
         signals:
             //! Button to select main info area has been pressed
             //! \sa CMainInfoAreaComponent
@@ -67,10 +70,6 @@ namespace BlackGui
 
             //! Request audio
             void audioPressed();
-
-        public slots:
-            //! Main info area changed
-            void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
 
         private:
             //! Button was clicked

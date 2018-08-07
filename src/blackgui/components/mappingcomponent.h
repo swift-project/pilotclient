@@ -55,6 +55,7 @@ namespace BlackGui
 
         public:
             //! Tab widget
+            //! \remark needs to be in sync with tab order
             enum TabWidget
             {
                 TabRenderedAircraft = 0,
@@ -65,20 +66,23 @@ namespace BlackGui
                 TabPartsLog
             };
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CMappingComponent();
 
-            //! Log categories
-            static const BlackMisc::CLogCategoryList &getLogCategories();
-
             //! Number of current mappings
             int countCurrentMappings() const;
 
             //! Numer of models
             int countAircraftModels() const;
+
+            //! Set tab
+            void setTab(TabWidget tab);
 
             //! Find models starting with
             BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs);

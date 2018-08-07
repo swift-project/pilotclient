@@ -63,7 +63,7 @@ namespace BlackGui
             BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Set the tab
-            void setSettingsTab(SettingTab tab);
+            void setTab(SettingTab tab);
 
             //! Set the overview tab
             void setSettingsOverviewTab();
@@ -96,7 +96,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSettingsComponent> ui;
         };
-    }
+    } // namespace
 } // namespace
 
 #endif // guard

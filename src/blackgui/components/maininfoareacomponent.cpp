@@ -112,14 +112,23 @@ namespace BlackGui
         void CMainInfoAreaComponent::selectArea(CMainInfoAreaComponent::InfoArea infoArea)
         {
             CInfoArea::selectArea(static_cast<int>(infoArea));
+
+            const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+            const bool shift = km.testFlag(Qt::ShiftModifier);
+            if (!shift) { return; }
+
+            // pressing shift will go to overview
             if (infoArea == InfoAreaSettings)
             {
-                // pressing shift will go to overview
-                const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
-                if (km.testFlag(Qt::ShiftModifier))
-                {
-                    ui->comp_Settings->setSettingsOverviewTab();
-                }
+                ui->comp_Settings->setSettingsOverviewTab();
+            }
+            else if (infoArea == InfoAreaAircraft)
+            {
+                ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange);
+            }
+            else if (infoArea == InfoAreaMapping)
+            {
+                ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft);
             }
         }
 
@@ -156,7 +165,7 @@ namespace BlackGui
         void CMainInfoAreaComponent::selectSettingsTab(int index)
         {
             this->selectArea(InfoAreaSettings);
-            ui->comp_Settings->setSettingsTab(static_cast<CSettingsComponent::SettingTab>(index));
+            ui->comp_Settings->setTab(static_cast<CSettingsComponent::SettingTab>(index));
         }
 
         void CMainInfoAreaComponent::selectAudioTab()

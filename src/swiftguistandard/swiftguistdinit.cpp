@@ -244,7 +244,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, [ this ]()
     {
         this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabServers);
+        ui->comp_MainInfoArea->getSettingsComponent()->setTab(CSettingsComponent::SettingTabServers);
     });
     connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
 

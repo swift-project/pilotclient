@@ -23,8 +23,6 @@
 #include <QtGlobal>
 #include <QTimer>
 
-class QWidget;
-
 namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
@@ -44,11 +42,19 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Tab
+            //! \remark needs to be in sync with tab order
+            enum AircraftTab
+            {
+                TabAircraftInRange = 0,
+                TabAirportsInRange
+            };
+
             //! Constructor
             explicit CAircraftComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftComponent();
+            virtual ~CAircraftComponent() override;
 
             //! Aircraft in range
             int countAircraftInView() const;
@@ -61,6 +67,9 @@ namespace BlackGui
 
             //! Update aircraft/airport view
             void update();
+
+            //! Set tab
+            void setTab(AircraftTab tab);
 
         signals:
             //! Request a text message

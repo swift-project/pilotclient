@@ -116,6 +116,12 @@ namespace BlackGui
             m_updateCounter++;
         }
 
+        void CAircraftComponent::setTab(CAircraftComponent::AircraftTab tab)
+        {
+            const int tabIndex = static_cast<int>(tab);
+            this->setCurrentIndex(tabIndex);
+        }
+
         void CAircraftComponent::onInfoAreaTabBarChanged(int index)
         {
             // ignore in those cases
