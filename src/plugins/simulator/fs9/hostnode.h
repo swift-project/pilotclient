@@ -52,14 +52,15 @@ namespace BlackSimPlugin
             //! Set the session name
             void setSessionName(const QString &name) { m_sessionName = name; }
 
+            //! Copy assignment operator
+            CHostNode &operator=(const CHostNode &other);
+
         private:
-
-            IDirectPlay8Address    *m_hostAddress = nullptr;
-            DPN_APPLICATION_DESC    m_appDesc;
-            QString                 m_sessionName;
-
+            IDirectPlay8Address  *m_hostAddress = nullptr;
+            DPN_APPLICATION_DESC  m_appDesc;
+            QString               m_sessionName;
         };
     }
 }
 
-#endif //BLACKSIMPLUGIN_FS9_HOST_NODE_H
+#endif //guard

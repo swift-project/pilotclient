@@ -34,6 +34,7 @@ namespace BlackMisc
             //! @{
             explicit OutputIterator(const F &func) : m_func(func) {}
             explicit OutputIterator(F &&func) : m_func(std::move(func)) {}
+            OutputIterator(const OutputIterator &other) : m_func(other.m_func) {}
             //! @}
 
             //! Advance the iterator (no-op)
