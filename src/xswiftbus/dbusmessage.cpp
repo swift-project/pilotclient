@@ -53,8 +53,7 @@ namespace XSwiftBus
 
     std::string CDBusMessage::getSender() const
     {
-        const char *sender = nullptr;
-        sender = dbus_message_get_sender(m_message);
+        const char *sender = dbus_message_get_sender(m_message);
         return sender ? std::string(sender) : std::string();
     }
 

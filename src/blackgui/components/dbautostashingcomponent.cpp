@@ -237,9 +237,10 @@ namespace BlackGui
             const int all = models.size();
 
             // maximum
+            int max = CDbStashComponent::MaxModelPublished;
             const QString maxStr(ui->le_MaxModelsStashed->text());
             bool okMaxStr = true;
-            int max = maxStr.isEmpty() ? CDbStashComponent::MaxModelPublished : maxStr.toInt(&okMaxStr);
+            if (!maxStr.isEmpty()) { max = maxStr.toInt(&okMaxStr); }
             if (!okMaxStr || max > all) { max = all; }
 
             // override description

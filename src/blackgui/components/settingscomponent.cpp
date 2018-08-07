@@ -74,8 +74,7 @@ namespace BlackGui
 
         void CSettingsComponent::initActions()
         {
-            QAction *a = nullptr;
-            a = new QAction(this);
+            QAction *a = new QAction(this);
             a->setObjectName("overview");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_O));
             connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);

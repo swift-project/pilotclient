@@ -23,12 +23,13 @@ namespace BlackGui
 {
     IWindowFinder *IWindowFinder::create()
     {
-        IWindowFinder *finder = nullptr;
 
 #if defined(Q_OS_WIN)
-        finder = new CWindowFinderWindows();
+        IWindowFinder *finder = new CWindowFinderWindows();
 #elif defined(Q_OS_LINUX)
+        IWindowFinder *finder = nullptr;
 #elif defined(Q_OS_MACOS)
+        IWindowFinder *finder = nullptr;
 #endif
 
         return finder;

@@ -614,6 +614,7 @@ namespace BlackMisc
             constexpr bool globalOffsetTest = false;
 
             const CCallsign cs(situation.getCallsign());
+            // cppcheck-suppress knownConditionTrueFalse
             if (!globalOffsetTest && !this->hasTestAltitudeOffset(cs)) { return situation; }
             CLength os;
             if (globalOffsetTest)

@@ -14,31 +14,24 @@ noExplicitConstructor
 // Ignore style issues in g2clib
 variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
 
-// std::initializer_list should always be passed by value
-passedByValue:src/blackmisc/input/actionhotkeylist.h
-passedByValue:src/blackmisc/network/rawfsdmessagelist.cpp
-passedByValue:src/blackmisc/logcategorylist.h
-passedByValue:src/blackmisc/platformset.cpp
-passedByValue:src/blackmisc/geo/coordinategeodeticlist.cpp
-
-// variableHidingEnum for status message
-variableHidingEnum:src/blackmisc/statusmessage.h
-
 // Shared pointers should be passed by value
 passedByValue:src/blackmisc/lockfree.h
 
-// False positive caused by cppcheck getting confused with preprocessor defines
-ConfigurationNotChecked:src/xswiftbus/libxplanemp/src/XObjReadWrite.cpp
-
 // Passing std::function by value is acceptable
 passedByValue:src/xswiftbus/libxplanemp/src/ResourceManager.h
+passedByValue:tests/blackcore/expect.h
 passedByValue:src/xswiftbus/command.h
 
 // Unique pointers should be passed by value
 passedByValue:src/xswiftbus/menus.h
 passedByValue:src/xswiftbus/menus.cpp
 
-// Suddenly appearing (KB 2018-03) issue here
-// src/blackmisc/iterator.h 53 -> 'operator=' should return reference to 'this' instance.
+// cppcheck cannot handle the advanced workaround in use
 operatorEqRetRefThis:src/blackmisc/iterator.h
 
+// Ignore unusedFunction as it has too many false positives (especially in tests)
+unusedFunction
+
+// Return value of those functions is not required.
+ignoredReturnValue:src/blackmisc/dbusserver.cpp
+ignoredReturnValue:src/blackmisc/simplecommandparser.cpp
