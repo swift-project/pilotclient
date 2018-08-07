@@ -91,14 +91,20 @@ namespace BlackCore
 
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
-        const CAircraftModelList modelSet(m_modelSet); // Models for this matching
-        const CAircraftMatcherSetup::MatchingMode mode = m_setup.getMatchingMode();
+        CAircraftModelList modelSet(m_modelSet); // Models for this matching
+        const CAircraftMatcherSetup setup = m_setup;
 
         static const QString format("hh:mm:ss.zzz");
+        static const QString m1("--- Start matching: UTC %1 ---");
+        static const QString m2("Input model: '%1' '%2'");
+        static const QString m3("Matching uses model set of %1 models\n%2");
+        static const QString m4("Setup %1");
+
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(startTime.toString(format)));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models\n%2").arg(modelSet.size()).arg(modelSet.extCoverageSummary(remoteAircraft.getModel())));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m1.arg(startTime.toString(format)));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m2.arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m3.arg(modelSet.size()).arg(modelSet.extCoverageSummary(remoteAircraft.getModel())));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m4.arg(setup.toQString(true)));
 
         // Before I really search I check some special conditions
         // 1) Manually set model (by user)
@@ -125,7 +131,7 @@ namespace BlackCore
         else if (remoteAircraft.hasModelString())
         {
             // try to find in installed models by model string
-            if (mode.testFlag(CAircraftMatcherSetup::ByModelString))
+            if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByModelString))
             {
                 matchedModel = matchByExactModelString(remoteAircraft, modelSet, log);
                 if (matchedModel.hasModelString())
@@ -142,8 +148,36 @@ namespace BlackCore
 
         if (!resolvedInPrephase)
         {
-            // matchedModel = this->getClosestMatchSearchImplementation(mode, modelSet, remoteAircraft, log);
-            matchedModel = this->getClosestMatchScoreImplementation(mode, modelSet, remoteAircraft, log);
+            // Reduce by ICAO if the flag is set
+            bool reduced = false;
+            if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByIcaoData))
+            {
+                modelSet = ifPossibleReduceByIcaoData(remoteAircraft, modelSet, setup, reduced, log);
+            }
+            else if (log)
+            {
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Skipping ICAO reduction"), getLogCategories());
+            }
+
+            // if not yet reduced, reduce to VTOL
+            if (!reduced && remoteAircraft.isVtol() && modelSet.containsVtol())
+            {
+                modelSet = modelSet.findByVtolFlag(true);
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Aircraft is VTOL, reduced to VTOL", getLogCategories());
+            }
+
+            static const QString msInfo("Using '%1' with model set with %2 models");
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, msInfo.arg(setup.getMatchingAlgorithmAsString()).arg(modelSet.size()), getLogCategories());
+            switch (setup.getMatchingAlgorithm())
+            {
+            case CAircraftMatcherSetup::MatchingStepwiseReduce:
+                matchedModel = this->getClosestMatchStepwiseReduceImplementation(modelSet, setup, remoteAircraft, this->getDefaultModel(), log);
+                break;
+            case CAircraftMatcherSetup::MatchingScoreBased:
+            default:
+                matchedModel = this->getClosestMatchScoreImplementation(modelSet, setup, remoteAircraft, this->getDefaultModel(), log);
+                break;
+            }
         }
 
         // copy over callsign validate
@@ -556,35 +590,24 @@ namespace BlackCore
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(CAircraftMatcherSetup::MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, const CAircraftModel &defaultModel, CStatusMessageList *log)
     {
         CAircraftModelList matchedModels(modelSet);
         CAircraftModel matchedModel(remoteAircraft.getModel());
-        // primary reduction
+
+        const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         bool reduced = false;
         do
         {
             // by livery, then by ICAO
             if (mode.testFlag(CAircraftMatcherSetup::ByLivery))
             {
-                matchedModels = ifPossibleReduceByLiveryAndIcaoCode(remoteAircraft, matchedModels, reduced, log);
+                matchedModels = ifPossibleReduceByLiveryAndAircraftIcaoCode(remoteAircraft, matchedModels, reduced, log);
                 if (reduced) { break; }
             }
             else if (log)
             {
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Skipping livery reduction", getLogCategories());
-            }
-
-            // by ICAO data from set
-            if (mode.testFlag(CAircraftMatcherSetup::ByIcaoData))
-            {
-                // if already matched by livery skip
-                matchedModels = ifPossibleReduceByIcaoData(remoteAircraft, matchedModels, false, reduced, log);
-                if (reduced) { break; }
-            }
-            else if (log)
-            {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Skipping ICAO reduction", getLogCategories());
             }
 
             // family
@@ -620,7 +643,7 @@ namespace BlackCore
         // the last resort is to use the combined type
         if (mode.testFlag(CAircraftMatcherSetup::ByCombinedType) && matchedModels.isEmpty() && remoteAircraft.getModel().getAircraftIcaoCode().hasValidCombinedType())
         {
-            const CAircraftModel defaultModel = getCombinedTypeDefaultModel(modelSet, remoteAircraft, log);
+            const CAircraftModel defaultModelCombined = getCombinedTypeDefaultModel(modelSet, remoteAircraft, defaultModel, log);
             matchedModels.push_back(defaultModel);
         }
 
@@ -636,7 +659,7 @@ namespace BlackCore
         {
             // in any case return hardwired default
             // normally I would not expect this to be called, as the combined code default should at least yield one model
-            matchedModel = getDefaultModel();
+            matchedModel = defaultModel;
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Using default model (nothing else found)", getLogCategories());
         }
         else
@@ -647,66 +670,20 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(CAircraftMatcherSetup::MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, const CAircraftModel &defaultModel, CStatusMessageList *log)
     {
-        Q_UNUSED(mode);
-        CAircraftModelList usedModelSet;
-        // cppcheck-suppress variableScope
-        static constexpr bool DoNotMindAboutColorLiveries = false;
-        static constexpr bool NoZeroScores = true;
-        static constexpr bool PreferColorLiveries = true;
+        CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
+        const bool noZeroScores = mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros);
+        const bool preferColorLiveries = mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries);
 
         // VTOL
         ScoredModels map;
-        if (remoteAircraft.isVtol() && modelSet.containsVtol())
-        {
-            usedModelSet = modelSet.findByVtolFlag(true);
-        }
-        else
-        {
-            usedModelSet = modelSet;
-        }
-
-        // first decide what set to use for scoring, it should not be too large
-        if (remoteAircraft.hasAircraftAndAirlineDesignator() && usedModelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
-        {
-            // Aircraft and airline ICAO
-            const CAircraftModelList byAircraftAndAirline(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());
-
-            // we have airline and aircraft ICAO, so use airline liveries
-            map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel(), DoNotMindAboutColorLiveries, NoZeroScores, log);
-        }
-        else if (remoteAircraft.hasAircraftDesignator() && usedModelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
-        {
-            // Aircraft ICAO only
-            const CAircraftModelList byAircraft(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' only (no airline in set) for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
-
-            // we do not have an airline for that aircraft, prefer color liveries
-            // this could also become a setting
-            map = byAircraft.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
-        }
-        else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && usedModelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))
-        {
-            const CAircraftModelList byAircraft(usedModelSet.findByCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by combined type '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getCombinedType()), getLogCategories());
-
-            // No aircraft / airline ICAO, we prefer color liveries
-            map = byAircraft.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
-        }
-        else
-        {
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using set with %1 models").arg(usedModelSet.size()), getLogCategories());
-
-            // Poor men`s matching
-            map = usedModelSet.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
-        }
+        map = modelSet.scoreFull(remoteAircraft.getModel(), preferColorLiveries, noZeroScores, log);
 
         CAircraftModel matchedModel;
         if (map.isEmpty())
         {
-            matchedModel = getCombinedTypeDefaultModel(modelSet, remoteAircraft, log);
+            matchedModel = getCombinedTypeDefaultModel(modelSet, remoteAircraft, defaultModel, log);
         }
         else
         {
@@ -724,18 +701,18 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::getCombinedTypeDefaultModel(const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getCombinedTypeDefaultModel(const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, const CAircraftModel &defaultModel, CStatusMessageList *log)
     {
         const QString combinedType = remoteAircraft.getAircraftIcaoCombinedType();
         if (combinedType.isEmpty())
         {
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No combined type, using default", getLogCategories(), CStatusMessage::SeverityInfo);
-            return this->getDefaultModel();
+            return defaultModel;
         }
         if (modelSet.isEmpty())
         {
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No models, using default", getLogCategories(), CStatusMessage::SeverityError);
-            return this->getDefaultModel();
+            return defaultModel;
         }
 
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Searching by combined type with color livery '" % combinedType % "'", getLogCategories());
@@ -763,7 +740,7 @@ namespace BlackCore
         }
 
         // return
-        if (matchedModels.isEmpty()) { return getDefaultModel(); }
+        if (matchedModels.isEmpty()) { return defaultModel; }
         return matchedModels.front();
     }
 
@@ -792,7 +769,7 @@ namespace BlackCore
         return model;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByLiveryAndIcaoCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByLiveryAndAircraftIcaoCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
         if (!remoteAircraft.getLivery().hasCombinedCode())
@@ -816,55 +793,36 @@ namespace BlackCore
         return byLivery;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool ignoreAirline, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const CAircraftMatcherSetup &setup, bool &reduced, CStatusMessageList *log)
     {
-        reduced = false;
         if (inList.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Empty list, skipping step", getLogCategories()); }
             return inList;
         }
 
-        if (!remoteAircraft.hasAircraftDesignator())
+        reduced = false;
+        if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst))
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No aircraft designator, skipping step", getLogCategories()); }
-            return inList;
+            bool r;
+            CAircraftModelList models = ifPossibleReduceByAirline(remoteAircraft, inList, "Reduce by airline first.", r, log);
+            models = ifPossibleReduceByAircraft(remoteAircraft, models, "Reduce by aircraft ICAO second.", r, log);
+            reduced = r;
+            if (reduced) { return models; }
         }
-
-        CAircraftModelList searchModels(inList.findByIcaoDesignators(
-                                            remoteAircraft.getAircraftIcaoCode(),
-                                            ignoreAirline ? CAirlineIcaoCode() : remoteAircraft.getAirlineIcaoCode()));
-
-        const bool searchModelsEmpty = searchModels.isEmpty();
-        if (!searchModelsEmpty)
+        else if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByIcaoData))
         {
-            if (log)
-            {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
-                                                    "Possible aircraft " + QString::number(searchModels.size()) +
-                                                    ", found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " +
-                                                    (ignoreAirline ? "" : remoteAircraft.getAirlineIcaoCodeDesignator()), getLogCategories());
-            }
-            reduced = true;
-            return searchModels;
+            bool r;
+            CAircraftModelList models = ifPossibleReduceByAircraft(remoteAircraft, inList, "Reduce by aircraft ICAO first.", r, log);
+            models = ifPossibleReduceByAirline(remoteAircraft, models, "Reduce by airline second.", r, log);
+            reduced = r;
+            if (reduced) { return models; }
         }
         else
         {
-            if (!ignoreAirline && remoteAircraft.hasAircraftAndAirlineDesignator())
-            {
-                // we have searched by aircraft and airline, but not found anything
-                if (log)
-                {
-                    CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
-                                                        "Not found by ICAO '" +
-                                                        remoteAircraft.getAircraftIcaoCodeDesignator() + "' '" + remoteAircraft.getAirlineIcaoCodeDesignator() +
-                                                        "', relaxing to only ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator());
-                }
-                // recursive lookup by ignoring airline
-                return ifPossibleReduceByIcaoData(remoteAircraft, inList, true, reduced, log);
-            }
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Not found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " + remoteAircraft.getAirlineIcaoCodeDesignator()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No reduction by ICAO data", getLogCategories()); }
         }
+
         return inList;
     }
 
@@ -951,6 +909,33 @@ namespace BlackCore
         return outList;
     }
 
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByAircraft(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, bool &reduced, CStatusMessageList *log)
+    {
+        reduced = false;
+        if (inList.isEmpty())
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " Empty input list, cannot reduce", getLogCategories()); }
+            return inList;
+        }
+
+        if (!remoteAircraft.hasAircraftDesignator())
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " No aircraft designator, cannot reduce " % QString::number(inList.size()) %  " entries", getLogCategories()); }
+            return inList;
+        }
+
+        const CAircraftModelList outList(inList.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode::null()));
+        if (outList.isEmpty())
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " Cannot reduce by '" % remoteAircraft.getAircraftIcaoCodeDesignator() % "' results: " % QString::number(outList.size()), getLogCategories()); }
+            return inList;
+        }
+
+        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " Reduced reduce by '" % remoteAircraft.getAircraftIcaoCodeDesignator() % "' to " % QString::number(outList.size()), getLogCategories()); }
+        reduced = true;
+        return outList;
+    }
+
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByAirline(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
@@ -966,7 +951,7 @@ namespace BlackCore
             return inList;
         }
 
-        const CAircraftModelList outList(inList.findByIcaoDesignators(CAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
+        const CAircraftModelList outList(inList.findByIcaoDesignators(CAircraftIcaoCode::null(), remoteAircraft.getAirlineIcaoCode()));
         if (outList.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " Cannot reduce by '" % remoteAircraft.getAirlineIcaoCodeDesignator() % "' results: " % QString::number(outList.size()), getLogCategories()); }
