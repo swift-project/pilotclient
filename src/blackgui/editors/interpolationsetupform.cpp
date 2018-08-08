@@ -45,7 +45,7 @@ namespace BlackGui
             ui->cb_DebugDriver->setChecked(setup.showSimulatorDebugMessages());
             ui->cb_LogInterpolation->setChecked(setup.logInterpolation());
             ui->cb_EnableParts->setChecked(setup.isAircraftPartsEnabled());
-            ui->cb_ForceVtolInterpolation->setChecked(setup.isForcingVtolInterpolation());
+            ui->cb_ForceFullInterpolation->setChecked(setup.isForcingFullInterpolation());
             ui->cb_SendGndFlagToSim->setChecked(setup.isSendingGndFlagToSimulator());
             ui->cb_FixSceneryOffset->setChecked(setup.isFixingSceneryOffset());
             ui->le_PitchOnGround->setText(setup.getPitchOnGround().valueRoundedWithUnit(CAngleUnit::deg()));
@@ -56,7 +56,7 @@ namespace BlackGui
         {
             CInterpolationAndRenderingSetupPerCallsign setup;
             setup.setEnabledAircraftParts(ui->cb_EnableParts->isChecked());
-            setup.setForceVtolInterpolation(ui->cb_ForceVtolInterpolation->isChecked());
+            setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
             setup.setLogInterpolation(ui->cb_LogInterpolation->isChecked());
             setup.setSendingGndFlagToSimulator(ui->cb_SendGndFlagToSim->isChecked());
             setup.setSimulatorDebuggingMessages(ui->cb_DebugDriver->isChecked());
@@ -70,7 +70,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_DebugDriver, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_LogInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_EnableParts, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_ForceVtolInterpolation, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ForceFullInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_SendGndFlagToSim, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FixSceneryOffset, readonly);
             ui->rb_Linear->setEnabled(!readonly);

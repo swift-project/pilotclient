@@ -51,9 +51,9 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QCheckBox" name="cb_ForceVtolInterpolation">
+    <widget class="QCheckBox" name="cb_ForceFullInterpolation">
      <property name="text">
-      <string>force VTOL interpolation</string>
+      <string>force full interpolation</string>
      </property>
     </widget>
    </item>
@@ -168,10 +168,11 @@
  <tabstops>
   <tabstop>rb_Spline</tabstop>
   <tabstop>rb_Linear</tabstop>
+  <tabstop>le_PitchOnGround</tabstop>
   <tabstop>cb_EnableParts</tabstop>
   <tabstop>cb_SendGndFlagToSim</tabstop>
   <tabstop>cb_FixSceneryOffset</tabstop>
-  <tabstop>cb_ForceVtolInterpolation</tabstop>
+  <tabstop>cb_ForceFullInterpolation</tabstop>
   <tabstop>cb_LogInterpolation</tabstop>
   <tabstop>cb_DebugDriver</tabstop>
  </tabstops>

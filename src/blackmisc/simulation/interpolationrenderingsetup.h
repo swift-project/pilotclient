@@ -34,7 +34,7 @@ namespace BlackMisc
             {
                 IndexLogInterpolation = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
                 IndexSimulatorDebugMessages,
-                IndexForceVtolInterpolation,
+                IndexForceFullInterpolation,
                 IndexSendGndFlagToSimulator,
                 IndexEnabledAircraftParts,
                 IndexInterpolatorMode,
@@ -63,10 +63,10 @@ namespace BlackMisc
             bool setLogInterpolation(bool log);
 
             //! Full interpolation (skip optimizations like checking if aircraft moves etc.)
-            bool isForcingVtolInterpolation() const { return m_forceVtolInterpolation; }
+            bool isForcingFullInterpolation() const { return m_forceFullInterpolation; }
 
             //! Force full interpolation
-            void setForceVtolInterpolation(bool force) { m_forceVtolInterpolation = force; }
+            void setForceFullInterpolation(bool force) { m_forceFullInterpolation = force; }
 
             //! Set enabled aircraft parts
             bool setEnabledAircraftParts(bool enabled);
@@ -131,7 +131,7 @@ namespace BlackMisc
 
             bool m_logInterpolation       = false; //!< Debug messages in interpolator
             bool m_simulatorDebugMessages = false; //!< Debug messages of simulator (aka plugin)
-            bool m_forceVtolInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
+            bool m_forceFullInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
             bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
             bool m_fixSceneryOffset       = false; //!< Fix. scenery offset
@@ -214,7 +214,7 @@ namespace BlackMisc
                 CInterpolationAndRenderingSetupGlobal,
                 BLACK_METAMEMBER(logInterpolation),
                 BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceVtolInterpolation),
+                BLACK_METAMEMBER(forceFullInterpolation),
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(fixSceneryOffset),
@@ -273,7 +273,7 @@ namespace BlackMisc
                 CInterpolationAndRenderingSetupPerCallsign,
                 BLACK_METAMEMBER(logInterpolation),
                 BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceVtolInterpolation),
+                BLACK_METAMEMBER(forceFullInterpolation),
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(fixSceneryOffset),

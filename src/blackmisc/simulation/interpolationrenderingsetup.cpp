@@ -102,7 +102,7 @@ namespace BlackMisc
             {
             case IndexLogInterpolation: return CVariant::fromValue(m_logInterpolation);
             case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
-            case IndexForceVtolInterpolation: return CVariant::fromValue(m_forceVtolInterpolation);
+            case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
             case IndexEnabledAircraftParts: return CVariant::fromValue(m_enabledAircraftParts);
             case IndexSendGndFlagToSimulator: return CVariant::fromValue(m_sendGndToSim);
             case IndexInterpolatorMode: return CVariant::fromValue(m_interpolatorMode);
@@ -122,7 +122,7 @@ namespace BlackMisc
             {
             case IndexLogInterpolation: m_logInterpolation = variant.toBool(); return;
             case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); return;
-            case IndexForceVtolInterpolation: m_forceVtolInterpolation = variant.toBool(); return;
+            case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); return;
             case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); return;
             case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
             case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
@@ -141,7 +141,7 @@ namespace BlackMisc
                 QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
                 QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
                 QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
-                QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceVtolInterpolation) %
+                QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
                 QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
                 QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
                 QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset) %
@@ -266,7 +266,7 @@ namespace BlackMisc
         {
             m_logInterpolation       = baseValues.logInterpolation();
             m_simulatorDebugMessages = baseValues.showSimulatorDebugMessages();
-            m_forceVtolInterpolation = baseValues.isForcingVtolInterpolation();
+            m_forceFullInterpolation = baseValues.isForcingFullInterpolation();
             m_enabledAircraftParts   = baseValues.isAircraftPartsEnabled();
             m_sendGndToSim           = baseValues.isSendingGndFlagToSimulator();
             m_fixSceneryOffset       = baseValues.isFixingSceneryOffset();
@@ -330,7 +330,7 @@ namespace BlackMisc
             CPropertyIndexList diff;
             if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
             if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages()) { diff.push_back(IndexSimulatorDebugMessages); }
-            if (this->isForcingVtolInterpolation() != globalSetup.isForcingVtolInterpolation()) { diff.push_back(IndexForceVtolInterpolation); }
+            if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
             if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
             if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
             if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset()) { diff.push_back(IndexFixSceneryOffset); }

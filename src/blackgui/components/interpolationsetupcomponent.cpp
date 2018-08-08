@@ -72,7 +72,7 @@ namespace BlackGui
 
         CInterpolationSetupComponent::Mode CInterpolationSetupComponent::getSetupMode() const
         {
-            return ui->rb_Callsign->isChecked() ? CInterpolationSetupComponent::PerCallsign : CInterpolationSetupComponent::Global;
+            return ui->rb_Callsign->isChecked() ? CInterpolationSetupComponent::SetupPerCallsign : CInterpolationSetupComponent::SetupGlobal;
         }
 
         void CInterpolationSetupComponent::onRowDoubleClicked(const QModelIndex &index)
@@ -89,7 +89,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             bool enableCallsign = false;
-            if (this->getSetupMode() == CInterpolationSetupComponent::Global)
+            if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal)
             {
                 this->setUiValuesFromGlobal();
             }
@@ -111,7 +111,7 @@ namespace BlackGui
         {
             const bool overlay = QObject::sender() == ui->pb_Reload;
             if (!this->checkPrerequisites(overlay)) { return; }
-            if (this->getSetupMode() == CInterpolationSetupComponent::Global)
+            if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal)
             {
                 CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
                 ui->form_InterpolationSetup->setValue(gs);
@@ -130,7 +130,7 @@ namespace BlackGui
             if (!this->checkPrerequisites(true)) { return; }
             CInterpolationAndRenderingSetupPerCallsign setup = ui->form_InterpolationSetup->getValue();
             CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
-            if (this->getSetupMode() == CInterpolationSetupComponent::Global)
+            if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal)
             {
                 gs.setBaseValues(setup);
                 gs.setLogInterpolation(false); // that would globally log all values
@@ -175,7 +175,7 @@ namespace BlackGui
         void CInterpolationSetupComponent::removeSetup()
         {
             if (!this->checkPrerequisites(true)) { return; }
-            if (this->getSetupMode() == CInterpolationSetupComponent::Global) { return; }
+            if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal) { return; }
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
             CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
             const int removed = setups.removeByCallsign(cs);

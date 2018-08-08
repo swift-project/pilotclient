@@ -32,8 +32,8 @@ namespace BlackGui
             //! Mode of setup
             enum Mode
             {
-                Global,
-                PerCallsign
+                SetupGlobal,
+                SetupPerCallsign
             };
 
             //! Constructor
