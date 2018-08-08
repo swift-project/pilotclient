@@ -517,8 +517,15 @@ namespace BlackCore
         return icao;
     }
 
-    int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator, bool forced)
     {
+        if (!simulator.isSingleSimulator()) { return 0; }
+        if (!forced && m_simulator == simulator && m_modelSet.size() > 0)
+        {
+            // same simulator with models
+            return m_modelSet.size();
+        }
+
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();
         const int r2 = modelsCleaned.removeIfExcluded();

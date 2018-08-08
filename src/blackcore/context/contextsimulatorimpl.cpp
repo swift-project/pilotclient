@@ -175,6 +175,9 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             const CSimulatorInfo simulator = m_modelSetSimulator.get();
+            if (!simulator.isSingleSimulator()) { return CAircraftModelList(); }
+
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
             return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
         }
 
@@ -191,7 +194,7 @@ namespace BlackCore
             if (this->isSimulatorAvailable()) { return; }
             m_modelSetSimulator.set(simulator);
             const CAircraftModelList models = this->getModelSet();
-            m_aircraftMatcher.setModelSet(models, simulator);
+            m_aircraftMatcher.setModelSet(models, simulator, false);
         }
 
         CSimulatorInfo CContextSimulator::simulatorsWithInitializedModelSet() const
@@ -375,7 +378,7 @@ namespace BlackCore
 
             m_modelSetSimulator.set(simInfo);
             const CAircraftModelList modelSetModels = this->getModelSet();
-            m_aircraftMatcher.setModelSet(modelSetModels, simInfo);
+            m_aircraftMatcher.setModelSet(modelSetModels, simInfo, true);
             m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
@@ -907,7 +910,7 @@ namespace BlackCore
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
             const CAircraftModelList models(this->getModelSet());
             CLogMessage(this).info("Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
-            m_aircraftMatcher.setModelSet(models, simulator);
+            m_aircraftMatcher.setModelSet(models, simulator, false);
         }
     } // namespace
 } // namespace

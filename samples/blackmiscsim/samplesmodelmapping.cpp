@@ -68,7 +68,7 @@ namespace BlackSample
 
         // sync definitions, remove redundant ones
         CAircraftMatcher matcher;
-        matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::FSX);
+        matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::FSX, true);
 
         const CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;

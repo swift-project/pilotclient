@@ -96,7 +96,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
-            m_matcher.setModelSet(models, simulator);
+            m_matcher.setModelSet(models, simulator, true);
             this->redisplay();
         }
 

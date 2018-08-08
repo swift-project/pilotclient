@@ -157,7 +157,7 @@ namespace BlackCore
 
         //! Set the models we want to use
         //! \note uses a set from "somewhere else" so it can also be used with arbitrary sets for testing
-        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator, bool forced);
 
         //! Default model
         const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const { return m_defaultModel; }
