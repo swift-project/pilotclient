@@ -147,11 +147,6 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts (global setup)"});
             }
 
-        signals:
-            //! A requested elevation has been received
-            //! \remark only meant to be used locally, not via DBus
-            void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
-
         protected:
             //! Constructor
             CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
@@ -203,9 +198,6 @@ namespace BlackCore
 
             //! Simulator has changed cockpit
             void onCockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
-
-            //! Received elevation
-            void onReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Failed adding remote aircraft
             void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
