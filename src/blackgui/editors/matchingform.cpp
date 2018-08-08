@@ -32,8 +32,6 @@ namespace BlackGui
         void CMatchingForm::setReadOnly(bool readonly)
         {
             CGuiUtility::checkBoxReadOnly(ui->cb_ByModelString, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_ByIcaoDataAircraft1st, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_ByIcaoDataAirline1st, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByFamily, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByLivery, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByCombinedCode, readonly);
@@ -43,6 +41,8 @@ namespace BlackGui
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
             ui->rb_ScoreBased->setEnabled(enabled);
+            ui->rb_ByIcaoDataAircraft1st->setEnabled(enabled);
+            ui->rb_ByIcaoDataAirline1st->setEnabled(enabled);
         }
 
         CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
@@ -56,8 +56,8 @@ namespace BlackGui
             const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
             ui->cb_ByModelString->setChecked(mode.testFlag(CAircraftMatcherSetup::ByModelString));
             ui->cb_ByCombinedCode->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCombinedType));
-            ui->cb_ByIcaoDataAircraft1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAircraftFirst));
-            ui->cb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
+            ui->rb_ByIcaoDataAircraft1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAircraftFirst));
+            ui->rb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
             ui->cb_ByLivery->setChecked(mode.testFlag(CAircraftMatcherSetup::ByLivery));
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
@@ -95,7 +95,7 @@ namespace BlackGui
         {
             return CAircraftMatcherSetup::matchingMode(
                        ui->cb_ByModelString->isChecked(),
-                       ui->cb_ByIcaoDataAircraft1st->isChecked(), ui->cb_ByIcaoDataAirline1st->isChecked(),
+                       ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
                        ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
                        ui->cb_ByCombinedCode->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked()

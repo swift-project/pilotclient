@@ -55,45 +55,45 @@
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="cb_ByFamily">
-        <property name="text">
-         <string>by family</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="cb_ByCombinedCode">
         <property name="text">
          <string>combined code</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string>by livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="cb_ByFamily">
+        <property name="text">
+         <string>by family</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QCheckBox" name="cb_ByModelString">
         <property name="text">
          <string>by model string</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="cb_ByIcaoDataAirline1st">
-        <property name="text">
-         <string>by ICAO: airline first</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_ByIcaoDataAircraft1st">
+       <widget class="QRadioButton" name="rb_ByIcaoDataAircraft1st">
         <property name="text">
          <string>by ICAO: aircraft first</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="cb_ByLivery">
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
         <property name="text">
-         <string>by livery</string>
+         <string>by ICAO: airline first</string>
         </property>
        </widget>
       </item>
@@ -128,9 +128,9 @@
  <tabstops>
   <tabstop>rb_ScoreBased</tabstop>
   <tabstop>rb_Reduction</tabstop>
+  <tabstop>rb_ByIcaoDataAircraft1st</tabstop>
+  <tabstop>rb_ByIcaoDataAirline1st</tabstop>
   <tabstop>cb_ByModelString</tabstop>
-  <tabstop>cb_ByIcaoDataAircraft1st</tabstop>
-  <tabstop>cb_ByIcaoDataAirline1st</tabstop>
   <tabstop>cb_ByFamily</tabstop>
   <tabstop>cb_ByLivery</tabstop>
   <tabstop>cb_ByCombinedCode</tabstop>
