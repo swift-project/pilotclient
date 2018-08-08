@@ -180,6 +180,7 @@ void CSwiftLauncher::init()
 
 void CSwiftLauncher::initStyleSheet()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     const QString s = sGui->getStyleSheetUtility().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
@@ -187,6 +188,7 @@ void CSwiftLauncher::initStyleSheet()
         CStyleSheetUtility::fileNameSwiftLauncher()
     }
     );
+    this->setStyleSheet(""); // clear, otherwise launcher crashing
     this->setStyleSheet(s);
 }
 

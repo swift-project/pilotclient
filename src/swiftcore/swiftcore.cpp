@@ -78,13 +78,14 @@ CSwiftCore::~CSwiftCore()
 
 void CSwiftCore::initStyleSheet()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     const QString s = sGui->getStyleSheetUtility().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
         CStyleSheetUtility::fileNameStandardWidget(),
         CStyleSheetUtility::fileNameSwiftCore()
-    }
-    );
+    });
+    this->setStyleSheet(""); // avoid crash, need to reset before
     this->setStyleSheet(s);
 }
 
@@ -104,7 +105,7 @@ void CSwiftCore::showSettingsDialog()
 
 void CSwiftCore::showRawFsdMessageDialog()
 {
-    if(!m_rawFsdMessageDialog)
+    if (!m_rawFsdMessageDialog)
     {
         m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this));
     }
