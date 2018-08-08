@@ -37,6 +37,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CCoreSettingsDialog> ui;
+
+            //! Show the overview tab
+            void showOverview();
         };
     } // ns
 } // ns

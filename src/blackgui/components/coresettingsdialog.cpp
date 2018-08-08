@@ -10,6 +10,7 @@
 #include "coresettingsdialog.h"
 #include "ui_coresettingsdialog.h"
 #include "blackgui/guiapplication.h"
+#include <QPushButton>
 
 namespace BlackGui
 {
@@ -22,9 +23,17 @@ namespace BlackGui
             Q_ASSERT(sGui);
             ui->setupUi(this);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+            QPushButton *overview = ui->bb_CoreSettingsDialog->button(QDialogButtonBox::Reset);
+            overview->setText("Overview");
+            connect(overview, &QPushButton::released, this, &CCoreSettingsDialog::showOverview);
         }
 
         CCoreSettingsDialog::~CCoreSettingsDialog()
         { }
+
+        void CCoreSettingsDialog::showOverview()
+        {
+            ui->comp_SettingsComponent->setSettingsOverviewTab();
+        }
     } // ns
 } // ns

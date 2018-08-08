@@ -99,6 +99,14 @@ BlackGui--Components--CSetupLoadingDialog #fr_Details {
 }
 */
 
+/* core settings */
+/* needed for CCoreSettingsDialog */
+/* BlackGui::Components::CSettingsComponent */
+BlackGui--Components--CCoreSettingsDialog {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
 QFileDialog #sidebar {
   background: black;
 }
