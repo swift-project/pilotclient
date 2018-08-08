@@ -14,6 +14,7 @@
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/icons.h"
 
@@ -59,9 +60,8 @@ namespace BlackGui
             int rowCount() const;
 
             //! Clear
-            void clear();
+            void clear(bool addInternalsAfterwards = false);
 
-        public slots:
             //! Update simulator
             void update();
 
@@ -92,6 +92,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
             QTimer m_updateTimer;
+            BlackMisc::Simulation::CSimulatorInfo m_simulator;
         };
     } // ns
 } // ns

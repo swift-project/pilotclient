@@ -98,9 +98,13 @@ namespace BlackGui
             return ui->tvp_LiveData->rowCount();
         }
 
-        void CSimulatorComponent::clear()
+        void CSimulatorComponent::clear(bool addInternalsAfterwards)
         {
             ui->tvp_LiveData->clear();
+            if (addInternalsAfterwards)
+            {
+                this->refreshInternals();
+            }
         }
 
         void CSimulatorComponent::update()
@@ -112,11 +116,11 @@ namespace BlackGui
             if (simulatorStatus == ISimulator::Unspecified || simulatorStatus == ISimulator::Disconnected)
             {
                 static const QString s("No simulator available");
-                addOrUpdateLiveDataByName("info", s, CIcons::StandardIconWarning16);
+                this->addOrUpdateLiveDataByName("info", s, CIcons::StandardIconWarning16);
                 return;
             }
 
-            if (!(simulatorStatus & ISimulator::Simulating))
+            if (!simulatorStatus.testFlag(ISimulator::Simulating))
             {
                 static const QString s("Simulator (%1) not yet running");
                 this->addOrUpdateLiveDataByName("info", s.arg(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()), CIcons::StandardIconWarning16);
@@ -124,7 +128,10 @@ namespace BlackGui
             }
 
             // clear old warnings / information
-            if (this->rowCount() < 5) { this->clear(); }
+            if (this->rowCount() < 5)
+            {
+                this->clear(true);
+            }
 
             const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
             const CAircraftSituation s = ownAircraft.getSituation();
@@ -135,6 +142,10 @@ namespace BlackGui
             static const CIcon iconRadio(CIcon::iconByIndex(CIcons::StandardIconRadio16));
             static const CIcon iconAttitude(CIcon::iconByIndex(CIcons::AviationAttitudeIndicator));
 
+            if (m_simulator.isAnySimulator())
+            {
+                this->addOrUpdateLiveDataByName("simulator", m_simulator.toQString(true), m_simulator.toIcon());
+            }
             this->addOrUpdateLiveDataByName("latitude", s.latitude().toQString(), iconLatLng);
             this->addOrUpdateLiveDataByName("longitude", s.longitude().toQString(), iconLatLng);
             this->addOrUpdateLiveDataByName("altitude", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
@@ -162,7 +173,7 @@ namespace BlackGui
             {
                 const int intervalMs = getUpdateIntervalMs();
                 m_updateTimer.start(intervalMs);
-                this->refreshInternals();
+                this->clear(true);
             }
             else
             {
@@ -187,6 +198,9 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
             const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
+            const CSimulatorInfo simulatorInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
+            m_simulator = simulatorInfo;
+
             const QStringList names(internals.getSortedNames());
             if (names.isEmpty())
             {
@@ -194,6 +208,7 @@ namespace BlackGui
                 return;
             }
 
+            // Update the INTERNAL view
             static const CIcon emptyIcon;
             const bool resize = true;
             const bool skipEqualValues = true;
@@ -207,6 +222,7 @@ namespace BlackGui
         int CSimulatorComponent::getUpdateIntervalMs() const
         {
             // much slower updates via DBus
+            if (!sGui || sGui->isShuttingDown()) { return 10000; }
             return sGui->getIContextSimulator()->isUsingImplementingObject() ? 1000 : 5000;
         }
     }
