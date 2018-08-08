@@ -149,6 +149,9 @@ namespace BlackMisc
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            CIcon toIcon() const;
+
             //! Add simulator
             void add(const CSimulatorInfo &other);
 

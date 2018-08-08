@@ -93,6 +93,14 @@ namespace BlackMisc
             OSLinux,
             OSMacOs,
             OSWindows,
+            SimulatorFS9,
+            SimulatorFS916,
+            SimulatorFSX,
+            SimulatorFSX16,
+            SimulatorP3D,
+            SimulatorP3D16,
+            SimulatorXPlane,
+            SimulatorXPlane16,
             StandardIconAppAircraft16,
             StandardIconAppAtc16,
             StandardIconAppFlightPlan16,
@@ -472,6 +480,30 @@ namespace BlackMisc
 
         //! Preloader
         static const QPixmap &preloader16();
+
+        // --------------------------------------------------
+        // -- Simulators
+        // --------------------------------------------------
+
+        //! Simulator FSX @{
+        static const QPixmap &simulatorFSX();
+        static const QPixmap &simulatorFSX16();
+        //! @}
+
+        //! Simulator P3D @{
+        static const QPixmap &simulatorP3D();
+        static const QPixmap &simulatorP3D16();
+        //! @}
+
+        //! Simulator FS9 @{
+        static const QPixmap &simulatorFS9();
+        static const QPixmap &simulatorFS916();
+        //! @}
+
+        //! Simulator XPlane @{
+        static const QPixmap &simulatorXPlane();
+        static const QPixmap &simulatorXPlane16();
+        //! @}
 
         // --------------------------------------------------
         // -- swift

@@ -8,11 +8,12 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/db/datastoreutility.h"
+#include "blackmisc/iconlist.h"
 #include "blackmisc/comparefunctions.h"
 
 #include <QJsonValue>
@@ -153,6 +154,22 @@ namespace BlackMisc
             if (s.testFlag(P3D)) { str.append("P3D "); }
             if (s.testFlag(XPLANE)) { str.append("XPlane"); }
             return str.trimmed();
+        }
+
+        CIcon CSimulatorInfo::toIcon() const
+        {
+            if (this->isSingleSimulator())
+            {
+                switch (this->getSimulator())
+                {
+                case FSX: return CIconList::allIcons().findByIndex(CIcons::SimulatorFSX16);
+                case FS9: return CIconList::allIcons().findByIndex(CIcons::SimulatorFS916);
+                case P3D: return CIconList::allIcons().findByIndex(CIcons::SimulatorP3D16);
+                case XPLANE: return CIconList::allIcons().findByIndex(CIcons::SimulatorXPlane16);
+                default: break;
+                }
+            }
+            return CValueObject::toIcon();
         }
 
         void CSimulatorInfo::add(const CSimulatorInfo &other)
