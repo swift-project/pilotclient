@@ -98,6 +98,9 @@ namespace BlackCore
             //! Setup changed
             void interpolationAndRenderingSetupChanged();
 
+            //! Matching setup changed
+            void matchingSetupChanged();
+
             //! Model set ready or changed
             void modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 

@@ -71,6 +71,7 @@ namespace BlackCore
             this->restoreSimulatorPlugins();
 
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
+            connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged, this, &CContextSimulator::matchingSetupChanged);
             connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
             // deferred init of last model set, if no other data are set in meantime

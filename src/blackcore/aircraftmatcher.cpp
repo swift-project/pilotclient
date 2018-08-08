@@ -50,6 +50,14 @@ namespace BlackCore
     CAircraftMatcher::~CAircraftMatcher()
     { }
 
+    bool CAircraftMatcher::setSetup(const CAircraftMatcherSetup &setup)
+    {
+        if (m_setup == setup) { return false; }
+        m_setup = setup;
+        emit this->setupChanged();
+        return true;
+    }
+
     CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcaoDesignator(
         const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao,
         bool airlineFromCallsign, bool useWebServices, CStatusMessageList *log)

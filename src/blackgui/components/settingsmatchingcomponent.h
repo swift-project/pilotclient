@@ -42,6 +42,9 @@ namespace BlackGui
             //! Reload pressed
             void onReloadPressed();
 
+            //! Setup has been changed
+            void onSetupChanged();
+
             //! Deferred reload
             void deferredReload(int deferMs);
 

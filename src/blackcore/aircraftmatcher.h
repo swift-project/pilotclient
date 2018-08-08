@@ -55,7 +55,7 @@ namespace BlackCore
         virtual ~CAircraftMatcher();
 
         //! Set the setup
-        void setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) { m_setup = setup; }
+        bool setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
         //! Get the setup
         BlackMisc::Simulation::CAircraftMatcherSetup getSetup() const { return m_setup; }
@@ -173,6 +173,10 @@ namespace BlackCore
 
         //! Evaluate if a statistics entry makes sense and add it
         void evaluateStatisticsEntry(const QString &sessionId, const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+
+    signals:
+        //! Setup changed
+        void setupChanged();
 
     private:
         //! The search based implementation

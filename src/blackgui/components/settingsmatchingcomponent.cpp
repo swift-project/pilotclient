@@ -28,6 +28,12 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->pb_Save, &QPushButton::released, this, &CSettingsMatchingComponent::onSavePressed);
             connect(ui->pb_Reload, &QPushButton::released, this, &CSettingsMatchingComponent::onReloadPressed);
+
+            IContextSimulator *simContext = simulatorContext();
+            if (simContext)
+            {
+                connect(simContext, &IContextSimulator::matchingSetupChanged, this, &CSettingsMatchingComponent::onSetupChanged, Qt::QueuedConnection);
+            }
             this->deferredReload(5000);
         }
 
@@ -44,6 +50,13 @@ namespace BlackGui
 
         void CSettingsMatchingComponent::onReloadPressed()
         {
+            this->deferredReload(0);
+        }
+
+        void CSettingsMatchingComponent::onSetupChanged()
+        {
+            const IContextSimulator *simContext = simulatorContext();
+            if (!simContext) { return; }
             this->deferredReload(0);
         }
 

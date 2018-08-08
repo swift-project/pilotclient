@@ -66,6 +66,9 @@ namespace BlackCore
                                    "interpolationAndRenderingSetupChanged", this, SIGNAL(interpolationAndRenderingSetupChanged()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "matchingSetupChanged", this, SIGNAL(matchingSetupChanged()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
@@ -256,6 +259,11 @@ namespace BlackCore
         bool CContextSimulatorProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
+        }
+
+        bool CContextSimulatorProxy::doMappingAgain(const CCallsign &callsign)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("doMappingAgain"), callsign);
         }
 
         CMatchingStatistics CContextSimulatorProxy::getCurrentMatchingStatistics(bool missingOnly) const
