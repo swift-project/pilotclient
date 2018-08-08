@@ -101,6 +101,7 @@ namespace BlackCore
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void setWeatherActivated(bool activated) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
+            virtual bool doMappingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;

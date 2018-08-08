@@ -854,6 +854,23 @@ namespace BlackCore
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
         }
 
+        bool CContextSimulator::doMappingAgain(const CCallsign &callsign)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
+            if (!this->isAircraftInRange(callsign)) { return false; }
+            if (!this->isSimulatorAvailable()) { return false; }
+
+            QPointer<CContextSimulator> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself) { return; }
+                const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
+                if (!aircraft.hasCallsign()) { return; } // no longer valid
+                this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
+            });
+            return false;
+        }
+
         void CContextSimulator::onSimulatorStarted(const CSimulatorPluginInfo &info)
         {
             this->stopSimulatorListeners();

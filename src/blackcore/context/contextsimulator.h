@@ -242,6 +242,9 @@ namespace BlackCore
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
 
+            //! Repeat the mapping
+            virtual bool doMappingAgain(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
             //! Current matching statistics
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const = 0;
 

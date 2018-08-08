@@ -238,6 +238,13 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::doMappingAgain
+            virtual bool doMappingAgain(const BlackMisc::Aviation::CCallsign &callsign) override
+            {
+                Q_UNUSED(callsign);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::setWeatherActivated
             virtual void setWeatherActivated(bool activated) override
             {
