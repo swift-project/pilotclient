@@ -411,6 +411,9 @@ namespace BlackMisc
             //! Support fast position updates
             bool setFastPositionUpdates(bool useFastPositions);
 
+            //! Toggle fast position updates
+            bool toggleFastPositionUpdates();
+
             //! Rendered?
             bool setRendered(bool rendered);
 
