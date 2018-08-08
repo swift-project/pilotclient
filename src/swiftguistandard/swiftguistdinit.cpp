@@ -46,6 +46,7 @@
 #include <QStatusBar>
 #include <QString>
 #include <QTimer>
+#include <QPointer>
 #include <QVBoxLayout>
 
 class QHBoxLayout;
@@ -177,7 +178,12 @@ void SwiftGuiStd::init()
     emit sGui->startUpCompleted(true);
     m_init = true;
 
-    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyPrerequisites);
+    QPointer<SwiftGuiStd> myself(this);
+    QTimer::singleShot(5000, this, [ = ]
+    {
+        if (!myself) { return; }
+        this->verifyPrerequisites();
+    });
 }
 
 void SwiftGuiStd::initStyleSheet()

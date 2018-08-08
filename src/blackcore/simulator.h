@@ -604,7 +604,7 @@ namespace BlackCore
     {
     public:
         //! ISimulatorVirtual destructor
-        virtual ~ISimulatorFactory();
+        virtual ~ISimulatorFactory() {}
 
         //! Create a new instance of a driver
         //! \param info                      metadata about simulator

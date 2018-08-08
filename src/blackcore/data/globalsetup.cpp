@@ -270,73 +270,73 @@ namespace BlackCore
         QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
         {
             QString s =
-                "timestamp: "
+                QStringLiteral("timestamp: ")
                 % this->getFormattedUtcTimestampYmdhms()
                 % separator
-                % "Global setup loaded: "
+                % QStringLiteral("Global setup loaded: ")
                 % boolToYesNo(this->wasLoaded())
                 % separator
 
-                % "For development: "
+                % QStringLiteral("For development: ")
                 % boolToYesNo(isDevelopment())
                 % separator
 
-                % "Mapping min.version: "
+                % QStringLiteral("Mapping min.version: ")
                 % this->getMappingMinimumVersionString()
                 % separator
 
-                % "Distribution URLs: "
+                % QStringLiteral("Distribution URLs: ")
                 % getSwiftUpdateInfoFileUrls().toQString(i18n)
                 % separator
-                % "Bootstrap URLs: "
+                % QStringLiteral("Bootstrap URLs: ")
                 % getSwiftBootstrapFileUrls().toQString(i18n)
                 % separator
-                % "News URLs: "
+                % QStringLiteral("News URLs: ")
                 % getSwiftLatestNewsUrls().toQString(i18n)
                 % separator
-                % "Help URLs: "
+                % QStringLiteral("Help URLs: ")
                 % m_onlineHelpUrls.toQString(i18n)
                 % separator
-                % "swift map URLs: "
+                % QStringLiteral("swift map URLs: ")
                 % getSwiftMapUrls().toQString(i18n)
                 % separator;
             s +=
-                "DB root directory: "
+                QStringLiteral("DB root directory: ")
                 % getDbRootDirectoryUrl().toQString(i18n)
                 % separator
-                % "ICAO DB reader: "
+                % QStringLiteral("ICAO DB reader: ")
                 % getDbIcaoReaderUrl().toQString(i18n)
                 % separator
-                % "Model DB reader: "
+                % QStringLiteral("Model DB reader: ")
                 % getDbModelReaderUrl().toQString(i18n)
                 % separator
-                % "Airport DB reader: "
+                % QStringLiteral("Airport DB reader: ")
                 % getDbAirportReaderUrl().toQString(i18n)
                 % separator
-                % "DB home page: "
+                % QStringLiteral("DB home page: ")
                 % getDbHomePageUrl().toQString(i18n)
                 % separator
-                % "DB login service: "
+                % QStringLiteral("DB login service: ")
                 % getDbLoginServiceUrl().toQString(i18n)
                 % separator
-                % "DB client ping service: "
+                % QStringLiteral("DB client ping service: ")
                 % getDbClientPingServiceUrl().toQString(i18n);
             s +=
-                "VATSIM bookings: "
+                QStringLiteral("VATSIM bookings: ")
                 % getVatsimBookingsUrl().toQString(i18n)
                 % separator
-                % "VATSIM METARs: "
+                % QStringLiteral("VATSIM METARs: ")
                 % getVatsimMetarsUrls().toQString(i18n)
                 % separator
-                % "VATSIM data file: "
+                % QStringLiteral("VATSIM data file: ")
                 % getVatsimDataFileUrls().toQString(i18n)
                 % separator
 
-                % "FSD test servers: "
+                % QStringLiteral("FSD test servers: ")
                 % getFsdTestServers().toQString(i18n)
                 % separator
 
-                % "Crash report server: "
+                % QStringLiteral("Crash report server: ")
                 % getCrashReportServerUrl().toQString(i18n);
 
             return s;

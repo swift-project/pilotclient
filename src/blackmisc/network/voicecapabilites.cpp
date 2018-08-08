@@ -35,7 +35,7 @@ namespace BlackMisc
             static const QString r("voice listening only");
             static const QString u("unknown");
 
-            switch (this->m_voiceCapabilities)
+            switch (m_voiceCapabilities)
             {
             case Voice: return v;
             case TextOnly: return t;
@@ -64,7 +64,7 @@ namespace BlackMisc
 
         CIcon CVoiceCapabilities::toIcon() const
         {
-            switch (this->m_voiceCapabilities)
+            switch (m_voiceCapabilities)
             {
             case Voice: return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceBackground);
             case TextOnly: return CIcon::iconByIndex(CIcons::NetworkCapabilityTextOnly);

@@ -166,6 +166,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const = 0;
 
             //! Verify prerequisites for simulation like an existing model set
+            //! \pre system needs to be initialized to work correctly
             virtual BlackMisc::CStatusMessageList verifyPrerequisites() const = 0;
 
             //! Number of installed models in simulator eco system
