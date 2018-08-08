@@ -126,23 +126,8 @@ namespace BlackGui
             //! Connection status has been changed
             void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
-            //! Fast position updates onf/off
-            void onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Follow aircrft in simulator
-            void onMenuFollowAircraftInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Support gnd.flag
-            void onMenuSupportGndFLag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Enable / disable aircraft
-            void onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
             //! Widget changed
             void onTabWidgetChanged(int index);
-
-            //! Highlight in simulator
-            void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Selected or connected simulator
             BlackMisc::Simulation::CSimulatorInfo getConnectedOrSelectedSimulator() const;

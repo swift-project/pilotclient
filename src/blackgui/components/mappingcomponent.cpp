@@ -93,12 +93,6 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::tokenBucketUpdate);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
 
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::onMenuToggleEnableAircraft);
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::onMenuChangeFastPositionUpdates);
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::onMenuHighlightInSimulator);
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestFollowInSimulator, this, &CMappingComponent::onMenuFollowAircraftInSimulator);
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestSupportingGndFlag, this, &CMappingComponent::onMenuSupportGndFLag);
-
             connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
             connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
@@ -406,38 +400,6 @@ namespace BlackGui
             }
         }
 
-        void CMappingComponent::onMenuChangeFastPositionUpdates(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui && sGui->getIContextNetwork())
-            {
-                sGui->getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates());
-            }
-        }
-
-        void CMappingComponent::onMenuFollowAircraftInSimulator(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui && sGui->getIContextSimulator())
-            {
-                sGui->getIContextSimulator()->followAircraft(aircraft.getCallsign());
-            }
-        }
-
-        void CMappingComponent::onMenuSupportGndFLag(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui && sGui->getIContextNetwork())
-            {
-                sGui->getIContextNetwork()->updateAircraftSupportingGndFLag(aircraft.getCallsign(), aircraft.isSupportingGndFlag());
-            }
-        }
-
-        void CMappingComponent::onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui && sGui->getIContextSimulator())
-            {
-                sGui->getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
-            }
-        }
-
         CSimulatorInfo CMappingComponent::getConnectedOrSelectedSimulator() const
         {
             if (this->isSimulatorAvailable()) { return sGui->getIContextSimulator()->isSimulatorAvailable(); }
@@ -458,8 +420,8 @@ namespace BlackGui
             QList<int> newSizes({0, 0});
             if (show)
             {
-                newSizes[0] = total * 0.8;
-                newSizes[1] = total * 0.2;
+                newSizes[0] = qRound(total * 0.8);
+                newSizes[1] = qRound(total * 0.2);
             }
             else
             {
@@ -474,14 +436,6 @@ namespace BlackGui
             this->tokenBucketUpdate();
             Q_UNUSED(aircraft);
             Q_UNUSED(message);
-        }
-
-        void CMappingComponent::onMenuToggleEnableAircraft(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui->getIContextNetwork())
-            {
-                sGui->getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled());
-            }
         }
 
         void CMappingComponent::onTabWidgetChanged(int index)

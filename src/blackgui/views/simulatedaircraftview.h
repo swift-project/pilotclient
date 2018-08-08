@@ -12,14 +12,11 @@
 #ifndef BLACKGUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 #define BLACKGUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-
 #include <QObject>
-
-class QWidget;
 
 namespace BlackMisc
 {
@@ -27,6 +24,14 @@ namespace BlackMisc
     namespace Simulation { class CSimulatedAircraft; }
 }
 
+namespace BlackCore
+{
+    namespace Context
+    {
+        class IContextSimulator;
+        class IContextNetwork;
+    }
+}
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
@@ -52,21 +57,6 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Request enable / disable fast position updates, \sa CSimulatedAircraft::fastPositionUpdates
-            void requestFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Request to enable / disable aircraft, \sa CSimulatedAircraft::isEnabled
-            void requestEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Request to enable / disable gnd.flag, \sa CSimulatedAircraft::isSupportingGndFlag
-            void requestSupportingGndFlag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Highlight given aircraft in simulator
-            void requestHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Highlight given aircraft in simulator
-            void requestFollowInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
         protected:
             //! \copydoc CViewBase::customMenu
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
@@ -85,13 +75,10 @@ namespace BlackGui
             void toggleSupportingGndFlag();
 
             //! Highlight aircraft in simulator
-            void reqHighlightInSimulator();
+            void requestHighlightInSimulator();
 
             //! Follow in simulator
-            void reqFollowInSimulator();
-
-            //! Enable gnd. flag capability for server
-            void reqEnableGndFlagForServer();
+            void requestFollowInSimulator();
 
             //! Show position log for selected aircraft
             void showPositionLogInSimulator();
@@ -108,10 +95,31 @@ namespace BlackGui
             //! Enable or disable aircraft
             void enableOrDisableAircraft(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool newEnabled);
 
+            //! Follow aircraft in simulator
+            void followAircraftInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Highlight in simulator
+            void highlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Enable fast position updates
+            void enableFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Update if aircraft is enabled
+            void updateAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Update the gnd.flag support
+            void updateAircraftSupportingGndFLag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Simulator context
+            static BlackCore::Context::IContextSimulator *simulatorContext();
+
+            //! Network context
+            static BlackCore::Context::IContextNetwork *networkContext();
+
             bool m_withMenuHighlightAndFollow = true;
-            bool m_withMenuEnableAircraft = true;
-            bool m_withMenuEnableGndFlag = true;
-            bool m_withMenuFastPosition = true;
+            bool m_withMenuEnableAircraft     = true;
+            bool m_withMenuEnableGndFlag      = true;
+            bool m_withMenuFastPosition       = true;
         };
     } // ns
 } // ns

@@ -53,7 +53,6 @@ namespace BlackGui
 
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::onMenuHighlightInSimulator);
             connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
@@ -163,14 +162,6 @@ namespace BlackGui
             else if (INetwork::isConnectedStatus(to))
             {
                 // void
-            }
-        }
-
-        void CAircraftComponent::onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
-        {
-            if (sGui->getIContextSimulator())
-            {
-                sGui->getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
         }
 

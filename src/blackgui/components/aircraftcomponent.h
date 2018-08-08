@@ -85,9 +85,6 @@ namespace BlackGui
             //! Connection status has been changed
             void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
-            //! Highlight in simulator
-            void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
             //! Settings have been changed
             void onSettingsChanged();
 

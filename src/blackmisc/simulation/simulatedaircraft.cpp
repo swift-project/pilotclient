@@ -124,6 +124,11 @@ namespace BlackMisc
             return true;
         }
 
+        bool CSimulatedAircraft::toggleFastPositionUpdates()
+        {
+            return this->setFastPositionUpdates(!this->fastPositionUpdates());
+        }
+
         bool CSimulatedAircraft::setRendered(bool rendered)
         {
             if (m_rendered == rendered) { return false; }
