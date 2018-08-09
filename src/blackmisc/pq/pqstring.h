@@ -62,16 +62,14 @@ namespace BlackMisc
             //! Parse into concrete type
             template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorsCLocale)
             {
-                PQ null;
-                null.setNull();
-                if (value.isEmpty()) {return null; }
-                if (value.contains("null", Qt::CaseInsensitive)) { return null; }
+                if (value.isEmpty()) {return PQ::null(); }
+                if (value.contains("null", Qt::CaseInsensitive)) { return PQ::null(); }
                 const CVariant qv = parseToVariant(value, mode);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
                 }
-                return null;
+                return PQ::null();
             }
 
             //! Locale aware parsing

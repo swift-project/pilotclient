@@ -31,7 +31,7 @@ namespace BlackMisc
     {
         QString CPqString::convertToQString(bool /** i18n **/) const
         {
-            return this->m_string;
+            return m_string;
         }
 
         CVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
@@ -45,68 +45,68 @@ namespace BlackMisc
             if (vs.isEmpty()) { return v; }
 
             thread_local const QRegularExpression regex("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$");
-            auto match = regex.match(value);
+            const auto match = regex.match(value);
             if (!match.hasMatch()) { return v; } // not a valid number
             QString unit = match.captured(2).trimmed();
-            QString number = QString(value).replace(unit, "");
+            const QString number = QString(value).replace(unit, "");
             unit = unit.trimmed(); // trim after replace, not before
 
             if (unit.isEmpty() || number.isEmpty()) { return v; }
             bool success;
-            double numberD = parseNumber(number, success, mode);
+            const double numberD = parseNumber(number, success, mode);
             if (!success) {return v; }
 
             if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
             {
-                CAcceleration pq(numberD, CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unit, false));
+                const CAcceleration pq(numberD, CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CAngleUnit>(unit))
             {
-                CAngle pq(numberD, CMeasurementUnit::unitFromSymbol<CAngleUnit>(unit, false));
+                const CAngle pq(numberD, CMeasurementUnit::unitFromSymbol<CAngleUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CFrequencyUnit>(unit))
             {
-                CFrequency pq(numberD, CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unit, false));
+                const CFrequency pq(numberD, CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CLengthUnit>(unit))
             {
-                CLength pq(numberD, CMeasurementUnit::unitFromSymbol<CLengthUnit>(unit, false));
+                const CLength pq(numberD, CMeasurementUnit::unitFromSymbol<CLengthUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CMassUnit>(unit))
             {
-                CMass pq(numberD, CMeasurementUnit::unitFromSymbol<CMassUnit>(unit, false));
+                const CMass pq(numberD, CMeasurementUnit::unitFromSymbol<CMassUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CPressureUnit>(unit))
             {
-                CPressure pq(numberD, CMeasurementUnit::unitFromSymbol<CPressureUnit>(unit, false));
+                const CPressure pq(numberD, CMeasurementUnit::unitFromSymbol<CPressureUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CSpeedUnit>(unit))
             {
-                CSpeed pq(numberD, CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unit, false));
+                const CSpeed pq(numberD, CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CTimeUnit>(unit))
             {
-                CTime pq(numberD, CMeasurementUnit::unitFromSymbol<CTimeUnit>(unit, false));
+                const CTime pq(numberD, CMeasurementUnit::unitFromSymbol<CTimeUnit>(unit, false));
                 return CVariant::from(pq);
             }
 
             if (CMeasurementUnit::isValidUnitSymbol<CTemperatureUnit>(unit))
             {
-                CTemperature pq(numberD, CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unit, false));
+                const CTemperature pq(numberD, CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unit, false));
                 return CVariant::from(pq);
             }
             return v;
@@ -133,6 +133,5 @@ namespace BlackMisc
             }
             return numberD;
         }
-
     } // namespace
 } // namespace
