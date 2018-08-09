@@ -230,7 +230,7 @@ namespace BlackGui
 
         IContextSimulator *CSimulatedAircraftView::simulatorContext()
         {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getISimulator()) { return nullptr; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
             return sGui->getIContextSimulator();
         }
 
