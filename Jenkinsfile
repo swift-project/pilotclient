@@ -216,12 +216,14 @@ node('linux') {
 
                 sh 'chmod 664 *'
                 sh '#!/bin/bash \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts_test <<< "mput *.run" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts_test <<< "mput *.dmg" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts_test <<< "mput *.tar.gz" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts_test <<< "mput *.exe" \n'
+                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.run" \n' +
+                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.dmg" \n' +
+                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.tar.gz" \n' +
+                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.exe" \n' +
+                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.7z" \n'
 
-                cleanWs deleteDirs: true, notFailBuild: true
+                archiveArtifacts artifacts: 'swiftinstaller-*,swiftsymbols-*.tar.gz', onlyIfSuccessful: true
+                archiveArtifacts artifacts: 'xswiftbus-allos-*.7z', onlyIfSuccessful: true
             }
         } else {
             stage('Archive') {
