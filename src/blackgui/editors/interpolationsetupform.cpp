@@ -48,8 +48,8 @@ namespace BlackGui
             ui->cb_ForceFullInterpolation->setChecked(setup.isForcingFullInterpolation());
             ui->cb_SendGndFlagToSim->setChecked(setup.isSendingGndFlagToSimulator());
             ui->cb_FixSceneryOffset->setChecked(setup.isFixingSceneryOffset());
-            ui->le_PitchOnGround->setText(setup.getPitchOnGround().valueRoundedWithUnit(CAngleUnit::deg()));
             this->setInterpolatorMode(setup.getInterpolatorMode());
+            this->displayPitchOnGround(setup.getPitchOnGround());
         }
 
         CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupForm::getValue() const
@@ -62,6 +62,7 @@ namespace BlackGui
             setup.setSimulatorDebuggingMessages(ui->cb_DebugDriver->isChecked());
             setup.setFixingSceneryOffset(ui->cb_FixSceneryOffset->isChecked());
             setup.setInterpolatorMode(this->getInterpolatorMode());
+            setup.setPitchOnGround(this->getPitchOnGround());
             return setup;
         }
 
@@ -73,8 +74,11 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ForceFullInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_SendGndFlagToSim, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FixSceneryOffset, readonly);
-            ui->rb_Linear->setEnabled(!readonly);
-            ui->rb_Spline->setEnabled(!readonly);
+            ui->le_PitchOnGround->setReadOnly(readonly);
+
+            const bool enabled = !readonly;
+            ui->rb_Linear->setEnabled(enabled);
+            ui->rb_Spline->setEnabled(enabled);
         }
 
         CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
@@ -115,9 +119,22 @@ namespace BlackGui
 
         void CInterpolationSetupForm::onPitchChanged()
         {
-            const QString p = ui->le_PitchOnGround->text().trimmed();
+            const CAngle pitchOnGround = this->getPitchOnGround();
+            this->displayPitchOnGround(pitchOnGround);
+        }
+
+        CAngle CInterpolationSetupForm::getPitchOnGround() const
+        {
             CAngle pitch;
-            pitch.parseFromString(p);
+            const QString p = ui->le_PitchOnGround->text().trimmed();
+            pitch.parseFromString(p, CPqString::SeparatorsBestGuess);
+            return pitch;
+        }
+
+        void CInterpolationSetupForm::displayPitchOnGround(const CAngle &pitchOnGround)
+        {
+            const QString p = pitchOnGround.valueRoundedWithUnit(CAngleUnit::deg(), 1, true);
+            ui->le_PitchOnGround->setText(p);
         }
     } // ns
 } // ns

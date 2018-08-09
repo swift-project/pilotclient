@@ -14,6 +14,7 @@
 
 #include "form.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/pq/angle.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QScopedPointer>
@@ -64,6 +65,12 @@ namespace BlackGui
 
             //! Pitch entry
             void onPitchChanged();
+
+            //! Pitch on ground
+            BlackMisc::PhysicalQuantities::CAngle getPitchOnGround() const;
+
+            //! Display pitch on ground
+            void displayPitchOnGround(const BlackMisc::PhysicalQuantities::CAngle &pitchOnGround);
 
             //! Mode from UI
             BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
