@@ -52,8 +52,10 @@ namespace BlackMisc
             qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingMode>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             CAircraftMatcherSetup::registerMetadata();
         }
     } // ns

@@ -51,6 +51,12 @@ namespace BlackMisc
         //! Current order of list will be new order values
         void freezeOrder();
 
+        //! Object with min.order or default
+        OBJ minOrderOrDefault() const;
+
+        //! Object with max.order or default
+        OBJ maxOrderOrDefault() const;
+
     protected:
         //! Constructor
         IOrderableList();

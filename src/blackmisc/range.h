@@ -127,6 +127,13 @@ namespace BlackMisc
             return equalsBy(other, BlackMisc::Predicates::EqualsByMembers(k0, keys...));
         }
 
+        //! Pick one random element
+        template <class T>
+        T randomElement() const
+        {
+            return this->randomElements(1).front();
+        }
+
         //! Copy n elements from the container at random.
         Derived randomElements(int n) const
         {

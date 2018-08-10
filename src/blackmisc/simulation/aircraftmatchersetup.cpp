@@ -14,17 +14,44 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm, MatchingMode mode)
+        CAircraftMatcherSetup::CAircraftMatcherSetup()
         {
-            this->setMatchingAlgorithm(algorithm);
+            this->reset(MatchingScoreBased);
+        }
+
+        CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
+        {
+            this->reset(algorithm);
+        }
+
+        CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm, MatchingMode mode, PickSimilarStrategy pickStrategy)
+        {
+            this->setPickStrategy(pickStrategy);
+            this->setMatchingAlgorithm(algorithm, false);
             this->setMatchingMode(mode);
+        }
+
+        bool CAircraftMatcherSetup::setMatchingAlgorithm(CAircraftMatcherSetup::MatchingAlgorithm algorithm, bool reset)
+        {
+            if (this->getMatchingAlgorithm() == algorithm) { return false; }
+            if (reset)
+            {
+                this->reset(algorithm);
+            }
+            else
+            {
+                m_algorithm = static_cast<int>(algorithm);
+            }
+            return true;
         }
 
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
             return QStringLiteral("algorithm: '") % this->getMatchingAlgorithmAsString() %
-                   QStringLiteral("' mode: ") % this->getMatchingModeAsString();
+                   QStringLiteral("' mode: '") % this->getMatchingModeAsString() %
+                   QStringLiteral("' strategy: ") % this->getPickStrategyAsString() %
+                   QStringLiteral("'");
         }
 
         CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
@@ -35,6 +62,7 @@ namespace BlackMisc
             {
             case IndexMatchingAlgorithm: return CVariant::fromValue(m_algorithm);
             case IndexMatchingMode: return CVariant::fromValue(m_mode);
+            case IndexPickStrategy: return CVariant::fromValue(m_strategy);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
@@ -48,9 +76,28 @@ namespace BlackMisc
             {
             case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
             case IndexMatchingMode: m_mode = variant.toInt(); break;
+            case IndexPickStrategy: m_strategy = variant.toInt(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
+        }
+
+        void CAircraftMatcherSetup::reset(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
+        {
+            m_algorithm = static_cast<int>(algorithm);
+            MatchingMode mode = ModeNone;
+            switch (algorithm)
+            {
+            case MatchingStepwiseReduce:
+                mode = ModeDefaultReduce;
+                break;
+            case MatchingScoreBased:
+            default:
+                mode = ModeDefaultScore;
+                break;
+            }
+            this->setMatchingMode(mode);
+            this->setPickStrategy(PickByOrder);
         }
 
         const QString &CAircraftMatcherSetup::algorithmToString(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
@@ -109,6 +156,24 @@ namespace BlackMisc
             if (mode.testFlag(ScoreIgnoreZeros)) { modes << modeFlagToString(ScoreIgnoreZeros); }
             if (mode.testFlag(ScorePreferColorLiveries)) { modes << modeFlagToString(ScorePreferColorLiveries); }
             return modes.join(", ");
+        }
+
+        const QString &CAircraftMatcherSetup::strategyToString(CAircraftMatcherSetup::PickSimilarStrategy strategy)
+        {
+            static const QString f("first");
+            static const QString o("order");
+            static const QString r("random");
+
+            switch (strategy)
+            {
+            case PickFirst:  return f;
+            case PickByOrder:  return o;
+            case PickRandom: return r;
+            default: break;
+            }
+
+            static const QString unknown("unknown");
+            return unknown;
         }
 
         CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(

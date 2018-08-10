@@ -45,7 +45,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     void IOrderableList<OBJ, CONTAINER>::sortAscendingByOrder()
     {
-        IOrderableList::container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getOrder));
+        IOrderableList::container().sort(Predicates::MemberLess(&OBJ::getOrder));
     }
 
     template <class OBJ, class CONTAINER>
@@ -138,6 +138,38 @@ namespace BlackMisc
         {
             obj.setOrder(c++);
         }
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ IOrderableList<OBJ, CONTAINER>::minOrderOrDefault() const
+    {
+        if (container().isEmpty()) { return OBJ(); }
+        OBJ min = container().front();
+        for (const OBJ &obj : container())
+        {
+            if (!obj.hasValidOrder()) { continue; }
+            if (obj.getOrder() < min.getOrder())
+            {
+                min = obj;
+            }
+        }
+        return min;
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ IOrderableList<OBJ, CONTAINER>::maxOrderOrDefault() const
+    {
+        if (container().isEmpty()) { return OBJ(); }
+        OBJ max = container().front();
+        for (const OBJ &obj : container())
+        {
+            if (!obj.hasValidOrder()) { continue; }
+            if (obj.getOrder() > max.getOrder())
+            {
+                max = obj;
+            }
+        }
+        return max;
     }
 
     //! \cond PRIVATE

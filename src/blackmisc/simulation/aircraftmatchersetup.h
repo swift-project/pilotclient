@@ -45,24 +45,37 @@ namespace BlackMisc
                 ScoreIgnoreZeros         = 1 << 7, //!< zero scores are ignored
                 ScorePreferColorLiveries = 1 << 8, //!< prefer color liveries
                 // --- others ---
-                ModeNone         = 0,
-                ModeScoreDefault = ScoreIgnoreZeros | ScorePreferColorLiveries,
-                ModeDefault      = ByModelString | ByFamily | ByLivery | ByCombinedType | ByIcaoOrderAircraftFirst | ModeScoreDefault
+                ModeNone          = 0,
+                ModeScoreDefault  = ScoreIgnoreZeros | ScorePreferColorLiveries,
+                ModeDefaultScore  = ByIcaoOrderAircraftFirst | ByModelString | ByCombinedType | ModeScoreDefault,
+                ModeDefaultReduce = ByModelString | ByFamily | ByLivery | ByCombinedType | ByIcaoOrderAircraftFirst
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
+
+            //! How to pick among similar candiates
+            enum PickSimilarStrategy
+            {
+                PickFirst,
+                PickRandom,
+                PickByOrder
+            };
 
             //! Properties by index
             enum ColumnIndex
             {
                 IndexMatchingAlgorithm = CPropertyIndex::GlobalIndexCAircraftMatcherSetup,
-                IndexMatchingMode
+                IndexMatchingMode,
+                IndexPickStrategy
             };
 
             //! Constructor
-            CAircraftMatcherSetup() {}
+            CAircraftMatcherSetup();
 
             //! Constructor
-            CAircraftMatcherSetup(MatchingAlgorithm algorithm, MatchingMode mode);
+            CAircraftMatcherSetup(MatchingAlgorithm algorithm);
+
+            //! Constructor
+            CAircraftMatcherSetup(MatchingAlgorithm algorithm, MatchingMode mode, PickSimilarStrategy pickStrategy);
 
             //! Algorithm
             MatchingAlgorithm getMatchingAlgorithm() const { return static_cast<MatchingAlgorithm>(m_algorithm); }
@@ -71,7 +84,7 @@ namespace BlackMisc
             const QString &getMatchingAlgorithmAsString() const { return algorithmToString(this->getMatchingAlgorithm()); }
 
             //! Algorithm
-            void setMatchingAlgorithm(MatchingAlgorithm algorithm) { m_algorithm = static_cast<int>(algorithm); }
+            bool setMatchingAlgorithm(MatchingAlgorithm algorithm, bool reset = true);
 
             //! Matching mode
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
@@ -82,6 +95,15 @@ namespace BlackMisc
             //! Dynamic offset values?
             void setMatchingMode(MatchingMode mode) { m_mode = static_cast<int>(mode); }
 
+            //! Strategy among equally suitable models
+            PickSimilarStrategy getPickStrategy() const { return static_cast<PickSimilarStrategy>(m_strategy); }
+
+            //! Strategy as string
+            const QString &getPickStrategyAsString() const { return strategyToString(this->getPickStrategy()); }
+
+            //! Set the strategy
+            void setPickStrategy(PickSimilarStrategy strategy) { m_strategy = static_cast<int>(strategy); }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -90,6 +112,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+
+            //! Reset
+            void reset(MatchingAlgorithm algorithm);
 
             //! Algorithm to string
             static const QString &algorithmToString(MatchingAlgorithm algorithm);
@@ -100,6 +125,9 @@ namespace BlackMisc
             //! Enumeration as string
             static QString modeToString(MatchingMode mode);
 
+            //! Strategy to string
+            static const QString &strategyToString(PickSimilarStrategy strategy);
+
             //! Mode by flags
             static MatchingMode matchingMode(
                 bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
@@ -107,12 +135,14 @@ namespace BlackMisc
 
         private:
             int m_algorithm = static_cast<int>(MatchingScoreBased);
-            int m_mode = static_cast<int>(ModeDefault);
+            int m_mode = static_cast<int>(ModeDefaultScore);
+            int m_strategy = static_cast<int>(PickByOrder);
 
             BLACK_METACLASS(
                 CAircraftMatcherSetup,
                 BLACK_METAMEMBER(algorithm),
-                BLACK_METAMEMBER(mode)
+                BLACK_METAMEMBER(mode),
+                BLACK_METAMEMBER(strategy)
             );
         };
     } // ns
@@ -122,6 +152,7 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingModeFlag)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode)
 
 #endif // guard
