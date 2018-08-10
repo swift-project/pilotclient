@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>243</width>
-    <height>239</height>
+    <width>247</width>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,18 +31,55 @@
      <property name="title">
       <string>Algorithm</string>
      </property>
-     <layout class="QHBoxLayout" name="hl_Algorithm">
-      <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_Reduction">
+        <property name="text">
+         <string>reduction</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
        <widget class="QRadioButton" name="rb_ScoreBased">
         <property name="text">
          <string>reduction, then score based</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="rb_Reduction">
+      <item row="1" column="1" alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pb_Reset">
         <property name="text">
-         <string>reduction</string>
+         <string>reset</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_PickStrategy">
+     <property name="title">
+      <string>Similar results (strategy)</string>
+     </property>
+     <layout class="QHBoxLayout" name="hl_PickStrategy">
+      <item>
+       <widget class="QRadioButton" name="rb_PickFirst">
+        <property name="text">
+         <string>first</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rb_PickRandom">
+        <property name="text">
+         <string>random</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rb_PickByOrder">
+        <property name="text">
+         <string>order (higher rank first)</string>
         </property>
        </widget>
       </item>
@@ -55,28 +92,35 @@
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="cb_ByCombinedCode">
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
         <property name="text">
-         <string>combined code</string>
+         <string>by ICAO: airline first</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="cb_ByLivery">
-        <property name="text">
-         <string>by livery</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="4" column="0">
        <widget class="QCheckBox" name="cb_ByFamily">
         <property name="text">
          <string>by family</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string>by livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QCheckBox" name="cb_ByModelString">
         <property name="text">
          <string>by model string</string>
@@ -90,10 +134,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
-        <property name="text">
-         <string>by ICAO: airline first</string>
+      <item row="2" column="0" colspan="2">
+       <widget class="Line" name="line_Reduction">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -128,11 +172,15 @@
  <tabstops>
   <tabstop>rb_ScoreBased</tabstop>
   <tabstop>rb_Reduction</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>rb_PickFirst</tabstop>
+  <tabstop>rb_PickRandom</tabstop>
+  <tabstop>rb_PickByOrder</tabstop>
   <tabstop>rb_ByIcaoDataAircraft1st</tabstop>
   <tabstop>rb_ByIcaoDataAirline1st</tabstop>
   <tabstop>cb_ByModelString</tabstop>
-  <tabstop>cb_ByFamily</tabstop>
   <tabstop>cb_ByLivery</tabstop>
+  <tabstop>cb_ByFamily</tabstop>
   <tabstop>cb_ByCombinedCode</tabstop>
   <tabstop>cb_ScorePreferColorLiveries</tabstop>
   <tabstop>cb_ScoreIgnoreZeros</tabstop>

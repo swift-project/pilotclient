@@ -10,6 +10,7 @@
 #include "ui_matchingform.h"
 #include "matchingform.h"
 #include "guiutility.h"
+#include <QPushButton>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -24,6 +25,8 @@ namespace BlackGui
             ui(new Ui::CMatchingForm)
         {
             ui->setupUi(this);
+            connect(ui->rb_Reduction, &QRadioButton::toggled, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->pb_Reset, &QPushButton::released, this, &CMatchingForm::clear, Qt::QueuedConnection);
         }
 
         CMatchingForm::~CMatchingForm()
@@ -43,6 +46,9 @@ namespace BlackGui
             ui->rb_ScoreBased->setEnabled(enabled);
             ui->rb_ByIcaoDataAircraft1st->setEnabled(enabled);
             ui->rb_ByIcaoDataAirline1st->setEnabled(enabled);
+            ui->rb_PickFirst->setEnabled(enabled);
+            ui->rb_PickByOrder->setEnabled(enabled);
+            ui->rb_PickRandom->setEnabled(enabled);
         }
 
         CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
@@ -62,26 +68,22 @@ namespace BlackGui
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
+            this->setMatchingAlgorithm(setup);
+            this->setPickStrategy(setup);
 
-            if (setup.getMatchingAlgorithm() == CAircraftMatcherSetup::MatchingScoreBased)
-            {
-                ui->rb_ScoreBased->setChecked(true);
-            }
-            else
-            {
-                ui->rb_Reduction->setChecked(true);
-            }
+            const bool scoring = (setup.getMatchingAlgorithm() == CAircraftMatcherSetup::MatchingScoreBased);
+            ui->gb_Scoring->setEnabled(scoring);
         }
 
         CAircraftMatcherSetup CMatchingForm::value() const
         {
-            const CAircraftMatcherSetup setup(algorithm(), matchingMode());
+            const CAircraftMatcherSetup setup(algorithm(), matchingMode(), pickStrategy());
             return setup;
         }
 
         void CMatchingForm::clear()
         {
-            CAircraftMatcherSetup s;
+            const CAircraftMatcherSetup s(algorithm());
             this->setValue(s);
         }
 
@@ -100,6 +102,44 @@ namespace BlackGui
                        ui->cb_ByCombinedCode->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked()
                    );
+        }
+
+        CAircraftMatcherSetup::PickSimilarStrategy CMatchingForm::pickStrategy() const
+        {
+            if (ui->rb_PickRandom->isChecked()) { return CAircraftMatcherSetup::PickRandom; }
+            if (ui->rb_PickByOrder->isChecked()) { return CAircraftMatcherSetup::PickByOrder; }
+            return CAircraftMatcherSetup::PickFirst;
+        }
+
+        void CMatchingForm::setPickStrategy(const CAircraftMatcherSetup &setup)
+        {
+            switch (setup.getPickStrategy())
+            {
+            case CAircraftMatcherSetup::PickByOrder: ui->rb_PickByOrder->setChecked(true); break;
+            case CAircraftMatcherSetup::PickRandom: ui->rb_PickRandom->setChecked(true); break;
+            case CAircraftMatcherSetup::PickFirst:
+            default:
+                ui->rb_PickFirst->setChecked(true); break;
+            }
+        }
+
+        void CMatchingForm::setMatchingAlgorithm(const CAircraftMatcherSetup &setup)
+        {
+            if (setup.getMatchingAlgorithm() == CAircraftMatcherSetup::MatchingScoreBased)
+            {
+                ui->rb_ScoreBased->setChecked(true);
+            }
+            else
+            {
+                ui->rb_Reduction->setChecked(true);
+            }
+        }
+
+        void CMatchingForm::onAlgorithmChanged(bool checked)
+        {
+            Q_UNUSED(checked);
+            const CAircraftMatcherSetup setup = this->value();
+            this->setValue(setup);
         }
     } // ns
 } // ns

@@ -55,6 +55,18 @@ namespace BlackGui
             //! Mode
             BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
 
+            //! Stragey
+            BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy pickStrategy() const;
+
+            //! Set the pick strategy
+            void setPickStrategy(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+
+            //! Set the matching mode
+            void setMatchingAlgorithm(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+
+            //! Algorithm has been toggled
+            void onAlgorithmChanged(bool checked);
+
             QScopedPointer<Ui::CMatchingForm> ui;
         };
     } // ns
