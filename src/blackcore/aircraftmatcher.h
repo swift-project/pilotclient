@@ -23,6 +23,7 @@
 #include <QFlags>
 #include <QObject>
 #include <QString>
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -180,10 +181,10 @@ namespace BlackCore
 
     private:
         //! The search based implementation
-        static BlackMisc::Simulation::CAircraftModel getClosestMatchStepwiseReduceImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,  const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModel &defaultModel, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,  const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! The score based implementation
-        static BlackMisc::Simulation::CAircraftModel getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModel &defaultModel, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModelList getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, int &maxScore, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get combined type default model, i.e. get a default model under consideration of the combined code such as "L2J"
         //! \see BlackMisc::Simulation::CSimulatedAircraft::getAircraftIcaoCombinedType
