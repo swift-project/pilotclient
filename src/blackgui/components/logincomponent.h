@@ -30,6 +30,7 @@
 
 #include <QFrame>
 #include <QIcon>
+#include <QTimer>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
@@ -115,12 +116,6 @@ namespace BlackGui
             //! Callsign from GUI
             BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
 
-            //! Set ICAO values
-            //! \return changed values?
-            bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
-
-            // -------------- values to GUI -----------------
-
             //! Update own callsign (own aircraft from what is set in the GUI)
             //! \return changed?
             bool updateOwnAircraftCallsignAndPilotFromGuiValues();
@@ -128,6 +123,18 @@ namespace BlackGui
             //! Update own ICAO values (own aircraft from what is set in the GUI)
             //! \return changed?
             bool updateOwnAircaftIcaoValuesFromGuiValues();
+
+            // -------------- values to GUI -----------------
+
+            //! Update GUI values
+            void updateGui();
+
+            //! Set ICAO values
+            //! \return changed values?
+            bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
+
+            //! Set the "login as" values
+            void setGuiLoginAsValues(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             // -------------- others -----------------
 
@@ -206,8 +213,8 @@ namespace BlackGui
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);
 
-            //! Has contexts
-            bool hasContexts();
+            //! Has contexts?
+            bool hasValidContexts();
 
             static const int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CLoginComponent> ui;

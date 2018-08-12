@@ -48,6 +48,7 @@
 #include <QToolButton>
 #include <QStringBuilder>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -153,6 +154,13 @@ namespace BlackGui
 
             const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
             ui->tw_Network->setCurrentIndex(tab);
+
+            QPointer<CLoginComponent> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->updateGui();
+            });
         }
 
         CLoginComponent::~CLoginComponent()
@@ -287,11 +295,7 @@ namespace BlackGui
             CLogMessage::preformatted(msg);
             if (msg.isSuccess())
             {
-                QString ac(ownAircraft.getCallsignAsString() % QLatin1Char(' ') % ownAircraft.getAircraftIcaoCodeDesignator());
-                if (ownAircraft.hasAirlineDesignator()) { ac += QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator(); }
-                if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += QLatin1Char(' ') % ownAircraft.getAircraftIcaoCode().getCombinedType(); }
-                ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
-                ui->le_LoginAsAircaft->setText(ac);
+                this->setGuiLoginAsValues(ownAircraft);
                 emit this->loginOrLogoffSuccessful();
             }
             else
@@ -373,7 +377,7 @@ namespace BlackGui
             ui->editor_Pilot->setUser(server.getUser(), true);
         }
 
-        bool CLoginComponent::hasContexts()
+        bool CLoginComponent::hasValidContexts()
         {
             if (!sGui || !sGui->supportsContexts()) { return false; }
             if (sGui->isShuttingDown()) { return false; }
@@ -433,7 +437,7 @@ namespace BlackGui
 
         void CLoginComponent::setOwnModelAndIcaoValues()
         {
-            if (!this->hasContexts()) { return; }
+            if (!this->hasValidContexts()) { return; }
             CAircraftModel model;
             const bool simulating = sGui->getIContextSimulator() &&
                                     (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
@@ -499,6 +503,15 @@ namespace BlackGui
             }
             const bool valid = this->validateAircraftValues();
             return valid ? changed : false;
+        }
+
+        void CLoginComponent::setGuiLoginAsValues(const CSimulatedAircraft &ownAircraft)
+        {
+            QString ac(ownAircraft.getCallsignAsString() % QLatin1Char(' ') % ownAircraft.getAircraftIcaoCodeDesignator());
+            if (ownAircraft.hasAirlineDesignator()) { ac += QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator(); }
+            if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += QLatin1Char(' ') % ownAircraft.getAircraftIcaoCode().getCombinedType(); }
+            ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
+            ui->le_LoginAsAircaft->setText(ac);
         }
 
         bool CLoginComponent::validateAircraftValues()
@@ -673,7 +686,7 @@ namespace BlackGui
 
         bool CLoginComponent::updateOwnAircraftCallsignAndPilotFromGuiValues()
         {
-            if (!sGui || !sGui->getIContextOwnAircraft()) { return false; }
+            if (!this->hasValidContexts()) { return false; }
             CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
             const QString cs(ui->le_Callsign->text().trimmed().toUpper());
             bool changedCallsign = false;
@@ -701,7 +714,7 @@ namespace BlackGui
 
         bool CLoginComponent::updateOwnAircaftIcaoValuesFromGuiValues()
         {
-            if (!sGui || !sGui->getIContextOwnAircraft()) { return false; }
+            if (!this->hasValidContexts()) { return false; }
             const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
             const CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
 
@@ -726,6 +739,22 @@ namespace BlackGui
             }
 
             return changedIcaoCodes;
+        }
+
+        void CLoginComponent::updateGui()
+        {
+            if (!this->hasValidContexts()) { return; }
+            IContextNetwork *nwc = sGui->getIContextNetwork();
+            const bool connected = nwc->isConnected();
+            if (!connected) { return; }
+            this->setUiLoginState(connected);
+            this->setOwnModelAndIcaoValues();
+            const CServer server = nwc->getConnectedServer();
+            ui->le_HomeBase->setText(server.getUser().getHomeBase().asString());
+            ui->frp_CurrentServer->setServer(server);
+            ui->frp_LoginMode->setLoginMode(nwc->getLoginMode());
+            const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            this->setGuiLoginAsValues(ownAircraft);
         }
     } // namespace
 } // namespace
