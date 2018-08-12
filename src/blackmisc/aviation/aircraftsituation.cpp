@@ -32,6 +32,15 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        void CAircraftSituation::registerMetadata()
+        {
+            CValueObject<CAircraftSituation>::registerMetadata();
+            qRegisterMetaType<CAircraftSituation::IsOnGround>();
+            qRegisterMetaType<CAircraftSituation::OnGroundDetails>();
+            qRegisterMetaType<CAircraftSituation::AltitudeCorrection>();
+            qRegisterMetaType<CAircraftSituation::GndElevationInfo>();
+        }
+
         CAircraftSituation::CAircraftSituation() {}
 
         CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign) : m_correspondingCallsign(correspondingCallsign)

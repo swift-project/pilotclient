@@ -87,6 +87,9 @@ namespace BlackMisc
             //! Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
+            //! Register metadata
+            static void registerMetadata();
+
         private:
             ReferenceNorth m_north; //!< magnetic or true?
 

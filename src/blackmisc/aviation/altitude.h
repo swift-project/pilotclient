@@ -198,6 +198,9 @@ namespace BlackMisc
             //! Standard pressure 1013.25mbar/hPa
             static const PhysicalQuantities::CPressure &standardISASeaLevelPressure();
 
+            //! Register metadata
+            static void registerMetadata();
+
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?
             AltitudeType m_altitudeType = TrueAltitude; //!< type

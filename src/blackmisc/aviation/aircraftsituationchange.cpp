@@ -32,6 +32,12 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        void CAircraftSituationChange::registerMetadata()
+        {
+            CValueObject<CAircraftSituationChange>::registerMetadata();
+            qRegisterMetaType<CAircraftSituationChange::GuessedSceneryDeviation>();
+        }
+
         CAircraftSituationChange::CAircraftSituationChange() {}
 
         CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst, bool calcStdDeviations)

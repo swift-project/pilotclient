@@ -183,6 +183,9 @@ namespace BlackMisc
             //! Within this range deviation is so small we consider values "almost constant"
             static const PhysicalQuantities::CLength &allowedAltitudeDeviation();
 
+            //! Register metadata
+            static void registerMetadata();
+
         private:
             //! Scenery deviation hint
             void setSceneryDeviationHint(GuessedSceneryDeviation hint) { m_guessedSceneryDeviationHint = static_cast<int>(hint); }

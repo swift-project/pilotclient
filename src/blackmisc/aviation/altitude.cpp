@@ -25,6 +25,13 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        void CAltitude::registerMetadata()
+        {
+            Mixin::MetaType<CAltitude>::registerMetadata();
+            qRegisterMetaType<CAltitude::ReferenceDatum>();
+            qRegisterMetaType<CAltitude::AltitudeType>();
+        }
+
         CAltitude::CAltitude(const QString &altitudeAsString, CPqString::SeparatorMode mode) : CLength(0, CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
             this->parseFromString(altitudeAsString, mode);

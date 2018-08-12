@@ -547,6 +547,9 @@ namespace BlackMisc
             //! \remark NULL if there are no two elevations
             static Geo::CElevationPlane interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
 
+            //! Register metadata
+            static void registerMetadata();
+
         private:
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default

@@ -21,6 +21,12 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        void CCallsign::registerMetadata()
+        {
+            CValueObject<CCallsign>::registerMetadata();
+            qRegisterMetaType<CCallsign::TypeHint>();
+        }
+
         QString CCallsign::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

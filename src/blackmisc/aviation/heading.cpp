@@ -34,5 +34,11 @@ namespace BlackMisc
                              this->isMagneticHeading() ? "magnetic" : "true");
             }
         }
+
+        void CHeading::registerMetadata()
+        {
+            Mixin::MetaType<CHeading>::registerMetadata();
+            qRegisterMetaType<CHeading::ReferenceNorth>();
+        }
     } // namespace
 } // namespace
