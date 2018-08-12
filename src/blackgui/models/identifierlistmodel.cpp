@@ -41,6 +41,5 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "lcl m.");
             (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "same p.");
         }
-
     } // class
 } // namespace

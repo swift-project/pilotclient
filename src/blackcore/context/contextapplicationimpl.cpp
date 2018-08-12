@@ -147,10 +147,7 @@ namespace BlackCore
                 out << content;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         CIdentifier CContextApplication::registerApplication(const CIdentifier &application)

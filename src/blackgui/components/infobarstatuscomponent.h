@@ -22,7 +22,6 @@
 #include <QString>
 
 class QPoint;
-class QWidget;
 
 namespace Ui { class CInfoBarStatusComponent; }
 namespace BlackGui
@@ -41,10 +40,7 @@ namespace BlackGui
             //!Destructor
             virtual ~CInfoBarStatusComponent();
 
-            //! Init the LEDs
-            void initLeds();
-
-            //! DBus used
+            //! DBus used?
             void setDBusStatus(bool dbus);
 
             //! Tooltip for DBus

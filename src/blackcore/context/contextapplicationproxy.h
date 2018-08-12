@@ -12,17 +12,17 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTAPPLICATION_PROXY_H
 #define BLACKCORE_CONTEXT_CONTEXTAPPLICATION_PROXY_H
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
-
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
+
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
 
 class QDBusConnection;
 
@@ -46,7 +46,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextApplicationProxy() {}
+            virtual ~CContextApplicationProxy() override {}
 
         public slots:
             //! @{

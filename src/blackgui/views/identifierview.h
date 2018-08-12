@@ -17,10 +17,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/identifierlist.h"
 
-class QWidget;
-
 namespace BlackMisc { class CIdentifier; }
-
 namespace BlackGui
 {
     namespace Views
@@ -28,9 +25,7 @@ namespace BlackGui
         //! Originator servers
         class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel, BlackMisc::CIdentifierList, BlackMisc::CIdentifier>
         {
-
         public:
-
             //! Constructor
             explicit CIdentifierView(QWidget *parent = nullptr);
         };

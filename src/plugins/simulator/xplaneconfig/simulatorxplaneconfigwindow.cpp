@@ -38,7 +38,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::settingsAccepted()
         {
-            QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
+            const QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
             if (currentAddress != ui->comp_SettingsXSwiftBus->getDBusAddress())
             {
                 m_xswiftbusServerSetting.set(ui->comp_SettingsXSwiftBus->getDBusAddress());

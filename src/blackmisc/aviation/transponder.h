@@ -82,22 +82,22 @@ namespace BlackMisc
             bool isInNormalSendingMode() const;
 
             //! Standby?
-            bool isInStandby() const { return StateStandby == m_transponderMode; }
+            bool isInStandby() const { return StateStandby == this->getTransponderMode(); }
 
             //! Standby?
-            bool isIdentifying() const { return StateIdent == m_transponderMode; }
+            bool isIdentifying() const { return StateIdent == this->getTransponderMode(); }
 
             //! Transponder mode as string
             void setModeAsString(const QString &mode) { this->setTransponderMode(CTransponder::modeFromString(mode)); }
 
             //! Transponder mode
-            TransponderMode getTransponderMode() const { return this->m_transponderMode; }
+            TransponderMode getTransponderMode() const { return static_cast<TransponderMode>(m_transponderMode); }
 
             //! Transponder mode as string
             static const QString &modeAsString(TransponderMode mode);
 
             //! Transponder code
-            int getTransponderCode() const { return this->m_transponderCode; }
+            int getTransponderCode() const { return m_transponderCode; }
 
             //! Transponder code
             QString getTransponderCodeFormatted() const;
@@ -106,7 +106,7 @@ namespace BlackMisc
             QString getTransponderCodeAndModeFormatted() const;
 
             //! Set transponder code
-            void setTransponderCode(int transponderCode) { this->m_transponderCode = transponderCode; }
+            void setTransponderCode(int transponderCode) { m_transponderCode = transponderCode; }
 
             //! Set transponder code
             void setTransponderCode(const QString &transponderCode);
@@ -115,16 +115,16 @@ namespace BlackMisc
             static TransponderMode modeFromString(const QString &modeString);
 
             //! Set transponder mode
-            void setTransponderMode(TransponderMode mode) { this->m_transponderMode = mode ; }
+            void setTransponderMode(TransponderMode mode) { m_transponderMode = static_cast<int>(mode); }
 
             //! Set emergency
-            void setEmergency() { this->m_transponderCode = 7700; }
+            void setEmergency() { m_transponderCode = 7700; }
 
             //! Set VFR
-            void setVFR() { this->m_transponderCode = 7000; }
+            void setVFR() { m_transponderCode = 7000; }
 
             //! Set IFR
-            void setIFR() { this->m_transponderCode = 2000; }
+            void setIFR() { m_transponderCode = 2000; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -146,7 +146,7 @@ namespace BlackMisc
 
         private:
             //! Default value?
-            bool isDefaultValue() const { return this->m_transponderCode == 0; }
+            bool isDefaultValue() const { return m_transponderCode == 0; }
 
             int m_transponderCode;             //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode

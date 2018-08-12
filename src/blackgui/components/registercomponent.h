@@ -17,8 +17,6 @@
 #include <QTimer>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CRegisterComponent; }
 namespace BlackGui
 {
@@ -26,8 +24,7 @@ namespace BlackGui
     {
         //! Show registered applications (registered with core) in the GUI
         //! \sa BlackCore::Context::IContextApplication::getRegisteredApplications
-        class BLACKGUI_EXPORT CRegisterComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CRegisterComponent : public QFrame
         {
             Q_OBJECT
 

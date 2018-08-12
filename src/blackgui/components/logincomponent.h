@@ -34,9 +34,6 @@
 #include <QScopedPointer>
 #include <QString>
 
-class QTimer;
-class QWidget;
-
 namespace BlackMisc
 {
     namespace Simulation
@@ -219,7 +216,7 @@ namespace BlackGui
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
             bool m_updatePilotOnServerChanges = true;
-            const QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
+            const QIcon m_iconPlay  {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer m_logoffCountdownTimer; //!< timer for logoff countdown

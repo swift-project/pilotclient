@@ -382,7 +382,7 @@ namespace BlackGui
             CViewBaseNonTemplate(QWidget *parent);
 
             //! Destructor
-            virtual ~CViewBaseNonTemplate();
+            virtual ~CViewBaseNonTemplate() override;
 
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu

@@ -49,17 +49,17 @@ namespace BlackGui
         {
             QWidget *w = qobject_cast<QWidget *>(QObject::sender());
             if (!w) { return; }
-            if (!sGui->getIContextOwnAircraft()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
             CTransponder::TransponderMode mode;
-            if (this->m_ledStandby.data() == w)
+            if (m_ledStandby.data() == w)
             {
                 mode = CTransponder::StateStandby;
             }
-            else if (this->m_ledIdent.data() == w)
+            else if (m_ledIdent.data() == w)
             {
                 mode = CTransponder::StateIdent;
             }
-            else if (this->m_ledModes.data() == w)
+            else if (m_ledModes.data() == w)
             {
                 mode = CTransponder::ModeC;
             }
@@ -86,9 +86,9 @@ namespace BlackGui
             ledLayout->addWidget(m_ledStandby.data());
             ledLayout->addWidget(m_ledModes.data());
             ledLayout->addWidget(m_ledIdent.data());
-            connect(this->m_ledIdent.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::ps_onLedClicked);
-            connect(this->m_ledModes.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::ps_onLedClicked);
-            connect(this->m_ledStandby.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::ps_onLedClicked);
+            connect(m_ledIdent.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
+            connect(m_ledModes.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
+            connect(m_ledStandby.data(), &CLedWidget::clicked, this, &CCockpitTransponderModeLedsComponent::onLedClicked);
             this->setLayout(ledLayout);
 
             // if context is already available set mode

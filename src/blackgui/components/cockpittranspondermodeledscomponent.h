@@ -23,13 +23,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace BlackGui
 {
     namespace Components
     {
-
         //! LEDs representing transponder mode state
         class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
             public QFrame,

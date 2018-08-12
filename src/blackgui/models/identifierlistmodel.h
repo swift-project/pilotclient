@@ -17,8 +17,6 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
 
-class QObject;
-
 namespace BlackGui
 {
     namespace Models
@@ -27,7 +25,6 @@ namespace BlackGui
         class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>
         {
         public:
-
             //! Constructor
             explicit CIdentifierListModel(QObject *parent = nullptr);
 

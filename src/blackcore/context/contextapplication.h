@@ -91,7 +91,7 @@ namespace BlackCore
             static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
-            virtual ~IContextApplication() {}
+            virtual ~IContextApplication() override {}
 
         signals:
             //! A component changes

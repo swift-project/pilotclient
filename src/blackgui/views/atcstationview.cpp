@@ -30,19 +30,19 @@ namespace BlackGui
         CAtcStationView::CAtcStationView(QWidget *parent) : CViewWithCallsignObjects(parent)
         {
             this->standardInit(new CAtcStationListModel(CAtcStationListModel::StationsOnline, this));
-            this->m_menus |= (MenuClear | MenuRefresh);
+            m_menus |= (MenuClear | MenuRefresh);
         }
 
         void CAtcStationView::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setStationMode(stationMode);
+            Q_ASSERT(m_model);
+            m_model->setStationMode(stationMode);
             this->setSortIndicator();
         }
 
         void CAtcStationView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
-            this->m_model->changedAtcStationConnectionStatus(station, added);
+            m_model->changedAtcStationConnectionStatus(station, added);
 
             // resize the first, rest will be resized with normal updates
             if (this->rowCount() == 1)
@@ -55,18 +55,18 @@ namespace BlackGui
         {
             if (BlackConfig::CBuildConfig::isDebugBuild())
             {
-                if (this->m_debugActions.isEmpty()) { this->m_actions = QList<QAction *>({nullptr, nullptr}); }
-                this->m_actions[0] = menuActions.addAction(this->m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
-                this->m_actions[1] = menuActions.addAction(this->m_actions[1], CIcons::tableSheet16(), "Test: 3k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest3kAtcOnlineDummies });
+                if (m_debugActions.isEmpty()) { m_actions = QList<QAction *>({nullptr, nullptr}); }
+                m_actions[0] = menuActions.addAction(m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
+                m_actions[1] = menuActions.addAction(m_actions[1], CIcons::tableSheet16(), "Test: 3k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest3kAtcOnlineDummies });
             }
 
             if (this->hasSelection())
             {
-                if (this->m_debugActions.isEmpty()) { this->m_debugActions = QList<QAction *>({nullptr, nullptr, nullptr}); }
+                if (m_debugActions.isEmpty()) { m_debugActions = QList<QAction *>({nullptr, nullptr, nullptr}); }
 
-                this->m_debugActions[0] = menuActions.addAction(this->m_debugActions[0], CIcons::appCockpit16(), "Tune in COM1", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom1 });
-                this->m_debugActions[1] = menuActions.addAction(this->m_debugActions[1], CIcons::appCockpit16(), "Tune in COM2", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom2 });
-                this->m_debugActions[2] = menuActions.addAction(this->m_debugActions[2], CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CAtcStationView::requestTextMessage });
+                m_debugActions[0] = menuActions.addAction(m_debugActions[0], CIcons::appCockpit16(), "Tune in COM1", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom1 });
+                m_debugActions[1] = menuActions.addAction(m_debugActions[1], CIcons::appCockpit16(), "Tune in COM2", CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom2 });
+                m_debugActions[2] = menuActions.addAction(m_debugActions[2], CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CAtcStationView::requestTextMessage });
             }
             CViewBase::customMenu(menuActions);
         }

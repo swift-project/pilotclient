@@ -21,7 +21,6 @@
 #include <QTimer>
 
 class QStringList;
-class QWidget;
 
 namespace BlackGui
 {
