@@ -83,11 +83,29 @@ namespace BlackMisc
         const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
         if (!win) { return CCompressUtils::whichZip7(stdOutAndError); }
 
+        // windows check
         QStringList args;
         args << "i";
         QProcess zipProcess;
         zipProcess.start("7za.exe", args);
         const bool finished = zipProcess.waitForFinished();
+        if (stdOutAndError)
+        {
+            stdOutAndError->clear();
+            const QString pStdout = zipProcess.readAllStandardOutput();
+            const QString pStderr = zipProcess.readAllStandardError();
+            if (pStdout.isEmpty() && pStderr.isEmpty())
+            {
+                stdOutAndError->push_back("Checking 7za");
+                stdOutAndError->push_back("No 7za or failing");
+            }
+            else
+            {
+                stdOutAndError->push_back(pStdout);
+                stdOutAndError->push_back(pStderr);
+            }
+        }
+
         if (zipProcess.exitStatus() != QProcess::NormalExit) { return false; }
         if (!finished) { return false; }
         const int r = zipProcess.exitCode();

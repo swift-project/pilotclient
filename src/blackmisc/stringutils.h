@@ -108,6 +108,14 @@ namespace BlackMisc
         return s.trimmed();
     }
 
+    //! Safe "at" function, returns empty string if index does not exists
+    inline const QString &safeAt(const QStringList &stringList, int index)
+    {
+        if (stringList.size() > index) { return stringList.at(index); }
+        static const QString empty;
+        return empty;
+    }
+
     //! String with digits only
     inline bool isDigitsOnlyString(const QString &testString)
     {

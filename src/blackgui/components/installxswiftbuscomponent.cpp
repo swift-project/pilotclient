@@ -174,7 +174,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning("Unzip failed: stdout '%1' stderr '%2'") << stdOutAndError[0] << stdOutAndError[1];
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning("Unzip failed: stdout '%1' stderr '%2'") << safeAt(stdOutAndError, 0) << safeAt(stdOutAndError, 1);
                 this->showOverlayMessage(msg);
             }
 
