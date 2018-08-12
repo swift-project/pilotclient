@@ -53,6 +53,9 @@ namespace BlackGui
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
             BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
 
+            //! Init the LEDs
+            void initLeds();
+
             //! Simulator connection has been changed
             void onSimulatorStatusChanged(int status);
 
@@ -73,6 +76,9 @@ namespace BlackGui
 
             //! Internet accessible?
             void onInternetAccessibleChanged(bool access);
+
+            //! Update values
+            void updateValues();
 
             //! Update spacing based on main window size
             void updateSpacing();

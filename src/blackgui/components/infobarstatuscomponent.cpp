@@ -28,6 +28,8 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
+#include <QTimer>
 
 using namespace BlackConfig;
 using namespace BlackCore;
@@ -48,6 +50,7 @@ namespace BlackGui
             ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
 
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged);
@@ -74,6 +77,13 @@ namespace BlackGui
                 ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
                 connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
             }
+
+            QPointer<CInfoBarStatusComponent> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->updateValues();
+            });
         }
 
         CInfoBarStatusComponent::~CInfoBarStatusComponent()
@@ -210,6 +220,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::onMapperReady()
         {
+            if (sGui && sGui->isShuttingDown()) { return; }
             if (!sGui || !sGui->getIContextSimulator())
             {
                 ui->led_MapperReady->setOn(false);
@@ -245,9 +256,45 @@ namespace BlackGui
             }
         }
 
+        void CInfoBarStatusComponent::updateValues()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
+            IContextSimulator *simCon = sGui->getIContextSimulator();
+            if (sGui->getIContextSimulator())
+            {
+
+                this->onSimulatorStatusChanged(simCon->getSimulatorStatus());
+                if (simCon->getModelSetCount() > 0)
+                {
+                    this->onMapperReady();
+                }
+            }
+
+            if (sGui->getIContextNetwork())
+            {
+                ui->led_Network->setOn(sGui->getIContextNetwork()->isConnected());
+            }
+
+            if (sGui->getIContextApplication())
+            {
+                ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
+            }
+
+            // audio context can be empty depending on which side it is called
+            if (sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject())
+            {
+                ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
+            }
+            else
+            {
+                ui->led_Audio->setOn(false);
+            }
+        }
+
         void CInfoBarStatusComponent::updateSpacing()
         {
-            if (!sGui || !sGui->mainApplicationWidget()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->mainApplicationWidget()) { return; }
             const int w = sGui->mainApplicationWidget()->width();
             const int s = (w >= 400) ? 6 : 2;
             this->setSpacing(s);

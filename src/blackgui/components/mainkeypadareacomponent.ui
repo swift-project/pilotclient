@@ -13,12 +13,6 @@
   <property name="windowTitle">
    <string>Main keypad area</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
   <layout class="QVBoxLayout" name="vl_MainKeypadArea">
    <property name="spacing">
     <number>0</number>
@@ -204,6 +198,9 @@
         <property name="text">
          <string>Connect</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="4" column="2">
@@ -360,6 +357,9 @@
         </property>
         <property name="text">
          <string>Mute</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

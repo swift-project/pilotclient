@@ -21,6 +21,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -73,6 +74,13 @@ namespace BlackGui
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
             connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
             connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+
+            QPointer<CMainKeypadAreaComponent> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself || !sGui) { return; }
+                this->update();
+            });
         }
 
         CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
@@ -145,7 +153,7 @@ namespace BlackGui
             }
         }
 
-        void CMainKeypadAreaComponent::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CMainKeypadAreaComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
 
@@ -153,12 +161,14 @@ namespace BlackGui
             if (to == INetwork::Connected)
             {
                 ui->pb_Connect->setText("Discon."); // full terms some too wide
-                ui->pb_Connect->setStyleSheet("background-color: green");
+                ui->pb_Connect->setChecked(true);
+                // moved to stylesheet: ui->pb_Connect->setStyleSheet("background-color: green");
             }
             else
             {
                 ui->pb_Connect->setText("Connect");
-                ui->pb_Connect->setStyleSheet("background-color: ");
+                ui->pb_Connect->setChecked(false);
+                // moved to stylesheet: ui->pb_Connect->setStyleSheet("background-color: ");
             }
         }
 
@@ -242,7 +252,26 @@ namespace BlackGui
             QPushButton *pb = qobject_cast<QPushButton *>(QObject::sender());
             if (!pb) { return; }
             pb->setEnabled(false);
-            QTimer::singleShot(750, [pb] { pb->setEnabled(true); });
+            QPointer<CMainKeypadAreaComponent> myself(this);
+            QTimer::singleShot(750, [ = ]
+            {
+                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+                pb->setEnabled(true);
+            });
+        }
+
+        void CMainKeypadAreaComponent::update()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
+            if (sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject())
+            {
+                this->muteChanged(sGui->getIContextAudio()->isMuted());
+            }
+
+            if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
+            {
+                this->connectionStatusChanged(INetwork::Connected, INetwork::Connected);
+            }
         }
     } // namespace
 } // namespace

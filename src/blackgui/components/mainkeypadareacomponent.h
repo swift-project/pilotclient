@@ -24,7 +24,6 @@
 #include <QString>
 
 class QPushButton;
-class QWidget;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CMainKeypadAreaComponent; }
@@ -95,6 +94,9 @@ namespace BlackGui
 
             //! Disable button for some (short) time to avoid double click
             void disableButtonBriefly();
+
+            //! Update values
+            void update();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
             BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
