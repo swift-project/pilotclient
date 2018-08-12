@@ -80,6 +80,9 @@ namespace BlackCore
 
         private:
             BlackMisc::CIdentifierList m_registeredApplications;
+
+            //! Housekeeping
+            void cleanupRegisteredApplications();
         };
     } // namespace
 } // namespace

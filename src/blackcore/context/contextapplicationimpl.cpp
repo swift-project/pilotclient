@@ -153,17 +153,22 @@ namespace BlackCore
         CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
-            if (!m_registeredApplications.contains(application))
+
+            CIdentifier identifier(application);
+            identifier.setCurrentUtcTime();
+
+            if (!m_registeredApplications.contains(identifier))
             {
-                m_registeredApplications.push_back(application);
+                m_registeredApplications.push_back(identifier);
                 emit this->registrationChanged();
                 emit this->hotkeyActionsRegistered(CInputManager::instance()->allAvailableActions(), {});
             }
             else
             {
-                m_registeredApplications.replace(application, application);
+                m_registeredApplications.replace(application, identifier);
             }
 
+            this->cleanupRegisteredApplications();
             return application;
         }
 
@@ -171,13 +176,21 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
             int r = m_registeredApplications.remove(application);
+            this->cleanupRegisteredApplications();
             if (r > 0) { emit registrationChanged(); }
+        }
+
+        void CContextApplication::cleanupRegisteredApplications()
+        {
+            static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
+            m_registeredApplications.removeOlderThanNowMinusOffset(outdatedMs);
         }
 
         CIdentifierList CContextApplication::getRegisteredApplications() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_registeredApplications;
+            static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
+            return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
         }
 
         QString CContextApplication::readFromFile(const QString &fileName) const

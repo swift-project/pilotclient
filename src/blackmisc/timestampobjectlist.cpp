@@ -112,6 +112,12 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findAfterNowMinusOffset(qint64 msOffset) const
+    {
+        return this->findAfter(QDateTime::currentMSecsSinceEpoch() - msOffset);
+    }
+
+    template<class OBJ, class CONTAINER>
     OBJ ITimestampObjectList<OBJ, CONTAINER>::findObjectAfterOrDefault(qint64 msSinceEpoch) const
     {
         const CONTAINER after = this->findAfter(msSinceEpoch);

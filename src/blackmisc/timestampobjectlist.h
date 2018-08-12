@@ -72,6 +72,9 @@ namespace BlackMisc
         //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfter(qint64 msSinceEpoch) const;
 
+        //! List of objects before now - offset
+        CONTAINER findAfterNowMinusOffset(qint64 msOffset) const;
+
         //! List of objects after msSinceEpoch (newer)
         OBJ findObjectAfterOrDefault(qint64 msSinceEpoch) const;
 

@@ -37,6 +37,10 @@ namespace BlackCore
                     CLogHandler::instance()->logRemoteMessage(message);
                 }
             });
+
+            m_pingTimer.setObjectName(serviceName + "::m_pingTimer");
+            connect(&m_pingTimer, &QTimer::timeout, this, &CContextApplicationProxy::reRegisterApplications);
+            m_pingTimer.start(PingIdentifiersMs);
         }
 
         void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
@@ -156,13 +160,15 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("callHotkeyAction"), action, argument, origin);
         }
 
-        BlackMisc::CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
+        CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
         {
+            m_proxyPingIdentifiers.insert(application);
             return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("registerApplication"), application);
         }
 
         void CContextApplicationProxy::unregisterApplication(const CIdentifier &application)
         {
+            m_proxyPingIdentifiers.remove(application);
             m_dBusInterface->callDBus(QLatin1String("unregisterApplication"), application);
         }
 
@@ -198,6 +204,17 @@ namespace BlackCore
         QString CContextApplicationProxy::dotCommandsHtmlHelp() const
         {
             return m_dBusInterface->callDBusRet<QString>(QLatin1String("dotCommandsHtmlHelp"));
+        }
+
+        void CContextApplicationProxy::reRegisterApplications()
+        {
+            if (!m_dBusInterface) { return; }
+            if (m_proxyPingIdentifiers.isEmpty()) { return; }
+            const CIdentifierList identifiers = m_proxyPingIdentifiers; // copy so member can be modified
+            for (const CIdentifier &identifier : identifiers)
+            {
+                this->registerApplication(identifier);
+            }
         }
 
         bool CContextApplicationProxy::isContextResponsive(const QString &dBusAddress, QString &msg, int timeoutMs)

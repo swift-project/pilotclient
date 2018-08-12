@@ -35,15 +35,13 @@ namespace BlackGui
             //! Destructor
             virtual ~CRegisterComponent();
 
-        private slots:
-            //! Update data
-            void ps_update();
-
         private:
             QScopedPointer<Ui::CRegisterComponent> ui;
             QTimer m_updateTimer;
-        };
 
+            //! Update data
+            void update();
+        };
     } // ns
 } // ns
 

@@ -212,6 +212,8 @@ namespace BlackCore
             virtual QString dotCommandsHtmlHelp() const = 0;
 
         protected:
+            static constexpr int PingIdentifiersMs = 20000; //!< how often identifiers are pinged
+
             //! Constructor
             IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 

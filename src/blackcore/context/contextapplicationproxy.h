@@ -89,10 +89,15 @@ namespace BlackCore
             CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         private:
-            BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr;
+            BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr; //!< interface
+            BlackMisc::CIdentifierList m_proxyPingIdentifiers; //!< automatically ping the implementing side
+            QTimer m_pingTimer;
 
             //! Relay connection signals to local signals
             void relaySignals(const QString &serviceName, QDBusConnection &connection);
+
+            //! Ping/heartbeat identifiers
+            void reRegisterApplications();
         };
     } // ns
 } // ns
