@@ -148,8 +148,8 @@ namespace BlackMisc
             //! Default value?
             bool isDefaultValue() const { return m_transponderCode == 0; }
 
-            int m_transponderCode;             //!< Transponder code
-            TransponderMode m_transponderMode; //!< Transponder mode
+            int m_transponderCode; //!< Transponder code
+            int m_transponderMode; //!< Transponder mode
 
             BLACK_METACLASS(
                 CTransponder,

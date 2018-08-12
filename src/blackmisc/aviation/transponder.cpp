@@ -39,27 +39,27 @@ namespace BlackMisc
             m_transponderCode(0), m_transponderMode(transponderMode)
         {
             bool ok = false;
-            this->m_transponderCode = transponderCode.toInt(&ok);
-            if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+            m_transponderCode = transponderCode.toInt(&ok);
+            if (!ok) m_transponderCode = -1; // will cause assert / exception
         }
 
         CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode) :
             m_transponderCode(0), m_transponderMode(StateStandby)
         {
             bool ok = false;
-            this->m_transponderCode = transponderCode.toInt(&ok);
-            if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+            m_transponderCode = transponderCode.toInt(&ok);
+            if (!ok) m_transponderCode = -1; // will cause assert / exception
             this->setModeAsString(transponderMode);
         }
 
         bool CTransponder::validValues() const
         {
-            return CTransponder::isValidTransponderCode(this->m_transponderCode);
+            return CTransponder::isValidTransponderCode(m_transponderCode);
         }
 
         bool CTransponder::isInNormalSendingMode() const
         {
-            switch (this->m_transponderMode)
+            switch (m_transponderMode)
             {
             case ModeA:
             case ModeC:
@@ -99,7 +99,7 @@ namespace BlackMisc
         QString CTransponder::getTransponderCodeFormatted() const
         {
             QString f("0000");
-            f = f.append(QString::number(this->m_transponderCode));
+            f = f.append(QString::number(m_transponderCode));
             return f.right(4);
         }
 
@@ -127,7 +127,7 @@ namespace BlackMisc
         {
             if (transponderCode.isEmpty() || transponderCode.length() > 4) return false;
             bool number;
-            qint32 tc = transponderCode.toInt(&number);
+            int tc = transponderCode.toInt(&number);
             if (!number) return false;
             if (tc < 0 || tc > 7777) return false;
             thread_local const QRegularExpression rx("^[0-7]{1,4}$");
@@ -147,79 +147,59 @@ namespace BlackMisc
 
         const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
         {
-            static QString m;
+            static const QString i("Ident");
+            static const QString s("Standby");
+            static const QString mc("Mode C");
+            static const QString ms("Mode S");
+            static const QString m1("Mil.Mode 1");
+            static const QString m2("Mil.Mode 2");
+            static const QString m3("Mil.Mode 3");
+            static const QString m4("Mil.Mode 4");
+            static const QString m5("Mil.Mode 5");
+
             switch (mode)
             {
-            case StateIdent:
-                m = "Ident";
-                break;
-            case StateStandby:
-                m = "Standby";
-                break;
-            case ModeC:
-                m = "Mode C";
-                break;
-            case ModeS:
-                m = "Mode S";
-                break;
-            case ModeMil1:
-                m = "Mil.Mode 1";
-                break;
-            case ModeMil2:
-                m = "Mil.Mode 2";
-                break;
-            case ModeMil3:
-                m = "Mil.Mode 3";
-                break;
-            case ModeMil4:
-                m = "Mil.Mode 4";
-                break;
-            case ModeMil5:
-                m = "Mil.Mode 5";
-                break;
-            default:
-                qFatal("Illegal Transponder Mode");
+            case StateIdent: return i;
+            case StateStandby: return s;
+            case ModeC: return mc;
+            case ModeS: return ms;
+            case ModeMil1: return m1;
+            case ModeMil2: return m2;
+            case ModeMil3: return m3;
+            case ModeMil4: return m4;
+            case ModeMil5: return m5;
+            default: qFatal("Illegal Transponder Mode");
             }
-            return m;
+            return i;
         }
 
         CVariant CTransponder::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMode:
-                return CVariant::from(this->getTransponderMode());
-            case IndexModeAsString:
-                return CVariant::from(this->getModeAsString());
-            case IndexTransponderCode:
-                return CVariant::from(this->getTransponderCode());
-            case IndexTransponderCodeFormatted:
-                return CVariant::from(this->getTransponderCodeFormatted());
-            case IndexTransponderCodeAndModeFormatted:
-                return CVariant::from(this->getTransponderCodeAndModeFormatted());
-            default:
-                break;
+            case IndexMode: return CVariant::from(this->getTransponderMode());
+            case IndexModeAsString: return CVariant::from(this->getModeAsString());
+            case IndexTransponderCode: return CVariant::from(this->getTransponderCode());
+            case IndexTransponderCodeFormatted: return CVariant::from(this->getTransponderCodeFormatted());
+            case IndexTransponderCodeAndModeFormatted: return CVariant::from(this->getTransponderCodeAndModeFormatted());
+            default: break;
             }
 
             Q_ASSERT_X(false, "CTransponder", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
+            const QString m = QString("no property, index ").append(index.toQString());
             return CVariant::fromValue(m);
         }
 
         void CTransponder::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CTransponder>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMode:
-                this->setTransponderMode(variant.value<TransponderMode>());
-                break;
-            case IndexModeAsString:
-                this->setTransponderMode(modeFromString(variant.toQString()));
-                break;
+            case IndexMode: m_transponderMode = variant.toInt(); break;
+            case IndexModeAsString: this->setTransponderMode(modeFromString(variant.toQString())); break;
             case IndexTransponderCode:
             case IndexTransponderCodeFormatted:
                 if (variant.canConvert<int>())

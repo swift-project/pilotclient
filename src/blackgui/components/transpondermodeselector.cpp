@@ -20,27 +20,27 @@ namespace BlackGui
         CTransponderModeSelector::CTransponderModeSelector(QWidget *parent) : QComboBox(parent)
         {
             QComboBox::insertItems(0, CTransponderModeSelector::modes());
-            this->m_resetTimer.setObjectName(this->objectName().append(":m_resetTimer"));
-            connect(&this->m_resetTimer, &QTimer::timeout, this, &CTransponderModeSelector::resetTransponderMode);
+            m_resetTimer.setObjectName(this->objectName().append(":m_resetTimer"));
+            connect(&m_resetTimer, &QTimer::timeout, this, &CTransponderModeSelector::resetTransponderMode);
             connect(this, &CTransponderModeSelector::currentTextChanged, this, &CTransponderModeSelector::setSelectedTransponderModeAsString);
-            this->m_resetTimer.setInterval(5000);
+            m_resetTimer.setInterval(5000);
         }
 
         const QString &CTransponderModeSelector::transponderStateStandby()
         {
-            static const QString s(BlackMisc::Aviation::CTransponder::modeAsString(BlackMisc::Aviation::CTransponder::StateStandby));
+            static const QString s(CTransponder::modeAsString(CTransponder::StateStandby));
             return s;
         }
 
         const QString &CTransponderModeSelector::transponderStateIdent()
         {
-            static const QString s(BlackMisc::Aviation::CTransponder::modeAsString(BlackMisc::Aviation::CTransponder::StateIdent));
+            static const QString s(CTransponder::modeAsString(CTransponder::StateIdent));
             return s;
         }
 
         const QString &CTransponderModeSelector::transponderModeC()
         {
-            static const QString s(BlackMisc::Aviation::CTransponder::modeAsString(BlackMisc::Aviation::CTransponder::ModeC));
+            static const QString s(CTransponder::modeAsString(CTransponder::ModeC));
             return s;
         }
 
@@ -57,31 +57,31 @@ namespace BlackGui
 
         BlackMisc::Aviation::CTransponder::TransponderMode CTransponderModeSelector::getSelectedTransponderMode() const
         {
-            return this->m_currentMode;
+            return m_currentMode;
         }
 
         bool CTransponderModeSelector::isIdentSelected() const
         {
-            return this->getSelectedTransponderMode() == BlackMisc::Aviation::CTransponder::StateIdent;
+            return this->getSelectedTransponderMode() == CTransponder::StateIdent;
         }
 
         void CTransponderModeSelector::setSelectedTransponderMode(CTransponder::TransponderMode mode)
         {
-            if (mode != CTransponder::StateIdent) { this->m_resetMode = mode; }
-            if (this->m_currentMode == mode) { return; }
-            if (this->m_currentMode == CTransponder::StateIdent) { emit this->transponderStateIdentEnded(); }
-            this->m_currentMode = mode;
+            if (mode != CTransponder::StateIdent) { m_resetMode = mode; }
+            if (m_currentMode == mode) { return; }
+            if (m_currentMode == CTransponder::StateIdent) { emit this->transponderStateIdentEnded(); }
+            m_currentMode = mode;
             const QString m = CTransponder::modeAsString(mode);
             QComboBox::setCurrentText(m);
             if (mode == CTransponder::StateIdent)
             {
-                this->m_resetTimer.start();
+                m_resetTimer.start();
             }
             else
             {
-                this->m_resetTimer.stop();
+                m_resetTimer.stop();
             }
-            emit this->transponderModeChanged(this->m_currentMode);
+            emit this->transponderModeChanged(m_currentMode);
         }
 
         void CTransponderModeSelector::setSelectedTransponderModeStateIdent()
@@ -92,14 +92,14 @@ namespace BlackGui
         void CTransponderModeSelector::setSelectedTransponderModeAsString(const QString &mode)
         {
             CTransponder::TransponderMode m = CTransponder::modeFromString(mode);
-            if (this->m_currentMode == m) return; // nothing to change
+            if (m_currentMode == m) return; // nothing to change
             this->setSelectedTransponderMode(m);
         }
 
         void CTransponderModeSelector::resetTransponderMode()
         {
             if (!this->isIdentSelected()) return; // avoid unnecessary events
-            this->setSelectedTransponderMode(this->m_resetMode);
+            this->setSelectedTransponderMode(m_resetMode);
         }
     } // ns
 } // ns
