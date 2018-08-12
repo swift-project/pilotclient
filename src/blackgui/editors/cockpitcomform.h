@@ -99,6 +99,9 @@ namespace BlackGui
             //! SELCAL value changed (in selector)
             void onSelcalChanged();
 
+            //! Compare 2 frequencies (consider epsilon)
+            static bool isFrequenceEqual(double f1, double f2);
+
             QScopedPointer<Ui::CCockpitComForm> ui;
         };
     } // ns

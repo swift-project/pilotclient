@@ -10,12 +10,15 @@
 #include "cockpitcomform.h"
 #include "ui_cockpitcomform.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/math/mathutils.h"
+
 #include <QPushButton>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Components;
 
@@ -185,25 +188,25 @@ namespace BlackGui
         void CCockpitComForm::setFrequencies(const CComSystem &com1, const CComSystem &com2)
         {
             double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom1Active->value())
+            if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Active->value()))
             {
                 ui->ds_ComPanelCom1Active->setValue(freq);
             }
 
             freq = com2.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom2Active->value())
+            if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Active->value()))
             {
                 ui->ds_ComPanelCom2Active->setValue(freq);
             }
 
             freq = com1.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom1Standby->value())
+            if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Standby->value()))
             {
                 ui->ds_ComPanelCom1Standby->setValue(freq);
             }
 
             freq = com2.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom2Standby->value())
+            if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Standby->value()))
             {
                 ui->ds_ComPanelCom2Standby->setValue(freq);
             }
@@ -220,6 +223,7 @@ namespace BlackGui
             if (transponder.getTransponderMode() != ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode())
             {
                 ui->cbp_ComPanelTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
+                ui->comp_TransponderLeds->setMode(transponder.getTransponderMode());
             }
         }
 
@@ -228,14 +232,14 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
             if (sender == ui->tb_ComPanelCom1Toggle)
             {
-                if (ui->ds_ComPanelCom1Standby->value() == ui->ds_ComPanelCom1Active->value()) { return; }
+                if (isFrequenceEqual(ui->ds_ComPanelCom1Standby->value(), ui->ds_ComPanelCom1Active->value())) { return; }
                 const double f = ui->ds_ComPanelCom1Active->value();
                 ui->ds_ComPanelCom1Active->setValue(ui->ds_ComPanelCom1Standby->value());
                 ui->ds_ComPanelCom1Standby->setValue(f);
             }
             else if (sender == ui->tb_ComPanelCom2Toggle)
             {
-                if (ui->ds_ComPanelCom2Standby->value() == ui->ds_ComPanelCom2Active->value()) { return; }
+                if (isFrequenceEqual(ui->ds_ComPanelCom2Standby->value(), ui->ds_ComPanelCom2Active->value())) { return; }
                 const double f = ui->ds_ComPanelCom2Active->value();
                 ui->ds_ComPanelCom2Active->setValue(ui->ds_ComPanelCom2Standby->value());
                 ui->ds_ComPanelCom2Standby->setValue(f);
@@ -249,6 +253,11 @@ namespace BlackGui
         {
             const CSelcal selcal = ui->frp_ComPanelSelcalSelector->getSelcal();
             emit this->changedSelcal(selcal);
+        }
+
+        bool CCockpitComForm::isFrequenceEqual(double f1, double f2)
+        {
+            return CMathUtils::epsilonEqual(f1, f2);
         }
     } // ns
 } // ns
