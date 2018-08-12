@@ -216,6 +216,7 @@ namespace BlackCore
                 mode = INetwork::LoginAsObserver;
             }
 
+            m_currentMode = mode;
             m_network->presetLoginMode(mode);
             m_network->presetCallsign(ownAircraft.getCallsign());
             m_network->presetIcaoCodes(ownAircraft);
@@ -231,12 +232,19 @@ namespace BlackCore
             return this->isConnected() ? m_network->getPresetServer() : CServer();
         }
 
+        INetwork::LoginMode CContextNetwork::getLoginMode() const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_currentMode;
+        }
+
         CStatusMessage CContextNetwork::disconnectFromNetwork()
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (m_network->isConnected() || m_network->isPendingConnection())
             {
                 m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
+                m_currentMode = INetwork::LoginNormal;
                 m_network->terminateConnection();
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
             }

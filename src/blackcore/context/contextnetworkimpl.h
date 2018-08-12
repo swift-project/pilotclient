@@ -87,7 +87,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextNetwork();
+            virtual ~CContextNetwork() override;
 
             //! \ingroup remoteaircraftprovider
             //! @{
@@ -226,6 +226,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
+            virtual INetwork::LoginMode getLoginMode() const override;
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
             virtual bool isConnected() const override;
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
@@ -265,6 +266,7 @@ namespace BlackCore
             CAirspaceMonitor           *m_airspace = nullptr;
             INetwork                   *m_network  = nullptr;
             INetwork::ConnectionStatus  m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
+            INetwork::LoginMode         m_currentMode = INetwork::LoginNormal;    //!< current modeM
             QTimer                     *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
             // Digest signals, only sending after some time

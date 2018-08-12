@@ -125,6 +125,13 @@ namespace BlackCore
                 return BlackMisc::Network::CServer();
             }
 
+            //! \copydoc IContextNetwork::getLoginMode
+            virtual INetwork::LoginMode getLoginMode() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackCore::INetwork::LoginNormal;
+            }
+
             //! \copydoc IContextNetwork::sendTextMessages()
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
             {

@@ -88,6 +88,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
             virtual bool isConnected() const override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
+            virtual INetwork::LoginMode getLoginMode() const override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
             virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;

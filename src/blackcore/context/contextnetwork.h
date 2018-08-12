@@ -235,6 +235,9 @@ namespace BlackCore
             //! Server which is connected, if not connected empty default object.
             virtual BlackMisc::Network::CServer getConnectedServer() const = 0;
 
+            //! Login mode
+            virtual INetwork::LoginMode getLoginMode() const = 0;
+
             //! Disconnect from network
             //! \return messages generated during disconnecting
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() = 0;

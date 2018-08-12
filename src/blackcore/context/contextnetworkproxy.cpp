@@ -333,6 +333,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1String("getConnectedServer"));
         }
 
+        INetwork::LoginMode CContextNetworkProxy::getLoginMode() const
+        {
+            return m_dBusInterface->callDBusRet<BlackCore::INetwork::LoginMode>(QLatin1String("getLoginMode"));
+        }
+
         bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
