@@ -32,7 +32,7 @@ QCheckBox::indicator {
   height: 15px;
 }
 
-QCheckBox::indicator::checked {
+QCheckBox::indicator:checked {
   image: url(:/diagona/icons/diagona/icons/tick.png);
 }
 
@@ -218,6 +218,7 @@ QPushButton {
   min-height:20px;
 }
 
+
 QPushButton::disabled {
   background-color: rgba(77, 88, 99, 128); /* slated gray if a channel) */
   border-style: none;
@@ -229,11 +230,14 @@ QPushButton::disabled {
 }
 
 QPushButton:pressed{ background-color: lightblue; }
+
 /**
+KEYPAD area buttons are in swift GUI stylesheet
+
+QPushButton:checked{ background-color: blue; }
 QPushButton:focus:pressed{ background-color: black; }
 QPushButton:focus{ background-color: green; }
 QPushButton:hover{ background-color: red; }
-QPushButton:checked{ background-color: pink; }
 **/
 
 QProgressBar {

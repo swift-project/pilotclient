@@ -85,14 +85,19 @@ QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
   min-height:20px;
 }
 
-#wi_MainKeypadArea QPushButton::checked {
+#wi_MainKeypadArea QPushButton:checked {
   border-style: solid;
   border-color: green;
   font: bold;
   color: yellow;
 }
 
-#wi_MainKeypadArea QPushButton::pressed {
+#wi_MainKeypadArea QPushButton#pb_Connect:checked {
+  background-color: green;
+  color: white;
+}
+
+#wi_MainKeypadArea QPushButton:pressed {
   background-color: lightblue;
 }
 
