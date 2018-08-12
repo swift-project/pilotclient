@@ -393,7 +393,6 @@ namespace BlackMisc
             if (json.isEmpty()) { return QJsonObject();}
             const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
             return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
-            // return acceptCacheFormat ? Json::swiftDataObjectValue(jsonDoc.object()) : jsonDoc.object();
         }
 
         QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format)

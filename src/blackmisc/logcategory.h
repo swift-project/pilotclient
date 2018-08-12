@@ -208,6 +208,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! JSON and JSON conversions
+        static const CLogCategory &json()
+        {
+            static const CLogCategory cat { "swift.json" };
+            return cat;
+        }
+
         //! Startup of application
         static const CLogCategory &startup()
         {
@@ -271,7 +278,10 @@ namespace BlackMisc
                 dataInconsistency(),
                 download(),
                 driver(),
+                flightPlan(),
                 guiComponent(),
+                interpolator(),
+                json(),
                 mapping(),
                 matching(),
                 modelLoader(),

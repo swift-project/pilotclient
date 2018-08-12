@@ -123,6 +123,7 @@ namespace BlackMisc
         }
 
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
+        //! \throws CJsonException
         void convertFromJson(const QJsonObject &json)
         {
             derived().clear();
@@ -164,6 +165,25 @@ namespace BlackMisc
             if (jsonString.isEmpty()) { return obj; }
             const QJsonObject jsonObj = acceptCacheJson ? Json::swiftDataObjectValue(jsonString) : Json::jsonObjectFromString(jsonString);
             obj.convertFromJson(jsonObj);
+            return obj;
+        }
+
+        //! Static version of convertFromJson
+        static Derived fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg)
+        {
+            success = false;
+            Derived obj;
+            try
+            {
+                if (jsonString.isEmpty()) { return obj; }
+                const QJsonObject jsonObj = acceptCacheJson ? Json::swiftDataObjectValue(jsonString) : Json::jsonObjectFromString(jsonString);
+                obj.convertFromJson(jsonObj);
+                success = true;
+            }
+            catch (const CJsonException &ex)
+            {
+                errMsg = ex.toString("JSON conversion");
+            }
             return obj;
         }
 

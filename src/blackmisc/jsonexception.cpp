@@ -26,12 +26,20 @@ namespace BlackMisc
 
     CStatusMessage CJsonException::toStatusMessage(const CLogCategoryList &categories, const QString &prefix) const
     {
-        return CStatusMessage(categories).validationError("%1: %2 in '%3'") << prefix << what() << getStackTrace();
+        return CStatusMessage(categories).validationError(toString(prefix));
+    }
+
+    QString CJsonException::toString(const QString &prefix) const
+    {
+        static const QString s("%1 in '%2'");
+        static const QString sp("%1: %2 in '%3'");
+        if (prefix.isEmpty()) { return s.arg(what()).arg(getStackTrace()); }
+        return sp.arg(prefix).arg(what()).arg(getStackTrace());
     }
 
     void CJsonException::toLogMessage(const CLogCategoryList &categories, const QString &prefix) const
     {
-        CLogMessage(categories).validationError("%1: %2 in '%3'") << prefix << what() << getStackTrace();
+        CLogMessage(categories).validationError(toString(prefix));
     }
 
     QString CJsonException::stackString()

@@ -36,6 +36,9 @@ namespace BlackMisc
         //! Get a status message representation.
         CStatusMessage toStatusMessage(const CLogCategoryList &categories, const QString &prefix) const;
 
+        //! As string info
+        QString toString(const QString &prefix) const;
+
         //! Write a message to the log.
         void toLogMessage(const CLogCategoryList &categories, const QString &prefix) const;
 

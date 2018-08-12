@@ -33,6 +33,7 @@ namespace BlackMisc
             { "driver",                      exactMatch(CLogCategory::driver()) },
             { "flight plan",                 exactMatch(CLogCategory::flightPlan()) },
             { "interpolator",                exactMatch(CLogCategory::interpolator()) },
+            { "JSON (conversion)",           exactMatch(CLogCategory::json()) },
             { "model cache",                 exactMatch(CLogCategory::modelCache()) },
             { "model GUI",                   exactMatch(CLogCategory::modelGui()) },
             { "model loader",                exactMatch(CLogCategory::modelLoader()) },
