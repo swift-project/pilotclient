@@ -16,6 +16,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacade.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
@@ -32,8 +33,7 @@
 #include <QRadioButton>
 #include <QtGlobal>
 #include <QVBoxLayout>
-
-class QWidget;
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackCore;
@@ -57,6 +57,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaStatusBar = nullptr;
 
     connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
+    connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
 
     this->initLogDisplay();
@@ -154,9 +155,21 @@ void CSwiftCore::initAudio()
 
 void CSwiftCore::restart()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     ui->pb_Restart->setEnabled(false);
     const QStringList args = this->getRestartCmdArgs();
     sGui->restartApplication(args, { "--coreaudio" });
+}
+
+void CSwiftCore::disconnectFromNetwork()
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui->getIContextNetwork()) { return; }
+    if (!sGui->getIContextNetwork()->isConnected()) { return; }
+
+    const QMessageBox::StandardButton reply = QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);
+    if (reply != QMessageBox::Yes) { return; }
+    sGui->getIContextNetwork()->disconnectFromNetwork();
 }
 
 QString CSwiftCore::getAudioCmdFromRadioButtons() const

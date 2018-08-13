@@ -79,6 +79,9 @@ private:
     //! Restart with new arguments
     void restart();
 
+    //! Disconnect from network
+    void disconnectFromNetwork();
+
     //! Core mode from radio buttons
     QString getAudioCmdFromRadioButtons() const;
 
@@ -88,7 +91,6 @@ private:
     QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
     QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
     QScopedPointer<Ui::CSwiftCore> ui;
-
 };
 
 #endif // guard
