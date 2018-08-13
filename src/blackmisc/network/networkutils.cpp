@@ -34,6 +34,7 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QStringBuilder>
 #include <QEventLoop>
 #include <QVariant>
 #include <QtDebug>
@@ -386,7 +387,7 @@ namespace BlackMisc
             return CNetworkUtils::createNetworkReport(CUrl(), am);
         }
 
-        CStatusMessageList CNetworkUtils::createNetworkReport(const CUrl &url, const QNetworkAccessManager *am)
+        CStatusMessageList CNetworkUtils::createNetworkReport(const CUrl &url, const QNetworkAccessManager *qam)
         {
             static const CLogCategoryList cats({CLogCategory::network()});
             CStatusMessageList msgs;
@@ -410,25 +411,74 @@ namespace BlackMisc
                 }
             }
 
-            if (am)
+            if (qam)
             {
-                const bool accessible = am->networkAccessible() == QNetworkAccessManager::Accessible;
-                const QNetworkConfiguration c = am->configuration();
-                static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
-
-                const QString msg = QString("Accessible: %1 (%2) config: %3").arg(
-                                        boolToYesNo(accessible),
-                                        enumAccessible.valueToKey(am->networkAccessible()),
-                                        networkConfigurationToString(c));
+                const QString msg = CNetworkUtils::createNetworkAccessManagerReport(qam);
+                const bool accessible = qam->networkAccessible() == QNetworkAccessManager::Accessible;
                 msgs.push_back(CStatusMessage(cats, accessible ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, msg));
             }
 
             return msgs;
         }
 
+        QString CNetworkUtils::createNetworkConfigurationReport(const QNetworkConfigurationManager *qcm, const QNetworkAccessManager *qam, const QString &separator)
+        {
+            if (!qcm) { return QStringLiteral("No configuration manager"); }
+
+            static const QString empty;
+            QString report;
+            int c = 0;
+
+            int active = 0;
+            int inActive = 0;
+            int valid = 0;
+            for (const QNetworkConfiguration &config : qcm->allConfigurations())
+            {
+                if (config.state() == QNetworkConfiguration::Active) { active++; }
+                else { inActive++; }
+                if (config.isValid()) { valid++; }
+
+                report +=
+                    (report.isEmpty() ? empty : separator) %
+                    QString::number(++c) % QStringLiteral(": ") %
+                    CNetworkUtils::networkConfigurationToString(config);
+            }
+
+            if (c < 1)
+            {
+                report = QStringLiteral("No network configurations!");
+            }
+            else
+            {
+                static const QString count("Network configurations: active %1 / inactive %2 / valid %3");
+                report +=
+                    (report.isEmpty() ? empty : separator) %
+                    count.arg(active).arg(inActive).arg(valid);
+            }
+
+            if (qam)
+            {
+                report +=
+                    (report.isEmpty() ? empty : separator) %
+                    QStringLiteral("QAM: ") %
+                    CNetworkUtils::createNetworkAccessManagerReport(qam);
+            }
+
+            return report;
+        }
+
+        QString CNetworkUtils::createNetworkAccessManagerReport(const QNetworkAccessManager *qam)
+        {
+            static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
+            static const QString info("Accessible: '%1' (%2) config: '%3'");
+
+            const bool accessible = qam->networkAccessible() == QNetworkAccessManager::Accessible;
+            return info.arg(boolToYesNo(accessible), enumAccessible.valueToKey(qam->networkAccessible()), CNetworkUtils::networkConfigurationToString(qam->configuration()));
+        }
+
         QString CNetworkUtils::networkConfigurationToString(const QNetworkConfiguration &configuration)
         {
-            static const QString s("%1 %2 valid: %3 %4 %5");
+            static const QString s("'%1' '%2' valid: '%3' '%4' '%5'");
             const QString stateFlagsStr = networkStatesToString(configuration.state());
             return s.arg(configuration.name(), configuration.identifier(), boolToYesNo(configuration.isValid()), stateFlagsStr, networkTypeToString(configuration.type()));
         }

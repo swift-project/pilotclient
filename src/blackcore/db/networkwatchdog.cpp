@@ -94,11 +94,11 @@ namespace BlackCore
 
         QString CNetworkWatchdog::getCheckInfo() const
         {
-            static const QString info("Internet accessible: %1 (good: %2 / bad: %3), swift DB accessible: %4 (good: %5 / bad: %6) DB last ping URL: '%7' canConnect: %8ms");
+            static const QString info("Network accessibility check: %1 | Internet accessible: %2 (good: %3 / bad: %4), swift DB accessible: %5 (good: %6 / bad: %7) DB last ping URL: '%8' canConnect: %9ms");
             const QString pUrl(this->getLastPingDbUrl());
             static const QString cct = QString::number(CanConnectTimeMs);
             return info.
-                   arg(boolToYesNo(this->isInternetAccessible())).arg(m_totalGoodCountInternet).arg(m_totalBadCountInternet).
+                   arg(boolToEnabledDisabled(!this->isNetworkAccessibilityCheckDisabled()),  boolToYesNo(this->isInternetAccessible())).arg(m_totalGoodCountInternet).arg(m_totalBadCountInternet).
                    arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_totalGoodCountDb).arg(m_totalBadCountDb).
                    arg(pUrl, cct); // cct has to be string, otherwise the % in the URL will be replaced
         }

@@ -9,9 +9,10 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackcore/setupreader.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/setupreader.h"
 #include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/components/updateinfodialog.h"
 #include "blackgui/components/aboutdialog.h"
@@ -542,7 +543,21 @@ namespace BlackGui
 
         a = menu.addAction(CIcons::swift24(), "Check for updates");
         c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersionMenu);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
+        a = menu.addAction(CIcons::monitorError16(), "Network config. (console)");
+        c = connect(a, &QAction::triggered, this, [ = ]()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            const QString r = CNetworkUtils::createNetworkConfigurationReport(this->getNetworkConfigurationManager(), this->getNetworkAccessManager());
+            this->displayTextInConsole(r);
+
+            if (this->getNetworkWatchdog())
+            {
+                const QString w = this->getNetworkWatchdog()->getCheckInfo();
+                this->displayTextInConsole(w);
+            }
+        });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
     }

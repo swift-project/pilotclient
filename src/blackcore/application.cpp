@@ -1093,22 +1093,9 @@ namespace BlackCore
 
     void CApplication::onNetworkConfigurationsUpdateCompleted()
     {
+        Q_ASSERT_X(m_networkConfigManager, Q_FUNC_INFO, "Need network config manager");
         const QNetworkConfiguration config = m_networkConfigManager->defaultConfiguration();
         const QList<QNetworkConfiguration> allConfigurations = m_networkConfigManager->allConfigurations();
-
-        /** testing only
-        for (const QNetworkConfiguration &config : allConfigurations)
-        {
-            const QString cs = CNetworkUtils::networkConfigurationToString(config);
-            CLogMessage(this).info("Network config: '%1'") << cs;
-        }
-        if (m_accessManager)
-        {
-            const QString cs = CNetworkUtils::networkConfigurationToString(m_accessManager->configuration());
-            CLogMessage(this).info("Network access manager config: '%1'") << cs;
-        }
-        **/
-
         if (allConfigurations.isEmpty())
         {
             // this is an odd situation we cannot handle, network check will be disabled
@@ -1121,14 +1108,25 @@ namespace BlackCore
         }
         else
         {
-            const bool isOnline = m_networkConfigManager->isOnline();
+            int active = 0;
+            int valid = 0;
+            for (const QNetworkConfiguration &config : allConfigurations)
+            {
+                if (config.state() == QNetworkConfiguration::Active) { active++; }
+                if (config.isValid()) { valid++; }
+            }
+            Q_UNUSED(valid);
+
+            // const bool isOnline = m_networkConfigManager->isOnline();
             const bool canStartIAP = (m_networkConfigManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
-            m_networkWatchDog->disableNetworkAccessibilityCheck(!isOnline);
+            const bool disable = active < 1; // only inactive
+            if (disable) { CLogMessage(this).warning("Disabling network accessibility check in watchdog"); }
+            m_networkWatchDog->disableNetworkAccessibilityCheck(disable);
 
             // Is there default access point, use it
             if (!config.isValid() || (!canStartIAP && config.state() != QNetworkConfiguration::Active))
             {
-                CLogMessage(this).error("No network access point found");
+                CLogMessage(this).warning("No network access point found for swift");
             }
         }
     }
@@ -1171,6 +1169,15 @@ namespace BlackCore
         // enable by setting accessible
         // http://doc.qt.io/qt-5/qnetworkaccessmanager.html#setNetworkAccessible
         m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
+
+
+        // create a network report in the log
+        QTimer::singleShot(4000, this, [ = ]
+        {
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            const QString r = CNetworkUtils::createNetworkConfigurationReport(m_networkConfigManager, m_accessManager);
+            CLogMessage(this).info("Network report:\n%1") << r;
+        });
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()

@@ -18,6 +18,7 @@
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
+#include <QNetworkConfigurationManager>
 #include <QNetworkConfiguration>
 #include <QString>
 #include <QStringList>
@@ -158,7 +159,13 @@ namespace BlackMisc
 
             //! Status about network, can be used when an URL fails to resolve issues
             //! \remark that can take a moment to complete, as it checks network
-            static BlackMisc::CStatusMessageList createNetworkReport(const CUrl &url, const QNetworkAccessManager *am = nullptr);
+            static BlackMisc::CStatusMessageList createNetworkReport(const CUrl &url, const QNetworkAccessManager *qam = nullptr);
+
+            //! Info about network configurations
+            static QString createNetworkConfigurationReport(const QNetworkConfigurationManager *qcm, const QNetworkAccessManager *qam, const QString &separator = "\n");
+
+            //! Report for QAM
+            static QString createNetworkAccessManagerReport(const QNetworkAccessManager *qam);
 
             //! Configuration as string
             static QString networkConfigurationToString(const QNetworkConfiguration &configuration);

@@ -426,6 +426,10 @@ namespace BlackCore
         //! \remark supposed to be used only in special cases
         const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
 
+        //! Access to configuration manager
+        //! \remark supposed to be used only in special cases
+        const QNetworkConfigurationManager *getNetworkConfigurationManager() const { return m_networkConfigManager; }
+
         //! Web data services available?
         //! \threadsafe
         bool hasWebDataServices() const;
