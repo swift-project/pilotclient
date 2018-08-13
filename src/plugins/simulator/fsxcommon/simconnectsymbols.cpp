@@ -99,6 +99,9 @@ QString getLastErrorMsg()
 
 bool loadAndResolveSimConnect(bool manifestProbing)
 {
+    // Check if already loaded
+    if (gSymbols.SimConnect_Open) { return true; }
+
     QLibrary simConnectDll;
     simConnectDll.setFileName("SimConnect.dll");
     simConnectDll.setLoadHints(QLibrary::PreventUnloadHint);
@@ -170,6 +173,11 @@ bool loadAndResolveSimConnect(bool manifestProbing)
         gSymbols.SimConnect_MapClientDataNameToID = reinterpret_cast<PfnSimConnect_MapClientDataNameToID>(simConnectDll.resolve("SimConnect_MapClientDataNameToID"));
         gSymbols.SimConnect_CreateClientData = reinterpret_cast<PfnSimConnect_CreateClientData>(simConnectDll.resolve("SimConnect_CreateClientData"));
         gSymbols.SimConnect_AddToClientDataDefinition = reinterpret_cast<PfnSimConnect_AddToClientDataDefinition>(simConnectDll.resolve("SimConnect_AddToClientDataDefinition"));
+    }
+    else
+    {
+        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to load SimConnect.dll: %1") << getLastErrorMsg();
+        return false;
     }
 
     return true;

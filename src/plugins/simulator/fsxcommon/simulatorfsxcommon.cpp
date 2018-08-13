@@ -87,6 +87,9 @@ namespace BlackSimPlugin
         {
             if (this->isConnected()) { return true; }
             this->reset();
+
+            if (!loadAndResolveSimConnect(true)) { return false; }
+
             if (FAILED(SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0)))
             {
                 // reset state as expected for unconnected
@@ -2017,7 +2020,6 @@ namespace BlackSimPlugin
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer.setInterval(QueryInterval);
             m_timer.setObjectName(this->objectName().append(":m_timer"));
-            loadAndResolveSimConnect(true);
             connect(&m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
 
@@ -2027,6 +2029,9 @@ namespace BlackSimPlugin
             m_simConnectVersion.clear();
             m_simulatorName.clear();
             m_simulatorDetails.clear();
+
+            if (!loadAndResolveSimConnect(true)) { return; }
+
             m_timer.start();
         }
 
