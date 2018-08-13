@@ -334,16 +334,16 @@ namespace BlackCore
 
         //! \name Direct access to contexts if a CCoreFacade has been initialized
         //! @{
-        const Context::IContextNetwork *getIContextNetwork() const;
-        const Context::IContextAudio *getIContextAudio() const;
+        const Context::IContextNetwork     *getIContextNetwork() const;
+        const Context::IContextAudio       *getIContextAudio() const;
         const Context::IContextApplication *getIContextApplication() const;
         const Context::IContextOwnAircraft *getIContextOwnAircraft() const;
-        const Context::IContextSimulator *getIContextSimulator() const;
-        Context::IContextNetwork *getIContextNetwork();
-        Context::IContextAudio *getIContextAudio();
-        Context::IContextApplication *getIContextApplication();
-        Context::IContextOwnAircraft *getIContextOwnAircraft();
-        Context::IContextSimulator *getIContextSimulator();
+        const Context::IContextSimulator   *getIContextSimulator() const;
+        Context::IContextNetwork           *getIContextNetwork();
+        Context::IContextAudio             *getIContextAudio();
+        Context::IContextApplication       *getIContextApplication();
+        Context::IContextOwnAircraft       *getIContextOwnAircraft();
+        Context::IContextSimulator         *getIContextSimulator();
         //! @}
 
         // ----------------------- setup data ---------------------------------

@@ -974,13 +974,8 @@ namespace BlackCore
         // info that we will shutdown
         emit this->aboutToShutdown();
 
-        // before marked as shutdown, otherwise URL
-        if (m_networkWatchDog)
-        {
-            m_networkWatchDog->gracefulShutdown();
-        }
-
         // mark as shutdown
+        if (m_networkWatchDog) { m_networkWatchDog->gracefulShutdown(); }
         m_shutdown = true;
 
         // save settings (but only when application was really alive)
@@ -1035,11 +1030,7 @@ namespace BlackCore
         }
 
         emit this->setupHandlingCompleted(available);
-
-        if (m_signalStartup)
-        {
-            emit this->startUpCompleted(m_started);
-        }
+        if (m_signalStartup) { emit this->startUpCompleted(m_started); }
     }
 
     void CApplication::onStartUpCompleted()

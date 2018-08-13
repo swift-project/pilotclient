@@ -29,14 +29,14 @@ namespace BlackSimPlugin
             ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xswiftbusServerSetting.getDefault());
             ui->comp_SettingsXSwiftBus->set(m_xswiftbusServerSetting.getThreadLocal());
 
-            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::settingsAccepted);
+            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::onSettingsAccepted);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
         }
 
         CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow()
         { }
 
-        void CSimulatorXPlaneConfigWindow::settingsAccepted()
+        void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
         {
             const QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
             if (currentAddress != ui->comp_SettingsXSwiftBus->getDBusAddress())
@@ -45,6 +45,5 @@ namespace BlackSimPlugin
             }
             close();
         }
-
     } // ns
 } // ns

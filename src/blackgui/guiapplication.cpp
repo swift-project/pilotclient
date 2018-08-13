@@ -471,9 +471,9 @@ namespace BlackGui
         QMenu *sm = menu.addMenu(CIcons::appSettings16(), "Settings");
         sm->setIcon(CIcons::appSettings16());
         QAction *a = sm->addAction(CIcons::disk16(), "Settings directory");
-        QPointer<CGuiApplication> myself(this);
         bool c = connect(a, &QAction::triggered, this, [ = ]()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
             if (QDir(path).exists())
             {
@@ -485,18 +485,18 @@ namespace BlackGui
         a = sm->addAction("Reset settings");
         c = connect(a, &QAction::triggered, this, [ = ]
         {
-            if (myself.isNull()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             CSettingsCache::instance()->clearAllValues();
-            myself->displayTextInConsole("Cleared all settings!");
+            this->displayTextInConsole("Cleared all settings!");
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("List settings files");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (myself.isNull()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CSettingsCache::instance()->enumerateStore());
-            myself->displayTextInConsole(files.join("\n"));
+            this->displayTextInConsole(files.join("\n"));
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -516,7 +516,7 @@ namespace BlackGui
         a = sm->addAction("Reset cache");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (myself.isNull()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files = CApplication::clearCaches();
             this->displayTextInConsole("Cleared caches! " + QString::number(files.size()) + " files");
         });
@@ -525,9 +525,9 @@ namespace BlackGui
         a = sm->addAction("List cache files");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (myself.isNull()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CDataCache::instance()->enumerateStore());
-            myself->displayTextInConsole(files.join("\n"));
+            this->displayTextInConsole(files.join("\n"));
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -540,6 +540,7 @@ namespace BlackGui
                 QDesktopServices::openUrl(QUrl::fromLocalFile(path));
             }
         });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::swift24(), "Check for updates");
         c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersionMenu);
@@ -564,21 +565,20 @@ namespace BlackGui
 
     void CGuiApplication::addMenuForStyleSheets(QMenu &menu)
     {
-        QPointer<CGuiApplication> myself(this);
         QMenu *sm = menu.addMenu("Style sheet");
         QAction *aReload = sm->addAction(CIcons::refresh16(), "Reload");
         bool c = connect(aReload, &QAction::triggered, this, [ = ]()
         {
-            if (myself.isNull()) { return; }
-            myself->reloadStyleSheets();
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->reloadStyleSheets();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         QAction *aOpen = sm->addAction(CIcons::text16(), "Open qss file");
         c = connect(aOpen, &QAction::triggered, this, [ = ]()
         {
-            if (myself.isNull()) { return; }
-            myself->openStandardWidgetStyleSheet();
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->openStandardWidgetStyleSheet();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -601,13 +601,12 @@ namespace BlackGui
         menu.addSeparator();
         a = menu.addAction("E&xit");
         a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
-        QPointer<CGuiApplication> myself(this);
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             // a close event might already trigger a shutdown
-            if (!myself) { return; }
-            myself->mainApplicationWidget()->close();
-            myself->gracefulShutdown();
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->mainApplicationWidget()->close();
+            this->gracefulShutdown();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -615,12 +614,11 @@ namespace BlackGui
 
     void CGuiApplication::addMenuInternals(QMenu &menu)
     {
-        QPointer<CGuiApplication> myself(this);
         QMenu *sm = menu.addMenu("Templates");
         QAction *a = sm->addAction("JSON bootstrap");
         bool c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (!myself) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const CGlobalSetup s = this->getGlobalSetup();
             this->displayTextInConsole(s.toJsonString());
         });
@@ -629,9 +627,9 @@ namespace BlackGui
         a = sm->addAction("JSON update info (for info only)");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (!myself) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const CUpdateInfo info = this->getUpdateInfo();
-            myself->displayTextInConsole(info.toJsonString());
+            this->displayTextInConsole(info.toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -640,8 +638,8 @@ namespace BlackGui
             a = menu.addAction("Services log.(console)");
             c = connect(a, &QAction::triggered, this, [ = ]()
             {
-                if (!myself) { return; }
-                myself->displayTextInConsole(this->getWebDataServices()->getReadersLog());
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
                 CLogMessage(this).info("Displayed services log.");
             });
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -650,8 +648,8 @@ namespace BlackGui
         a = menu.addAction("Metadata (slow)");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (!myself) { return; }
-            myself->displayTextInConsole(getAllUserMetatypesTypes());
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->displayTextInConsole(getAllUserMetatypesTypes());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -707,12 +705,11 @@ namespace BlackGui
         QPointer<QWidget> w = mainApplicationWidget();
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
-        QPointer<CGuiApplication> myself(this);
 
         bool c = connect(a, &QAction::triggered, this, [ = ]()
         {
-            if (!myself) { return; }
-            myself->showHelp();
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            this->showHelp();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 

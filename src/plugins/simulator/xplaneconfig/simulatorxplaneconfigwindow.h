@@ -18,8 +18,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSimulatorXPlaneConfigWindow; }
 namespace BlackSimPlugin
 {
@@ -40,7 +38,8 @@ namespace BlackSimPlugin
             virtual ~CSimulatorXPlaneConfigWindow();
 
         private:
-            void settingsAccepted();
+            //! Settings have been accepted
+            void onSettingsAccepted();
 
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
