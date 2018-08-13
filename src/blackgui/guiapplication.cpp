@@ -260,7 +260,7 @@ namespace BlackGui
         CApplication::exit(retcode);
     }
 
-    void CGuiApplication::highDpiScreenSupport(qreal scaleFactor)
+    void CGuiApplication::highDpiScreenSupport(double scaleFactor)
     {
         if (scaleFactor < 0)
         {
@@ -318,8 +318,8 @@ namespace BlackGui
             {
                 // setMinimumSizeInCharacters sets m_minHeightChars/m_minWidthChars
                 QSize cs = mw->size();
-                if (m_minWidthChars > 0)  { cs.setWidth(fontMetricEstSize.width()); }
-                if (m_minHeightChars > 0) { cs.setHeight(fontMetricEstSize.height()); }
+                if (m_minWidthChars > 0)  { cs.setWidth(qRound(fontMetricEstSize.width())); }
+                if (m_minHeightChars > 0) { cs.setHeight(qRound(fontMetricEstSize.height())); }
                 mw->resize(cs);
             }
         }
@@ -381,7 +381,7 @@ namespace BlackGui
         return html;
     }
 
-    qreal CGuiApplication::parseScaleFactor(int argc, char *argv[])
+    double CGuiApplication::parseScaleFactor(int argc, char *argv[])
     {
         for (int i = 1; i < argc; ++i)
         {
@@ -390,7 +390,7 @@ namespace BlackGui
                 if (i + 1 >= argc) { return -1.0; } // no value
                 const QString factor(argv[i + 1]);
                 bool ok;
-                qreal f = factor.toFloat(&ok);
+                const double f = factor.toDouble(&ok);
                 return ok ? f : -1.0;
             }
         }
