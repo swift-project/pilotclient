@@ -84,17 +84,16 @@ struct SimConnectSymbols
 
 SimConnectSymbols gSymbols;
 
-QString getLastErrorMsg()
+template<typename FuncPtr>
+bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *funcName)
 {
-    LPWSTR bufPtr = nullptr;
-    DWORD err = GetLastError();
-    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                   FORMAT_MESSAGE_FROM_SYSTEM |
-                   FORMAT_MESSAGE_IGNORE_INSERTS,
-                   NULL, err, 0, (LPWSTR)&bufPtr, 0, NULL);
-    const QString result = (bufPtr) ? QString::fromUtf16((const ushort *)bufPtr).trimmed() : QString("Unknown Error %1").arg(err);
-    LocalFree(bufPtr);
-    return result;
+    funcPtr = reinterpret_cast<FuncPtr>(library.resolve(funcName));
+    if (! funcPtr)
+    {
+        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to resolve %1: %2") << funcName << library.errorString();
+        return false;
+    }
+    return true;
 }
 
 bool loadAndResolveSimConnect(bool manifestProbing)
@@ -148,35 +147,36 @@ bool loadAndResolveSimConnect(bool manifestProbing)
 
     if (simConnectDll.isLoaded())
     {
-        gSymbols.SimConnect_Open = reinterpret_cast<PfnSimConnect_Open>(simConnectDll.resolve("SimConnect_Open"));
-        gSymbols.SimConnect_Close = (PfnSimConnect_Close) simConnectDll.resolve("SimConnect_Close");
-
-        gSymbols.SimConnect_AddToDataDefinition = reinterpret_cast<PfnSimConnect_AddToDataDefinition>(simConnectDll.resolve("SimConnect_AddToDataDefinition"));
-        gSymbols.SimConnect_Text = reinterpret_cast<PfnSimConnect_Text>(simConnectDll.resolve("SimConnect_Text"));
-        gSymbols.SimConnect_CallDispatch = reinterpret_cast<PfnSimConnect_CallDispatch>(simConnectDll.resolve("SimConnect_CallDispatch"));
-        gSymbols.SimConnect_WeatherSetModeCustom = reinterpret_cast<PfnSimConnect_WeatherSetModeCustom>(simConnectDll.resolve("SimConnect_WeatherSetModeCustom"));
-        gSymbols.SimConnect_WeatherSetModeGlobal = reinterpret_cast<PfnSimConnect_WeatherSetModeGlobal>(simConnectDll.resolve("SimConnect_WeatherSetModeGlobal"));
-        gSymbols.SimConnect_WeatherSetObservation = reinterpret_cast<PfnSimConnect_WeatherSetObservation>(simConnectDll.resolve("SimConnect_WeatherSetObservation"));
-        gSymbols.SimConnect_TransmitClientEvent = reinterpret_cast<PfnSimConnect_TransmitClientEvent>(simConnectDll.resolve("SimConnect_TransmitClientEvent"));
-        gSymbols.SimConnect_SetClientData = reinterpret_cast<PfnSimConnect_SetClientData>(simConnectDll.resolve("SimConnect_SetClientData"));
-        gSymbols.SimConnect_RequestDataOnSimObject = reinterpret_cast<PfnSimConnect_RequestDataOnSimObject>(simConnectDll.resolve("SimConnect_RequestDataOnSimObject"));
-        gSymbols.SimConnect_RequestClientData = reinterpret_cast<PfnSimConnect_RequestClientData>(simConnectDll.resolve("SimConnect_RequestClientData"));
-        gSymbols.SimConnect_SubscribeToSystemEvent = reinterpret_cast<PfnSimConnect_SubscribeToSystemEvent>(simConnectDll.resolve("SimConnect_SubscribeToSystemEvent"));
-        gSymbols.SimConnect_MapClientEventToSimEvent = reinterpret_cast<PfnSimConnect_MapClientEventToSimEvent>(simConnectDll.resolve("SimConnect_MapClientEventToSimEvent"));
-        gSymbols.SimConnect_SubscribeToFacilities = reinterpret_cast<PfnSimConnect_SubscribeToFacilities>(simConnectDll.resolve("SimConnect_SubscribeToFacilities"));
-        gSymbols.SimConnect_GetLastSentPacketID = reinterpret_cast<PfnSimConnect_GetLastSentPacketID>(simConnectDll.resolve("SimConnect_GetLastSentPacketID"));
-        gSymbols.SimConnect_AIRemoveObject = reinterpret_cast<PfnSimConnect_AIRemoveObject>(simConnectDll.resolve("SimConnect_AIRemoveObject"));
-        gSymbols.SimConnect_SetDataOnSimObject = reinterpret_cast<PfnSimConnect_SetDataOnSimObject>(simConnectDll.resolve("SimConnect_SetDataOnSimObject"));
-        gSymbols.SimConnect_AIReleaseControl = reinterpret_cast<PfnSimConnect_AIReleaseControl>(simConnectDll.resolve("SimConnect_AIReleaseControl"));
-        gSymbols.SimConnect_AICreateNonATCAircraft = reinterpret_cast<PfnSimConnect_AICreateNonATCAircraft>(simConnectDll.resolve("SimConnect_AICreateNonATCAircraft"));
-        gSymbols.SimConnect_AICreateSimulatedObject = reinterpret_cast<PfnSimConnect_AICreateSimulatedObject>(simConnectDll.resolve("SimConnect_AICreateSimulatedObject"));
-        gSymbols.SimConnect_MapClientDataNameToID = reinterpret_cast<PfnSimConnect_MapClientDataNameToID>(simConnectDll.resolve("SimConnect_MapClientDataNameToID"));
-        gSymbols.SimConnect_CreateClientData = reinterpret_cast<PfnSimConnect_CreateClientData>(simConnectDll.resolve("SimConnect_CreateClientData"));
-        gSymbols.SimConnect_AddToClientDataDefinition = reinterpret_cast<PfnSimConnect_AddToClientDataDefinition>(simConnectDll.resolve("SimConnect_AddToClientDataDefinition"));
+        bool resolveSuccess = true;
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_Open, "SimConnect_Open");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_Close, "SimConnect_Close");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AddToDataDefinition, "SimConnect_AddToDataDefinition");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_Text, "SimConnect_Text");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CallDispatch, "SimConnect_CallDispatch");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_WeatherSetModeCustom, "SimConnect_WeatherSetModeCustom");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_WeatherSetModeGlobal, "SimConnect_WeatherSetModeGlobal");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_WeatherSetObservation, "SimConnect_WeatherSetObservation");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_TransmitClientEvent, "SimConnect_TransmitClientEvent");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SetClientData, "SimConnect_SetClientData");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_RequestDataOnSimObject, "SimConnect_RequestDataOnSimObject");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_RequestClientData, "SimConnect_RequestClientData");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SubscribeToSystemEvent, "SimConnect_SubscribeToSystemEvent");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_MapClientEventToSimEvent, "SimConnect_MapClientEventToSimEvent");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SubscribeToFacilities, "SimConnect_SubscribeToFacilities");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_GetLastSentPacketID, "SimConnect_GetLastSentPacketID");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AIRemoveObject, "SimConnect_AIRemoveObject");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SetDataOnSimObject, "SimConnect_SetDataOnSimObject");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AIReleaseControl, "SimConnect_AIReleaseControl");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateNonATCAircraft, "SimConnect_AICreateNonATCAircraft");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateSimulatedObject, "SimConnect_AICreateSimulatedObject");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_MapClientDataNameToID, "SimConnect_MapClientDataNameToID");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CreateClientData, "SimConnect_CreateClientData");
+        resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AddToClientDataDefinition, "SimConnect_AddToClientDataDefinition");
+        return resolveSuccess;
     }
     else
     {
-        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to load SimConnect.dll: %1") << getLastErrorMsg();
+        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
         return false;
     }
 
