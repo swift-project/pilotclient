@@ -12,9 +12,10 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSXSWIFTBUSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSXSWIFTBUSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/settingscache.h"
-#include "blackgui/blackguiexport.h"
+#include "blackmisc/logcategorylist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -31,6 +32,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CSettingsXSwiftBusComponent(QWidget *parent = nullptr);
 
@@ -41,7 +45,8 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xSwiftBusServerSetting { this };
 
-            void saveServer(const QString &dBusAddress);
+            void resetServer();
+            void saveServer();
         };
     } // ns
 } // ns

@@ -54,6 +54,12 @@ namespace BlackGui
             //! Set system DBus radio button visible/invisible
             void setSystemDBusVisible(bool visible);
 
+            //! P2P visible
+            void setP2PDBusVisible(bool visible);
+
+            //! Set to be used for XSwiftBus
+            void setForXSwiftBus();
+
         signals:
             //! Is being edited
             void editingFinished();
@@ -62,7 +68,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDBusServerAddressSelector> ui;
 
             //! Radio button clicked
-            void radioButtonReleased();
+            void onRadioButtonReleased();
         };
     } // ns
 } // ns

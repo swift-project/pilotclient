@@ -325,6 +325,11 @@ QLineEdit[readOnly="true"] {
   border: 1px solid rgba(50,50,50);
 }
 
+QLineEdit:disabled {
+  background: rgba(40,40,40);
+  border: 1px solid rgba(50,50,50);
+}
+
 QTextEdit {
   border: 1px solid green;
   background: transparent;
@@ -390,6 +395,11 @@ QComboBox {
   padding: 1px;
   background: transparent;
   selection-background-color: #3f98ff;
+}
+
+QComboBox:disabled {
+  background: rgba(40,40,40);
+  border: 1px solid rgba(50,50,50);
 }
 
 /* drop down list */

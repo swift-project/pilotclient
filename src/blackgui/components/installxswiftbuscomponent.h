@@ -49,14 +49,14 @@ namespace BlackGui
             void setDefaultDownloadName(const QString &defaultDownload);
 
         private:
+            static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
+
             QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
             BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
             BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
             const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
             QString m_defaultDownloadName; //!< default name for download
-
-            static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
 
             //! Select X-Plane plugin directory
             void selectPluginDirectory();

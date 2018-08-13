@@ -38,9 +38,9 @@ namespace BlackGui
             this->set(sGui->getCmdDBusAddressValue());
 
             ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
-            connect(ui->rb_DBusP2P, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
-            connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
-            connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
+            connect(ui->rb_DBusP2P, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
+            connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
+            connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
             connect(ui->le_DBusServerPort, &QLineEdit::editingFinished, this, &CDBusServerAddressSelector::editingFinished);
             connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::editingFinished);
         }
@@ -116,6 +116,7 @@ namespace BlackGui
                     ui->le_DBusServerPort->setText(port);
                 }
             }
+            this->onRadioButtonReleased();
         }
 
         void CDBusServerAddressSelector::setSystemDBusVisible(bool visible)
@@ -128,7 +129,19 @@ namespace BlackGui
             }
         }
 
-        void CDBusServerAddressSelector::radioButtonReleased()
+        void CDBusServerAddressSelector::setP2PDBusVisible(bool visible)
+        {
+            ui->rb_DBusP2P->setVisible(visible);
+            ui->fr_DBusServerAddress->setVisible(visible);
+        }
+
+        void CDBusServerAddressSelector::setForXSwiftBus()
+        {
+            this->setP2PDBusVisible(true);
+            this->setSystemDBusVisible(false);
+        }
+
+        void CDBusServerAddressSelector::onRadioButtonReleased()
         {
             const bool p2p = this->isP2P();
             ui->le_DBusServerPort->setEnabled(p2p);

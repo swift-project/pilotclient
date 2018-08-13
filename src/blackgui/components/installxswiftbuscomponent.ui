@@ -169,22 +169,16 @@
    <item>
     <widget class="QGroupBox" name="gb_XSwiftBusSettings">
      <property name="title">
-      <string>XSwiftBusSettings</string>
+      <string>XSwiftBus settings</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="vl_XSwiftBusSettings">
       <item>
        <widget class="BlackGui::Components::CSettingsXSwiftBusComponent" name="comp_SettingsXSwiftBus">
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>25</height>
+          <height>40</height>
          </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
         </property>
        </widget>
       </item>
@@ -214,6 +208,16 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_XSwiftBusPluginDir</tabstop>
+  <tabstop>tb_DialogInstallDir</tabstop>
+  <tabstop>pb_OpenInstallDir</tabstop>
+  <tabstop>le_DownloadDir</tabstop>
+  <tabstop>tb_DialogDownloadDir</tabstop>
+  <tabstop>pb_OpenDownloadDir</tabstop>
+  <tabstop>cb_DownloadFile</tabstop>
+  <tabstop>pb_Download</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>

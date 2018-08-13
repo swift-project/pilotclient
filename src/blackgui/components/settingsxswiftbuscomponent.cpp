@@ -10,35 +10,54 @@
 #include "settingsxswiftbuscomponent.h"
 #include "ui_settingsxswiftbuscomponent.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/logmessage.h"
 
 #include <QComboBox>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CSettingsXSwiftBusComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            return cats;
+        }
+
         CSettingsXSwiftBusComponent::CSettingsXSwiftBusComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CSettingsXSwiftBusComponent)
         {
             ui->setupUi(this);
-            ui->cb_XSwiftBusServer->addItem(CDBusServer::sessionBusAddress());
-            ui->cb_XSwiftBusServer->addItem(CDBusServer::systemBusAddress());
-            ui->cb_XSwiftBusServer->setCurrentText(m_xSwiftBusServerSetting.getThreadLocal());
 
-            connect(ui->cb_XSwiftBusServer, &QComboBox::currentTextChanged, this, &CSettingsXSwiftBusComponent::saveServer);
+            connect(ui->pb_Save, &QPushButton::released, this, &CSettingsXSwiftBusComponent::saveServer);
+            connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsXSwiftBusComponent::resetServer);
+
+            const QString dBusAddress = m_xSwiftBusServerSetting.get();
+            ui->comp_DBusServer->setForXSwiftBus();
+            ui->comp_DBusServer->set(dBusAddress);
         }
 
         CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent()
         { }
 
-        void CSettingsXSwiftBusComponent::saveServer(const QString &dBusAddress)
+        void CSettingsXSwiftBusComponent::resetServer()
         {
+            const QString s = TXSwiftBusServer::defaultValue();
+            ui->comp_DBusServer->set(s);
+        }
+
+        void CSettingsXSwiftBusComponent::saveServer()
+        {
+            const QString dBusAddress = ui->comp_DBusServer->getDBusAddress();
+            if (dBusAddress.isEmpty()) { return; }
             if (dBusAddress != m_xSwiftBusServerSetting.getThreadLocal())
             {
-                m_xSwiftBusServerSetting.setAndSave(dBusAddress);
+                const CStatusMessage msg = m_xSwiftBusServerSetting.setAndSave(dBusAddress);
+                CLogMessage::preformatted(msg);
             }
         }
     } // ns
