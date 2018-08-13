@@ -189,6 +189,7 @@ namespace BlackGui
 
     void CGuiApplication::processEventsToRefreshGui() const
     {
+        if (this->isShuttingDown()) { return; }
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 

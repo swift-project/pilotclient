@@ -137,6 +137,9 @@ namespace BlackGui
 
             const CApplicationInfo otherVersionInfo = ui->comp_OtherSwiftVersions->selectedOtherVersion();
             if (otherVersionInfo.isNull()) { return; }
+
+            bool success = false;
+            QString errMsg;
             ui->le_Status->setText("Starting to copy from '" + otherVersionInfo.toQString(true) + "'");
 
             // ------- audio -------
@@ -145,8 +148,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudio.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const Audio::CSettings audioSettings = Audio::CSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true));
+                    const Audio::CSettings audioSettings = Audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey())) { this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true)); }
                 }
             }
 
@@ -176,8 +179,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsNetworkServers.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CServerList networkServers = CServerList::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true));
+                    const CServerList networkServers = CServerList::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsNetworkServers.getKey())) { this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true)); }
                 }
             }
 
@@ -186,8 +189,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(otherVersionInfo, m_cacheLastNetworkServer.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CServer server = CServer::fromJson(joStr, true);
-                    this->displayStatusMessage(m_cacheLastNetworkServer.set(server), server.toQString(true));
+                    const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_cacheLastNetworkServer.getKey())) { this->displayStatusMessage(m_cacheLastNetworkServer.set(server), server.toQString(true)); }
                 }
             }
 
@@ -196,8 +199,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(otherVersionInfo, m_cacheLastVatsimServer.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CServer server = CServer::fromJson(joStr, true);
-                    this->displayStatusMessage(m_cacheLastVatsimServer.set(server), server.toQString(true));
+                    const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_cacheLastVatsimServer.getKey())) { this->displayStatusMessage(m_cacheLastVatsimServer.set(server), server.toQString(true)); }
                 }
             }
 
@@ -207,7 +210,7 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsGuiGeneral.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CGeneralGuiSettings guiGeneral = CGeneralGuiSettings::fromJson(joStr, true);
+                    const CGeneralGuiSettings guiGeneral = CGeneralGuiSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsGuiGeneral.setAndSave(guiGeneral), guiGeneral.toQString(true));
                 }
             }
@@ -217,7 +220,7 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsDockWidget.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CDockWidgetSettings dwSettings = CDockWidgetSettings::fromJson(joStr, true);
+                    const CDockWidgetSettings dwSettings = CDockWidgetSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsDockWidget.setAndSave(dwSettings), dwSettings.toQString(true));
                 }
             }
@@ -227,7 +230,7 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsViewUpdate.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CViewUpdateSettings viewUpdate = CViewUpdateSettings::fromJson(joStr, true);
+                    const CViewUpdateSettings viewUpdate = CViewUpdateSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsViewUpdate.setAndSave(viewUpdate), viewUpdate.toQString(true));
                 }
             }
@@ -251,8 +254,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorFsx.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CSimulatorSettings settings = CSimulatorSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true));
+                    const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsSimulatorFsx.getKey())) { this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true)); }
                 }
             }
 
@@ -261,8 +264,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorP3D.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CSimulatorSettings settings = CSimulatorSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsSimulatorP3D.setAndSave(settings), settings.toQString(true));
+                    const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsSimulatorP3D.getKey())) { this->displayStatusMessage(m_settingsSimulatorP3D.setAndSave(settings), settings.toQString(true)); }
                 }
             }
 
@@ -271,8 +274,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorXPlane.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CSimulatorSettings settings = CSimulatorSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings), settings.toQString(true));
+                    const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsSimulatorXPlane.getKey())) { this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings), settings.toQString(true)); }
                 }
             }
 
@@ -282,8 +285,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsModel.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CModelSettings settings = CModelSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsModel.setAndSave(settings), settings.toQString(true));
+                    const CModelSettings settings = CModelSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsModel.getKey())) { this->displayStatusMessage(m_settingsModel.setAndSave(settings), settings.toQString(true)); }
                 }
             }
 
@@ -307,8 +310,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsActionHotkeys.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CActionHotkeyList hotkeys = CActionHotkeyList::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true));
+                    const CActionHotkeyList hotkeys = CActionHotkeyList::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsActionHotkeys.getKey())) { this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true)); }
                 }
             }
 
@@ -317,8 +320,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAtcStations.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CAtcStationsSettings settings = CAtcStationsSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsAtcStations.setAndSave(settings), settings.toQString(true));
+                    const CAtcStationsSettings settings = CAtcStationsSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsAtcStations.getKey())) { this->displayStatusMessage(m_settingsAtcStations.setAndSave(settings), settings.toQString(true)); }
                 }
             }
 
@@ -327,8 +330,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsTextMessage.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CTextMessageSettings settings = CTextMessageSettings::fromJson(joStr, true);
-                    this->displayStatusMessage(m_settingsTextMessage.setAndSave(settings), settings.toQString(true));
+                    const CTextMessageSettings settings = CTextMessageSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsTextMessage.getKey())) { this->displayStatusMessage(m_settingsTextMessage.setAndSave(settings), settings.toQString(true)); }
                 }
             }
         }
@@ -352,6 +355,14 @@ namespace BlackGui
         QList<QCheckBox *> CCopySettingsAndCachesComponent::checkBoxes() const
         {
             return this->findChildren<QCheckBox *>();
+        }
+
+        bool CCopySettingsAndCachesComponent::parsingMessage(bool success, const QString &msg, const QString &value)
+        {
+            if (success) { return true; }
+            const CStatusMessage sm(this, msg);
+            this->displayStatusMessage(sm, value);
+            return false;
         }
 
         void CCopySettingsAndCachesComponent::displayStatusMessage(const CStatusMessage &msg, const QString &value)

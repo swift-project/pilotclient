@@ -93,6 +93,9 @@ namespace BlackGui
             //! All checkboxes
             QList<QCheckBox *> checkBoxes() const;
 
+            //! Display parsing message
+            bool parsingMessage(bool success, const QString &msg, const QString &value);
+
             //! Display status message
             void displayStatusMessage(const BlackMisc::CStatusMessage &msg, const QString &value);
 
