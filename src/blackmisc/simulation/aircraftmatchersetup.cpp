@@ -16,7 +16,7 @@ namespace BlackMisc
     {
         CAircraftMatcherSetup::CAircraftMatcherSetup()
         {
-            this->reset(MatchingScoreBased);
+            this->reset(MatchingStepwiseReducePlusScoreBased);
         }
 
         CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
@@ -50,7 +50,7 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             return QStringLiteral("algorithm: '") % this->getMatchingAlgorithmAsString() %
                    QStringLiteral("' mode: '") % this->getMatchingModeAsString() %
-                   QStringLiteral("' strategy: ") % this->getPickStrategyAsString() %
+                   QStringLiteral("' strategy: '") % this->getPickStrategyAsString() %
                    QStringLiteral("'");
         }
 
@@ -92,8 +92,11 @@ namespace BlackMisc
                 mode = ModeDefaultReduce;
                 break;
             case MatchingScoreBased:
-            default:
                 mode = ModeDefaultScore;
+                break;
+            case MatchingStepwiseReducePlusScoreBased:
+            default:
+                mode = ModeDefaultReducePlusScore;
                 break;
             }
             this->setMatchingMode(mode);
@@ -102,15 +105,17 @@ namespace BlackMisc
 
         const QString &CAircraftMatcherSetup::algorithmToString(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
         {
+            static const QString rs("reduce + score based");
             static const QString s("score based");
             static const QString r("stepwise reduce");
             switch (algorithm)
             {
             case MatchingStepwiseReduce: return r;
-            case MatchingScoreBased:
+            case MatchingScoreBased: return s;
+            case MatchingStepwiseReducePlusScoreBased:
             default: break;
             }
-            return s;
+            return rs;
         }
 
         const QString &CAircraftMatcherSetup::modeFlagToString(MatchingModeFlag modeFlag)
@@ -121,20 +126,20 @@ namespace BlackMisc
             static const QString icaoAirline("by ICAO, airline first");
             static const QString family("by family");
             static const QString livery("by livery");
-            static const QString combined("by combined combined");
+            static const QString combined("by combined code");
             static const QString noZeros("scoring, ignore zero scores");
             static const QString preferColorLiveries("scoring, prefer color liveries");
 
             switch (modeFlag)
             {
-            case ByModelString:  return ms;
-            case ByIcaoData:     return icao;
-            case ByFamily:       return family;
-            case ByLivery:       return livery;
-            case ByCombinedType: return combined;
+            case ByModelString:            return ms;
+            case ByIcaoData:               return icao;
+            case ByFamily:                 return family;
+            case ByLivery:                 return livery;
+            case ByCombinedType:           return combined;
             case ByIcaoOrderAircraftFirst: return icaoAircraft;
-            case ByIcaoOrderAirlineFirst: return icaoAirline;
-            case ScoreIgnoreZeros: return noZeros;
+            case ByIcaoOrderAirlineFirst:  return icaoAirline;
+            case ScoreIgnoreZeros:         return noZeros;
             case ScorePreferColorLiveries: return preferColorLiveries;
             default: break;
             }
@@ -146,8 +151,8 @@ namespace BlackMisc
         QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
         {
             QStringList modes;
-            if (mode.testFlag(ByModelString))  { modes << modeFlagToString(ByModelString); }
-            if (mode.testFlag(ByIcaoData))     { modes << modeFlagToString(ByIcaoData); }
+            if (mode.testFlag(ByModelString))    { modes << modeFlagToString(ByModelString); }
+            if (mode.testFlag(ByIcaoData))       { modes << modeFlagToString(ByIcaoData); }
             if (mode.testFlag(ByIcaoOrderAircraftFirst)) { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
             if (mode.testFlag(ByIcaoOrderAirlineFirst))  { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
             if (mode.testFlag(ByFamily))         { modes << modeFlagToString(ByFamily); }
@@ -166,9 +171,9 @@ namespace BlackMisc
 
             switch (strategy)
             {
-            case PickFirst:  return f;
-            case PickByOrder:  return o;
-            case PickRandom: return r;
+            case PickFirst:   return f;
+            case PickByOrder: return o;
+            case PickRandom:  return r;
             default: break;
             }
 
@@ -178,15 +183,18 @@ namespace BlackMisc
 
         CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
             bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
+            bool byMilitary, bool byVtol,
             bool scoreIgnoreZeros, bool scorePreferColorLiveries)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
-            if (byIcaoDataAircraft1st) { mode |= ByIcaoOrderAircraftFirst; }
-            if (byIcaoDataAirline1st)  { mode |= ByIcaoOrderAirlineFirst; }
-            if (byFamily)         { mode |= ByFamily; }
-            if (byLivery)         { mode |= ByLivery; }
-            if (byCombinedType)   { mode |= ByCombinedType; }
-            if (scoreIgnoreZeros) { mode |= ScoreIgnoreZeros; }
+            if (byIcaoDataAircraft1st)    { mode |= ByIcaoOrderAircraftFirst; }
+            if (byIcaoDataAirline1st)     { mode |= ByIcaoOrderAirlineFirst; }
+            if (byFamily)                 { mode |= ByFamily; }
+            if (byLivery)                 { mode |= ByLivery; }
+            if (byCombinedType)           { mode |= ByCombinedType; }
+            if (byMilitary)               { mode |= ByMilitary; }
+            if (byVtol)                   { mode |= ByVtol; }
+            if (scoreIgnoreZeros)         { mode |= ScoreIgnoreZeros; }
             if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }
             return mode;
         }

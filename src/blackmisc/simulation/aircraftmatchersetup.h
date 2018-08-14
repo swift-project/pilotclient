@@ -28,6 +28,7 @@ namespace BlackMisc
             enum MatchingAlgorithm
             {
                 MatchingScoreBased,
+                MatchingStepwiseReducePlusScoreBased,
                 MatchingStepwiseReduce
             };
 
@@ -39,16 +40,20 @@ namespace BlackMisc
                 ByFamily         = 1 << 2,
                 ByLivery         = 1 << 3,
                 ByCombinedType   = 1 << 4,
-                ByIcaoOrderAircraftFirst = (1 << 5) | ByIcaoData,
-                ByIcaoOrderAirlineFirst  = (1 << 6) | ByIcaoData,
+                ByManufacturer   = 1 << 5,
+                ByMilitary       = 1 << 6,
+                ByVtol           = 1 << 7,
+                ByIcaoOrderAircraftFirst = (1 << 8) | ByIcaoData,
+                ByIcaoOrderAirlineFirst  = (1 << 9) | ByIcaoData,
                 // --- score based matching ---
-                ScoreIgnoreZeros         = 1 << 7, //!< zero scores are ignored
-                ScorePreferColorLiveries = 1 << 8, //!< prefer color liveries
+                ScoreIgnoreZeros         = 1 << 10, //!< zero scores are ignored
+                ScorePreferColorLiveries = 1 << 11, //!< prefer color liveries
                 // --- others ---
                 ModeNone          = 0,
-                ModeScoreDefault  = ScoreIgnoreZeros | ScorePreferColorLiveries,
-                ModeDefaultScore  = ByIcaoOrderAircraftFirst | ByModelString | ByCombinedType | ModeScoreDefault,
-                ModeDefaultReduce = ByModelString | ByFamily | ByLivery | ByCombinedType | ByIcaoOrderAircraftFirst
+                ModeByFLags       = ByMilitary  | ByVtol,
+                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries,
+                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery,
+                ModeDefaultReducePlusScore  = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore,
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -129,13 +134,13 @@ namespace BlackMisc
             static const QString &strategyToString(PickSimilarStrategy strategy);
 
             //! Mode by flags
-            static MatchingMode matchingMode(
-                bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-                bool scoreIgnoreZeros, bool scorePreferColorLiveries);
+            static MatchingMode matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
+                                             bool byFamily, bool byLivery, bool byCombinedType, bool byMilitary, bool byVtol,
+                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries);
 
         private:
-            int m_algorithm = static_cast<int>(MatchingScoreBased);
-            int m_mode = static_cast<int>(ModeDefaultScore);
+            int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
+            int m_mode = static_cast<int>(ModeDefaultReducePlusScore);
             int m_strategy = static_cast<int>(PickByOrder);
 
             BLACK_METACLASS(
