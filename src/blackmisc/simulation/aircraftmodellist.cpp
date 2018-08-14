@@ -1070,26 +1070,26 @@ namespace BlackMisc
         {
             return
                 QStringLiteral("Entries: ") % QString::number(this->size()) %
-                QStringLiteral(" valid DB keys: ") % QString::number(this->countWithValidDbKey()) % separator %
+                QStringLiteral(" | valid DB keys: ") % QString::number(this->countWithValidDbKey()) % separator %
                 QStringLiteral("color liveries: ") % QString::number(this->countModelsWithColorLivery()) %
-                QStringLiteral(" airline liveries: ") % QString::number(this->countModelsWithAirlineLivery()) % separator %
-                QStringLiteral("VTOL: ") % QString::number(this->countVtolAircraft()) % separator %
-                QStringLiteral("Simulators: ") % this->countPerSimulator().toQString() % separator %
-                QStringLiteral("Military: ") % QString::number(this->countMilitaryAircraft()) %
-                QStringLiteral(" civilian: ") % QString::number(this->countCivilianAircraft()) % separator %
+                QStringLiteral(" | airline liveries: ") % QString::number(this->countModelsWithAirlineLivery()) % separator %
+                QStringLiteral("VTOL: ") % QString::number(this->countVtolAircraft()) %
+                QStringLiteral(" | military: ") % QString::number(this->countMilitaryAircraft()) %
+                QStringLiteral(" | civilian: ") % QString::number(this->countCivilianAircraft()) % separator %
                 QStringLiteral("Different airlines: ") % QString::number(this->countDifferentAirlines()) % separator %
-                QStringLiteral("Combined types: ") % this->getCombinedTypesAsString();
+                QStringLiteral("Combined types: '") % this->getCombinedTypesAsString() % QStringLiteral("'") % separator %
+                QStringLiteral("Simulators: ") % this->countPerSimulator().toQString();
         }
 
         QString CAircraftModelList::extCoverageSummary(const CAircraftModel &checkModel, const QString &separator) const
         {
-            const bool combined = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
-            const bool airline = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
+            const bool combinedCodeForModel = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
+            const bool airlineForModel = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
             return coverageSummary(separator) % separator %
-                   QStringLiteral("Has combined: ") % boolToYesNo(combined) %
+                   QStringLiteral("Data for input model, has combined: ") % boolToYesNo(combinedCodeForModel) %
                    (
                        checkModel.hasAirlineDesignator() ?
-                       QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airline) :
+                       QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airlineForModel) :
                        QStringLiteral("")
                    );
         }

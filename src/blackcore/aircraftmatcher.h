@@ -201,7 +201,11 @@ namespace BlackCore
 
         //! Find model by aircraft family
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &family, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &modelSource, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
+
+        //! Find model by aircraft family
+        //! \threadsafe
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &family, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &hint, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Search for exact livery and aircraft ICAO code
         //! \threadsafe
@@ -219,17 +223,25 @@ namespace BlackCore
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
+        //! Reduce by aircraft ICAO or family
+        //! \threadsafe
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAircraftOrFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+
         //! Reduce by airline ICAO
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirline(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedCode(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedType(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! By military flag
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
+
+        //! By VTOL flag
+        //! \threadsafe
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByVTOLFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Scores to string for debugging
         //! \threadsafe
