@@ -65,7 +65,7 @@ namespace BlackGui
             void setMatchingAlgorithm(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
             //! Algorithm has been toggled
-            void onAlgorithmChanged(bool checked);
+            void onAlgorithmChanged();
 
             QScopedPointer<Ui::CMatchingForm> ui;
         };

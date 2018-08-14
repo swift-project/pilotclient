@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>247</width>
-    <height>304</height>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Matching form</string>
   </property>
   <layout class="QVBoxLayout" name="vl_MatchingForm">
    <property name="leftMargin">
@@ -32,6 +32,13 @@
       <string>Algorithm</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rb_ScoreAndReduction">
+        <property name="text">
+         <string>reduction, then score based</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QRadioButton" name="rb_Reduction">
         <property name="text">
@@ -39,14 +46,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="rb_ScoreBased">
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="rb_ScoreOnly">
         <property name="text">
-         <string>reduction, then score based</string>
+         <string>score only</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" alignment="Qt::AlignRight">
+      <item row="0" column="1" rowspan="3" alignment="Qt::AlignLeft|Qt::AlignBottom">
        <widget class="QPushButton" name="pb_Reset">
         <property name="text">
          <string>reset</string>
@@ -92,17 +99,17 @@
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cb_ByFamily">
+        <property name="text">
+         <string>family</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
         <property name="text">
          <string>by ICAO: airline first</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="cb_ByFamily">
-        <property name="text">
-         <string>by family</string>
         </property>
        </widget>
       </item>
@@ -113,17 +120,24 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="cb_ByLivery">
-        <property name="text">
-         <string>by livery</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QCheckBox" name="cb_ByModelString">
         <property name="text">
-         <string>by model string</string>
+         <string>model string</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string> livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="Line" name="line_Reduction">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -134,10 +148,20 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="Line" name="line_Reduction">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="cb_ByMilitary">
+        <property name="text">
+         <string>military</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="cb_ByVtol">
+        <property name="toolTip">
+         <string>Vertical Takeoff or Landing</string>
+        </property>
+        <property name="text">
+         <string>VTOL (helicopters)</string>
         </property>
        </widget>
       </item>
@@ -170,9 +194,8 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>rb_ScoreBased</tabstop>
+  <tabstop>rb_ScoreAndReduction</tabstop>
   <tabstop>rb_Reduction</tabstop>
-  <tabstop>pb_Reset</tabstop>
   <tabstop>rb_PickFirst</tabstop>
   <tabstop>rb_PickRandom</tabstop>
   <tabstop>rb_PickByOrder</tabstop>
@@ -182,6 +205,8 @@
   <tabstop>cb_ByLivery</tabstop>
   <tabstop>cb_ByFamily</tabstop>
   <tabstop>cb_ByCombinedCode</tabstop>
+  <tabstop>cb_ByMilitary</tabstop>
+  <tabstop>cb_ByVtol</tabstop>
   <tabstop>cb_ScorePreferColorLiveries</tabstop>
   <tabstop>cb_ScoreIgnoreZeros</tabstop>
  </tabstops>

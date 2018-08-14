@@ -25,7 +25,10 @@ namespace BlackGui
             ui(new Ui::CMatchingForm)
         {
             ui->setupUi(this);
-            connect(ui->rb_Reduction, &QRadioButton::toggled, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+
             connect(ui->pb_Reset, &QPushButton::released, this, &CMatchingForm::clear, Qt::QueuedConnection);
         }
 
@@ -38,12 +41,15 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ByFamily, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByLivery, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByCombinedCode, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ByVtol, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ByMilitary, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScoreIgnoreZeros, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScorePreferColorLiveries, readonly);
 
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
-            ui->rb_ScoreBased->setEnabled(enabled);
+            ui->rb_ScoreAndReduction->setEnabled(enabled);
+            ui->rb_ScoreOnly->setEnabled(enabled);
             ui->rb_ByIcaoDataAircraft1st->setEnabled(enabled);
             ui->rb_ByIcaoDataAirline1st->setEnabled(enabled);
             ui->rb_PickFirst->setEnabled(enabled);
@@ -66,13 +72,13 @@ namespace BlackGui
             ui->rb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
             ui->cb_ByLivery->setChecked(mode.testFlag(CAircraftMatcherSetup::ByLivery));
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
+            ui->cb_ByMilitary->setChecked(mode.testFlag(CAircraftMatcherSetup::ByMilitary));
+            ui->cb_ByVtol->setChecked(mode.testFlag(CAircraftMatcherSetup::ByVtol));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
+
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
-
-            const bool scoring = (setup.getMatchingAlgorithm() == CAircraftMatcherSetup::MatchingScoreBased);
-            ui->gb_Scoring->setEnabled(scoring);
         }
 
         CAircraftMatcherSetup CMatchingForm::value() const
@@ -90,7 +96,8 @@ namespace BlackGui
         CAircraftMatcherSetup::MatchingAlgorithm CMatchingForm::algorithm() const
         {
             if (ui->rb_Reduction->isChecked()) { return CAircraftMatcherSetup::MatchingStepwiseReduce; }
-            return CAircraftMatcherSetup::MatchingScoreBased;
+            if (ui->rb_ScoreOnly->isChecked()) { return CAircraftMatcherSetup::MatchingScoreBased; }
+            return CAircraftMatcherSetup::MatchingStepwiseReducePlusScoreBased;
         }
 
         CAircraftMatcherSetup::MatchingMode CMatchingForm::matchingMode() const
@@ -100,6 +107,7 @@ namespace BlackGui
                        ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
                        ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
                        ui->cb_ByCombinedCode->isChecked(),
+                       ui->cb_ByMilitary->isChecked(), ui->cb_ByVtol->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked()
                    );
         }
@@ -125,19 +133,29 @@ namespace BlackGui
 
         void CMatchingForm::setMatchingAlgorithm(const CAircraftMatcherSetup &setup)
         {
-            if (setup.getMatchingAlgorithm() == CAircraftMatcherSetup::MatchingScoreBased)
+            switch (setup.getMatchingAlgorithm())
             {
-                ui->rb_ScoreBased->setChecked(true);
-            }
-            else
-            {
+            case CAircraftMatcherSetup::MatchingStepwiseReduce:
                 ui->rb_Reduction->setChecked(true);
+                ui->gb_Reduction->setEnabled(true);
+                ui->gb_Scoring->setEnabled(false);
+                break;
+            case CAircraftMatcherSetup::MatchingScoreBased:
+                ui->rb_ScoreOnly->setChecked(true);
+                ui->gb_Reduction->setEnabled(false);
+                ui->gb_Scoring->setEnabled(true);
+                break;
+            case CAircraftMatcherSetup::MatchingStepwiseReducePlusScoreBased:
+            default:
+                ui->rb_ScoreAndReduction->setChecked(true);
+                ui->gb_Reduction->setEnabled(true);
+                ui->gb_Scoring->setEnabled(true);
+                break;
             }
         }
 
-        void CMatchingForm::onAlgorithmChanged(bool checked)
+        void CMatchingForm::onAlgorithmChanged()
         {
-            Q_UNUSED(checked);
             const CAircraftMatcherSetup setup = this->value();
             this->setValue(setup);
         }
