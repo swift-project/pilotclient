@@ -229,14 +229,17 @@ namespace BlackCore
             //! Add to message list for matching
             void addMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessageList &messages);
 
+            //! Clear matching messages
+            void clearMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Load the last know model set
             void initByLastUsedModelSet();
 
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
-            CPluginManagerSimulator *m_plugins = nullptr; //!< plugin manager
-            BlackMisc::CRegularThread m_listenersThread;  //!< waiting for plugin
-            CWeatherManager m_weatherManager   { this };  //!< weather management
-            CAircraftMatcher m_aircraftMatcher { this };  //!< model matcher
+            CPluginManagerSimulator  *m_plugins = nullptr; //!< plugin manager
+            BlackMisc::CRegularThread m_listenersThread;   //!< waiting for plugin
+            CWeatherManager  m_weatherManager  { this };   //!< weather management
+            CAircraftMatcher m_aircraftMatcher { this };   //!< model matcher
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList>  m_matchingMessages; //!< all matching log messages per callsign
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
 

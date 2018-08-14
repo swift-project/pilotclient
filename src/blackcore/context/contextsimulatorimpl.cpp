@@ -526,6 +526,7 @@ namespace BlackCore
             const CLength cg = m_simulatorPlugin.second->getCGPerModelString(aircraftModel.getModelString());
             if (!cg.isNull()) { aircraftModel.setCG(cg); }
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());
+
             const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             if (!aircraftAfterModelApplied.hasModelString())
             {
@@ -539,12 +540,16 @@ namespace BlackCore
                 brokenAircraft.setEnabled(false);
                 brokenAircraft.setRendered(false);
                 emit this->aircraftRenderingChanged(brokenAircraft);
-                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Cannot add remote aircraft, no model string: %1").arg(brokenAircraft.toQString()));
+                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
                 return;
             }
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+
+            this->clearMatchingMessages(callsign);
             this->addMatchingMessages(callsign, matchingMessages);
+
+            // done
             emit this->modelMatchingCompleted(aircraftAfterModelApplied);
         }
 
@@ -913,6 +918,12 @@ namespace BlackCore
             {
                 m_matchingMessages.insert(callsign, messages);
             }
+        }
+
+        void CContextSimulator::clearMatchingMessages(const CCallsign &callsign)
+        {
+            if (callsign.isEmpty()) { return; }
+            m_matchingMessages.remove(callsign);
         }
 
         void CContextSimulator::initByLastUsedModelSet()
