@@ -581,6 +581,8 @@ namespace BlackCore
             int id = 0;
             QString key;
             if (!CNetworkVatlib::getCmdLineClientIdAndKey(id, key)) { return args; }
+
+            // from cmd. line
             args << "--idAndKey";
             args << sApp->getParserValue("clientIdAndKey"); // as typed in
             return args;
@@ -762,6 +764,7 @@ namespace BlackCore
             key = "";
 
             // split parser values
+            if (CNetworkVatlib::getCmdLineOptions().isEmpty()) { return false; } // no such option, avoid warnings
             const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
             const QStringList stringList = clientIdAndKey.split(':');
