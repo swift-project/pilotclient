@@ -23,7 +23,7 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
             ui->tw_Settings->setCurrentIndex(0);
-            ui->comp_Settings->setSimulator(m_simulator);
+            ui->comp_FsxSettings->setSimulator(m_simulator);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &QWidget::close);
             this->setWindowTitle(m_simulator.toQString(true) + " plugin configuration");
         }

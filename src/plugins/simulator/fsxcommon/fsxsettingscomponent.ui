@@ -6,18 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>126</width>
-    <height>31</height>
+    <width>326</width>
+    <height>47</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>FSX settings</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QHBoxLayout" name="hl_FsxSettingsComponent" stretch="0,1">
+   <item>
     <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
      <property name="text">
-      <string>Trace simConnect calls</string>
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_TraceSimConnectCalls">
+     <property name="text">
+      <string>Trace simConnect calls (this will trace sendId calls and provide further information)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

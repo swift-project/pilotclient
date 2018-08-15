@@ -53,7 +53,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_Settings">
+     <widget class="QWidget" name="tb_FsxSettings">
       <attribute name="title">
        <string>Settings</string>
       </attribute>
@@ -71,7 +71,27 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackSimPlugin::FsxCommon::CFsxSettingsComponent" name="comp_Settings"/>
+        <widget class="BlackSimPlugin::FsxCommon::CFsxSettingsComponent" name="comp_FsxSettings">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>75</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
