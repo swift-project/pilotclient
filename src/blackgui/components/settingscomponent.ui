@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>6</number>
   </property>
   <widget class="QWidget" name="tb_SettingsOverview">
    <attribute name="title">
@@ -30,32 +30,6 @@
     <property name="verticalSpacing">
      <number>20</number>
     </property>
-    <item row="6" column="0">
-     <widget class="QPushButton" name="pb_SimulatorBasics">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Simulator (basics)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QPushButton" name="pb_Simulator">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Simulator</string>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="0">
      <widget class="QPushButton" name="pb_Network">
       <property name="sizePolicy">
@@ -206,6 +180,32 @@
       </property>
       <property name="text">
        <string>Simulator (messages)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QPushButton" name="pb_SimulatorBasics">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Simulator (basics)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QPushButton" name="pb_Simulator">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Simulator</string>
       </property>
      </widget>
     </item>
@@ -473,6 +473,38 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="tb_SettingsSimulator">
+   <attribute name="title">
+    <string>Simulator</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_SettingsSimulator">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CSettingsSimulatorComponent" name="comp_SettingsSimulator">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWidget" name="tb_SettingsSimulatorBasics">
    <attribute name="title">
     <string>Simulator (basics)</string>
@@ -515,38 +547,6 @@
        </size>
       </property>
      </spacer>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="tb_SettingsSimulator">
-   <attribute name="title">
-    <string>Simulator</string>
-   </attribute>
-   <layout class="QVBoxLayout" name="vl_SettingsSimulator">
-    <property name="spacing">
-     <number>2</number>
-    </property>
-    <property name="leftMargin">
-     <number>1</number>
-    </property>
-    <property name="topMargin">
-     <number>1</number>
-    </property>
-    <property name="rightMargin">
-     <number>1</number>
-    </property>
-    <property name="bottomMargin">
-     <number>1</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Components::CSettingsSimulatorComponent" name="comp_SettingsSimulator">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
@@ -744,8 +744,8 @@
   <tabstop>pb_Hotkeys</tabstop>
   <tabstop>pb_Audio</tabstop>
   <tabstop>pb_DataLoadAndCaches</tabstop>
-  <tabstop>pb_SimulatorBasics</tabstop>
   <tabstop>pb_Simulator</tabstop>
+  <tabstop>pb_SimulatorBasics</tabstop>
   <tabstop>pb_SimulatorMessages</tabstop>
   <tabstop>pb_Matching</tabstop>
   <tabstop>pb_Advanced</tabstop>
