@@ -400,7 +400,7 @@ namespace BlackMisc
             //! \threadsafe
             //! @{
             void storeAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdated);
-            void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
+            void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
             //! @}
 
             //! Guess situation "on ground" and update model's CG if applicable

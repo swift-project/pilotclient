@@ -209,14 +209,14 @@ namespace BlackCore
                 {
                     // Normal / Stealth mode
                     VatPilotPosition pos;
-                    pos.altitudePressure = myAircraft.getPressureAltitude().value(CLengthUnit::ft());
-                    pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
+                    pos.altitudePressure = myAircraft.getPressureAltitude().valueInteger(CLengthUnit::ft());
+                    pos.altitudeTrue = myAircraft.getAltitude().valueInteger(CLengthUnit::ft());
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
                     pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
                     pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
                     pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
                     pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
-                    pos.groundSpeed  = myAircraft.getGroundSpeed().value(CSpeedUnit::kts());
+                    pos.groundSpeed  = myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts());
                     pos.rating = vatPilotRatingUnknown;
                     pos.transponderCode = static_cast<qint16>(myAircraft.getTransponderCode());
                     pos.transponderMode = vatTransponderModeStandby;
@@ -240,7 +240,7 @@ namespace BlackCore
                 if (m_loginMode == LoginNormal)
                 {
                     VatInterimPilotPosition pos;
-                    pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
+                    pos.altitudeTrue = myAircraft.getAltitude().valueInteger(CLengthUnit::ft());
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
                     pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
                     pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
@@ -535,8 +535,8 @@ namespace BlackCore
                 // if this is really required, I need to group by message
                 // currently I send individual messages
                 freqsVec.clear();
-                freqsVec.push_back(message.getFrequency().valueRounded(CFrequencyUnit::kHz(), 0));
-                Vat_SendRadioMessage(m_net.data(), freqsVec.data(), freqsVec.size(), toFSD(message.getMessage()));
+                freqsVec.push_back(message.getFrequency().valueInteger(CFrequencyUnit::kHz()));
+                Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSD(message.getMessage()));
                 emit this->textMessageSent(message);
             }
         }
@@ -637,7 +637,7 @@ namespace BlackCore
             vatlibFP.fuelMins = timeParts[CTime::Minutes];
             vatlibFP.remarks = remarksTemp = toFSD(remarks);
             vatlibFP.route = routeTemp = toFSD(route);
-            vatlibFP.trueCruisingSpeed = flightPlan.getCruiseTrueAirspeed().valueRounded(CSpeedUnit::kts());
+            vatlibFP.trueCruisingSpeed = flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts());
             switch (flightPlan.getFlightRules())
             {
             default:
@@ -906,7 +906,7 @@ namespace BlackCore
 
             //! we set a dynamically updating offset time here
             situation.setCurrentUtcTime();
-            const int offsetMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            const qint64 offsetMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
             situation.setTimeOffsetMs(offsetMs);
 
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
@@ -964,7 +964,7 @@ namespace BlackCore
             const QJsonObject config = doc.object().value("config").toObject();
             if (config.empty()) { return; }
 
-            const int offsetTimeMs = self->currentOffsetTime(callsign);
+            const qint64 offsetTimeMs = self->currentOffsetTime(callsign);
             emit self->aircraftConfigPacketReceived(callsign, config, offsetTimeMs);
         }
 
@@ -1253,7 +1253,7 @@ namespace BlackCore
             auto *self = cbvar_cast(cbvar);
             switch (type)
             {
-            case vatClientQueryFreq:   emit self->frequencyReplyReceived(self->fromFSD(callsign), CFrequency(self->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+            case vatClientQueryFreq:   emit self->frequencyReplyReceived(self->fromFSD(callsign), CFrequency(self->fromFSD(data).toDouble(), CFrequencyUnit::MHz())); break;
             case vatClientQueryServer: emit self->serverReplyReceived(self->fromFSD(callsign), self->fromFSD(data)); break;
             case vatClientQueryAtc:    emit self->atcReplyReceived(CCallsign(self->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
             case vatClientQueryName:   emit self->realNameReplyReceived(self->fromFSD(callsign), self->fromFSD(data)); break;

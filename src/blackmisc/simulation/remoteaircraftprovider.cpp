@@ -367,7 +367,7 @@ namespace BlackMisc
             emit this->addedAircraftParts(callsign, parts);
         }
 
-        void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
+        void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
         {
             const CSimulatedAircraft remoteAircraft(this->getAircraftInRangeForCallsign(callsign));
             const bool isFull = jsonObject.value(CAircraftParts::attributeNameIsFullJson()).toBool();
@@ -400,7 +400,7 @@ namespace BlackMisc
 
             // make sure in any case right time and correct details
             parts.setCurrentUtcTime();
-            parts.setTimeOffsetMs(currentOffset);
+            parts.setTimeOffsetMs(currentOffsetMs);
             parts.setPartsDetails(CAircraftParts::FSDAircraftParts);
 
             // store part history (parts always absolute)

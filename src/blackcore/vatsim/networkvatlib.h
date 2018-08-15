@@ -71,7 +71,7 @@ namespace BlackCore
                 QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CNetworkVatlib();
+            virtual ~CNetworkVatlib() override;
 
             //! \copydoc INetwork::getLibraryInfo
             const QString &getLibraryInfo(bool detailed) const override;

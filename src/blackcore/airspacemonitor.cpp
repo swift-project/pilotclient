@@ -955,10 +955,10 @@ namespace BlackCore
         this->updateAircraftInRange(callsign, vm);
     }
 
-    void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
+    void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        this->storeAircraftParts(callsign, jsonObject, currentOffset);
+        this->storeAircraftParts(callsign, jsonObject, currentOffsetMs);
 
         // update client capability
         CClient client = this->getClientOrDefaultForCallsign(callsign);
