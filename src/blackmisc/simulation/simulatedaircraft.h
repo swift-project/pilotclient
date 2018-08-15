@@ -131,6 +131,9 @@ namespace BlackMisc
             //! Aircraft ICAO code designator
             const QString &getAircraftIcaoCodeDesignator() const;
 
+            //! Aircraft and Airline ICAO code designators
+            QString getAirlineAndAircraftIcaoCodeDesignators() const;
+
             //! Aircraft ICAO combined code
             const QString &getAircraftIcaoCombinedType() const;
 

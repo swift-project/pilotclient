@@ -828,25 +828,48 @@ namespace BlackCore
         reduced = false;
         if (mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst))
         {
-            bool r;
-            CAircraftModelList models = ifPossibleReduceByAirline(remoteAircraft, inList, "Reduce by airline first.", r, log);
-            models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, models, setup, "Reduce by aircraft ICAO second.", r, log);
-            reduced = r;
+            bool r1 = false;
+            bool r2 = false;
+            CAircraftModelList models = ifPossibleReduceByAirline(remoteAircraft, inList, "Reduce by airline first.", r1, log);
+            models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, models, setup, "Reduce by aircraft ICAO second.", r2, log);
+            reduced = r1 || r2;
             if (reduced) { return models; }
         }
         else if (mode.testFlag(CAircraftMatcherSetup::ByIcaoData))
         {
-            bool r;
-            CAircraftModelList models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, inList, setup, "Reduce by aircraft ICAO first.", r, log);
-            models = ifPossibleReduceByAirline(remoteAircraft, models, "Reduce by airline second.", r, log);
-            reduced = r;
-            if (reduced) { return models; }
-        }
-        else
-        {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No reduction by ICAO data", getLogCategories()); }
+            bool r1 = false;
+            bool r2 = false;
+            CAircraftModelList models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, inList, setup, "Reduce by aircraft ICAO first.", r1, log);
+            models = ifPossibleReduceByAirline(remoteAircraft, models, "Reduce aircraft ICAO by airline second.", r2, log);
+
+            // not finding anything so far means we have no valid aircraft/airline ICAO combination
+            // but it can happen we found B738, and for DLH there is no B738 but B737, so we search again
+            if (!r2 && mode.testFlag(CAircraftMatcherSetup::ByFamily))
+            {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No exact ICAO match of '") % remoteAircraft.getAirlineAndAircraftIcaoCodeDesignators() % QStringLiteral("', will try family combination"), getLogCategories()); }
+
+                bool r3 = false;
+                CAircraftModelList models2nd = ifPossibleReduceByFamily(remoteAircraft, inList, r3, log);
+                models2nd = ifPossibleReduceByAirline(remoteAircraft, models2nd, "Reduce family by airline second.", r3, log);
+                if (r3)
+                {
+                    // we found family / airline combination
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Found aircraft family/airline '") % QStringLiteral("'combination"), getLogCategories()); }
+                    return models;
+                }
+            }
+
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Found aircraft family/airline '") % remoteAircraft.getAircraftIcaoCode().getFamily() % QStringLiteral("/") % remoteAircraft.getAirlineIcaoCodeDesignator() % QStringLiteral("'combination"), getLogCategories()); }
+
+            reduced = r1 || r2;
+            if (reduced)
+            {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced by aircraft ICAO: ") % boolToYesNo(r1) % QStringLiteral(" airline: ") % boolToYesNo(r2), getLogCategories()); }
+                return models;
+            }
         }
 
+        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No reduction by ICAO data", getLogCategories()); }
         return inList;
     }
 

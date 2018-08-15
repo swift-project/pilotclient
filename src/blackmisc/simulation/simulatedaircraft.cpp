@@ -141,6 +141,13 @@ namespace BlackMisc
             return getAircraftIcaoCode().getDesignator();
         }
 
+        QString CSimulatedAircraft::getAirlineAndAircraftIcaoCodeDesignators() const
+        {
+            if (this->hasAircraftAndAirlineDesignator()) { return this->getAircraftIcaoCodeDesignator() % QStringLiteral("/") % this->getAirlineIcaoCodeDesignator(); }
+            if (this->hasAirlineDesignator()) { return this->getAirlineIcaoCodeDesignator(); }
+            return this->getAircraftIcaoCodeDesignator();
+        }
+
         const QString &CSimulatedAircraft::getAircraftIcaoCombinedType() const
         {
             return getAircraftIcaoCode().getCombinedType();
