@@ -225,9 +225,9 @@ namespace BlackSimPlugin
             switch (message.getSeverity())
             {
             case CStatusMessage::SeverityDebug: return;
-            case CStatusMessage::SeverityInfo: type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN; break;
+            case CStatusMessage::SeverityInfo:    type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN;  break;
             case CStatusMessage::SeverityWarning: type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW; break;
-            case CStatusMessage::SeverityError: type = SIMCONNECT_TEXT_TYPE_PRINT_RED; break;
+            case CStatusMessage::SeverityError:   type = SIMCONNECT_TEXT_TYPE_PRINT_RED;    break;
             }
             const HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()), m.data());
             Q_UNUSED(hr);

@@ -37,7 +37,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexStrobe = BlackMisc::CPropertyIndex::GlobalIndexCAircraftLights,
+                IndexStrobe = CPropertyIndex::GlobalIndexCAircraftLights,
                 IndexLanding,
                 IndexTaxi,
                 IndexBeacon,

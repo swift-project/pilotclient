@@ -56,8 +56,8 @@ namespace BlackSimPlugin
             double com2StandbyMHz;    //!< COM1 standby frequency
 
             double flapsHandlePosition;    //!< Flaps handle position in percent
-            double spoilersHandlePosition; //!< Spoilers out?
-            double gearHandlePosition;     //!< Gear handle position
+            double spoilersHandlePosition; //!< Spoilers out? (flag)
+            double gearHandlePosition;     //!< Gear handle position (flag)
 
             double numberOfEngines;   //!< Number of engines
             double engine1Combustion; //!< Engine 1 combustion flag

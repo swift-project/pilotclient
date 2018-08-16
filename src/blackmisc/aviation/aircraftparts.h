@@ -69,10 +69,10 @@ namespace BlackMisc
                            const CAircraftEngineList &engines, bool onGround);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftParts &compareValue) const;

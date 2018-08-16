@@ -350,9 +350,7 @@ namespace BlackSimPlugin
                     MultiPlayerPacketParser::readMessage(message, mpChatText);
                     break;
                 }
-
-            default:
-                break;
+            default: break;
             }
         }
 

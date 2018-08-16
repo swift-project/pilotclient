@@ -109,7 +109,7 @@ namespace BlackMisc
                 const int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);
                 if (i < 0) { return QString("No enumerator for %1").arg(enumName); }
                 const QMetaEnum m = CSimConnectUtilities::staticMetaObject.enumerator(i);
-                const char *k = m.valueToKey(id);
+                const char *k = m.valueToKey(static_cast<int>(id));
                 return (k) ? QLatin1String(k) : QString("Id '%1' not found for %2").arg(id).arg(enumName);
             }
 
