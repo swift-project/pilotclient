@@ -113,7 +113,7 @@ namespace BlackSimPlugin
                                 QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatorFsxCommon();
+            virtual ~CSimulatorFsxCommon() override;
 
             //! \name ISimulator implementations
             //! @{
@@ -516,7 +516,7 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
-            QTimer  m_timer;
+            QTimer  m_timer { this }; //!< timer, "this" is needed otherwise
             QString m_simulatorVersion;
             QString m_simConnectVersion;
             QString m_simulatorName;

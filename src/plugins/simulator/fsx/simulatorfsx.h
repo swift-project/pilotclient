@@ -34,7 +34,7 @@ namespace BlackSimPlugin
         };
 
         //! Listener for FSX
-        class CSimulatorFsxListener : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommonListener
+        class CSimulatorFsxListener : public FsxCommon::CSimulatorFsxCommonListener
         {
             Q_OBJECT
 

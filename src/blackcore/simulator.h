@@ -552,18 +552,15 @@ namespace BlackCore
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
     };
 
-    //! Interface to a simulator listener.
-    //! The simulator listener is responsible for letting the core know when
-    //! the corresponding simulator is started.
+    //! \brief Interface to a simulator listener.
+    //! \details The simulator listener is responsible for letting the core know,
+    //!          when the corresponding simulator is started.
+    //! \note Will be moved to a background thread (context)
     class BLACKCORE_EXPORT ISimulatorListener : public QObject
     {
         Q_OBJECT
 
     public:
-        //! Constructor
-        //! \sa ISimulatorFactory::createListener().
-        ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
-
         //! Destructor
         virtual ~ISimulatorListener() = default;
 
@@ -588,6 +585,10 @@ namespace BlackCore
         void simulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
     protected:
+        //! Constructor
+        //! \sa ISimulatorFactory::createListener().
+        ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+
         //! Plugin specific implementation to start listener
         virtual void startImpl() = 0;
 
