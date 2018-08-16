@@ -214,6 +214,11 @@ namespace BlackMisc
             this->setNormalVector(normalVector);
         }
 
+        CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude) : CCoordinateGeodetic(latitude, longitude, CAltitude::null())
+        {
+            // void
+        }
+
         CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) :
             m_x(latitude.cos() * longitude.cos()),
             m_y(latitude.cos() * longitude.sin()),

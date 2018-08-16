@@ -215,7 +215,10 @@ namespace BlackMisc
             //! Constructor by normal vector
             CCoordinateGeodetic(const std::array<double, 3> &normalVector);
 
-            //! Constructor by values
+            //! Constructor by latitude/longitude, height is null
+            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude);
+
+            //! Constructor by latitude/longitude/height (or altitude)
             CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const Aviation::CAltitude &geodeticHeight);
 
             //! Constructor by double values, but no geodetic height

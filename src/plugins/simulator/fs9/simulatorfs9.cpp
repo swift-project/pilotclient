@@ -333,7 +333,7 @@ namespace BlackSimPlugin
 
                     if (m_isWeatherActivated)
                     {
-                        const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
+                        const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
                         if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
                                 calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                         {
