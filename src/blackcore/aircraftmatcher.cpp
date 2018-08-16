@@ -107,11 +107,14 @@ namespace BlackCore
         static const QString m2("Input model: '%1' '%2'");
         static const QString m3("Matching uses model set of %1 models\n%2");
         static const QString m4("Setup %1");
-        static const QString summary = QStringLiteral("\n-----------------------------------------\n") %
-                                       QStringLiteral("- Combined: %1 -> %2\n") %
-                                       QStringLiteral("- Aircraft: %3 -> %4\n") %
-                                       QStringLiteral("- Airline:  %5 -> %6\n") %
-                                       QStringLiteral("-----------------------------------------\n");
+        static const QString summary =
+            QStringLiteral("\n") %
+            QStringLiteral("-----------------------------------------\n") %
+            QStringLiteral("- Combined: %1 -> %2\n") %
+            QStringLiteral("- Aircraft: %3 -> %4\n") %
+            QStringLiteral("- Airline:  %5 -> %6\n") %
+            QStringLiteral("- Livery:   %7 -> %8\n") %
+            QStringLiteral("-----------------------------------------\n");
 
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
         if (log) { log->clear(); }
@@ -214,7 +217,8 @@ namespace BlackCore
                                                     summary.arg(
                                                         remoteAircraft.getAircraftIcaoCode().getCombinedType(), matchedModel.getAircraftIcaoCode().getCombinedType(),
                                                         remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
-                                                        remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey()
+                                                        remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey(),
+                                                        remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId()
                                                     ));
             }
         }
@@ -668,7 +672,8 @@ namespace BlackCore
                 // family only because aircraft ICAO is not used
                 if (mode.testFlag(CAircraftMatcherSetup::ByFamily))
                 {
-                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, matchedModels, reduced, log);
+                    QString usedFamily;
+                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, matchedModels, reduced, usedFamily, log);
                     if (reduced) { break; }
                 }
                 else if (log)
@@ -849,17 +854,16 @@ namespace BlackCore
                 if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No exact ICAO match of '") % remoteAircraft.getAirlineAndAircraftIcaoCodeDesignators() % QStringLiteral("', will try family combination"), getLogCategories()); }
 
                 bool r3 = false;
-                CAircraftModelList models2nd = ifPossibleReduceByFamily(remoteAircraft, inList, r3, log);
+                QString usedFamily;
+                CAircraftModelList models2nd = ifPossibleReduceByFamily(remoteAircraft, inList, r3, usedFamily, log);
                 models2nd = ifPossibleReduceByAirline(remoteAircraft, models2nd, "Reduce family by airline second.", r3, log);
                 if (r3)
                 {
                     // we found family / airline combination
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Found aircraft family/airline '") % QStringLiteral("'combination"), getLogCategories()); }
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Found aircraft family/airline '") % QStringLiteral("' combination"), getLogCategories()); }
                     return models;
                 }
             }
-
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Found aircraft family/airline '") % remoteAircraft.getAircraftIcaoCode().getFamily() % QStringLiteral("/") % remoteAircraft.getAirlineIcaoCodeDesignator() % QStringLiteral("'combination"), getLogCategories()); }
 
             reduced = r1 || r2;
             if (reduced)
@@ -873,16 +877,19 @@ namespace BlackCore
         return inList;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, QString &usedFamily, CStatusMessageList *log)
     {
         reduced = false;
-        QString family = remoteAircraft.getAircraftIcaoCode().getFamily();
-        CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, family, inList, "real family", reduced, log);
-        if (reduced) { return matchedModels; }
+        usedFamily = remoteAircraft.getAircraftIcaoCode().getFamily();
+        if (!usedFamily.isEmpty())
+        {
+            CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, usedFamily, inList, "real family", reduced, log);
+            if (reduced) { return matchedModels; }
+        }
 
         // scenario: the ICAO actually is the family
-        family = remoteAircraft.getAircraftIcaoCodeDesignator();
-        return ifPossibleReduceByFamily(remoteAircraft, family, inList, "ICAO treated as family", reduced, log);
+        usedFamily = remoteAircraft.getAircraftIcaoCodeDesignator();
+        return ifPossibleReduceByFamily(remoteAircraft, usedFamily, inList, "ICAO treated as family", reduced, log);
     }
 
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &inList, const QString &hint, bool &reduced, CStatusMessageList *log)
@@ -1000,7 +1007,8 @@ namespace BlackCore
         reduced = false;
         const CAircraftModelList outList = ifPossibleReduceByAircraft(remoteAircraft, inList, info, reduced, log);
         if (reduced || !setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByFamily)) { return outList; }
-        return ifPossibleReduceByFamily(remoteAircraft, inList, reduced, log);
+        QString family;
+        return ifPossibleReduceByFamily(remoteAircraft, inList, reduced, family, log);
     }
 
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByAirline(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, bool &reduced, CStatusMessageList *log)

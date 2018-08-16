@@ -201,7 +201,7 @@ namespace BlackCore
 
         //! Find model by aircraft family
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, QString &usedFamily, BlackMisc::CStatusMessageList *log);
 
         //! Find model by aircraft family
         //! \threadsafe

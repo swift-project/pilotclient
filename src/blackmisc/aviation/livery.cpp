@@ -69,20 +69,17 @@ namespace BlackMisc
 
         QString CLivery::getCombinedCodePlusInfo() const
         {
-            QString s = this->getCombinedCode();
-            if (!this->getDescription().isEmpty())
-            {
-                s += " ";
-                s += this->getDescription();
-            }
-            return s;
+            return this->getCombinedCode() % (
+                       this->getDescription().isEmpty() ?
+                       QStringLiteral("") :
+                       (QStringLiteral(" ") % this->getDescription())
+                   );
         }
 
         QString CLivery::getCombinedCodePlusInfoAndId() const
         {
-            QString s = this->getCombinedCodePlusInfo();
-            s += this->getDbKeyAsStringInParentheses(" ");
-            return s;
+            return this->getCombinedCodePlusInfo() %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         bool CLivery::isContainedInSimplifiedAirlineName(const QString &candidate) const
