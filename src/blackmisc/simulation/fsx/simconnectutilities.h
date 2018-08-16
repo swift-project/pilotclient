@@ -17,7 +17,6 @@
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/windllutils.h"
-#include "simconnectutilities.h"
 
 #include <QMetaType>
 #include <QObject>
@@ -32,7 +31,7 @@
 #   ifndef NOMINMAX
 #       define NOMINMAX
 #   endif
-#   include <windows.h>
+#   include <Windows.h>
 #else
 using DWORD = unsigned long; //!< Fake Windows DWORD
 #endif
