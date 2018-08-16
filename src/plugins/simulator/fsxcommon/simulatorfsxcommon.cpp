@@ -47,6 +47,13 @@ namespace BlackSimPlugin
 {
     namespace FsxCommon
     {
+        //! Correctly casted values/checks @{
+        static HRESULT inline  s_ok() { return S_OK; }
+        static bool inline isOk(HRESULT result) { return result == s_ok(); }
+        static bool inline isFailure(HRESULT result) { return !isOk(result); }
+        static bool inline dtb(double doubleBool) { return static_cast<bool>(qRound(doubleBool)); }
+        //! @}
+
         CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
@@ -90,7 +97,7 @@ namespace BlackSimPlugin
 
             if (!loadAndResolveSimConnect(true)) { return false; }
 
-            if (FAILED(SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0)))
+            if (FAILED(SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0)))
             {
                 // reset state as expected for unconnected
                 return false;
@@ -186,11 +193,11 @@ namespace BlackSimPlugin
                 {
                     byte ident = newTransponder.isIdentifying() ? 1U : 0U; // 1 is ident
                     byte standby = newTransponder.isInStandby() ? 1U : 0U; // 1 is standby
-                    HRESULT hr = S_OK;
+                    HRESULT hr = s_ok();
 
                     hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &ident);
                     hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &standby);
-                    if (hr != S_OK)
+                    if (isFailure(hr))
                     {
                         this->triggerAutoTraceSendId();
                         CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
@@ -268,7 +275,7 @@ namespace BlackSimPlugin
             return specificInfo.
                    arg(m_dispatchProcCount).arg(m_dispatchProcEmptyCount).
                    arg(m_dispatchTimeMs).arg(m_dispatchProcTimeMs).arg(m_dispatchMaxTimeMs).arg(m_dispatchProcMaxTimeMs).
-                   arg(CSimConnectUtilities::simConnectReceiveIdToString(m_dispatchReceiveIdMaxTime), requestIdToString(m_dispatchRequestIdMaxTime)).
+                   arg(CSimConnectUtilities::simConnectReceiveIdToString(static_cast<DWORD>(m_dispatchReceiveIdMaxTime)), requestIdToString(m_dispatchRequestIdMaxTime)).
                    arg(m_requestSimObjectDataCount);
         }
 
@@ -291,7 +298,7 @@ namespace BlackSimPlugin
                                sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
             if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
 
-            if (hr == S_OK)
+            if (isOk(hr))
             {
                 this->requestTerrainProbeData(callsign);
                 emit this->requestedElevation(callsign);
@@ -302,7 +309,7 @@ namespace BlackSimPlugin
                 const CStatusMessage msg = CStatusMessage(this).error("Cannot request AI position: '%1'") << callsign.asString();
                 CLogMessage::preformatted(msg);
             }
-            return hr == S_OK;
+            return isOk(hr);
         }
 
         bool CSimulatorFsxCommon::isTracingSendId() const
@@ -411,7 +418,7 @@ namespace BlackSimPlugin
                                                     CSimConnectDefinitions::DataSimEnvironment,
                                                     SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
 
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 this->triggerAutoTraceSendId();
                 CLogMessage(this).error("FSX plugin: SimConnect_RequestDataOnSimObject failed");
@@ -422,7 +429,7 @@ namespace BlackSimPlugin
             hr += SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
                                                CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED);
 
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 this->triggerAutoTraceSendId();
                 CLogMessage(this).error("FSX plugin: SimConnect_RequestClientData failed");
@@ -537,16 +544,16 @@ namespace BlackSimPlugin
             aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitude, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
             // set on ground also in situation for consistency and future usage
             // it is duplicated in parts
-            aircraftSituation.setOnGround(simulatorOwnAircraft.simOnGround ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
+            aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
 
-            const CAircraftLights lights(simulatorOwnAircraft.lightStrobe, simulatorOwnAircraft.lightLanding, simulatorOwnAircraft.lightTaxi,
-                                         simulatorOwnAircraft.lightBeacon, simulatorOwnAircraft.lightNav, simulatorOwnAircraft.lightLogo);
+            const CAircraftLights lights(dtb(simulatorOwnAircraft.lightStrobe), dtb(simulatorOwnAircraft.lightLanding), dtb(simulatorOwnAircraft.lightTaxi),
+                                         dtb(simulatorOwnAircraft.lightBeacon), dtb(simulatorOwnAircraft.lightNav), dtb(simulatorOwnAircraft.lightLogo));
 
             CAircraftEngineList engines;
             const QList<bool> helperList
             {
-                simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
-                simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0
+                dtb(simulatorOwnAircraft.engine1Combustion), dtb(simulatorOwnAircraft.engine2Combustion),
+                dtb(simulatorOwnAircraft.engine3Combustion), dtb(simulatorOwnAircraft.engine4Combustion)
             };
 
             for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
@@ -554,11 +561,12 @@ namespace BlackSimPlugin
                 engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
             }
 
-            const CAircraftParts parts(lights, simulatorOwnAircraft.gearHandlePosition,
-                                       simulatorOwnAircraft.flapsHandlePosition * 100,
-                                       simulatorOwnAircraft.spoilersHandlePosition,
+            const CAircraftParts parts(lights,
+                                       dtb(simulatorOwnAircraft.gearHandlePosition),
+                                       qRound(simulatorOwnAircraft.flapsHandlePosition * 100),
+                                       dtb(simulatorOwnAircraft.spoilersHandlePosition),
                                        engines,
-                                       simulatorOwnAircraft.simOnGround);
+                                       dtb(simulatorOwnAircraft.simOnGround));
 
             // set values
             this->updateOwnSituation(aircraftSituation);
@@ -585,7 +593,7 @@ namespace BlackSimPlugin
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
                 m_simCom2 = com2;
 
-                transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
+                transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));
                 const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
 
                 if (changedCom1 || changedCom2 || changedXpr)
@@ -785,7 +793,7 @@ namespace BlackSimPlugin
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-                if (hr != S_OK)
+                if (isFailure(hr))
                 {
                     msg = CStatusMessage(this).error("Cannot confirm object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
                     break;
@@ -800,14 +808,13 @@ namespace BlackSimPlugin
                 const bool updated = this->updateAircraftRendered(callsign, true);
                 if (updated)
                 {
-                    emit aircraftRenderingChanged(simObject.getAircraft());
+                    emit this->aircraftRenderingChanged(simObject.getAircraft());
                     static const QString debugMsg("CS: '%1' model: '%2' verified, request/object id: %3 %4");
                     if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, debugMsg.arg(callsign.toQString(), remoteAircraft.getModelString()).arg(requestId).arg(objectId)); }
                 }
                 else
                 {
-                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 already rendered") <<
-                            callsign.asString() << remoteAircraft.getModelString() << objectId;
+                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 already rendered") << callsign.asString() << remoteAircraft.getModelString() << requestId << objectId;
                 }
             }
             while (false);
@@ -971,6 +978,11 @@ namespace BlackSimPlugin
             this->dispatch();
         }
 
+        HRESULT CSimulatorFsxCommon::initEventsP3D()
+        {
+            return s_ok();
+        }
+
         bool CSimulatorFsxCommon::parseDetails(const CSimpleCommandParser &parser)
         {
             // .driver sendid on|off
@@ -1041,7 +1053,7 @@ namespace BlackSimPlugin
             }
 
             // error handling
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 m_dispatchErrors++;
                 this->triggerAutoTraceSendId();
@@ -1173,7 +1185,7 @@ namespace BlackSimPlugin
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
             const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
                 CLogMessage::preformatted(msg);
@@ -1207,7 +1219,7 @@ namespace BlackSimPlugin
             if (this->isTracingSendId()) { this->traceSendId(0, Q_FUNC_INFO, QString("Adding probe, req.id: %1").arg(requestId));}
 
             bool ok = false;
-            if (hr == S_OK)
+            if (isOk(hr))
             {
                 ok = true;
                 const CAircraftModel model(modelString, CAircraftModel::TypeTerrainProbe, QStringLiteral("swift terrain probe"), CAircraftIcaoCode::unassignedIcao());
@@ -1270,7 +1282,7 @@ namespace BlackSimPlugin
             // call in SIM
             const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
             const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
-            if (result == S_OK)
+            if (isOk(result))
             {
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
             }
@@ -1320,7 +1332,7 @@ namespace BlackSimPlugin
 
         HRESULT CSimulatorFsxCommon::initEvents()
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             // System events, see http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventSimStatus, "Sim");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectAdded, "ObjectAdded");
@@ -1328,7 +1340,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFrame, "Frame");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventPause, "Pause");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFlightLoaded, "FlightLoaded");
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
                 return hr;
@@ -1372,7 +1384,7 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleTaxiLights, "TOGGLE_TAXI_LIGHTS");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleWingLights, "TOGGLE_WING_LIGHTS");
 
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
                 return hr;
@@ -1381,7 +1393,7 @@ namespace BlackSimPlugin
             // facility
             SIMCONNECT_DATA_REQUEST_ID requestId = static_cast<SIMCONNECT_DATA_REQUEST_ID>(CSimConnectDefinitions::RequestFacility);
             hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, requestId);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
                 return hr;
@@ -1399,7 +1411,7 @@ namespace BlackSimPlugin
             // called when connected
 
             HRESULT hr = this->initEvents();
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("FSX plugin: initEvents failed");
                 return hr;
@@ -1407,7 +1419,7 @@ namespace BlackSimPlugin
 
             // init data definitions and SB data area
             hr += this->initDataDefinitionsWhenConnected();
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("FSX plugin: initDataDefinitionsWhenConnected failed");
                 return hr;
@@ -1464,7 +1476,7 @@ namespace BlackSimPlugin
                         const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                            static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                            sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
-                        if (hr == S_OK)
+                        if (isOk(hr))
                         {
                             this->rememberLastSent(result); // remember
                             if (this->isTracingSendId()) { this->traceSendId(objectId, Q_FUNC_INFO, simObject.toQString()); }
@@ -1549,7 +1561,7 @@ namespace BlackSimPlugin
                                objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights);
 
-            if (hr == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
+            if (isOk(hr) && m_simConnectObjects.contains(simObject.getCallsign()))
             {
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
             }
@@ -1567,7 +1579,7 @@ namespace BlackSimPlugin
             this->sendToggledLightsToSimulator(simObject, lights);
 
             // done
-            const bool ok = (hr == S_OK);
+            const bool ok = isOk(hr);
             if (!ok) { this->triggerAutoTraceSendId(); }
             return ok;
         }
@@ -1641,7 +1653,7 @@ namespace BlackSimPlugin
 
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
-            position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
+            position.Airspeed = static_cast<DWORD>(situation.getGroundSpeed().valueInteger(CSpeedUnit::kts()));
 
             // MSFS has inverted pitch and bank angles
             position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
@@ -1683,21 +1695,21 @@ namespace BlackSimPlugin
             QDateTime myDateTime = QDateTime::currentDateTimeUtc();
             if (!m_syncTimeOffset.isZeroEpsilonConsidered())
             {
-                int offsetSeconds = m_syncTimeOffset.valueRounded(CTimeUnit::s(), 0);
+                int offsetSeconds = m_syncTimeOffset.valueInteger(CTimeUnit::s());
                 myDateTime = myDateTime.addSecs(offsetSeconds);
             }
             const QTime myTime = myDateTime.time();
             const DWORD h = static_cast<DWORD>(myTime.hour());
             const DWORD m = static_cast<DWORD>(myTime.minute());
             const int targetMins = myTime.hour() * 60 + myTime.minute();
-            const int simMins = zuluTimeSim.valueRounded(CTimeUnit::min());
+            const int simMins = zuluTimeSim.valueInteger(CTimeUnit::min());
             const int diffMins = qAbs(targetMins - simMins);
             if (diffMins < 2) { return; }
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(this).warning("Sending time sync failed!");
             }
@@ -1734,7 +1746,7 @@ namespace BlackSimPlugin
                                        CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                        simObject.getObjectId(), period);
 
-            if (result == S_OK)
+            if (isOk(result))
             {
                 m_requestSimObjectDataCount++;
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
@@ -1760,7 +1772,7 @@ namespace BlackSimPlugin
                                        CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                        objectId, SIMCONNECT_PERIOD_ONCE);
 
-            if (result == S_OK)
+            if (isOk(result))
             {
                 if (this->isTracingSendId()) { this->traceSendId(requestId, Q_FUNC_INFO); }
                 m_pendingProbeRequests.insert(requestId, callsign);
@@ -1781,7 +1793,7 @@ namespace BlackSimPlugin
                                        m_hSimConnect, requestId,
                                        CSimConnectDefinitions::DataRemoteAircraftLights, simObject.getObjectId(),
                                        SIMCONNECT_PERIOD_SECOND);
-            if (result == S_OK)
+            if (isOk(result))
             {
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
                 return true;
@@ -1801,7 +1813,7 @@ namespace BlackSimPlugin
                                        m_hSimConnect, requestId,
                                        CSimConnectDefinitions::DataRemoteAircraftModelData, simObject.getObjectId(),
                                        SIMCONNECT_PERIOD_ONCE);
-            if (result == S_OK)
+            if (isOk(result))
             {
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
                 return true;
@@ -1821,14 +1833,14 @@ namespace BlackSimPlugin
                                  m_hSimConnect, requestId,
                                  CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                  simObject.getObjectId(), SIMCONNECT_PERIOD_NEVER);
-            if (result == S_OK)  { if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Position");} }
+            if (isOk(result))  { if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Position");} }
 
             requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectLights);
             result = SimConnect_RequestDataOnSimObject(
                          m_hSimConnect, requestId,
                          CSimConnectDefinitions::DataRemoteAircraftLights, simObject.getObjectId(),
                          SIMCONNECT_PERIOD_NEVER);
-            if (result == S_OK)  { if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Lights");} }
+            if (isOk(result))  { if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Lights");} }
             Q_UNUSED(result);
             return true;
         }
@@ -1892,7 +1904,7 @@ namespace BlackSimPlugin
             if (MaxSendIdTraces < 1) { return; }
             DWORD dwLastId = 0;
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
-            if (hr != S_OK) { return; }
+            if (isFailure(hr)) { return; }
             if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeFirst(); }
             const TraceFsxSendId trace(dwLastId, simObjectId,
                                        details.isEmpty() ? function : details + ", " + function);
@@ -1922,7 +1934,7 @@ namespace BlackSimPlugin
                 if (!probeSimObject.isConfirmedAdded()) { continue; }
                 const SIMCONNECT_DATA_REQUEST_ID requestId = probeSimObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
                 const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(probeSimObject.getObjectId()), requestId);
-                if (result == S_OK)
+                if (isOk(result))
                 {
                     c++;
                 }
@@ -2051,15 +2063,15 @@ namespace BlackSimPlugin
             if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
-            HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0);
+            HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
             bool check = false;
-            if (result == S_OK)
+            if (isOk(result))
             {
                 for (int i = 0; !check && i < 3 && !this->isShuttingDown(); i++)
                 {
                     // result not always in first dispatch as we first have to obtain simulator name
                     result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
-                    if (result != S_OK) { break; } // means serious failure
+                    if (isFailure(result)) { break; } // means serious failure
                     check = this->checkVersionAndSimulator();
                     if (!check) { sApp->processEventsFor(500); }
                 }
@@ -2114,10 +2126,8 @@ namespace BlackSimPlugin
                     CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
                     break;
                 }
-            case SIMCONNECT_RECV_ID_EXCEPTION:
-                break;
-            default:
-                break;
+            case SIMCONNECT_RECV_ID_EXCEPTION: break;
+            default: break;
             }
         }
     } // namespace

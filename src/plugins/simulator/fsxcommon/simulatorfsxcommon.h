@@ -183,7 +183,7 @@ namespace BlackSimPlugin
             virtual void timerEvent(QTimerEvent *event) override;
 
             //! Specific P3D events
-            virtual HRESULT initEventsP3D() { return S_OK; }
+            virtual HRESULT initEventsP3D();
 
             //! \addtogroup swiftdotcommands
             //! @{
@@ -422,8 +422,8 @@ namespace BlackSimPlugin
             static constexpr int SkipUpdateCyclesForCockpit    = 10; //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions       = 10; //!< skip exceptions when displayed more than x times
             static constexpr int MaxSendIdTraces   = 10000; //!< max.traces of send id
-            static constexpr int MaxSimObjAircraft = 10000; //!< max.number of SimObjects at the same time
-            static constexpr int MaxSimObjProbes   = 100;   //!< max. probes
+            static constexpr DWORD MaxSimObjAircraft = 10000; //!< max.number of SimObjects at the same time
+            static constexpr DWORD MaxSimObjProbes   = 100;   //!< max. probes
 
             // -- range for sim data, each sim object will get its own request id and use the offset ranges
             static constexpr int RequestSimObjAircraftStart    = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
@@ -460,10 +460,10 @@ namespace BlackSimPlugin
             qint64 m_dispatchProcTimeMs = -1;
             qint64 m_dispatchProcMaxTimeMs = -1;
 
-            SIMCONNECT_RECV_ID m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL; //!< last receive id from dispatching
-            SIMCONNECT_RECV_ID m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
-            DWORD m_dispatchRequestIdLast    = -1; //!< request id if any
-            DWORD m_dispatchRequestIdMaxTime = -1; //!< max.time request
+            SIMCONNECT_RECV_ID m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL;     //!< last receive id from dispatching
+            SIMCONNECT_RECV_ID m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL;     //!< receive id corresponding to max.time
+            DWORD m_dispatchRequestIdLast    = CSimConnectDefinitions::RequestEndMarker; //!< request id if any for last request
+            DWORD m_dispatchRequestIdMaxTime = CSimConnectDefinitions::RequestEndMarker; //!< request id corresponding to max.time
 
             // sending via SimConnect
             QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging
@@ -482,8 +482,8 @@ namespace BlackSimPlugin
 
         public:
             //! Offsets @{
-            static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjAircraft * req; }
-            static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjProbes * req; }
+            static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjAircraft * static_cast<DWORD>(req); }
+            static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjProbes * static_cast<DWORD>(req); }
             //! @}
         };
 
@@ -516,7 +516,7 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
-            QTimer  m_timer { this };
+            QTimer  m_timer;
             QString m_simulatorVersion;
             QString m_simConnectVersion;
             QString m_simulatorName;
