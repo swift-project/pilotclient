@@ -815,7 +815,7 @@ namespace BlackCore
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                CLogMessage(this).info("Callsign %1 set gnd.capability ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+                CLogMessage(this).info("Callsign '%1' set gnd.capability: %2") << aircraft.getCallsign() << boolToOnOff(aircraft.isSupportingGndFlag());
                 emit this->changedGndFlagCapability(aircraft);
             }
             return c;
