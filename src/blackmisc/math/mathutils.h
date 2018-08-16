@@ -17,6 +17,7 @@
 #include <QtCore/qmath.h>
 #include <QPair>
 #include <cmath>
+#include <numeric>
 
 namespace BlackMisc
 {
@@ -56,8 +57,16 @@ namespace BlackMisc
             //! Round by given epsilon
             static double roundEpsilon(double value, double epsilon);
 
-            //! Epsilon safe equal
+            //! Epsilon safe equal @{
             static bool epsilonEqual(double v1, double v2, double epsilon = 1E-06);
+            static bool epsilonEqualLimits(double v1, double v2) { return qAbs(v1 - v2) <= std::numeric_limits<double>::epsilon(); }
+            //! @}
+
+            //! Epsilon safe zero @{
+            static bool epsilonZero(double v, double epsilon) { return epsilonEqual(v, 0.0, epsilon); }
+            static bool epsilonZero(double v) { return epsilonEqual(v, 0.0, 1E-09); }
+            static inline bool epsilonZeroLimits(double v) { return qAbs(v) <= std::numeric_limits<double>::epsilon(); }
+            //! @}
 
             //! Nearest integer not greater in magnitude than value, correcting for epsilon
             static inline double trunc(double value, double epsilon = 1e-10)

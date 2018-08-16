@@ -22,21 +22,19 @@ namespace BlackMisc
 {
     namespace Math
     {
-
         double CMathUtils::hypot(double x, double y)
         {
             x = qAbs(x);
             y = qAbs(y);
-            double max = std::max(x, y);
-            double min = std::min(x, y);
+            const double max = std::max(x, y);
+            const double min = std::min(x, y);
             double r = min / max;
             return max * sqrt(1 + r * r);
         }
 
         double CMathUtils::cubicRootReal(double x)
         {
-            double result;
-            result = std::pow(qAbs(x), 1.0 / 3.0);
+            const double result = std::pow(qAbs(x), 1.0 / 3.0);
             return x < 0 ? -result : result;
         }
 
@@ -45,10 +43,10 @@ namespace BlackMisc
             // gosh, is there no Qt method for this??? It's year 2013
             double fractpart, intpart;
             fractpart = modf(value, &intpart);
-            if (fractpart == 0) return value; // do not mess any "integers" to the worse
-            double m = pow(10.0, digits);
-            qint64 ri = qRound64(value * m); // do not loose any range here
-            double rv = static_cast<double>(ri) / m;
+            if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
+            const double m = pow(10.0, digits);
+            const qint64 ri = qRound64(value * m); // do not loose any range here
+            const double rv = static_cast<double>(ri) / m;
             return rv;
         }
 
@@ -59,19 +57,18 @@ namespace BlackMisc
 
         double CMathUtils::roundEpsilon(double value, double epsilon)
         {
-            if (epsilon == 0) { return value; } // avoid division by 0
+            if (epsilonZeroLimits(epsilon)) { return value; } // avoid division by 0
             double fractpart, intpart;
             fractpart = modf(value, &intpart);
-            if (fractpart == 0) { return value; } // do not mess any "integers" to the worse
+            if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
             const double roundValue = value / epsilon;
-            qint64 ri = qRound64(roundValue);
-            double rv = static_cast<double>(ri) * epsilon; // do not loose any range here
+            const qint64 ri = qRound64(roundValue);
+            const double rv = static_cast<double>(ri) * epsilon; // do not loose any range here
             return rv;
         }
 
         bool CMathUtils::epsilonEqual(double v1, double v2, double epsilon)
         {
-            if (v1 == v2) return true;
             return qAbs(v1 - v2) <= epsilon;
         }
 

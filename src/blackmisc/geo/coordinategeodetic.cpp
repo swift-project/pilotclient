@@ -44,7 +44,7 @@ namespace BlackMisc
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
             const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
-            return { d, CLengthUnit::m() };
+            return { static_cast<double>(d), CLengthUnit::m() };
         }
 
         CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
@@ -56,17 +56,17 @@ namespace BlackMisc
             const float sinTheta = std::copysign(cross.length(), QVector3D::dotProduct(cross, coordinate1.normalVector()));
             const float cosTheta = QVector3D::dotProduct(c1, c2);
             const float theta = std::atan2(sinTheta, cosTheta);
-            return { theta, CAngleUnit::rad() };
+            return { static_cast<double>(theta), CAngleUnit::rad() };
         }
 
         double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
-            return coordinate1.normalVector().distanceToPoint(coordinate2.normalVector());
+            return static_cast<double>(coordinate1.normalVector().distanceToPoint(coordinate2.normalVector()));
         }
 
         double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
-            return (coordinate1.normalVector() - coordinate2.normalVector()).lengthSquared();
+            return static_cast<double>((coordinate1.normalVector() - coordinate2.normalVector()).lengthSquared());
         }
 
         bool ICoordinateGeodetic::equalNormalVectorDouble(const std::array<double, 3> &otherVector) const

@@ -12,17 +12,18 @@
 #ifndef BLACKMISC_GEO_COORDINATEGEODETIC_H
 #define BLACKMISC_GEO_COORDINATEGEODETIC_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/metaclass.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
@@ -209,7 +210,7 @@ namespace BlackMisc
             CCoordinateGeodetic() {}
 
             //! Constructor by normal vector
-            CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
+            CCoordinateGeodetic(const QVector3D &normal) : m_x(static_cast<double>(normal.x())), m_y(static_cast<double>(normal.y())), m_z(static_cast<double>(normal.z())) {}
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const std::array<double, 3> &normalVector);
@@ -269,7 +270,7 @@ namespace BlackMisc
             void setGeodeticHeightToNull();
 
             //! Set normal vector
-            void setNormalVector(const QVector3D &normal) { m_x = normal.x(); m_y = normal.y(); m_z = normal.z(); }
+            void setNormalVector(const QVector3D &normal) { m_x = static_cast<double>(normal.x()); m_y = static_cast<double>(normal.y()); m_z = static_cast<double>(normal.z()); }
 
             //! Set normal vector
             void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
@@ -285,7 +286,7 @@ namespace BlackMisc
             }
 
             //! Is null?
-            virtual bool isNull() const override { return m_x == 0 && m_y == 0 && m_z == 0; }
+            virtual bool isNull() const override { return Math::CMathUtils::epsilonZeroLimits(m_x) && Math::CMathUtils::epsilonZeroLimits(m_y) && Math::CMathUtils::epsilonZeroLimits(m_z); }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});
