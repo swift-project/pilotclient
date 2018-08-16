@@ -466,10 +466,10 @@ namespace BlackSimPlugin
             auto xpdr = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
             if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
             {
-                m_xplaneData.com1Active = aircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::kHz(), 0);
-                m_xplaneData.com1Standby = aircraft.getCom1System().getFrequencyStandby().valueRounded(CFrequencyUnit::kHz(), 0);
-                m_xplaneData.com2Active = aircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::kHz(), 0);
-                m_xplaneData.com2Standby = aircraft.getCom2System().getFrequencyStandby().valueRounded(CFrequencyUnit::kHz(), 0);
+                m_xplaneData.com1Active  = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com1Standby = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com2Active  = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com2Standby = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
                 m_xplaneData.xpdrCode = aircraft.getTransponderCode();
                 m_xplaneData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
                 m_serviceProxy->setCom1Active(m_xplaneData.com1Active);
@@ -673,8 +673,8 @@ namespace BlackSimPlugin
             CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
             temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
             const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
-            m_weatherProxy->setTemperature(temperatureLayer.getTemperature().value(CTemperatureUnit::C()));
-            m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
+            m_weatherProxy->setTemperature(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
+            m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C()));
             m_weatherProxy->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
 
             int layerNumber = 0;
@@ -691,8 +691,8 @@ namespace BlackSimPlugin
             cloudLayers.truncate(3);
             for (const auto &cloudLayer : as_const(cloudLayers))
             {
-                const int base = cloudLayer.getBase().value(CLengthUnit::m());
-                const int top = cloudLayer.getTop().value(CLengthUnit::m());
+                const int base = cloudLayer.getBase().valueInteger(CLengthUnit::m());
+                const int top = cloudLayer.getTop().valueInteger(CLengthUnit::m());
 
                 int coverage = 0;
                 switch (cloudLayer.getCoverage())
@@ -733,9 +733,9 @@ namespace BlackSimPlugin
             windLayers.truncate(3);
             for (const auto &windLayer : windLayers)
             {
-                const int altitudeMeter = windLayer.getLevel().value(CLengthUnit::m());
+                const int altitudeMeter = windLayer.getLevel().valueInteger(CLengthUnit::m());
                 const double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
-                const int speedKts = windLayer.getSpeed().value(CSpeedUnit::kts());
+                const int speedKts = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
                 m_weatherProxy->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
                 layerNumber++;
             }
