@@ -33,41 +33,12 @@ namespace BlackGui
             ui(new Ui::CModelMatcherLogComponent)
         {
             ui->setupUi(this);
-            this->initGui();
             m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CModelMatcherLogComponent::callsignEntered);
-            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
-            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
-
-            if (this->hasContexts())
-            {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::valuesChanged, Qt::QueuedConnection);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::valuesChanged, Qt::QueuedConnection);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogComponent::connectionStatusChanged, Qt::QueuedConnection);
-            }
         }
 
         CModelMatcherLogComponent::~CModelMatcherLogComponent()
         { }
-
-        void CModelMatcherLogComponent::initGui()
-        {
-            if (sGui)
-            {
-                // avoid signal roundtrips
-                bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
-                if (c != ui->cb_LogReverseLookup->isChecked())
-                {
-                    ui->cb_LogReverseLookup->setChecked(c);
-                }
-
-                c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
-                if (c != ui->cb_LogMatchingMessages->isChecked())
-                {
-                    ui->cb_LogMatchingMessages->setChecked(c);
-                }
-            }
-        }
 
         bool CModelMatcherLogComponent::hasContexts() const
         {
@@ -76,7 +47,7 @@ namespace BlackGui
 
         bool CModelMatcherLogComponent::enabledMessages() const
         {
-            return this->hasContexts() && (ui->cb_LogMatchingMessages->isChecked() || ui->cb_LogReverseLookup->isChecked());
+            return this->hasContexts() && (ui->comp_EnableLog->isMatchingLogEnabled() || ui->comp_EnableLog->isReverseLookupLogEnabled());
         }
 
         void CModelMatcherLogComponent::callsignEntered()
@@ -93,34 +64,6 @@ namespace BlackGui
             const QString html = allMessages.toHtml();
             m_text.setHtml(html);
             ui->te_Messages->setDocument(&m_text);
-        }
-
-        void CModelMatcherLogComponent::valuesChanged()
-        {
-            this->initGui();
-        }
-
-        void CModelMatcherLogComponent::enabledCheckboxChanged(bool enabled)
-        {
-            if (!sGui || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
-            const QObject *sender = QObject::sender();
-            if (sender == ui->cb_LogReverseLookup)
-            {
-                sGui->getIContextNetwork()->enableReverseLookupMessages(enabled);
-            }
-            else if (sender == ui->cb_LogMatchingMessages)
-            {
-                sGui->getIContextSimulator()->enableMatchingMessages(enabled);
-            }
-        }
-
-        void CModelMatcherLogComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
-        {
-            Q_UNUSED(from);
-            if (to == INetwork::Connected || to == INetwork::Disconnected)
-            {
-                this->initGui();
-            }
         }
     } // ns
 } // ns

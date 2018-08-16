@@ -12,7 +12,6 @@
 #ifndef BLACKGUI_COMPONENT_MODELMATCHERLOGCOMPONENT_H
 #define BLACKGUI_COMPONENT_MODELMATCHERLOGCOMPONENT_H
 
-#include "blackcore/network.h"
 #include <QFrame>
 #include <QTabWidget>
 #include <QTimer>
@@ -41,9 +40,6 @@ namespace BlackGui
             QScopedPointer<Ui::CModelMatcherLogComponent> ui;
             QTextDocument m_text { this };
 
-            //! Init
-            void initGui();
-
             //! Contexts available
             bool hasContexts() const;
 
@@ -52,15 +48,6 @@ namespace BlackGui
 
             //! Callsign was entered
             void callsignEntered();
-
-            //! When values changed elsewhere
-            void valuesChanged();
-
-            //! Flag changed
-            void enabledCheckboxChanged(bool enabled);
-
-            //! Connection status changed
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
         };
     } // ns
 } // ns

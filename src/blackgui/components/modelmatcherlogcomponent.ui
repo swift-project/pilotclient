@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>256</height>
+    <width>264</width>
+    <height>245</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,27 +55,16 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
+       <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter"/>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_Enable">
-        <property name="toolTip">
-         <string>Enables / disables future message logging</string>
+      <item row="2" column="0" colspan="2">
+       <widget class="BlackGui::Components::CModelMatcherLogEnable" name="comp_EnableLog">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>15</height>
+         </size>
         </property>
-        <property name="text">
-         <string>Enable:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QWidget" name="wi_CheckBoxes" native="true">
         <layout class="QHBoxLayout" name="hl_CheckBoxes">
          <property name="leftMargin">
           <number>0</number>
@@ -89,39 +78,6 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item>
-          <widget class="QCheckBox" name="cb_LogReverseLookup">
-           <property name="toolTip">
-            <string>enable logging of reverse lookup messages</string>
-           </property>
-           <property name="text">
-            <string>rev. lookup msgs.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="cb_LogMatchingMessages">
-           <property name="toolTip">
-            <string>enable matching messages</string>
-           </property>
-           <property name="text">
-            <string>matching msgs.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="hs_CheckBoxes">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </widget>
       </item>
@@ -148,6 +104,12 @@
    <class>BlackGui::Components::CCallsignCompleter</class>
    <extends>QFrame</extends>
    <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CModelMatcherLogEnable</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/modelmatcherlogenable.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
