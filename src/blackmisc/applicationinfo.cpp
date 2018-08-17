@@ -13,6 +13,8 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackconfig/buildconfig.h"
+
+#include <QDir>
 #include <QStringBuilder>
 
 using namespace BlackConfig;
@@ -57,6 +59,13 @@ namespace BlackMisc
         default: break;
         }
         return unknown;
+    }
+
+    bool CApplicationInfo::isExecutablePathExisting() const
+    {
+        if (this->getExecutablePath().isEmpty()) { return false; }
+        const QDir d(this->getExecutablePath());
+        return d.exists();
     }
 
     bool CApplicationInfo::isSampleOrUnitTest() const
@@ -112,6 +121,7 @@ namespace BlackMisc
         case IndexApplicationDataPath: return CVariant::fromValue(this->getApplicationDataDirectory());
         case IndexCompileInfo: return CVariant::fromValue(this->getCompileInfo());
         case IndexExecutablePath: return CVariant::fromValue(this->getExecutablePath());
+        case IndexExecutablePathExisting: return CVariant::fromValue(this->isExecutablePathExisting());
         case IndexPlatformInfo: return CVariant::fromValue(this->getPlatform());
         case IndexProcessInfo: return m_process.propertyByIndex(index.copyFrontRemoved());
         case IndexVersionString: return CVariant::fromValue(this->getVersionString());
@@ -132,10 +142,11 @@ namespace BlackMisc
         case IndexApplicationDataPath: this->setApplicationDataDirectory(variant.toQString()); break;
         case IndexCompileInfo: this->setCompileInfo(variant.toQString()); break;
         case IndexExecutablePath: this->setExecutablePath(variant.toQString()); break;
+        case IndexExecutablePathExisting: break;
         case IndexPlatformInfo: this->setPlatformInfo(variant.toQString()); break;
         case IndexProcessInfo: m_process.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVersionString: this->setVersionString(variant.toQString()); break;
-        case IndexWordSize: return this->setWordSize(variant.toInt()); break;
+        case IndexWordSize: this->setWordSize(variant.toInt()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -146,9 +157,10 @@ namespace BlackMisc
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexApplicationDataPath: this->getApplicationDataDirectory().compare(compareValue.getApplicationDataDirectory());
-        case IndexCompileInfo: this->getCompileInfo().compare(compareValue.getCompileInfo());
-        case IndexExecutablePath: this->getExecutablePath().compare(compareValue.getExecutablePath());
+        case IndexApplicationDataPath: return this->getApplicationDataDirectory().compare(compareValue.getApplicationDataDirectory());
+        case IndexCompileInfo: return this->getCompileInfo().compare(compareValue.getCompileInfo());
+        case IndexExecutablePath: return this->getExecutablePath().compare(compareValue.getExecutablePath());
+        case IndexExecutablePathExisting: return Compare::compare(this->isExecutablePathExisting(), compareValue.isExecutablePathExisting());
         case IndexPlatformInfo: return this->getPlatform().compare(compareValue.getPlatform());
         case IndexProcessInfo: return this->getProcessInfo().processName().compare(compareValue.getProcessInfo().processName());
         case IndexVersionString: return this->getVersionString().compare(compareValue.getVersionString());

@@ -47,6 +47,7 @@ namespace BlackMisc
             IndexApplicationDataPath,
             IndexCompileInfo,
             IndexExecutablePath,
+            IndexExecutablePathExisting,
             IndexPlatformInfo,
             IndexProcessInfo,
             IndexVersionString,
@@ -73,6 +74,11 @@ namespace BlackMisc
 
         //! Get executable path.
         const QString &getExecutablePath() const { return m_exePath; }
+
+        //! Is the executable path existing?
+        //! \remark this indicates if the swift version is still existing
+        //! \remark file check, relatively slow
+        bool isExecutablePathExisting() const;
 
         //! Set application data dir
         //! \remark rootdir of settings, cache and logs
