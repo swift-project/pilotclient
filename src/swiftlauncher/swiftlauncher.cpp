@@ -233,6 +233,7 @@ void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
 
 void CSwiftLauncher::startSwiftCore()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
     if (ui->rb_SwiftCoreAudioOnCore->isChecked())
@@ -253,6 +254,7 @@ void CSwiftLauncher::setSwiftDataExecutable()
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
+    if (!sGui || sGui->isShuttingDown()) { return false; }
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
     QStringList args
     {
