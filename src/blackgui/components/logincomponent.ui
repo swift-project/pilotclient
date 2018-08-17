@@ -267,7 +267,7 @@
      </layout>
     </widget>
    </item>
-   <item alignment="Qt::AlignTop">
+   <item>
     <widget class="QGroupBox" name="gb_OwnAircraft">
      <property name="title">
       <string>Own aircraft</string>
@@ -487,6 +487,37 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="gb_PilotsDetails">
+     <property name="title">
+      <string>Pilot's info</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_PilotIngoGroupBox">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item alignment="Qt::AlignTop">
+       <widget class="BlackGui::Editors::CPilotForm" name="editor_Pilot">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QFrame" name="fr_LogoffConfirmation">
      <property name="minimumSize">
       <size>
@@ -507,37 +538,6 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
-      <item>
-       <widget class="QGroupBox" name="gb_PilotsDetails">
-        <property name="title">
-         <string>Pilot's info</string>
-        </property>
-        <layout class="QVBoxLayout" name="vl_PilotIngoGroupBox">
-         <property name="leftMargin">
-          <number>2</number>
-         </property>
-         <property name="topMargin">
-          <number>2</number>
-         </property>
-         <property name="rightMargin">
-          <number>2</number>
-         </property>
-         <property name="bottomMargin">
-          <number>2</number>
-         </property>
-         <item alignment="Qt::AlignTop">
-          <widget class="BlackGui::Editors::CPilotForm" name="editor_Pilot">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>50</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item alignment="Qt::AlignTop">
        <widget class="QGroupBox" name="gb_CurrentLogin">
         <property name="title">
