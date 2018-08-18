@@ -42,6 +42,9 @@ namespace BlackGui
             //! \copydoc CDbOwnModelsComponent::requestModelsInBackground
             bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
 
+            //! \copydoc CDbOwnModelsComponent::getOwnModelsCount
+            int getOwnModelsCount() const;
+
             //! Direct access to component
             //! \remark allows to use the powerful component class
             const CDbOwnModelsComponent *modelsComponent() const;

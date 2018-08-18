@@ -39,6 +39,11 @@ namespace BlackGui
             return ui->comp_OwnModels->requestModelsInBackground(simulator, onlyIfNotEmpty);
         }
 
+        int CDbOwnModelsDialog::getOwnModelsCount() const
+        {
+            return ui->comp_OwnModels->getOwnModelsCount();
+        }
+
         const CDbOwnModelsComponent *CDbOwnModelsDialog::modelsComponent() const
         {
             return ui->comp_OwnModels;

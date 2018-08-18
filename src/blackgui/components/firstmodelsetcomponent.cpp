@@ -145,7 +145,11 @@ namespace BlackGui
         void CFirstModelSetComponent::openOwnModelsDialog()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+            if (!m_modelsDialog) { return; }
             const bool reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
+
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            m_modelsDialog->setSimulator(simulator);
 
             if (reload)
             {
@@ -154,12 +158,15 @@ namespace BlackGui
                     const QMessageBox::StandardButton reply = QMessageBox::warning(this->mainWindow(), "DB data", "No DB data, models cannot be consolidated. Load anyway?", QMessageBox::Yes | QMessageBox::No);
                     if (reply != QMessageBox::Yes) { return; }
                 }
-                const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-                m_modelsDialog->requestModelsInBackground(simulator, true);
-            }
 
-            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-            m_modelsDialog->setSimulator(simulator);
+                bool loadOnlyIfNotEmpty = true;
+                if (m_modelsDialog->getOwnModelsCount() > 0)
+                {
+                    const QMessageBox::StandardButton reply = QMessageBox::warning(this->mainWindow(), "Model loading", "Reload the models?\nThe xisting cache data will we overridden.", QMessageBox::Yes | QMessageBox::No);
+                    if (reply == QMessageBox::Yes) { loadOnlyIfNotEmpty = false; }
+                }
+                m_modelsDialog->requestModelsInBackground(simulator, loadOnlyIfNotEmpty);
+            }
             m_modelsDialog->exec();
 
             // force UI update
@@ -221,7 +228,7 @@ namespace BlackGui
             bool useAllModels = false;
             if (!ui->comp_Distributors->hasSelectedDistributors())
             {
-                const QMessageBox::StandardButton reply = QMessageBox::question(this->mainWindow(), "Models", "No distributors selected, use all model?", QMessageBox::Yes | QMessageBox::No);
+                const QMessageBox::StandardButton reply = QMessageBox::question(this->mainWindow(), "Models", "No distributors selected, use all models?", QMessageBox::Yes | QMessageBox::No);
                 if (reply == QMessageBox::Yes)
                 {
                     useAllModels = true;

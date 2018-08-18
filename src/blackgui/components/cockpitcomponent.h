@@ -38,7 +38,7 @@ namespace BlackGui
             explicit CCockpitComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCockpitComponent();
+            virtual ~CCockpitComponent() override;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;

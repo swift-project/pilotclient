@@ -13,13 +13,7 @@
   <property name="windowTitle">
    <string>Initial data loading</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QVBoxLayout" name="vl_DataLoadComponent">
+  <layout class="QVBoxLayout" name="vl_DataLoadComponent" stretch="0,1">
    <property name="leftMargin">
     <number>4</number>
    </property>
@@ -34,13 +28,7 @@
    </property>
    <item>
     <widget class="QFrame" name="fr_Header">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QHBoxLayout" name="hl_HeaderText" stretch="1,6">
+     <layout class="QHBoxLayout" name="hl_HeaderText" stretch="0,1">
       <item>
        <widget class="QLabel" name="lbl_HeaderIcon">
         <property name="textFormat">
@@ -54,7 +42,7 @@
       <item>
        <widget class="QLabel" name="lbl_HeaderText">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;We recommend to download an initial data set. This may take some time, but then you can start to use all tools with full functionality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;We recommend to download an initial data set. This may take some time, but then you can start to use all tools with full functionality. You can wait until the load is completed and you see entries for all cache values (C#). Or you can already move on, &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;loading continues in background&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

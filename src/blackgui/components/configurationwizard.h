@@ -36,8 +36,8 @@ namespace BlackGui
                 DataLoad,
                 CopyModels,
                 CopySettingsAndCaches,
-                FirstModelSet,
                 ConfigSimulator,
+                FirstModelSet,
                 XSwiftBus,
                 ConfigHotkeys
             };
@@ -46,7 +46,7 @@ namespace BlackGui
             explicit CConfigurationWizard(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CConfigurationWizard();
+            virtual ~CConfigurationWizard() override;
 
             //! Was the last step skipped?
             bool lastStepSkipped() const;
