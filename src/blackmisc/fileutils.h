@@ -148,6 +148,7 @@ namespace BlackMisc
         static QString fixWindowsUncPath(const QString &filePath);
 
         //! Fix UNC file paths
+        //! \remark will do nothing on OS other than Windows
         static QStringList fixWindowsUncPaths(const QStringList &filePaths);
 
         //! Windows UNC path?

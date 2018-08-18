@@ -20,10 +20,6 @@ using namespace BlackMisc::Simulation::Fsx;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     void CSamplesFsx::samplesMisc(QTextStream &streamOut)
     {
         BlackMisc::registerMetadata();

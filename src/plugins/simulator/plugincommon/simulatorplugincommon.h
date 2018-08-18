@@ -31,7 +31,7 @@ namespace BlackSimPlugin
 
         public:
             //! Destructor
-            virtual ~CSimulatorPluginCommon();
+            virtual ~CSimulatorPluginCommon() override;
 
             // --------- ISimulator implementations ------------
             virtual void unload() override;

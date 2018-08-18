@@ -47,21 +47,21 @@ namespace BlackSimPlugin
             {
             case SIMCONNECT_RECV_ID_OPEN:
                 {
-                    SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
+                    SIMCONNECT_RECV_OPEN *event = static_cast<SIMCONNECT_RECV_OPEN *>(pData);
                     const QString simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     const QString version = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
                     const QString name = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
                     const QString details = QString("Name: '%1' Version: %2 SimConnect: %3").arg(name, version, simConnectVersion);
                     simulatorFsxP3D->setSimulatorDetails(name, details, version);
                     simulatorFsxP3D->m_simConnectVersion = simConnectVersion;
-                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
+                    CLogMessage(simulatorFsxP3D).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
                     simulatorFsxP3D->setSimConnected();
                     break; // SIMCONNECT_RECV_ID_OPEN
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
                     if (!simulatorFsxP3D->stillDisplayReceiveExceptions()) { break; }
-                    SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
+                    SIMCONNECT_RECV_EXCEPTION *exception = static_cast<SIMCONNECT_RECV_EXCEPTION *>(pData);
                     const DWORD exceptionId = exception->dwException;
                     const DWORD sendId = exception->dwSendID;
                     const DWORD index = exception->dwIndex;
@@ -75,7 +75,7 @@ namespace BlackSimPlugin
                     }
                     QString ex;
                     ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
-                    const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
+                    const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
                     const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
                     CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
                             << exceptionString << ex
@@ -162,7 +162,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
-                    const SIMCONNECT_RECV_EVENT_FRAME *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
+                    const SIMCONNECT_RECV_EVENT_FRAME *event = static_cast<SIMCONNECT_RECV_EVENT_FRAME *>(pData);
                     switch (event->uEventID)
                     {
                     case SystemEventFrame:
@@ -220,7 +220,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
                 {
-                    const SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
+                    const SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = static_cast<SIMCONNECT_RECV_SIMOBJECT_DATA *>(pData);
                     const DWORD requestId = pObjData->dwRequestID;
                     simulatorFsxP3D->m_dispatchRequestIdLast = requestId;
 
@@ -229,20 +229,20 @@ namespace BlackSimPlugin
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
                             static_assert(sizeof(DataDefinitionOwnAircraft) == 31 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
-                            const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
+                            const DataDefinitionOwnAircraft *ownAircaft = reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
                             simulatorFsxP3D->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
                         }
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
                         {
-                            const DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
+                            const DataDefinitionOwnAircraftModel *dataDefinitionModel = reinterpret_cast<const DataDefinitionOwnAircraftModel *>(&pObjData->dwData);
                             const CAircraftModel model(dataDefinitionModel->title, CAircraftModel::TypeOwnSimulatorModel);
                             simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
-                            const DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
+                            const DataDefinitionSimEnvironment *simEnv = reinterpret_cast<const DataDefinitionSimEnvironment *>(&pObjData->dwData);
                             if (simulatorFsxP3D->isTimeSynchronized())
                             {
                                 const int zh = simEnv->zuluTimeSeconds / 3600;
@@ -321,7 +321,7 @@ namespace BlackSimPlugin
                                 if (subRequest == CSimConnectDefinitions::SimObjectPositionData)
                                 {
                                     static_assert(sizeof(DataDefinitionPosData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                                    const DataDefinitionPosData *probeSimData = (DataDefinitionPosData *)&pObjData->dwData;
+                                    const DataDefinitionPosData *probeSimData = reinterpret_cast<const DataDefinitionPosData *>(&pObjData->dwData);
                                     // extra check, but ids should be the same
                                     if (objectId == probeObj.getObjectId())
                                     {
@@ -348,7 +348,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
-                    const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
+                    const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = static_cast<SIMCONNECT_RECV_AIRPORT_LIST *>(pData);
                     CAirportList simAirports;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
@@ -371,11 +371,11 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_CLIENT_DATA:
                 {
                     if (!simulatorFsxP3D->m_useSbOffsets) { break; }
-                    const SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
+                    const SIMCONNECT_RECV_CLIENT_DATA *clientData = static_cast<SIMCONNECT_RECV_CLIENT_DATA *>(pData);
                     if (simulatorFsxP3D->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
                         //! \fixme FSUIPC vs SimConnect why is offset 19 ident 2/0? In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here. Whoever knows, add comment or fix if wrong
-                        DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
+                        const DataDefinitionClientAreaSb *sbData = reinterpret_cast<const DataDefinitionClientAreaSb *>(&clientData->dwData);
                         simulatorFsxP3D->updateOwnAircraftFromSimulator(*sbData);
                     }
                     break; // SIMCONNECT_RECV_ID_CLIENT_DATA

@@ -46,10 +46,10 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IRemoteAircraftProvider : public IProvider
         {
         public:
-            static constexpr int MaxSituationsPerCallsign = 6;    //!< How many situations we keep per callsign
-            static constexpr int MaxPartsPerCallsign = 20;        //!< How many parts we keep per callsign (we keep more parts than situations as parts can just come in)
+            static constexpr int MaxSituationsPerCallsign   = 6;  //!< How many situations we keep per callsign
+            static constexpr int MaxPartsPerCallsign        = 20; //!< How many parts we keep per callsign (we keep more parts than situations as parts can just come in)
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
-            static constexpr int DefaultOffsetTimeMs = 6000;      //!< \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
+            static constexpr int DefaultOffsetTimeMs      = 6000; //!< \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
 
             //! Destructor
             virtual ~IRemoteAircraftProvider() {}

@@ -633,8 +633,7 @@ namespace BlackCore
                 m_aircraftMatcher.clearMatchingStatistics();
                 m_matchingMessages.clear();
 
-                // check in case the plugin has been unloaded
-                if (m_simulatorPlugin.second)
+                if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
                 {
                     const CStatusMessageList verifyMessages = m_simulatorPlugin.second->debugVerifyStateAfterAllAircraftRemoved();
                     m_simulatorPlugin.second->clearAllRemoteAircraftData();

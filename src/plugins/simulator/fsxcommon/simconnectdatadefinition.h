@@ -41,29 +41,30 @@ namespace BlackSimPlugin
             double velocity;          //!< Ground velocity
             double elevation;         //!< Elevation (ft)
             double simOnGround;       //!< Is aircraft on ground?
-
+            // 12
             double lightStrobe;       //!< Is strobe light on?
             double lightLanding;      //!< Is landing light on?
             double lightTaxi;         //!< Is taxi light on?
             double lightBeacon;       //!< Is beacon light on?
             double lightNav;          //!< Is nav light on?
             double lightLogo;         //!< Is logo light on?
-
+            // 18
             double transponderCode;   //!< Transponder Code
             double com1ActiveMHz;     //!< COM1 active frequency
             double com2ActiveMHz;     //!< COM2 active frequency
             double com1StandbyMHz;    //!< COM1 standby frequency
             double com2StandbyMHz;    //!< COM1 standby frequency
-
+            // 23
             double flapsHandlePosition;    //!< Flaps handle position in percent
             double spoilersHandlePosition; //!< Spoilers out? (flag)
             double gearHandlePosition;     //!< Gear handle position (flag)
-
+            // 26
             double numberOfEngines;   //!< Number of engines
             double engine1Combustion; //!< Engine 1 combustion flag
             double engine2Combustion; //!< Engine 2 combustion flag
             double engine3Combustion; //!< Engine 3 combustion flag
             double engine4Combustion; //!< Engine 4 combustion flag
+            //31
         };
 
         //! Data struct of aircraft position

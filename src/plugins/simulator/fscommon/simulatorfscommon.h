@@ -29,7 +29,7 @@ namespace BlackSimPlugin
         {
         public:
             //! Destructor
-            virtual ~CSimulatorFsCommon();
+            virtual ~CSimulatorFsCommon() override;
 
             //! FSUIPC connected?
             bool isFsuipcConnected() const;

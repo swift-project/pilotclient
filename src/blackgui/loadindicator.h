@@ -130,6 +130,9 @@ namespace BlackGui
         //! Ctor
         CLoadIndicatorEnabled(QWidget *usingWidget);
 
+        //! Destructor
+        virtual ~CLoadIndicatorEnabled() {}
+
         //! Showing load indicator?
         bool isShowingLoadIndicator() const;
 
