@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Simulator basic settings</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -131,6 +131,9 @@
    </item>
    <item row="3" column="4">
     <widget class="QPushButton" name="pb_AdjustModelDirectory">
+     <property name="toolTip">
+      <string>remove redundant directories, fix file paths ...</string>
+     </property>
      <property name="text">
       <string>adjust</string>
      </property>
@@ -146,6 +149,18 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_SimulatorDirectory</tabstop>
+  <tabstop>pb_SimulatorFileDialog</tabstop>
+  <tabstop>pte_ModelDirectories</tabstop>
+  <tabstop>pb_ModelFileDialog</tabstop>
+  <tabstop>pb_AdjustModelDirectory</tabstop>
+  <tabstop>pte_ExcludeDirectories</tabstop>
+  <tabstop>pb_ExcludeFileDialog</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_CopyDefaults</tabstop>
+  <tabstop>pb_Save</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
