@@ -343,6 +343,17 @@ namespace BlackSimPlugin
             CSimulatorPluginCommon::resetAircraftStatistics();
         }
 
+        void CSimulatorFsxCommon::setFlightNetworkConnected(bool connected)
+        {
+            if (connected == !this->isFlightNetworkConnected())
+            {
+                // toggling, we trace for a while to better monitor those "critical" phases
+                this->triggerAutoTraceSendId();
+            }
+
+            ISimulator::setFlightNetworkConnected(connected);
+        }
+
         CSimConnectDefinitions::SimObjectRequest CSimulatorFsxCommon::requestToSimObjectRequest(DWORD requestId)
         {
             DWORD v = static_cast<DWORD>(CSimConnectDefinitions::SimObjectEndMarker);

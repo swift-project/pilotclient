@@ -414,6 +414,12 @@ namespace BlackCore
 
             // try to connect to simulator
             const bool connected = simulator->connectTo();
+            if (!connected)
+            {
+                CLogMessage(this).error("Simulator plugin connection to simulator '%1' failed") << simulatorPluginInfo.toQString(true);
+                return false;
+            }
+
             simulator->setWeatherActivated(m_isWeatherActivated);
 
             // when everything is set up connected, update the current plugin info
@@ -626,6 +632,10 @@ namespace BlackCore
             if (to == INetwork::Connected && this->getIContextNetwork())
             {
                 m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
+                if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
+                {
+                    m_simulatorPlugin.second->setFlightNetworkConnected(true);
+                }
             }
             else if (INetwork::isDisconnectedStatus(to))
             {
@@ -637,6 +647,7 @@ namespace BlackCore
                 {
                     const CStatusMessageList verifyMessages = m_simulatorPlugin.second->debugVerifyStateAfterAllAircraftRemoved();
                     m_simulatorPlugin.second->clearAllRemoteAircraftData();
+                    m_simulatorPlugin.second->setFlightNetworkConnected(false);
                     if (!verifyMessages.isEmpty()) { emit this->driverMessages(verifyMessages); }
                 }
             }

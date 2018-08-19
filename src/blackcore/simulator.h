@@ -169,6 +169,14 @@ namespace BlackCore
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated);
 
+        //! Flight network has been connected
+        //! \remark hint if network connected and we expect any planes
+        //! \sa ISimulator::isFlightNetworkConnected
+        virtual void setFlightNetworkConnected(bool connected);
+
+        //! Is the flight network connected
+        bool isFlightNetworkConnected() const { return m_networkConnected; }
+
         //! Reload weather settings
         void reloadWeatherSettings();
 
@@ -538,18 +546,24 @@ namespace BlackCore
         //! Display a logged situation in simulator
         void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 40);
 
-        bool m_blinkCycle = false;            //!< used for highlighting
-        qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
-        int m_timerCounter = 0;               //!< allows to calculate n seconds
-        QTimer m_oneSecondTimer;              //!< multi purpose timer with 1 sec. interval
-        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;             //!< callsigns which will be rendered
-        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections; //!< connected signal/slots
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;               //!< all other aircraft are to be ignored
-
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
         int m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
+
+        // highlighting
+        bool m_blinkCycle = false;                //!< used for highlighting
+        qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
+        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
+
+        // timer
+        int m_timerCounter = 0;                   //!< allows to calculate n seconds
+        QTimer m_oneSecondTimer;                  //!< multi purpose timer with 1 sec. interval
+
+        // misc. as callsigns
+        bool   m_networkConnected = false;        //!< flight network connected
+        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;             //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard       m_remoteAircraftProviderConnections; //!< connected signal/slots
     };
 
     //! \brief Interface to a simulator listener.

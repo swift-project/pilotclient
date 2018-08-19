@@ -123,6 +123,11 @@ namespace BlackCore
         }
     }
 
+    void ISimulator::setFlightNetworkConnected(bool connected)
+    {
+        m_networkConnected = connected;
+    }
+
     void ISimulator::reloadWeatherSettings()
     {
         if (!m_isWeatherActivated) { return; }
