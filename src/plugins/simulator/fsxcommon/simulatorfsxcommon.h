@@ -410,7 +410,19 @@ namespace BlackSimPlugin
             void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
 
             //! Trace the send id
-            void traceSendId(DWORD simObjectId, const QString &function, const QString &details = {});
+            void traceSendId(DWORD simObjectId, const QString &functionName, const QString &details = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
             //! Get the trace details, otherwise empty string
             QString getSendIdTraceDetails(DWORD sendId) const;
@@ -449,7 +461,7 @@ namespace BlackSimPlugin
             bool m_simSimulating = false;        //!< Simulator running?
             bool m_useSbOffsets  = true;         //!< with SB offsets
             bool m_traceSendId   = false;        //!< trace the send ids, meant for debugging
-            qint64 m_traceAutoTs = -1;           //!< allows to automatically trace for some time
+            qint64 m_traceAutoUntilTs = -1;      //!< allows to automatically trace for some time
             qint64 m_simulatingChangedTs = -1;   //!< timestamp, when simulating changed (used to avoid jitter)
             int m_syncDeferredCounter =  0;      //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
