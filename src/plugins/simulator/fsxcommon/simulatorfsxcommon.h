@@ -195,7 +195,8 @@ namespace BlackSimPlugin
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
             //! Trigger tracing ids for some while
-            bool triggerAutoTraceSendId();
+            //! \sa CSimulatorFsxCommon::isTracingSendId
+            bool triggerAutoTraceSendId(qint64 traceTimeMs = AutoTraceOffsetMs);
 
             //! Callsign for pending request
             BlackMisc::Aviation::CCallsign getCallsignForPendingProbeRequests(DWORD requestId, bool remove);
@@ -215,8 +216,8 @@ namespace BlackSimPlugin
             static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
-            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes and their object / request ids
+            CSimConnectObjects m_simConnectObjects;                             //!< AI objects and their object and request ids
+            CSimConnectObjects m_simConnectProbes;                              //!< AI terrain probes and their object / request ids
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
 
         private:
@@ -250,6 +251,7 @@ namespace BlackSimPlugin
 
             //! Verify that an object has been added in simulator
             //! \remark checks if the object was really added after an "add request" and not directly removed again
+            //! \remark requests further data on remote aircraft (lights, ..) when correctly added
             void verifyAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 
             //! Add next aircraft based on timer
@@ -292,7 +294,7 @@ namespace BlackSimPlugin
             HRESULT initDataDefinitionsWhenConnected();
 
             //! Update remote aircraft
-            //! \remark this is where the interpolated data are send
+            //! \remark this is where the interpolated data are sent
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to FSX)
@@ -416,15 +418,15 @@ namespace BlackSimPlugin
             //! Remove all probes
             int removeAllProbes();
 
-            //! Insert an new SimConnect object
+            //! Insert a new SimConnect object
             CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
             static constexpr int SkipUpdateCyclesForCockpit    = 10; //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions       = 10; //!< skip exceptions when displayed more than x times
-            static constexpr int MaxSendIdTraces   = 10000; //!< max.traces of send id
-            static constexpr DWORD MaxSimObjAircraft = 10000; //!< max.number of SimObjects at the same time
-            static constexpr DWORD MaxSimObjProbes   = 100;   //!< max. probes
+            static constexpr int MaxSendIdTraces     = 10000;        //!< max.traces of send id
+            static constexpr DWORD MaxSimObjAircraft = 10000;        //!< max.number of SimObjects at the same time
+            static constexpr DWORD MaxSimObjProbes   = 100;          //!< max. probes
 
             // -- range for sim data, each sim object will get its own request id and use the offset ranges
             static constexpr int RequestSimObjAircraftStart    = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
@@ -438,9 +440,9 @@ namespace BlackSimPlugin
 
             // times
             static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
-            static constexpr int DispatchIntervalMs = 10;      //!< how often with run the FSX event queue
+            static constexpr int DispatchIntervalMs    = 10;   //!< how often with run the FSX event queue
             static constexpr int DeferSimulatingFlagMs = 1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
-            static constexpr int DeferResendingLights = 2500;  //!< Resend light state when aircraft light state was not yet available
+            static constexpr int DeferResendingLights  = 2500; //!< Resend light state when aircraft light state was not yet available
 
             QString m_simConnectVersion;         //!< SimConnect version
             bool m_simConnected  = false;        //!< Is simulator connected?
@@ -453,12 +455,12 @@ namespace BlackSimPlugin
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
 
             // tracing dispatch performance
-            int m_dispatchErrors = 0;            //!< number of dispatched failed, \sa dispatch
-            int m_dispatchProcCount = 0;         //!< number of dispatchProc counts
+            int m_dispatchErrors         = 0;    //!< number of dispatched failed, \sa dispatch
+            int m_dispatchProcCount      = 0;    //!< number of dispatchProc counts
             int m_dispatchProcEmptyCount = 0;    //!< number dispatchProc doing nothing
-            qint64 m_dispatchTimeMs = -1;
-            qint64 m_dispatchMaxTimeMs = -1;
-            qint64 m_dispatchProcTimeMs = -1;
+            qint64 m_dispatchTimeMs        = -1;
+            qint64 m_dispatchMaxTimeMs     = -1;
+            qint64 m_dispatchProcTimeMs    = -1;
             qint64 m_dispatchProcMaxTimeMs = -1;
 
             SIMCONNECT_RECV_ID m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL;     //!< last receive id from dispatching
@@ -467,7 +469,7 @@ namespace BlackSimPlugin
             DWORD m_dispatchRequestIdMaxTime = CSimConnectDefinitions::RequestEndMarker; //!< request id corresponding to max.time
 
             // sending via SimConnect
-            QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging
+            QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging, latest first
             int m_receiveExceptionCount = 0;      //!< exceptions
             int m_requestSimObjectDataCount  = 0; //!< requested SimObjects
 
@@ -517,7 +519,7 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
-            QTimer  m_timer { this }; //!< timer, "this" is needed otherwise
+            QTimer  m_timer { this }; //!< timer, "this" is needed otherwise warnings when move to new thread
             QString m_simulatorVersion;
             QString m_simConnectVersion;
             QString m_simulatorName;

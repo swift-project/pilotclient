@@ -406,7 +406,7 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(DeferSimulatingFlagMs, this, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
                 this->onSimRunningDeferred(m_simulatingChangedTs);
             });
@@ -737,7 +737,7 @@ namespace BlackSimPlugin
             QTimer::singleShot(1000, this, [ = ]
             {
                 // also triggers new add if required
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 this->verifyAddedRemoteAircraft(verifyAircraft);
             });
             return true;
@@ -884,7 +884,7 @@ namespace BlackSimPlugin
                 const QPointer <CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(100, this, [ = ]
                 {
-                    if (myself.isNull()) { return; }
+                    if (!myself) { return; }
                     this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode);
                 });
             }
@@ -951,7 +951,7 @@ namespace BlackSimPlugin
                 QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(2500, this, [ = ]
                 {
-                    if (myself.isNull()) { return; }
+                    if (!myself) { return; }
                     myself->physicallyAddRemoteAircraftImpl(aircraftAddAgain, AddedAfterRemoved);
                 });
             }
@@ -1315,7 +1315,7 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
             });
 
@@ -2129,7 +2129,7 @@ namespace BlackSimPlugin
             {
             case SIMCONNECT_RECV_ID_OPEN:
                 {
-                    SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
+                    SIMCONNECT_RECV_OPEN *event = static_cast<SIMCONNECT_RECV_OPEN *>(pData);
                     simListener->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
                     simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
