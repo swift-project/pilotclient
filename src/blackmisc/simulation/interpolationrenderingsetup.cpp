@@ -271,6 +271,7 @@ namespace BlackMisc
             m_sendGndToSim           = baseValues.isSendingGndFlagToSimulator();
             m_fixSceneryOffset       = baseValues.isFixingSceneryOffset();
             m_interpolatorMode       = baseValues.getInterpolatorMode();
+            m_pitchOnGround          = baseValues.getPitchOnGround();
         }
 
         QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const

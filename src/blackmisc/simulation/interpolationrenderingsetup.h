@@ -219,6 +219,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(fixSceneryOffset),
                 BLACK_METAMEMBER(interpolatorMode),
+                BLACK_METAMEMBER(pitchOnGround),
                 BLACK_METAMEMBER(maxRenderedAircraft),
                 BLACK_METAMEMBER(maxRenderedDistance)
             );
@@ -277,7 +278,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(fixSceneryOffset),
-                BLACK_METAMEMBER(interpolatorMode)
+                BLACK_METAMEMBER(interpolatorMode),
+                BLACK_METAMEMBER(pitchOnGround)
             );
         };
     } // namespace
