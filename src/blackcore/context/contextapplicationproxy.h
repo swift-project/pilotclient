@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifierlist.h"
+#include "blackmisc/identifierset.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
 
@@ -90,7 +90,7 @@ namespace BlackCore
 
         private:
             BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr; //!< interface
-            BlackMisc::CIdentifierList m_proxyPingIdentifiers; //!< automatically ping the implementing side
+            BlackMisc::CIdentifierSet m_proxyPingIdentifiers; //!< automatically ping the implementing side
             QTimer m_pingTimer;
 
             //! Relay connection signals to local signals

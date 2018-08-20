@@ -163,6 +163,7 @@ namespace BlackCore
         CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
         {
             m_proxyPingIdentifiers.insert(application);
+            if (m_pingTimer.isActive()) { m_pingTimer.start(); } // restart, no need to ping again
             return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("registerApplication"), application);
         }
 
@@ -210,7 +211,7 @@ namespace BlackCore
         {
             if (!m_dBusInterface) { return; }
             if (m_proxyPingIdentifiers.isEmpty()) { return; }
-            const CIdentifierList identifiers = m_proxyPingIdentifiers; // copy so member can be modified
+            const CIdentifierSet identifiers = m_proxyPingIdentifiers; // copy so member can be modified
             for (const CIdentifier &identifier : identifiers)
             {
                 this->registerApplication(identifier);
