@@ -12,13 +12,11 @@
 #ifndef BLACKMISC_IDENTIFIERLIST_H
 #define BLACKMISC_IDENTIFIERLIST_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/variant.h"
-
+#include "blackmisc/blackmiscexport.h"
 #include <QMetaType>
 
 namespace BlackMisc
@@ -27,7 +25,7 @@ namespace BlackMisc
      * Value object encapsulating a list of object identifiers
      */
     class BLACKMISC_EXPORT CIdentifierList :
-        public CSequence<BlackMisc::CIdentifier>,
+        public CSequence<CIdentifier>,
         public Mixin::MetaType<CIdentifierList>,
         public ITimestampObjectList<CIdentifier, CIdentifierList>
     {
@@ -38,7 +36,7 @@ namespace BlackMisc
         CIdentifierList();
 
         //! Construct from a base class object.
-        CIdentifierList(const CSequence<BlackMisc::CIdentifier> &other);
+        CIdentifierList(const CSequence<CIdentifier> &other);
 
         //! This list contains an identifier which is not contained in other.
         bool containsAnyNotIn(const CIdentifierList &other) const;

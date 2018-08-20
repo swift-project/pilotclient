@@ -93,11 +93,11 @@ namespace BlackMisc
         // starts/ends with
         float s1 = aStr.length();
         float s2 = bStr.length();
-        if (aStr.endsWith(bStr, cs)) { return s1 / s2 * 100; }
-        if (aStr.startsWith(bStr, cs)) { return s1 / s2 * 100; }
+        if (aStr.endsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
+        if (aStr.startsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
 
         // contains
-        if (aStr.contains(bStr, cs)) { return s1 / s2 * 100; }
+        if (aStr.contains(bStr, cs)) { return qRound(s1 / s2 * 100); }
 
         // char by char
         float points = 0;
@@ -125,7 +125,7 @@ namespace BlackMisc
                 continue;
             }
         }
-        return points / s1 * 100;
+        return qRound(points / s1 * 100);
     }
 
     QString intToHex(int value, int digits)

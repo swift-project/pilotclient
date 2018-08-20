@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAircraftIcaoCode :
             public CValueObject<CAircraftIcaoCode>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
+            public Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index

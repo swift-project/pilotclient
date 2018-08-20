@@ -126,12 +126,13 @@ namespace BlackGui
         void CInfoBarWebReadersStatusBase::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
         {
             Q_ASSERT_X(led, Q_FUNC_INFO, "no LED");
-            const int resetTimeMs = 2.5 * 1000;
+            const int resetTimeMs = qRound(2.5 * 1000);
             switch (readState)
             {
             case CEntityFlags::ReadSkipped:
             case CEntityFlags::ReadFinished:
             case CEntityFlags::ReadFinishedRestricted:
+                led->setOn(false);
                 led->blink(resetTimeMs); // blink here (temp. "on"), since read from cache results in immediate ReadFinished
                 break;
             case CEntityFlags::StartRead:

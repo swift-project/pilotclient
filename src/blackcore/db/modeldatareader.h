@@ -155,7 +155,6 @@ namespace BlackCore
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
-
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading,

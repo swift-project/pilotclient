@@ -17,8 +17,8 @@ namespace BlackMisc
 {
     CIdentifierList::CIdentifierList() { }
 
-    CIdentifierList::CIdentifierList(const CSequence<BlackMisc::CIdentifier> &other) :
-        CSequence<BlackMisc::CIdentifier>(other)
+    CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) :
+        CSequence<CIdentifier>(other)
     { }
 
     bool CIdentifierList::containsAnyNotIn(const CIdentifierList &other) const

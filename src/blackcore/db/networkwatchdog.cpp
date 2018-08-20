@@ -224,7 +224,7 @@ namespace BlackCore
             const int accessiblityInt = static_cast<int>(accessibility);
             if (m_networkAccessibility == accessiblityInt) { return; }
 
-            // shift in thread
+            // shift to thread
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
                 QPointer<CNetworkWatchdog> myself(this);

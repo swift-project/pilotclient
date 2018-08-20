@@ -55,7 +55,7 @@ namespace BlackMisc
             if (i1 < 0) { return -1; }
             int i2 = ks.lastIndexOf(')');
             if (i2 <= i1 + 1) { return -1;}
-            QString n(ks.mid(i1 + 1, i2 - i1 - 1));
+            const QString n(ks.mid(i1 + 1, i2 - i1 - 1));
             ok = false;
             key = n.toInt(&ok);
             return ok ? key : -1;
@@ -65,7 +65,7 @@ namespace BlackMisc
         {
             if (!timestamp.isEmpty())
             {
-                QString ts(timestamp.trimmed().remove(' ').remove('-').remove(':')); // normalize
+                const QString ts(timestamp.trimmed().remove(' ').remove('-').remove(':')); // normalize
                 QDateTime dt = QDateTime::fromString(ts, "yyyyMMddHHmmss");
                 dt.setTimeZone(QTimeZone::utc());
                 return dt;

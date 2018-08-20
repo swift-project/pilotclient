@@ -23,8 +23,6 @@
 #include <QScopedPointer>
 #include <QTimer>
 
-class QWidget;
-
 namespace Ui { class CInfoBarWebReadersStatusComponent; }
 namespace BlackGui
 {

@@ -47,9 +47,9 @@ namespace BlackMisc
 
             //! Get data from a DB response
             static bool parseSwiftPublishResponse(const QString &jsonResponse,
-                                                  BlackMisc::Simulation::CAircraftModelList &publishedModels,
-                                                  BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                                  BlackMisc::CStatusMessageList &messages, bool &directWrite);
+                                                  Simulation::CAircraftModelList &publishedModels,
+                                                  Simulation::CAircraftModelList &skippedModels,
+                                                  CStatusMessageList &messages, bool &directWrite);
         };
     } // namespace
 } // namespace

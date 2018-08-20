@@ -123,13 +123,14 @@ namespace BlackMisc
 
             if (socket.state() != QTcpSocket::ConnectedState)
             {
-                const QString error = timedOut ? QObject::tr("Timed out", "BlackMisc") : socket.errorString();
-                message = QObject::tr("Connection failed : %1", "BlackMisc").arg(error);
+                static const QString e("Connection failed: '%1'");
+                message = timedOut ? e.arg("Timed out") : e.arg(socket.errorString());
                 return false;
             }
             else
             {
-                message = QObject::tr("OK, connected", "BlackMisc");
+                static const QString ok("OK, connected");
+                message = ok;
                 return true;
             }
         }
