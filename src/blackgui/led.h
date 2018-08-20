@@ -57,10 +57,10 @@ namespace BlackGui
         CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on", const QString &offName = "off", int targetWidth = -1, QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLedWidget();
+        virtual ~CLedWidget() override;
 
         //! Value
-        bool value() const { return m_state; }
+        bool value() const { return m_blinkState; }
 
         //! Allows to set the led value {true, false}
         void setOn(bool on) { this->setOn(on, -1); }
@@ -136,7 +136,7 @@ namespace BlackGui
         void clicked();
 
     private:
-        State m_state = Off;             //!< current state, can be different from value when blinking
+        State m_blinkState = Off;        //!< current state, can be different from value when blinking
         State m_value = Off;             //!< explicit value
         LedColor m_colorOn = Yellow;     //!< On color
         LedColor m_colorOff = Black;     //!< Off color

@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QStyleOption>
 #include <QSvgRenderer>
+#include <QPointer>
 #include <Qt>
 #include <QtGlobal>
 
@@ -33,7 +34,7 @@ namespace BlackGui
 
     CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) :
         QWidget(parent),
-        m_state(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
+        m_blinkState(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
         m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
         m_renderer(new QSvgRenderer(this))
     {
@@ -61,7 +62,7 @@ namespace BlackGui
         QString ledShapeAndColor(shapes().at(static_cast<int>(m_shape)));
         if (ledColor == NoColor)
         {
-            switch (m_state)
+            switch (m_blinkState)
             {
             case On:
                 m_currentToolTip = m_tooltipOn;
@@ -138,8 +139,8 @@ namespace BlackGui
 
     void CLedWidget::resetState()
     {
-        if (m_value == m_state) { return; }
-        m_state = m_value;
+        if (m_value == m_blinkState) { return; }
+        m_blinkState = m_value;
         this->setLed();
     }
 
@@ -231,15 +232,20 @@ namespace BlackGui
         State s = on ? On : Off;
         if (resetTimeMs > 0)
         {
-            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState);
+            QPointer<CLedWidget> myself(this);
+            m_resetTimer.singleShot(resetTimeMs, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->resetState();
+            });
         }
         else
         {
             m_resetTimer.stop();
             m_value = s;
         }
-        if (m_state == s) { return; }
-        m_state = s;
+        if (m_blinkState == s) { return; }
+        m_blinkState = s;
         this->setLed();
     }
 
@@ -260,14 +266,14 @@ namespace BlackGui
             m_resetTimer.stop();
             m_value = TriState;
         }
-        if (m_state == TriState) { return; }
-        m_state = TriState;
+        if (m_blinkState == TriState) { return; }
+        m_blinkState = TriState;
         this->setLed();
     }
 
     void CLedWidget::toggleValue()
     {
-        m_state = (m_state == Off) ? On : Off;
+        m_blinkState = (m_blinkState == Off) ? On : Off;
         this->setLed();
     }
 
@@ -299,7 +305,7 @@ namespace BlackGui
 
     const QStringList &CLedWidget::shapes()
     {
-        static const QStringList shapes({":/qled/icons/qled/circle_" , ":/qled/icons/qled/square_" , ":/qled/icons/qled/triang_" , ":/qled/icons/qled/round_"});
+        static const QStringList shapes({":/qled/icons/qled/circle_", ":/qled/icons/qled/square_", ":/qled/icons/qled/triang_", ":/qled/icons/qled/round_"});
         return shapes;
     }
 
