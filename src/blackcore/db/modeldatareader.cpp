@@ -25,6 +25,7 @@
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
+#include <QTime>
 #include <QUrl>
 #include <QWriteLocker>
 #include <Qt>
@@ -309,9 +310,10 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in livery list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            m_liveryCache.set(liveries, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
+            const CStatusMessage cacheMsg = m_liveryCache.set(liveries, latestTimestamp);
+            CLogMessage::preformatted(cacheMsg);
 
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             this->emitAndLogDataRead(CEntityFlags::LiveryEntity, n, res);
         }
 
@@ -352,9 +354,11 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in distributor list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            m_distributorCache.set(distributors, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
+            const CStatusMessage cacheMsg = m_distributorCache.set(distributors, latestTimestamp);
+            CLogMessage::preformatted(cacheMsg);
+
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             this->emitAndLogDataRead(CEntityFlags::DistributorEntity, n, res);
         }
 
@@ -384,7 +388,10 @@ namespace BlackCore
             }
             else
             {
+                QTime time;
+                time.start();
                 models = CAircraftModelList::fromDatabaseJson(res);
+                CLogMessage(this).info("Parsed %1 models in %2 ms") << models.size() << time.elapsed();
             }
 
             // synchronized update
@@ -396,7 +403,8 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in model list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            m_modelCache.set(models, latestTimestamp);
+            const CStatusMessage cacheMsg = m_modelCache.set(models, latestTimestamp);
+            CLogMessage::preformatted(cacheMsg);
 
             this->updateReaderUrl(this->getBaseUrl(CDbFlags::DbReading));
             this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);

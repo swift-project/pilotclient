@@ -75,6 +75,7 @@ namespace BlackMisc
 
         void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
+            // this function is performance sensitive, as it is called for all DB data
             const int dbKey = json.value(prefix % QStringLiteral("id")).toInt(-1);
             this->setDbKey(dbKey);
 
