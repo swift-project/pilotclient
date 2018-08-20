@@ -30,6 +30,7 @@
 #include <QToolButton>
 #include <QVariant>
 #include <Qt>
+#include <QStringBuilder>
 #include <QtGlobal>
 
 using namespace BlackGui;
@@ -52,16 +53,16 @@ namespace BlackGui
 
             // context menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
-            this->m_input = new CMarginsInput(this);
-            this->m_input->setMaximumWidth(150);
-            this->m_marginMenuAction = new QWidgetAction(this);
-            this->m_marginMenuAction->setDefaultWidget(this->m_input);
+            m_input = new CMarginsInput(this);
+            m_input->setMaximumWidth(150);
+            m_marginMenuAction = new QWidgetAction(this);
+            m_marginMenuAction->setDefaultWidget(m_input);
 
             this->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(this->m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::ps_menuChangeMargins);
-            connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::ps_showContextMenu);
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged, Qt::QueuedConnection);
-            this->ps_onStyleSheetsChanged();
+            connect(m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::menuChangeMargins);
+            connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::showContextMenu);
+            if (sGui) { connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::onStyleSheetsChanged, Qt::QueuedConnection); }
+            this->onStyleSheetsChanged();
         }
 
         CNavigatorDialog::~CNavigatorDialog()
@@ -69,13 +70,13 @@ namespace BlackGui
 
         void CNavigatorDialog::buildNavigator(int columns)
         {
-            if (this->m_firstBuild)
+            if (m_firstBuild)
             {
-                this->m_firstBuild = false;
+                m_firstBuild = false;
                 this->insertOwnActions();
             }
 
-            this->ps_onStyleSheetsChanged();
+            this->onStyleSheetsChanged();
 
             // remove old layout
             CGuiUtility::deleteLayout(ui->fr_NavigatorDialogInner->layout(), false);
@@ -90,20 +91,26 @@ namespace BlackGui
             int r = 0;
             int c = 0;
 
-            for (const auto &action : this->actions())
+            // remark:
+            for (QAction *action : this->actions())
             {
+                if (!action) { continue; }
                 QToolButton *tb = new QToolButton(ui->fr_NavigatorDialogInner);
                 tb->setDefaultAction(action);
-                tb->setObjectName(this->objectName().append(":").append(action->objectName()));
-
+                tb->setObjectName(this->objectName() % QStringLiteral(":") % action->objectName());
+                if (!action->text().isEmpty())
+                {
+                    tb->setToolTip(action->text());
+                }
                 gridLayout->addWidget(tb, r, c++);
                 tb->show();
                 if (c < columns) { continue; }
                 c = 0;
                 r++;
             }
-            this->m_currentColumns = gridLayout->columnCount();
+            m_currentColumns = gridLayout->columnCount();
             this->adjustNavigatorSize(gridLayout);
+            this->focusWidget();
         }
 
         void CNavigatorDialog::reject()
@@ -124,7 +131,7 @@ namespace BlackGui
 
         void CNavigatorDialog::restoreFromSettings()
         {
-            const CNavigatorSettings s = this->m_settings.get();
+            const CNavigatorSettings s = m_settings.get();
             this->setContentsMargins(s.getMargins());
             if (this->isFrameless() != s.isFramless()) { this->toggleFrameless(); }
             this->buildNavigator(s.getColumns());
@@ -134,19 +141,20 @@ namespace BlackGui
 
         void CNavigatorDialog::saveToSettings()
         {
-            CNavigatorSettings s = this->m_settings.get();
+            CNavigatorSettings s = m_settings.get();
             s.setFrameless(this->isFrameless());
             s.setMargins(this->contentsMargins());
             s.setGeometry(this->saveGeometry());
-            s.setColumns(this->m_currentColumns);
-            const CStatusMessage m = this->m_settings.setAndSave(s);
+            s.setColumns(m_currentColumns);
+            const CStatusMessage m = m_settings.setAndSave(s);
             if (!m.isSuccess()) { CLogMessage::preformatted(m); }
         }
 
-        void CNavigatorDialog::ps_onStyleSheetsChanged()
+        void CNavigatorDialog::onStyleSheetsChanged()
         {
             const QString fn(CStyleSheetUtility::fileNameNavigator());
             const QString qss(sGui->getStyleSheetUtility().style(fn));
+            this->setStyleSheet("");
             this->setStyleSheet(qss);
             this->adjustNavigatorSize();
             this->repaint();
@@ -178,27 +186,34 @@ namespace BlackGui
 
         void CNavigatorDialog::windowFlagsChanged()
         {
-            if (this->m_firstBuild) { return; }
-            this->buildNavigator(this->m_currentColumns);
+            if (m_firstBuild) { return; }
+            this->buildNavigator(m_currentColumns);
         }
 
         void CNavigatorDialog::paintEvent(QPaintEvent *event)
         {
-            bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
+            const bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
             if (s) { return; }
             QDialog::paintEvent(event);
         }
 
-        void CNavigatorDialog::ps_showContextMenu(const QPoint &pos)
+        void CNavigatorDialog::enterEvent(QEvent *event)
         {
-            QPoint globalPos = this->mapToGlobal(pos);
+            // event called when mouse is over, acts as auto-focus
+            QApplication::setActiveWindow(this);
+            QDialog::enterEvent(event);
+        }
+
+        void CNavigatorDialog::showContextMenu(const QPoint &pos)
+        {
+            const QPoint globalPos = this->mapToGlobal(pos);
             QScopedPointer<QMenu> contextMenu(new QMenu(this));
             this->addToContextMenu(contextMenu.data());
             QAction *selectedItem = contextMenu.data()->exec(globalPos);
             Q_UNUSED(selectedItem);
         }
 
-        void CNavigatorDialog::ps_changeLayout()
+        void CNavigatorDialog::changeLayout()
         {
             QAction *a = qobject_cast<QAction *>(QObject::sender());
             if (!a) { return; }
@@ -209,18 +224,18 @@ namespace BlackGui
             else if (v == "2r") { buildNavigator(columnsForRows(2));}
         }
 
-        void CNavigatorDialog::ps_menuChangeMargins(const QMargins &margins)
+        void CNavigatorDialog::menuChangeMargins(const QMargins &margins)
         {
             this->setContentsMargins(margins);
             this->adjustNavigatorSize();
         }
 
-        void CNavigatorDialog::ps_dummy()
+        void CNavigatorDialog::dummyFunction()
         {
             // void
         }
 
-        void CNavigatorDialog::ps_settingsChanged()
+        void CNavigatorDialog::onSettingsChanged()
         {
             // void
         }
@@ -228,7 +243,7 @@ namespace BlackGui
         void CNavigatorDialog::insertOwnActions()
         {
             // add some space for frameless navigators where I can move the navigator
-            QAction *a = new QAction(BlackMisc::CIcons::empty16(), "move navigator here", this);
+            QAction *a = new QAction(CIcons::empty16(), "move navigator here", this);
             if (this->actions().isEmpty())
             {
                 this->addAction(a);
@@ -238,10 +253,14 @@ namespace BlackGui
                 this->insertAction(this->actions().first(), a);
             }
 
-            a = new QAction(BlackMisc::CIcons::swiftLauncher16(), "Start launcher", this);
-            bool c = connect(a, &QAction::triggered, sGui, &CGuiApplication::startLauncher);
-            Q_ASSERT(c);
-            this->addAction(a);
+            bool c;
+            if (sGui)
+            {
+                a = new QAction(CIcons::swiftLauncher16(), "Start launcher", this);
+                c = connect(a, &QAction::triggered, sGui, &CGuiApplication::startLauncher);
+                Q_ASSERT(c);
+                this->addAction(a);
+            }
 
             // save
             a = new QAction(CIcons::save16(), "Save state", this);
@@ -292,18 +311,18 @@ namespace BlackGui
 
         void CNavigatorDialog::addToContextMenu(QMenu *contextMenu) const
         {
-            QAction *a = contextMenu->addAction(CIcons::resize16(), "1 row", this, &CNavigatorDialog::ps_changeLayout);
+            QAction *a = contextMenu->addAction(CIcons::resize16(), "1 row", this, &CNavigatorDialog::changeLayout);
             a->setData("1r");
-            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, &CNavigatorDialog::changeLayout);
             a->setData("2r");
-            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, &CNavigatorDialog::changeLayout);
             a->setData("1c");
-            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::changeLayout);
             a->setData("2c");
             const QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
-            contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
-            contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::ps_dummy);
-            contextMenu->addAction(this->m_marginMenuAction);
+            contextMenu->addAction(CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
+            contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::dummyFunction);
+            contextMenu->addAction(m_marginMenuAction);
             contextMenu->addSeparator();
             contextMenu->addAction(CIcons::load16(), "Restore state", this, &CNavigatorDialog::restoreFromSettings);
             contextMenu->addAction(CIcons::save16(), "Save state", this, &CNavigatorDialog::saveToSettings);

@@ -49,7 +49,7 @@ namespace BlackGui
             CNavigatorDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CNavigatorDialog();
+            virtual ~CNavigatorDialog() override;
 
             //! Navigator
             void buildNavigator(int columns);
@@ -75,9 +75,6 @@ namespace BlackGui
             void saveToSettings();
 
         protected:
-            //! Style sheet has changed
-            void ps_onStyleSheetsChanged();
-
             //! \name Base class events
             //! @{
             virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -85,25 +82,28 @@ namespace BlackGui
             virtual void changeEvent(QEvent *evt) override;
             virtual void windowFlagsChanged() override;
             virtual void paintEvent(QPaintEvent *event) override;
+            virtual void enterEvent(QEvent *event) override;
             //! @}
 
-        private slots:
-            //! Context menu
-            void ps_showContextMenu(const QPoint &pos);
+        private:
+            //! Margins context menu
+            void menuChangeMargins(const QMargins &margins);
 
             //! Change the layout
-            void ps_changeLayout();
-
-            //! Margins context menu
-            void ps_menuChangeMargins(const QMargins &margins);
+            void changeLayout();
 
             //! Dummy slot
-            void ps_dummy();
+            void dummyFunction();
+
+            //! Context menu
+            void showContextMenu(const QPoint &pos);
+
+            //! Style sheet has changed
+            void onStyleSheetsChanged();
 
             //! Changed settigs
-            void ps_settingsChanged();
+            void onSettingsChanged();
 
-        private:
             //! Insert own actions
             void insertOwnActions();
 
@@ -124,7 +124,7 @@ namespace BlackGui
             int  m_currentColumns = 1;
             QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
             CMarginsInput *m_input = nullptr; //!< margins widget
-            BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::ps_settingsChanged };
+            BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
         };
     } // ns
 } // ns
