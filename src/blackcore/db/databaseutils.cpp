@@ -200,7 +200,7 @@ namespace BlackCore
                     if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
                 }
             }
-            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2 ms") << models.size() << timer.elapsed();
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2ms") << models.size() << timer.elapsed();
             return c;
         }
 

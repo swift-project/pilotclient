@@ -391,7 +391,8 @@ namespace BlackCore
                 QTime time;
                 time.start();
                 models = CAircraftModelList::fromDatabaseJson(res);
-                CLogMessage(this).info("Parsed %1 models in %2 ms") << models.size() << time.elapsed();
+                const int elapsed = time.elapsed();
+                CLogMessage(this).info("Parsed %1 models in %2 ms") << models.size() << elapsed;
             }
 
             // synchronized update
@@ -419,7 +420,7 @@ namespace BlackCore
             }
 
             whatToRead &= CEntityFlags::DistributorLiveryModel; // supported
-            BlackMisc::Network::CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
+            CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
 
             CStatusMessageList msgs;
             if (whatToRead.testFlag(CEntityFlags::LiveryEntity))

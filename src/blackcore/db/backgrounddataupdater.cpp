@@ -16,6 +16,7 @@
 #include "blackmisc/threadutils.h"
 #include "blackmisc/eventloop.h"
 #include "blackmisc/logmessage.h"
+#include <QTime>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -115,7 +116,8 @@ namespace BlackCore
             const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(modelCaches.getDescription());
             if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync) { return; }
 
-            m_syncedModelsLatestChange[modelCaches.getDescription()] = latestDbModelsTs;
+            const QString description = modelCaches.getDescription();
+            m_syncedModelsLatestChange[description] = latestDbModelsTs;
             const CSimulatorInfo simulators = modelCaches.simulatorsWithInitializedCache(); // simulators ever used
             if (simulators.isNoSimulator()) { return; }
 
@@ -124,11 +126,13 @@ namespace BlackCore
                                                 dbModelsConsidered;
             if (dbModels.isEmpty()) { return; }
             const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
+            QTime time;
             for (const CSimulatorInfo &singleSimulator : simulatorsSet)
             {
                 if (!this->doWorkCheck()) { return; }
                 CAircraftModelList simulatorModels = modelCaches.getSynchronizedCachedModels(singleSimulator);
                 if (simulatorModels.isEmpty()) { continue; }
+                time.restart();
                 const CAircraftModelList dbModelsForSimulator = dbModels.matchesSimulator(singleSimulator);
                 if (dbModelsForSimulator.isEmpty()) { continue; }
 
@@ -136,8 +140,9 @@ namespace BlackCore
                 const int c = CDatabaseUtils::consolidateModelsWithDbData(dbModelsForSimulator, simulatorModels, true);
                 if (c > 0)
                 {
-                    this->addHistory(CLogMessage(this).info("Consolidated %1 models for '%2'") << c << singleSimulator.convertToQString());
                     const CStatusMessage m = modelCaches.setCachedModels(simulatorModels, singleSimulator);
+                    const int msElapsed = time.elapsed();
+                    this->addHistory(CLogMessage(this).info("Consolidated %1 models (%2) for '%3' in %4ms") << c << description << singleSimulator.convertToQString() << msElapsed);
                     CLogMessage::preformatted(m);
                     this->addHistory(m);
                 }
@@ -168,11 +173,11 @@ namespace BlackCore
             if (!latestDbTs.isValid()) { return; }
             if (latestDbTs <= latestCacheTs)
             {
-                this->addHistory(CLogMessage(this).info("No auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
+                this->addHistory(CLogMessage(this).info("Background updater, no auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
                 return;
             }
 
-            this->addHistory(CLogMessage(this).info("Triggering read of '%1' since '%2'") << entityStr << latestCacheTsStr);
+            this->addHistory(CLogMessage(this).info("Background updater triggering read of '%1' since '%2'") << entityStr << latestCacheTsStr);
             sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(entity, latestCacheTs);
         }
 
