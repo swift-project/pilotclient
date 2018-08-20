@@ -134,8 +134,17 @@ namespace BlackCore
                 const bool wasInternetAvailable = m_internetAccessible;
                 const bool networkAccessible = this->isNetworkkAccessibleOrCheckDisabled();
                 const CUrl testUrl(CNetworkWatchdog::dbTestUrl());
-                bool canConnectDb = m_checkDbAccessibility && networkAccessible &&
-                                    CNetworkUtils::canConnect(testUrl, CanConnectTimeMs); // running here in background worker
+                bool canConnectDb = m_checkDbAccessibility && networkAccessible;
+                if (canConnectDb)
+                {
+                    // running here in background worker check twice
+                    canConnectDb = CNetworkUtils::canConnect(testUrl, CanConnectTimeMs);
+                    if (!canConnectDb)
+                    {
+                        canConnectDb = CNetworkUtils::canConnect(testUrl, CanConnectTimeMs);
+                    }
+                }
+
                 if (m_checkDbAccessibility && m_doDetailedCheck && canConnectDb)
                 {
                     // test against real HTTP response
@@ -223,6 +232,7 @@ namespace BlackCore
             // avoid unnecessary signals
             const int accessiblityInt = static_cast<int>(accessibility);
             if (m_networkAccessibility == accessiblityInt) { return; }
+            if (m_disableNetworkCheck) { return; } // ignore with disabled check
 
             // shift to thread
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
@@ -316,9 +326,13 @@ namespace BlackCore
 
             if (ok)
             {
+                // be a little less verbose
+                if ((m_totalGoodCountDb % 5 == 0) || m_consecutivePingBadCount > 0)
+                {
+                    CLogMessage(this).info("Watchdog pinged '%1'")  << url;
+                }
                 m_totalGoodCountDb++;
                 m_consecutivePingBadCount = 0;
-                CLogMessage(this).info("Watchdog pinged '%1'")  << url;
             }
             else
             {

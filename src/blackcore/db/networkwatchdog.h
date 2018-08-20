@@ -183,7 +183,7 @@ namespace BlackCore
             std::atomic_bool m_online { true };
             std::atomic_bool m_internetAccessible { true };
             std::atomic_bool m_dbAccessible { true };
-            std::atomic_bool m_lastClientPingSuccess { true };
+            std::atomic_bool m_lastClientPingSuccess { true }; //!< ping swift DB client service
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress
