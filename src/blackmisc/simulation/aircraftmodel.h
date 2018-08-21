@@ -185,6 +185,9 @@ namespace BlackMisc
             //! Airline ICAO code
             const Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return m_livery.getAirlineIcaoCode(); }
 
+            //! Set airline ICAO code designator
+            bool setAirlineIcaoDesignator(const QString &designator) { return m_livery.setAirlineIcaoCodeDesignator(designator); }
+
             //! Airline ICAO code designator
             const QString &getAirlineIcaoCodeDesignator() const { return m_livery.getAirlineIcaoCode().getDesignator(); }
 

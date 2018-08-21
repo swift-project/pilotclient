@@ -101,6 +101,9 @@ namespace BlackMisc
             //! Airline ICAO code
             bool setAirlineIcaoCode(const CAirlineIcaoCode &airlineIcao);
 
+            //! Airline ICAO code designator
+            bool setAirlineIcaoCodeDesignator(const QString &airlineIcaoDesignator);
+
             //! Combined code
             void setCombinedCode(const QString &code) { m_combinedCode = code.trimmed().toUpper(); }
 

@@ -94,6 +94,13 @@ namespace BlackMisc
             return true;
         }
 
+        bool CLivery::setAirlineIcaoCodeDesignator(const QString &airlineIcaoDesignator)
+        {
+            if (m_airline.getDesignator() == airlineIcaoDesignator) { return false; }
+            m_airline.setDesignator(airlineIcaoDesignator);
+            return true;
+        }
+
         bool CLivery::hasColorFuselage() const
         {
             return m_colorFuselage.isValid();

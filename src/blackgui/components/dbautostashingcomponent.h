@@ -23,8 +23,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace BlackMisc
 {
     class CLogCategoryList;
@@ -41,7 +39,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbAutoStashingComponent :
             public QDialog,
-            public BlackGui::Components::CDbMappingComponentAware,
+            public CDbMappingComponentAware,
             public BlackCore::IProgressIndicator
         {
             Q_OBJECT
@@ -63,7 +61,7 @@ namespace BlackGui
             explicit CDbAutoStashingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAutoStashingComponent();
+            virtual ~CDbAutoStashingComponent() override;
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }
@@ -81,15 +79,14 @@ namespace BlackGui
             //! Show last result
             void showLastResults();
 
-        private slots:
-            //! Data have been read
-            void ps_entitiesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
-
-            //! Reset the description settings
-            void ps_resetDescription();
-
         private:
             QScopedPointer<Ui::CDbAutoStashingComponent> ui;
+
+            //! Data have been read
+            void onEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Reset the description settings
+            void resetDescription();
 
             //! Init the component
             void initGui();
