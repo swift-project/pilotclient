@@ -112,8 +112,7 @@ namespace BlackCore
                     {
                         // normally the timestamp is always updated from backend
                         // if this changes in the future we're prepared
-                        updateTimestamp = QDateTime::fromString(ts, timestampFormat);
-                        updateTimestamp.setTimeSpec(Qt::UTC);
+                        updateTimestamp = fromStringUtc(ts, timestampFormat);
                         if (this->getUpdateTimestamp() == updateTimestamp) return; // nothing to do
 
                         // save parsing and all follow up actions if nothing changed
@@ -166,14 +165,12 @@ namespace BlackCore
                             }
                             else if (name == "time_end")
                             {
-                                QDateTime t = QDateTime::fromString(value, timestampFormat);
-                                t.setTimeSpec(Qt::UTC);
+                                QDateTime t = fromStringUtc(value, timestampFormat);
                                 bookedStation.setBookedUntilUtc(t);
                             }
                             else if (name == "time_start")
                             {
-                                QDateTime t = QDateTime::fromString(value, timestampFormat);
-                                t.setTimeSpec(Qt::UTC);
+                                QDateTime t = fromStringUtc(value, timestampFormat);
                                 bookedStation.setBookedFromUtc(t);
                             }
                         }

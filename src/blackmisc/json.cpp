@@ -76,7 +76,7 @@ const QJsonValue &operator >>(const QJsonValue &json, bool &value)
 
 const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value)
 {
-    value = QDateTime::fromString(json.toString());
+    value = fromStringUtc(json.toString());
     return json;
 }
 
@@ -150,7 +150,7 @@ QJsonValueRef operator >>(QJsonValueRef json, bool &value)
 
 QJsonValueRef operator >>(QJsonValueRef json, QDateTime &value)
 {
-    value = QDateTime::fromString(json.toString());
+    value = fromStringUtc(json.toString());
     return json;
 }
 

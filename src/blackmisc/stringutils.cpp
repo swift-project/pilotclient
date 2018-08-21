@@ -17,6 +17,14 @@
 
 namespace BlackMisc
 {
+    QString removeDateTimeSeparators(const QString &s)
+    {
+        return removeChars(s, [](QChar c)
+        {
+            return c == ' ' || c == ':' || c == '_' || c == '-' || c == '.';
+        });
+    }
+
     QList<QStringRef> splitLinesRefs(const QString &s)
     {
         return splitStringRefs(s, [](QChar c) { return c == '\n' || c == '\r'; });
@@ -251,6 +259,20 @@ namespace BlackMisc
         return removeChars(name.toUpper(), [](QChar c) { return !c.isUpper(); });
     }
 
+    QDateTime fromStringUtc(const QString &dateTimeString, const QString &format)
+    {
+        QDateTime dt = QDateTime::fromString(dateTimeString, format);
+        dt.setUtcOffset(0);
+        return dt;
+    }
+
+    QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format)
+    {
+        QDateTime dt = QDateTime::fromString(dateTimeString, format);
+        dt.setUtcOffset(0);
+        return dt;
+    }
+
     QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString)
     {
         if (dateTimeString.isEmpty()) { return QDateTime(); }
@@ -259,52 +281,74 @@ namespace BlackMisc
             // 2017 0301 124421 321
             if (dateTimeString.length() == 17)
             {
-                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmmsszzz");
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz");
             }
             if (dateTimeString.length() == 14)
             {
-                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmmss");
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmmss");
             }
             if (dateTimeString.length() == 12)
             {
-                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmm");
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmm");
             }
             if (dateTimeString.length() == 8)
             {
-                return QDateTime::fromString(dateTimeString, "yyyyMMdd");
+                return fromStringUtc(dateTimeString, "yyyyMMdd");
             }
             return QDateTime();
         }
 
         // remove simple separators and check if digits only again
-        const QString simpleSeparatorsRemoved = removeChars(dateTimeString, [](QChar c)
-        {
-            return c == ' ' || c == ':' || c == '_' || c == '-';
-        });
+        const QString simpleSeparatorsRemoved = removeDateTimeSeparators(dateTimeString);
         if (isDigitsOnlyString(simpleSeparatorsRemoved))
         {
             return parseMultipleDateTimeFormats(simpleSeparatorsRemoved);
         }
 
         // stupid trial and error
-        QDateTime ts = QDateTime::fromString(dateTimeString, Qt::ISODateWithMs);
+        QDateTime ts = fromStringUtc(dateTimeString, Qt::ISODateWithMs);
         if (ts.isValid()) return ts;
 
-        ts = QDateTime::fromString(dateTimeString, Qt::ISODate);
+        ts = fromStringUtc(dateTimeString, Qt::ISODate);
         if (ts.isValid()) return ts;
 
-        ts = QDateTime::fromString(dateTimeString, Qt::TextDate);
+        ts = fromStringUtc(dateTimeString, Qt::TextDate);
         if (ts.isValid()) return ts;
 
-        ts = QDateTime::fromString(dateTimeString, Qt::DefaultLocaleLongDate);
+        ts = fromStringUtc(dateTimeString, Qt::DefaultLocaleLongDate);
         if (ts.isValid()) return ts;
 
-        ts = QDateTime::fromString(dateTimeString, Qt::DefaultLocaleShortDate);
+        ts = fromStringUtc(dateTimeString, Qt::DefaultLocaleShortDate);
         if (ts.isValid()) return ts;
 
         // SystemLocaleShortDate,
         // SystemLocaleLongDate,
         return QDateTime();
+    }
+
+    QDateTime parseDateTimeStringOptimized(const QString &dateTimeString)
+    {
+        // yyyyMMddHHmmsszzz
+        // 01234567890123456
+        int year(dateTimeString.leftRef(4).toInt());
+        int month(dateTimeString.midRef(4, 2).toInt());
+        int day(dateTimeString.midRef(6, 2).toInt());
+        QDate date;
+        date.setDate(year, month, day);
+        QDateTime dt;
+        dt.setOffsetFromUtc(0);
+        dt.setDate(date);
+        if (dateTimeString.length() < 12) { return dt; }
+
+        QTime t;
+        const int hour(dateTimeString.midRef(8, 2).toInt());
+        const int minute(dateTimeString.midRef(10, 2).toInt());
+        const int second(dateTimeString.length() < 14 ? 0 : dateTimeString.midRef(12, 2).toInt());
+        const int ms(dateTimeString.length() < 17 ? 0 : dateTimeString.rightRef(3).toInt());
+
+        t.setHMS(hour, minute, second, ms);
+        dt.setTime(t);
+        return dt;
     }
 
     QString dotToLocaleDecimalPoint(QString &input)
@@ -343,7 +387,7 @@ namespace BlackMisc
     QString withQUestionMark(const QString &question)
     {
         if (question.endsWith("?")) { return question; }
-        return question + "?";
+        return question % QStringLiteral("?");
     }
 } // ns
 

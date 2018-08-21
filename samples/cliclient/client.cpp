@@ -276,7 +276,7 @@ namespace BlackSample
         const CFlightPlan::FlightRules flightRules = CFlightPlan::stringToFlightRules(flightRulesString);
         const CCallsign callsign("DAMBZ");
         CFlightPlan fp(callsign, equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
-                       QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
+                       fromStringUtc(takeoffTimePlanned, "hhmm"), fromStringUtc(takeoffTimeActual, "hhmm"),
                        CTime(enrouteTime, CTimeUnit::hrmin()),
                        CTime(fuelTime, CTimeUnit::hrmin()),
                        CAltitude(cruiseAltitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()),

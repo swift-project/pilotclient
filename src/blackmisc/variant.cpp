@@ -180,7 +180,7 @@ namespace BlackMisc
         {
         case QVariant::Invalid:     throw CJsonException("Type not recognized by QMetaType");
         case QVariant::Int:         m_v.setValue(value.toInt()); break;
-        case QVariant::UInt:        m_v.setValue<uint>(value.toInt()); break;
+        case QVariant::UInt:        m_v.setValue<uint>(static_cast<uint>(value.toInt())); break;
         case QVariant::Bool:        m_v.setValue(value.toBool()); break;
         case QVariant::Double:      m_v.setValue(value.toDouble()); break;
         case QVariant::LongLong:    m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
@@ -188,7 +188,7 @@ namespace BlackMisc
         case QVariant::String:      m_v.setValue(value.toString()); break;
         case QVariant::Char:        m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
         case QVariant::ByteArray:   m_v.setValue(value.toString().toLatin1()); break;
-        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::DateTime:    m_v.setValue(fromStringUtc(value.toString(), Qt::ISODate)); break;
         case QVariant::Date:        m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
         case QVariant::Time:        m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
         case QVariant::StringList:  m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;

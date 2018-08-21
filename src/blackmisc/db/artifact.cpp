@@ -229,8 +229,8 @@ namespace BlackMisc
                 return v;
             }
 
-            const QString versionTimestampString = BlackMisc::digitOnlyString(ts1Match.captured(0));
-            const QDateTime versionTimestamp = QDateTime::fromString(versionTimestampString, "yyyyMMddHHmmss");
+            const QString versionTimestampString = digitOnlyString(ts1Match.captured(0));
+            const QDateTime versionTimestamp = fromStringUtc(versionTimestampString, "yyyyMMddHHmmss");
             const QString lastSegment = QString::number(CBuildConfig::buildTimestampAsVersionSegment(versionTimestamp));
 
             v += lastSegment;
@@ -262,7 +262,7 @@ namespace BlackMisc
         {
             // yyyyMMddHHmmss (14): offset is 2010xxxxx
             if (seg.length() <= 13) { return seg; }
-            const int fs = CBuildConfig::buildTimestampAsVersionSegment(QDateTime::fromString(seg, "yyyyMMddHHmmss"));
+            const int fs = CBuildConfig::buildTimestampAsVersionSegment(fromStringUtc(seg, "yyyyMMddHHmmss"));
             return QString::number(fs);
         }
     } // ns

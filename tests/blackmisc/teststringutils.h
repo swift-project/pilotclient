@@ -21,7 +21,6 @@
 
 namespace BlackMiscTest
 {
-
     //! Testing string utilities
     class CTestStringUtils : public QObject
     {
@@ -36,8 +35,8 @@ namespace BlackMiscTest
         void testContains();
         void testIndexOf();
         void testSplit();
+        void testTimestampParsing();
     };
-
 }
 
 //! \endcond

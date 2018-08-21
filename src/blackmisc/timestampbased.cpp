@@ -9,6 +9,7 @@
 
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/timestampbased.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
@@ -45,30 +46,8 @@ namespace BlackMisc
         // 0123 45 67 89 01 23 456
         // 1234 56 78 90 12 34 567
 
-        QString s(yyyyMMddhhmmsszzz);
-        s.remove(':').remove(' ').remove('-').remove('.'); // plain vanilla string
-        int year(s.leftRef(4).toInt());
-        int month(s.midRef(4, 2).toInt());
-        int day(s.midRef(6, 2).toInt());
-        QDate date;
-        date.setDate(year, month, day);
-        QDateTime dt;
-        dt.setOffsetFromUtc(0);
-        dt.setDate(date);
-        if (s.length() < 12)
-        {
-            this->setUtcTimestamp(dt);
-            return;
-        }
-
-        QTime t;
-        int hour(s.midRef(8, 2).toInt());
-        int minute(s.midRef(10, 2).toInt());
-        int second(s.length() < 14 ? 0 : s.midRef(12, 2).toInt());
-        int ms(s.length() < 17 ? 0 : s.rightRef(3).toInt());
-
-        t.setHMS(hour, minute, second, ms);
-        dt.setTime(t);
+        const QString s(removeDateTimeSeparators(yyyyMMddhhmmsszzz));
+        const QDateTime dt = parseDateTimeStringOptimized(s);
         this->setUtcTimestamp(dt);
     }
 
@@ -242,7 +221,7 @@ namespace BlackMisc
             case IndexUtcTimestampFormattedHms:
             case IndexUtcTimestampFormattedDhms:
                 {
-                    const QDateTime dt = QDateTime::fromString(variant.toQString());
+                    const QDateTime dt = fromStringUtc(variant.toQString());
                     m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
                 }
                 return;

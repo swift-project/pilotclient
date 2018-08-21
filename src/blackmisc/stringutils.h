@@ -42,6 +42,9 @@ namespace BlackMisc
         return result;
     }
 
+    //! Remove the typical separators such as "-", " "
+    BLACKMISC_EXPORT QString removeDateTimeSeparators(const QString &s);
+
     //! True if any character in the string matches the given predicate.
     template <class F> bool containsChar(const QString &s, F predicate)
     {
@@ -192,9 +195,23 @@ namespace BlackMisc
     //! Add a question mark at the end if not existing
     BLACKMISC_EXPORT QString withQUestionMark(const QString &question);
 
+    //! Same as QDateTime::fromString but QDateTime will be set to UTC
+    //! \remark potentially slow, so only to be used when format is unknown
+    BLACKMISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, const QString &format);
+
+    //! Same as QDateTime::fromString but QDateTime will be set to UTC
+    //! \remark potentially slow, so only to be used when format is unknown
+    BLACKMISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format = Qt::TextDate);
+
     //! Parse multiple date time formats
     //! \remark potentially slow, so only to be used when format is unknown
+    //! \remark TZ is UTC
     BLACKMISC_EXPORT QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString);
+
+    //! Parse yyyyMMddHHmmsszzz strings optimized
+    //! \remark string needs to be cleaned up and containing only numbers
+    //! \remark TZ is UTC
+    BLACKMISC_EXPORT QDateTime parseDateTimeStringOptimized(const QString &dateTimeString);
 
     namespace Mixin
     {

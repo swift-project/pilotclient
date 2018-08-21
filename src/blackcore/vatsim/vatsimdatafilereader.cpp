@@ -344,8 +344,7 @@ namespace BlackCore
                                 const QStringList updateParts = currentLine.replace(" ", "").split('=');
                                 if (updateParts.length() < 2) break;
                                 const QString dts = updateParts.at(1).trimmed();
-                                updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
-                                updateTimestampFromFile.setOffsetFromUtc(0);
+                                updateTimestampFromFile = fromStringUtc(dts, "yyyyMMddHHmmss");
                                 const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
                                 if (alreadyRead)
                                 {

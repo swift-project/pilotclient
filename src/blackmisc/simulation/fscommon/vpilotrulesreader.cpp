@@ -247,7 +247,7 @@ namespace BlackMisc
 
                 // "2/1/2014 12:00:00 AM", "5/26/2014 2:00:00 PM"
                 const QString updated = attributes.namedItem("UpdatedOn").nodeValue();
-                QDateTime qt = QDateTime::fromString(updated, "M/d/yyyy h:mm:ss AP");
+                QDateTime qt = fromStringUtc(updated, "M/d/yyyy h:mm:ss AP");
                 qint64 updatedTimestamp = qt.toMSecsSinceEpoch();
 
                 int rulesSize = rules.size();
