@@ -112,7 +112,12 @@ bool loadAndResolveSimConnect(bool manifestProbing)
         wchar_t szModuleName[MAX_PATH];
         GetModuleFileName(hInst, szModuleName, MAX_PATH);
 
-        std::array<WORD, 3> resourceNumbers = {{ 101U, 102U, 103U }};
+        // 101 => "SimConnect_RTM.manifest"
+        // 102 => "SimConnect_SP1.manifest"
+        // 103 => "SimConnect_XPack.manifest"
+        // Use only SP1 and XPack, since RTM is missing two important symbols.
+        // Try the latest one first.
+        std::array<WORD, 2> resourceNumbers = {{ 103U, 102U }};
 
         for (const auto resourceNumber :  resourceNumbers)
         {
@@ -139,7 +144,8 @@ bool loadAndResolveSimConnect(bool manifestProbing)
         }
     }
 
-    // Try once without activation context
+    // If at that stage, no SimConnect library was found in the WinSxS folder, try once without activation context to link to the one we
+    // ship ourselves.
     if (!simConnectDll.isLoaded())
     {
         simConnectDll.load();
