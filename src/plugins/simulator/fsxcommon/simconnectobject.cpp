@@ -141,11 +141,11 @@ namespace BlackSimPlugin
             m_camera = false;
             m_currentLightsInSim = CAircraftLights();
             m_lightsAsSent = CAircraftLights();
-            m_requestId = -1;
-            m_objectId = -1;
+            m_requestId = 0;
+            m_objectId  = 0;
             m_lightsRequestedAt = -1;
             m_validRequestId = false;
-            m_validObjectId = false;
+            m_validObjectId  = false;
             this->resetCameraPositions();
         }
 
