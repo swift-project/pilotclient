@@ -10,7 +10,7 @@
 #include "simconnectsymbols.h"
 #include "blackmisc/logmessage.h"
 #include <QLibrary>
-#include <Windows.h>
+#include <windows.h>
 #include <SimConnect.h>
 #include <array>
 
@@ -51,7 +51,7 @@ typedef HRESULT(__stdcall *PfnSimConnect_MapClientDataNameToID)(HANDLE, const ch
 typedef HRESULT(__stdcall *PfnSimConnect_CreateClientData)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, DWORD, SIMCONNECT_CREATE_CLIENT_DATA_FLAG);
 typedef HRESULT(__stdcall *PfnSimConnect_AddToClientDataDefinition)(HANDLE, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, DWORD, DWORD, float, DWORD);
 
-//! The SimCOnnect Symbols
+//! The SimConnect Symbols
 //! \private @{
 struct SimConnectSymbols
 {
@@ -82,7 +82,7 @@ struct SimConnectSymbols
 };
 //! @ }
 
-SimConnectSymbols gSymbols;
+static SimConnectSymbols gSymbols;
 
 template<typename FuncPtr>
 bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *funcName)
