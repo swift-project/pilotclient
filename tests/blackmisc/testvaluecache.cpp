@@ -235,7 +235,7 @@ namespace BlackMiscTest
     {
         CSimulatedAircraftList aircraft({ CSimulatedAircraft("BAW001", {}, {}) });
         CAtcStationList atcStations({ CAtcStation("EGLL_TWR") });
-        CVariantMap testData
+        const CVariantMap testData
         {
             { "namespace1/value1", CVariant::from(1) },
             { "namespace1/value2", CVariant::from(2) },
@@ -260,7 +260,8 @@ namespace BlackMiscTest
         CValueCache cache2(1);
         status = cache2.loadFromFiles(dir.absolutePath());
         QVERIFY(status.isSuccess());
-        QCOMPARE(cache2.getAllValues(), testData);
+        const CVariantMap test2Values = cache2.getAllValues();
+        QCOMPARE(test2Values, testData);
     }
 
     //! Is value between 0 - 100?

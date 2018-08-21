@@ -261,15 +261,19 @@ namespace BlackMisc
 
     QDateTime fromStringUtc(const QString &dateTimeString, const QString &format)
     {
+        if (dateTimeString.isEmpty() || format.isEmpty()) { return QDateTime(); }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
-        dt.setUtcOffset(0);
+        if (!dt.isValid()) { return dt; }
+        dt.setUtcOffset(0); // must only be applied to valid timestamps
         return dt;
     }
 
     QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format)
     {
+        if (dateTimeString.isEmpty()) { return QDateTime(); }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
-        dt.setUtcOffset(0);
+        if (!dt.isValid()) { return dt; }
+        dt.setUtcOffset(0); // must only be applied to valid timestamps
         return dt;
     }
 
