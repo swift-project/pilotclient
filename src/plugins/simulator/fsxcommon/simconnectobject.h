@@ -134,6 +134,9 @@ namespace BlackSimPlugin
             //! Removing is pending
             bool isPendingRemoved() const { return m_pendingRemoved; }
 
+            //! Object which can be used for sending, not pending and valid ids
+            bool isReadyToSend() const { return !this->isPending() && this->hasValidRequestAndObjectId(); }
+
             //! Marked as pending for removal
             void setPendingRemoved(bool pending);
 

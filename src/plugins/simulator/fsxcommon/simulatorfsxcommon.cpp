@@ -902,6 +902,7 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return false; }
             const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
             if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
+
             const CCallsign callsign(simObject.getCallsign());
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign for removed object");
 
@@ -1464,8 +1465,7 @@ namespace BlackSimPlugin
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
-                if (simObject.isPendingAdded())   { continue; }
-                if (simObject.isPendingRemoved()) { continue; }
+                if (!simObject.isReadyToSend()) { continue; }
                 if (!simObject.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
 
                 const CCallsign callsign(simObject.getCallsign());
@@ -1562,6 +1562,9 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
         {
             Q_ASSERT(m_hSimConnect);
+
+            if (!simObject.isReadyToSend()) { return false; }
+
             const DWORD objectId = simObject.getObjectId();
             const bool traceId = this->isTracingSendId();
 
@@ -1594,7 +1597,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::sendToggledLightsToSimulator(const CSimConnectObject &simObj, const CAircraftLights &lightsWanted, bool force)
         {
-            if (!simObj.hasValidRequestAndObjectId()) { return; } // stale
+            if (!simObj.isReadyToSend()) { return; } // stale
+
             const CAircraftLights lightsIsState = simObj.getCurrentLightsInSimulator();
             if (lightsWanted == lightsIsState) { return; }
             if (!force && lightsWanted == simObj.getLightsAsSent()) { return; }
@@ -1661,7 +1665,7 @@ namespace BlackSimPlugin
                 if (!myself) { return; }
                 if (!m_simConnectObjects.contains(callsign)) { return; }
                 const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
-                if (!currentSimObject.hasValidRequestAndObjectId()) { return; } // stale
+                if (!currentSimObject.isReadyToSend()) { return; } // stale
                 if (lightsWanted != currentSimObject.getLightsAsSent())  { return; } // changed in between, so another call sendToggledLightsToSimulator is pending
                 if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Resending light state for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
                 this->sendToggledLightsToSimulator(currentSimObject, lightsWanted, true);
