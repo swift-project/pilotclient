@@ -930,7 +930,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    msg = CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    msg = CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us (swift): %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 emit this->driverMessages(msg);
             }
@@ -1731,11 +1731,10 @@ namespace BlackSimPlugin
             const int simMins = zuluTimeSim.valueInteger(CTimeUnit::min());
             const int diffMins = qAbs(targetMins - simMins);
             if (diffMins < 2) { return; }
-            HRESULT hr = s_ok();
-            hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            const HRESULT hr1 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            const HRESULT hr2 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-            if (isFailure(hr))
+            if (isFailure(hr1, hr2))
             {
                 CLogMessage(this).warning("Sending time sync failed!");
             }
