@@ -37,4 +37,28 @@ namespace BlackMisc
         if (!QCoreApplication::instance()->thread()) { return false; }
         return (QCoreApplication::instance()->thread() == QThread::currentThread());
     }
+
+    const QString &CThreadUtils::priorityToString(QThread::Priority priority)
+    {
+        static const QString idle("idle");
+        static const QString lowest("lowest");
+        static const QString low("low");
+        static const QString normal("normal");
+        static const QString high("high");
+        static const QString highest("highest");
+
+        switch (priority)
+        {
+        case QThread::IdlePriority: return idle;
+        case QThread::LowestPriority: return lowest;
+        case QThread::LowPriority: return low;
+        case QThread::NormalPriority: return normal;
+        case QThread::HighPriority: return high;
+        case QThread::HighestPriority: return highest;
+        default: break;
+        }
+
+        static const QString unknown("unknown");
+        return unknown;
+    }
 } // ns

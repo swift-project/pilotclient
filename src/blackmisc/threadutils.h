@@ -13,8 +13,7 @@
 #define BLACKMISC_CTHREADUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-
-class QObject;
+#include <QThread>
 
 namespace BlackMisc
 {
@@ -38,6 +37,9 @@ namespace BlackMisc
         //! Is the current thread the Application thread?
         //! \remarks can be used as ASSERT check for threaded objects
         static bool isCurrentThreadApplicationThread();
+
+        //! Priority to string
+        static const QString &priorityToString(QThread::Priority priority);
     };
 } // ns
 
