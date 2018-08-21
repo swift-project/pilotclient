@@ -8,12 +8,14 @@
  */
 
 #include "service.h"
+#include "utils.h"
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
-#include <fstream>
-#include "utils.h"
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
 
 // clazy:excludeall=reserve-candidates
+
+using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
 
 namespace XSwiftBus
 {
@@ -29,8 +31,8 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = extractAcfProperties(path);
-        emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), model.getModelString(), model.getName(), getAircraftDescription());
+        AcfProperties acfProperties = extractAcfProperties(path);
+        emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), acfProperties.modelString, acfProperties.modelName, getAircraftDescription());
     }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
@@ -81,8 +83,8 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = extractAcfProperties(path);
-        return model.getModelString();
+        const AcfProperties acfProperties = extractAcfProperties(path);
+        return acfProperties.modelString;
     }
 
     std::string CService::getAircraftName() const
@@ -90,8 +92,8 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = extractAcfProperties(path);
-        return model.getName();
+        const AcfProperties acfProperties = extractAcfProperties(path);
+        return acfProperties.modelName;
     }
 
     int CService::getXPlaneVersionMajor() const
@@ -670,119 +672,6 @@ namespace XSwiftBus
         std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(), compareFunction);
         closestAirports.resize(number);
         return closestAirports;
-    }
-
-    //! Qt free version of BlackMisc::Simulation::XPlane::descriptionForFlyableModel()
-    std::string descriptionForFlyableModel(const CAircraftModel &model)
-    {
-        if (!model.getName().empty())
-        {
-            if (model.getDistributor().hasDescription() && model.getName().find(model.getDistributor().getDescription()) == std::string::npos)
-            {
-                return std::string("[ACF] ") + model.getName() + " by " + model.getDistributor().getDescription();
-            }
-            else
-            {
-                return std::string("[ACF] ") + model.getName();
-            }
-        }
-        else if (model.hasAircraftDesignator())
-        {
-            if (model.getDistributor().hasDescription())
-            {
-                return std::string("[ACF] ") + model.getAircraftIcaoCodeDesignator() + " by " + model.getDistributor().getDescription();
-            }
-            else
-            {
-                return std::string("[ACF] ") + model.getAircraftIcaoCodeDesignator();
-            }
-        }
-        return std::string("[ACF]");
-    }
-
-    //! Qt free version of BlackMisc::Simulation::XPlane::stringForFlyableModel()
-    std::string stringForFlyableModel(const CAircraftModel &model, const std::string &acfFile)
-    {
-        if (model.getDistributor().hasDescription())
-        {
-            if (!model.getName().empty())
-            {
-                if (model.getName().find(model.getDistributor().getDescription()) != std::string::npos)
-                {
-                    return model.getName();
-                }
-                else
-                {
-                    return model.getDistributor().getDescription() + ' ' + model.getName();
-                }
-            }
-            else if (model.hasAircraftDesignator())
-            {
-                return model.getDistributor().getDescription() + ' ' + model.getAircraftIcaoCodeDesignator();
-            }
-        }
-        return getDirName(acfFile) + ' ' + getBaseName(acfFile);
-    }
-
-    CAircraftModel CService::extractAcfProperties(const std::string &filePath)
-    {
-        CAircraftModel model;
-
-        std::ifstream fs(filePath, std::ios::in | std::ios::binary);
-        if (!fs.is_open()) { return model; }
-
-        std::string i;
-        std::string version;
-        std::string acf;
-        std::getline(fs, i);
-        std::getline(fs, version);
-        std::getline(fs, acf);
-
-        if (i == "I" && version.find("version") != std::string::npos && acf == "ACF")
-        {
-            std::string line;
-            while (std::getline(fs, line))
-            {
-                auto tokens = split(line, 2);
-                if (tokens.size() < 3 || tokens.at(0) != "P") { continue; }
-                if (tokens.at(1) == "acf/_ICAO")
-                {
-                    const std::string icao(tokens.at(2));
-                    model.setAircraftIcaoCode(icao);
-                }
-                else if (tokens.at(1) == "acf/_descrip")
-                {
-                    const std::string desc(tokens.at(2));
-                    model.setDescription("[ACF] " + desc);
-                }
-                else if (tokens.at(1) == "acf/_name")
-                {
-                    const std::string name(tokens.at(2));
-                    model.setName(name);
-                }
-                else if (tokens.at(1) == "acf/_studio")
-                {
-                    const CDistributor dist(tokens.at(2));
-                    model.setDistributor(dist);
-                }
-                else if (tokens.at(1) == "acf/_author")
-                {
-                    if (model.getDistributor().hasDescription()) { continue; }
-                    std::string author = tokens.at(2);
-                    size_t pos = author.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
-                    author = author.substr(0, pos);
-                    if (author.empty()) { continue; }
-                    const CDistributor dist(author);
-                    model.setDistributor(dist);
-                }
-            }
-        }
-
-        fs.close();
-
-        model.setModelString(stringForFlyableModel(model, filePath));
-        if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
-        return model;
     }
 
 }

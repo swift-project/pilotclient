@@ -26,19 +26,6 @@ namespace XSwiftBus
     //! Init global xplane path
     void initXPlanePath();
 
-    //! Returns the directory name of a given file path
-    std::string getDirName(const std::string &filePath);
-
-    //! Returns the filename (including extension) of a given file path
-    std::string getFileName(const std::string &filePath);
-
-    //! Returns the filename without extension of a given file path
-    std::string getBaseName(const std::string &filePath);
-
-    //! Splits the given string maximal maxSplitCount times and returns the tokens
-    //! The size of the returned vector is up to maxSplitCount + 1 or less
-    std::vector<std::string> split(const std::string &str, size_t maxSplitCount = 0);
-
     //! Simple logger class.
     //! Don't use it directly, but the _LOG macros instead
     class Logger

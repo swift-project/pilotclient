@@ -54,9 +54,6 @@ namespace BlackMisc
                 //! Parsed or injected models
                 void updateInstalledModels(const CAircraftModelList &models);
 
-                //! Extract from an acf file (flyable plane) the properties needed to generate model string.
-                static CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
-
             protected:
                 //! \name Interface functions
                 //! @{

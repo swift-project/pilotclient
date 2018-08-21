@@ -20,7 +20,6 @@
 #include "datarefs.h"
 #include "messages.h"
 #include "navdatareference.h"
-#include "aircraftmodel.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 
@@ -245,8 +244,6 @@ namespace XSwiftBus
         void readAirportsDatabase();
 
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
-
-        static CAircraftModel extractAcfProperties(const std::string &filePath);
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;

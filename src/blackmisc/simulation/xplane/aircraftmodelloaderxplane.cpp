@@ -18,6 +18,7 @@
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/simulation/xplane/qtfreeutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
@@ -60,30 +61,6 @@ namespace BlackMisc
                         e = '/';
                     }
                 }
-            }
-
-            //! Create a unique string to identify a model
-            static QString stringForFlyableModel(const CAircraftModel &model, const QFileInfo &acfFile)
-            {
-                if (model.getDistributor().hasDescription())
-                {
-                    if (!model.getName().isEmpty())
-                    {
-                        if (model.getName().contains(model.getDistributor().getDescription()))
-                        {
-                            return model.getName();
-                        }
-                        else
-                        {
-                            return model.getDistributor().getDescription() % ' ' % model.getName();
-                        }
-                    }
-                    else if (model.hasAircraftDesignator())
-                    {
-                        return model.getDistributor().getDescription() % ' ' % model.getAircraftIcaoCodeDesignator();
-                    }
-                }
-                return acfFile.dir().dirName() % ' ' % acfFile.baseName();
             }
 
             //! Create a description string for a model that doesn't already have one
@@ -217,7 +194,17 @@ namespace BlackMisc
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
 
-                    CAircraftModel model = this->extractAcfProperties(aircraftIt.filePath(), aircraftIt.fileInfo());
+                    using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+                    AcfProperties acfProperties = extractAcfProperties(aircraftIt.filePath().toStdString());
+
+                    const CDistributor dist({}, QString::fromStdString(acfProperties.author), {}, {}, CSimulatorInfo::XPLANE);
+                    CAircraftModel model;
+                    model.setAircraftIcaoCode(QString::fromStdString(acfProperties.aircraftIcaoCode));
+                    model.setDescription(QString::fromStdString(acfProperties.modelDescription));
+                    model.setName(QString::fromStdString(acfProperties.modelName));
+                    model.setDistributor(dist);
+                    model.setModelString(QString::fromStdString(acfProperties.modelString));
+                    if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(CSimulatorInfo::xplane());
                     model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
@@ -234,59 +221,6 @@ namespace BlackMisc
                     }
                 }
                 return installedModels;
-            }
-
-            CAircraftModel CAircraftModelLoaderXPlane::extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo)
-            {
-                BlackMisc::Simulation::CAircraftModel model;
-                QFile file(filePath);
-                if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return model; }
-
-                QTextStream ts(&file);
-                if (ts.readLine() == "I" && ts.readLine().contains("version") && ts.readLine() == "ACF")
-                {
-                    while (!ts.atEnd())
-                    {
-                        const QString line = ts.readLine();
-                        QVector<QStringRef> tokens = line.splitRef(' ', QString::SkipEmptyParts);
-                        if (tokens.size() < 3 || tokens.at(0) != QLatin1String("P")) { continue; }
-                        if (tokens.at(1) == QLatin1String("acf/_ICAO"))
-                        {
-                            const CAircraftIcaoCode icao(tokens.at(2).toString());
-                            model.setAircraftIcaoCode(icao);
-                        }
-                        else if (tokens.at(1) == QLatin1String("acf/_descrip"))
-                        {
-                            const QString desc(line.mid(tokens.at(2).position()));
-                            model.setDescription("[ACF] " % desc);
-                        }
-                        else if (tokens.at(1) == QLatin1String("acf/_name"))
-                        {
-                            const QString name(line.mid(tokens.at(2).position()));
-                            model.setName(name);
-                        }
-                        else if (tokens.at(1) == QLatin1String("acf/_studio"))
-                        {
-                            const CDistributor dist({}, line.mid(tokens.at(2).position()), {}, {}, CSimulatorInfo::XPLANE);
-                            model.setDistributor(dist);
-                        }
-                        else if (tokens.at(1) == QLatin1String("acf/_author"))
-                        {
-                            if (model.getDistributor().hasDescription()) { continue; }
-                            thread_local const QRegularExpression end("\\W\\s", QRegularExpression::UseUnicodePropertiesOption);
-                            QString author = line.mid(tokens.at(2).position());
-                            author = author.left(author.indexOf(end)).trimmed();
-                            if (author.isEmpty()) { continue; }
-                            const CDistributor dist({}, author, {}, {}, CSimulatorInfo::XPLANE);
-                            model.setDistributor(dist);
-                        }
-                    }
-                }
-                file.close();
-
-                model.setModelString(stringForFlyableModel(model, fileInfo));
-                if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
-                return model;
             }
 
             CAircraftModelList CAircraftModelLoaderXPlane::parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories)

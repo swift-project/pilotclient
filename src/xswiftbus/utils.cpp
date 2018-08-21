@@ -43,66 +43,6 @@ namespace XSwiftBus
         g_xplanePath = xplanePath;
     }
 
-    std::string getDirName(const std::string &filePath)
-    {
-        std::string seperator = "/\\";
-        std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos)
-        {
-            std::string dirPath = filePath.substr(0, sepPos);
-            return getFileName(dirPath);
-        }
-        else
-        {
-            return {};
-        }
-    }
-
-    std::string getFileName(const std::string &filePath)
-    {
-        std::string seperator = "/\\";
-        std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos)
-        {
-            return filePath.substr(sepPos + 1, filePath.size() - 1);
-        }
-        else
-        {
-            return filePath;
-        }
-    }
-
-    std::string getBaseName(const std::string &filePath)
-    {
-        std::string seperator = ".";
-        std::string fileName = getFileName(filePath);
-        std::size_t sepPos = fileName.find(seperator);
-        if (sepPos != std::string::npos)
-        {
-            return fileName.substr(0, sepPos);
-        }
-        else
-        {
-            return fileName;
-        }
-    }
-
-    std::vector<std::string> split(const std::string &str, size_t maxSplitCount)
-    {
-        std::string s(str);
-        std::string delimiter = " ";
-        size_t pos = 0;
-        std::vector<std::string> tokens;
-        while ((pos = s.find(delimiter)) != std::string::npos)
-        {
-            tokens.push_back(s.substr(0, pos));
-            s.erase(0, pos + delimiter.length());
-            if (tokens.size() == maxSplitCount) { break; }
-        }
-        tokens.push_back(s);
-        return tokens;
-    }
-
     void Logger::print(const std::string &filePath, int line, MsgType type, const std::string &message)
     {
         (void) line;
