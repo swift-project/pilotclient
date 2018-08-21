@@ -26,6 +26,7 @@ namespace BlackInput
     class BLACKINPUT_EXPORT IKeyboard : public QObject
     {
         Q_OBJECT
+
     public:
         //! Constructor
         IKeyboard(QObject *parent = nullptr);
@@ -43,9 +44,6 @@ namespace BlackInput
     protected:
         //! Initializes the platform keyboard device
         virtual bool init() = 0;
-
-    private:
-        static IKeyboard *m_instance;
     };
 } // ns
 

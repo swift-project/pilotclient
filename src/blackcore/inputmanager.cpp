@@ -69,7 +69,7 @@ namespace BlackCore
         }
     }
 
-    void CInputManager::ps_changeHotkeySettings()
+    void CInputManager::onChangedHotkeySettings()
     {
         m_configuredActions.clear();
         for (const CActionHotkey &actionHotkey : m_actionHotkeys.getThreadLocal())

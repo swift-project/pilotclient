@@ -111,9 +111,6 @@ namespace BlackCore
         void ps_processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
         void ps_processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
 
-        //! Change hotkey settings
-        void ps_changeHotkeySettings();
-
     private:
         //! Handle to a bound action
         struct BindInfo
@@ -125,13 +122,17 @@ namespace BlackCore
             std::function<void(bool)> m_function;
         };
 
+        //! Change hotkey settings
+        void onChangedHotkeySettings();
+
+        //! Bind action
         int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
+
+        //! Process the hotkey combination
         void processCombination(const BlackMisc::Input::CHotkeyCombination &combination);
 
-        static CInputManager *m_instance;
-
-        std::unique_ptr<BlackInput::IKeyboard> m_keyboard;
-        std::unique_ptr<BlackInput::IJoystick> m_joystick;
+        std::unique_ptr<BlackInput::IKeyboard> m_keyboard; //!< keyboard
+        std::unique_ptr<BlackInput::IJoystick> m_joystick; //!< joystick
 
         QMap<QString, QPixmap> m_availableActions;
         QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
@@ -142,8 +143,8 @@ namespace BlackCore
         BlackMisc::Input::CHotkeyCombination m_lastCombination;
         BlackMisc::Input::CHotkeyCombination m_capturedCombination;
 
-        BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
+        BlackMisc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::onChangedHotkeySettings };
     };
-}
+} // ns
 
 #endif //guard

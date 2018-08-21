@@ -35,5 +35,4 @@ namespace BlackInput
         ptr->init();
         return ptr;
     }
-
 } // ns
