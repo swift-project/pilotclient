@@ -209,7 +209,10 @@ namespace BlackCore
             }
             else
             {
+                QTime time;
+                time.start();
                 airports = CAirportList::fromDatabaseJson(res, &inconsistent);
+                this->logParseMessage("airports", airports.size(), time.elapsed(), res);
             }
 
             if (!inconsistent.isEmpty())

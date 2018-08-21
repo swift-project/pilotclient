@@ -299,7 +299,10 @@ namespace BlackCore
             }
             else
             {
+                QTime time;
+                time.start();
                 liveries  = CLiveryList::fromDatabaseJson(res);
+                this->logParseMessage("liveries", liveries.size(), time.elapsed(), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -343,7 +346,10 @@ namespace BlackCore
             }
             else
             {
+                QTime time;
+                time.start();
                 distributors = CDistributorList::fromDatabaseJson(res);
+                this->logParseMessage("distributors", distributors.size(), time.elapsed(), res);
             }
 
             if (!this->doWorkCheck()) { return; }
@@ -391,8 +397,7 @@ namespace BlackCore
                 QTime time;
                 time.start();
                 models = CAircraftModelList::fromDatabaseJson(res);
-                const int elapsed = time.elapsed();
-                CLogMessage(this).info("Parsed %1 models in %2 ms") << models.size() << elapsed;
+                this->logParseMessage("models", models.size(), time.elapsed(), res);
             }
 
             // synchronized update

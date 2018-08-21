@@ -281,8 +281,11 @@ namespace BlackCore
             }
             else
             {
-                // normally read from special view which already filters incomplete
+                // normally read from special DB view which already filters incomplete
+                QTime time;
+                time.start();
                 codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+                this->logParseMessage("aircraft ICAO", codes.size(), time.elapsed(), res);
             }
 
             if (!inconsistent.isEmpty())
@@ -332,8 +335,11 @@ namespace BlackCore
             }
             else
             {
-                // normally read from special view which already filters incomplete
+                // normally read from special DB view which already filters incomplete
+                QTime time;
+                time.start();
                 codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+                this->logParseMessage("airline ICAO", codes.size(), time.elapsed(), res);
             }
 
             if (!inconsistent.isEmpty())
@@ -380,8 +386,11 @@ namespace BlackCore
             }
             else
             {
-                // normally read from special view which already filters incomplete
+                // normally read from special DB view which already filters incomplete
+                QTime time;
+                time.start();
                 countries  = CCountryList::fromDatabaseJson(res);
+                this->logParseMessage("countries", countries.size(), time.elapsed(), res);
             }
 
             if (!this->doWorkCheck()) { return; }

@@ -132,20 +132,18 @@ namespace BlackCore
             private:
                 QJsonArray m_jsonArray;          //!< JSON array data
                 int        m_arraySize  = -1;    //!< size of array, if applicable (copied to member for debugging purposes)
+                int        m_stringSize =  0;    //!< string size of JSON data
                 bool       m_restricted = false; //!< restricted reponse, only changed data
 
             public:
                 //! Any data?
                 bool isEmpty() const { return m_jsonArray.isEmpty(); }
 
-                //! Number of elements
-                int size() const { return m_jsonArray.size(); }
+                //! Is loaded from database
+                bool isLoadedFromDb() const;
 
                 //! Incremental data, restricted by query?
                 bool isRestricted() const { return m_restricted; }
-
-                //! Is loaded from database
-                bool isLoadedFromDb() const;
 
                 //! Mark as restricted
                 void setRestricted(bool restricted) { m_restricted = restricted; }
@@ -153,8 +151,17 @@ namespace BlackCore
                 //! Get the JSON array
                 QJsonArray getJsonArray() const { return m_jsonArray; }
 
+                //! Number of elements
+                int getArraySize() const { return m_jsonArray.size(); }
+
                 //! Set the JSON array
                 void setJsonArray(const QJsonArray &value);
+
+                //! Set string size
+                void setStringSize(int size) { m_stringSize = size; }
+
+                //! String info
+                QString toQString() const;
 
                 //! Implicit conversion
                 operator QJsonArray() const { return m_jsonArray; }
@@ -411,6 +418,9 @@ namespace BlackCore
             //! Override cache from file
             //! \threadsafe
             bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::CStatusMessageList &msgs) const;
+
+            //! Parsing info message
+            void logParseMessage(const QString &entity, int size, int msElapsed, const JsonDatastoreResponse &response) const;
         };
     } // ns
 } // ns

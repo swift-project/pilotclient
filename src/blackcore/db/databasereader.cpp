@@ -25,6 +25,7 @@
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QPointer>
 #include <QFileInfo>
 #include <QJsonValueRef>
 #include <QMetaObject>
@@ -196,8 +197,10 @@ namespace BlackCore
                     // Using timer to first finish this function, then the resulting signal
                     if (validInCacheEntities != CEntityFlags::NoEntity)
                     {
+                        QPointer<CDatabaseReader> myself(this);
                         QTimer::singleShot(0, this, [ = ]
                         {
+                            if (!myself) { return; }
                             emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0);
                         });
                     }
@@ -234,6 +237,7 @@ namespace BlackCore
             {
                 const QString dataFileData = nwReply->readAll();
                 nwReply->close(); // close asap
+                datastoreResponse.setStringSize(dataFileData.size());
                 if (dataFileData.isEmpty())
                 {
                     datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Empty response, no data"));
@@ -662,6 +666,13 @@ namespace BlackCore
             }
         }
 
+        void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed, const CDatabaseReader::JsonDatastoreResponse &response) const
+        {
+            CLogMessage(this).info("Parsed %1 %2 in %3ms, thread '%4' | '%5'")
+                    << size << entity << msElapsed
+                    << QThread::currentThread()->objectName() << response.toQString();
+        }
+
         QString CDatabaseReader::fileNameForMode(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode)
         {
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "needs single entity");
@@ -784,6 +795,12 @@ namespace BlackCore
         {
             m_jsonArray = value;
             m_arraySize = value.size();
+        }
+
+        QString CDatabaseReader::JsonDatastoreResponse::toQString() const
+        {
+            static const QString s("DB: %1 | restricted: %2 | array: %3 | string size: %4 | content: %5");
+            return s.arg(boolToYesNo(this->isLoadedFromDb()), boolToYesNo(this->isRestricted())).arg(this->getArraySize()).arg(m_stringSize).arg(this->getContentLengthHeader());
         }
 
         bool CDatabaseReader::HeaderResponse::isSharedFile() const

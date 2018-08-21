@@ -738,10 +738,10 @@ namespace BlackMisc
             }
 
             // turn E to P engine
-            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) + "P"}); }
+            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) % QStringLiteral("P")}); }
 
             // turn T to H plane (tilt wing to helicopter
-            if (combinedCode.startsWith("T")) { return QStringList({ "H" + combinedCode.rightRef(2)}); }
+            if (combinedCode.startsWith("T")) { return QStringList({ QStringLiteral("H") % combinedCode.rightRef(2)}); }
 
             // based on engine count
             QStringList codes;
@@ -766,18 +766,18 @@ namespace BlackMisc
                 return CAircraftIcaoCode();
             }
 
-            const QString designator(json.value(prefix + "designator").toString());
-            const QString iata(json.value(prefix + "iata").toString());
-            const QString family(json.value(prefix + "family").toString());
-            const QString manufacturer(json.value(prefix + "manufacturer").toString());
-            const QString model(json.value(prefix + "model").toString());
-            const QString modelIata(json.value(prefix + "modeliata").toString());
-            const QString modelSwift(json.value(prefix + "modelswift").toString());
-            const QString type(json.value(prefix + "type").toString());
-            const QString engine(json.value(prefix + "engine").toString());
-            const int engineCount(json.value(prefix + "enginecount").toInt(-1));
+            const QString designator(json.value(prefix % QStringLiteral("designator")).toString());
+            const QString iata(json.value(prefix % QStringLiteral("iata")).toString());
+            const QString family(json.value(prefix % QStringLiteral("family")).toString());
+            const QString manufacturer(json.value(prefix % QStringLiteral("manufacturer")).toString());
+            const QString model(json.value(prefix % QStringLiteral("model")).toString());
+            const QString modelIata(json.value(prefix % QStringLiteral("modeliata")).toString());
+            const QString modelSwift(json.value(prefix % QStringLiteral("modelswift")).toString());
+            const QString type(json.value(prefix % QStringLiteral("type")).toString());
+            const QString engine(json.value(prefix % QStringLiteral("engine")).toString());
+            const int engineCount(json.value(prefix % QStringLiteral("enginecount")).toInt(-1));
             const QString combined(createdCombinedString(type, engineCount, engine));
-            QString wtc(json.value(prefix + "wtc").toString());
+            QString wtc(json.value(prefix % QStringLiteral("wtc")).toString());
             if (wtc.length() > 1 && wtc.contains("/"))
             {
                 // "L/M" -> "M"
@@ -785,10 +785,10 @@ namespace BlackMisc
             }
             Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
 
-            const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "realworld").toString());
-            const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "legacy").toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
-            const int rank(json.value(prefix + "rank").toInt(10));
+            const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("realworld")).toString());
+            const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("legacy")).toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
+            const int rank(json.value(prefix % QStringLiteral("rank")).toInt(10));
 
             CAircraftIcaoCode code(
                 designator, iata, family, combined, manufacturer,
@@ -802,11 +802,9 @@ namespace BlackMisc
         QString CAircraftIcaoCode::createdCombinedString(const QString &type, const QString &engineCount, const QString &engine)
         {
             Q_ASSERT_X(engineCount.length() < 2, Q_FUNC_INFO, "Wrong engine count");
-            QString c(type.isEmpty() ? "-" : type.trimmed().left(1).toUpper());
-            c += engineCount.isEmpty() ? "-" : engineCount.trimmed();
-            c += engine.isEmpty() ? "-" : engine.trimmed().left(1).toUpper();
-            Q_ASSERT_X(c.length() == 3, Q_FUNC_INFO, "Wrong combined length");
-            return c;
+            return (type.isEmpty() ? QStringLiteral("-") : type.trimmed().left(1).toUpper()) %
+                   (engineCount.isEmpty() ? QStringLiteral("-") : engineCount.trimmed()) %
+                   (engine.isEmpty() ? QStringLiteral("-") : engine.trimmed().left(1).toUpper());
         }
 
         QString CAircraftIcaoCode::createdCombinedString(const QString &type, int engineCount, const QString &engine)

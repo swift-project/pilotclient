@@ -63,17 +63,8 @@ namespace BlackMisc
 
         QDateTime CDatastoreUtility::parseTimestamp(const QString &timestamp)
         {
-            if (!timestamp.isEmpty())
-            {
-                const QString ts(timestamp.trimmed().remove(' ').remove('-').remove(':')); // normalize
-                QDateTime dt = QDateTime::fromString(ts, "yyyyMMddHHmmss");
-                dt.setTimeZone(QTimeZone::utc());
-                return dt;
-            }
-            else
-            {
-                return QDateTime();
-            }
+            if (timestamp.isEmpty()) { return QDateTime(); }
+            return parseDateTimeStringOptimized(removeDateTimeSeparators(timestamp));
         }
 
         bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
