@@ -40,6 +40,12 @@ namespace BlackMisc
 
         //! Priority to string
         static const QString &priorityToString(QThread::Priority priority);
+
+        //! Thread to int string info
+        static const QString threadToString(const void *t);
+
+        //! Info about current thread
+        static const QString currentThreadInfo();
     };
 } // ns
 

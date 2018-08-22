@@ -173,11 +173,13 @@ namespace BlackCore
             if (!latestDbTs.isValid()) { return; }
             if (latestDbTs <= latestCacheTs)
             {
-                this->addHistory(CLogMessage(this).info("Background updater, no auto sync with DB, entity '%1', DB ts: %2 cache ts: %3") << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
+                this->addHistory(CLogMessage(this).info("Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
+                                 << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
                 return;
             }
 
-            this->addHistory(CLogMessage(this).info("Background updater triggering read of '%1' since '%2'") << entityStr << latestCacheTsStr);
+            this->addHistory(CLogMessage(this).info("Background updater (%1) triggering read of '%2' since '%3'")
+                             << CThreadUtils::currentThreadInfo() << entityStr << latestCacheTsStr);
             sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(entity, latestCacheTs);
         }
 

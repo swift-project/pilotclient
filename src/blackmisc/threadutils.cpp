@@ -61,4 +61,18 @@ namespace BlackMisc
         static const QString unknown("unknown");
         return unknown;
     }
+
+    const QString CThreadUtils::threadToString(const void *t)
+    {
+        static const QString s("0x%1");
+        return s.arg(reinterpret_cast<long long>(t), 0, 16);
+    }
+
+    const QString CThreadUtils::currentThreadInfo()
+    {
+        static const QString info("thread: %1 name: '%2' priority: '%3'");
+        const QThread *t = QThread::currentThread();
+        if (!t) { return QString("no thread"); }
+        return info.arg(threadToString(t), t->objectName(), priorityToString(t->priority()));
+    }
 } // ns

@@ -668,9 +668,9 @@ namespace BlackCore
 
         void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed, const CDatabaseReader::JsonDatastoreResponse &response) const
         {
-            CLogMessage(this).info("Parsed %1 %2 in %3ms, thread '%4' | '%5'")
+            CLogMessage(this).info("Parsed %1 %2 in %3ms, thread %4 | '%5'")
                     << size << entity << msElapsed
-                    << QThread::currentThread()->objectName() << response.toQString();
+                    << CThreadUtils::currentThreadInfo() << response.toQString();
         }
 
         QString CDatabaseReader::fileNameForMode(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode)
