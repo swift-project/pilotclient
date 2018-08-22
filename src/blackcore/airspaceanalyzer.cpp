@@ -203,7 +203,7 @@ namespace BlackCore
         {
             QReadLocker l(&m_lockRestrictions);
             restricted = m_simulatorRenderedAircraftRestricted;
-            enabled = m_simulatorRenderingEnabled,
+            enabled = m_simulatorRenderingEnabled;
             maxAircraft = m_simulatorMaxRenderedAircraft;
             maxRenderedDistance = m_simulatorMaxRenderedDistance;
         }
