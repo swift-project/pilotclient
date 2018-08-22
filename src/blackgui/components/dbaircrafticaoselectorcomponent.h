@@ -27,7 +27,6 @@ class QDragEnterEvent;
 class QDragLeaveEvent;
 class QDragMoveEvent;
 class QDropEvent;
-class QWidget;
 
 namespace Ui { class CDbAircraftIcaoSelectorComponent; }
 namespace BlackGui
@@ -39,7 +38,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbAircraftIcaoSelectorComponent :
             public QFrame,
-            public BlackGui::CDropBase
+            public CDropBase
         {
             Q_OBJECT
 

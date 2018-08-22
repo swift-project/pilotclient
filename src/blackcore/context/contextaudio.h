@@ -83,7 +83,7 @@ namespace BlackCore
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
-            virtual ~IContextAudio() {}
+            virtual ~IContextAudio() override {}
 
         signals:
             //! Voice rooms changed

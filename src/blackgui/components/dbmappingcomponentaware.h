@@ -25,8 +25,6 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbMappingComponentAware
         {
         public:
-
-
             //! Set the corresponding component
             virtual void setMappingComponent(CDbMappingComponent *component);
 

@@ -377,7 +377,7 @@ namespace BlackCore
     void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, int clientCaps)
     {
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
-        CClient::Capabilities caps = static_cast<CClient::Capabilities>(clientCaps);
+        const CClient::Capabilities caps = static_cast<CClient::Capabilities>(clientCaps);
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
         vm.addValue({CClient::IndexVoiceCapabilities}, voiceCaps);
@@ -511,7 +511,7 @@ namespace BlackCore
         }
         else
         {
-            const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories());
+            const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
             this->addReverseLookupMessage(callsign, m);
         }
     }
@@ -924,14 +924,16 @@ namespace BlackCore
         Q_UNUSED(oldStatus);
         switch (newStatus)
         {
-        case INetwork::Connected: break;
+        case INetwork::Connected:
+            break;
         case INetwork::Disconnected:
         case INetwork::DisconnectedError:
         case INetwork::DisconnectedLost:
         case INetwork::DisconnectedFailed:
             this->clear();
             break;
-        default: break;
+        default:
+            break;
         }
     }
 

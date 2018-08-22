@@ -78,7 +78,7 @@ namespace BlackCore
 
         CLivery CModelDataReader::smartLiverySelector(const CLivery &liveryPattern) const
         {
-            const CLiveryList liveries(getLiveries()); // thread safe copy
+            const CLiveryList liveries(this->getLiveries()); // thread safe copy
             return liveries.smartLiverySelector(liveryPattern);
         }
 

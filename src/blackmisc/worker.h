@@ -76,7 +76,7 @@ namespace BlackMisc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        virtual ~CRegularThread();
+        virtual ~CRegularThread() override;
 
     protected:
         //! \copydoc QThread::run
