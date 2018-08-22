@@ -11,11 +11,9 @@
 #define BLACKMISC_TESTVALUEOBJECT_H
 
 //! \cond PRIVATE_TESTS
+//! \file
+//! \ingroup testblackmisc
 
-/*!
- * \file
- * \ingroup testblackmisc
- */
 #include "blackmisc/collection.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/metaclass.h"
@@ -67,13 +65,48 @@ namespace BlackMisc
         void setDescription(const QString &description) { m_description = description; }
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return CVariant::from(*this); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexDescription:
+                return CVariant::fromValue(this->m_description);
+            case IndexName:
+                return CVariant::fromValue(this->m_name);
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant)
+        {
+            if (index.isMyself()) { (*this) = variant.to<CTestValueObject>(); return; }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexDescription:
+                this->setDescription(variant.value<QString>());
+                break;
+            case IndexName:
+                this->setName(variant.value<QString>());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(index, variant);
+                break;
+            }
+        }
 
         //! \copydoc BlackMisc::Mixin::String::toQString()
-        QString convertToQString(bool i18n = false) const;
+        QString convertToQString(bool i18n = false) const
+        {
+            Q_UNUSED(i18n);
+            QString s(this->m_name);
+            s.append(" ").append(this->m_description);
+            return s;
+        }
 
     private:
         QString m_name;

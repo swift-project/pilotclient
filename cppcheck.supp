@@ -19,7 +19,7 @@ passedByValue:src/blackmisc/lockfree.h
 
 // Passing std::function by value is acceptable
 passedByValue:src/xswiftbus/libxplanemp/src/ResourceManager.h
-passedByValue:tests/blackcore/expect.h
+passedByValue:tests/blackcore/vatsim/testnetwork/expect.h
 passedByValue:src/xswiftbus/command.h
 
 // Unique pointers should be passed by value
