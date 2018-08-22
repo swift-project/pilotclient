@@ -32,7 +32,6 @@
 #include <memory>
 
 class QAction;
-class QWidget;
 
 namespace Ui { class CDbOwnModelsComponent; }
 namespace BlackGui
@@ -137,10 +136,13 @@ namespace BlackGui
             void loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! On disk loading started
-            void onOwnModelsDiskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void onModelLoaderDiskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! Model loading finished
-            void onOwnModelsLoadingFinished(const BlackMisc::CStatusMessageList &statusMessages, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void onModelLoaderLoadingFinished(const BlackMisc::CStatusMessageList &statusMessages, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+
+            //! Loading from disk (via view context menu)
+            void onViewDiskLoadingFinished(const BlackMisc::CStatusMessage &status);
 
             //! Cache has been changed
             void onCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);

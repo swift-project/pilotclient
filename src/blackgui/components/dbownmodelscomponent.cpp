@@ -25,6 +25,7 @@
 #include <QIcon>
 #include <QtGlobal>
 #include <QFileDialog>
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -50,9 +51,10 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
+            connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this, &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onOwnModelsLoadingFinished, Qt::QueuedConnection);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onOwnModelsDiskLoadingStarted, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
             connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
 
             // Last selection isPinned -> no sync needed
@@ -511,13 +513,13 @@ namespace BlackGui
             m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), modelDirectories);
         }
 
-        void CDbOwnModelsComponent::onOwnModelsDiskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
+        void CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
         {
             const CStatusMessage msg = CLogMessage(this).info("Started disk loading for '%1' in mode '%2'") << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
             this->showOverlayMessage(msg, 5000);
         }
 
-        void CDbOwnModelsComponent::onOwnModelsLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
+        void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
             if (statusMessages.isSuccess() && m_modelLoader)
@@ -549,6 +551,19 @@ namespace BlackGui
 
             // parsed loads normally explicit displaying this simulator
             this->setSimulator(simulator);
+        }
+
+        void CDbOwnModelsComponent::onViewDiskLoadingFinished(const CStatusMessage &status)
+        {
+            if (status.isFailure()) { return; }
+            QMessageBox msgBox(QMessageBox::Question, "Loaded models from disk", "Loaded models from disk file.\nSave to cache or just temporarily keep them?\n\nHint: Saving them will override the loaded models from the simulator.\nNormally you would not want that (cancel).", QMessageBox::Save | QMessageBox::Cancel, this);
+            msgBox.setDefaultButton(QMessageBox::Cancel);
+            const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
+            if (reply != QMessageBox::Cancel) { return; }
+            const CAircraftModelList models = ui->tvp_OwnAircraftModels->container();
+            if (models.isEmpty()) { return; }
+            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            m_modelLoader->setModelsForSimulator(models, simulator);
         }
 
         void CDbOwnModelsComponent::onCacheChanged(const CSimulatorInfo &simulator)
