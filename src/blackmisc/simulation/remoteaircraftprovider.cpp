@@ -630,10 +630,7 @@ namespace BlackMisc
                 os = m_testOffset.value(cs);
             }
             if (os.isNull() || os.isZeroEpsilonConsidered()) { return situation; }
-            const CAltitude newAlt = situation.getAltitude().withOffset(os);
-            CAircraftSituation newSituation(situation);
-            newSituation.setAltitude(newAlt);
-            return newSituation;
+            return situation.withAltitudeOffset(os);
         }
 
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const

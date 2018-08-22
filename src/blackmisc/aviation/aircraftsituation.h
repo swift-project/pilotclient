@@ -392,6 +392,9 @@ namespace BlackMisc
             //! Add offset to altitude
             CAltitude addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 
+            //! Situation with altitude offset
+            CAircraftSituation withAltitudeOffset(const PhysicalQuantities::CLength &offset) const;
+
             //! Get pressure altitude
             const CAltitude &getPressureAltitude() const { return m_pressureAltitude; }
 
