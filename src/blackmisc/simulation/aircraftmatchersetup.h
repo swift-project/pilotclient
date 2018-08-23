@@ -48,12 +48,16 @@ namespace BlackMisc
                 // --- score based matching ---
                 ScoreIgnoreZeros         = 1 << 10, //!< zero scores are ignored
                 ScorePreferColorLiveries = 1 << 11, //!< prefer color liveries
+                // --- exclusion ---
+                ExcludeNoDbData   = 1 << 12,
+                ExcludeNoExcluded = 1 << 13,
+                ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
-                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries,
-                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery,
-                ModeDefaultReducePlusScore  = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore,
+                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
+                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
+                ModeDefaultReducePlusScore  = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -136,7 +140,7 @@ namespace BlackMisc
             //! Mode by flags
             static MatchingMode matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
                                              bool byFamily, bool byLivery, bool byCombinedType, bool byMilitary, bool byVtol,
-                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries);
+                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded);
 
         private:
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);

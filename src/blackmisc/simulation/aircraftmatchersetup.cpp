@@ -129,6 +129,8 @@ namespace BlackMisc
             static const QString combined("by combined code");
             static const QString noZeros("scoring, ignore zero scores");
             static const QString preferColorLiveries("scoring, prefer color liveries");
+            static const QString exNoDb("excl.without DB data");
+            static const QString exExcl("excl.excluded");
 
             switch (modeFlag)
             {
@@ -141,6 +143,8 @@ namespace BlackMisc
             case ByIcaoOrderAirlineFirst:  return icaoAirline;
             case ScoreIgnoreZeros:         return noZeros;
             case ScorePreferColorLiveries: return preferColorLiveries;
+            case ExcludeNoDbData:          return exNoDb;
+            case ExcludeNoExcluded:        return exExcl;
             default: break;
             }
 
@@ -184,7 +188,8 @@ namespace BlackMisc
         CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
             bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
             bool byMilitary, bool byVtol,
-            bool scoreIgnoreZeros, bool scorePreferColorLiveries)
+            bool scoreIgnoreZeros, bool scorePreferColorLiveries,
+            bool excludeNoDbData, bool excludeNoExcluded)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
             if (byIcaoDataAircraft1st)    { mode |= ByIcaoOrderAircraftFirst; }
@@ -196,6 +201,8 @@ namespace BlackMisc
             if (byVtol)                   { mode |= ByVtol; }
             if (scoreIgnoreZeros)         { mode |= ScoreIgnoreZeros; }
             if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }
+            if (excludeNoDbData)          { mode |= ExcludeNoDbData; }
+            if (excludeNoExcluded)        { mode |= ExcludeNoExcluded; }
             return mode;
         }
     } // namespace

@@ -76,6 +76,8 @@ namespace BlackGui
             ui->cb_ByVtol->setChecked(mode.testFlag(CAircraftMatcherSetup::ByVtol));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
+            ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
+            ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
@@ -108,7 +110,8 @@ namespace BlackGui
                        ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
                        ui->cb_ByCombinedCode->isChecked(),
                        ui->cb_ByMilitary->isChecked(), ui->cb_ByVtol->isChecked(),
-                       ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked()
+                       ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
+                       ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked()
                    );
         }
 

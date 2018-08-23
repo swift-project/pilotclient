@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>6</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="tb_SettingsOverview">
    <attribute name="title">
@@ -614,19 +614,6 @@
        </size>
       </property>
      </widget>
-    </item>
-    <item>
-     <spacer name="vs_Matching">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
