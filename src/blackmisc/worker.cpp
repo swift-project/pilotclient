@@ -12,6 +12,7 @@
 #include "blackmisc/verify.h"
 
 #include <future>
+#include <QTimer>
 #include <QPointer>
 
 #ifdef Q_OS_WIN32
@@ -224,9 +225,24 @@ namespace BlackMisc
     {
         this->setFinished();
 
-        auto *ownThread = thread();
+        QThread *ownThread = thread();
+        if (!ownThread) { return; } // normally never happening
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        QMetaObject::invokeMethod(ownThread, "deleteLater");
-        QMetaObject::invokeMethod(this, "deleteLater");
+
+        // very sporadic crash here, changing to QSingleShot version for testing
+        // QMetaObject::invokeMethod(ownThread, "deleteLater");
+        // QMetaObject::invokeMethod(this, "deleteLater");
+        QPointer<QThread> pOwnThread(ownThread);
+        QPointer<CContinuousWorker> myself(this);
+        QTimer::singleShot(0, ownThread, [ = ]
+        {
+            if (!pOwnThread) { return; }
+            pOwnThread->deleteLater();
+        });
+        QTimer::singleShot(0, this, [ = ]
+        {
+            if (!myself) { return; }
+            myself->deleteLater();
+        });
     }
-}
+} // ns
