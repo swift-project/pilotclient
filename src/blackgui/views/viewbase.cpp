@@ -109,9 +109,14 @@ namespace BlackGui
             deleteRow->setContext(Qt::WidgetShortcut);
 
             QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this);
-            connect(copy, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_copy);
+            connect(copy, &QShortcut::activated, this, &CViewBaseNonTemplate::copy);
             copy->setObjectName("Copy selection shortcut for " + this->objectName());
             copy->setContext(Qt::WidgetShortcut);
+
+            QShortcut *resize = new QShortcut(CShortcut::keyResizeView(), this);
+            connect(resize, &QShortcut::activated, this, &CViewBaseNonTemplate::fullResizeToContents);
+            resize->setObjectName("Resize view shortcut for " + this->objectName());
+            resize->setContext(Qt::WidgetShortcut);
         }
 
         CViewBaseNonTemplate::~CViewBaseNonTemplate()
@@ -265,30 +270,30 @@ namespace BlackGui
                     if (m_filterWidget)
                     {
                         const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
-                        if (dialog) ma.addAction(CIcons::filter16(), "Show filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
+                        if (dialog) ma.addAction(CIcons::filter16(), "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()), CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
                         ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
                     }
                     break;
                 }
             case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
-            case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction }); break; }
-            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews()); break; }
+            case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction }); break; }
+            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews()); break; }
             case MenuCut:
                 {
                     if (!QApplication::clipboard()) break;
-                    ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_cut }, QKeySequence(QKeySequence::Paste));
+                    ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::cut }, QKeySequence(QKeySequence::Paste));
                     break;
                 }
             case MenuPaste:
                 {
                     if (!QApplication::clipboard()) break;
-                    ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_paste }, QKeySequence(QKeySequence::Paste));
+                    ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::paste }, QKeySequence(QKeySequence::Paste));
                     break;
                 }
             case MenuCopy:
                 {
                     if (!QApplication::clipboard()) break;
-                    ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_copy }, QKeySequence(QKeySequence::Copy));
+                    ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::copy }, QKeySequence(QKeySequence::Copy));
                     break;
                 }
             default:
@@ -386,7 +391,7 @@ namespace BlackGui
             }
             if (sm != NoSelection)
             {
-                menuActions.addAction("Clear selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
+                menuActions.addAction("Clear selection " + CShortcut::toParenthesisString(CShortcut::keyClearSelection()), CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
             }
             if ((m_originalSelectionMode == MultiSelection || m_originalSelectionMode == ExtendedSelection) && m_menus.testFlag(MenuToggleSelectionMode))
             {
@@ -411,7 +416,7 @@ namespace BlackGui
             if (m_menus.testFlag(MenuSave) && !isEmpty()) { menuActions.addActions(this->initMenuActions(MenuSave)); }
 
             // resizing
-            menuActions.addAction(CIcons::resize16(), "Resize", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
+            menuActions.addAction(CIcons::resize16(), "&Resize " + CShortcut::toParenthesisString(CShortcut::keyResizeView()), CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
@@ -548,7 +553,7 @@ namespace BlackGui
             const QPointer<CViewBaseNonTemplate> guard(this);
             QTimer::singleShot(500, this, [ = ]()
             {
-                if (guard.isNull()) { return; }
+                if (!guard) { return; }
                 CViewBaseNonTemplate::settingsChanged();
             });
         }
@@ -1609,7 +1614,7 @@ namespace BlackGui
         }
 
         template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_copy()
+        void CViewBase<ModelClass, ContainerType, ObjectType>::copy()
         {
             QClipboard *clipboard = QApplication::clipboard();
             if (!clipboard) { return; }
@@ -1622,15 +1627,15 @@ namespace BlackGui
         }
 
         template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_cut()
+        void CViewBase<ModelClass, ContainerType, ObjectType>::cut()
         {
             if (!QApplication::clipboard()) { return; }
-            this->ps_copy();
+            this->copy();
             this->removeSelectedRows();
         }
 
         template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_paste()
+        void CViewBase<ModelClass, ContainerType, ObjectType>::paste()
         {
             const QClipboard *clipboard = QApplication::clipboard();
             if (!clipboard) { return; }

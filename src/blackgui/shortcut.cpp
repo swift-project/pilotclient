@@ -46,6 +46,12 @@ namespace BlackGui
         return k;
     }
 
+    const QKeySequence &CShortcut::keyResizeView()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_R);
+        return k;
+    }
+
     const QKeySequence &CShortcut::keySave()
     {
         static const QKeySequence k(Qt::CTRL + Qt::Key_S);
@@ -93,5 +99,11 @@ namespace BlackGui
     {
         static const QKeySequence k(Qt::CTRL + Qt::Key_0);
         return k;
+    }
+
+    const QString CShortcut::toParenthesisString(const QKeySequence &sequence)
+    {
+        static const QString s("(%1)");
+        return s.arg(sequence.toString());
     }
 } // ns

@@ -44,6 +44,9 @@ namespace BlackGui
         //! Display filter
         static const QKeySequence &keyDisplayFilter();
 
+        //! Resize view
+        static const QKeySequence &keyResizeView();
+
         //! Save depending on context
         static const QKeySequence &keySave();
 
@@ -67,6 +70,9 @@ namespace BlackGui
 
         //! Font reset
         static const QKeySequence &keyFontReset();
+
+        //! As string for menus etc. Looks like "(CTRL + R)"
+        static const QString toParenthesisString(const QKeySequence &sequence);
     };
 } // ns
 #endif // guard

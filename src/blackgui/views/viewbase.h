@@ -467,6 +467,12 @@ namespace BlackGui
             //! \remark Default implementation, can be overridden with specifi implementation
             virtual QString getRememberedLastJsonDirectory() const;
 
+            //! Clipboard cut/copy/paste @{
+            virtual void copy() = 0;
+            virtual void cut() = 0;
+            virtual void paste() = 0;
+            //! @}
+
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
             SelectionMode  m_originalSelectionMode    = this->selectionMode(); //!< Selection mode set
@@ -526,15 +532,6 @@ namespace BlackGui
 
             //! Trigger reload from backend by signal requestNewBackendData()
             void ps_triggerReloadFromBackend();
-
-            //! Copy
-            virtual void ps_copy() = 0;
-
-            //! Cut
-            virtual void ps_cut() = 0;
-
-            //! Paste
-            virtual void ps_paste() = 0;
 
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
@@ -725,6 +722,9 @@ namespace BlackGui
             virtual void updateSortIndicator() override;
             virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
             virtual void drawDropIndicator(bool indicator) override;
+            virtual void copy() override;
+            virtual void cut() override;
+            virtual void paste() override;
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
@@ -755,9 +755,6 @@ namespace BlackGui
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
             virtual BlackMisc::CStatusMessage ps_saveJson() override;
-            virtual void ps_copy() override;
-            virtual void ps_cut() override;
-            virtual void ps_paste() override;
             //! @}
         };
     } // namespace
