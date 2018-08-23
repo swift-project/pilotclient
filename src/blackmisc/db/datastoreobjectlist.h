@@ -48,7 +48,7 @@ namespace BlackMisc
             //! Max.key value (making sense with integer key)
             KEYTYPE getMaxKey(bool *ok = nullptr) const;
 
-            //! Remove objects with key
+            //! Remove objects with keys
             int removeObjectsWithKeys(const QSet<KEYTYPE> &keys);
 
             //! Remove objects without key

@@ -523,39 +523,33 @@ namespace BlackMisc
         int CAircraftModelList::removeAllWithoutModelString()
         {
             if (this->isEmpty()) { return 0; }
-            int c = 0;
-            for (auto it = this->begin(); it != this->end();)
+            const int s = this->size();
+            CAircraftModelList withModelStr;
+            for (const CAircraftModel &model : *this)
             {
-                if (it->hasModelString())
-                {
-                    ++it;
-                }
-                else
-                {
-                    c++;
-                    it = this->erase(it);
-                }
+                if (!model.hasModelString()) { continue; }
+                withModelStr.push_back(model);
             }
-            return c;
+            const int diff =  s - withModelStr.size();
+            if (diff < 1) { return 0; }
+            *this = withModelStr;
+            return diff;
         }
 
         int CAircraftModelList::removeIfExcluded()
         {
             if (this->isEmpty()) { return 0; }
-            int c = 0;
-            for (auto it = this->begin(); it != this->end();)
+            const int s = this->size();
+            CAircraftModelList onlyIncluded;
+            for (const CAircraftModel &model : *this)
             {
-                if (it->getModelMode() != CAircraftModel::Exclude)
-                {
-                    ++it;
-                }
-                else
-                {
-                    c++;
-                    it = this->erase(it);
-                }
+                if (model.getModelMode() == CAircraftModel::Exclude) { continue; }
+                onlyIncluded.push_back(model);
             }
-            return c;
+            const int diff =  s - onlyIncluded.size();
+            if (diff < 1) { return 0; }
+            *this = onlyIncluded;
+            return diff;
         }
 
         int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)
