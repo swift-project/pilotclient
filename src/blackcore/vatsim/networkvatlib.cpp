@@ -1221,9 +1221,11 @@ namespace BlackCore
 
         void CNetworkVatlib::clearState()
         {
+            m_textMessagesToConsolidate.clear();
             m_pendingAtisQueries.clear();
             m_lastPositionUpdate.clear();
             m_lastOffsetTime.clear();
+            m_sentAircraftConfig = CAircraftParts::null();
         }
 
         void CNetworkVatlib::clearState(const CCallsign &callsign)
