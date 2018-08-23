@@ -165,6 +165,26 @@ namespace BlackCore
 
         if (!resolvedInPrephase)
         {
+            // sanity
+            const int noString = modelSet.removeAllWithoutModelString();
+            static const QString noModelStr("Excluded %1 models without model string");
+            if (noString > 0 && log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, noModelStr.arg(noString)); }
+
+            // exclusion
+            if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ExcludeNoDbData))
+            {
+                const int noDbKey = modelSet.removeObjectsWithoutDbKey();
+                static const QString excludedStr("Excluded %1 models without DB key");
+                if (noDbKey > 0 && log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, excludedStr.arg(noDbKey)); }
+            }
+
+            if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ExcludeNoExcluded))
+            {
+                const int excluded = modelSet.removeIfExcluded();
+                static const QString excludedStr("Excluded %1 models marked 'Excluded'");
+                if (excluded > 0 && log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, excludedStr.arg(excluded)); }
+            }
+
             // Reduce by ICAO if the flag is set
             static const QString msInfo("Using '%1' with model set with %2 models");
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, msInfo.arg(setup.getMatchingAlgorithmAsString()).arg(modelSet.size()), getLogCategories());
@@ -212,14 +232,18 @@ namespace BlackCore
                     matchedModel = candidates.front();
                     break;
                 }
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, ps.arg(candidates.size()).arg(CAircraftMatcherSetup::strategyToString(usedStrategy)));
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
-                                                    summary.arg(
-                                                        remoteAircraft.getAircraftIcaoCode().getCombinedType(), matchedModel.getAircraftIcaoCode().getCombinedType(),
-                                                        remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
-                                                        remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey(),
-                                                        remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId()
-                                                    ));
+
+                if (log)
+                {
+                    CMatchingUtils::addLogDetailsToList(log, remoteAircraft, ps.arg(candidates.size()).arg(CAircraftMatcherSetup::strategyToString(usedStrategy)));
+                    CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
+                                                        summary.arg(
+                                                            remoteAircraft.getAircraftIcaoCode().getCombinedType(), matchedModel.getAircraftIcaoCode().getCombinedType(),
+                                                            remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
+                                                            remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey(),
+                                                            remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId()
+                                                        ));
+                }
             }
         }
 
