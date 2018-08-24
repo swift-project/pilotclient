@@ -34,7 +34,7 @@ namespace BlackMisc
             qint64 tsCurrent = -1;          //!< current timestamp
             qint64 tsInterpolated = -1;     //!< timestamp interpolated
             double groundFactor = -1;       //!< current ground factor
-            double vtolAircraft = false;    //!< VTOL aircraft
+            bool vtolAircraft = false;      //!< VTOL aircraft
             double simTimeFraction = -1;    //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
             bool useParts = false;          //!< supporting aircraft parts
