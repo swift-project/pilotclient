@@ -13,6 +13,7 @@
 #define BLACKMISC_HTMLUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/propertyindexlist.h"
 
 
 //! Free functions in BlackMisc
