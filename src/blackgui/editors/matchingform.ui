@@ -196,7 +196,7 @@
          <string>models without DB data are ignored</string>
         </property>
         <property name="text">
-         <string>Excl. no DB data</string>
+         <string>Exclude no DB data</string>
         </property>
        </widget>
       </item>
