@@ -41,7 +41,7 @@ namespace BlackMisc
 
     bool CIcon::isIndexBased() const
     {
-        return m_index >= 0 && m_index < CIcons::IconIsGenerated;
+        return m_index < CIcons::IconIsGenerated;
     }
 
     bool CIcon::isGenerated() const
