@@ -412,7 +412,7 @@ namespace BlackMisc
                 // 0..25 based on color distance
                 // 0..10 based on mil.flag
                 // same ICAO at least means 30, max 50
-                score = 0.5 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log);
+                score = this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log) / 2;
                 score += 25 * colorMultiplier;
                 CMatchingUtils::addLogDetailsToList(log, *this, QString("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
                 if (this->isMilitary() == otherLivery.isMilitary())
