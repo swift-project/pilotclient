@@ -12,8 +12,10 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "blackmisc/logmessage.h"
 #include <QPointer>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 
@@ -28,6 +30,7 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->pb_Save, &QPushButton::released, this, &CSettingsMatchingComponent::onSavePressed);
             connect(ui->pb_Reload, &QPushButton::released, this, &CSettingsMatchingComponent::onReloadPressed);
+            connect(ui->pb_MatchingAgain, &QPushButton::released, this, &CSettingsMatchingComponent::onMatchingsAgainPressed);
 
             IContextSimulator *simContext = simulatorContext();
             if (simContext)
@@ -51,6 +54,13 @@ namespace BlackGui
         void CSettingsMatchingComponent::onReloadPressed()
         {
             this->deferredReload(0);
+        }
+
+        void CSettingsMatchingComponent::onMatchingsAgainPressed()
+        {
+            if (!sGui || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
+            const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
+            CLogMessage(this).info("Triggered re-apping of %1 aircraft") << reMatchedNo;
         }
 
         void CSettingsMatchingComponent::onSetupChanged()

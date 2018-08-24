@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>319</width>
-    <height>303</height>
+    <width>376</width>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -170,27 +170,20 @@
        <property name="bottomMargin">
         <number>3</number>
        </property>
-       <item row="2" column="0" colspan="5">
-        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>20</height>
-          </size>
+       <item row="1" column="5">
+        <widget class="QPushButton" name="pb_SaveAircraft">
+         <property name="toolTip">
+          <string>save selected model</string>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_Aircraft">
          <property name="text">
-          <string>Aircraft</string>
+          <string>save</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
         <widget class="QCheckBox" name="cb_AircraftEnabled">
          <property name="toolTip">
-          <string>enabled / disable</string>
+          <string>aircraft enabled/disable</string>
          </property>
          <property name="text">
           <string/>
@@ -210,13 +203,13 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="4">
-        <widget class="QPushButton" name="pb_SaveAircraft">
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_Aircraft">
          <property name="toolTip">
-          <string>save selected model</string>
+          <string>aircraft enabled</string>
          </property>
          <property name="text">
-          <string>save</string>
+          <string>Enbl.</string>
          </property>
         </widget>
        </item>
@@ -227,13 +220,13 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="pb_ResetAircraft">
+       <item row="0" column="5">
+        <widget class="QPushButton" name="pb_LoadModels">
          <property name="toolTip">
-          <string>reset model by callsign</string>
+          <string>load model set</string>
          </property>
          <property name="text">
-          <string>reset</string>
+          <string>load set</string>
          </property>
         </widget>
        </item>
@@ -256,23 +249,47 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="4">
-        <widget class="QPushButton" name="pb_LoadModels">
-         <property name="toolTip">
-          <string>load model set</string>
-         </property>
-         <property name="text">
-          <string>load set</string>
+       <item row="2" column="0" colspan="6">
+        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
          </property>
         </widget>
        </item>
-       <item row="0" column="2" colspan="2">
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pb_DoMatchingAgain">
+         <property name="toolTip">
+          <string>do all matchings again</string>
+         </property>
+         <property name="text">
+          <string>re-match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="3">
         <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="pb_ResetAircraft">
+         <property name="toolTip">
+          <string>reset model by callsign</string>
+         </property>
+         <property name="text">
+          <string>reset</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../blackmisc/blackmisc.qrc">
+           <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
          </property>
         </widget>
        </item>
@@ -318,6 +335,20 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <tabstops>
+  <tabstop>tw_SpecializedViews</tabstop>
+  <tabstop>tvp_RenderedAircraft</tabstop>
+  <tabstop>cb_AircraftIconDisplayed</tabstop>
+  <tabstop>pb_LoadModels</tabstop>
+  <tabstop>cb_AircraftEnabled</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>pb_ResetAircraft</tabstop>
+  <tabstop>pb_DoMatchingAgain</tabstop>
+  <tabstop>pb_SaveAircraft</tabstop>
+  <tabstop>tvp_AircraftModels</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

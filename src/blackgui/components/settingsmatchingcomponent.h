@@ -42,6 +42,9 @@ namespace BlackGui
             //! Reload pressed
             void onReloadPressed();
 
+            //! Do re-matching
+            void onMatchingsAgainPressed();
+
             //! Setup has been changed
             void onSetupChanged();
 

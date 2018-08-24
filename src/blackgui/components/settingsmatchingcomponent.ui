@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>230</width>
-    <height>197</height>
+    <width>315</width>
+    <height>309</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>211</width>
+        <width>296</width>
         <height>375</height>
        </rect>
       </property>
@@ -82,6 +82,16 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_MatchingAgain">
+        <property name="toolTip">
+         <string>do matching for all models again</string>
+        </property>
+        <property name="text">
+         <string>re-matching</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Reload">

@@ -31,7 +31,6 @@
 #include <QString>
 #include <Qt>
 
-class QCompleter;
 class QModelIndex;
 
 namespace BlackMisc
@@ -168,13 +167,16 @@ namespace BlackGui
             //! Plugin info has been changed
             void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo);
 
+            //! Do re-matching
+            void doMatchingsAgain();
+
             static constexpr int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CMappingComponent> ui;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             QTimer m_updateTimer;
             BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
-            Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
+            Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };
     } // namespace
 } // namespace

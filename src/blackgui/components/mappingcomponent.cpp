@@ -96,6 +96,7 @@ namespace BlackGui
             connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
             connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
+            connect(ui->pb_DoMatchingAgain, &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
 
             m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, m_currentMappingsViewDelegate);
@@ -292,6 +293,13 @@ namespace BlackGui
         {
             Q_UNUSED(pluginInfo);
             ui->comp_SimulatorSelector->setToConnectedSimulator(50);
+        }
+
+        void CMappingComponent::doMatchingsAgain()
+        {
+            if (!sGui || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
+            const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
+            CLogMessage(this).info("Triggered re-apping of %1 aircraft") << reMatchedNo;
         }
 
         void CMappingComponent::onSaveAircraft()
