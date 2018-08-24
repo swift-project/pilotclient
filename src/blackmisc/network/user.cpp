@@ -166,7 +166,7 @@ namespace BlackMisc
 
             int uc = 0;
             int lc = 0;
-            for (const QChar ch : realName)
+            for (const QChar &ch : realName)
             {
                 // Joe Doe -> valid
                 // jOE dOE -> invalid

@@ -194,7 +194,7 @@ namespace BlackMisc
         qint64 CArtifactList::getTotalFileSize() const
         {
             qint64 s = 0;
-            for (const CArtifact a : *this)
+            for (const CArtifact &a : *this)
             {
                 s += a.getFileSize();
             }
