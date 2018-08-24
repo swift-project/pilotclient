@@ -33,21 +33,21 @@ namespace BlackGui
 
         void CMatchingStatisticsModel::setMode(CMatchingStatisticsModel::MatchingStatisticsMode mode)
         {
-            if (this->m_mode == mode) { return; }
-            this->m_mode = mode;
-            this->m_columns.clear();
+            if (m_mode == mode) { return; }
+            m_mode = mode;
+            m_columns.clear();
             switch (mode)
             {
             case ForMultiSessions:
-                this->m_columns.addColumn(CColumn::standardString("session", CMatchingStatisticsEntry::IndexSessionId));
-                this->m_columns.addColumn(CColumn::standardString("model set", CMatchingStatisticsEntry::IndexModelSetId));
+                m_columns.addColumn(CColumn::standardString("session", CMatchingStatisticsEntry::IndexSessionId));
+                m_columns.addColumn(CColumn::standardString("model set", CMatchingStatisticsEntry::IndexModelSetId));
             // fall thru
             case ForSingleSession:
-                this->m_columns.addColumn(CColumn("type", CMatchingStatisticsEntry::IndexEntryTypeAsIcon));
-                this->m_columns.addColumn(CColumn::standardString("aircraft", CMatchingStatisticsEntry::IndexAircraftDesignator));
-                this->m_columns.addColumn(CColumn::standardString("airline", CMatchingStatisticsEntry::IndexAirlineDesignator));
-                this->m_columns.addColumn(CColumn::standardString("description", CMatchingStatisticsEntry::IndexDescription));
-                this->m_columns.addColumn(CColumn::standardInteger("#", "count", CMatchingStatisticsEntry::IndexCount));
+                m_columns.addColumn(CColumn("type", CMatchingStatisticsEntry::IndexEntryTypeAsIcon));
+                m_columns.addColumn(CColumn::standardString("aircraft", CMatchingStatisticsEntry::IndexAircraftDesignator));
+                m_columns.addColumn(CColumn::standardString("airline", CMatchingStatisticsEntry::IndexAirlineDesignator));
+                m_columns.addColumn(CColumn::standardInteger("#", "count", CMatchingStatisticsEntry::IndexCount));
+                m_columns.addColumn(CColumn::standardString("description", CMatchingStatisticsEntry::IndexDescription));
                 break;
             default:
                 break;

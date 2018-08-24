@@ -98,18 +98,17 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSessionId: return CVariant::from(this->m_sessionId);
-            case IndexModelSetId: return CVariant::from(this->m_modelSetId);
-            case IndexCount: return CVariant::from(this->m_count);
-            case IndexEntryType: return CVariant::from(this->m_entryType);
+            case IndexSessionId: return CVariant::from(m_sessionId);
+            case IndexModelSetId: return CVariant::from(m_modelSetId);
+            case IndexCount: return CVariant::from(m_count);
+            case IndexEntryType: return CVariant::from(m_entryType);
             case IndexEntryTypeAsString: return CVariant::from(entryTypeToString(this->getEntryType()));
             case IndexEntryTypeAsIcon: return CVariant::from(entryTypeToIcon(this->getEntryType()));
-            case IndexAircraftDesignator: return CVariant::from(this->m_aircraftDesignator);
-            case IndexAirlineDesignator: return CVariant::from(this->m_airlineDesignator);
-            case IndexDescription: return CVariant::from(this->m_description);
+            case IndexAircraftDesignator: return CVariant::from(m_aircraftDesignator);
+            case IndexAirlineDesignator: return CVariant::from(m_airlineDesignator);
+            case IndexDescription: return CVariant::from(m_description);
             case IndexHasAircraftAirlineCombination: return CVariant::from(this->hasAircraftAirlineCombination());
-            default:
-                return CValueObject::propertyByIndex(index);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -121,30 +120,14 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSessionId:
-                this->setSessionId(variant.value<QString>());
-                break;
-            case IndexModelSetId:
-                this->setModelSetId(variant.value<QString>());
-                break;
-            case IndexAircraftDesignator:
-                this->m_aircraftDesignator = variant.value<QString>();
-                break;
-            case IndexEntryType:
-                this->setEntryType(static_cast<EntryType>(variant.toInt()));
-                break;
-            case IndexCount:
-                this->m_count = variant.toInt();
-                break;
-            case IndexAirlineDesignator:
-                this->m_airlineDesignator = variant.value<QString>();
-                break;
-            case IndexDescription:
-                this->m_description = variant.value<QString>();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexSessionId: this->setSessionId(variant.value<QString>()); break;
+            case IndexModelSetId: this->setModelSetId(variant.value<QString>()); break;
+            case IndexAircraftDesignator: m_aircraftDesignator = variant.value<QString>(); break;
+            case IndexEntryType: this->setEntryType(static_cast<EntryType>(variant.toInt())); break;
+            case IndexCount: m_count = variant.toInt(); break;
+            case IndexAirlineDesignator: m_airlineDesignator = variant.value<QString>(); break;
+            case IndexDescription: m_description = variant.value<QString>(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -154,17 +137,17 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexSessionId: return this->m_sessionId.compare(compareValue.m_sessionId, Qt::CaseInsensitive);
-            case IndexModelSetId: return this->m_modelSetId.compare(compareValue.getModelSetId(), Qt::CaseInsensitive);
+            case IndexSessionId: return m_sessionId.compare(compareValue.m_sessionId, Qt::CaseInsensitive);
+            case IndexModelSetId: return m_modelSetId.compare(compareValue.getModelSetId(), Qt::CaseInsensitive);
             case IndexEntryTypeAsIcon:
             case IndexEntryTypeAsString:
-            case IndexEntryType: return Compare::compare(this->m_entryType, compareValue.m_entryType);
-            case IndexCount: return Compare::compare(this->m_count, compareValue.m_count);
-            case IndexAircraftDesignator: return this->m_aircraftDesignator.compare(compareValue.m_aircraftDesignator, Qt::CaseInsensitive);
-            case IndexAirlineDesignator: return this->m_airlineDesignator.compare(compareValue.m_airlineDesignator, Qt::CaseInsensitive);
+            case IndexEntryType: return Compare::compare(m_entryType, compareValue.m_entryType);
+            case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexCount: return Compare::compare(m_count, compareValue.m_count);
+            case IndexAircraftDesignator: return m_aircraftDesignator.compare(compareValue.m_aircraftDesignator, Qt::CaseInsensitive);
+            case IndexAirlineDesignator: return m_airlineDesignator.compare(compareValue.m_airlineDesignator, Qt::CaseInsensitive);
             case IndexHasAircraftAirlineCombination: return Compare::compare(this->hasAircraftAirlineCombination(), compareValue.hasAircraftAirlineCombination());
-            default:
-                break;
+            default: return CValueObject::comparePropertyByIndex(index, compareValue);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
@@ -173,9 +156,8 @@ namespace BlackMisc
         QString CMatchingStatisticsEntry::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            const QString s = QString("%1 Session: '%2' model set: '%3' aircraft: '%4' airline: '%5' description: '%6'")
-                              .arg(entryTypeToString(getEntryType()), m_sessionId, m_modelSetId, m_aircraftDesignator, m_airlineDesignator, m_description);
-            return s;
+            static const QString s("%1 Session: '%2' model set: '%3' aircraft: '%4' airline: '%5' description: '%6'");
+            return s.arg(entryTypeToString(getEntryType()), m_sessionId, m_modelSetId, m_aircraftDesignator, m_airlineDesignator, m_description);
         }
     } // namespace
 } // namespace
