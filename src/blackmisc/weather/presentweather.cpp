@@ -115,7 +115,7 @@ namespace BlackMisc
             };
 
             QString weatherPhenomenaAsString;
-            for (const auto &wp : makeKeysRange(weatherPhenomenaHash))
+            for (const WeatherPhenomenon &wp : makeKeysRange(weatherPhenomenaHash))
             {
                 if (m_weatherPhenomena & wp)
                 {

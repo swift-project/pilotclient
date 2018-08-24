@@ -92,7 +92,7 @@ namespace BlackInput
 
     void CKeyboardLinux::deviceDirectoryChanged(const QString &dir)
     {
-        QDir eventFiles(dir, QLatin1String("event*"), 0, QDir::System);
+        QDir eventFiles(dir, QLatin1String("event*"), QDir::Name, QDir::System);
 
         foreach(QFileInfo fileInfo, eventFiles.entryInfoList())
         {

@@ -97,7 +97,7 @@ namespace BlackInput
     {
         cleanupJoysticks();
 
-        QDir dir(path, QLatin1String("js*"), 0, QDir::System);
+        QDir dir(path, QLatin1String("js*"), QDir::Name, QDir::System);
         for (const auto &entry : dir.entryInfoList())
         {
             QString f = entry.absoluteFilePath();

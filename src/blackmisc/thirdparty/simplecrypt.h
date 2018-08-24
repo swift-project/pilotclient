@@ -214,7 +214,7 @@ namespace BlackMisc
                 CryptoFlagChecksum    = 0x02, //!< Checksum
                 CryptoFlagHash        = 0x04  //!< Hash
             };
-            Q_DECLARE_FLAGS(CryptoFlags, CryptoFlag); //!< For future usage
+            Q_DECLARE_FLAGS(CryptoFlags, CryptoFlag) //!< For future usage
 
         private:
             //! Split key
