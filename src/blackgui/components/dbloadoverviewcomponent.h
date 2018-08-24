@@ -70,7 +70,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
             BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
-            bool m_loadInProgress = false; //!< data loading in progress
             bool m_setValuesInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
 
             //! Trigger loading from DB
