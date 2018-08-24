@@ -17,9 +17,11 @@
 #include "blackmisc/input/registermetadatainput.h"
 #include "blackmisc/geo/registermetadatageo.h"
 #include "blackmisc/pq/registermetadatapq.h"
+
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/directories.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/logcategorylist.h"
@@ -59,6 +61,7 @@ namespace BlackMisc
         CApplicationInfoList::registerMetadata();
         CCountry::registerMetadata();
         CCountryList::registerMetadata();
+        CDirectories::registerMetadata();
         CIcon::registerMetadata();
         CIconList::registerMetadata();
         CIdentifier::registerMetadata();
@@ -78,7 +81,6 @@ namespace BlackMisc
         CPropertyIndexVariantMap::registerMetadata();
         CRgbColor::registerMetadata();
         CStatusMessage::registerMetadata();
-        qDBusRegisterMetaType<CStatusMessage::StatusSeverity>();
         CStatusMessageList::registerMetadata();
         CValueCachePacket::registerMetadata();
         CVariant::registerMetadata();

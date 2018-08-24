@@ -294,7 +294,8 @@ namespace BlackMisc
     void CStatusMessage::registerMetadata()
     {
         CValueObject<CStatusMessage>::registerMetadata();
-        qRegisterMetaType<StatusSeverity>();
+        qRegisterMetaType<CStatusMessage::StatusSeverity>();
+        qDBusRegisterMetaType<CStatusMessage::StatusSeverity>();
     }
 
     CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)
