@@ -12,13 +12,13 @@
 #ifndef BLACKMISC_COUNTRY_H
 #define BLACKMISC_COUNTRY_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QJsonObject>
 #include <QMetaType>
@@ -37,7 +37,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexIsoCode = BlackMisc::CPropertyIndex::GlobalIndexCCountry,
+            IndexIsoCode = CPropertyIndex::GlobalIndexCCountry,
             IndexIso3Code,
             IndexName,
             IndexAlias1,

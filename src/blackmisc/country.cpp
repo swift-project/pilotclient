@@ -13,6 +13,7 @@
 #include <QJsonValue>
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -25,10 +26,10 @@ namespace BlackMisc
 
     CIcon CCountry::toIcon() const
     {
-        if (this->m_dbKey.length() == 2)
+        if (m_dbKey.length() == 2)
         {
             // relative to images
-            return CIcon("flags/" + m_dbKey.toLower() + ".png", this->convertToQString());
+            return CIcon(QStringLiteral("flags/") % m_dbKey.toLower() % QStringLiteral(".png"), this->convertToQString());
         }
         else
         {
@@ -72,17 +73,14 @@ namespace BlackMisc
     {
         if (!this->hasIsoCode()) { return QString(); }
         QString s(m_dbKey);
-        if (this->m_name.isEmpty()) { return s; }
-        s.append(" (").append(m_name).append(")");
-        return s;
+        if (m_name.isEmpty()) { return s; }
+        return QStringLiteral(" (") % m_name % QStringLiteral(")");
     }
 
     QString CCountry::getCombinedStringNameIso() const
     {
         if (!this->isValid()) { return QString(); }
-        QString s(m_name);
-        s.append(" - ").append(m_dbKey);
-        return s;
+        return m_name % QStringLiteral(" -  ") % m_dbKey;
     }
 
     void CCountry::setName(const QString &countryName)
@@ -129,20 +127,13 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIsoCode:
-            return CVariant::fromValue(m_dbKey);
-        case IndexIso3Code:
-            return CVariant::fromValue(getIso3Code());
-        case IndexName:
-            return CVariant::fromValue(m_name);
-        case IndexIsoName:
-            return CVariant::fromValue(getCombinedStringIsoName());
-        case IndexAlias1:
-            return CVariant::fromValue(this->getAlias1());
-        case IndexAlias2:
-            return CVariant::fromValue(this->getAlias2());
-        case IndexHistoric:
-            return CVariant::fromValue(this->isHistoric());
+        case IndexIsoCode: return CVariant::fromValue(m_dbKey);
+        case IndexIso3Code: return CVariant::fromValue(getIso3Code());
+        case IndexName: return CVariant::fromValue(m_name);
+        case IndexIsoName: return CVariant::fromValue(getCombinedStringIsoName());
+        case IndexAlias1: return CVariant::fromValue(this->getAlias1());
+        case IndexAlias2: return CVariant::fromValue(this->getAlias2());
+        case IndexHistoric: return CVariant::fromValue(this->isHistoric());
         default:
             return (IDatastoreObjectWithStringKey::canHandleIndex(index)) ?
                    IDatastoreObjectWithStringKey::propertyByIndex(index) :
@@ -153,27 +144,15 @@ namespace BlackMisc
     void CCountry::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CCountry>(); return; }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIsoCode:
-            this->setIsoCode(variant.toQString());
-            break;
-        case IndexIso3Code:
-            this->setIso3Code(variant.toQString());
-            break;
-        case IndexName:
-            this->setName(variant.toQString());
-            break;
-        case IndexAlias1:
-            this->setAlias1(variant.toQString());
-            break;
-        case IndexAlias2:
-            this->setAlias1(variant.toQString());
-            break;
-        case IndexHistoric:
-            this->setHistoric(variant.toBool());
-            break;
+        case IndexIsoCode: this->setIsoCode(variant.toQString()); break;
+        case IndexIso3Code: this->setIso3Code(variant.toQString()); break;
+        case IndexName: this->setName(variant.toQString()); break;
+        case IndexAlias1: this->setAlias1(variant.toQString()); break;
+        case IndexAlias2: this->setAlias1(variant.toQString()); break;
+        case IndexHistoric: this->setHistoric(variant.toBool()); break;
         default:
             IDatastoreObjectWithStringKey::canHandleIndex(index) ?
             IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant) :
@@ -186,23 +165,17 @@ namespace BlackMisc
     {
         if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
         if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);}
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIsoCode:
-            return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
-        case IndexIso3Code:
-            return getIso3Code().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
-        case IndexName:
-            return getName().compare(compareValue.getName(), Qt::CaseInsensitive);
-        case IndexAlias1:
-            return this->getAlias1().compare(compareValue.getAlias1(), Qt::CaseInsensitive);
-        case IndexAlias2:
-            return this->getAlias2().compare(compareValue.getAlias2(), Qt::CaseInsensitive);
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
+        case IndexIsoCode: return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
+        case IndexIso3Code: return getIso3Code().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
+        case IndexName: return getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+        case IndexAlias1: return this->getAlias1().compare(compareValue.getAlias1(), Qt::CaseInsensitive);
+        case IndexAlias2: return this->getAlias2().compare(compareValue.getAlias2(), Qt::CaseInsensitive);
+        default: break;
         }
-        return 0;
+        return CValueObject::comparePropertyByIndex(index, compareValue);
     }
 
     CCountry CCountry::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
@@ -212,12 +185,12 @@ namespace BlackMisc
             // when using relationship, this can be null
             return CCountry();
         }
-        const QString iso(json.value(prefix + "id").toString());
-        const QString name(json.value(prefix + "country").toString());
-        const QString alias1(json.value(prefix + "alias1").toString());
-        const QString alias2(json.value(prefix + "alias2").toString());
-        const QString iso3(json.value(prefix + "iso3").toString());
-        const QString historic(json.value(prefix + "historic").toString());
+        const QString iso(json.value(prefix % QStringLiteral("id")).toString());
+        const QString name(json.value(prefix % QStringLiteral("country")).toString());
+        const QString alias1(json.value(prefix % QStringLiteral("alias1")).toString());
+        const QString alias2(json.value(prefix % QStringLiteral("alias2")).toString());
+        const QString iso3(json.value(prefix % QStringLiteral("iso3")).toString());
+        const QString historic(json.value(prefix % QStringLiteral("historic")).toString());
         CCountry country(iso, name);
         country.setLoadedFromDb(true);
         country.setAlias1(alias1);
@@ -235,7 +208,7 @@ namespace BlackMisc
 
     void CCountry::setSimplifiedNameIfNotSame()
     {
-        const QString simplified = removeAccents(this->m_name);
-        this->m_simplifiedName = this->m_name == simplified ? "" : simplified;
+        const QString simplified = removeAccents(m_name);
+        m_simplifiedName = m_name == simplified ? "" : simplified;
     }
 } // namespace
