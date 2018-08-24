@@ -32,8 +32,8 @@ namespace BlackMisc
         QString languageToIsoCode(LanguageCodePage codePage)
         {
             const LCID locale = codePage.wLanguage;
-            const int nchars = GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, NULL, 0);
-            std::vector<wchar_t> language(nchars);
+            const int nchars = GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, nullptr, 0);
+            std::vector<wchar_t> language(static_cast<size_t>(nchars));
             GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, language.data(), nchars);
             const QString iso = QString::fromWCharArray(language.data(), nchars);
             return iso;
@@ -76,7 +76,7 @@ namespace BlackMisc
         VS_FIXEDFILEINFO *pFileInfo     = nullptr;
 
         // Get the version info for the file requested
-        dwSize = GetFileVersionInfoSize(pszFilePath, NULL);
+        dwSize = GetFileVersionInfoSize(pszFilePath, nullptr);
         if (dwSize == 0)
         {
             result.errorMsg = QString("Error in GetFileVersionInfoSize: %1\n").arg(GetLastError());

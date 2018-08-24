@@ -48,7 +48,7 @@ namespace BlackMisc
         std::array<WCHAR, MAX_PATH> wszCommandLine = {{}};
         command.toWCharArray(wszCommandLine.data());
 
-        int result = CreateProcess (nullptr, wszCommandLine.data(), 0, 0, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
+        int result = CreateProcess (nullptr, wszCommandLine.data(), nullptr, nullptr, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
 
         if (result == 0)
         {

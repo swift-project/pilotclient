@@ -79,7 +79,7 @@ namespace BlackInput
     {
         Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
         g_keyboardWindows = this;
-        m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, GetModuleHandle(NULL), 0);
+        m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, GetModuleHandle(nullptr), 0);
         return true;
     }
 
