@@ -3,3 +3,4 @@ SUBDIRS += \
     testinterpolatorlinear \
     testinterpolatormisc \
     testinterpolatorparts \
+    testxplane \
