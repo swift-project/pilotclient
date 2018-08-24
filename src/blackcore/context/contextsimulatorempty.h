@@ -238,8 +238,15 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextSimulator::doMappingAgain
-            virtual bool doMappingAgain(const BlackMisc::Aviation::CCallsign &callsign) override
+
+            //! \copydoc IContextSimulator::doMatchingsAgain
+            virtual int doMatchingsAgain() override
+            {
+                return 0;
+            }
+
+            //! \copydoc IContextSimulator::doMatchingAgain
+            virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override
             {
                 Q_UNUSED(callsign);
                 return false;

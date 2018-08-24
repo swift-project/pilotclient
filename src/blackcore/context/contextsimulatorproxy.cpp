@@ -261,9 +261,14 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
         }
 
-        bool CContextSimulatorProxy::doMappingAgain(const CCallsign &callsign)
+        int CContextSimulatorProxy::doMatchingsAgain()
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("doMappingAgain"), callsign);
+            return m_dBusInterface->callDBusRet<int>(QLatin1String("doMatchingsAgain"));
+        }
+
+        bool CContextSimulatorProxy::doMatchingAgain(const CCallsign &callsign)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("doMatchingAgain"), callsign);
         }
 
         CMatchingStatistics CContextSimulatorProxy::getCurrentMatchingStatistics(bool missingOnly) const

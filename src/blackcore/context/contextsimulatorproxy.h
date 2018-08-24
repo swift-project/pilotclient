@@ -91,7 +91,8 @@ namespace BlackCore
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
-            virtual bool doMappingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int doMatchingsAgain() override;
+            virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;

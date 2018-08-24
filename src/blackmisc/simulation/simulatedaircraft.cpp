@@ -491,6 +491,14 @@ namespace BlackMisc
             m_models[NetworkModel] = model;
         }
 
+        bool CSimulatedAircraft::resetToNetworkModel()
+        {
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+            const CAircraftModel nwModel = m_models[NetworkModel];
+            m_models[CurrentModel] = nwModel;
+            return true;
+        }
+
         bool CSimulatedAircraft::setCG(const CLength &cg)
         {
             if (cg.isNull()) { return false; }

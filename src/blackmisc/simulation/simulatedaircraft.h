@@ -390,6 +390,9 @@ namespace BlackMisc
             //! Set network model
             void setNetworkModel(const CAircraftModel &model);
 
+            //! Reset to the newtork model
+            bool resetToNetworkModel();
+
             //! Set the center of gravity
             bool setCG(const PhysicalQuantities::CLength &cg);
 

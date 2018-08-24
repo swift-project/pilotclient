@@ -863,7 +863,26 @@ namespace BlackCore
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
         }
 
-        bool CContextSimulator::doMappingAgain(const CCallsign &callsign)
+        int CContextSimulator::doMatchingsAgain()
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
+            if (callsigns.isEmpty()) { return 0; }
+            int delayMs = 25;
+            QPointer<CContextSimulator> myself(this);
+            for (const CCallsign &cs : callsigns)
+            {
+                QTimer::singleShot(delayMs, this, [ = ]
+                {
+                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                    this->doMatchingAgain(cs);
+                });
+                delayMs += 25;
+            }
+            return callsigns.size();
+        }
+
+        bool CContextSimulator::doMatchingAgain(const CCallsign &callsign)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
             if (!this->isAircraftInRange(callsign)) { return false; }
@@ -872,10 +891,12 @@ namespace BlackCore
             QPointer<CContextSimulator> myself(this);
             QTimer::singleShot(2500, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
                 if (!aircraft.hasCallsign()) { return; } // no longer valid
-                this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
+                CSimulatedAircraft resetAircraft(aircraft);
+                resetAircraft.resetToNetworkModel();
+                this->xCtxAddedRemoteAircraftReadyForModelMatching(resetAircraft);
             });
             return false;
         }
