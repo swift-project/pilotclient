@@ -108,7 +108,7 @@ namespace BlackMisc
             for (CAircraftSituation &situation : *this)
             {
                 situation.setOnGroundDetails(CAircraftSituation::InFromParts);
-                if (situation.adjustGroundFlag(parts, timeDeviationFactor)) { c++; };
+                if (situation.adjustGroundFlag(parts, true, timeDeviationFactor)) { c++; };
             }
             return c;
         }
