@@ -40,7 +40,7 @@ namespace BlackGui
                 QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationLogDisplayDialog();
+            virtual ~CInterpolationLogDisplayDialog() override;
 
             //! Set simulator
             void setSimulator(BlackCore::ISimulator *simulator);

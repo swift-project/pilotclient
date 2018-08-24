@@ -39,7 +39,7 @@ namespace BlackInput
         CKeyboardWindows &operator=(CKeyboardWindows const &) = delete;
 
         //! Destructor
-        virtual ~CKeyboardWindows();
+        virtual ~CKeyboardWindows() override;
 
         //! Keyboard hook handle
         HHOOK keyboardHook() const { return m_keyboardHook; }

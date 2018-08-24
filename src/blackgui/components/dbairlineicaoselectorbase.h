@@ -44,7 +44,7 @@ namespace BlackGui
 
         public:
             //! Destructor
-            virtual ~CDbAirlineIcaoSelectorBase();
+            virtual ~CDbAirlineIcaoSelectorBase() override;
 
             //! Current airline ICAO
             virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);

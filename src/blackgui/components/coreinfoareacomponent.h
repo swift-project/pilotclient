@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CCoreInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCoreInfoAreaComponent();
+            virtual ~CCoreInfoAreaComponent() override;
 
             //! Info areas
             enum InfoArea

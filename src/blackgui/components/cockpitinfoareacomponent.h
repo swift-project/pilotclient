@@ -38,7 +38,7 @@ namespace BlackGui
             explicit CCockpitInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCockpitInfoAreaComponent();
+            virtual ~CCockpitInfoAreaComponent() override;
 
             //! Info areas
             enum InfoArea

@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CDbLoadOverviewComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbLoadOverviewComponent();
+            virtual ~CDbLoadOverviewComponent() override;
 
             //! Initialize
             void display();

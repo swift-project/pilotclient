@@ -39,7 +39,7 @@ namespace BlackGui
             void displayCount(bool show);
 
             //! Destructor
-            virtual ~CStatusMessageFilterBar();
+            virtual ~CStatusMessageFilterBar() override;
 
             //! Use icons with radio buttons
             void useRadioButtonDescriptiveIcons(bool oneCharacterText);

@@ -46,7 +46,7 @@ namespace BlackGui
             explicit CColorSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CColorSelector();
+            ~CColorSelector() override;
 
             //! Color
             void setColor(const BlackMisc::CRgbColor &color);

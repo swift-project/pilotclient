@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CAircraftModelFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelFilterBar();
+            virtual ~CAircraftModelFilterBar() override;
 
             //! Show count
             void displayCount(bool show);

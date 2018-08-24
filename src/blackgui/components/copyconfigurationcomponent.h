@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CCopyConfigurationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCopyConfigurationComponent();
+            virtual ~CCopyConfigurationComponent() override;
 
             //! Cache mode
             void setCacheMode();

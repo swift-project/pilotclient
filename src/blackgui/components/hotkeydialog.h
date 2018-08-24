@@ -71,7 +71,7 @@ namespace BlackGui
                 QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CHotkeyDialog();
+            virtual ~CHotkeyDialog() override;
 
             //! Get hotkey selected by user
             BlackMisc::Input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }

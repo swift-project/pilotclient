@@ -35,7 +35,7 @@ namespace BlackGui
             explicit CPilotForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CPilotForm();
+            virtual ~CPilotForm() override;
 
             //! Set VATSIM validation mode
             void setVatsimValidation(bool vatsim);

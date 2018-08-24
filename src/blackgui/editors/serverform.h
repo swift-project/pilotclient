@@ -39,7 +39,7 @@ namespace BlackGui
             explicit CServerForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CServerForm();
+            virtual ~CServerForm() override;
 
             //! Set server
             void setServer(const BlackMisc::Network::CServer &server);

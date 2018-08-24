@@ -53,7 +53,7 @@ namespace BlackGui
             explicit CAtcStationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAtcStationComponent();
+            virtual ~CAtcStationComponent() override;
 
             //! Number of booked stations
             int countBookedStations() const;

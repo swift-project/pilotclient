@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CCopyConfigurationDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCopyConfigurationDialog();
+            virtual ~CCopyConfigurationDialog() override;
 
             //! For cache data
             void setCacheMode();

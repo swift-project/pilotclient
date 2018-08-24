@@ -48,7 +48,7 @@ namespace BlackGui
             explicit CAirlineIcaoFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAirlineIcaoFilterBar();
+            virtual ~CAirlineIcaoFilterBar() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>> createModelFilter() const override;

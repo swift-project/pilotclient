@@ -40,7 +40,7 @@ namespace BlackGui
 
             //! Destructor
             //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-            virtual ~CDbAirlineNameSelectorComponent();
+            virtual ~CDbAirlineNameSelectorComponent() override;
 
             //! \name Base class overrides
             //! @{

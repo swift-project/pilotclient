@@ -36,7 +36,7 @@ namespace BlackInput
         CKeyboardLinux &operator=(CKeyboardLinux const &) = delete;
 
         //! Destructor
-        virtual ~CKeyboardLinux();
+        virtual ~CKeyboardLinux() override;
 
     protected:
         //! \copydoc IKeyboard::init()

@@ -61,7 +61,7 @@ namespace BlackGui
             explicit CDataInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDataInfoAreaComponent();
+            virtual ~CDataInfoAreaComponent() override;
 
             //! DB model component
             CDbModelComponent *getModelComponent() const;

@@ -51,7 +51,7 @@ namespace BlackGui
             explicit CDbAutoSimulatorStashingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAutoSimulatorStashingComponent();
+            virtual ~CDbAutoSimulatorStashingComponent() override;
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }

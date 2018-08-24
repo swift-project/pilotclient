@@ -48,7 +48,7 @@ namespace BlackGui
             explicit CDbCountrySelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbCountrySelectorComponent();
+            ~CDbCountrySelectorComponent() override;
 
             //! Current country
             void setCountry(const BlackMisc::CCountry &country);

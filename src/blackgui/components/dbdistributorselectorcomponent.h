@@ -49,7 +49,7 @@ namespace BlackGui
             explicit CDbDistributorSelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbDistributorSelectorComponent();
+            virtual ~CDbDistributorSelectorComponent() override;
 
             //! Current distributor
             void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);

@@ -56,7 +56,7 @@ namespace BlackGui
             explicit CDataMainInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDataMainInfoAreaComponent();
+            virtual ~CDataMainInfoAreaComponent() override;
 
             //! Log component
             CLogComponent *getLogComponent() const;

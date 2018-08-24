@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CStatusMessageFilterDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CStatusMessageFilterDialog();
+            virtual ~CStatusMessageFilterDialog() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;

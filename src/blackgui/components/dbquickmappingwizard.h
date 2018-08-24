@@ -47,7 +47,7 @@ namespace BlackGui
             explicit CDbQuickMappingWizard(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbQuickMappingWizard();
+            virtual ~CDbQuickMappingWizard() override;
 
             //! Preset values
             void presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao);

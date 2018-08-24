@@ -106,7 +106,7 @@ namespace BlackGui
             explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
 
             //!Destructor
-            virtual ~CInfoBarWebReadersStatusComponent();
+            virtual ~CInfoBarWebReadersStatusComponent() override;
 
             //! Show the consolidation status
             virtual void showConsolidationStatus(bool show) override;

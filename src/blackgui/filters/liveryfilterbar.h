@@ -50,7 +50,7 @@ namespace BlackGui
             explicit CLiveryFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CLiveryFilterBar();
+            virtual ~CLiveryFilterBar() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;

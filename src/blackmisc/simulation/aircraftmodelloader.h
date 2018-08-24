@@ -93,7 +93,7 @@ namespace BlackMisc
             using ModelConsolidationCallback = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
 
             //! Destructor
-            virtual ~IAircraftModelLoader();
+            virtual ~IAircraftModelLoader() override;
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;

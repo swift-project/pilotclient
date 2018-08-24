@@ -55,7 +55,7 @@ namespace BlackGui
             explicit CDbAircraftIcaoSelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAircraftIcaoSelectorComponent();
+            virtual ~CDbAircraftIcaoSelectorComponent() override;
 
             //! Current aircraft ICAO
             //! \return changed

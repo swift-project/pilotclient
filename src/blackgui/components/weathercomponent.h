@@ -52,7 +52,7 @@ namespace BlackGui
             explicit CWeatherComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CWeatherComponent();
+            virtual ~CWeatherComponent() override;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;

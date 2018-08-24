@@ -44,7 +44,7 @@ namespace BlackMisc
                 CAircraftModelLoaderXPlane(QObject *parent = nullptr);
 
                 //! Virtual destructor
-                virtual ~CAircraftModelLoaderXPlane();
+                virtual ~CAircraftModelLoaderXPlane() override;
 
                 //! \name Interface functions
                 //! @{

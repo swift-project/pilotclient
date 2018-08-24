@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CDownloadDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDownloadDialog();
+            virtual ~CDownloadDialog() override;
 
             //! \copydoc CDownloadComponent::setDownloadFile
             void setDownloadFile(const BlackMisc::Network::CRemoteFile &remoteFile);

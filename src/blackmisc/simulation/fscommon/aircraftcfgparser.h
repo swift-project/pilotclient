@@ -44,7 +44,7 @@ namespace BlackMisc
                 CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
 
                 //! Virtual destructor
-                virtual ~CAircraftCfgParser();
+                virtual ~CAircraftCfgParser() override;
 
                 //! Get parsed aircraft cfg entries list
                 const CAircraftCfgEntriesList &getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }

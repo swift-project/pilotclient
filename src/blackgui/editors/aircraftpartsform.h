@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CAircraftPartsForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftPartsForm();
+            virtual ~CAircraftPartsForm() override;
 
             //! \name Form class implementations
             //! @{

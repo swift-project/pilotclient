@@ -63,7 +63,7 @@ namespace BlackGui
             explicit CDbOwnModelsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelsComponent();
+            virtual ~CDbOwnModelsComponent() override;
 
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();

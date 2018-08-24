@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CAircraftModelFilterDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelFilterDialog();
+            virtual ~CAircraftModelFilterDialog() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;

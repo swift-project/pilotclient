@@ -32,7 +32,7 @@ namespace BlackInput
         CKeyboardMacOS &operator=(CKeyboardMacOS const&) = delete;
 
         //! Destructor
-        virtual ~CKeyboardMacOS();
+        virtual ~CKeyboardMacOS() override;
 
         //! Process key event
         virtual void processKeyEvent(CGEventType type, CGEventRef event);

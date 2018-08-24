@@ -59,7 +59,7 @@ namespace BlackInput
         CJoystickWindows &operator=(CJoystickWindows const &) = delete;
 
         //! \brief Destructor
-        virtual ~CJoystickWindows();
+        virtual ~CJoystickWindows() override;
 
     protected:
         //! Timer based updates

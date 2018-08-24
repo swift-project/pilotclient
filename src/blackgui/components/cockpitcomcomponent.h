@@ -47,7 +47,7 @@ namespace BlackGui
             explicit CCockpitComComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCockpitComComponent();
+            virtual ~CCockpitComComponent() override;
 
             //! Set to BlackMisc::Aviation::CTransponder::StateIdent
             void setTransponderModeStateIdent();

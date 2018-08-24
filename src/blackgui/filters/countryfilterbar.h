@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CCountryFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCountryFilterBar();
+            virtual ~CCountryFilterBar() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;

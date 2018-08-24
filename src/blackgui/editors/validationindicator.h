@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CValidationIndicator(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CValidationIndicator();
+            ~CValidationIndicator() override;
 
             //! Validation passed
             void passed();

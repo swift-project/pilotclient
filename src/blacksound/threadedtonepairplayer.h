@@ -38,7 +38,7 @@ namespace BlackSound
         CThreadedTonePairPlayer(QObject *owner, const QString &name, const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice());
 
         //! Destructor
-        virtual ~CThreadedTonePairPlayer();
+        virtual ~CThreadedTonePairPlayer() override;
 
     public slots:
         //! Play the list of tones.

@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelSetFormDialog();
+            virtual ~CDbOwnModelSetFormDialog() override;
 
             //! Last build set
             const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }

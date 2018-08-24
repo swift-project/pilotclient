@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CDistributorFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDistributorFilterBar();
+            virtual ~CDistributorFilterBar() override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;

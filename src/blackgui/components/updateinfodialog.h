@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CUpdateInfoDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CUpdateInfoDialog();
+            virtual ~CUpdateInfoDialog() override;
 
             //! A new version existing?
             bool isNewVersionAvailable() const;

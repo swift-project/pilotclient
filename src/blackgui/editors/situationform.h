@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CSituationForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSituationForm();
+            virtual ~CSituationForm() override;
 
             //! Set the situation
             void setSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

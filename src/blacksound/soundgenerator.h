@@ -75,7 +75,7 @@ namespace BlackSound
         CSoundGenerator(const QList<Tone> &tones, BlackMisc::Audio::CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CSoundGenerator();
+        virtual ~CSoundGenerator() override;
 
         //! Set volume
         //! \param volume 0..100

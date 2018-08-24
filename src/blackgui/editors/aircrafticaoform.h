@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CAircraftIcaoForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftIcaoForm();
+            virtual ~CAircraftIcaoForm() override;
 
             //! Get value
             BlackMisc::Aviation::CAircraftIcaoCode getValue() const;

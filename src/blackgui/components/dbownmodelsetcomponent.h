@@ -65,7 +65,7 @@ namespace BlackGui
             explicit CDbOwnModelSetComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelSetComponent();
+            virtual ~CDbOwnModelSetComponent() override;
 
             //! Corresponding view
             Views::CAircraftModelView *view() const;
