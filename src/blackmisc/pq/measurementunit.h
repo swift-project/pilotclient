@@ -333,7 +333,7 @@ namespace BlackMisc
             bool isEpsilon(double value) const
             {
                 if (this->isNull()) return false;
-                if (value == 0) return true;
+                if (qFuzzyIsNull(value)) return true;
                 return std::abs(value) <= this->m_data->m_epsilon;
             }
 

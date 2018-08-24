@@ -145,7 +145,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         const PQ &CPhysicalQuantity<MU, PQ>::makePositive()
         {
-            if (this->isNull() || m_value == 0) { return *this->derived(); }
+            if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
             if (m_value < 0) { m_value *= -1.0; }
             return *this->derived();
         }
@@ -153,7 +153,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         const PQ &CPhysicalQuantity<MU, PQ>::makeNegative()
         {
-            if (this->isNull() || m_value == 0) { return *this->derived(); }
+            if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
             if (m_value > 0) { m_value *= -1.0; }
             return *this->derived();
         }
@@ -161,7 +161,7 @@ namespace BlackMisc
         template<class MU, class PQ>
         PQ CPhysicalQuantity<MU, PQ>::abs() const
         {
-            if (this->isNull() || m_value == 0) { return *this->derived(); }
+            if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
             if (m_value >= 0) { return *this->derived(); }
             PQ copy(*this->derived());
             return copy.makePositive();

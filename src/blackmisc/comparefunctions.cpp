@@ -40,7 +40,7 @@ namespace BlackMisc
 
         int compare(double a, double b)
         {
-            if (a == b) return 0;
+            if (qFuzzyCompare(a, b)) return 0;
             return a < b ? -1 : 1;
         }
 

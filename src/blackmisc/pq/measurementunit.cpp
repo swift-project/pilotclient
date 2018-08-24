@@ -48,7 +48,7 @@ namespace BlackMisc
 
         double CMeasurementUnit::roundToEpsilon(double value) const
         {
-            if (this->getEpsilon() == 0 || this->isNull()) { return value; }
+            if (qFuzzyIsNull(getEpsilon()) || this->isNull()) { return value; }
             return CMathUtils::roundEpsilon(value, this->getEpsilon());
         }
 
