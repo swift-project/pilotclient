@@ -198,7 +198,7 @@ namespace BlackMisc
             template <int Subfactor>
             struct InEachHundred
             {
-                static double fraction() { return 100.0f; } //!< fraction
+                static double fraction() { return 100.0; } //!< fraction
                 static double subfactor() { return float(Subfactor); } //!< subfactor
             };
             //! @}
