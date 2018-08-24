@@ -25,6 +25,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbMappingComponentAware
         {
         public:
+
+
             //! Set the corresponding component
             virtual void setMappingComponent(CDbMappingComponent *component);
 
@@ -34,6 +36,9 @@ namespace BlackGui
         protected:
             //! Constructor
             CDbMappingComponentAware(QObject *parent);
+
+            //! Destructor
+            virtual ~CDbMappingComponentAware() {}
 
         private :
             CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component

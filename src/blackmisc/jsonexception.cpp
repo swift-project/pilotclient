@@ -24,6 +24,10 @@ namespace BlackMisc
         return stack.localData();
     }
 
+    // pin vtables to this file
+    void CJsonException::anchor()
+    { }
+
     CStatusMessage CJsonException::toStatusMessage(const CLogCategoryList &categories, const QString &prefix) const
     {
         return CStatusMessage(categories).validationError(toString(prefix));

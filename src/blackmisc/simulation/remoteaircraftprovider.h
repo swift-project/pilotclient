@@ -52,7 +52,7 @@ namespace BlackMisc
             static constexpr int DefaultOffsetTimeMs      = 6000; //!< \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
 
             //! Destructor
-            virtual ~IRemoteAircraftProvider() {}
+            virtual ~IRemoteAircraftProvider();
 
             //! All remote aircraft
             //! \threadsafe
@@ -449,7 +449,7 @@ namespace BlackMisc
         {
         public:
             //! Destructor
-            virtual ~CRemoteAircraftAware() {}
+            virtual ~CRemoteAircraftAware();
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
             CSimulatedAircraftList getAircraftInRange() const;

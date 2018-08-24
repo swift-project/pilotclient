@@ -111,6 +111,8 @@ namespace BlackMisc
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
         class BLACKMISC_EXPORT COwnAircraftAware : public IProviderAware<IOwnAircraftProvider>
         {
+            virtual void anchor();
+
         public:
             //! Set the provider
             void setOwnAircraftProvider(IOwnAircraftProvider *provider) { this->setProvider(provider); }

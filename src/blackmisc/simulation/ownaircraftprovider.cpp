@@ -24,6 +24,10 @@ namespace BlackMisc
             return changed1 || changed2;
         }
 
+        // pin vtables to this file
+        void COwnAircraftAware::anchor()
+        { }
+
         CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");

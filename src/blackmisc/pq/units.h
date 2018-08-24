@@ -56,6 +56,8 @@ namespace BlackMisc
             struct StatuteMilesToMeters     { static double factor() { return 1609.3472; } };
             using MetersToMeters = One;
 
+            virtual void anchor();
+
         public:
             //! Base type
             using base_type = CMeasurementUnit;
@@ -271,6 +273,8 @@ namespace BlackMisc
 
             using HertzToHertz = One;
 
+            virtual void anchor();
+
         public:
             //! Base type
             using base_type = CMeasurementUnit;
@@ -361,6 +365,8 @@ namespace BlackMisc
 
             using GramsToKilograms = Milli<One>;
             struct PoundsToKilograms { static double factor() { return 0.45359237; } };
+
+            virtual void anchor();
 
         public:
             //! Base type
@@ -463,6 +469,8 @@ namespace BlackMisc
             struct PsiToHectopascals            { static double factor() { return  68.948;      } };
             struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
             struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
+
+            virtual void anchor();
 
         public:
             //! Base type
@@ -589,6 +597,8 @@ namespace BlackMisc
                 static double offset() { return 32.0; }
             };
 
+            virtual void anchor();
+
         public:
             //! Base type
             using base_type = CMeasurementUnit;
@@ -672,6 +682,8 @@ namespace BlackMisc
             struct KphToMps         { static double factor() { return    1.0    /    3.6; } };
             struct FtPerSecToMps    { static double factor() { return    0.3048         ; } };
             struct FtPerMinToMps    { static double factor() { return    0.3048 /   60.0; } };
+
+            virtual void anchor();
 
         public:
             //! Base type
@@ -917,6 +929,8 @@ namespace BlackMisc
             using CMeasurementUnit::CMeasurementUnit;
 
             struct FeetToMeters { static double factor() { return 0.3048; } };
+
+            virtual void anchor();
 
         public:
             //! Base type

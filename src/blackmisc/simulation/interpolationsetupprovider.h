@@ -110,6 +110,8 @@ namespace BlackMisc
         //! Class which can be directly used to access an \sa IInterpolationSetupProvider object
         class BLACKMISC_EXPORT CInterpolationSetupAware : public IProviderAware<IInterpolationSetupProvider>
         {
+            virtual void anchor();
+
         public:
             //! \copydoc IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
             CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupPerCallsignOrDefault(const Aviation::CCallsign &callsign) const;

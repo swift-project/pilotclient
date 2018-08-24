@@ -25,6 +25,9 @@ namespace BlackMisc
 {
     namespace Geo
     {
+        ICoordinateGeodetic::~ICoordinateGeodetic()
+        { }
+
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             return ICoordinateGeodetic::convertToQString(i18n);

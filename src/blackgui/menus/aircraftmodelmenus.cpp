@@ -34,6 +34,9 @@ namespace BlackGui
 {
     namespace Menus
     {
+        void IAircraftModelViewMenu::anchor()
+        { }
+
         const CLogCategoryList &IAircraftModelViewMenu::getLogCategories()
         {
             static const CLogCategoryList cats { CLogCategory::guiComponent() };

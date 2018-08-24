@@ -21,6 +21,9 @@ namespace BlackGui
     CDropBase::CDropBase()
     { }
 
+    CDropBase::~CDropBase()
+    { }
+
     void CDropBase::setAcceptedMetaTypeIds(const QList<int> &ids)
     {
         m_acceptedMetaTypes = ids;

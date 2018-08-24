@@ -216,6 +216,8 @@ namespace BlackMisc
         //! Class which can be directly used to access an \sa ISimulationEnvironmentProvider object
         class BLACKMISC_EXPORT CSimulationEnvironmentAware : public IProviderAware<ISimulationEnvironmentProvider>
         {
+            virtual void anchor();
+
         public:
             //! Set the provider
             void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }

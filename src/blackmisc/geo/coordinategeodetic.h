@@ -56,7 +56,7 @@ namespace BlackMisc
             };
 
             //! Destructor
-            virtual ~ICoordinateGeodetic() {}
+            virtual ~ICoordinateGeodetic();
 
             //! Latitude
             virtual CLatitude latitude() const = 0;

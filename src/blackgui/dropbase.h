@@ -24,6 +24,9 @@ namespace BlackGui
     class BLACKGUI_EXPORT CDropBase
     {
     public:
+        //! Dtor
+        virtual ~CDropBase();
+
         //! Accepted ids
         void setAcceptedMetaTypeIds(const QList<int> &ids);
 
@@ -47,9 +50,6 @@ namespace BlackGui
 
         //! Mime data to CVariant (normally encapsulating a value object)
         BlackMisc::CVariant toCVariant(const QMimeData *mime) const;
-
-        //! Dtor
-        virtual ~CDropBase() {}
 
     protected:
         //! Ctor

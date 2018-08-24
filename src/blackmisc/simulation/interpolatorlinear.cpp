@@ -54,6 +54,9 @@ namespace BlackMisc
             m_pbh = CInterpolatorPbh(m_simulationTimeFraction, situation1, situation2);
         }
 
+        void CInterpolatorLinear::anchor()
+        { }
+
         CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
         {
             const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());

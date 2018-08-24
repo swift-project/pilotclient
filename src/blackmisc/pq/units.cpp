@@ -18,6 +18,29 @@ namespace BlackMisc
     {
         using BlackMisc::Math::CMathUtils;
 
+        // pin vtables to this file
+
+        void CLengthUnit::anchor()
+        { }
+
+        void CFrequencyUnit::anchor()
+        { }
+
+        void CMassUnit::anchor()
+        { }
+
+        void CPressureUnit::anchor()
+        { }
+
+        void CTemperatureUnit::anchor()
+        { }
+
+        void CSpeedUnit::anchor()
+        { }
+
+        void CAccelerationUnit::anchor()
+        { }
+
         QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
         {
             if (digits < 0) digits = this->getDisplayDigits();

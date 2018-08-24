@@ -142,6 +142,10 @@ namespace BlackMisc
             return true;
         }
 
+        // pin vtables to this file
+        void CInterpolatorSpline::anchor()
+        { }
+
         CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
         {
             // recalculate derivatives only if they changed

@@ -28,6 +28,8 @@ namespace BlackGui
         //! Menu base class for aircraft model view menus
         class IAircraftModelViewMenu : public IMenuDelegate
         {
+            virtual void anchor();
+
         public:
             //! Constructor
             IAircraftModelViewMenu(BlackGui::Views::CAircraftModelView *modelView, bool separator = true) :

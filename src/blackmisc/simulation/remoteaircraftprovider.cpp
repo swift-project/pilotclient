@@ -24,6 +24,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        IRemoteAircraftProvider::~IRemoteAircraftProvider()
+        { }
+
         const CLogCategoryList &CRemoteAircraftProvider::getLogCategories()
         {
             static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
@@ -755,6 +758,9 @@ namespace BlackMisc
             }
             return removedCallsign;
         }
+
+        CRemoteAircraftAware::~CRemoteAircraftAware()
+        { }
 
         CSimulatedAircraftList CRemoteAircraftAware::getAircraftInRange() const
         {

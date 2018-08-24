@@ -344,6 +344,10 @@ namespace BlackMisc
             this->resetSimulationEnvironmentStatistics();
         }
 
+        // pin vtables to this file
+        void CSimulationEnvironmentAware::anchor()
+        { }
+
         CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }

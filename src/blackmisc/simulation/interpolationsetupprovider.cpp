@@ -197,6 +197,10 @@ namespace BlackMisc
             return m_setups;
         }
 
+        // pin vtables to this file
+        void CInterpolationSetupAware::anchor()
+        { }
+
         CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
         {
             if (!this->hasProvider()) { return CInterpolationAndRenderingSetupPerCallsign(); }

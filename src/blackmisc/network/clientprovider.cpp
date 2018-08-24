@@ -132,6 +132,10 @@ namespace BlackMisc
             return true;
         }
 
+        // Pin the vtable to this file
+        void CClientAware::anchor()
+        { }
+
         CClientList CClientAware::getClients() const
         {
             if (this->provider()) { return this->provider()->getClients(); }

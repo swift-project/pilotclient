@@ -57,6 +57,10 @@ namespace BlackMisc
             return true;
         }
 
+        // pin vtable to this file
+        void CEcosystemAware::anchor()
+        { }
+
         CEcosystem CEcosystemAware::getCurrentEcosystem() const
         {
             if (!this->hasProvider()) { return CEcosystem::unspecified(); }

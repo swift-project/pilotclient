@@ -27,6 +27,8 @@ namespace BlackMisc
         //! Cubic spline interpolator
         class BLACKMISC_EXPORT CInterpolatorSpline : public CInterpolator<CInterpolatorSpline>
         {
+            virtual void anchor();
+
         public:
             //! Constructor
             CInterpolatorSpline(const Aviation::CCallsign &callsign,

@@ -26,6 +26,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CJsonException : public std::runtime_error
     {
+        virtual void anchor();
+
     public:
         //! Constructor.
         explicit CJsonException(const QString &message) : std::runtime_error(message.toStdString()) {}

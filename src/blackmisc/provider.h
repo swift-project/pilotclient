@@ -20,11 +20,11 @@
 namespace BlackMisc
 {
     //! Base class for providers
-    class IProvider
+    class BLACKMISC_EXPORT IProvider
     {
     public:
         //! Dtor
-        virtual ~IProvider() {}
+        virtual ~IProvider();
 
         //! Return as QObject
         virtual QObject *asQObject() { return nullptr; }

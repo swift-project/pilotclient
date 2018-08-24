@@ -109,6 +109,8 @@ namespace BlackMisc
         //! Class which can be directly used to access an \sa IClientProvider object
         class BLACKMISC_EXPORT CClientAware : public IProviderAware<IClientProvider>
         {
+            virtual void anchor();
+
         public:
             //! \copydoc CClientProvider::getClients
             CClientList getClients() const;

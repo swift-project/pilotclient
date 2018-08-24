@@ -63,6 +63,9 @@ namespace BlackGui
             //! \remarks Normally the info area will be provided later \sa setParentDockWidgetInfoArea
             CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea = nullptr);
 
+            // Destructor
+            virtual ~CEnableForDockWidgetInfoArea() {}
+
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
             BlackMisc::CConnectionGuard    m_connections;
