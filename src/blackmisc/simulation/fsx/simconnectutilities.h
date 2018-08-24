@@ -31,7 +31,7 @@
 #   ifndef NOMINMAX
 #       define NOMINMAX
 #   endif
-#   include <Windows.h>
+#   include <windows.h>
 #else
 using DWORD = unsigned long; //!< Fake Windows DWORD
 #endif

@@ -18,7 +18,7 @@
 #include <QTextStream>
 
 #if defined(Q_OS_WIN)
-#include <Shlobj.h>
+#include <shlobj.h>
 #endif
 
 using namespace BlackMisc;
