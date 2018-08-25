@@ -239,7 +239,7 @@ namespace BlackMisc
                 return CLivery();
             }
 
-            const QString combinedCode(json.value(prefix + "combinedcode").toString());
+            const QString combinedCode(json.value(prefix % QStringLiteral("combinedcode")).toString());
             if (combinedCode.isEmpty())
             {
                 CLivery liveryStub; // only consists of id, maybe key and timestamp
@@ -248,10 +248,10 @@ namespace BlackMisc
             }
 
             const bool isColorLivery = combinedCode.startsWith(colorLiveryMarker());
-            const QString description(json.value(prefix + "description").toString());
-            const CRgbColor colorFuselage(json.value(prefix + "colorfuselage").toString());
-            const CRgbColor colorTail(json.value(prefix + "colortail").toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
+            const QString description(json.value(prefix % QStringLiteral("description")).toString());
+            const CRgbColor colorFuselage(json.value(prefix % QStringLiteral("colorfuselage")).toString());
+            const CRgbColor colorTail(json.value(prefix % QStringLiteral("colortail")).toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
             CAirlineIcaoCode airline;
             if (!isColorLivery) { airline = CAirlineIcaoCode::fromDatabaseJson(json, "al_"); }
             CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
@@ -367,9 +367,9 @@ namespace BlackMisc
             }
 
             if (!m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
-            if (!m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
-            if (m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode());}
-            if (m_description.isEmpty()) { this->setDescription(otherLivery.getDescription());}
+            if (!m_colorTail.isValid())     { this->setColorTail(otherLivery.getColorTail()); }
+            if (m_combinedCode.isEmpty())   { this->setCombinedCode(otherLivery.getCombinedCode());}
+            if (m_description.isEmpty())    { this->setDescription(otherLivery.getDescription());}
 
             m_airline.updateMissingParts(otherLivery.getAirlineIcaoCode());
             if (!this->hasValidDbKey())
