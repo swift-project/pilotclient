@@ -332,6 +332,8 @@ namespace BlackMisc
 
     QDateTime parseDateTimeStringOptimized(const QString &dateTimeString)
     {
+        if (dateTimeString.length() < 8) { return QDateTime(); }
+
         // yyyyMMddHHmmsszzz
         // 01234567890123456
         int year(dateTimeString.leftRef(4).toInt());
