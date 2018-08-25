@@ -42,7 +42,8 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ByLivery, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByCombinedCode, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ByVtol, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_ByMilitary, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ByForceMilitary, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ByForceCivilian, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScoreIgnoreZeros, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScorePreferColorLiveries, readonly);
 
@@ -72,7 +73,8 @@ namespace BlackGui
             ui->rb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
             ui->cb_ByLivery->setChecked(mode.testFlag(CAircraftMatcherSetup::ByLivery));
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
-            ui->cb_ByMilitary->setChecked(mode.testFlag(CAircraftMatcherSetup::ByMilitary));
+            ui->cb_ByForceMilitary->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceMilitary));
+            ui->cb_ByForceCivilian->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceCivilian));
             ui->cb_ByVtol->setChecked(mode.testFlag(CAircraftMatcherSetup::ByVtol));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
@@ -109,7 +111,9 @@ namespace BlackGui
                        ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
                        ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
                        ui->cb_ByCombinedCode->isChecked(),
-                       ui->cb_ByMilitary->isChecked(), ui->cb_ByVtol->isChecked(),
+                       ui->cb_ByForceMilitary->isChecked(),
+                       ui->cb_ByForceCivilian->isChecked(),
+                       ui->cb_ByVtol->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
                        ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked()
                    );

@@ -125,6 +125,9 @@ namespace BlackMisc
             static const QString icaoAircraft("by ICAO, aircraft first");
             static const QString icaoAirline("by ICAO, airline first");
             static const QString family("by family");
+            static const QString forceMil("force military");
+            static const QString forceCiv("force civilian");
+            static const QString vtol("VTOL");
             static const QString livery("by livery");
             static const QString combined("by combined code");
             static const QString noZeros("scoring, ignore zero scores");
@@ -141,6 +144,9 @@ namespace BlackMisc
             case ByCombinedType:           return combined;
             case ByIcaoOrderAircraftFirst: return icaoAircraft;
             case ByIcaoOrderAirlineFirst:  return icaoAirline;
+            case ByForceCivilian:          return forceCiv;
+            case ByForceMilitary:          return forceMil;
+            case ByVtol:                   return vtol;
             case ScoreIgnoreZeros:         return noZeros;
             case ScorePreferColorLiveries: return preferColorLiveries;
             case ExcludeNoDbData:          return exNoDb;
@@ -162,6 +168,9 @@ namespace BlackMisc
             if (mode.testFlag(ByFamily))         { modes << modeFlagToString(ByFamily); }
             if (mode.testFlag(ByLivery))         { modes << modeFlagToString(ByLivery); }
             if (mode.testFlag(ByCombinedType))   { modes << modeFlagToString(ByCombinedType); }
+            if (mode.testFlag(ByForceCivilian))  { modes << modeFlagToString(ByForceCivilian); }
+            if (mode.testFlag(ByForceMilitary))  { modes << modeFlagToString(ByForceMilitary); }
+            if (mode.testFlag(ByVtol))           { modes << modeFlagToString(ByVtol); }
             if (mode.testFlag(ScoreIgnoreZeros)) { modes << modeFlagToString(ScoreIgnoreZeros); }
             if (mode.testFlag(ScorePreferColorLiveries)) { modes << modeFlagToString(ScorePreferColorLiveries); }
             return modes.join(", ");
@@ -185,11 +194,11 @@ namespace BlackMisc
             return unknown;
         }
 
-        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
-            bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-            bool byMilitary, bool byVtol,
-            bool scoreIgnoreZeros, bool scorePreferColorLiveries,
-            bool excludeNoDbData, bool excludeNoExcluded)
+        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
+                bool byForceMilitary, bool byForceCivilian,
+                bool byVtol,
+                bool scoreIgnoreZeros, bool scorePreferColorLiveries,
+                bool excludeNoDbData, bool excludeNoExcluded)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
             if (byIcaoDataAircraft1st)    { mode |= ByIcaoOrderAircraftFirst; }
@@ -197,7 +206,8 @@ namespace BlackMisc
             if (byFamily)                 { mode |= ByFamily; }
             if (byLivery)                 { mode |= ByLivery; }
             if (byCombinedType)           { mode |= ByCombinedType; }
-            if (byMilitary)               { mode |= ByMilitary; }
+            if (byForceMilitary)          { mode |= ByForceMilitary; }
+            if (byForceCivilian)          { mode |= ByForceCivilian; }
             if (byVtol)                   { mode |= ByVtol; }
             if (scoreIgnoreZeros)         { mode |= ScoreIgnoreZeros; }
             if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }

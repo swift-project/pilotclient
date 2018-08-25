@@ -105,13 +105,6 @@
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="cb_ByModelString">
-        <property name="text">
-         <string>model string</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
         <property name="text">
@@ -119,10 +112,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="Line" name="line_Reduction">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="cb_ByModelString">
+        <property name="text">
+         <string>model string</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
         </property>
        </widget>
       </item>
@@ -130,6 +130,13 @@
        <widget class="QCheckBox" name="cb_ByLivery">
         <property name="text">
          <string> livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="Line" name="line_Reduction">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -147,27 +154,33 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="cb_ByCombinedCode">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cb_ByForceMilitary">
+        <property name="toolTip">
+         <string>inbound military force matched military</string>
+        </property>
         <property name="text">
-         <string>combined code</string>
+         <string>force military</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="cb_ByMilitary">
-        <property name="text">
-         <string>military</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
+      <item row="3" column="1" colspan="2">
        <widget class="QCheckBox" name="cb_ByVtol">
         <property name="toolTip">
          <string>Vertical Takeoff or Landing</string>
         </property>
         <property name="text">
-         <string>VTOL</string>
+         <string>VTOL (helicopters and such)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="cb_ByForceCivilian">
+        <property name="toolTip">
+         <string>inbound civilian force matched civilian</string>
+        </property>
+        <property name="text">
+         <string>force civilian</string>
         </property>
        </widget>
       </item>
@@ -231,6 +244,8 @@
  <tabstops>
   <tabstop>rb_Reduction</tabstop>
   <tabstop>rb_ScoreOnly</tabstop>
+  <tabstop>rb_ScoreAndReduction</tabstop>
+  <tabstop>pb_Reset</tabstop>
   <tabstop>rb_PickFirst</tabstop>
   <tabstop>rb_PickRandom</tabstop>
   <tabstop>rb_PickByOrder</tabstop>
@@ -238,6 +253,11 @@
   <tabstop>rb_ByIcaoDataAirline1st</tabstop>
   <tabstop>cb_ByModelString</tabstop>
   <tabstop>cb_ByLivery</tabstop>
+  <tabstop>cb_ByFamily</tabstop>
+  <tabstop>cb_ByCombinedCode</tabstop>
+  <tabstop>cb_ByVtol</tabstop>
+  <tabstop>cb_ByForceMilitary</tabstop>
+  <tabstop>cb_ByForceCivilian</tabstop>
   <tabstop>cb_ExclNoExcludedModels</tabstop>
   <tabstop>cb_ExclNoDbData</tabstop>
   <tabstop>cb_ScorePreferColorLiveries</tabstop>

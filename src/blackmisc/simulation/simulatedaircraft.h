@@ -345,6 +345,9 @@ namespace BlackMisc
             //! VTOL aircraft?
             bool isVtol() const;
 
+            //! Is military aircraft
+            bool isMilitary() const;
+
             //! Combined ICAO / color string
             QString getCombinedIcaoLiveryString(bool networkModel = false) const;
 

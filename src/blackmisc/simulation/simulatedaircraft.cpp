@@ -290,7 +290,12 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::isVtol() const
         {
-            return getModel().isVtol();
+            return this->getModel().isVtol();
+        }
+
+        bool CSimulatedAircraft::isMilitary() const
+        {
+            return this->getModel().isMilitary();
         }
 
         QString CSimulatedAircraft::getCombinedIcaoLiveryString(bool networkModel) const

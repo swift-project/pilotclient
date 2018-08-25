@@ -41,16 +41,18 @@ namespace BlackMisc
                 ByLivery         = 1 << 3,
                 ByCombinedType   = 1 << 4,
                 ByManufacturer   = 1 << 5,
-                ByMilitary       = 1 << 6,
-                ByVtol           = 1 << 7,
-                ByIcaoOrderAircraftFirst = (1 << 8) | ByIcaoData,
-                ByIcaoOrderAirlineFirst  = (1 << 9) | ByIcaoData,
+                ByForceMilitary  = 1 << 6, //!< military (in) will only search in military
+                ByForceCivilian  = 1 << 7, //!< civilian (in) will only search in civilian
+                ByMilitary       = ByForceCivilian | ByForceMilitary,
+                ByVtol           = 1 << 8,
+                ByIcaoOrderAircraftFirst = (1 << 9)  | ByIcaoData,
+                ByIcaoOrderAirlineFirst  = (1 << 10) | ByIcaoData,
                 // --- score based matching ---
-                ScoreIgnoreZeros         = 1 << 10, //!< zero scores are ignored
-                ScorePreferColorLiveries = 1 << 11, //!< prefer color liveries
+                ScoreIgnoreZeros         = 1 << 11, //!< zero scores are ignored
+                ScorePreferColorLiveries = 1 << 12, //!< prefer color liveries
                 // --- exclusion ---
-                ExcludeNoDbData   = 1 << 12,
-                ExcludeNoExcluded = 1 << 13,
+                ExcludeNoDbData   = 1 << 13,
+                ExcludeNoExcluded = 1 << 14,
                 ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
                 // --- others ---
                 ModeNone          = 0,
@@ -139,7 +141,9 @@ namespace BlackMisc
 
             //! Mode by flags
             static MatchingMode matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
-                                             bool byFamily, bool byLivery, bool byCombinedType, bool byMilitary, bool byVtol,
+                                             bool byFamily, bool byLivery, bool byCombinedType,
+                                             bool byForceMilitary, bool byForceCivilian,
+                                             bool byVtol,
                                              bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded);
 
         private:

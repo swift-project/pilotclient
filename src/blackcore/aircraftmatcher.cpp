@@ -714,9 +714,17 @@ namespace BlackCore
             }
 
             // military / civilian
-            if (mode.testFlag(CAircraftMatcherSetup::ByMilitary))
+            bool milFlagReduced = false;
+            if (mode.testFlag(CAircraftMatcherSetup::ByForceMilitary) && remoteAircraft.isMilitary())
             {
                 matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, log);
+                milFlagReduced = true;
+            }
+
+            if (!milFlagReduced && mode.testFlag(CAircraftMatcherSetup::ByForceCivilian) && !remoteAircraft.isMilitary())
+            {
+                matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, log);
+                milFlagReduced = true;
             }
 
             // combined code
