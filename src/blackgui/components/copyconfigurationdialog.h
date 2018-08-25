@@ -21,9 +21,8 @@ namespace BlackGui
 {
     namespace Components
     {
-        /**
-         * Dialog to copy cache and settings
-         */
+        //! Dialog to copy cache and settings
+        //! \deprecated replaced by CCopySettingsAndCachesComponent
         class BLACKGUI_EXPORT CCopyConfigurationDialog : public QDialog
         {
             Q_OBJECT

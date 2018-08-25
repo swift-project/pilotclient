@@ -27,9 +27,8 @@ namespace BlackGui
 {
     namespace Components
     {
-        /**
-         * Copy configuration (i.e. settings and cache files)
-         */
+        //! Copy configuration (i.e. settings and cache files)
+        //! \deprecated replaced by CCopySettingsAndCachesComponent
         class BLACKGUI_EXPORT CCopyConfigurationComponent : public QFrame
         {
             Q_OBJECT
