@@ -31,7 +31,7 @@ namespace XSwiftBus
 
         char xplanePath[512];
         XPLMGetSystemPath(xplanePath);
-#ifdef Q_OS_MAC
+#ifdef APL
         if (XPLMIsFeatureEnabled("XPLM_USE_NATIVE_PATHS") == 0)
         {
             HFS2PosixPath(xplanePath, xplanePath, sizeof(xplanePath));
