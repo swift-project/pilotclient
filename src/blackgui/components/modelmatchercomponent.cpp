@@ -73,7 +73,7 @@ namespace BlackGui
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
             connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
 
             this->redisplay();
         }

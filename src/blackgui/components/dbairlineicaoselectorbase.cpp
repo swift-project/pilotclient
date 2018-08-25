@@ -43,7 +43,7 @@ namespace BlackGui
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead, Qt::QueuedConnection);
 
             // when we already have data, init completers. This can not be done directly in the
             // constructor due to virtual functions

@@ -65,7 +65,7 @@ namespace BlackGui
             ui->le_MaxModelsStashed->setValidator(new QIntValidator(10, CDbStashComponent::MaxModelPublished, this));
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Expect mapping componet");
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAutoStashingComponent::onEntitiesRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAutoStashingComponent::onEntitiesRead, Qt::QueuedConnection);
             connect(ui->tb_ResetDescription, &QToolButton::clicked, this, &CDbAutoStashingComponent::resetDescription);
 
             this->resetDescription();

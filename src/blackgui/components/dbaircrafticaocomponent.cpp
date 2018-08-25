@@ -42,7 +42,7 @@ namespace BlackGui
             ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
             ui->tvp_AircraftIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead, Qt::QueuedConnection);
             this->onIcaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 

@@ -96,6 +96,9 @@ namespace BlackGui
             //! Load info objects if not already loaded
             void loadInfoObjects();
 
+            //! Adjust text width
+            void adjustTextWidth();
+
             //! Timestamp
             static QString formattedTimestamp(const QDateTime &dateTime);
 

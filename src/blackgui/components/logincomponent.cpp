@@ -139,7 +139,7 @@ namespace BlackGui
             connect(ui->tb_Timeout, &QToolButton::clicked, this, &CLoginComponent::toggleTimeout);
 
             // web service data
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
 
             // inital setup, if data already available
             this->validateAircraftValues();

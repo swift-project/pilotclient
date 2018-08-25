@@ -10,9 +10,10 @@
 #include "dbloadoverviewcomponent.h"
 #include "ui_dbloadoverviewcomponent.h"
 
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/infodatareader.h"
-#include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 
 #include <QPointer>
@@ -73,6 +74,7 @@ namespace BlackGui
                 {
                     if (!myself) { return; }
                     this->loadInfoObjects();
+                    this->adjustTextWidth();
                 });
             }
         }
@@ -115,6 +117,7 @@ namespace BlackGui
             {
                 // re-center
                 this->centerLoadIndicator();
+                this->adjustTextWidth();
             }
             QFrame::resizeEvent(event);
         }
@@ -379,6 +382,25 @@ namespace BlackGui
             if (direct)
             {
                 m_dsTriggerGuiUpdate.inputSignal();
+            }
+        }
+
+        void CDbLoadOverviewComponent::adjustTextWidth()
+        {
+            const QSize s = this->size();
+            const QSizeF sizeFont = CGuiUtility::fontMetricsLazyDog43Chars();
+            const int thresholdW = qRound(sizeFont.width() * 2.0);
+            if (s.width() > thresholdW)
+            {
+                ui->lbl_DbCount->setText("DB count");
+                ui->lbl_CacheCount->setText("Cache count");
+                ui->lbl_SharedCount->setText("Shared count");
+            }
+            else
+            {
+                ui->lbl_DbCount->setText("DB#");
+                ui->lbl_CacheCount->setText("C#");
+                ui->lbl_SharedCount->setText("S#");
             }
         }
     } // ns

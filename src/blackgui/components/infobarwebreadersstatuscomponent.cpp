@@ -45,7 +45,7 @@ namespace BlackGui
 
             if (sGui->hasWebDataServices())
             {
-                c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::dataRead);
+                c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::dataRead, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
             }
 

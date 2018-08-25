@@ -52,7 +52,7 @@ namespace BlackGui
             connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::onDataChanged);
 
             ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountrySelectorComponent::onCountriesRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountrySelectorComponent::onCountriesRead, Qt::QueuedConnection);
             this->onCountriesRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
         }
 

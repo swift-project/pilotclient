@@ -39,7 +39,7 @@ namespace BlackGui
             ui->tvp_Countries->setFilterWidget(ui->filter_CountryComponent);
             ui->tvp_Countries->allowDragDrop(true, false);
 
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead);
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead, Qt::QueuedConnection);
             this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
         }
 

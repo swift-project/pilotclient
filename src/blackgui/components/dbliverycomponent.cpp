@@ -38,7 +38,7 @@ namespace BlackGui
             ui->tvp_Liveries->allowDragDrop(true, false);
             ui->tvp_Liveries->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::onLiveriesRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::onLiveriesRead, Qt::QueuedConnection);
             this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 

@@ -496,8 +496,8 @@ namespace BlackCore
         {
             // never emit when lock is held, deadlock
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
-            emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
             CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
+            emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
         }
 
         void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
