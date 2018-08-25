@@ -122,6 +122,7 @@ namespace BlackGui
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_settingsAudio { this };
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_settingsDirectories { this };
             BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_settingsNetworkServers { this };
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFs9> m_settingsSimulatorFs9 { this }; //!< FS9 settings

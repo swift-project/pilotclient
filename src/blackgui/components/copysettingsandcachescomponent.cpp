@@ -26,6 +26,7 @@ using namespace BlackMisc::Input;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Network::Data;
 using namespace BlackMisc::Network::Settings;
+using namespace BlackMisc::Settings;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore::Audio;
 using namespace BlackCore::Application;
@@ -74,6 +75,7 @@ namespace BlackGui
             readOnlyCheckbox(ui->cb_SettingsActionHotkeys, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsActionHotkeys.getFilename()));
             readOnlyCheckbox(ui->cb_SettingsTextMessages, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsTextMessage.getFilename()));
             readOnlyCheckbox(ui->cb_SettingsAtcStations, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAtcStations.getFilename()));
+            readOnlyCheckbox(ui->cb_SettingsDirectories, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDirectories.getFilename()));
 
             readOnlyCheckbox(ui->cb_SettingsConsolidation, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsConsolidation.getFilename()));
             readOnlyCheckbox(ui->cb_SettingsModel, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsModel.getFilename()));
@@ -123,6 +125,7 @@ namespace BlackGui
             ui->cb_SettingsActionHotkeys->setText(checkBoxText(TActionHotkeys::humanReadable(), true));
             ui->cb_SettingsAtcStations->setText(checkBoxText(TAtcStationsSettings::humanReadable(), true));
             ui->cb_SettingsTextMessages->setText(checkBoxText(TextMessageSettings::humanReadable(), true));
+            ui->cb_SettingsDirectories->setText(checkBoxText(TDirectorySettings::humanReadable(), true));
         }
 
         void CCopySettingsAndCachesComponent::initModel()
@@ -170,6 +173,17 @@ namespace BlackGui
                 if (!audioOutputSettings.isEmpty())
                 {
                     this->displayStatusMessage(m_settingsAudioOutputDevice.setAndSave(audioOutputSettings), audioOutputSettings);
+                }
+            }
+
+            // ------- directories -------
+            if (ui->cb_SettingsDirectories->isChecked())
+            {
+                const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsDirectories.getFilename());
+                if (!joStr.isEmpty())
+                {
+                    const CDirectories directories = CDirectories::fromJsonNoThrow(joStr, true, success, errMsg);
+                    if (this->parsingMessage(success, errMsg, m_settingsDirectories.getKey())) { this->displayStatusMessage(m_settingsDirectories.setAndSave(directories), directories.toQString(true)); }
                 }
             }
 
