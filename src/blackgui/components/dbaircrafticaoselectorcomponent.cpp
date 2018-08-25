@@ -177,12 +177,13 @@ namespace BlackGui
 
         const QStringList &CDbAircraftIcaoSelectorComponent::completerStrings()
         {
+            static const QStringList empty;
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return empty; }
             const int c = sGui->getWebDataServices()->getAircraftIcaoCodesCount();
             if (c != m_completerStrings.size())
             {
                 CAircraftIcaoCodeList icaos(sGui->getWebDataServices()->getAircraftIcaoCodes());
                 icaos.removeInvalidCombinedCodes();
-                icaos.sortByDesignatorManufacturerAndRank();
                 m_completerStrings = icaos.toCompleterStrings(true, true, true);
             }
             return m_completerStrings;
@@ -190,7 +191,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!sGui || !sGui->hasWebDataServices()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)

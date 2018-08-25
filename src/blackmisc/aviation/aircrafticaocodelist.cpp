@@ -222,7 +222,7 @@ namespace BlackMisc
             CAircraftIcaoCodeList icaos(*this);
             if (sort) { icaos.sortByDesignatorAndRank(); }
 
-            // 3 steps to get a proper sort order
+            // 3 steps to get a proper sort order of the string list
             for (const CAircraftIcaoCode &icao : as_const(icaos))
             {
                 c.append(icao.getCombinedIcaoStringWithKey());
@@ -230,8 +230,8 @@ namespace BlackMisc
 
             if (withFamily)
             {
-                icaos = this->findWithFamily(true);
-                for (const CAircraftIcaoCode &icao : as_const(icaos))
+                const CAircraftIcaoCodeList icaosFamily = icaos.findWithFamily(true);
+                for (const CAircraftIcaoCode &icao : icaosFamily)
                 {
                     c.append(icao.getCombinedFamilyStringWithKey());
                 }

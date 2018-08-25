@@ -21,6 +21,7 @@
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/directories.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/connectionguard.h"
 
@@ -128,6 +129,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             BlackMisc::Simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
 
             //! Request own models
             void requestOwnModelsUpdate();
@@ -166,7 +168,7 @@ namespace BlackGui
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
             //! Directory selector for given simulator
-            static QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
+            QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component

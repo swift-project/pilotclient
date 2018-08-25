@@ -468,32 +468,30 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
-            QString s(hasDesignator() ? getDesignator() : "????");
-            if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
-            if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
-            return s.append(getDbKeyAsStringInParentheses(" "));
+            return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
         {
             if (!this->hasIataCode()) { return ""; }
-            QString s(getIataCode());
-            s = s.append(" [IATA]");
-            if (hasDesignator()) { s.append(" ").append(getDesignator()); }
-            if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
-            if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
-            return s.append(getDbKeyAsStringInParentheses(" "));
+            return this->getIataCode() % QStringLiteral(" [IATA") %
+                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QStringLiteral("")) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
         {
             if (!this->hasFamily()) { return ""; }
-            QString s(getFamily());
-            s = s.append(" [family]");
-            if (hasDesignator()) { s.append(" ").append(getDesignator()); }
-            if (hasManufacturer()) { s.append(" ").append(getManufacturer()); }
-            if (hasModelDescription()) { s.append(" ").append(getModelDescription()); }
-            return s.append(getDbKeyAsStringInParentheses(" "));
+            return this->getFamily() % QStringLiteral(" [family") %
+                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QStringLiteral("")) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         bool CAircraftIcaoCode::hasCompleteData() const
