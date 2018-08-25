@@ -16,14 +16,14 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
-#include "blackgui/settings/viewdirectorysettings.h"
 #include "blackgui/menus/menuaction.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/directories.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
-#include "blackgui/blackguiexport.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/propertyindex.h"
 
 #include <QAbstractItemView>
 #include <QFlags>
@@ -287,6 +287,9 @@ namespace BlackGui
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
             void setForceColumnsToMaxSize(bool force) { m_forceColumnsToMaxSize = force; }
 
+            //! Index of the directory we "remember"
+            void setSettingsDirectoryIndex(BlackMisc::CDirectories::ColumnIndex directoryIndex) { m_dirSettingsIndex = directoryIndex; }
+
         signals:
             //! Ask for new data from currently loaded data
             void requestUpdate();
@@ -498,8 +501,8 @@ namespace BlackGui
             CLoadIndicator *m_loadIndicator           = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
             QString        m_saveFileName;                                     //!< save file name (JSON)
-            QString        m_lastJsonDirectory;                                //!< remember last JSON directory
-            BlackMisc::CSetting<Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
+            BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         protected slots:

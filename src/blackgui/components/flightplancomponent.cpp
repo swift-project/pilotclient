@@ -7,25 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/webdataservices.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/components/flightplancomponent.h"
 #include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/network/user.h"
-#include "blackmisc/pq/pqstring.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
@@ -43,6 +43,7 @@
 #include <QTabBar>
 #include <QCompleter>
 #include <QStringBuilder>
+#include <QPointer>
 #include <Qt>
 
 using namespace BlackMisc;
@@ -502,6 +503,7 @@ namespace BlackGui
                     {
                         const CFlightPlan fp = variant.value<CFlightPlan>();
                         this->fillWithFlightPlanData(fp);
+                        this->updateDirectorySettings(fileName);
                     }
                     else
                     {
@@ -539,6 +541,7 @@ namespace BlackGui
                 if (ok)
                 {
                     m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Written " + fileName, true);
+                    this->updateDirectorySettings(fileName);
                 }
                 else
                 {
@@ -551,8 +554,8 @@ namespace BlackGui
 
         void CFlightPlanComponent::setSelcalInOwnAircraft()
         {
-            if (!sGui->getIContextOwnAircraft()) return;
-            if (!ui->frp_SelcalCode->hasValidCode()) return;
+            if (!sGui || !sGui->getIContextOwnAircraft()) { return; }
+            if (!ui->frp_SelcalCode->hasValidCode()) { return; }
             sGui->getIContextOwnAircraft()->updateSelcal(ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
         }
 
@@ -802,6 +805,16 @@ namespace BlackGui
             }
         }
 
+        void CFlightPlanComponent::updateDirectorySettings(const QString &fileOrDirectory)
+        {
+            if (fileOrDirectory.isEmpty()) { return; }
+
+            CDirectories swiftDirs = m_directories.get();
+            swiftDirs.setFlightPlanDirectory(CDirectories::fileNameToDirectory(fileOrDirectory));
+            CStatusMessage saveMsg = m_directories.setAndSave(swiftDirs);
+            CLogMessage::preformatted(saveMsg);
+        }
+
         void CFlightPlanComponent::initCompleters()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
@@ -818,7 +831,7 @@ namespace BlackGui
         QString CFlightPlanComponent::getDefaultFilename(bool load)
         {
             // some logic to find a useful default name
-            const QString dir = CDirectoryUtils::documentationDirectory();
+            const QString dir = m_directories.get().getFlightPlanDirectoryOrDefault();
             if (load) { return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix()); }
 
             // Save file path

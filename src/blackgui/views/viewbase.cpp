@@ -317,24 +317,21 @@ namespace BlackGui
         void CViewBaseNonTemplate::rememberLastJsonDirectory(const QString &selectedFileOrDir)
         {
             if (selectedFileOrDir.isEmpty()) { return; }
-            const QFileInfo fi(selectedFileOrDir);
-            if ((fi.isDir() && fi.exists()) || (fi.isFile() && fi.exists()))
-            {
-                // existing dir
-                m_lastJsonDirectory = fi.absolutePath();
-            }
+            const QString dir = CDirectories::fileNameToDirectory(selectedFileOrDir);
+            QDir d(dir);
+            if (!d.exists()) { return; }
+
+            // existing dir
+            CDirectories directories = m_dirSettings.get();
+            directories.setPropertyByIndex(m_dirSettingsIndex, CVariant::fromValue(dir));
+            const CStatusMessage msg = m_dirSettings.setAndSave(directories);
+            CLogMessage::preformatted(msg);
         }
 
         QString CViewBaseNonTemplate::getRememberedLastJsonDirectory() const
         {
-            if (!m_lastJsonDirectory.isEmpty()) { return m_lastJsonDirectory; }
-            QString dirCandidate = m_dirSettings.get();
-            const QFileInfo fi(dirCandidate);
-            if ((fi.isDir() && fi.exists()) || (fi.isFile() && fi.exists()))
-            {
-                return fi.absolutePath();
-            }
-            return QStringLiteral("");
+            const CDirectories directories = m_dirSettings.get();
+            return directories.propertyByIndex(m_dirSettingsIndex).toQString();
         }
 
         void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
@@ -567,7 +564,7 @@ namespace BlackGui
             }
 
             // Save file path
-            const QString dir = m_dirSettings.get();
+            const QString dir = m_dirSettings.get().propertyByIndex(m_dirSettingsIndex).toQString();
             QString name(m_saveFileName);
             if (name.isEmpty())
             {
@@ -1538,8 +1535,6 @@ namespace BlackGui
                     break;
                 }
 
-                this->rememberLastJsonDirectory(fileName);
-
                 try
                 {
                     const bool allowCacheFormat = this->allowCacheFileFormatJson();
@@ -1567,6 +1562,7 @@ namespace BlackGui
                     this->updateContainerMaybeAsync(container);
                     m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
                     this->jsonLoadedAndModelUpdated(container);
+                    this->rememberLastJsonDirectory(fileName);
                 }
                 catch (const CJsonException &ex)
                 {
@@ -1598,16 +1594,9 @@ namespace BlackGui
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
             const QString json(this->toJsonString()); // save as CVariant JSON
 
-            // keep directory for settings
-            const QFileInfo file(fileName);
-            const QDir fileDir(file.absoluteDir());
-            if (fileDir.exists())
-            {
-                m_dirSettings.setAndSave(fileDir.absolutePath());
-            }
-
             // save file
             const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
+            if (ok) { this->rememberLastJsonDirectory(fileName); }
             return ok ?
                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true) :
                    CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);

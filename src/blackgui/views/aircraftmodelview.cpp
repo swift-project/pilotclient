@@ -8,22 +8,23 @@
  */
 
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/menus/menuaction.h"
-#include "blackgui/shortcut.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/shortcut.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/directories.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/variant.h"
 
 #include <QAction>
@@ -49,6 +50,7 @@ namespace BlackGui
         {
             // default
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnAircraftModelClient, this));
+            this->setSettingsDirectoryIndex(CDirectories::IndexDirLastModelJsonOrDefault);
 
             // shortcut
             QShortcut *stashShortcut = new QShortcut(CShortcut::keyStash(), this);

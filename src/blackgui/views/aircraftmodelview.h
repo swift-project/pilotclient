@@ -30,7 +30,6 @@
 #include <Qt>
 
 class QDropEvent;
-class QWidget;
 
 namespace BlackMisc
 {

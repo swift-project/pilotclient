@@ -7,23 +7,22 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/dbstashcomponent.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/components/dbstashcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/models/aircraftmodellistmodel.h"
-#include "blackgui/views/aircraftmodelview.h"
-#include "blackgui/views/viewbase.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/verify.h"
 #include "dbstashcomponent.h"
 #include "ui_dbstashcomponent.h"
@@ -78,6 +77,7 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
+            ui->tvp_StashAircraftModels->setSettingsDirectoryIndex(CDirectories::IndexDirLastModelStashJsonOrDefault);
             this->enableButtonRow();
 
             connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::onPublishedModelsResponse, Qt::QueuedConnection);

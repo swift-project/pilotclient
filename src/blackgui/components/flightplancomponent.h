@@ -19,6 +19,8 @@
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/directories.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
@@ -65,6 +67,7 @@ namespace BlackGui
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
@@ -171,6 +174,9 @@ namespace BlackGui
 
             //! Guess some FP values/setting
             void anticipateValues();
+
+            //! Update the diretcory settings
+            void updateDirectorySettings(const QString &fileOrDirectory);
         };
     } // ns
 } // ns
