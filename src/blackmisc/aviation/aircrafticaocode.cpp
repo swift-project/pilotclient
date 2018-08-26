@@ -141,7 +141,11 @@ namespace BlackMisc
             {
                 // 0..65
                 score += 50; // same designator
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same designator: %1").arg(score));
+                if (log)
+                {
+                    static const QString s("Same designator: %1");
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
+                }
 
                 int scoreOld = score;
                 if (this->getRank() == 0) { score += 15; }
@@ -149,20 +153,23 @@ namespace BlackMisc
                 else if (this->getRank() < 10) { score += (10 - this->getRank()); }
                 if (score > scoreOld)
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added rank: %1").arg(score));
+                    static const QString s("Added rank: %1");
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
                 }
             }
             else
             {
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
+                    static const QString s("Added family: %1");
                     score += 30;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added family: %1").arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
+                    static const QString s("Added combined code: %1");
                     score += 20;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added combined code: %1").arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
@@ -178,12 +185,14 @@ namespace BlackMisc
             {
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
+                    static const QString s("Matches manufacturer '%1': %2");
                     score += 10;
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(this->getManufacturer()).arg(score));
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                    static const QString s("Contains manufacturer '%1': %2");
+                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(this->getManufacturer()).arg(score));
                     score += 5;
                 }
             }
@@ -191,8 +200,9 @@ namespace BlackMisc
             // 0..75 so far
             if (this->isMilitary() == otherCode.isMilitary())
             {
+                static const QString s("Matches military flag '%1': %2");
                 score += 10;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, s.arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             // 0..85
             return score;
@@ -388,9 +398,8 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getDesignatorManufacturer() const
         {
-            QString d(getDesignator());
-            if (this->hasManufacturer()) { d = d.append(" ").append(this->getManufacturer());}
-            return d.trimmed();
+            return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral(""));
         }
 
         bool CAircraftIcaoCode::hasManufacturer() const
