@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "aircraftmodelview.h"
+#include "viewbase.h"
+#include "aircraftmodelstatisticsdialog.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
-#include "blackgui/views/aircraftmodelview.h"
-#include "blackgui/views/viewbase.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -206,7 +207,7 @@ namespace BlackGui
                 {
                     if (valueVariant.canConvert<CAircraftModel>())
                     {
-                        CAircraftModel model = valueVariant.value<CAircraftModel>();
+                        const CAircraftModel model = valueVariant.value<CAircraftModel>();
                         if (!model.hasModelString()) { return; }
                         const CAircraftModelList models({model});
                         this->derivedModel()->replaceOrAddByModelString(models);
@@ -214,7 +215,7 @@ namespace BlackGui
                     }
                     else if (valueVariant.canConvert<CAircraftModelList>())
                     {
-                        CAircraftModelList models(valueVariant.value<CAircraftModelList>());
+                        const CAircraftModelList models(valueVariant.value<CAircraftModelList>());
                         if (models.isEmpty()) { return; }
                         this->derivedModel()->replaceOrAddByModelString(models);
                         return;
@@ -266,7 +267,7 @@ namespace BlackGui
                     }
                     else if (valueVariant.canConvert<CAirlineIcaoCode>())
                     {
-                        CAirlineIcaoCode airline = valueVariant.value<CAirlineIcaoCode>();
+                        const CAirlineIcaoCode airline = valueVariant.value<CAirlineIcaoCode>();
                         if (airline.validate().hasErrorMessages()) { return; }
                         emit requestHandlingOfStashDrop(airline); // I need to convert to stanard livery, which I can`t do here
                     }
@@ -288,7 +289,11 @@ namespace BlackGui
 
         void CAircraftModelView::customMenu(CMenuActions &menuActions)
         {
-            bool used = false;
+            // Statistics
+            menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
+
+            // Stash menus
+            bool addStashMenu = false;
             if (m_menus.testFlag(MenuCanStashModels))
             {
                 if (!m_menuFlagActions.contains(MenuCanStashModels))
@@ -308,7 +313,7 @@ namespace BlackGui
                 a->setEnabled(canStash);
                 a = menuActions.addActions(initMenuActions(MenuCanStashModels)).last();
                 a->setChecked(m_stashingClearsSelection);
-                used = true;
+                addStashMenu = true;
             }
             if (m_menus.testFlag(MenuHighlightStashed))
             {
@@ -322,9 +327,11 @@ namespace BlackGui
                 }
                 QAction *a = menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuHighlightStashed)).first();
                 a->setChecked(this->derivedModel()->highlightModelStrings());
-                used = true;
+                addStashMenu = true;
             }
-            if (used) { menuActions.addMenuStash();}
+            if (addStashMenu) { menuActions.addMenuStash(); }
+
+            // base class menus
             COrderableViewWithDbObjects::customMenu(menuActions);
         }
 
@@ -391,6 +398,17 @@ namespace BlackGui
                 this->clearSelection();
             }
             sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStringList(true).join(" ")));
+        }
+
+        void CAircraftModelView::displayModelStatisticsDialog()
+        {
+            if (!m_statisticsDialog)
+            {
+                m_statisticsDialog = new CAircraftModelStatisticsDialog(this);
+            }
+
+            m_statisticsDialog->analyzeModels(this->container());
+            m_statisticsDialog->exec();
         }
     } // namespace
 } // namespace

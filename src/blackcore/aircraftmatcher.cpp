@@ -120,7 +120,7 @@ namespace BlackCore
         if (log) { log->clear(); }
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m1.arg(startTime.toString(format)));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m2.arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m3.arg(modelSet.size()).arg(modelSet.extCoverageSummary(remoteAircraft.getModel())));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m3.arg(modelSet.size()).arg(modelSet.coverageSummaryForModel(remoteAircraft.getModel())));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m4.arg(setup.toQString(true)));
 
         // Before I really search I check some special conditions

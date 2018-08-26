@@ -352,7 +352,10 @@ namespace BlackMisc
 
             //! What kind of models are represented here?
             //! \remark checking for some criteria in the given model
-            QString extCoverageSummary(const CAircraftModel &checkModel, const QString &separator = "\n") const;
+            QString coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator = "\n") const;
+
+            //! A HTML summary of the data in the list
+            QString htmlStatistics() const;
         };
 
         //! Model per callsign

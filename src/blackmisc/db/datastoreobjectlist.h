@@ -30,6 +30,12 @@ namespace BlackMisc
             //! Object with key, notFound otherwise
             OBJ findByKey(KEYTYPE key, const OBJ &notFound = OBJ()) const;
 
+            //! Objects with DB key
+            CONTAINER findObjectsWithDbKey() const;
+
+            //! Objects without DB key
+            CONTAINER findObjectsWithoutDbKey() const;
+
             //! Object with max.key
             OBJ maxKeyObject() const;
 
@@ -65,6 +71,9 @@ namespace BlackMisc
 
             //! Number of entries with valid DB key
             int countWithValidDbKey() const;
+
+            //! Any object without key?
+            bool containsAnyObjectWithoutKey() const;
 
             //! From multiple JSON formats
             //! \remark supports native swift C++ format, DB format, and cache format

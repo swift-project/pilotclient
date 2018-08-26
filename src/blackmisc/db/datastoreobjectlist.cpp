@@ -47,6 +47,30 @@ namespace BlackMisc
             return this->container().findFirstByOrDefault(&OBJ::getDbKey, key, notFound);
         }
 
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findObjectsWithDbKey() const
+        {
+            CONTAINER objects;
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!obj.hasValidDbKey()) { continue; }
+                objects.push_back(obj);
+            }
+            return objects;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findObjectsWithoutDbKey() const
+        {
+            CONTAINER objects;
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (obj.hasValidDbKey()) { continue; }
+                objects.push_back(obj);
+            }
+            return objects;
+        }
+
         template <class OBJ, class CONTAINER, typename KEYTYPE>
         OBJ IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::maxKeyObject() const
         {
@@ -139,8 +163,8 @@ namespace BlackMisc
                 if (keys.contains(obj.getDbKey())) { continue; }
                 newValues.push_back(obj);
             }
-            int delta = this->container().size() - newValues.size();
-            this->container() = newValues;
+            const int delta = this->container().size() - newValues.size();
+            if (delta > 0) { this->container() = newValues; }
             return delta;
         }
 
@@ -195,6 +219,16 @@ namespace BlackMisc
                 if (obj.hasValidDbKey()) { count++; }
             }
             return count;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        bool IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::containsAnyObjectWithoutKey() const
+        {
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!obj.hasValidDbKey()) { return true; }
+            }
+            return false;
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>

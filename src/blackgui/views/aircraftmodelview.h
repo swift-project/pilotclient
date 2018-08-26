@@ -46,6 +46,8 @@ namespace BlackGui
     namespace Menus { class CMenuActions; }
     namespace Views
     {
+        class CAircraftModelStatisticsDialog;
+
         //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView :
             public COrderableViewWithDbObjects<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>
@@ -146,7 +148,11 @@ namespace BlackGui
             //! Stash shortcut pressed
             void requestedStash();
 
+            //! Dialog about model statistics
+            void displayModelStatisticsDialog();
+
             bool m_stashingClearsSelection = true; //!< stashing unselects
+            CAircraftModelStatisticsDialog *m_statisticsDialog = nullptr;
             BlackMisc::Simulation::CSimulatorInfo m_loadingRequiresSimulator; //!< simulator required when loading
         };
     } // ns

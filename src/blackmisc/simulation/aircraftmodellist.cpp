@@ -13,6 +13,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
@@ -26,6 +27,7 @@
 #include <tuple>
 
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -504,20 +506,18 @@ namespace BlackMisc
         int CAircraftModelList::removeIfNotMatchingSimulator(const CSimulatorInfo &needToMatch)
         {
             if (this->isEmpty()) { return 0; }
-            int c = 0;
-            for (auto it = this->begin(); it != this->end();)
+            const int oldSize = this->size();
+            CAircraftModelList models;
+            for (const CAircraftModel &model : *this)
             {
-                if (it->matchesSimulator(needToMatch))
+                if (model.matchesSimulator(needToMatch))
                 {
-                    ++it;
-                }
-                else
-                {
-                    c++;
-                    it = this->erase(it);
+                    models.push_back(model);
                 }
             }
-            return c;
+            const int diff = models.size() - oldSize;
+            if (diff > 0) { *this = models; }
+            return diff;
         }
 
         int CAircraftModelList::removeAllWithoutModelString()
@@ -848,7 +848,7 @@ namespace BlackMisc
             // normally prefer colors if there is no airline
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models").arg(this->size()));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->extCoverageSummary(remoteModel));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
 
             int c = 1;
             for (const CAircraftModel &model : *this)
@@ -1054,17 +1054,23 @@ namespace BlackMisc
             QString html;
             for (const CAircraftModel &model : *this)
             {
-                if (!html.isEmpty()) { html += "<br>"; }
-                html += model.asHtmlSummary(" ");
+                html += html.isEmpty() ?
+                        model.asHtmlSummary(" ") :
+                        QStringLiteral("<br>") % model.asHtmlSummary(" ");
             }
             return html;
         }
 
         QString CAircraftModelList::coverageSummary(const QString &separator) const
         {
+            if (this->isEmpty()) { return "no models"; } // avoid division by 0
+
+            const int dbEntries = this->countWithValidDbKey();
+            const double dbRatio = CMathUtils::round(static_cast<double>(100 * dbEntries) / this->size(), 1);
             return
                 QStringLiteral("Entries: ") % QString::number(this->size()) %
-                QStringLiteral(" | valid DB keys: ") % QString::number(this->countWithValidDbKey()) % separator %
+                QStringLiteral(" | valid DB keys: ") % QString::number(dbEntries) %
+                QStringLiteral(" (") % QString::number(dbRatio) % QStringLiteral("%)") % separator %
                 QStringLiteral("color liveries: ") % QString::number(this->countModelsWithColorLivery()) %
                 QStringLiteral(" | airline liveries: ") % QString::number(this->countModelsWithAirlineLivery()) % separator %
                 QStringLiteral("VTOL: ") % QString::number(this->countVtolAircraft()) %
@@ -1075,7 +1081,7 @@ namespace BlackMisc
                 QStringLiteral("Simulators: ") % this->countPerSimulator().toQString();
         }
 
-        QString CAircraftModelList::extCoverageSummary(const CAircraftModel &checkModel, const QString &separator) const
+        QString CAircraftModelList::coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator) const
         {
             const bool combinedCodeForModel = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
             const bool airlineForModel = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
@@ -1086,6 +1092,19 @@ namespace BlackMisc
                        QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airlineForModel) :
                        QStringLiteral("")
                    );
+        }
+
+        QString CAircraftModelList::htmlStatistics() const
+        {
+            const bool notOnlyDb = this->containsAnyObjectWithoutKey();
+            QString stats = this->coverageSummary("<br>");
+            if (notOnlyDb)
+            {
+                const CAircraftModelList dbModels = this->findObjectsWithDbKey();
+                stats += QStringLiteral("<br><br>DB objects:<br>---------<br>") %
+                         dbModels.coverageSummary("<br>");
+            }
+            return stats;
         }
     } // namespace
 } // namespace

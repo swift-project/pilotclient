@@ -26,6 +26,7 @@ SOURCES += $$PWD/menus/*.cpp
 
 HEADERS += $$PWD/views/*.h
 SOURCES += $$PWD/views/*.cpp
+FORMS   += $$PWD/views/*.ui
 
 HEADERS += $$PWD/components/*.h
 HEADERS += $$PWD/settings/*.h
