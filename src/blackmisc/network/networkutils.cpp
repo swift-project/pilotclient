@@ -471,7 +471,7 @@ namespace BlackMisc
         QString CNetworkUtils::createNetworkAccessManagerReport(const QNetworkAccessManager *qam)
         {
             static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
-            static const QString info("Accessible: '%1' (%2) config: '%3'");
+            static const QString info("Accessible: '%1' (%2) config: %3");
 
             const bool accessible = qam->networkAccessible() == QNetworkAccessManager::Accessible;
             return info.arg(boolToYesNo(accessible), enumAccessible.valueToKey(qam->networkAccessible()), CNetworkUtils::networkConfigurationToString(qam->configuration()));
