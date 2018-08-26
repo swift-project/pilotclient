@@ -56,7 +56,7 @@ namespace BlackGui
         m_input->setMaximumWidth(150);
         m_marginMenuAction = new QWidgetAction(this);
         m_marginMenuAction->setDefaultWidget(m_input);
-        m_fontMenu = new CFontMenu(this, true, Qt::WidgetWithChildrenShortcut);
+        m_fontMenu = new CFontMenu(this, Qt::WidgetWithChildrenShortcut);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu);

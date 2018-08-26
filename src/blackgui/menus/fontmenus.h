@@ -33,7 +33,7 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CFontMenu(QWidget *widget, bool separator = true, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
+            CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
 
             //! Log.categories
             static const BlackMisc::CLogCategoryList &getLogCategories();

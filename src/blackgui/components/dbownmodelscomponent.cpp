@@ -49,7 +49,7 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelMappingTool);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
@@ -73,7 +73,7 @@ namespace BlackGui
             }
 
             // menu
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this));
         }
 
         CDbOwnModelsComponent::~CDbOwnModelsComponent()

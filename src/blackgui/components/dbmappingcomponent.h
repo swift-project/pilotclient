@@ -111,7 +111,7 @@ namespace BlackGui
             bool canAddToModelSetTab() const;
 
             //! Current model view
-            BlackGui::Views::CAircraftModelView *currentModelView() const;
+            Views::CAircraftModelView *currentModelView() const;
 
             //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
@@ -346,8 +346,8 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
+                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) :
+                    BlackGui::Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -366,14 +366,14 @@ namespace BlackGui
             //! -# toggle stash auto filtering
             //! -# show changed attributes
             //! \note This is a specific menu for the CDbMappingComponent component
-            class CStashToolsMenu : public BlackGui::Menus::IMenuDelegate
+            class CStashToolsMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator = true);
+                CStashToolsMenu(CDbMappingComponent *mappingComponent);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -388,12 +388,12 @@ namespace BlackGui
             };
 
             //! Menu for own model sets
-            class COwnModelSetMenu : public BlackGui::Menus::IMenuDelegate
+            class COwnModelSetMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                COwnModelSetMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
+                COwnModelSetMenu(CDbMappingComponent *mappingComponent) :
+                    Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -407,16 +407,16 @@ namespace BlackGui
             };
 
             //! Apply DB data to selected models
-            class CApplyDbDataMenu : public BlackGui::Menus::IMenuDelegate
+            class CApplyDbDataMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CApplyDbDataMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
+                CApplyDbDataMenu(CDbMappingComponent *mappingComponent) :
+                    Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -427,14 +427,14 @@ namespace BlackGui
 
             //! Merge with vPilot data
             //! \deprecated vPilot menus will be removed in the future
-            class CMergeWithVPilotMenu : public BlackGui::Menus::IMenuDelegate
+            class CMergeWithVPilotMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true);
+                CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;

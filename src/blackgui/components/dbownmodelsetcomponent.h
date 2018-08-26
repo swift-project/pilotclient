@@ -177,8 +177,8 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent, bool separator = true) :
-                    Menus::IMenuDelegate(ownModelSetComponent, separator)
+                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent) :
+                    Menus::IMenuDelegate(ownModelSetComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

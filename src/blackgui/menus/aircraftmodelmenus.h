@@ -32,8 +32,8 @@ namespace BlackGui
 
         public:
             //! Constructor
-            IAircraftModelViewMenu(BlackGui::Views::CAircraftModelView *modelView, bool separator = true) :
-                IMenuDelegate(modelView, separator)
+            IAircraftModelViewMenu(BlackGui::Views::CAircraftModelView *modelView) :
+                IMenuDelegate(modelView)
             {}
 
             //! Log.categories
@@ -60,7 +60,7 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CShowSimulatorFileMenu(BlackGui::Views::CAircraftModelView *modelView, BlackGui::COverlayMessagesFrame *messageFrame, bool separator = true);
+            CShowSimulatorFileMenu(Views::CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame);
 
             //! Log.categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -89,7 +89,7 @@ namespace BlackGui
             using IAircraftModelViewMenu::IAircraftModelViewMenu;
 
             //! Constructor
-            CConsolidateWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
+            CConsolidateWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget);
 
             //! Log.categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -121,7 +121,7 @@ namespace BlackGui
             using IAircraftModelViewMenu::IAircraftModelViewMenu;
 
             //! Constructor
-            CConsolidateWithSimulatorModels(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
+            CConsolidateWithSimulatorModels(Views::CAircraftModelView *modelView, QObject *modelsTarget);
 
             //! Log.categories
             static const BlackMisc::CLogCategoryList &getLogCategories();

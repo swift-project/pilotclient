@@ -81,7 +81,7 @@ namespace BlackGui
             //! Is menu?
             bool isSubMenu() const { return m_isMenu; }
 
-            //! Is separator
+            //! Is separator?
             bool isSeparator() const { return m_title == "_SEP_"; }
 
             //! Is menu?
@@ -118,20 +118,24 @@ namespace BlackGui
             //! Path converter into separator
             static const QString &pathSeparator() { static const QString p("_SEPARATOR"); return p; }
 
-            //! Model set
-            static const QString &pathModelSet()  { static const QString p("Custom.10.Model/Model set"); return p; }
-
-            //! Model set, new set
-            static const QString &pathModelSetNew()  { static const QString p("Custom.10.Model/Model set/New set"); return p; }
 
             //! Simulator sub menu
-            static const QString &pathSimulator()  { static const QString p("Custom.11.Simulator/Simulator"); return p; }
+            static const QString &pathSimulator()  { static const QString p("Custom.10.Simulator/Simulator"); return p; }
 
             //! Simulator sub menu reload models
-            static const QString &pathSimulatorModelsReload()  { static const QString p("Custom.11.Simulator/Simulator/Reload models"); return p; }
+            static const QString &pathSimulatorModelsReload()  { static const QString p("Custom.10.Simulator/Simulator/Reload models"); return p; }
 
             //! Simulator sub menu reload models
-            static const QString &pathSimulatorModelsClearCache()  { static const QString p("Custom.11.Simulator/Simulator/Clear model caches"); return p; }
+            static const QString &pathSimulatorModelsClearCache()  { static const QString p("Custom.10.Simulator/Simulator/Clear model caches"); return p; }
+
+            //! Model
+            static const QString &pathModel()  { static const QString p("Custom.11.Model"); return p; }
+
+            //! Model set
+            static const QString &pathModelSet()  { static const QString p("Custom.11.Model/Model set"); return p; }
+
+            //! Model set, new set
+            static const QString &pathModelSetNew()  { static const QString p("Custom.11.Model/Model set/New set"); return p; }
 
             //! Stash sub menu
             static const QString &pathStash()  { static const QString p("Custom.12.Stash/Stash"); return p; }

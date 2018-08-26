@@ -51,8 +51,7 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            IMenuDelegate(QWidget *parent = nullptr, bool separator = false) :
-                QObject(parent), m_separator(separator) {}
+            IMenuDelegate(QWidget *parent = nullptr) : QObject(parent) {}
 
             //! Delegate down one level
             void nestedCustomMenu(CMenuActions &menuActions) const
@@ -70,7 +69,6 @@ namespace BlackGui
             }
 
             IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
-            bool           m_separator      = false;   //!< at end, terminate with separator
         };
     } // ns
 } // ns

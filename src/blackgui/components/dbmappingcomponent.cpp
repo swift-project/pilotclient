@@ -83,18 +83,18 @@ namespace BlackGui
             ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
             // model menus
-            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this, true));
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CMergeWithVPilotMenu(this));
-            ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this, true));
-            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CStashToolsMenu(this, false));
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this));
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CStashToolsMenu(this));
 
-            ui->comp_OwnModelSet->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnModelSet->view(), this, true));
-            ui->comp_OwnModelSet->view()->setCustomMenu(new CStashToolsMenu(this, true));
+            ui->comp_OwnModelSet->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnModelSet->view(), this));
+            ui->comp_OwnModelSet->view()->setCustomMenu(new CStashToolsMenu(this));
 
-            ui->comp_StashAircraft->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_StashAircraft->view(), this, true));
-            ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this, true));
-            ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this, true));
-            ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this, false));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_StashAircraft->view(), this));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this));
+            ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this));
 
             // connects
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
@@ -159,8 +159,8 @@ namespace BlackGui
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::requestVPilotDataUpdate);
 
-                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
-                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashToolsMenu(this, false));
+                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this));
+                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashToolsMenu(this));
                 ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
 
                 ui->tvp_AircraftModelsForVPilot->addFilterDialog();
@@ -909,8 +909,8 @@ namespace BlackGui
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }
 
-        CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator) :
-            BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
+        CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent) :
+            Menus::IMenuDelegate(mappingComponent)
         {}
 
         void CDbMappingComponent::CStashToolsMenu::customMenu(CMenuActions &menuActions)
@@ -1009,8 +1009,8 @@ namespace BlackGui
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }
 
-        CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent, bool separator) :
-            IMenuDelegate(mappingComponent, separator)
+        CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent) :
+            IMenuDelegate(mappingComponent)
         {
             Q_ASSERT_X(mappingComponent, Q_FUNC_INFO, "Missing vPilot reader");
         }

@@ -71,8 +71,8 @@ namespace BlackGui
             return mv->selectedObjects();
         }
 
-        CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame, bool separator) :
-            IAircraftModelViewMenu(modelView, separator), m_messageFrame(messageFrame)
+        CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame) :
+            IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
         { }
 
         const CLogCategoryList &CShowSimulatorFileMenu::getLogCategories()
@@ -158,8 +158,8 @@ namespace BlackGui
 
         // --------------------------------- with DB data ---------------------------------
 
-        CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
-            IAircraftModelViewMenu(modelView, separator), m_modelsTarget(modelsTarget)
+        CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget) :
+            IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
         {
             // it can be the target is not yet known
             if (modelsTarget)
@@ -265,8 +265,8 @@ namespace BlackGui
 
         // --------------------------------- with simulator models ---------------------------------
 
-        CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
-            IAircraftModelViewMenu(modelView, separator), m_modelsTarget(modelsTarget)
+        CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget) :
+            IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
         {
             // it can be the target is not yet known
             if (modelsTarget)

@@ -172,16 +172,16 @@ namespace BlackGui
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
-            class CLoadModelsMenu : public BlackGui::Menus::IMenuDelegate
+            class CLoadModelsMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent, bool separator = true) :
-                    BlackGui::Menus::IMenuDelegate(ownModelsComponent, separator)
+                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent) :
+                    BlackGui::Menus::IMenuDelegate(ownModelsComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
                 QList<QAction *> m_loadActions;       //!< load actions
