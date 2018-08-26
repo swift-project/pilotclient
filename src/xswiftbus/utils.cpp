@@ -16,6 +16,7 @@
 #include "utils.h"
 #include <XPMPMultiplayerCSL.h>
 #include <XPLM/XPLMUtilities.h>
+#include <XPLM/XPLMPlugin.h>
 #include <string>
 #include <sstream>
 
