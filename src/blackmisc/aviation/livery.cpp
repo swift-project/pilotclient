@@ -177,6 +177,11 @@ namespace BlackMisc
             return m_airline.hasValidDesignator();
         }
 
+        bool CLivery::hasAirlineName() const
+        {
+            return m_airline.hasName();
+        }
+
         bool CLivery::hasCombinedCode() const
         {
             Q_ASSERT_X(!m_combinedCode.startsWith("." + standardLiveryMarker()), Q_FUNC_INFO, "illegal combined code");
@@ -412,7 +417,7 @@ namespace BlackMisc
                 // 0..25 based on color distance
                 // 0..10 based on mil.flag
                 // same ICAO at least means 30, max 50
-                score = this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log) / 2;
+                score = qRound(0.5 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode(), log));
                 score += 25 * colorMultiplier;
                 CMatchingUtils::addLogDetailsToList(log, *this, QString("2 airline liveries, color multiplier %1: %2").arg(colorMultiplier).arg(score));
                 if (this->isMilitary() == otherLivery.isMilitary())

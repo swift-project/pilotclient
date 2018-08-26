@@ -155,6 +155,9 @@ namespace BlackMisc
             //! Airline available?
             bool hasValidAirlineDesignator() const;
 
+            //! Has airline name?
+            bool hasAirlineName() const;
+
             //! Livery combined code available?
             bool hasCombinedCode() const;
 

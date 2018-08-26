@@ -57,7 +57,7 @@ namespace BlackMisc
 
         CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const
         {
-            QString icaoDesignator(icao.trimmed().toUpper());
+            const QString icaoDesignator(icao.trimmed().toUpper());
             if (icaoDesignator.isEmpty()) { return CLivery(); }
             return this->findFirstByOrDefault([&](const CLivery & livery)
             {
@@ -163,7 +163,7 @@ namespace BlackMisc
             // by combined code
             if (liveryPattern.hasCombinedCode())
             {
-                QString cc(liveryPattern.getCombinedCode());
+                const QString cc(liveryPattern.getCombinedCode());
                 const CLivery l(this->findByCombinedCode(cc));
                 if (l.hasCompleteData()) { return l; }
             }
@@ -174,6 +174,21 @@ namespace BlackMisc
                 const QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
                 const CLivery l(this->findStdLiveryByAirlineIcaoVDesignator(icao));
                 if (l.hasCompleteData()) { return l; }
+
+                // lenient search by assuming that a virtual airline is not annotated by "V"
+                // VHDU not found, but HDU
+                const CLiveryList liveries = this->findByAirlineIcaoDesignator(icao);
+                if (liveries.size() == 1) { return liveries.front(); }
+                if (liveries.size() > 1)
+                {
+                    if (liveryPattern.hasAirlineName())
+                    {
+                        // reduce by name
+                        const CLiveryList liveriesByName = liveries.findStdLiveriesBySimplifiedAirlineName(liveryPattern.getAirlineName());
+                        if (!liveriesByName.isEmpty()) {return liveriesByName.front(); }
+                    }
+                    return liveries.front();
+                }
             }
 
             // lenient search by name contained (slow)

@@ -66,7 +66,7 @@ namespace BlackMisc
                 TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
                 TypeDatabaseEntry,             //!< used along with mapping definition
                 TypeManuallySet,               //!< manually set, e.g. from GUI
-                TypeOwnSimulatorModel,         //!< represents own simulator model
+                TypeOwnSimulatorModel,         //!< represents own simulator model (AI model, model on disk)
                 TypeVPilotRuleBased,           //!< based on a vPilot rule
                 TypeTerrainProbe               //!< peudo aircraft used for terrain probing (FSX)
             };
