@@ -1145,4 +1145,10 @@ namespace BlackCore
         this->stopImpl();
         m_isRunning = false;
     }
+
+    void ISimulatorListener::check()
+    {
+        if (!m_isRunning) { return; }
+        this->checkImpl();
+    }
 } // namespace

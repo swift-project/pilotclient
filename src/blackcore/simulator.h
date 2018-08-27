@@ -584,15 +584,15 @@ namespace BlackCore
         //! Info about the backend system (if available)
         virtual QString backendInfo() const;
 
-        //! Overall (swift) application shutting down
-        virtual bool isShuttingDown() const;
-
     public slots:
         //! Start listening for the simulator to start.
         void start();
 
         //! Stops listening.
         void stop();
+
+        //! Check simulator availability
+        void check();
 
     signals:
         //! Emitted when the listener discovers the simulator running.
@@ -603,11 +603,17 @@ namespace BlackCore
         //! \sa ISimulatorFactory::createListener().
         ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+        //! Overall (swift) application shutting down
+        virtual bool isShuttingDown() const;
+
         //! Plugin specific implementation to start listener
         virtual void startImpl() = 0;
 
         //! Plugin specific implementation to stop listener
         virtual void stopImpl() = 0;
+
+        //! Plugin specific implementation to check
+        virtual void checkImpl() = 0;
 
     private:
         BlackMisc::Simulation::CSimulatorPluginInfo m_info;
@@ -620,6 +626,11 @@ namespace BlackCore
     public:
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
+
+        //! Not copyable @{
+        ISimulatorFactory(const ISimulatorFactory &) = delete;
+        ISimulatorFactory &operator=(const ISimulatorFactory &) = delete;
+        //! @}
 
         //! Create a new instance of a driver
         //! \param info                      metadata about simulator
@@ -638,6 +649,10 @@ namespace BlackCore
 
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) = 0;
+
+    protected:
+        //! Default ctor
+        ISimulatorFactory() {}
     };
 } // namespace
 
