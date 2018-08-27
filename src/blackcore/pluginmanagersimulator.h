@@ -55,6 +55,9 @@ namespace BlackCore
         //! Get all simulator driver plugins
         BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const;
 
+        //! Check if simulator is connected
+        int checkAvailableListeners();
+
         //! \copydoc BlackCore::IPluginManager::collectPlugins()
         virtual void collectPlugins() override;
 

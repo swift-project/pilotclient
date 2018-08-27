@@ -41,7 +41,7 @@ namespace BlackCore
             ISimulatorFactory *factory = getFactory(pluginId);
             if (!factory)
             {
-                CLogMessage(this).warning("Could not load plugin %1.") << pluginId;
+                CLogMessage(this).warning("Could not load plugin '%1'.") << pluginId;
                 m_plugins.remove(pluginId);
                 return nullptr;
             }
@@ -69,6 +69,20 @@ namespace BlackCore
             list.push_back(i.info);
         }
         return list;
+    }
+
+    int CPluginManagerSimulator::checkAvailableListeners()
+    {
+        if (m_plugins.isEmpty()) { return 0; }
+
+        int c = 0;
+        for (PluginExtended &pi : m_plugins.values())
+        {
+            if (!pi.listener) { continue; }
+            pi.listener->check();
+            c++;
+        }
+        return c;
     }
 
     void CPluginManagerSimulator::collectPlugins()
