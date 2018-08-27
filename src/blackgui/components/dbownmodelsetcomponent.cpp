@@ -73,6 +73,7 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
+            ui->le_Simulator->setText(simulator.toQString(true));
 
             //! \fixme maybe it would be better to set those in stylesheet file
             ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
@@ -263,8 +264,9 @@ namespace BlackGui
             ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
             if (canSave)
             {
+                static const QString ss("save %1");
                 this->setSaveFileName(this->getModelSetSimulator());
-                ui->pb_SaveAsSetForSimulator->setText("save for " + this->getModelSetSimulator().toQString(true));
+                ui->pb_SaveAsSetForSimulator->setText(ss.arg(this->getModelSetSimulator().toQString(true)));
             }
             else
             {

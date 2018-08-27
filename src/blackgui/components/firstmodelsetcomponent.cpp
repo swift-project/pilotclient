@@ -162,7 +162,7 @@ namespace BlackGui
                 bool loadOnlyIfNotEmpty = true;
                 if (m_modelsDialog->getOwnModelsCount() > 0)
                 {
-                    const QMessageBox::StandardButton reply = QMessageBox::warning(this->mainWindow(), "Model loading", "Reload the models?\nThe xisting cache data will we overridden.", QMessageBox::Yes | QMessageBox::No);
+                    const QMessageBox::StandardButton reply = QMessageBox::warning(this->mainWindow(), "Model loading", "Reload the models?\nThe existing cache data will we overridden.", QMessageBox::Yes | QMessageBox::No);
                     if (reply == QMessageBox::Yes) { loadOnlyIfNotEmpty = false; }
                 }
                 m_modelsDialog->requestModelsInBackground(simulator, loadOnlyIfNotEmpty);

@@ -64,6 +64,7 @@ namespace BlackGui
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             if (simulator.isSingleSimulator())
             {
+                ui->le_Simulator->setText(simulator.toQString(true));
                 m_simulator = simulator;
                 const bool success = this->initModelLoader(simulator, IAircraftModelLoader::CacheOnly);
                 if (!success)
