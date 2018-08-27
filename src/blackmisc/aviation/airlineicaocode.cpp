@@ -302,10 +302,9 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
-            QString s(getVDesignator());
-            if (s.isEmpty()) s = "????";
-            if (hasName()) { s = s.append(" ").append(getName()); }
-            return s.append(this->getDbKeyAsStringInParentheses(" "));
+            return (this->hasValidDesignator() ? this->getVDesignator() : QStringLiteral("")) %
+                   (this->hasName() ? QStringLiteral(" ") % m_name : QStringLiteral("")) %
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const

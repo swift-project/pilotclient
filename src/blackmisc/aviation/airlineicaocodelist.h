@@ -101,6 +101,12 @@ namespace BlackMisc
             //! String list for completion by name
             QStringList toNameCompleterStrings(bool sort = true) const;
 
+            //! All designators
+            QSet<QString> allDesignators() const;
+
+            //! All designators
+            QSet<QString> allVDesignators() const;
+
             //! Contains given designator?
             bool containsDesignator(const QString &designator) const;
 

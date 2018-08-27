@@ -9,8 +9,6 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/math/mathutils.h"
@@ -732,6 +730,24 @@ namespace BlackMisc
             return distributors;
         }
 
+        CAircraftIcaoCodeList CAircraftModelList::getAircraftIcaoCodesFromDb() const
+        {
+            if (this->isEmpty()) { return CAircraftIcaoCodeList(); }
+            QSet<int> keys;
+            CAircraftIcaoCodeList icaos;
+            for (const CAircraftModel &model : *this)
+            {
+                const CAircraftIcaoCode icao = model.getAircraftIcaoCode();
+                if (!icao.hasValidDbKey()) { continue; }
+
+                const int key = icao.getDbKey();
+                if (keys.contains(key)) { continue; }
+                icaos.push_back(icao);
+                keys.insert(key);
+            }
+            return icaos;
+        }
+
         QSet<QString> CAircraftModelList::getAircraftDesignators() const
         {
             QSet<QString> designators;
@@ -763,6 +779,24 @@ namespace BlackMisc
             {
                 if (model.getAirlineIcaoCode() != airlineCode) { continue; }
                 icaos.push_back(model.getAircraftIcaoCode());
+            }
+            return icaos;
+        }
+
+        CAirlineIcaoCodeList CAircraftModelList::getAirlineIcaoCodesFromDb() const
+        {
+            if (this->isEmpty()) { return CAirlineIcaoCodeList(); }
+            QSet<int> keys;
+            CAirlineIcaoCodeList icaos;
+            for (const CAircraftModel &model : *this)
+            {
+                const CAirlineIcaoCode icao = model.getAirlineIcaoCode();
+                if (!icao.hasValidDbKey()) { continue; }
+
+                const int key = icao.getDbKey();
+                if (keys.contains(key)) { continue; }
+                icaos.push_back(icao);
+                keys.insert(key);
             }
             return icaos;
         }
@@ -1094,15 +1128,38 @@ namespace BlackMisc
                    );
         }
 
-        QString CAircraftModelList::htmlStatistics() const
+        QString CAircraftModelList::htmlStatistics(bool aircraftStats, bool airlineStats) const
         {
+            static const QString sep("<br>");
             const bool notOnlyDb = this->containsAnyObjectWithoutKey();
-            QString stats = this->coverageSummary("<br>");
+            QString stats = this->coverageSummary(sep);
+            if (aircraftStats)
+            {
+                const CAircraftIcaoCodeList icaos = this->getAircraftIcaoCodesFromDb();
+                QStringList designators(icaos.allDesignators().toList());
+                designators.sort();
+                stats += sep % sep %
+                         QStringLiteral("Aircraft ICAOs from DB: ") % sep %
+                         designators.join(", ");
+            }
+
+            if (airlineStats)
+            {
+                const CAirlineIcaoCodeList icaos = this->getAirlineIcaoCodesFromDb();
+                const QStringList designators = icaos.toIcaoDesignatorCompleterStrings();
+                stats += sep % sep %
+                         QStringLiteral("Airline ICAOs from DB: ") % sep %
+                         designators.join(", ");
+            }
+
             if (notOnlyDb)
             {
                 const CAircraftModelList dbModels = this->findObjectsWithDbKey();
-                stats += QStringLiteral("<br><br>DB objects:<br>---------<br>") %
-                         dbModels.coverageSummary("<br>");
+                stats += sep %
+                         sep %
+                         QStringLiteral("DB objects:<br>---------") %
+                         sep %
+                         dbModels.htmlStatistics(false, false);
             }
             return stats;
         }

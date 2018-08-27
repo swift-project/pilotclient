@@ -250,13 +250,25 @@ namespace BlackMisc
             return c;
         }
 
-        QSet<QString> CAircraftIcaoCodeList::allIcaoCodes(bool onlyKnownDesignators) const
+        QSet<QString> CAircraftIcaoCodeList::allDesignators(bool noUnspecified) const
         {
             QSet<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
-                if (onlyKnownDesignators && !icao.hasKnownDesignator()) { continue; }
+                if (noUnspecified && !icao.hasKnownDesignator()) { continue; }
                 const QString d(icao.getDesignator());
+                c.insert(d);
+            }
+            return c;
+        }
+
+        QSet<QString> CAircraftIcaoCodeList::allDesignatorsAndKey(bool noUnspecified) const
+        {
+            QSet<QString> c;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (noUnspecified && !icao.hasKnownDesignator()) { continue; }
+                const QString d(icao.getDesignatorDbKey());
                 c.insert(d);
             }
             return c;

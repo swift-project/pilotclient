@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
@@ -282,6 +283,9 @@ namespace BlackMisc
             //! All distributors used with models of this list
             CDistributorList getDistributors(bool onlyDbDistributors = true) const;
 
+            //! Aircraft ICAO codes from DB, without duplicates
+            Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesFromDb() const;
+
             //! Aircraft designators
             QSet<QString> getAircraftDesignators() const;
 
@@ -292,6 +296,9 @@ namespace BlackMisc
             //! Aircraft ICAO codes for airline
             //! \remark gives all aircraft flown by an airline
             Aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const Aviation::CAirlineIcaoCode &airlineCode) const;
+
+            //! Airline ICAO codes from DB, without duplicates
+            Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesFromDb() const;
 
             //! Airline designators
             QSet<QString> getAirlineDesignators() const;
@@ -355,7 +362,7 @@ namespace BlackMisc
             QString coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator = "\n") const;
 
             //! A HTML summary of the data in the list
-            QString htmlStatistics() const;
+            QString htmlStatistics(bool aircraftStats, bool airlineStats) const;
         };
 
         //! Model per callsign

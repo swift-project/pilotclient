@@ -273,6 +273,28 @@ namespace BlackMisc
             return c;
         }
 
+        QSet<QString> CAirlineIcaoCodeList::allDesignators() const
+        {
+            QSet<QString> designators;
+            for (const CAirlineIcaoCode &icao : *this)
+            {
+                if (!icao.hasValidDesignator()) { continue; }
+                designators.insert(icao.getDesignator());
+            }
+            return designators;
+        }
+
+        QSet<QString> CAirlineIcaoCodeList::allVDesignators() const
+        {
+            QSet<QString> designators;
+            for (const CAirlineIcaoCode &icao : *this)
+            {
+                if (!icao.hasValidDesignator()) { continue; }
+                designators.insert(icao.getVDesignator());
+            }
+            return designators;
+        }
+
         bool CAirlineIcaoCodeList::containsDesignator(const QString &designator) const
         {
             if (designator.isEmpty()) { return false; }

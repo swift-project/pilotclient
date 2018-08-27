@@ -122,7 +122,10 @@ namespace BlackMisc
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
 
             //! All ICAO codes, no duplicates
-            QSet<QString> allIcaoCodes(bool noUnspecified = true) const;
+            QSet<QString> allDesignators(bool noUnspecified = true) const;
+
+            //! All ICAO codes and DB key, no duplicates
+            QSet<QString> allDesignatorsAndKey(bool noUnspecified = true) const;
 
             //! All families, no duplicates
             QSet<QString> allFamilies() const;
