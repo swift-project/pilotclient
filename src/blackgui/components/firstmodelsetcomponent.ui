@@ -61,19 +61,10 @@
       <item row="0" column="1" alignment="Qt::AlignLeft">
        <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector"/>
       </item>
-      <item row="4" column="1" colspan="4">
-       <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributors">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>200</height>
-         </size>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_ModelSet">
+        <property name="text">
+         <string>Model set</string>
         </property>
        </widget>
       </item>
@@ -84,23 +75,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_ModelSetInfo">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>model set info</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_ModelSet">
-        <property name="text">
-         <string>Model set</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="le_ModelDirectories">
         <property name="readOnly">
@@ -108,6 +82,16 @@
         </property>
         <property name="placeholderText">
          <string>model directory from settings</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_ModelSetInfo">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>model set info</string>
         </property>
        </widget>
       </item>
@@ -135,13 +119,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_Distributor">
-        <property name="text">
-         <string>Distributors:</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_Simulator">
         <property name="text">
@@ -156,16 +133,10 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pb_ModelSet">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="pb_CreateModelSet">
         <property name="text">
-         <string>display</string>
+         <string>create</string>
         </property>
        </widget>
       </item>
@@ -186,11 +157,42 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="pb_CreateModelSet">
-        <property name="text">
-         <string>create</string>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pb_ModelSet">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
+        <property name="text">
+         <string>display</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="4">
+       <widget class="QGroupBox" name="gb_Distributors">
+        <property name="title">
+         <string>Distributions</string>
+        </property>
+        <layout class="QVBoxLayout" name="vl_Distributors">
+         <item>
+          <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributors">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>200</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

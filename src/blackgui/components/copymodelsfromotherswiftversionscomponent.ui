@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
+    <width>583</width>
     <height>495</height>
    </rect>
   </property>
@@ -89,14 +89,14 @@
       <item>
        <widget class="QCheckBox" name="cb_Silent">
         <property name="text">
-         <string>silent mode</string>
+         <string>silent mode (no dialogs)</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_StartCopying">
         <property name="text">
-         <string>start</string>
+         <string>start copy</string>
         </property>
        </widget>
       </item>
