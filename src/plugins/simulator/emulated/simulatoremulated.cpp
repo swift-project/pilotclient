@@ -443,10 +443,10 @@ namespace BlackSimPlugin
         void CSimulatorEmulatedListener::startImpl()
         {
             if (this->isShuttingDown()) { return; }
-            const QPointer<CSimulatorEmulatedListener> guard(this);
+            const QPointer<CSimulatorEmulatedListener> myself(this);
             QTimer::singleShot(2000, this, [ = ]
             {
-                if (!guard) { return; }
+                if (!myself) { return; }
                 Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
                 emit this->simulatorStarted(this->getPluginInfo());
             });

@@ -43,6 +43,7 @@
 #include <QFlags>
 #include <QObject>
 #include <QString>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -586,12 +587,15 @@ namespace BlackCore
 
     public slots:
         //! Start listening for the simulator to start.
+        //! \threadsafe
         void start();
 
         //! Stops listening.
+        //! \threadsafe
         void stop();
 
         //! Check simulator availability
+        //! \threadsafe
         void check();
 
     signals:
@@ -617,7 +621,7 @@ namespace BlackCore
 
     private:
         BlackMisc::Simulation::CSimulatorPluginInfo m_info;
-        bool m_isRunning = false;
+        std::atomic_bool m_isRunning { false };
     };
 
     //! Factory pattern class to create instances of ISimulator

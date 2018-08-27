@@ -12,6 +12,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
 
 #include <QFlag>
@@ -1135,6 +1136,14 @@ namespace BlackCore
     void ISimulatorListener::start()
     {
         if (m_isRunning) { return; }
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            // call in correct thread
+            QPointer<ISimulatorListener> myself(this);
+            QTimer::singleShot(0, this, [ = ] { if (myself) { this->start(); }});
+            return;
+        }
+
         m_isRunning = true;
         this->startImpl();
     }
@@ -1142,13 +1151,29 @@ namespace BlackCore
     void ISimulatorListener::stop()
     {
         if (!m_isRunning) { return; }
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            // call in correct thread
+            QPointer<ISimulatorListener> myself(this);
+            QTimer::singleShot(0, this, [ = ] { if (myself) { this->stop(); }});
+            return;
+        }
+
         this->stopImpl();
         m_isRunning = false;
     }
 
     void ISimulatorListener::check()
     {
-        if (!m_isRunning) { return; }
+        if (m_isRunning) { return; }
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            // call in correct thread
+            QPointer<ISimulatorListener> myself(this);
+            QTimer::singleShot(0, this, [ = ] { if (myself) { this->check(); }});
+            return;
+        }
+
         this->checkImpl();
     }
 } // namespace
