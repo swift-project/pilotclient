@@ -554,7 +554,7 @@ namespace BlackCore
             return CAircraftIcaoCode();
         }
 
-        const QSet<QString> allIcaos = aircraft.allIcaoCodes();
+        const QSet<QString> allIcaos = aircraft.allDesignators();
         const QString allIcaosStr = allIcaos.toList().join(", ");
         CMatchingUtils::addLogDetailsToList(log, callsign, QString("Aircraft '%1' known for airline '%2'").arg(allIcaosStr, airline.getDesignator()));
 

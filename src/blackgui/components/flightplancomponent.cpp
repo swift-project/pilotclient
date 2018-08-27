@@ -818,7 +818,7 @@ namespace BlackGui
         void CFlightPlanComponent::initCompleters()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
-            const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes().toList());
+            const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().toList());
             ui->le_AircraftType->setCompleter(new QCompleter(aircraft, this));
 
             const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);

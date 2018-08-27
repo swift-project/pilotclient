@@ -52,7 +52,7 @@ namespace BlackCore
         else if (options.testFlag(OnlyDbIcaoCodes))
         {
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
-            const QSet<QString> designators(sApp->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes());
+            const QSet<QString> designators(sApp->getWebDataServices()->getAircraftIcaoCodes().allDesignators());
             modelSet = modelSet.findWithAircraftDesignator(designators);
         }
         else
