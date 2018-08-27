@@ -29,7 +29,7 @@ namespace BlackGui
 
         void CAircraftModelStatisticsDialog::analyzeModels(const CAircraftModelList &models)
         {
-            ui->te_Statistics->setHtml(models.htmlStatistics());
+            ui->te_Statistics->setHtml(models.htmlStatistics(true, true));
         }
     } // ns
 } // ns
