@@ -135,6 +135,9 @@ namespace BlackCore
             //! Return list of available simulator plugins
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
+            //! Check all listeners enabled if simulator is connected
+            virtual int checkListeners() = 0;
+
             //! Load and start specific simulator plugin
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 

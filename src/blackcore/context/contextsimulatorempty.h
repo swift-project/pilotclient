@@ -30,21 +30,21 @@ namespace BlackCore
             CContextSimulatorEmpty(CCoreFacade *runtime) : IContextSimulator(CCoreFacadeConfig::NotUsed, runtime) {}
 
         public slots:
-            //! \copydoc IContextSimulator::getSimulatorPluginInfo()
+            //! \copydoc IContextSimulator::getSimulatorPluginInfo
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CSimulatorPluginInfo();
             }
 
-            //! \copydoc IContextSimulator::getAvailableSimulatorPlugins()
+            //! \copydoc IContextSimulator::getAvailableSimulatorPlugins
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CSimulatorPluginInfoList();
             }
 
-            //! \copydoc IContextSimulator::startSimulatorPlugin()
+            //! \copydoc IContextSimulator::startSimulatorPlugin
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
             {
                 Q_UNUSED(simulatorInfo);
@@ -52,7 +52,13 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextSimulator::getSimulatorStatus()
+            //! \copydoc IContextSimulator::checkListeners
+            virtual int checkListeners() override
+            {
+                return 0;
+            }
+
+            //! \copydoc IContextSimulator::getSimulatorStatus
             virtual int getSimulatorStatus() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);

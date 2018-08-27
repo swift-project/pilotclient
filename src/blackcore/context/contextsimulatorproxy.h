@@ -20,7 +20,6 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
 
@@ -61,6 +60,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
+            virtual int checkListeners() override;
             virtual int getSimulatorStatus() const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
