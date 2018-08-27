@@ -196,9 +196,10 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::enableButtons(bool firstSet)
+        void CDbOwnModelSetComponent::enableButtons(bool firstSet, bool newSet)
         {
             ui->pb_FirstSet->setEnabled(firstSet);
+            ui->pb_CreateNewSet->setEnabled(newSet);
         }
 
         void CDbOwnModelSetComponent::tabIndexChanged(int index)
@@ -209,6 +210,8 @@ namespace BlackGui
         void CDbOwnModelSetComponent::buttonClicked()
         {
             const QObject *sender = QObject::sender();
+            if (!sender) { return; }
+
             if (sender == ui->pb_CreateNewSet)
             {
                 this->createNewSet();
@@ -312,15 +315,20 @@ namespace BlackGui
             // since we use the componet also in the launcher wizard, mc might not be existing
             const CSimulatorInfo simulator(this->getModelSetSimulator());
             CDbMappingComponent *mc = this->getMappingComponent();
-            if (mc) { mc->setOwnModelsSimulator(simulator); }
+            if (!mc)
+            {
+                CLogMessage(this).error("No mapping component available!");
+                return;
+            }
 
+            mc->setOwnModelsSimulator(simulator);
             if (!m_modelSetFormDialog)
             {
                 m_modelSetFormDialog.reset(new CDbOwnModelSetFormDialog(this));
                 m_modelSetFormDialog->setMappingComponent(this->getMappingComponent());
             }
 
-            if (this->getMappingComponent()->getOwnModelsCount() > 0)
+            if (mc->getOwnModelsCount() > 0)
             {
                 m_modelSetFormDialog->setModal(true);
                 m_modelSetFormDialog->reloadData();
@@ -333,7 +341,7 @@ namespace BlackGui
             else
             {
                 const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
-                if (mc) { mc->showOverlayMessage(m); }
+                mc->showOverlayMessage(m);
             }
         }
 

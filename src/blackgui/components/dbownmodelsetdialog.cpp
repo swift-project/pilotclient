@@ -42,9 +42,9 @@ namespace BlackGui
             return ui->comp_OwnModelSet;
         }
 
-        void CDbOwnModelSetDialog::enableButtons(bool firstSet)
+        void CDbOwnModelSetDialog::enableButtons(bool firstSet, bool newSet)
         {
-            ui->comp_OwnModelSet->enableButtons(firstSet);
+            ui->comp_OwnModelSet->enableButtons(firstSet, newSet);
         }
     } // ns
 } // ns

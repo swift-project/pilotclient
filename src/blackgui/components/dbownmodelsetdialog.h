@@ -45,7 +45,7 @@ namespace BlackGui
             CDbOwnModelSetComponent *modelSetComponent();
 
             //! Enable buttons
-            void enableButtons(bool firstSet);
+            void enableButtons(bool firstSet, bool newSet);
 
         private:
             QScopedPointer<Ui::CDbOwnModelSetDialog> ui;

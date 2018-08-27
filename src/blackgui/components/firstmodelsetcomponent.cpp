@@ -177,7 +177,7 @@ namespace BlackGui
         {
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             m_modelSetDialog->setSimulator(simulator);
-            m_modelSetDialog->enableButtons(false);
+            m_modelSetDialog->enableButtons(false, false);
             m_modelSetDialog->exec();
 
             // force UI update

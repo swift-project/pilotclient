@@ -113,7 +113,7 @@ namespace BlackGui
             //! @}
 
             //! Enable buttons
-            void enableButtons(bool firstSet);
+            void enableButtons(bool firstSet, bool newSet);
 
             //! Set the model set for a given simulator
             void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
