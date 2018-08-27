@@ -32,7 +32,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
-using namespace BlackSimPlugin::Fs9;
+using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin
@@ -86,9 +86,9 @@ namespace BlackSimPlugin
 
             FS_PBH pbhstrct;
             pbhstrct.pbh = positionVelocity.pbh;
-            int pitch = std::floor(pbhstrct.pitch / CFs9Sdk::pitchMultiplier());
+            int pitch = qRound(std::floor(pbhstrct.pitch / CFs9Sdk::pitchMultiplier()));
             if (pitch < -90 || pitch > 89) { CLogMessage().warning("FS9: Pitch value out of limits: %1") << pitch; }
-            int bank = std::floor(pbhstrct.bank / CFs9Sdk::bankMultiplier());
+            int bank = qRound(std::floor(pbhstrct.bank / CFs9Sdk::bankMultiplier()));
 
             // MSFS has inverted pitch and bank angles
             pitch = ~pitch;
@@ -260,21 +260,21 @@ namespace BlackSimPlugin
             return changed;
         }
 
-        void CSimulatorFs9::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
+        void CSimulatorFs9::displayStatusMessage(const CStatusMessage &message) const
         {
             // Avoid errors from CDirectPlayPeer as it may end in infinite loop
-            if (message.getSeverity() == BlackMisc::CStatusMessage::SeverityError && message.isFromClass<CDirectPlayPeer>())
+            if (message.getSeverity() == CStatusMessage::SeverityError && message.isFromClass<CDirectPlayPeer>())
             {
                 return;
             }
 
-            if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
+            if (message.getSeverity() != CStatusMessage::SeverityDebug)
             {
                 QMetaObject::invokeMethod(m_fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.toQString()));
             }
         }
 
-        void CSimulatorFs9::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        void CSimulatorFs9::displayTextMessage(const CTextMessage &message) const
         {
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
@@ -385,7 +385,7 @@ namespace BlackSimPlugin
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
                 const QSharedPointer<CFs9Host> &fs9Host,
                 const QSharedPointer<CLobbyClient> &lobbyClient) :
-            BlackCore::ISimulatorListener(info),
+            ISimulatorListener(info),
             m_timer(new QTimer(this)),
             m_fs9Host(fs9Host),
             m_lobbyClient(lobbyClient)
@@ -395,26 +395,12 @@ namespace BlackSimPlugin
             m_timer->setObjectName(this->objectName() + ":m_timer");
 
             // Test whether we can lobby connect at all.
-            bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
+            const bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
 
-            connect(m_timer, &QTimer::timeout, [this, canLobbyConnect]()
+            // check connection
+            connect(m_timer, &QTimer::timeout, [ = ]()
             {
-                if (m_fs9Host->getHostAddress().isEmpty()) { return; } // host not yet set up
-                if (canLobbyConnect)
-                {
-                    if (m_isConnecting || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK)
-                    {
-                        m_isConnecting = true;
-                        CLogMessage(this).info("swift is joining FS9 to the multiplayer session...");
-                    }
-                }
-
-                if (!m_isStarted && m_fs9Host->isConnected())
-                {
-                    emit simulatorStarted(getPluginInfo());
-                    m_isStarted = true;
-                    m_isConnecting = false;
-                }
+                this->checkConnection(canLobbyConnect);
             });
         }
 
@@ -427,6 +413,42 @@ namespace BlackSimPlugin
         void CSimulatorFs9Listener::stopImpl()
         {
             m_timer->stop();
+        }
+
+        void CSimulatorFs9Listener::checkImpl()
+        {
+            if (m_timer) { m_timer->start(); }
+            if (this->isShuttingDown()) { return; }
+
+            QPointer<CSimulatorFs9Listener> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                const bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
+                this->checkConnection(canLobbyConnect);
+            });
+        }
+
+        bool CSimulatorFs9Listener::checkConnection(bool canLobbyConnect)
+        {
+            if (m_fs9Host->getHostAddress().isEmpty()) { return false; } // host not yet set up
+            if (canLobbyConnect)
+            {
+                if (m_isConnecting || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK)
+                {
+                    m_isConnecting = true;
+                    CLogMessage(this).info("swift is joining FS9 to the multiplayer session...");
+                }
+            }
+
+            if (!m_isStarted && m_fs9Host->isConnected())
+            {
+                m_isStarted = true;
+                m_isConnecting = false;
+                emit this->simulatorStarted(this->getPluginInfo());
+            }
+
+            return m_isConnecting;
         }
 
         static void cleanupFs9Host(CFs9Host *host)

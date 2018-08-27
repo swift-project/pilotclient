@@ -521,6 +521,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::stopImpl
             virtual void stopImpl() override;
 
+            //! \copydoc BlackCore::ISimulatorListener::checkImpl
+            virtual void checkImpl() override;
+
             //! Test if connection can be established
             void checkConnection();
 
@@ -531,7 +534,7 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
-            QTimer  m_timer { this }; //!< timer, "this" is needed otherwise warnings when move to new thread
+            QTimer  m_timer { this }; //!< timer, "this" is needed otherwise I get warnings when move to new thread
             QString m_simulatorVersion;
             QString m_simConnectVersion;
             QString m_simulatorName;

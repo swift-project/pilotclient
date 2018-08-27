@@ -1096,11 +1096,11 @@ namespace BlackSimPlugin
         {
             QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
 
-            if (BlackMisc::CDBusServer::isSessionOrSystemAddress(dbusAddress))
+            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
             {
                 checkConnectionViaBus(dbusAddress);
             }
-            else if (BlackMisc::CDBusServer::isQtDBusAddress(dbusAddress))
+            else if (CDBusServer::isQtDBusAddress(dbusAddress))
             {
                 m_timer.start();
             }
@@ -1119,6 +1119,20 @@ namespace BlackSimPlugin
                 m_watcher = nullptr;
             }
             m_timer.stop();
+        }
+
+        void CSimulatorXPlaneListener::checkImpl()
+        {
+            if (!m_timer.isActive()) { return; }
+            if (this->isShuttingDown()) { return; }
+
+            m_timer.start(); // restart because we will check just now
+            QPointer<CSimulatorXPlaneListener> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->checkConnectionViaPeer();
+            });
         }
 
         void CSimulatorXPlaneListener::checkConnectionViaBus(const QString &address)
@@ -1148,7 +1162,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneListener::checkConnectionViaPeer()
         {
             m_conn = QDBusConnection::connectToPeer(m_xswiftbusServerSetting.getThreadLocal(), "xswiftbus");
-            if (! m_conn.isConnected())
+            if (!m_conn.isConnected())
             {
                 // This is required to cleanup the connection in QtDBus
                 m_conn.disconnectFromPeer(m_conn.name());

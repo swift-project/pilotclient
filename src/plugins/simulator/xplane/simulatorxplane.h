@@ -118,7 +118,7 @@ namespace BlackSimPlugin
                              QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorXPlane();
+            virtual ~CSimulatorXPlane() override;
 
             //! \name ISimulator implementations
             //! @{
@@ -272,6 +272,9 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulatorListener::stopImpl
             virtual void stopImpl() override;
+
+            //! \copydoc BlackCore::ISimulatorListener::checkImpl
+            virtual void checkImpl() override;
 
         private:
             //! Check if XSwiftBus service is already registered on the bus

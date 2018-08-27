@@ -168,7 +168,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;  //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CConnectionGuard m_connectionGuard;                    //!< connected with provider
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
         };
 
@@ -187,6 +187,9 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulatorListener::stopImpl
             virtual void stopImpl() override;
+
+            //! \copydoc BlackCore::ISimulatorListener::stopImpl
+            virtual void checkImpl() override;
         };
     } // ns
 } // ns

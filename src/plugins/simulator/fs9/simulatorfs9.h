@@ -49,7 +49,7 @@ namespace BlackSimPlugin
                           QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatorFs9() = default;
+            virtual ~CSimulatorFs9() override = default;
 
             //! \name Interface implementations
             //! \@{
@@ -125,7 +125,13 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::stopImpl
             virtual void stopImpl() override;
 
+            //! \copydoc BlackCore::ISimulatorListener::checkImpl
+            virtual void checkImpl() override;
+
         private:
+            //! Check connection to FS9
+            bool checkConnection(bool canLobbyConnect);
+
             QTimer *m_timer = nullptr;
             bool m_isConnecting = false;
             bool m_isStarted = false;
@@ -145,7 +151,7 @@ namespace BlackSimPlugin
             CSimulatorFs9Factory(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatorFs9Factory();
+            virtual ~CSimulatorFs9Factory() override;
 
             //! \copydoc BlackCore::ISimulatorFactory::create
             virtual BlackCore::ISimulator *create(

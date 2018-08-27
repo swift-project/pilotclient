@@ -342,7 +342,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::onSettingsChanged()
         {
-            const CSwiftPluginSettings settings(m_settings.get());
+            const CSwiftPluginSettings settings(m_pluginSettings.get());
             m_log = settings.isLoggingFunctionCalls();
 
             const CSimulatorInfo simulator = settings.getEmulatedSimulator();
@@ -446,7 +446,7 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorEmulatedListener> guard(this);
             QTimer::singleShot(2000, this, [ = ]
             {
-                if (guard.isNull()) { return; }
+                if (!guard) { return; }
                 Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
                 emit this->simulatorStarted(this->getPluginInfo());
             });
@@ -454,5 +454,10 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedListener::stopImpl()
         { }
+
+        void CSimulatorEmulatedListener::checkImpl()
+        {
+            this->startImpl();
+        }
     } // ns
 } // ns

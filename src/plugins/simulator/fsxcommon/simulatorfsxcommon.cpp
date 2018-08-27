@@ -2101,6 +2101,20 @@ namespace BlackSimPlugin
             m_timer.stop();
         }
 
+        void CSimulatorFsxCommonListener::checkImpl()
+        {
+            if (!m_timer.isActive()) { return; }
+            if (this->isShuttingDown()) { return; }
+
+            m_timer.start(); // restart because we will check just now
+            QPointer<CSimulatorFsxCommonListener> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->checkConnection();
+            });
+        }
+
         QString CSimulatorFsxCommonListener::backendInfo() const
         {
             if (m_simulatorName.isEmpty()) { return ISimulatorListener::backendInfo(); }
