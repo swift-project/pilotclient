@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>220</width>
-    <height>255</height>
+    <height>260</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,243 +35,32 @@
    <property name="bottomMargin">
     <number>2</number>
    </property>
-   <item row="3" column="1">
-    <widget class="QLabel" name="lbl_PluginInfo">
-     <property name="text">
-      <string>Simulator info will go here</string>
+   <item row="5" column="2">
+    <widget class="QPushButton" name="pb_ApplyTimeSync">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="lbl_RestrictedRendering">
-     <property name="toolTip">
-      <string>Current rendering restrictions (if any)</string>
-     </property>
-     <property name="text">
-      <string>Restrictions</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <layout class="QHBoxLayout" name="hl_RestrictedRendering">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <widget class="BlackGui::CLedWidget" name="led_RestrictedRendering" native="true"/>
-     </item>
-     <item alignment="Qt::AlignRight">
-      <widget class="QLabel" name="lbl_RestrictionText">
-       <property name="text">
-        <string>restriction info</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pb_ClearRestrictedRendering">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>60</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>clear</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lbl_LoadedPlugin">
-     <property name="text">
-      <string>Loaded</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="BlackGui::CPluginSelector" name="pluginSelector_EnabledSimulators" native="true">
      <property name="minimumSize">
       <size>
-       <width>0</width>
-       <height>50</height>
+       <width>60</width>
+       <height>0</height>
       </size>
      </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="lbl_TimeSync">
-     <property name="toolTip">
-      <string>Time synchronization</string>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
      </property>
      <property name="text">
-      <string>Time synch.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="lbl_RenderingEnabled">
-     <property name="toolTip">
-      <string>Rendering enabled</string>
-     </property>
-     <property name="text">
-      <string>Rendering en.</string>
+      <string>apply</string>
      </property>
     </widget>
    </item>
    <item row="5" column="1">
-    <layout class="QHBoxLayout" name="hl_RenderingEnabled">
-     <item>
-      <widget class="BlackGui::CLedWidget" name="led_RenderingEnabled" native="true"/>
-     </item>
-     <item>
-      <spacer name="hs_RenderingEnabled">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pb_DisableRendering">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>60</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>disable</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="7" column="1">
-    <layout class="QHBoxLayout" name="hl_MaxAircraft">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <widget class="QLineEdit" name="le_MaxAircraft">
-       <property name="placeholderText">
-        <string>no restrictions</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pb_ApplyMaxAircraft">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>60</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>apply</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_Check">
-     <property name="text">
-      <string>Check</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lbl_MaxDistance">
-     <property name="text">
-      <string>Max.dist.(NM)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <layout class="QHBoxLayout" name="hl_MaxDistance">
-     <property name="spacing">
-      <number>4</number>
-     </property>
-     <item>
-      <widget class="QLineEdit" name="le_MaxDistance">
-       <property name="placeholderText">
-        <string>no restrictions</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pb_ApplyMaxDistance">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>60</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>60</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>apply</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="1">
     <widget class="QWidget" name="wi_TimeSync" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
@@ -324,49 +113,226 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pb_ApplyTimeSync">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>apply</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
+   <item row="6" column="1">
+    <widget class="BlackGui::CLedWidget" name="led_RenderingEnabled" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QPushButton" name="pb_ApplyMaxAircraft">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>apply</string>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="0">
+    <widget class="QLabel" name="lbl_RestrictedRendering">
+     <property name="toolTip">
+      <string>Current rendering restrictions (if any)</string>
+     </property>
+     <property name="text">
+      <string>Restrictions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="lbl_TimeSync">
+     <property name="toolTip">
+      <string>Time synchronization</string>
+     </property>
+     <property name="text">
+      <string>Time synch.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <layout class="QHBoxLayout" name="hl_RestrictedRendering">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="BlackGui::CLedWidget" name="led_RestrictedRendering" native="true"/>
+     </item>
+     <item alignment="Qt::AlignRight">
+      <widget class="QLabel" name="lbl_RestrictionText">
+       <property name="text">
+        <string>restriction info</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_LoadedPlugin">
+     <property name="text">
+      <string>Loaded</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="lbl_RenderingEnabled">
+     <property name="toolTip">
+      <string>Rendering enabled</string>
+     </property>
+     <property name="text">
+      <string>Rendering en.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="lbl_MaxDistance">
+     <property name="text">
+      <string>Max.dist.(NM)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <layout class="QHBoxLayout" name="hl_MaxAircraft">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="le_MaxAircraft">
+       <property name="placeholderText">
+        <string>no restrictions</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="9" column="1">
+    <layout class="QHBoxLayout" name="hl_MaxDistance">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="le_MaxDistance">
+       <property name="placeholderText">
+        <string>no restrictions</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="8" column="0">
     <widget class="QLabel" name="lbl_MaxAircraft">
      <property name="text">
       <string>Max.aircraft</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" alignment="Qt::AlignRight">
-    <widget class="QPushButton" name="pb_Check">
+   <item row="9" column="2">
+    <widget class="QPushButton" name="pb_ApplyMaxDistance">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
-      <string>check</string>
+      <string>apply</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="7" column="2">
+    <widget class="QPushButton" name="pb_ClearRestrictedRendering">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>clear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="BlackGui::CPluginSelector" name="pluginSelector_EnabledSimulators" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QPushButton" name="pb_DisableRendering">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>disable</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
     <spacer name="vs_Top">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -381,6 +347,23 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="2" column="1" colspan="2" alignment="Qt::AlignRight">
+    <widget class="QPushButton" name="pb_Check">
+     <property name="text">
+      <string>check again </string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QLabel" name="lbl_PluginInfo">
+     <property name="text">
+      <string>Simulator info will go here</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -399,16 +382,10 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pb_Check</tabstop>
   <tabstop>cb_TimeSync</tabstop>
   <tabstop>le_TimeSyncOffset</tabstop>
-  <tabstop>pb_ApplyTimeSync</tabstop>
-  <tabstop>pb_DisableRendering</tabstop>
-  <tabstop>pb_ClearRestrictedRendering</tabstop>
   <tabstop>le_MaxAircraft</tabstop>
-  <tabstop>pb_ApplyMaxAircraft</tabstop>
   <tabstop>le_MaxDistance</tabstop>
-  <tabstop>pb_ApplyMaxDistance</tabstop>
  </tabstops>
  <resources/>
  <connections/>

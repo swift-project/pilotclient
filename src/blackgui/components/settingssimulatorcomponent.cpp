@@ -61,7 +61,7 @@ namespace BlackGui
 
             m_plugins->collectPlugins();
             ui->setupUi(this);
-            CLedWidget::LedShape shape = CLedWidget::Circle;
+            const CLedWidget::LedShape shape = CLedWidget::Circle;
             ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
             ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled", "No aircraft will be rendered", 14);
 
@@ -78,6 +78,7 @@ namespace BlackGui
             connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
             connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
             connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
+            connect(ui->pb_Check, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
             connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
             connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
             connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
@@ -119,6 +120,7 @@ namespace BlackGui
             ui->pb_ApplyMaxDistance->setEnabled(m_pluginLoaded);
             ui->pb_ClearRestrictedRendering->setEnabled((m_pluginLoaded));
             ui->pb_DisableRendering->setEnabled(m_pluginLoaded);
+            ui->pb_Check->setEnabled(!m_pluginLoaded);
 
             if (m_pluginLoaded)
             {
@@ -285,7 +287,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::showPluginDetails(const QString &identifier)
         {
-            const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            const CSimulatorPluginInfoList simDrivers(this->getAvailablePlugins());
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
             QWidget *aw = qApp->activeWindow();
@@ -325,11 +327,17 @@ namespace BlackGui
         {
             // list all available simulators
             const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
-            for (const auto &p : getAvailablePlugins())
+            for (const auto &p : this->getAvailablePlugins())
             {
                 ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
             }
         }
-    }
 
+        void CSettingsSimulatorComponent::checkSimulatorPlugins()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+            if (sGui->getIContextSimulator()->isSimulatorAvailable()) { return; } // already available
+            sGui->getIContextSimulator()->checkListeners();
+        }
+    }
 } // namespace

@@ -22,8 +22,6 @@
 #include <QScopedPointer>
 #include <QString>
 
-class QWidget;
-
 namespace BlackCore { class CPluginManagerSimulator; }
 namespace BlackMisc { namespace Simulation { class CSimulatorPluginInfo; } }
 namespace Ui { class CSettingsSimulatorComponent; }
@@ -56,7 +54,7 @@ namespace BlackGui
             //! Apply disable rendering
             void onApplyDisableRendering();
 
-            //! Apply time sync
+            //! Apply time synchronization
             void onApplyTimeSync();
 
             //! Clear restricted rendering
@@ -73,6 +71,9 @@ namespace BlackGui
 
             //! Select/deselect enabled/disabled plugins
             void reloadPluginConfig();
+
+            //! Check plugins again
+            void checkSimulatorPlugins();
 
             //! Set the GUI values
             void setGuiValues();
