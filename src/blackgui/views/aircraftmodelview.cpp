@@ -299,8 +299,8 @@ namespace BlackGui
                 if (!m_menuFlagActions.contains(MenuCanStashModels))
                 {
                     CMenuActions ma;
-                    ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathStash(), { this, &CAircraftModelView::requestedStash });
-                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::stashingClearsSelection });
+                    ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathModelStash(), { this, &CAircraftModelView::requestedStash });
+                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathModelStash(), { this, &CAircraftModelView::stashingClearsSelection });
                     added->setCheckable(true);
                     m_menuFlagActions.insert(MenuCanStashModels, ma);
                 }
@@ -321,7 +321,7 @@ namespace BlackGui
                 if (!m_menuFlagActions.contains(MenuHighlightStashed))
                 {
                     CMenuActions ma;
-                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::toggleHighlightStashedModels });
+                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathModelStash(), { this, &CAircraftModelView::toggleHighlightStashedModels });
                     added->setCheckable(true);
                     m_menuFlagActions.insert(MenuHighlightStashed, ma);
                 }

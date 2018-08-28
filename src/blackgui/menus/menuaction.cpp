@@ -92,7 +92,7 @@ namespace BlackGui
 
         const CMenuAction &CMenuAction::subMenuConsolidateModels()
         {
-            static const CMenuAction subdir(CIcons::appModels16(), "Consolidate models", CMenuAction::pathViewModelsConsolidate());
+            static const CMenuAction subdir(CIcons::appModels16(), "Consolidate models", CMenuAction::pathModelConsolidate());
             return subdir;
         }
 
@@ -140,7 +140,7 @@ namespace BlackGui
                     }
                 }
             }
-            actions.append(checkableActions); // checkable actions ar end
+            actions.append(checkableActions); // checkable actions at end
         }
 
         CMenuActions::CMenuActions(const QList<CMenuAction> &actions)
@@ -324,17 +324,19 @@ namespace BlackGui
         void CMenuActions::toQMenu(QMenu &menu, bool separateGroups) const
         {
             if (m_actions.isEmpty()) { return; }
-            const QStringList keys = m_actions.uniqueKeys(); // Sorted ascending
+            const QStringList keys = m_actions.uniqueKeys(); // Sorted ascending keys, we need a menu for all those keys
 
             QMap<QString, QMenu *> subMenus; // all sub menus
+            QString lastKey;
+
             for (const QString &key : keys)
             {
-                bool addedSeparator = false;
+                bool handledSeparator = false;
                 const int pathDepth = CMenuActions::pathDepth(key); // 0 based
 
                 QList<CMenuAction> actions;
                 QList<CMenuAction> menus;
-                this->splitSubMenus(key, actions, menus);
+                this->splitSubMenus(key, actions, menus); // splits actions and (sub) menus for that key
                 if (actions.isEmpty())
                 {
                     // No actions directly for that level
@@ -342,8 +344,11 @@ namespace BlackGui
                 }
                 if (!menu.isEmpty() && separateGroups)
                 {
-                    menu.addSeparator();
-                    addedSeparator = true;
+                    // no separator a) if there is already one b) key roots are the same (such entries belong together)
+                    const bool noSeparator = (!menu.actions().isEmpty() && menu.actions().last()->isSeparator()) ||
+                                             (isSameKeyRoot(key, lastKey));
+                    if (!noSeparator) { menu.addSeparator(); }
+                    handledSeparator = true;
                 }
 
                 int noActionsWithoutPath = 0;
@@ -372,10 +377,10 @@ namespace BlackGui
                         noActionsWithoutPath++;
 
                         // separator for unclassfied items
-                        if ((!addedSeparator || noActionsWithoutPath > 1) && menuAction.hasNoPathWithSeparator())
+                        if ((!handledSeparator || noActionsWithoutPath > 1) && menuAction.hasNoPathWithSeparator())
                         {
                             menu.addSeparator();
-                            addedSeparator = false;
+                            handledSeparator = false;
                         }
                     }
 
@@ -394,6 +399,10 @@ namespace BlackGui
                 {
                     menu.removeAction(currentMenu->menuAction());
                 }
+
+                // remember last key
+                lastKey = key;
+
             } // keys
         }
 
@@ -427,16 +436,16 @@ namespace BlackGui
 
         CMenuAction CMenuActions::addMenuStash()
         {
-            if (this->containsMenu(CMenuAction::pathStash())) { return CMenuAction(); }
+            if (this->containsMenu(CMenuAction::pathModelStash())) { return CMenuAction(); }
             const bool canConnectDb = sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb();
             const QString txt(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
-            return this->addMenu(CIcons::appDbStash16(), txt, CMenuAction::pathStash());
+            return this->addMenu(CIcons::appDbStash16(), txt, CMenuAction::pathModelStash());
         }
 
         CMenuAction CMenuActions::addMenuStashEditor()
         {
-            if (this->containsMenu(CMenuAction::pathStashEditor())) { return CMenuAction(); }
-            return this->addMenu(CIcons::appDbStash16(), "Edit models", CMenuAction::pathStashEditor());
+            if (this->containsMenu(CMenuAction::pathModelStashEditor())) { return CMenuAction(); }
+            return this->addMenu(CIcons::appDbStash16(), "Edit models", CMenuAction::pathModelStashEditor());
         }
 
         CMenuAction CMenuActions::addMenuDatabase()
@@ -447,7 +456,7 @@ namespace BlackGui
 
         CMenuAction CMenuActions::addMenuConsolidateModels()
         {
-            if (this->containsMenu(CMenuAction::pathViewModelsConsolidate())) { CMenuAction(); }
+            if (this->containsMenu(CMenuAction::pathModelConsolidate())) { CMenuAction(); }
             return this->addMenu(CMenuAction::subMenuConsolidateModels());
         }
 
@@ -515,6 +524,22 @@ namespace BlackGui
             if (!currentPath.contains('/')) { return ""; }
             const int i = currentPath.lastIndexOf('/');
             return currentPath.left(i);
+        }
+
+        QString CMenuActions::keyRoot(const QString &key)
+        {
+            const int i = key.lastIndexOf('.');
+            if (i < 0) { return ""; }
+            return key.left(i);
+        }
+
+        bool CMenuActions::isSameKeyRoot(const QString &key1, const QString &key2)
+        {
+            const int i1 = key1.lastIndexOf('.');
+            if (i1 < 0) { return false; }
+            const int i2 = key2.lastIndexOf('.');
+            if (i2 < 0 || i1 != i2) { return false; }
+            return key1.left(i1) == key2.left(i2);
         }
 
         QMenu *CMenuActions::findUpwardsInMenus(const QString &key, const QMap<QString, QMenu *> &menus)

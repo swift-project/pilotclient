@@ -922,15 +922,15 @@ namespace BlackGui
                 menuActions.addMenuStash();
 
                 // auto filter in DB views
-                m_stashFiltering = menuActions.addAction(m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::toggleAutoFiltering });
+                m_stashFiltering = menuActions.addAction(m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::toggleAutoFiltering });
                 m_stashFiltering->setCheckable(true);
                 m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
 
-                m_autoStashing = menuActions.addAction(m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::displayAutoStashingDialog });
-                m_autoSimulatorStashing = menuActions.addAction(m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::displayAutoSimulatorStashingDialog });
+                m_autoStashing = menuActions.addAction(m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::displayAutoStashingDialog });
+                m_autoSimulatorStashing = menuActions.addAction(m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::displayAutoSimulatorStashingDialog });
                 if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
                 {
-                    menuActions.addAction(CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathStash(), nullptr, { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });
+                    menuActions.addAction(CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathModelStash(), nullptr, { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });
                 }
             }
             else if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash)
@@ -948,14 +948,14 @@ namespace BlackGui
             const int dbModels = sGui->getWebDataServices()->getModelsCount();
             if (dbModels > 0 && mapComp->hasStashedModels())
             {
-                menuActions.addMenu(CIcons::appDbStash16(), "Stash", CMenuAction::pathStash());
+                menuActions.addMenu(CIcons::appDbStash16(), "Stash", CMenuAction::pathModelStash());
 
                 // we have keys and data by which we could delete them from view
                 const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" + mapComp->currentTabText() + "'");
-                menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::removeDbModelsFromView});
+                menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::removeDbModelsFromView});
 
                 // attribute info
-                menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::showChangedAttributes});
+                menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::showChangedAttributes});
             }
         }
 
@@ -972,7 +972,8 @@ namespace BlackGui
             {
                 menuActions.addMenuModelSet();
                 m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(),
-                                                     "Add to own model set", CMenuAction::pathModelSet(),
+                                                     "Add to own model set " + CShortcut::toParenthesisString(CShortcut::keyAddToModelSet()),
+                                                     CMenuAction::pathModelSet(),
                                                      this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
                                                      CShortcut::keyAddToModelSet());
             }
@@ -996,10 +997,10 @@ namespace BlackGui
                 // stash view and selection
                 menuActions.addMenuStashEditor();
 
-                m_menuActions[0] = menuActions.addAction(m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormAircraftIcaoData });
-                m_menuActions[1] = menuActions.addAction(m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormDistributorData });
-                m_menuActions[2] = menuActions.addAction(m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormLiveryData });
-                m_menuActions[3] = menuActions.addAction(m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::modifyModelDialog });
+                m_menuActions[0] = menuActions.addAction(m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormAircraftIcaoData });
+                m_menuActions[1] = menuActions.addAction(m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormDistributorData });
+                m_menuActions[2] = menuActions.addAction(m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormLiveryData });
+                m_menuActions[3] = menuActions.addAction(m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::modifyModelDialog });
             }
             this->nestedCustomMenu(menuActions);
         }

@@ -118,88 +118,87 @@ namespace BlackGui
             //! Path converter into separator
             static const QString &pathSeparator() { static const QString p("_SEPARATOR"); return p; }
 
-
             //! Simulator sub menu
-            static const QString &pathSimulator()  { static const QString p("Custom.10.Simulator/Simulator"); return p; }
+            static const QString &pathSimulator() { static const QString p("Custom.10.Simulator/Simulator"); return p; }
 
             //! Simulator sub menu reload models
-            static const QString &pathSimulatorModelsReload()  { static const QString p("Custom.10.Simulator/Simulator/Reload models"); return p; }
+            static const QString &pathSimulatorModelsReload() { static const QString p("Custom.10.Simulator/Simulator/Reload models"); return p; }
 
             //! Simulator sub menu reload models
-            static const QString &pathSimulatorModelsClearCache()  { static const QString p("Custom.10.Simulator/Simulator/Clear model caches"); return p; }
+            static const QString &pathSimulatorModelsClearCache() { static const QString p("Custom.10.Simulator/Simulator/Clear model caches"); return p; }
 
             //! Model
-            static const QString &pathModel()  { static const QString p("Custom.11.Model"); return p; }
+            static const QString &pathModel() { static const QString p("Custom.11.Model"); return p; }
 
             //! Model set
-            static const QString &pathModelSet()  { static const QString p("Custom.11.Model/Model set"); return p; }
+            static const QString &pathModelSet() { static const QString p("Custom.11.Model/Model set"); return p; }
 
             //! Model set, new set
-            static const QString &pathModelSetNew()  { static const QString p("Custom.11.Model/Model set/New set"); return p; }
+            static const QString &pathModelSetNew() { static const QString p("Custom.11.Model/Model set/New set"); return p; }
+
+            //! Consolidate
+            static const QString &pathModelConsolidate() { static const QString p("Custom.11.Model/Consolidate"); return p; }
 
             //! Stash sub menu
-            static const QString &pathStash()  { static const QString p("Custom.12.Stash/Stash"); return p; }
+            static const QString &pathModelStash() { static const QString p("Custom.11.Model/Stash/Stash"); return p; }
 
             //! Stash editor sub menu
-            static const QString &pathStashEditor()  { static const QString p("Custom.13.Stash/Editor"); return p; }
+            static const QString &pathModelStashEditor() { static const QString p("Custom.11.Model/Stash/Editor"); return p; }
 
             //! vPilot data
             //! \deprecated vPilot functionality likely to be removed in the future
-            static const QString &pathVPilot()  { static const QString p("Custom.14.vPilot/vPilot"); return p; }
+            static const QString &pathVPilot() { static const QString p("Custom.14.vPilot/vPilot"); return p; }
 
             //! Log functionality
-            static const QString &pathLog()  { static const QString p("Custom15.Log"); return p; }
+            static const QString &pathLog() { static const QString p("Custom15.Log"); return p; }
 
             //! Font menus (font size etc.)
-            static const QString &pathFont()  { static const QString p("Custom20.Font"); return p; }
+            static const QString &pathFont() { static const QString p("Custom20.Font"); return p; }
 
             // ---- client ----
 
             //! Client COM related
-            static const QString &pathClientCom()  { static const QString p("Client.ATC"); return p; }
+            static const QString &pathClientCom() { static const QString p("Client.ATC"); return p; }
 
             //! Client simulation related
-            static const QString &pathClientSimulation()  { static const QString p("Client.Simulation"); return p; }
+            static const QString &pathClientSimulation() { static const QString p("Client.Simulation"); return p; }
 
             // ---- standard view paths --------
 
             //! Database
-            static const QString &pathViewDatabase()  { static const QString p("View.10.Database/Database"); return p; }
-
-            //! Consolidate
-            static const QString &pathViewModelsConsolidate()  { static const QString p("View.11.Models/Consolidate"); return p; }
+            static const QString &pathViewDatabase() { static const QString p("View.10.Database/Database"); return p; }
 
             //! Select add remove
-            static const QString &pathViewAddRemove()  { static const QString p("View.12.AddRemove"); return p; }
+            static const QString &pathViewAddRemove() { static const QString p("View.12.AddRemove"); return p; }
 
             //! View selection mode
-            static const QString &pathViewSelection()  { static const QString p("View.13.Selection/Selection"); return p; }
+            static const QString &pathViewSelection() { static const QString p("View.13.Selection/Selection"); return p; }
 
             //! Order submenus
-            static const QString &pathViewOrder()  { static const QString p("View.14.Order/Order"); return p; }
+            static const QString &pathViewOrder() { static const QString p("View.14.Order/Order"); return p; }
 
             //! View resizing
-            static const QString &pathViewResize()  { static const QString p("View.15.Resize"); return p; }
+            static const QString &pathViewResize() { static const QString p("View.15.Resize"); return p; }
 
             //! View clear highlighting
-            static const QString &pathViewClearHighlighting()  { static const QString p("View.16.ClearHighlight"); return p; }
+            static const QString &pathViewClearHighlighting() { static const QString p("View.16.ClearHighlight"); return p; }
 
             //! View filter
-            static const QString &pathViewFilter()  { static const QString p("View.17.Filter"); return p; }
+            static const QString &pathViewFilter() { static const QString p("View.17.Filter"); return p; }
 
             //! View update
-            static const QString &pathViewUpdates()  { static const QString p("View.18.Updates"); return p; }
+            static const QString &pathViewUpdates() { static const QString p("View.18.Updates"); return p; }
 
             //! View load/save
-            static const QString &pathViewLoadSave()  { static const QString p("View.18.LoadSave"); return p; }
+            static const QString &pathViewLoadSave() { static const QString p("View.18.LoadSave"); return p; }
 
             //! View cut and paste
-            static const QString &pathViewCutPaste()  { static const QString p("View.18.CutPaste"); return p; }
+            static const QString &pathViewCutPaste() { static const QString p("View.18.CutPaste"); return p; }
 
             // ---- nested dock widgets ----
 
             //! Nested dock widget
-            static const QString &pathDockWidgetNested()  { static const QString p("DockWidget.Nested"); return p; }
+            static const QString &pathDockWidgetNested() { static const QString p("DockWidget.Nested"); return p; }
             //! @}
 
             //! \name Predefined sub sub menus
@@ -361,9 +360,22 @@ namespace BlackGui
             //! Split actions into submenus, normal actions and fix order
             void splitSubMenus(const QString &key, QList<CMenuAction> &actions, QList<CMenuAction> &menus) const;
 
+            //! Path depth
             static int pathDepth(const QString &path);
+
+            //! find current menu for given action
             static QMenu *currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pd);
+
+            //! Get parent path (one level up) for path
             static QString parentPath(const QString &cuurentPath);
+
+            //! Root of "Custom.11.Model/Stash/Stash" is "Custom.11"
+            static QString keyRoot(const QString &key);
+
+            //! Same key root?
+            static bool isSameKeyRoot(const QString &key1, const QString &key2);
+
+            //! Find key in top level menus
             static QMenu *findUpwardsInMenus(const QString &key, const QMap<QString, QMenu *> &menus);
         };
     } // ns

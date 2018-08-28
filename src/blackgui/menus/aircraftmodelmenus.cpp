@@ -184,10 +184,10 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
+            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
             if (mv->hasSelection())
             {
-                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
+                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
@@ -291,10 +291,10 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
+            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
             if (mv->hasSelection())
             {
-                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
+                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
