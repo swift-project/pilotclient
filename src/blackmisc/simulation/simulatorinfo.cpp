@@ -122,9 +122,9 @@ namespace BlackMisc
         int CSimulatorInfo::numberSimulators() const
         {
             int c = isFS9() ? 1 : 0;
-            if (isFSX()) { c++; }
+            if (isFSX())    { c++; }
             if (isXPlane()) { c++; }
-            if (isP3D()) { c++; }
+            if (isP3D())    { c++; }
             return c;
         }
 
@@ -148,11 +148,11 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             const Simulator s = getSimulator();
-            QString str;
-            if (s.testFlag(FSX)) { str.append("FSX "); }
-            if (s.testFlag(FS9)) { str.append("FS9 "); }
-            if (s.testFlag(P3D)) { str.append("P3D "); }
-            if (s.testFlag(XPLANE)) { str.append("XPlane"); }
+            const QString str =
+                (s.testFlag(FSX) ? QStringLiteral("FS9 ") : QStringLiteral("")) %
+                (s.testFlag(FS9) ? QStringLiteral("FSX ") : QStringLiteral("")) %
+                (s.testFlag(P3D) ? QStringLiteral("P3D ") : QStringLiteral("")) %
+                (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QStringLiteral(""));
             return str.trimmed();
         }
 
@@ -299,10 +299,10 @@ namespace BlackMisc
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            const QJsonValue jfsx = json.value(prefix + "simfsx");
-            const QJsonValue jfs9 = json.value(prefix + "simfs9");
-            const QJsonValue jxp  = json.value(prefix + "simxplane");
-            const QJsonValue jp3d = json.value(prefix + "simp3d");
+            const QJsonValue jfsx = json.value(prefix % QStringLiteral("simfsx"));
+            const QJsonValue jfs9 = json.value(prefix % QStringLiteral("simfs9"));
+            const QJsonValue jxp  = json.value(prefix % QStringLiteral("simxplane"));
+            const QJsonValue jp3d = json.value(prefix % QStringLiteral("simp3d"));
 
             // we handle bool JSON values and bool as string
             const bool fsx = jfsx.isBool() ? jfsx.toBool() : CDatastoreUtility::dbBoolStringToBool(jfsx.toString());
@@ -365,10 +365,10 @@ namespace BlackMisc
 
         QString CCountPerSimulator::toQString() const
         {
-            return "FSX: " % QString::number(m_counts[0]) %
-                   " P3D: " % QString::number(m_counts[1]) %
-                   " FS9: " % QString::number(m_counts[2]) %
-                   " XPlane: " % QString::number(m_counts[3]);
+            return QStringLiteral("FSX: ") % QString::number(m_counts[0]) %
+                   QStringLiteral(" P3D: ") % QString::number(m_counts[1]) %
+                   QStringLiteral(" FS9: ") % QString::number(m_counts[2]) %
+                   QStringLiteral(" XPlane: ") % QString::number(m_counts[3]);
         }
 
         void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
