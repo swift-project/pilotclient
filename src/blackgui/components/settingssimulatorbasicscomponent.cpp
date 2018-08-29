@@ -234,9 +234,9 @@ namespace BlackGui
         {
             if (existingDirs.isEmpty() || removeDirectories.isEmpty()) { return existingDirs; }
             const QStringList rDirs = CFileUtils::fixWindowsUncPaths(removeDirectories);
-            const QStringList eDirs = CFileUtils::fixWindowsUncPaths(eDirs);
+            const QStringList eDirs = CFileUtils::fixWindowsUncPaths(existingDirs);
             QStringList dirs;
-            for (const QString &dir : existingDirs)
+            for (const QString &dir : eDirs)
             {
                 if (rDirs.contains(dir, m_fileCaseSensitivity)) { continue; }
                 dirs.push_back(dir);
