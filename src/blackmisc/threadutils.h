@@ -34,6 +34,10 @@ namespace BlackMisc
         //! \remarks can be used as ASSERT check for threaded objects
         static bool isApplicationThreadObjectThread(const QObject *toBeTested);
 
+        //! Is the application thread the QObject's thread?
+        //! \remarks can be used as ASSERT check for threaded objects
+        static bool isApplicationThread(const QThread *toBeTested);
+
         //! Is the current thread the Application thread?
         //! \remarks can be used as ASSERT check for threaded objects
         static bool isCurrentThreadApplicationThread();
@@ -43,6 +47,9 @@ namespace BlackMisc
 
         //! Thread to int string info
         static const QString threadToString(const void *t);
+
+        //! Info about current thread
+        static const QString threadInfo(QThread *thread);
 
         //! Info about current thread
         static const QString currentThreadInfo();

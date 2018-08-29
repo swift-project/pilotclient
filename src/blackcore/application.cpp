@@ -118,6 +118,7 @@ namespace BlackCore
         QCoreApplication::setApplicationName(m_applicationName);
         QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
         this->setObjectName(m_applicationName);
+        this->thread()->setObjectName(m_applicationName); // normally no effect as thread already runs, but does not harm either
 
         // init skipped when called from CGuiApplication
         if (init)

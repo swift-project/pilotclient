@@ -31,6 +31,12 @@ namespace BlackMisc
         return (QCoreApplication::instance()->thread() == toBeTested->thread());
     }
 
+    bool CThreadUtils::isApplicationThread(const QThread *toBeTested)
+    {
+        if (!toBeTested || !QCoreApplication::instance() || !QCoreApplication::instance()->thread()) { return false; }
+        return (QCoreApplication::instance()->thread() == toBeTested);
+    }
+
     bool CThreadUtils::isCurrentThreadApplicationThread()
     {
         if (!QCoreApplication::instance()) { return false; }
@@ -68,11 +74,15 @@ namespace BlackMisc
         return s.arg(reinterpret_cast<long long>(t), 0, 16);
     }
 
-    const QString CThreadUtils::currentThreadInfo()
+    const QString CThreadUtils::threadInfo(QThread *thread)
     {
         static const QString info("thread: %1 name: '%2' priority: '%3'");
-        const QThread *t = QThread::currentThread();
-        if (!t) { return QString("no thread"); }
-        return info.arg(threadToString(t), t->objectName(), priorityToString(t->priority()));
+        if (!thread) { return QString("no thread"); }
+        return info.arg(threadToString(thread), thread->objectName(), priorityToString(thread->priority()));
+    }
+
+    const QString CThreadUtils::currentThreadInfo()
+    {
+        return threadInfo(QThread::currentThread());
     }
 } // ns

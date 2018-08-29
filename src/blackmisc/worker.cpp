@@ -14,9 +14,10 @@
 #include <future>
 #include <QTimer>
 #include <QPointer>
+#include <QCoreApplication>
 
 #ifdef Q_OS_WIN32
-#include <windows.h>
+#include <Windows.h>
 #endif
 
 namespace BlackMisc
@@ -149,7 +150,7 @@ namespace BlackMisc
         if (m_owner)
         {
             const QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
-            thread->setObjectName(ownerName + ":" + m_name);
+            thread->setObjectName(ownerName + ": " + m_name);
         }
 
         moveToThread(thread);
@@ -175,12 +176,12 @@ namespace BlackMisc
     {
         this->quit();
 
-        // already in different thread? otherwise return
+        // already in application (main) thread? => return
         if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
 
-        // Called by own thread, will deadlock, return
+        // called by own thread, will deadlock, return
         if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
-        auto *ownThread = thread();
+        QThread *ownThread = thread();
 
         const qint64 beforeWait = QDateTime::currentMSecsSinceEpoch();
         ownThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
@@ -225,24 +226,49 @@ namespace BlackMisc
     {
         this->setFinished();
 
-        QThread *ownThread = thread();
-        if (!ownThread) { return; } // normally never happening
-        moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-
-        // very sporadic crash here, changing to QSingleShot version for testing
-        // QMetaObject::invokeMethod(ownThread, "deleteLater");
-        // QMetaObject::invokeMethod(this, "deleteLater");
-        QPointer<QThread> pOwnThread(ownThread);
+        QPointer<QThread> pOwnThreadBeforeMove(this->thread()); // thread before moved back
         QPointer<CContinuousWorker> myself(this);
-        QTimer::singleShot(0, ownThread, [ = ]
+
+        if (!m_owner || (pOwnThreadBeforeMove.data() != m_owner->thread()))
         {
-            if (!pOwnThread) { return; }
-            pOwnThread->deleteLater();
-        });
-        QTimer::singleShot(0, this, [ = ]
+            if (m_owner)
+            {
+                // we have a owner, and the owner thread is not the same as the worker thread
+                // move worker back to the thread which constructed it, so there is no race on deletion
+                this->moveToThread(m_owner->thread());
+                Q_ASSERT_X(this->thread() == m_owner->thread(), Q_FUNC_INFO, "Thread mismatch owner");
+            }
+            else if (qApp && qApp->thread())
+            {
+                // no owner, we move to main thread
+                this->moveToThread(qApp->thread());
+                Q_ASSERT_X(this->thread() == qApp->thread(), Q_FUNC_INFO, "Thread mismatch qApp");
+            }
+
+            // if thread still exists and is not the main thread, delete it
+            if (pOwnThreadBeforeMove && !CThreadUtils::isApplicationThread(pOwnThreadBeforeMove.data()))
+            {
+                // delete the original "background" thread
+                QTimer::singleShot(0, pOwnThreadBeforeMove.data(), [ = ]
+                {
+                    if (pOwnThreadBeforeMove) { pOwnThreadBeforeMove->deleteLater(); }
+                });
+            }
+        }
+        else
         {
-            if (!myself) { return; }
-            myself->deleteLater();
-        });
+            // getting here would mean we have a owner and the owner thread is the same as the work thread
+            const QString msg = QString("Owner thread: '%1' own thread: '%2'").arg(CThreadUtils::threadInfo(m_owner->thread()), CThreadUtils::threadInfo(pOwnThreadBeforeMove.data()));
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, msg.toLatin1().constData());
+        }
+
+        if (myself)
+        {
+            // if worker still exists delete it
+            QTimer::singleShot(0, myself.data(), [ = ]
+            {
+                if (myself) { myself->deleteLater(); }
+            });
+        }
     }
 } // ns
