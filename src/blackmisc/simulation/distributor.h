@@ -32,9 +32,9 @@ namespace BlackMisc
     {
         //! Value object encapsulating information of software distributor.
         class BLACKMISC_EXPORT CDistributor :
-            public BlackMisc::CValueObject<CDistributor>,
-            public BlackMisc::Db::IDatastoreObjectWithStringKey,
-            public BlackMisc::IOrderable
+            public CValueObject<CDistributor>,
+            public Db::IDatastoreObjectWithStringKey,
+            public IOrderable
         {
         public:
             //! Property indexes

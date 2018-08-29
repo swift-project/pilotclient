@@ -42,7 +42,7 @@ namespace BlackMisc
             int current = 0;
             CAircraftIcaoCode found;
             const QString d(designator.trimmed().toUpper());
-            for (const CAircraftIcaoCode &code : * this)
+            for (const CAircraftIcaoCode &code : *this)
             {
                 if (!code.matchesDesignator(d, cutoff, &current)) { continue; }
                 if (current == 100.0) { return code; }

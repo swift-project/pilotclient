@@ -21,7 +21,6 @@
 
 #include <QJsonArray>
 #include <QMetaType>
-#include <QString>
 #include <QStringList>
 #include <tuple>
 
@@ -32,8 +31,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of ICAO codes.
         class BLACKMISC_EXPORT CAircraftIcaoCodeList :
             public CSequence<CAircraftIcaoCode>,
-            public BlackMisc::Db::IDatastoreObjectList<CAircraftIcaoCode, CAircraftIcaoCodeList, int>,
-            public BlackMisc::Mixin::MetaType<CAircraftIcaoCodeList>
+            public Db::IDatastoreObjectList<CAircraftIcaoCode, CAircraftIcaoCodeList, int>,
+            public Mixin::MetaType<CAircraftIcaoCodeList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftIcaoCodeList)

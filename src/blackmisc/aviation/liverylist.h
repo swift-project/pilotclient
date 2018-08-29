@@ -31,8 +31,8 @@ namespace BlackMisc
         //! Value object for a list of airports.
         class BLACKMISC_EXPORT CLiveryList :
             public CSequence<CLivery>,
-            public BlackMisc::Db::IDatastoreObjectList<CLivery, CLiveryList, int>,
-            public BlackMisc::Mixin::MetaType<CLiveryList>
+            public Db::IDatastoreObjectList<CLivery, CLiveryList, int>,
+            public Mixin::MetaType<CLiveryList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLiveryList)
