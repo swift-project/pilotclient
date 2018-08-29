@@ -387,7 +387,7 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJson(res));
+                const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJsonCaching(res));
                 if (incrementalModels.isEmpty()) { return; } // currently ignored
                 models = this->getModels();
                 models.replaceOrAddObjectsByKey(incrementalModels);
@@ -396,7 +396,7 @@ namespace BlackCore
             {
                 QTime time;
                 time.start();
-                models = CAircraftModelList::fromDatabaseJson(res);
+                models = CAircraftModelList::fromDatabaseJsonCaching(res);
                 this->logParseMessage("models", models.size(), time.elapsed(), res);
             }
 

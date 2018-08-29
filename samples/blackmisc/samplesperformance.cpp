@@ -275,25 +275,58 @@ namespace BlackSample
         return EXIT_SUCCESS;
     }
 
-    int CSamplesPerformance::samplesJsonModel(QTextStream &out)
+    int CSamplesPerformance::samplesJsonModelAndLivery(QTextStream &out)
     {
         const QString dir = CDirectoryUtils::staticDbFilesDirectory();
-        const QString file = QDir(dir).filePath("models.json");
-        QFile modelFile(file);
-        Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");
+        const QString modelFileName = QDir(dir).filePath("models.json");
+        const QString liveriesFileName = QDir(dir).filePath("liveries.json");
 
-        out << "Load DB JSON file " << modelFile.fileName() << endl;
-        const QString data = CFileUtils::readFileToString(modelFile.fileName());
-        Q_ASSERT_X(!data.isEmpty(), Q_FUNC_INFO, "Model file empty");
+        QFile modelFile(modelFileName);
+        Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");
+        QFile liveryFile(liveriesFileName);
+        Q_ASSERT_X(liveryFile.exists(), Q_FUNC_INFO, "Liveries file does not exist");
+
+        out << "Loaded DB JSON model file " << modelFile.fileName() << endl;
+        const QString modelData = CFileUtils::readFileToString(modelFile.fileName());
+        Q_ASSERT_X(!modelData.isEmpty(), Q_FUNC_INFO, "Model file empty");
+
+        out << "Loaded DB JSON livery file " << liveryFile.fileName() << endl;
+        const QString liveryData = CFileUtils::readFileToString(liveryFile.fileName());
+        Q_ASSERT_X(!liveryData.isEmpty(), Q_FUNC_INFO, "Livery file empty");
 
         // DB format, all models denormalized in DB JSON format
         CDatabaseReader::JsonDatastoreResponse response;
-        CDatabaseReader::stringToDatastoreResponse(data, response);
         QTime timer;
+
+        CDatabaseReader::stringToDatastoreResponse(liveryData, response);
+        timer.start();
+        const CLiveryList dbLiveries = CLiveryList::fromDatabaseJson(response);
+        int ms = timer.elapsed();
+        out << "Read via DB JSON format: " << dbLiveries.size() << " liveries in " << ms << "ms" << endl;
+
+        // does not result in better performance, liveries/airlines have almost a 1:1 ratio
+        // unlike models' fromDatabaseJsonCaching not many airlines will be recycled
+        timer.start();
+        const CLiveryList dbLiveries2 = CLiveryList::fromDatabaseJsonCaching(response);
+        ms = timer.elapsed();
+        out << "Read via DB JSON format (new): " << dbLiveries2.size() << " liveries in " << ms << "ms" << endl;
+
+        const CAirlineIcaoCodeList liveryAirlines = dbLiveries2.getAirlines();
+        timer.start();
+        const CLiveryList dbLiveries3 = CLiveryList::fromDatabaseJsonCaching(response, liveryAirlines);
+        ms = timer.elapsed();
+        out << "Read via DB JSON format (new, passing airlines): " << dbLiveries3.size() << " liveries in " << ms << "ms" << endl;
+
+        CDatabaseReader::stringToDatastoreResponse(modelData, response);
         timer.start();
         const CAircraftModelList dbModels = CAircraftModelList::fromDatabaseJson(response);
-        int ms = timer.elapsed();
+        ms = timer.elapsed();
         out << "Read via DB JSON format: " << dbModels.size() << " models in " << ms << "ms" << endl;
+
+        timer.start();
+        const CAircraftModelList dbModels2 = CAircraftModelList::fromDatabaseJsonCaching(response);
+        ms = timer.elapsed();
+        out << "Read via DB JSON format (new): " << dbModels2.size() << " models in " << ms << "ms" << endl;
 
         // swift JSON format
         const QJsonObject swiftJsonObject = dbModels.toJson();

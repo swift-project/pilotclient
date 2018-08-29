@@ -39,7 +39,7 @@ namespace BlackSample
         static int samplesJson(QTextStream &out);
 
         //! JSON loading (database vs. own format
-        static int samplesJsonModel(QTextStream &out);
+        static int samplesJsonModelAndLivery(QTextStream &out);
 
         //! String manipulation (inserter)
         static int samplesStringUtilsVsRegEx(QTextStream &out);
