@@ -80,6 +80,11 @@ namespace BlackMisc
 
             //! Find by multiple criteria
             CLivery smartLiverySelector(const CLivery &liveryPattern) const;
+
+            //! Caching version from DB data
+            //! \param relatedAirlines passing the airline can skip the parsing from livery
+            //! \remark without passing related airlines there is not much sense using this function, as most airlines/liveries have a 1:1 ratio
+            static CLiveryList fromDatabaseJsonCaching(const QJsonArray &array, const CAirlineIcaoCodeList &relatedAirlines = {});
         };
     } //namespace
 } // namespace

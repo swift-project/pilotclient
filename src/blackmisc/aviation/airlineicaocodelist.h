@@ -113,6 +113,9 @@ namespace BlackMisc
             //! Contains given designator?
             bool containsVDesignator(const QString &vDesignator) const;
 
+            //! To id map
+            AirlineIcaoIdMap toIdMap() const;
+
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true, CAirlineIcaoCodeList *inconsistent = nullptr);
         };

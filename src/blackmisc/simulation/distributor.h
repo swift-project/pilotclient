@@ -24,6 +24,7 @@
 
 #include <QJsonObject>
 #include <QMetaType>
+#include <QMap>
 #include <QString>
 
 namespace BlackMisc
@@ -142,6 +143,10 @@ namespace BlackMisc
                 BLACK_METAMEMBER(simulator)
             );
         };
+
+        //! Distributor/id map
+        using DistributorIdMap = QMap<QString, CDistributor>;
+
     } // namespace
 } // namespace
 

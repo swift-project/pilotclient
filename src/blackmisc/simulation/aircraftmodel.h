@@ -37,7 +37,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMetaType>
-#include <QString>
 #include <QStringList>
 #include <Qt>
 #include <QFileInfo>
@@ -436,6 +435,9 @@ namespace BlackMisc
 
             //! From swift DB JSON
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("mod_"));
+
+            //! From swift DB JSON, caching during this process (faster)
+            static CAircraftModel fromDatabaseJsonCaching(const QJsonObject &json, Aviation::AircraftIcaoIdMap &aircraftIcaos, Aviation::LiveryIdMap &liveries, DistributorIdMap &distributors, const QString &prefix = QString("mod_"));
 
             //! Split swift network string "DLH._STD [modelname]"
             //! \return QStringList [0] livery code , [1] model string

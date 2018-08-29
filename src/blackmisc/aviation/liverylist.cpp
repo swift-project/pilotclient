@@ -203,5 +203,17 @@ namespace BlackMisc
             }
             return CLivery();
         }
+
+        CLiveryList CLiveryList::fromDatabaseJsonCaching(const QJsonArray &array, const CAirlineIcaoCodeList &relatedAirlines)
+        {
+            AirlineIcaoIdMap airlineIcaos = relatedAirlines.toIdMap();
+
+            CLiveryList models;
+            for (const QJsonValue &value : array)
+            {
+                models.push_back(CLivery::fromDatabaseJsonCaching(value.toObject(), airlineIcaos));
+            }
+            return models;
+        }
     } // namespace
 } // namespace

@@ -307,5 +307,16 @@ namespace BlackMisc
             if (vDesignator.length() < 4) { return this->containsDesignator(vDesignator); }
             return this->contains(&CAirlineIcaoCode::getVDesignator, vDesignator.toUpper());
         }
+
+        AirlineIcaoIdMap CAirlineIcaoCodeList::toIdMap() const
+        {
+            AirlineIcaoIdMap map;
+            for (const CAirlineIcaoCode &code : *this)
+            {
+                if (!code.hasValidDbKey()) { continue; }
+                map.insert(code.getDbKey(), code);
+            }
+            return map;
+        }
     } // ns
 } // ns

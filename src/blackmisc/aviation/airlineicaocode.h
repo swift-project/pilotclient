@@ -25,6 +25,7 @@
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+#include <QMap>
 #include <QSet>
 
 namespace BlackMisc
@@ -281,6 +282,10 @@ namespace BlackMisc
                 BLACK_METAMEMBER(isMilitary)
             );
         };
+
+        //! Airline ICAO/id list
+        using AirlineIcaoIdMap = QMap<int, CAirlineIcaoCode>;
+
     } // namespace
 } // namespace
 

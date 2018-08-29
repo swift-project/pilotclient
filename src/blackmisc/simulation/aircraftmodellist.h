@@ -363,6 +363,9 @@ namespace BlackMisc
 
             //! A HTML summary of the data in the list
             QString htmlStatistics(bool aircraftStats, bool airlineStats) const;
+
+            //! Newer version
+            static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array);
         };
 
         //! Model per callsign

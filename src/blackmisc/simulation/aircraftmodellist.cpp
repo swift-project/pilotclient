@@ -22,6 +22,7 @@
 #include <QJsonValue>
 #include <QList>
 #include <QMultiMap>
+#include <QMap>
 #include <tuple>
 
 using namespace BlackMisc::Network;
@@ -1070,7 +1071,7 @@ namespace BlackMisc
             for (const CAircraftModel &model : *this)
             {
                 CAircraftModel copy(model);
-                copy.normalizeFileNameForDb();
+                copy.normalizeFileNameForDb(); // strip full path
                 QJsonValue v(copy.toDatabaseJson());
                 array.append(v);
             }
@@ -1162,6 +1163,20 @@ namespace BlackMisc
                          dbModels.htmlStatistics(false, false);
             }
             return stats;
+        }
+
+        CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(const QJsonArray &array)
+        {
+            AircraftIcaoIdMap aircraftIcaos;
+            LiveryIdMap       liveries;
+            DistributorIdMap  distributors;
+
+            CAircraftModelList models;
+            for (const QJsonValue &value : array)
+            {
+                models.push_back(CAircraftModel::fromDatabaseJsonCaching(value.toObject(), aircraftIcaos, liveries, distributors));
+            }
+            return models;
         }
     } // namespace
 } // namespace

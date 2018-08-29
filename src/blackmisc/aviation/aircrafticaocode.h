@@ -372,6 +372,10 @@ namespace BlackMisc
                 BLACK_METAMEMBER(rank)
             );
         };
+
+        //! Id/CAircraftIcaoCode map
+        using AircraftIcaoIdMap = QMap<int, CAircraftIcaoCode>;
+
     } // namespace
 } // namespace
 

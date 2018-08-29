@@ -772,19 +772,24 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            const QString modelString(json.value(prefix + "modelstring").toString());
-            const QString modelDescription(json.value(prefix + "description").toString());
-            const QString modelName(json.value(prefix + "name").toString());
-            const QString modelMode(json.value(prefix + "mode").toString());
+            static const QString prefixAircraftIcao("ac_");
+            static const QString prefixLivery("liv_");
+            static const QString prefixDistributor("dist_");
+
+            const QString modelString(json.value(prefix % QStringLiteral("modelstring")).toString());
+            const QString modelDescription(json.value(prefix % QStringLiteral("description")).toString());
+            const QString modelName(json.value(prefix % QStringLiteral("name")).toString());
+            const QString modelMode(json.value(prefix % QStringLiteral("mode")).toString());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
-            CDistributor distributor(CDistributor::fromDatabaseJson(json, "dist_"));
-            CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));
-            CLivery livery(CLivery::fromDatabaseJson(json, "liv_"));
+            CDistributor distributor(CDistributor::fromDatabaseJson(json, prefixDistributor));
+            CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, prefixAircraftIcao));
+            CLivery livery(CLivery::fromDatabaseJson(json, prefixLivery));
 
+            //! \todo KB 2018-08 "idaircrafticao" seem not to be used anymore (remove???) in "vAircraftModelDenormalized", but was used in "vAircraftModelComplete"
             if (!aircraftIcao.isLoadedFromDb())
             {
-                const int idAircraftIcao = json.value(prefix + "idaircrafticao").toInt(-1);
+                const int idAircraftIcao = json.value(prefix % QStringLiteral("idaircrafticao")).toInt(-1);
                 if (idAircraftIcao >= 0)
                 {
                     aircraftIcao.setDbKey(idAircraftIcao);
@@ -793,7 +798,7 @@ namespace BlackMisc
 
             if (!livery.isLoadedFromDb())
             {
-                const int idLivery = json.value(prefix + "idlivery").toInt(-1);
+                const int idLivery = json.value(prefix % QStringLiteral("idlivery")).toInt(-1);
                 if (idLivery >= 0)
                 {
                     livery.setDbKey(idLivery);
@@ -802,12 +807,85 @@ namespace BlackMisc
 
             if (!distributor.isLoadedFromDb())
             {
-                const QString idDistributor = json.value(prefix + "iddistributor").toString();
+                const QString idDistributor = json.value(prefix % QStringLiteral("iddistributor")).toString();
                 if (!idDistributor.isEmpty())
                 {
                     distributor.setDbKey(idDistributor);
                 }
             }
+
+            CAircraftModel model(
+                modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery
+            );
+            model.setDistributor(distributor);
+            model.setModelModeAsString(modelMode);
+            model.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            return model;
+        }
+
+        CAircraftModel CAircraftModel::fromDatabaseJsonCaching(
+            const QJsonObject &json,
+            AircraftIcaoIdMap &aircraftIcaos, LiveryIdMap &liveries, DistributorIdMap &distributors,
+            const QString &prefix)
+        {
+            static const QString prefixAircraftIcao("ac_");
+            static const QString prefixLivery("liv_");
+            static const QString prefixDistributor("dist_");
+
+            const QString modelString(json.value(prefix % QStringLiteral("modelstring")).toString());
+            const QString modelDescription(json.value(prefix % QStringLiteral("description")).toString());
+            const QString modelName(json.value(prefix % QStringLiteral("name")).toString());
+            const QString modelMode(json.value(prefix % QStringLiteral("mode")).toString());
+
+            const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
+            const int idAircraftIcao = json.value(prefixAircraftIcao % QStringLiteral("id")).toInt(-1);
+            const int idLivery = json.value(prefixLivery % QStringLiteral("id")).toInt(-1);
+            const QString idDistributor = json.value(prefixDistributor % QStringLiteral("id")).toString();
+            const bool cachedAircraftIcao = (idAircraftIcao >= 0) && aircraftIcaos.contains(idAircraftIcao);
+            const bool cachedLivery = (idLivery >= 0) && liveries.contains(idLivery);
+            const bool cachedDistributor = !idDistributor.isEmpty() && distributors.contains(idDistributor);
+
+            CAircraftIcaoCode aircraftIcao(cachedAircraftIcao ?
+                                           aircraftIcaos[idAircraftIcao] :
+                                           CAircraftIcaoCode::fromDatabaseJson(json, prefixAircraftIcao));
+
+            CLivery livery(cachedLivery ?
+                           liveries[idLivery] :
+                           CLivery::fromDatabaseJson(json, prefixLivery));
+
+            CDistributor distributor(cachedDistributor ?
+                                     distributors[idDistributor] :
+                                     CDistributor::fromDatabaseJson(json, prefixDistributor));
+
+            if (!aircraftIcao.isLoadedFromDb())
+            {
+                if (idAircraftIcao >= 0)
+                {
+                    aircraftIcao.setDbKey(idAircraftIcao);
+                }
+            }
+
+            if (!livery.isLoadedFromDb())
+            {
+                const int idLivery = json.value(prefix % QStringLiteral("idlivery")).toInt(-1);
+                if (idLivery >= 0)
+                {
+                    livery.setDbKey(idLivery);
+                }
+            }
+
+            if (!distributor.isLoadedFromDb())
+            {
+                const QString idDistributor = json.value(prefix % QStringLiteral("iddistributor")).toString();
+                if (!idDistributor.isEmpty())
+                {
+                    distributor.setDbKey(idDistributor);
+                }
+            }
+
+            if (!cachedAircraftIcao && aircraftIcao.isLoadedFromDb()) { aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao; }
+            if (!cachedLivery && livery.isLoadedFromDb()) { liveries[livery.getDbKey()] = livery; }
+            if (!cachedDistributor && distributor.isLoadedFromDb()) { distributors[distributor.getDbKey()] = distributor; }
 
             CAircraftModel model(
                 modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery

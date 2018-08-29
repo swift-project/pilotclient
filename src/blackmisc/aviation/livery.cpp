@@ -263,6 +263,54 @@ namespace BlackMisc
             return livery;
         }
 
+        CLivery CLivery::fromDatabaseJsonCaching(const QJsonObject &json, AirlineIcaoIdMap &airlineIcaos, const QString &prefix)
+        {
+            if (!existsKey(json,  prefix))
+            {
+                // when using relationship, this can be null
+                return CLivery();
+            }
+
+            const QString combinedCode(json.value(prefix % QStringLiteral("combinedcode")).toString());
+            if (combinedCode.isEmpty())
+            {
+                CLivery liveryStub; // only consists of id, maybe key and timestamp
+                liveryStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                return liveryStub;
+            }
+
+            const bool isColorLivery = combinedCode.startsWith(colorLiveryMarker());
+            const QString description(json.value(prefix % QStringLiteral("description")).toString());
+            const CRgbColor colorFuselage(json.value(prefix % QStringLiteral("colorfuselage")).toString());
+            const CRgbColor colorTail(json.value(prefix % QStringLiteral("colortail")).toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
+
+            CAirlineIcaoCode airline;
+            if (!isColorLivery)
+            {
+                static const QString prefixAirline("al_");
+                const int idAirlineIcao = json.value(prefixAirline % "id").toInt(-1);
+                const bool cachedAirlineIcao = idAirlineIcao >= 0 && airlineIcaos.contains(idAirlineIcao);
+
+                airline = cachedAirlineIcao ?
+                          airlineIcaos[idAirlineIcao] :
+                          CAirlineIcaoCode::fromDatabaseJson(json, prefixAirline);
+
+                if (!cachedAirlineIcao && airline.isLoadedFromDb())
+                {
+                    airlineIcaos[idAirlineIcao] = airline;
+                }
+            }
+
+            CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
+            livery.setKeyAndTimestampFromDatabaseJson(json, prefix);
+
+            // color liveries must have default ICAO, but airline liveries must have DB airline
+            BLACK_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
+
+            return livery;
+        }
+
         bool CLivery::isValidCombinedCode(const QString &candidate)
         {
             if (candidate.isEmpty()) { return false; }

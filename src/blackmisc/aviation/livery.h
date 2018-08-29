@@ -22,6 +22,7 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
+#include <QMap>
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
@@ -198,6 +199,9 @@ namespace BlackMisc
             //! Object from JSON
             static CLivery fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("liv_"));
 
+            //! Object from JSON caching
+            static CLivery fromDatabaseJsonCaching(const QJsonObject &json, AirlineIcaoIdMap &airlineIcaos, const QString &prefix = QString("liv_"));
+
             //! Valid combined code string?
             static bool isValidCombinedCode(const QString &candidate);
 
@@ -233,6 +237,10 @@ namespace BlackMisc
                 BLACK_METAMEMBER(military)
             );
         };
+
+        //! Id/CLivery map
+        using LiveryIdMap = QMap<int, CLivery>;
+
     } // namespace
 } // namespace
 
