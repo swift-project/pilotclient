@@ -251,7 +251,7 @@ namespace BlackMisc
         qint64 oldestAdjustedTimestampMsecsSinceEpoch() const;
 
         //! Set the hint
-        void setAdjustedSortHint(HintAdjustedTimestampSort hint) { m_tsAdjustedSortHint = hint; }
+        void setAdjustedSortHint(HintAdjustedTimestampSort hint);
 
     protected:
         //! Constructor

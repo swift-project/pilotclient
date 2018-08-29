@@ -643,6 +643,12 @@ namespace BlackMisc
         return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
     }
 
+    template <class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::setAdjustedSortHint(HintAdjustedTimestampSort hint)
+    {
+        m_tsAdjustedSortHint = hint;
+    }
+
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;

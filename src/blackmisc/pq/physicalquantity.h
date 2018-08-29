@@ -70,11 +70,11 @@ namespace BlackMisc
             };
 
             //! Unit
-            const MU &getUnit() const { return m_unit; }
+            const MU &getUnit() const;
 
             //! Simply set unit, do no calclulate conversion
             //! \sa switchUnit
-            void setUnit(const MU &unit) { m_unit = unit; }
+            void setUnit(const MU &unit);
 
             //! Set unit by string
             void setUnitBySymbol(const QString &unitName);

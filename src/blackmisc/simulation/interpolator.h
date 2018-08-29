@@ -227,7 +227,7 @@ namespace BlackMisc
             void initCorrespondingModel(const CAircraftModel &model = {});
 
             //! Mark as unit test
-            void markAsUnitTest() { m_unitTest = true; }
+            void markAsUnitTest();
 
         protected:
             //! Constructor

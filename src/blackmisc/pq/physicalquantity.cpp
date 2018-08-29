@@ -42,6 +42,18 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         template <class MU, class PQ>
+        const MU & CPhysicalQuantity<MU, PQ>::getUnit() const
+        {
+            return m_unit;
+        }
+
+        template <class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::setUnit(const MU &unit)
+        {
+            m_unit = unit;
+        }
+
+        template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setUnitBySymbol(const QString &unitName)
         {
             m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);

@@ -481,6 +481,12 @@ namespace BlackMisc
             this->getAndFetchModelCG();
         }
 
+        template<typename Derived>
+        void CInterpolator<Derived>::markAsUnitTest()
+        {
+            m_unitTest = true;
+        }
+
         CInterpolationResult::CInterpolationResult()
         {
             this->reset();
