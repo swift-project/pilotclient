@@ -25,7 +25,7 @@ namespace BlackMisc
             struct TModelMatching : public TSettingTrait<CAircraftMatcherSetup>
             {
                 //! Key in data cache
-                static const char *key() { return "Matching"; }
+                static const char *key() { return "matching"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Model matching"); return name; }
