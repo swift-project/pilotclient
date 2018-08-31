@@ -74,12 +74,9 @@ msvc:!llvm: QMAKE_CXXFLAGS *= /bigobj
 # No gigantic MinGW obj files
 ################################
 
-# If you get variables, optimized out during debugging, try to comment the first and uncomment
-# the second line. This disables all debug optimizations. But be warned, that the build
-# will take hours.
-
-win32-g++: CONFIG += optimize_debug
-# win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
+# To reduce the size of MinGW binaries, uncomment the first and comment the second line
+# win32-g++: CONFIG += optimize_debug
+win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
 
 ################################
 # FSX or FS9 on 32bit Windows only
