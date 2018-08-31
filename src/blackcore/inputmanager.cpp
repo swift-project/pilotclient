@@ -31,6 +31,7 @@ namespace BlackCore
     {
         connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::ps_processKeyCombinationChanged, Qt::QueuedConnection);
         connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::ps_processButtonCombinationChanged, Qt::QueuedConnection);
+        reloadHotkeySettings();
     }
 
     CInputManager *CInputManager::instance()
@@ -69,7 +70,7 @@ namespace BlackCore
         }
     }
 
-    void CInputManager::onChangedHotkeySettings()
+    void CInputManager::reloadHotkeySettings()
     {
         m_configuredActions.clear();
         for (const CActionHotkey &actionHotkey : m_actionHotkeys.getThreadLocal())

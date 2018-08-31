@@ -122,8 +122,8 @@ namespace BlackCore
             std::function<void(bool)> m_function;
         };
 
-        //! Change hotkey settings
-        void onChangedHotkeySettings();
+        //! Reload hotkey settings
+        void reloadHotkeySettings();
 
         //! Bind action
         int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
@@ -143,7 +143,7 @@ namespace BlackCore
         BlackMisc::Input::CHotkeyCombination m_lastCombination;
         BlackMisc::Input::CHotkeyCombination m_capturedCombination;
 
-        BlackMisc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::onChangedHotkeySettings };
+        BlackMisc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
     };
 } // ns
 
