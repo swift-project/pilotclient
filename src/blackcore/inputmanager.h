@@ -107,9 +107,7 @@ namespace BlackCore
         //! Constructor
         CInputManager(QObject *parent = nullptr);
 
-    private slots:
-        void ps_processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
-        void ps_processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+
 
     private:
         //! Handle to a bound action
@@ -124,6 +122,9 @@ namespace BlackCore
 
         //! Reload hotkey settings
         void reloadHotkeySettings();
+
+        void processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+        void processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
 
         //! Bind action
         int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
