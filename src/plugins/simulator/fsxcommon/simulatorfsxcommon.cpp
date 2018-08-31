@@ -1272,9 +1272,11 @@ namespace BlackSimPlugin
             {
                 // problem: we try to delete an aircraft just requested to be added
                 // best solution so far, call remove again with a delay
-                CLogMessage(this).warning("Object: %1 requested to be removed, but pedning added (%2) / or pending lights(%3). CS '%3' will be removed again.")
-                        << simObject.toQString() << boolToYesNo(pendingAdded) << boolToYesNo(stillWaitingForLights) << callsign.asString();
+                CLogMessage(this).warning("Object: '%1' requested to be removed, but pedning added (%2) / or pending lights(%3). CS '%4' will be removed again.")
+                        << simObject.toQString() << boolToYesNo(pendingAdded)
+                        << boolToYesNo(stillWaitingForLights) << callsign.asString();
                 simObject.fakeCurrentLightsInSimulator(); // next time looks like we have lights
+                simObject.setRemovedWhileAdding(true);
                 QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(2000, this, [ = ]
                 {
@@ -2064,7 +2066,7 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
         {
-            const CCallsignSet callsignsToBeRemoved(getCallsignsMissingInProvider());
+            const CCallsignSet callsignsToBeRemoved(this->getCallsignsMissingInProvider());
             if (callsignsToBeRemoved.isEmpty()) { return callsignsToBeRemoved; }
             for (const CCallsign &callsign : callsignsToBeRemoved)
             {

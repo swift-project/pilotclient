@@ -131,11 +131,17 @@ namespace BlackSimPlugin
             //! Marked as confirmed, means the simulator has "confirmed" the objectId as added and not instantly removed the object
             void setConfirmedAdded(bool confirm);
 
+            //! Special states
+            //! @{
+            void setAddedWhileRemoved(bool addedWileRemoved);
+            void setRemovedWhileAdding(bool removedWhileAdding);
+            //! @}
+
             //! Removing is pending
             bool isPendingRemoved() const { return m_pendingRemoved; }
 
             //! Object which can be used for sending, not pending and valid ids
-            bool isReadyToSend() const { return !this->isPending() && this->hasValidRequestAndObjectId(); }
+            bool isReadyToSend() const;
 
             //! Marked as pending for removal
             void setPendingRemoved(bool pending);
@@ -210,7 +216,9 @@ namespace BlackSimPlugin
             bool m_confirmedAdded = false;
             bool m_pendingRemoved = false;
             bool m_camera         = false;
-            int m_lightsRequestedAt = -1;
+            bool m_removedWhileAdding = false;
+            bool m_addedWhileRemoving = false;
+            int m_lightsRequestedAt   = -1;
             GUID m_cameraGuid;
             SIMCONNECT_DATA_XYZ m_cameraPosition;
             SIMCONNECT_DATA_PBH m_cameraRotation;

@@ -115,12 +115,31 @@ namespace BlackSimPlugin
         void CSimConnectObject::setConfirmedAdded(bool confirm)
         {
             m_confirmedAdded = confirm;
+            m_removedWhileAdding = false;
+            m_addedWhileRemoving = false;
             m_aircraft.setRendered(true);
+        }
+
+        void CSimConnectObject::setAddedWhileRemoved(bool addedWileRemoved)
+        {
+            m_addedWhileRemoving = addedWileRemoved;
+        }
+
+        void CSimConnectObject::setRemovedWhileAdding(bool removedWhileAdding)
+        {
+            m_removedWhileAdding = removedWhileAdding;
+        }
+
+        bool CSimConnectObject::isReadyToSend() const
+        {
+            return !this->isPending() && !m_addedWhileRemoving && !m_removedWhileAdding;
         }
 
         void CSimConnectObject::setPendingRemoved(bool pending)
         {
             m_pendingRemoved = pending;
+            m_removedWhileAdding = false;
+            m_addedWhileRemoving = false;
             m_aircraft.setRendered(false);
         }
 
@@ -138,6 +157,8 @@ namespace BlackSimPlugin
         {
             m_pendingRemoved = false;
             m_confirmedAdded = false;
+            m_removedWhileAdding = false;
+            m_addedWhileRemoving = false;
             m_camera = false;
             m_currentLightsInSim = CAircraftLights();
             m_lightsAsSent = CAircraftLights();
@@ -180,8 +201,8 @@ namespace BlackSimPlugin
 
         QString CSimConnectObject::toQString() const
         {
-            static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5");
-            return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved));
+            static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7");
+            return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving));
         }
 
         CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
