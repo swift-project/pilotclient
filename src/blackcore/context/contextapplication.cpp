@@ -107,11 +107,13 @@ namespace BlackCore
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
             Q_UNUSED(s);
 
-            s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [ = ](const QString & action, bool argument)
+            s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, this, [ = ](const QString & action, bool argument)
             {
                 if (!myself) { return; }
                 this->callHotkeyAction(action, argument, {});
-            });
+            },
+            Qt::QueuedConnection);
+
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote action failed");
             Q_UNUSED(s);
 
