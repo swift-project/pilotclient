@@ -2,13 +2,11 @@
 <ui version="4.0">
  <class>CSimulatorFsxConfigWindow</class>
  <widget class="QWidget" name="CSimulatorFsxConfigWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>500</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>FSX/P3D plugin settings</string>
@@ -70,7 +68,7 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignTop">
         <widget class="BlackSimPlugin::FsxCommon::CFsxSettingsComponent" name="comp_FsxSettings">
          <property name="minimumSize">
           <size>
@@ -79,19 +77,6 @@
           </size>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

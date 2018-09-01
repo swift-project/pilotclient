@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
+    <width>600</width>
     <height>593</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>500</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Emulated simulator monitor</string>
@@ -81,7 +87,7 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignTop">
         <widget class="BlackGui::Editors::CSituationForm" name="editor_Situation">
          <property name="minimumSize">
           <size>
@@ -90,19 +96,6 @@
           </size>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="vs_Situation">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
