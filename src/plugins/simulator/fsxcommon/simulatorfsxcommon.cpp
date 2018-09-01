@@ -9,6 +9,7 @@
 
 #include "simulatorfsxcommon.h"
 #include "simconnectsymbols.h"
+#include "simconnectfunctions.h"
 #include "blackcore/application.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
@@ -48,15 +49,6 @@ namespace BlackSimPlugin
 {
     namespace FsxCommon
     {
-        //! Correctly casted values/checks @{
-        static HRESULT inline  s_ok() { return S_OK; }
-        static bool inline isOk(HRESULT result) { return result == s_ok(); }
-        static bool inline isOk(HRESULT hr1, HRESULT hr2, HRESULT hr3 = s_ok(), HRESULT hr4 = s_ok()) { return isOk(hr1) && isOk(hr2) && isOk(hr3) && isOk(hr4); }
-        static bool inline isFailure(HRESULT result) { return !isOk(result); }
-        static bool inline isFailure(HRESULT hr1, HRESULT hr2, HRESULT hr3 = s_ok(), HRESULT hr4 = s_ok()) { return !isOk(hr1, hr2, hr3, hr4); }
-        static bool inline dtb(double doubleBool) { return static_cast<bool>(qRound(doubleBool)); }
-        //! @}
-
         CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,

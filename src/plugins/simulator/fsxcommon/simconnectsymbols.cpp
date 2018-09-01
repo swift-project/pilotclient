@@ -10,7 +10,7 @@
 #include "simconnectsymbols.h"
 #include "blackmisc/logmessage.h"
 #include <QLibrary>
-#include <windows.h>
+#include <Windows.h>
 #include <SimConnect.h>
 #include <array>
 

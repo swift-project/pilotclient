@@ -9,6 +9,7 @@
 
 #include "simconnectdatadefinition.h"
 #include "simconnectsymbols.h"
+#include "simconnectfunctions.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/logmessage.h"
@@ -75,7 +76,7 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             hr += initOwnAircraft(hSimConnect);
             hr += initRemoteAircraft(hSimConnect);
             hr += initRemoteAircraftSimData(hSimConnect);
@@ -86,7 +87,7 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initOwnAircraft(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
@@ -105,7 +106,7 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT BEACON", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT NAV", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LOGO", "Bool");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1", NULL);
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1", nullptr);
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:1", "MHz");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:2", "MHz");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
@@ -120,8 +121,8 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
 
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
-            if (hr != S_OK)
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initOwnAircraft %1") << hr;
             }
@@ -130,9 +131,9 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initRemoteAircraft(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             // Position
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition, "Initial Position", nullptr, SIMCONNECT_DATATYPE_INITPOSITION);
 
             // Hint: "Bool" and "Percent .." are units name
             // default data type is SIMCONNECT_DATATYPE_FLOAT64 -> double
@@ -154,7 +155,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:4", "Bool");
 
             // Lights (other definition)
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
 
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT STROBE", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LANDING", "Bool");
@@ -166,7 +167,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT RECOGNITION", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT CABIN", "Bool");
 
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSituation %1") << hr;
             }
@@ -175,25 +176,25 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initRemoteAircraftSimData(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE LATITUDE", "degrees");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE LONGITUDE", "degrees");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE ALTITUDE", "Feet");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "GROUND ALTITUDE", "Feet");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "STATIC CG TO GROUND", "Feet");
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftGetPosition %1") << hr;
             }
 
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "STATIC CG TO GROUND", "Feet");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC TYPE", NULL, SIMCONNECT_DATATYPE_STRING32);
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC MODEL", NULL, SIMCONNECT_DATATYPE_STRING32);
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC ID", NULL, SIMCONNECT_DATATYPE_STRING32);
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC AIRLINE", NULL, SIMCONNECT_DATATYPE_STRING64);
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC FLIGHT NUMBER", NULL, SIMCONNECT_DATATYPE_STRING8);
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
-            if (hr != S_OK)
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC TYPE", nullptr, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC MODEL", nullptr, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC ID", nullptr, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC AIRLINE", nullptr, SIMCONNECT_DATATYPE_STRING64);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC FLIGHT NUMBER", nullptr, SIMCONNECT_DATATYPE_STRING8);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftModelData %1") << hr;
             }
@@ -203,10 +204,10 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initSimulatorEnvironment(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "ZULU TIME", "", SIMCONNECT_DATATYPE_INT32);
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "LOCAL TIME", "", SIMCONNECT_DATATYPE_INT32);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initSimulatorEnvironment %1") << hr;
             }
@@ -215,12 +216,12 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initSbDataArea(const HANDLE hSimConnect)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             const DWORD sbSize = sizeof(DataDefinitionClientAreaSb);
 
             // We need to know the client area 'name' and map it to a client ID
             hr += SimConnect_MapClientDataNameToID(hSimConnect, "SquawkBox Data", ClientAreaSquawkBox);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_MapClientDataNameToID %1") << hr;
                 return hr;
@@ -228,7 +229,7 @@ namespace BlackSimPlugin
 
             // Mapping needs to be first
             hr += SimConnect_CreateClientData(hSimConnect, ClientAreaSquawkBox, sbSize, SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_CreateClientData %1") << hr;
                 return hr;
@@ -237,7 +238,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSb, 0, sbSize);
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbStandby, 17, 1);
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbIdent, 19, 1);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SB data area data definitions %1") << hr;
                 return hr;
@@ -247,7 +248,7 @@ namespace BlackSimPlugin
             DataDefinitionClientAreaSb sbArea;
             sbArea.setDefaultValues();
             hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, sbSize, &sbArea);
-            if (hr != S_OK)
+            if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_SetClientData %1") << hr;
             }
@@ -339,7 +340,10 @@ namespace BlackSimPlugin
 
         CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
         {
-            return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo, lightRecognition, lightCabin);
+            return CAircraftLights(
+                       dtb(lightStrobe), dtb(lightLanding), dtb(lightTaxi),
+                       dtb(lightBeacon), dtb(lightNav), dtb(lightLogo), dtb(lightRecognition),
+                       dtb(lightCabin));
         }
     } // namespace
 } // namespace
