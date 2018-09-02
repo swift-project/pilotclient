@@ -1675,6 +1675,13 @@ namespace BlackSimPlugin
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
             position.Airspeed = static_cast<DWORD>(situation.getGroundSpeed().valueInteger(CSpeedUnit::kts()));
 
+            // sanity check
+            if (CBuildConfig::isLocalDeveloperDebugBuild() && situation.getGroundSpeed().isNegativeWithEpsilonConsidered())
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Negative speed");
+                position.Airspeed = 0;
+            }
+
             // MSFS has inverted pitch and bank angles
             position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
             position.Bank  = -situation.getBank().value(CAngleUnit::deg());

@@ -58,19 +58,19 @@ namespace BlackSimPlugin
             }
 
             //! Returns the FS9 pitch multiplier
-            static double pitchMultiplier ()
+            static double pitchMultiplier()
             {
                 return 256.0  / 90.0;
             }
 
             //! Return the FS9 bank multiplier
-            static double bankMultiplier ()
+            static double bankMultiplier()
             {
                 return 512.0  / 180.0;
             }
 
             //! Returns the FS9 heading multiplier
-            static double headingMultiplier ()
+            static double headingMultiplier()
             {
                 return 1024.0 / 360.0;
             }
@@ -153,7 +153,7 @@ namespace BlackSimPlugin
         {
             quint32 application_time = 0; //!< Application time - ignored
             quint32 packet_index = 0; //!< Packet index
-            std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
+            std::array<quint8, 4> reserved = std::array<quint8, 4> {{0, 0, 0, 0}}; //!< Reserved
             quint32 pbh = 0; //!< Pitch/Bank/Heading
             qint32 lat_i = 0; //!< Latitude - integer
             qint32 lon_hi = 0; //!< Longitude - integer
@@ -161,7 +161,7 @@ namespace BlackSimPlugin
             quint16 lat_f = 0; //!< Latitude - fraction
             quint16 lon_lo = 0; //!< Longitude - fraction
             quint16 alt_f = 0; //!< Altitude - fraction
-            std::array<quint8, 2> unknown = std::array<quint8, 2>{{0, 0}}; //!< Unknown packet
+            std::array<quint8, 2> unknown = std::array<quint8, 2> {{0, 0}}; //!< Unknown packet
         };
 
         //! Full multiplayer position and velocity packet
@@ -173,14 +173,14 @@ namespace BlackSimPlugin
             qint32 lon_velocity = 0; //!< Longitude velocity
             qint32 alt_velocity = 0; //!< Altitude velocity
             quint32 ground_velocity = 0; //!< Ground velocity
-            std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
-            quint32 pbh = 0; //!< Pitch/Bank/Heading
-            qint32 lat_i = 0; //!< Latitude - integer
-            qint32 lon_hi = 0; //!< Longitude - integer
-            qint32 alt_i = 0; //!< Altitude - integer
-            quint16 lat_f = 0; //!< Latitude - fraction
+            std::array<quint8, 4> reserved = std::array<quint8, 4> {{0, 0, 0, 0}}; //!< Reserved
+            quint32 pbh    = 0; //!< Pitch/Bank/Heading
+            qint32 lat_i   = 0; //!< Latitude - integer
+            qint32 lon_hi  = 0; //!< Longitude - integer
+            qint32 alt_i   = 0; //!< Altitude - integer
+            quint16 lat_f  = 0; //!< Latitude - fraction
             quint16 lon_lo = 0; //!< Longitude - fraction
-            quint16 alt_f = 0; //!< Altitude - fraction
+            quint16 alt_f  = 0; //!< Altitude - fraction
         };
 
         //! Player info
@@ -213,16 +213,18 @@ namespace BlackSimPlugin
         union FS_PBH
         {
             unsigned int pbh = 0; //!< Pitch/Bank/Heading as integer value
+
+            //! PBH
             struct
             {
-                unsigned int unused   : 1; //!< unused bit
-                unsigned int onground : 1; //!< Onground flag
+                unsigned int unused   : 1;  //!< unused bit
+                unsigned int onground : 1;  //!< Onground flag
                 unsigned int hdg      : 10; //!< Heading
                 int bank              : 10; //!< Bank
                 int pitch             : 10; //!< Pitch
             };
         };
     }
-}
+} // ns
 
-#endif // BLACKSIMPLUGIN_FS9_FS9SDK_H
+#endif // guard
