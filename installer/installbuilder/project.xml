@@ -130,16 +130,16 @@
     <!--  <allowedLanguages>en fr es it de ja nl ru zh_CN no pt_BR</allowedLanguages> -->
     <enableRollback>0</enableRollback>
     <enableTimestamp>1</enableTimestamp>
-    <osxApplicationBundleIcon>../images/swift.icns</osxApplicationBundleIcon>
+    <osxApplicationBundleIcon>../images/swiftinstaller.icns</osxApplicationBundleIcon>
     <wmImage>../images/logo.png</wmImage>
     <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
-    <osxUninstallerApplicationBundleIcon>../images/swift.icns</osxUninstallerApplicationBundleIcon>
+    <osxUninstallerApplicationBundleIcon>../images/swiftinstaller.icns</osxUninstallerApplicationBundleIcon>
     <outputDirectory>.</outputDirectory>
-    <productDisplayIcon>../images/swift.ico</productDisplayIcon>
+    <productDisplayIcon>../images/swiftinstaller.ico</productDisplayIcon>
     <saveRelativePaths>1</saveRelativePaths>
     <startMenuGroupName>swift ${project.version} ${architecture}bit</startMenuGroupName>
     <vendor>swift Project</vendor>
-    <windowsExecutableIcon>../images/swift.ico</windowsExecutableIcon>
+    <windowsExecutableIcon>../images/swiftinstaller.ico</windowsExecutableIcon>
 
     <!-- <windowsResourceOriginalFilename>TODO</windowsResourceOriginalFilename>  
  <windowsResourceFileDescription>TODO</windowsResourceFileDescription>  
