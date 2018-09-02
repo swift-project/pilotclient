@@ -645,8 +645,9 @@ namespace BlackCore
         CCoreFacadeConfig                      m_coreFacadeConfig;        //!< Core facade config if any
         CWebReaderFlags::WebReader             m_webReadersUsed;          //!< Readers to be used
         Db::CDatabaseReaderConfigList          m_dbReaderConfig;          //!< Load or used caching?
-        bool m_useContexts = false;            //!< use contexts
-        bool m_useWebData = false;             //!< use web data
+        bool m_noNwAccessPoint = false;        //!< no network access point?
+        bool m_useContexts   = false;          //!< use contexts
+        bool m_useWebData    = false;          //!< use web data
         bool m_signalStartup = true;           //!< signal startup automatically
         bool m_devFlag = false;                //!< dev. environment
         bool m_saveSettingsOnShutdown = true;  //!< saving all settings on shutdown

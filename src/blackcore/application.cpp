@@ -1086,12 +1086,11 @@ namespace BlackCore
     void CApplication::onNetworkConfigurationsUpdateCompleted()
     {
         Q_ASSERT_X(m_networkConfigManager, Q_FUNC_INFO, "Need network config manager");
-        const QNetworkConfiguration config = m_networkConfigManager->defaultConfiguration();
         const QList<QNetworkConfiguration> allConfigurations = m_networkConfigManager->allConfigurations();
         if (allConfigurations.isEmpty())
         {
             // this is an odd situation we cannot handle, network check will be disabled
-            if (!m_networkWatchDog->isNetworkAccessibilityCheckDisabled())
+            if (m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
             {
                 m_networkWatchDog->disableNetworkAccessibilityCheck(true);
                 m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
@@ -1100,25 +1099,32 @@ namespace BlackCore
         }
         else
         {
-            int active = 0;
-            int valid = 0;
+            int activeCount = 0;
+            int validCount  = 0;
             for (const QNetworkConfiguration &config : allConfigurations)
             {
-                if (config.state() == QNetworkConfiguration::Active) { active++; }
-                if (config.isValid()) { valid++; }
+                if (config.state() == QNetworkConfiguration::Active) { activeCount++; m_noNwAccessPoint = false; }
+                if (config.isValid()) { validCount++; }
             }
-            Q_UNUSED(valid);
+            Q_UNUSED(validCount);
 
-            // const bool isOnline = m_networkConfigManager->isOnline();
             const bool canStartIAP = (m_networkConfigManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
-            const bool disable = active < 1; // only inactive
-            if (disable) { CLogMessage(this).warning("Disabling network accessibility check in watchdog"); }
-            m_networkWatchDog->disableNetworkAccessibilityCheck(disable);
+            const bool disable = activeCount < 1; // only inactive
+            if (disable && m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
+            {
+                CLogMessage(this).warning("Disabling network accessibility check in watchdog");
+                m_networkWatchDog->disableNetworkAccessibilityCheck(disable);
+            }
 
             // Is there default access point, use it
+            const QNetworkConfiguration config = m_networkConfigManager->defaultConfiguration();
             if (!config.isValid() || (!canStartIAP && config.state() != QNetworkConfiguration::Active))
             {
-                CLogMessage(this).warning("No network access point found for swift");
+                if (!m_noNwAccessPoint)
+                {
+                    m_noNwAccessPoint = true;
+                    CLogMessage(this).warning("No network access point found for swift");
+                }
             }
         }
     }

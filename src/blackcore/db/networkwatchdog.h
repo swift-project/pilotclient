@@ -130,6 +130,10 @@ namespace BlackCore
             //! \threadsafe
             bool isNetworkAccessibilityCheckDisabled() const { return m_disableNetworkCheck; }
 
+            //! Network check enabled?
+            //! \threadsafe
+            bool isNetworkAccessibilityCheckEnabled() const { return !this->isNetworkAccessibilityCheckDisabled(); }
+
             //! URL referring to the DB
             //! \remark depends on BlackCore::Application::getGlobalSetup()
             static bool isDbUrl(const BlackMisc::Network::CUrl &url);
