@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>412</height>
+    <width>336</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
       <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used for model matching.&lt;br/&gt;&lt;br/&gt;1) Reload your models if not already done&lt;br/&gt;2) Create your model set and SAVE the model set&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The model set defines aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used for model matching.&lt;br/&gt;&lt;br/&gt;Hint: If you already have a model set, or you have copied the model set, you can skip this step.&lt;br/&gt;&lt;br/&gt;1) Reload your models if not already done&lt;br/&gt;2) Create your model set and SAVE the model set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
@@ -187,7 +187,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>200</height>
+             <height>150</height>
             </size>
            </property>
           </widget>
