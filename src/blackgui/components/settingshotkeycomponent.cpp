@@ -50,8 +50,9 @@ namespace BlackGui
             connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
             connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
             connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::removeEntry);
+            connect(ui->tb_ReloadHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings);
 
-            reloadHotkeysFromSettings();
+            this->reloadHotkeysFromSettings();
             ui->tv_Hotkeys->selectRow(0);
         }
 

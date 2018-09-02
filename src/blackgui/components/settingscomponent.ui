@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CSettingsComponent</class>
  <widget class="QTabWidget" name="CSettingsComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>211</width>
-    <height>378</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
@@ -338,12 +330,6 @@
    </layout>
   </widget>
   <widget class="QWidget" name="tb_SettingsHotkeys">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
    <attribute name="title">
     <string>Hotkeys</string>
    </attribute>
@@ -363,13 +349,13 @@
     <property name="bottomMargin">
      <number>1</number>
     </property>
-    <item>
+    <item alignment="Qt::AlignTop">
      <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_SettingsHotkeysComponent">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>150</height>
+       </size>
       </property>
      </widget>
     </item>

@@ -2,18 +2,10 @@
 <ui version="4.0">
  <class>CSettingsHotkeyComponent</class>
  <widget class="QFrame" name="CSettingsHotkeyComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>193</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Hotkeys</string>
   </property>
-  <layout class="QGridLayout" name="gl_HotKeyComponent">
+  <layout class="QVBoxLayout" name="vl_SettingsHotkeys">
    <property name="leftMargin">
     <number>1</number>
    </property>
@@ -23,41 +15,7 @@
    <property name="rightMargin">
     <number>1</number>
    </property>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="pb_AddHotkey">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pb_EditHotkey">
-     <property name="text">
-      <string>Edit</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pb_RemoveHotkey">
-     <property name="text">
-      <string>Remove</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <spacer name="hs_HotkeyComponent">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0" colspan="5">
+   <item>
     <widget class="QTableView" name="tv_Hotkeys">
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustToContents</enum>
@@ -76,25 +34,83 @@
      </attribute>
     </widget>
    </item>
-   <item row="3" column="1">
-    <spacer name="vs_HotkeyComponent">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
+   <item>
+    <widget class="QWidget" name="wi_Buttons" native="true">
+     <layout class="QHBoxLayout" name="hl_Buttons">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QToolButton" name="tb_ReloadHotkey">
+        <property name="toolTip">
+         <string>reload hotkey settings</string>
+        </property>
+        <property name="statusTip">
+         <string>reload settings</string>
+        </property>
+        <property name="text">
+         <string>reload</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pb_EditHotkey">
+        <property name="text">
+         <string>edit</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pb_AddHotkey">
+        <property name="text">
+         <string>add</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_RemoveHotkey">
+        <property name="text">
+         <string>remove</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <tabstops>
+  <tabstop>tv_Hotkeys</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>
