@@ -174,10 +174,10 @@
                 </platformTest>
             </ruleList>
         </runProgram>
-        <launchBrowser>
+        <!-- <launchBrowser>
             <url>http://www.swift-project.org</url>
             <progressText>Visit the swift project page</progressText>
-        </launchBrowser>
+        </launchBrowser> -->
     </finalPageActionList>
     <licenseFileList>
         <licenseFile>
