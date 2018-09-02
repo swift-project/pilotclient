@@ -108,7 +108,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
     </folderList>
     <startMenuShortcutList>
         <startMenuShortcut>
-            <comment></comment>
+            <comment>Run swiftgui</comment>
             <name>swiftgui ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
@@ -118,7 +118,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <windowsPath></windowsPath>
         </startMenuShortcut>
         <startMenuShortcut>
-            <comment></comment>
+            <comment>Run swiftcore</comment>
             <name>swiftcore ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
@@ -128,7 +128,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <windowsPath></windowsPath>
         </startMenuShortcut>
         <startMenuShortcut>
-            <comment></comment>
+            <comment>Run swiftdata</comment>
             <name>swiftdata ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
@@ -138,7 +138,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <windowsPath></windowsPath>
         </startMenuShortcut>
         <startMenuShortcut>
-            <comment></comment>
+            <comment>>Run swiftlauncher</comment>
             <name>swiftlauncher ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
@@ -148,7 +148,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <windowsPath></windowsPath>
         </startMenuShortcut>
         <startMenuShortcut>
-            <comment></comment>
+            <comment>Uninstall swift</comment>
             <name>Uninstall swift ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
