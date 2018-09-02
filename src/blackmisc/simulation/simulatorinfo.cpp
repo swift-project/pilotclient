@@ -149,8 +149,8 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             const Simulator s = getSimulator();
             const QString str =
-                (s.testFlag(FSX) ? QStringLiteral("FS9 ") : QStringLiteral("")) %
-                (s.testFlag(FS9) ? QStringLiteral("FSX ") : QStringLiteral("")) %
+                (s.testFlag(FSX) ? QStringLiteral("FSX ") : QStringLiteral("")) %
+                (s.testFlag(FS9) ? QStringLiteral("FS9 ") : QStringLiteral("")) %
                 (s.testFlag(P3D) ? QStringLiteral("P3D ") : QStringLiteral("")) %
                 (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QStringLiteral(""));
             return str.trimmed();
@@ -280,14 +280,14 @@ namespace BlackMisc
             static const CSimulatorInfo locallyInstalled(CSimulatorInfo::getLocallyInstalledSimulators());
             if (CBuildConfig::isRunningOnLinuxPlatform())
             {
-                return CSimulatorInfo("XPLANE");
+                return CSimulatorInfo::xplane();
             }
-            if (locallyInstalled.isP3D()) { return CSimulatorInfo("P3D"); }
-            if (locallyInstalled.isFSX()) { return CSimulatorInfo("FSX"); }
-            if (locallyInstalled.isFS9()) { return CSimulatorInfo("FS9"); }
+            if (locallyInstalled.isP3D()) { return CSimulatorInfo::p3d(); }
+            if (locallyInstalled.isFSX()) { return CSimulatorInfo::fsx(); }
+            if (locallyInstalled.isFS9()) { return CSimulatorInfo::fs9(); }
 
             // fallback
-            return CSimulatorInfo("P3D");
+            return CSimulatorInfo::p3d();
         }
         //! \endcond
 
