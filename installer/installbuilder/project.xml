@@ -38,6 +38,45 @@
             </ruleList>
         </createBundleDmg>
     </postBuildActionList>
+    <preInstallationActionList>
+        <!-- TODO Linux/MacOS: Save and load last install dir -->
+        <setInstallerVariable>
+            <name>installBaseDir</name>
+            <value>${platform_install_prefix}</value>
+        </setInstallerVariable>
+        <actionGroup>
+            <actionList>
+                <readFile>
+                    <name>installBaseDir</name>
+                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+                </readFile>
+                <setInstallerVariableFromRegEx>
+                    <name>installBaseDir</name>
+                    <pattern>^(.*)[\\\/](.*?)$</pattern>
+                    <substitution>\1</substitution>
+                    <text>${installBaseDir}</text>
+                </setInstallerVariableFromRegEx>
+            </actionList>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+                <fileTest>
+                    <condition>readable</condition>
+                    <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+        <setInstallerVariable>
+            <name>installdir</name>
+            <value>${installBaseDir}/${project.shortName}-${project.version}-${architecture}bit</value>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </setInstallerVariable>
+    </preInstallationActionList>
     <postInstallationActionList>
         <createDirectory>
             <path>/usr/local/var/lib/dbus</path>
@@ -101,7 +140,15 @@
                 </platformTest>
             </ruleList>
         </runProgram>
-
+        <writeFile>
+            <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
+            <text>${installdir}</text>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </writeFile>
     </postInstallationActionList>
     <preUninstallationActionList>
         <deleteFile>
