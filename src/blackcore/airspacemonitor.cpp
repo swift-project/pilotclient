@@ -185,6 +185,18 @@ namespace BlackCore
         return CFlightPlanRemarks();
     }
 
+    CAtcStationList CAirspaceMonitor::getAtcStationsOnlineRecalculated()
+    {
+        m_atcStationsOnline.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
+        return m_atcStationsOnline;
+    }
+
+    CAtcStationList CAirspaceMonitor::getAtcStationsBookedRecalculated()
+    {
+        m_atcStationsBooked.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
+        return m_atcStationsBooked;
+    }
+
     CUserList CAirspaceMonitor::getUsers() const
     {
         CUserList users;
@@ -439,6 +451,8 @@ namespace BlackCore
             m_atcStationsBooked = newBookedStations;
         }
         m_bookingsRequested = false; // we already emit here
+        m_atcStationsBooked.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
+
         emit this->changedAtcStationsBooked(); // all booked stations reloaded
     }
 
@@ -546,6 +560,9 @@ namespace BlackCore
 
             // subsequent queries
             this->sendInitialAtcQueries(callsign);
+
+            // update distances
+            m_atcStationsOnline.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
 
             emit this->changedAtcStationsOnline();
             // Remark: this->changedAtcStationOnlineConnectionStatus

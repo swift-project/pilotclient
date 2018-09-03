@@ -97,8 +97,14 @@ namespace BlackCore
         //! Returns the current online ATC stations (consolidated with booked stations)
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
+        //! Recalculate distance to own aircraft
+        BlackMisc::Aviation::CAtcStationList getAtcStationsOnlineRecalculated();
+
         //! Returns the current booked ATC stations (consolidated with online stations)
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
+
+        //! Recalculate distance to own aircraft
+        BlackMisc::Aviation::CAtcStationList getAtcStationsBookedRecalculated();
 
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem) const;
