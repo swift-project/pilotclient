@@ -64,7 +64,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EXCEPTION *exception = static_cast<SIMCONNECT_RECV_EXCEPTION *>(pData);
                     const DWORD exceptionId = exception->dwException;
                     const DWORD sendId = exception->dwSendID;
-                    const DWORD index = exception->dwIndex;
+                    const DWORD index = exception->dwIndex; // index of parameter that was source of error, 4294967295/0xFFFFFFFF means unknown, 0 means also UNKNOWN INDEX
                     const DWORD data = cbData;
                     switch (exceptionId)
                     {
