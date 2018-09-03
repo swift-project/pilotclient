@@ -189,24 +189,15 @@ INSTALLS += externals_bin_target
 
 ############### Installbuilder ##############
 
-bitrock_customize_bin = $$(BITROCK_CUSTOMIZE)
 bitrock_builder_bin = $$(BITROCK_BUILDER)
-!isEmpty(bitrock_customize_bin):!isEmpty(bitrock_builder_bin) {
+!isEmpty(bitrock_builder_bin) {
 
     copy_installer_project.depends = install
     win32: copy_installer_project.commands = xcopy /Y /E /I $$shell_path($$SourceRoot/installer) $$shell_path($$DestRoot/../../installer)
     else: copy_installer_project.commands = cp -R $$shell_path($$SourceRoot/installer) $$shell_path($$DestRoot/../../)
     QMAKE_EXTRA_TARGETS += copy_installer_project
 
-    bitrock_autoupdateproject = "$${PREFIX}/../installer/installbuilder/autoupdateproject.xml"
     bitrock_project = $${PREFIX}/../installer/installbuilder/project.xml
-
-    # create_updater is currently not used
-    create_updater.depends = copy_installer_project
-    win32: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} windows
-    else:macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} osx
-    else:unix: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux-x64
-    QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = copy_installer_project
     WINDOWS64BITMODE = 0
