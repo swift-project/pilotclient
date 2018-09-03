@@ -34,8 +34,8 @@ namespace BlackMisc
         {
             //! Utility, providing FS aircraft.cfg entries
             class BLACKMISC_EXPORT CAircraftCfgEntriesList :
-                public BlackMisc::CSequence<CAircraftCfgEntries>,
-                public BlackMisc::Mixin::MetaType<CAircraftCfgEntriesList>
+                public CSequence<CAircraftCfgEntries>,
+                public Mixin::MetaType<CAircraftCfgEntriesList>
             {
             public:
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)

@@ -94,7 +94,7 @@ namespace BlackMisc
                 static QString getFixedIniLineContent(const QString &line);
 
                 //! Files to be used
-                static const QString &fileFilter();
+                static const QStringList &fileNameFilters();
 
                 CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
                 QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer

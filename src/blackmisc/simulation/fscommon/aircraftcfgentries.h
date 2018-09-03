@@ -33,14 +33,14 @@ namespace BlackMisc
             //! \remarks an entry in the aircraft.cfg is title, atc type, ...
             //!          This class already bundles relevant entries, hence the class is named Entries (plural)
             class BLACKMISC_EXPORT CAircraftCfgEntries:
-                public BlackMisc::CValueObject<CAircraftCfgEntries>,
-                public BlackMisc::ITimestampBased
+                public CValueObject<CAircraftCfgEntries>,
+                public ITimestampBased
             {
             public:
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftCfgEntries,
+                    IndexEntryIndex = CPropertyIndex::GlobalIndexCAircraftCfgEntries,
                     IndexFileName,
                     IndexTitle,
                     IndexAirline,

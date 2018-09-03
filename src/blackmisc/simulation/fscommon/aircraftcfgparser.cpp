@@ -165,7 +165,8 @@ namespace BlackMisc
                 }
 
                 // set directory with name filters, get aircraft.cfg and sub directories
-                const QDir dir(directory, fileFilter(), QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+                QDir dir(directory, "", QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+                dir.setNameFilters(fileNameFilters());
                 if (!dir.exists())
                 {
                     *ok = true;
@@ -403,9 +404,9 @@ namespace BlackMisc
                 return content;
             }
 
-            const QString &CAircraftCfgParser::fileFilter()
+            const QStringList &CAircraftCfgParser::fileNameFilters()
             {
-                static const QString f("aircraft.cfg");
+                static const QStringList f({ "aircraft.cfg", "sim.cfg" });
                 return f;
             }
         } // ns
