@@ -127,11 +127,12 @@ namespace BlackMisc
             //! Calculate distances, then sort by range
             void sortByRange(const ICoordinateGeodetic &position, bool updateValues);
 
-            //! If distance is already set, just sort
-            void sortByDistanceToOwnAircraft();
+            //! If distance is already set, just sort container
+            //! \remark requires calculcateAndUpdateRelativeDistanceAndBearing
+            void sortByDistanceToReferencePosition();
 
             //! Sort the first n closest objects
-            void partiallySortByDistanceToOwnAircraft(int number);
+            void partiallySortByDistanceToReferencePosition(int number);
 
             //! Get n closest objects
             CONTAINER getClosestObjects(int number) const;

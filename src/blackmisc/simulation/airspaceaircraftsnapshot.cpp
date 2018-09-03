@@ -36,7 +36,7 @@ namespace BlackMisc
             if (allAircraft.isEmpty()) { return; }
 
             CSimulatedAircraftList aircraft(allAircraft);
-            aircraft.sortByDistanceToOwnAircraft();
+            aircraft.sortByDistanceToReferencePosition();
             int numberAll = aircraft.size();
             Q_ASSERT_X(numberAll == allAircraft.size(), Q_FUNC_INFO, "aircraft got lost");
             CSimulatedAircraftList vtolAircraft(aircraft.findByVtol(true));

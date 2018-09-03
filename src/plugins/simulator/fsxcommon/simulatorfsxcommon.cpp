@@ -1547,7 +1547,7 @@ namespace BlackSimPlugin
                 m_airportsInRangeFromSimulator.replaceOrAddByIcao(consolidatedAirport);
                 if (m_airportsInRangeFromSimulator.size() > this->maxAirportsInRange())
                 {
-                    m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
+                    m_airportsInRangeFromSimulator.sortByDistanceToReferencePosition();
                     m_airportsInRangeFromSimulator.truncate(this->maxAirportsInRange());
                 }
             }

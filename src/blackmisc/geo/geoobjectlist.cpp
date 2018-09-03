@@ -221,13 +221,13 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::sortByDistanceToOwnAircraft()
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::sortByDistanceToReferencePosition()
         {
             this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         template <class OBJ, class CONTAINER>
-        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::partiallySortByDistanceToOwnAircraft(int number)
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::partiallySortByDistanceToReferencePosition(int number)
         {
             this->container().partiallySort(number, [ & ](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
@@ -238,7 +238,7 @@ namespace BlackMisc
             if (number < 1) { return CONTAINER(); }
             if (this->container().size() >= number) { return (this->container()); }
             CONTAINER closest(this->container());
-            closest.partiallySortByDistanceToOwnAircraft(number);
+            closest.partiallySortByDistanceToReferencePosition(number);
             Q_ASSERT_X(closest.size() <= number, Q_FUNC_INFO, "size exceeded");
             return closest;
         }

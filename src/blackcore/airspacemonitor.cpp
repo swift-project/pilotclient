@@ -263,7 +263,7 @@ namespace BlackCore
         CAtcStation station;
         CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedIn25KHz(comSystem);
         if (stations.isEmpty()) { return station; }
-        stations.sortByDistanceToOwnAircraft();
+        stations.sortByDistanceToReferencePosition();
         return stations.front();
     }
 
