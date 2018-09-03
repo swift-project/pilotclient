@@ -9,11 +9,6 @@
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
     <wmImage>../images/logo.png</wmImage>
-    <functionDefinitionList>
-        <include>
-            <file>createbundledmg.xml</file>
-        </include>
-    </functionDefinitionList>
     <componentList>
         <include>
             <file>swift.xml</file>
@@ -25,18 +20,6 @@
             <file>vcredist.xml</file>
         </include>
     </componentList>
-    <postBuildActionList>
-        <createBundleDmg>
-            <dmgIconPosition>186, 186</dmgIconPosition>
-            <dmgIconSize>128</dmgIconSize>
-            <dmgWindowBounds>400, 100, 765, 465</dmgWindowBounds>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </createBundleDmg>
-    </postBuildActionList>
     <preInstallationActionList>
         <!-- TODO Linux/MacOS: Save and load last install dir -->
         <setInstallerVariable>
@@ -171,7 +154,7 @@
     <compressionAlgorithm>lzma</compressionAlgorithm>
 
     <!-- Generate a DMG for MacOS Installer -->
-    <createOsxBundleDmg>0</createOsxBundleDmg>
+    <createOsxBundleDmg>1</createOsxBundleDmg>
 
     <!--  <allowedLanguages>en fr es it de ja nl ru zh_CN no pt_BR</allowedLanguages> -->
     <enableRollback>0</enableRollback>
