@@ -71,17 +71,12 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextOwnAircraft();
+            virtual ~CContextOwnAircraft() override;
 
             // IOwnAircraftProvider overrides
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
+            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftPosition
             //! \ingroup ownaircraftprovider
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
-
-            //! Own aircraft's situation
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
-            //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
             //! \ingroup ownaircraftprovider
@@ -115,6 +110,10 @@ namespace BlackCore
             //! \copydoc IContextOwnAircraft::getOwnAircraft()
             //! \ingroup ownaircraftprovider
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
+
+            //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
+            //! \ingroup ownaircraftprovider
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc IContextOwnAircraft::updateOwnCallsign
             //! \ingroup ownaircraftprovider

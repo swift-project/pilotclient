@@ -28,7 +28,7 @@ namespace BlackCore
         CContextOwnAircraftProxy::CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
         {
             this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
-                serviceName , IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
         }
@@ -53,6 +53,11 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatedAircraft CContextOwnAircraftProxy::getOwnAircraft() const
         {
             return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getOwnAircraft"));
+        }
+
+        CAircraftSituation CContextOwnAircraftProxy::getOwnAircraftSituation() const
+        {
+            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftSituation>(QLatin1String("getOwnAircraftSituation"));
         }
 
         bool CContextOwnAircraftProxy::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const CIdentifier &originator)

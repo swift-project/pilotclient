@@ -54,7 +54,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextOwnAircraftProxy() {}
+            virtual ~CContextOwnAircraftProxy() override {}
 
             //! Unit test relay signals
             //! \private
@@ -64,6 +64,7 @@ namespace BlackCore
             //! \publicsection
             //! @{
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
             virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude) override;
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;

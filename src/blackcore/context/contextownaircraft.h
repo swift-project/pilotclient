@@ -84,7 +84,7 @@ namespace BlackCore
             static IContextOwnAircraft *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
-            virtual ~IContextOwnAircraft() {}
+            virtual ~IContextOwnAircraft() override {}
 
         signals:
             //! Aircraft cockpit update
@@ -105,6 +105,9 @@ namespace BlackCore
         public slots:
             //! Get own aircraft
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
+
+            //! Get own aircraft
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const = 0;
 
             //! Update position
             //! \note this is in \sa IContextOwnAircraft as we want to set test positions from the GUI / elsewhere

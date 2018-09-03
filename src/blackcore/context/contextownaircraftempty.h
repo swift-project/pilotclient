@@ -37,6 +37,13 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatedAircraft();
             }
 
+            //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Aviation::CAircraftSituation();
+            }
+
             //! \copydoc IContextOwnAircraft::updateOwnPosition
             virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude) override
             {
