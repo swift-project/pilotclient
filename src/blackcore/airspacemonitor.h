@@ -101,7 +101,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
 
         //! Returns the closest ATC station operating on the given frequency, if any
-        BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
+        BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem) const;
 
         //! Clear the contents
         void clear();
@@ -119,7 +119,7 @@ namespace BlackCore
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
 
         //! \copydoc CAirspaceAnalyzer::setEnabled
-        bool enableWatchdog(bool enable);
+        bool enableAnalyzer(bool enable);
 
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();

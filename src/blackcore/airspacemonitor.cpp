@@ -122,7 +122,7 @@ namespace BlackCore
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(0, m_network, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 if (m_network) { m_network->addInterimPositionReceiver(callsign); }
             });
         }
@@ -159,7 +159,7 @@ namespace BlackCore
             {
                 // process some other events and hope network answer is received already
                 // CEventLoop::processEventsUntil cannot be used, as a received flight plan might be for another callsign
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                sApp->processEventsFor(100);
                 if (!sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
                 if (m_flightPlanCache.contains(callsign))
                 {
@@ -258,7 +258,7 @@ namespace BlackCore
         return users;
     }
 
-    CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
+    CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem) const
     {
         CAtcStation station;
         CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedIn25KHz(comSystem);
@@ -303,7 +303,7 @@ namespace BlackCore
         m_bookingsRequested = true;
     }
 
-    bool CAirspaceMonitor::enableWatchdog(bool enable)
+    bool CAirspaceMonitor::enableAnalyzer(bool enable)
     {
         if (!this->analyzer()) { return false; }
         this->analyzer()->setEnabled(enable);
@@ -488,7 +488,7 @@ namespace BlackCore
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(1500, this, [ = ]()
             {
-                if (myself.isNull() || !sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
                 {
                     const CStatusMessage m = CMatchingUtils::logMessage(callsign, "No longer in range", CAirspaceMonitor::getLogCategories());
@@ -516,7 +516,7 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
+    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
@@ -989,7 +989,7 @@ namespace BlackCore
             }
             else
             {
-                const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distnacee per ms
+                const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
                 const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
                 haveRequestedElevation = ep.isNull();  // NULL means we requested
                 Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
