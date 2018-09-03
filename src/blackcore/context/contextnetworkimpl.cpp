@@ -384,7 +384,7 @@ namespace BlackCore
                 if (parser.countParts() < 2) { return false; }
 
                 const bool watchdog = parser.toBool(1, true);
-                m_airspace->enableWatchdog(watchdog);
+                m_airspace->enableAnalyzer(watchdog);
                 CLogMessage(this).info("Enabled watchdog: %1") << boolToYesNo(watchdog);
             }
             else if (parser.matchesCommand(".reinit", ".reinitialize"))
@@ -595,16 +595,22 @@ namespace BlackCore
             return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
         }
 
-        CAtcStationList CContextNetwork::getAtcStationsOnline() const
+        CAtcStationList CContextNetwork::getAtcStationsOnline(bool recalculateDistance) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_airspace->getAtcStationsOnline();
+            CAtcStationList stations = m_airspace->getAtcStationsOnline();
+            if (!recalculateDistance || !this->getIContextOwnAircraft()) { return stations; }
+            stations.calculcateAndUpdateRelativeDistanceAndBearing(this->getIContextOwnAircraft()->getOwnAircraftSituation());
+            return stations;
         }
 
-        CAtcStationList CContextNetwork::getAtcStationsBooked() const
+        CAtcStationList CContextNetwork::getAtcStationsBooked(bool recalculateDistance) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_airspace->getAtcStationsBooked();
+            CAtcStationList stations = m_airspace->getAtcStationsBooked();
+            if (!recalculateDistance || !this->getIContextOwnAircraft()) { return stations; }
+            stations.calculcateAndUpdateRelativeDistanceAndBearing(this->getIContextOwnAircraft()->getOwnAircraftSituation());
+            return stations;
         }
 
         CSimulatedAircraftList CContextNetwork::getAircraftInRange() const

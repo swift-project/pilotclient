@@ -37,15 +37,17 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::getAtcStationsOnline()
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override
             {
+                Q_UNUSED(recalculateDistance);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }
 
             //! \copydoc IContextNetwork::getAtcStationsBooked()
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override
             {
+                Q_UNUSED(recalculateDistance);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAtcStationList();
             }

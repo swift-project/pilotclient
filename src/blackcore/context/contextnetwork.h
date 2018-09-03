@@ -172,10 +172,10 @@ namespace BlackCore
             virtual void requestAtcBookingsUpdate() const = 0;
 
             //! The ATC list with online ATC controllers
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const = 0;
 
             //! ATC list, with booked controllers
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const = 0;
 
             //! Aircraft list
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;

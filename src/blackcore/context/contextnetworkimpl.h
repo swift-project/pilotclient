@@ -220,9 +220,9 @@ namespace BlackCore
 
             //! \publicsection
             //! @{
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
             virtual void requestAtcBookingsUpdate() const override;
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;

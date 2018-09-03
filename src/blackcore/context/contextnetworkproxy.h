@@ -66,7 +66,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextNetworkProxy() {}
+            virtual ~CContextNetworkProxy() override {}
 
             //! Unit test relay signals
             //! \private
@@ -76,8 +76,8 @@ namespace BlackCore
             //! \name Interface overrides
             //! @{
             virtual void requestAtcBookingsUpdate() const override;
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
             virtual int getAircraftInRangeCount() const override;
