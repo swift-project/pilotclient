@@ -135,7 +135,7 @@ namespace BlackGui
         bool CAtcStationComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::infoAreaTabBarChanged);
+            const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::infoAreaTabBarChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
             return c && parentDockableWidget;
@@ -143,7 +143,7 @@ namespace BlackGui
 
         void CAtcStationComponent::update()
         {
-            if (!sGui || !sGui->getIContextNetwork()) { return; }
+            if (!this->canAccessContext()) { return; }
             Q_ASSERT(ui->tvp_AtcStationsBooked);
             Q_ASSERT(ui->tvp_AtcStationsOnline);
 
@@ -171,7 +171,7 @@ namespace BlackGui
                 {
                     const CAtcStationsSettings settings = m_settingsAtc.getThreadLocal();
                     CAtcStationList onlineStations =
-                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency(); // alternatively: stationsWithValidVoiceRoom()
+                        sGui->getIContextNetwork()->getAtcStationsOnline(true).stationsWithValidFrequency(); // alternatively: stationsWithValidVoiceRoom()
 
                     if (settings.showOnlyInRange())
                     {
@@ -204,6 +204,7 @@ namespace BlackGui
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
         {
+            if (!this->canAccessContext()) { return; }
             const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
             ui->le_AtcStationsOnlineMetar->setText(icao.asString());
             if (!icao.hasValidIcaoCode()) { return; }
@@ -217,16 +218,15 @@ namespace BlackGui
             {
                 ui->te_AtcStationsOnlineInfo->clear();
             }
-            // ui->le_AtcStationsOnlineMetar->clear();
         }
 
         void CAtcStationComponent::reloadAtcStationsBooked()
         {
             Q_ASSERT(ui->tvp_AtcStationsBooked);
-            Q_ASSERT(sGui && sGui->getIContextNetwork());
+            if (!this->canAccessContext()) { return; }
 
             QObject *sender = QObject::sender();
-            if (sender == ui->tvp_AtcStationsBooked && sGui->getIContextNetwork())
+            if (sender == ui->tvp_AtcStationsBooked)
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
                 CLogMessage(this).info("Requested new bookings");
@@ -234,7 +234,7 @@ namespace BlackGui
             }
             else
             {
-                ui->tvp_AtcStationsBooked->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAtcStationsBooked());
+                ui->tvp_AtcStationsBooked->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAtcStationsBooked(false));
                 m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
             }
         }
@@ -259,7 +259,7 @@ namespace BlackGui
             this->update();
         }
 
-        void CAtcStationComponent::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CAtcStationComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
@@ -276,7 +276,7 @@ namespace BlackGui
 
         void CAtcStationComponent::testCreateDummyOnlineAtcStations(int number)
         {
-            if (sGui->getIContextNetwork())
+            if (this->canAccessContext())
             {
                 sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
             }
@@ -298,7 +298,7 @@ namespace BlackGui
             const QPointer<CAtcStationComponent> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 this->update();
             });
             Q_UNUSED(index);
@@ -399,6 +399,12 @@ namespace BlackGui
         {
             if (!sGui->getIContextNetwork()->isConnected()) return;
             sGui->getIContextNetwork()->requestAtisUpdates();
+        }
+
+        bool CAtcStationComponent::canAccessContext() const
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return false; }
+            return true;
         }
     } // namespace
 } // namespace

@@ -31,8 +31,6 @@
 #include <QtGlobal>
 #include <QTimer>
 
-class QWidget;
-
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace Ui { class CAtcStationComponent; }
 namespace BlackGui
@@ -131,6 +129,9 @@ namespace BlackGui
 
             //! Settings have been changed
             void settingsChanged();
+
+            //! Contexts?
+            bool canAccessContext() const;
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;
