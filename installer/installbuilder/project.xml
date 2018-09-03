@@ -1,17 +1,19 @@
 <project>
     <shortName>swift</shortName>
     <fullName>swift</fullName>
+    <version></version>
+
     <!-- <version>0.7.0</version> -->
     <licenseFile>../../dist/bin/LICENSE</licenseFile>
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
+    <wmImage>../images/logo.png</wmImage>
     <functionDefinitionList>
         <include>
             <file>createbundledmg.xml</file>
         </include>
     </functionDefinitionList>
-    <requireInstallationByRootUser>0</requireInstallationByRootUser>
     <componentList>
         <include>
             <file>swift.xml</file>
@@ -19,9 +21,6 @@
         <include>
             <file>qt5-binaries.xml</file>
         </include>
-        <!--<include>
-            <file>autoupdater.xml</file>
-        </include>-->
         <include>
             <file>vcredist.xml</file>
         </include>
@@ -178,22 +177,22 @@
     <enableRollback>0</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <osxApplicationBundleIcon>../images/swiftinstaller.icns</osxApplicationBundleIcon>
-    <wmImage>../images/logo.png</wmImage>
     <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
     <osxUninstallerApplicationBundleIcon>../images/swiftinstaller.icns</osxUninstallerApplicationBundleIcon>
     <outputDirectory>.</outputDirectory>
     <productDisplayIcon>../images/swiftinstaller.ico</productDisplayIcon>
+    <requestedExecutionLevel>highestAvailable</requestedExecutionLevel>
     <saveRelativePaths>1</saveRelativePaths>
     <startMenuGroupName>swift ${project.version} ${architecture}bit</startMenuGroupName>
     <vendor>swift Project</vendor>
     <windowsExecutableIcon>../images/swiftinstaller.ico</windowsExecutableIcon>
 
-    <!-- <windowsResourceOriginalFilename>TODO</windowsResourceOriginalFilename>  
- <windowsResourceFileDescription>TODO</windowsResourceFileDescription>  
+    <!-- <windowsResourceOriginalFilename>TODO</windowsResourceOriginalFilename>
+ <windowsResourceFileDescription>TODO</windowsResourceFileDescription>
  Code signing parameters -->
     <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
     <customLanguageFileList>
-        <!-- <language> 
+        <!-- <language>
             <code>en</code>
             <encoding>utf-8</encoding>
             <file>${build_project_directory}/lang/alf-en.po</file>
@@ -221,6 +220,7 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+
         <!-- <launchBrowser>
             <url>http://www.swift-project.org</url>
             <progressText>Visit the swift project page</progressText>
@@ -242,9 +242,9 @@
             <default>${platform_install_prefix}/${project.shortName}-${project.version}-${architecture}bit</default>
             <allowEmptyValue>0</allowEmptyValue>
             <cliOptionName>prefix</cliOptionName>
-            <mustBeWritable>1</mustBeWritable>
+            <mustBeWritable>yes</mustBeWritable>
             <mustExist>0</mustExist>
-            <width>30</width>
+            <width>40</width>
         </directoryParameter>
         <stringParameter name="architecture" value="64" ask="0">
             <description></description>
