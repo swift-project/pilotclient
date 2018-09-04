@@ -98,7 +98,7 @@ namespace BlackGui
             virtual void customMenu(CMenuActions &menuActions) override;
 
             //! Change target
-            void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
+            void setModelsTarget(QObject *target) { m_modelsTarget = target; }
 
         private:
             void consolidateData();
@@ -130,7 +130,7 @@ namespace BlackGui
             virtual void customMenu(CMenuActions &menuActions) override;
 
             //! Change target
-            void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
+            void setModelsTarget(QObject *target) { m_modelsTarget = target; }
 
         private:
             void consolidateData();

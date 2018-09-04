@@ -135,45 +135,45 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(CMenuActions &menuActions)
         {
-            if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
+            if (m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
             {
                 const int maxOrder = this->rowCount() - 1;
                 CMenuAction menu = menuActions.addMenuViewOrder();
-                if (this->m_menuActions.isEmpty())
+                if (m_menuActions.isEmpty())
                 {
                     // predefine menus
-                    this->m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr});
+                    m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr});
 
-                    if (!this->m_menuActions[0])
+                    if (!m_menuActions[0])
                     {
-                        this->m_frame = new QFrame(this);
-                        QHBoxLayout *layout = new QHBoxLayout(this->m_frame);
+                        m_frame = new QFrame(this);
+                        QHBoxLayout *layout = new QHBoxLayout(m_frame);
                         layout->setMargin(2);
-                        this->m_frame->setLayout(layout);
-                        this->m_leOrder = new QLineEdit(this->m_frame);
-                        QLabel *icon = new QLabel(this->m_frame);
+                        m_frame->setLayout(layout);
+                        m_leOrder = new QLineEdit(m_frame);
+                        QLabel *icon = new QLabel(m_frame);
                         icon->setPixmap(menu.getPixmap());
                         layout->addWidget(icon);
-                        QLabel *label = new QLabel(this->m_frame);
+                        QLabel *label = new QLabel(m_frame);
                         label->setText("Order:");
                         layout->addWidget(label);
-                        layout->addWidget(this->m_leOrder);
-                        this->m_validator = new QIntValidator(0, maxOrder, this);
-                        this->m_leOrder->setValidator(this->m_validator);
+                        layout->addWidget(m_leOrder);
+                        m_validator = new QIntValidator(0, maxOrder, this);
+                        m_leOrder->setValidator(m_validator);
                         QWidgetAction *orderAction = new QWidgetAction(this);
-                        orderAction->setDefaultWidget(this->m_frame);
-                        QObject::connect(this->m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToLineEdit);
-                        this->m_menuActions[0] = orderAction;
+                        orderAction->setDefaultWidget(m_frame);
+                        QObject::connect(m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToLineEdit);
+                        m_menuActions[0] = orderAction;
                     }
                 }
 
-                this->m_validator->setRange(0, maxOrder);
-                this->m_leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
+                m_validator->setRange(0, maxOrder);
+                m_leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
 
-                menuActions.addAction(this->m_menuActions[0], CMenuAction::pathViewOrder());
-                this->m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToTop });
-                this->m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToBottom });
-                this->m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::freezeCurrentOrder });
+                menuActions.addAction(m_menuActions[0], CMenuAction::pathViewOrder());
+                m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToTop });
+                m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::orderToBottom });
+                m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::freezeCurrentOrder });
             }
             CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menuActions);
         }
@@ -193,7 +193,7 @@ namespace BlackGui
             if (this->isEmpty()) { return; }
             const ContainerType objs(this->selectedObjects());
             if (objs.isEmpty()) { return; }
-            this->m_model->moveItems(objs, order);
+            m_model->moveItems(objs, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>

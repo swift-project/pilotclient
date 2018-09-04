@@ -48,22 +48,22 @@ namespace BlackGui
             CColumn(const BlackMisc::CPropertyIndex &propertyIndex);
 
             //! Alignment for this column?
-            bool hasAlignment() const { return (!this->m_formatter.isNull() && this->m_formatter->hasAlignment()); }
+            bool hasAlignment() const { return (!m_formatter.isNull() && m_formatter->hasAlignment()); }
 
             //! Editable?
-            bool isEditable() const { return this->m_editable; }
+            bool isEditable() const { return m_editable; }
 
             //! Set editable
-            void setEditable(bool editable) { this->m_editable = editable; }
+            void setEditable(bool editable) { m_editable = editable; }
 
             //! Sortable?
-            bool isSortable() const { return this->m_sortable; }
+            bool isSortable() const { return m_sortable; }
 
             //! Set sortable
-            void setSortable(bool sortable) { this->m_sortable = sortable; }
+            void setSortable(bool sortable) { m_sortable = sortable; }
 
             //! Property index used when sorting, option alternative
-            BlackMisc::CPropertyIndex getSortPropertyIndex() const { return this->m_sortPropertyIndex; }
+            BlackMisc::CPropertyIndex getSortPropertyIndex() const { return m_sortPropertyIndex; }
 
             //! Sort index available
             bool hasSortPropertyIndex() const;
@@ -75,7 +75,7 @@ namespace BlackGui
             void setFormatter(CDefaultFormatter *formatter) { Q_ASSERT(formatter); m_formatter.reset(formatter); }
 
             //! Formatter
-            const CDefaultFormatter *getFormatter() const { return this->m_formatter.data(); }
+            const CDefaultFormatter *getFormatter() const { return m_formatter.data(); }
 
             //! Aligment as CVariant
             BlackMisc::CVariant getAlignment() const;
@@ -87,10 +87,10 @@ namespace BlackGui
             QString getColumnToolTip(bool i18n = false) const;
 
             //! Property index
-            const BlackMisc::CPropertyIndex &getPropertyIndex() const { return this->m_propertyIndex;}
+            const BlackMisc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex;}
 
             //! Translation context
-            void setTranslationContext(const QString &translationContext) { this->m_translationContext = translationContext; }
+            void setTranslationContext(const QString &translationContext) { m_translationContext = translationContext; }
 
             //! Get a standard value object formatted column
             static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
@@ -193,10 +193,10 @@ namespace BlackGui
             const CDefaultFormatter *getFormatter(const QModelIndex &index) const;
 
             //! Column at position
-            const CColumn &at(int columnNumber) const { return this->m_columns.at(columnNumber); }
+            const CColumn &at(int columnNumber) const { return m_columns.at(columnNumber); }
 
             //! Clear
-            void clear() { this->m_columns.clear(); }
+            void clear() { m_columns.clear(); }
 
         private:
             QList<CColumn> m_columns;
