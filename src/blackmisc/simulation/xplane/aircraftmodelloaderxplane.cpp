@@ -287,9 +287,6 @@ namespace BlackMisc
                         livery.setAirlineIcaoCode(airline);
                         model.setLivery(livery);
 
-                        const CDistributor distributor(package.name);
-                        model.setDistributor(distributor);
-
                         model.setSimulator(CSimulatorInfo::xplane());
                         model.setDescription("[CSL]");
                         installedModels.push_back(model);
