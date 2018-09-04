@@ -66,7 +66,7 @@ namespace BlackGui
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelSetMenu(this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnModelSet, this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithSimulatorModels(ui->tvp_OwnModelSet, this));
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave | CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
             ui->tvp_OwnModelSet->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
