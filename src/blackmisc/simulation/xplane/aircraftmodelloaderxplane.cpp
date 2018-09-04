@@ -481,8 +481,6 @@ namespace BlackMisc
                 }
 
                 package.planes.push_back(CSLPlane());
-                // Package name and object name uniquely identify an OBJ8 aircraft.
-                // File path just points to the package root.
                 return true;
             }
 
@@ -521,6 +519,8 @@ namespace BlackMisc
                 if (tokens.size() >= 5)
                 {
                     // Load regular texture
+                    // Replace package root dir again back to package name
+                    dirNames.replace(0, package.name);
                     QString relativeTexPath = dirNames.join('/') + '/' + tokens[4];
                     normalizePath(relativeTexPath);
                     QString absoluteTexPath(relativeTexPath);
