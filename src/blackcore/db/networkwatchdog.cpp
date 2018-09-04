@@ -370,6 +370,7 @@ namespace BlackCore
         CUrl CNetworkWatchdog::dbTestUrl()
         {
             // requires global setup to be read
+            if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
             const CUrl testUrl(sApp->getGlobalSetup().getDbHomePageUrl());
             return testUrl;
         }
