@@ -214,6 +214,7 @@ namespace BlackCore
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
                     pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
                     pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
+                    pos.onGround     = myAircraft.getParts().isOnGround();
                     pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
                     pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
                     pos.groundSpeed  = myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts());
@@ -244,6 +245,7 @@ namespace BlackCore
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
                     pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
                     pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
+                    pos.onGround     = myAircraft.getParts().isOnGround();
                     pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
                     pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
 
