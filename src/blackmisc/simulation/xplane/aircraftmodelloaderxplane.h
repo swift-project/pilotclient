@@ -64,6 +64,12 @@ namespace BlackMisc
                 //! CSL Plane data
                 struct CSLPlane
                 {
+                    enum ObjectVersion
+                    {
+                        OBJ7,
+                        OBJ8
+                    };
+
                     QString getModelName() const;
 
                     // Model name parts
@@ -75,6 +81,8 @@ namespace BlackMisc
                     QString icao;     //!< Icao type of this model
                     QString airline;  //!< Airline identifier. Can be empty.
                     QString livery;   //!< Livery identifier. Can be empty.
+
+                    ObjectVersion objectVersion;
                 };
 
                 //! CSL package

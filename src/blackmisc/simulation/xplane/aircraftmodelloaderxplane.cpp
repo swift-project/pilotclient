@@ -288,7 +288,10 @@ namespace BlackMisc
                         model.setLivery(livery);
 
                         model.setSimulator(CSimulatorInfo::xplane());
-                        model.setDescription("[CSL]");
+                        QString modelDescription("[CSL]");
+                        if (plane.objectVersion == CSLPlane::OBJ7) { modelDescription += "[OBJ7]"; }
+                        else if (plane.objectVersion == CSLPlane::OBJ8) { modelDescription += "[OBJ8]"; }
+                        model.setDescription(modelDescription);
                         installedModels.push_back(model);
                     }
                 }
@@ -421,6 +424,7 @@ namespace BlackMisc
                 package.planes.back().objectName = fileInfo.completeBaseName();
                 package.planes.back().textureName = texture;
                 package.planes.back().filePath = fullPath;
+                package.planes.back().objectVersion = CSLPlane::OBJ7;
                 return true;
             }
 
@@ -512,6 +516,7 @@ namespace BlackMisc
                 package.planes.back().dirNames = dirNames;
                 package.planes.back().objectName = fileInfo.completeBaseName();
                 package.planes.back().filePath = fullPath;
+                package.planes.back().objectVersion = CSLPlane::OBJ8;
 
                 if (tokens.size() >= 5)
                 {
