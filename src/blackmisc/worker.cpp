@@ -17,7 +17,7 @@
 #include <QCoreApplication>
 
 #ifdef Q_OS_WIN32
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace BlackMisc
@@ -54,11 +54,9 @@ namespace BlackMisc
 #endif
         quit();
 
-        const qint64 beforeWait = QDateTime::currentMSecsSinceEpoch();
-        wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
-        const qint64 delta = QDateTime::currentMSecsSinceEpoch() - beforeWait;
-        BLACK_VERIFY_X(delta < 30 * 1000, Q_FUNC_INFO, "Wait timeout");
-        Q_UNUSED(delta);
+        bool ok = wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
+        Q_UNUSED(ok);
     }
 
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
@@ -88,8 +86,11 @@ namespace BlackMisc
 
         this->setFinished();
 
-        auto *ownThread = thread();
+        QThread *ownThread = this->thread();
+        Q_ASSERT_X(ownThread->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
+
         this->moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        Q_ASSERT_X(this->thread() == ownThread->thread(), Q_FUNC_INFO, "moveToThread failed");
 
         //! \todo KB 2018-97 new syntax not yet supported on Jenkins QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater)
         QMetaObject::invokeMethod(ownThread, "deleteLater");
@@ -174,20 +175,20 @@ namespace BlackMisc
 
     void CContinuousWorker::quitAndWait() noexcept
     {
-        this->quit();
+        this->setEnabled(false);
 
         // already in application (main) thread? => return
         if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
 
         // called by own thread, will deadlock, return
         if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
-        QThread *ownThread = thread();
 
-        const qint64 beforeWait = QDateTime::currentMSecsSinceEpoch();
-        ownThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
-        const qint64 delta = QDateTime::currentMSecsSinceEpoch() - beforeWait;
-        BLACK_VERIFY_X(delta < 30 * 1000, Q_FUNC_INFO, "Wait timeout");
-        Q_UNUSED(delta);
+        QThread *ownThread = thread(); // must be before quit()
+        this->quit();
+
+        bool ok = ownThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
+        Q_UNUSED(ok);
     }
 
     void CContinuousWorker::startUpdating(int updateTimeSecs)
@@ -226,49 +227,14 @@ namespace BlackMisc
     {
         this->setFinished();
 
-        QPointer<QThread> pOwnThreadBeforeMove(this->thread()); // thread before moved back
-        QPointer<CContinuousWorker> myself(this);
+        Q_ASSERT_X(m_owner->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
-        if (!m_owner || (pOwnThreadBeforeMove.data() != m_owner->thread()))
-        {
-            if (m_owner)
-            {
-                // we have a owner, and the owner thread is not the same as the worker thread
-                // move worker back to the thread which constructed it, so there is no race on deletion
-                this->moveToThread(m_owner->thread());
-                Q_ASSERT_X(this->thread() == m_owner->thread(), Q_FUNC_INFO, "Thread mismatch owner");
-            }
-            else if (qApp && qApp->thread())
-            {
-                // no owner, we move to main thread
-                this->moveToThread(qApp->thread());
-                Q_ASSERT_X(this->thread() == qApp->thread(), Q_FUNC_INFO, "Thread mismatch qApp");
-            }
+        QThread *ownThread = this->thread();
+        this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        Q_ASSERT_X(this->thread() == m_owner->thread(), Q_FUNC_INFO, "moveToThread failed");
 
-            // if thread still exists and is not the main thread, delete it
-            if (pOwnThreadBeforeMove && !CThreadUtils::isApplicationThread(pOwnThreadBeforeMove.data()))
-            {
-                // delete the original "background" thread
-                QTimer::singleShot(0, pOwnThreadBeforeMove.data(), [ = ]
-                {
-                    if (pOwnThreadBeforeMove) { pOwnThreadBeforeMove->deleteLater(); }
-                });
-            }
-        }
-        else
-        {
-            // getting here would mean we have a owner and the owner thread is the same as the work thread
-            const QString msg = QString("Owner thread: '%1' own thread: '%2'").arg(CThreadUtils::threadInfo(m_owner->thread()), CThreadUtils::threadInfo(pOwnThreadBeforeMove.data()));
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, msg.toLatin1().constData());
-        }
-
-        if (myself)
-        {
-            // if worker still exists delete it
-            QTimer::singleShot(0, myself.data(), [ = ]
-            {
-                if (myself) { myself->deleteLater(); }
-            });
-        }
+        //! \todo new syntax not yet supported on Jenkins QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater)
+        QMetaObject::invokeMethod(ownThread, "deleteLater");
+        QMetaObject::invokeMethod(this, "deleteLater");
     }
 } // ns
