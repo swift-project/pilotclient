@@ -234,12 +234,15 @@ namespace BlackSimPlugin
                 if (m_isWeatherActivated)
                 {
                     const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude() };
-                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
                     {
-                        m_lastWeatherPosition = currentPosition;
-                        const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
-                        requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                        if (m_lastWeatherPosition.isNull() ||
+                                calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                        {
+                            m_lastWeatherPosition = currentPosition;
+                            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                            requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                        }
                     }
                 }
             }

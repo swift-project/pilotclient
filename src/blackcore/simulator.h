@@ -533,7 +533,7 @@ namespace BlackCore
         // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
         BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &ISimulator::reloadWeatherSettings }; //!< Selected weather scenario
+        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &ISimulator::reloadWeatherSettings }; //!< Selected weather scenario
 
     private:
         // remote aircraft provider ("rap") bound

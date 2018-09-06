@@ -174,7 +174,7 @@ namespace BlackGui
 
             if (CWeatherScenario::isRealWeatherScenario(scenario))
             {
-                if (!useOwnAcftPosition ||
+                if (m_lastOwnAircraftPosition.isNull() ||
                         calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20)
                 {
                     requestWeatherGrid(position);
