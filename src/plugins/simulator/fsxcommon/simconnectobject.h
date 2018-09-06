@@ -53,6 +53,9 @@ namespace BlackSimPlugin
             //! Get callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
+            //! Callsign?
+            bool hasCallsign() const { return !this->getCallsign().isEmpty(); }
+
             //! Simulated aircraft (as added)
             const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
@@ -61,6 +64,12 @@ namespace BlackSimPlugin
 
             //! Object type
             SimObjectType getType() const { return m_type; }
+
+            //! Aircraft?
+            bool isAircraft() const { return this->getType() == Aircraft; }
+
+            //! Probe?
+            bool isTerrainProbe() const { return this->getType() == TerrainProbe; }
 
             //! Set the type
             void setType(SimObjectType type) { m_type = type; }
@@ -125,6 +134,9 @@ namespace BlackSimPlugin
             //! Object is requested in simulator, not yet confirmed added
             bool isPendingAdded() const;
 
+            //! Still pending
+            bool isOutdatedPendingAdded(qint64 thresholdMs = 2000, qint64 currentMsSinceEpoch = -1) const;
+
             //! Adding is confirmed
             bool isConfirmedAdded() const;
 
@@ -133,7 +145,9 @@ namespace BlackSimPlugin
 
             //! Special states
             //! @{
-            void setAddedWhileRemoved(bool addedWileRemoved);
+            bool isAddedWhileRemoving() { return m_addedWhileRemoving; }
+            void setAddedWhileRemoving(bool addedWileRemoved);
+            bool isRemovedWhileAdding() const { return m_removedWhileAdding; }
             void setRemovedWhileAdding(bool removedWhileAdding);
             //! @}
 
@@ -170,8 +184,17 @@ namespace BlackSimPlugin
             //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
             void resetState();
 
+            //! Reset the timestamp
+            void resetTimestamp() { m_tsCreated = QDateTime::currentMSecsSinceEpoch(); }
+
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
+
+            //! Valid?
+            bool isValid() const { return !this->isInvalid(); }
+
+            //! Invalid?
+            bool isInvalid() const { return !this->hasValidObjectId() && !this->hasValidRequestId(); }
 
             //! Engine count
             int getEngineCount() const { return m_aircraft.getEnginesCount(); }
@@ -218,7 +241,8 @@ namespace BlackSimPlugin
             bool m_camera         = false;
             bool m_removedWhileAdding = false;
             bool m_addedWhileRemoving = false;
-            int m_lightsRequestedAt   = -1;
+            int  m_lightsRequestedAt  = -1;
+            qint64 m_tsCreated    = -1;
             GUID m_cameraGuid;
             SIMCONNECT_DATA_XYZ m_cameraPosition;
             SIMCONNECT_DATA_PBH m_cameraRotation;
@@ -242,17 +266,26 @@ namespace BlackSimPlugin
             //! Get object per object id
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
 
-            //! Mark as added if existing
-            CSimConnectObject markObjectAsAdded(DWORD objectId);
-
             //! Get object per request id
             CSimConnectObject getSimObjectForRequestId(DWORD requestId) const;
+
+            //! Get by request or object id, just as possible
+            CSimConnectObject getSimObjectForOtherSimObject(const CSimConnectObject &otherSimObj) const;
+
+            //! Mark as added if existing
+            CSimConnectObject markObjectAsAdded(DWORD objectId);
 
             //! Is the object id one of our AI objects?
             bool isKnownSimObjectId(DWORD objectId) const;
 
             //! Remove by id
             bool removeByObjectId(DWORD objectId);
+
+            //! Remove by object id or request id
+            bool removeByOtherSimObject(const CSimConnectObject &otherSimObj);
+
+            //! Remove all the probes
+            int removeAllProbes();
 
             //! Pending add condition
             bool containsPendingAdded() const;
@@ -270,7 +303,7 @@ namespace BlackSimPlugin
             int countConfirmedAdded();
 
             //! Get all callsigns
-            BlackMisc::Aviation::CCallsignSet getAllCallsigns() const;
+            BlackMisc::Aviation::CCallsignSet getAllCallsigns(bool withoutProbes = true) const;
 
             //! Get all callsign strings
             QStringList getAllCallsignStrings(bool sorted = false) const;
@@ -286,6 +319,12 @@ namespace BlackSimPlugin
 
             //! Get by type
             QList<CSimConnectObject> getByType(CSimConnectObject::SimObjectType type) const;
+
+            //! All probes
+            QList<CSimConnectObject> getProbes() const { return this->getByType(CSimConnectObject::TerrainProbe); }
+
+            //! Get a non pending probe
+            CSimConnectObject getNotPendingProbe() const;
 
             //! Contains object of type
             bool containsType(CSimConnectObject::SimObjectType type) const;

@@ -43,6 +43,7 @@ namespace BlackSimPlugin
             m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
         {
             this->resetCameraPositions();
+            m_type = aircraft.isTerrainProbe() ? TerrainProbe : Aircraft;
             m_interpolator->initCorrespondingModel(aircraft.getModel());
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
         }
@@ -106,6 +107,14 @@ namespace BlackSimPlugin
             return !this->hasValidRequestAndObjectId() || !m_confirmedAdded;
         }
 
+        bool CSimConnectObject::isOutdatedPendingAdded(qint64 thresholdMs, qint64 currentMsSinceEpoch) const
+        {
+            if (!this->isPendingAdded()) { return false; }
+            if (currentMsSinceEpoch < 0) { currentMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
+            const qint64 delta = currentMsSinceEpoch - m_tsCreated;
+            return delta > thresholdMs;
+        }
+
         bool CSimConnectObject::isConfirmedAdded() const
         {
             Q_ASSERT_X(!m_confirmedAdded || this->hasValidRequestAndObjectId(), Q_FUNC_INFO, "confirmed but invalid ids");
@@ -120,7 +129,7 @@ namespace BlackSimPlugin
             m_aircraft.setRendered(true);
         }
 
-        void CSimConnectObject::setAddedWhileRemoved(bool addedWileRemoved)
+        void CSimConnectObject::setAddedWhileRemoving(bool addedWileRemoved)
         {
             m_addedWhileRemoving = addedWileRemoved;
         }
@@ -167,6 +176,7 @@ namespace BlackSimPlugin
             m_lightsRequestedAt = -1;
             m_validRequestId = false;
             m_validObjectId  = false;
+            m_tsCreated = QDateTime::currentMSecsSinceEpoch();
             this->resetCameraPositions();
         }
 
@@ -243,9 +253,15 @@ namespace BlackSimPlugin
             return this->getSimObjectForObjectId(objectId).getCallsign();
         }
 
-        CCallsignSet CSimConnectObjects::getAllCallsigns() const
+        CCallsignSet CSimConnectObjects::getAllCallsigns(bool withoutProbes) const
         {
-            return CCallsignSet(this->keys());
+            if (!withoutProbes) { return CCallsignSet(this->keys()); }
+            CCallsignSet callsigns;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isAircraft()) { callsigns.insert(simObject.getCallsign().asString()); }
+            }
+            return callsigns;
         }
 
         QStringList CSimConnectObjects::getAllCallsignStrings(bool sorted) const
@@ -288,6 +304,17 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
+        CSimConnectObject CSimConnectObjects::getSimObjectForOtherSimObject(const CSimConnectObject &otherSimObj) const
+        {
+            if (otherSimObj.hasValidObjectId())
+            {
+                CSimConnectObject obj = this->getSimObjectForObjectId(otherSimObj.getObjectId());
+                if (!obj.isInvalid()) { return obj; }
+            }
+            if (!otherSimObj.hasValidRequestId()) { return CSimConnectObject(); }
+            return this->getSimObjectForRequestId(otherSimObj.getRequestId());
+        }
+
         bool CSimConnectObjects::isKnownSimObjectId(DWORD objectId) const
         {
             const CSimConnectObject simObject(this->getSimObjectForObjectId(objectId));
@@ -299,6 +326,24 @@ namespace BlackSimPlugin
             const CSimConnectObject simObject(this->getSimObjectForObjectId(objectId));
             const int c = this->remove(simObject.getCallsign());
             return c > 0;
+        }
+
+        bool CSimConnectObjects::removeByOtherSimObject(const CSimConnectObject &otherSimObj)
+        {
+            const int c = this->remove(otherSimObj.getCallsign());
+            return c > 0;
+        }
+
+        int CSimConnectObjects::removeAllProbes()
+        {
+            const QList<CSimConnectObject> probes = this->getProbes();
+            int c = 0;
+            for (const CSimConnectObject &probe : probes)
+            {
+                this->remove(probe.getCallsign());
+                c++;
+            }
+            return c;
         }
 
         bool CSimConnectObjects::containsPendingAdded() const
@@ -377,6 +422,15 @@ namespace BlackSimPlugin
                 if (simObject.getType() == type) { objs.push_back(simObject); }
             }
             return objs;
+        }
+
+        CSimConnectObject CSimConnectObjects::getNotPendingProbe() const
+        {
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending()) { return simObject; }
+            }
+            return CSimConnectObject();
         }
 
         bool CSimConnectObjects::containsType(CSimConnectObject::SimObjectType type) const
