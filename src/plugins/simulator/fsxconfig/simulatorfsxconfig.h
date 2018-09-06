@@ -33,7 +33,7 @@ namespace BlackSimPlugin
             CSimulatorFsxConfig(QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorFsxConfig() {}
+            virtual ~CSimulatorFsxConfig() override {}
 
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

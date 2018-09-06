@@ -6,28 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>326</width>
-    <height>47</height>
+    <width>180</width>
+    <height>64</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FSX settings</string>
   </property>
-  <layout class="QHBoxLayout" name="hl_FsxSettingsComponent" stretch="0,1">
-   <item>
+  <layout class="QGridLayout" name="gl_FsxSettingsComponent">
+   <item row="0" column="0">
     <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
     <widget class="QLabel" name="lbl_TraceSimConnectCalls">
      <property name="text">
       <string>Trace simConnect calls (this will trace sendId calls and provide further information)</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_EnableTerrainProbe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lbl_TraceTerrainProbe">
+     <property name="text">
+      <string>Use the terrain probe</string>
      </property>
     </widget>
    </item>

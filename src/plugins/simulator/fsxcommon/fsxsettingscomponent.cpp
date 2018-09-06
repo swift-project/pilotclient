@@ -25,7 +25,10 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
             ui->cb_TraceSimConnectCalls->setChecked(false);
+
             connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
+            connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+
             const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
             if (fsx)
             {
@@ -43,9 +46,16 @@ namespace BlackSimPlugin
             fsx->setTractingSendId(ui->cb_TraceSimConnectCalls->isChecked());
         }
 
+        void CFsxSettingsComponent::onEnableTerrainProbeChanged()
+        {
+            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
+            if (!fsx) { return; }
+            fsx->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
+        }
+
         CSimulatorFsxCommon *CFsxSettingsComponent::getFsxSimulator() const
         {
-            if (!sGui || !sGui->getISimulator()) { return nullptr; }
+            if (!sGui || !sGui->getISimulator() || sGui->isShuttingDown()) { return nullptr; }
             ISimulator *sim = sGui->getISimulator();
             if (!sim->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
             if (sim->getSimulatorInfo() != m_simulator) { return nullptr; }

@@ -39,8 +39,11 @@ namespace BlackSimPlugin
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
 
         private:
-            //! Checkbox change
+            //! Trace checkbox changed
             void onSimConnectTraceChanged();
+
+            //! Terrain probe checkbox changed
+            void onEnableTerrainProbeChanged();
 
             //! Access the concrete implementation
             CSimulatorFsxCommon *getFsxSimulator () const;
