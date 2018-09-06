@@ -23,6 +23,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
@@ -87,14 +88,29 @@ namespace BlackSimPlugin
         struct TraceFsxSendId
         {
             //! Ctor
-            TraceFsxSendId(DWORD sendId, DWORD simObjectId, const QString &comment) :
-                sendId(sendId), simObjectId(simObjectId), comment(comment)
+            TraceFsxSendId(DWORD sendId, const CSimConnectObject &simObject, const QString &comment) :
+                sendId(sendId), simObject(simObject), comment(comment)
             { }
 
             // DWORD is unsigned
-            DWORD sendId = 0;      //!< the send id
-            DWORD simObjectId = 0; //!< corresponding CSimConnectObject
-            QString comment;       //!< where sent
+            DWORD sendId = 0;            //!< the send id
+            CSimConnectObject simObject; //!< CSimConnectObject at the time of the trace
+            QString comment;             //!< where sent
+
+            //! For probe
+            bool isForProbe() const { return simObject.getType() == CSimConnectObject::TerrainProbe; }
+
+            //! For aircraft
+            bool isForAircraft() const { return simObject.getType() == CSimConnectObject::Aircraft; }
+
+            //! Invalid trace?
+            bool isInvalid() const { return sendId == 0 && simObject.isInvalid() == 0 && comment.isEmpty(); }
+
+            //! Valid trace?
+            bool isValid() const { return !this->isInvalid(); }
+
+            //! Invalid object
+            static const TraceFsxSendId &invalid() { static const TraceFsxSendId i(0, CSimConnectObject(), ""); return i; }
         };
 
         //! FSX Simulator Implementation
@@ -136,6 +152,8 @@ namespace BlackSimPlugin
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+            //! \remark x86 FSX version, x64 version is overridden
+            //! \sa CSimulatorFsxCommon::is
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! Tracing?
@@ -144,11 +162,24 @@ namespace BlackSimPlugin
             //! Set tracing on/off
             void setTractingSendId(bool trace);
 
+            //! FSX Terrain probe
+            //! \remark must be off at P3D v4.2 drivers or later
+            bool isUsingFsxTerrainProbe() const { return m_useFsxTerrainProbe; }
+
+            //! FSX terrain probe
+            void setUsingFsxTerrainProbe(bool use) { m_useFsxTerrainProbe = use; }
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
 
             //! Request for probe (elevation)?
             static bool isRequestForSimObjTerrainProbe(DWORD requestId) { return requestId >= RequestSimObjTerrainProbeStart && requestId <= RequestSimObjTerrainProbeRangeEnd; }
+
+            //! Request for any CSimConnectObject?
+            static bool isRequestForSimConnectObject(DWORD requestId)
+            {
+                return isRequestForSimObjAircraft(requestId) || isRequestForSimObjTerrainProbe(requestId);
+            }
 
             //! Sub request type
             static CSimConnectDefinitions::SimObjectRequest requestToSimObjectRequest(DWORD requestId);
@@ -210,6 +241,12 @@ namespace BlackSimPlugin
             //! Valid CSimConnectObject which is NOT pendig removed
             bool isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const;
 
+            //! CSimConnectObject for trace
+            CSimConnectObject getSimObjectForTrace(const TraceFsxSendId &trace) const;
+
+            //! Remove the CSimConnectObject linked in the trace
+            bool removeSimObjectForTrace(const TraceFsxSendId &trace);
+
             //! Register help
             static void registerHelp();
 
@@ -217,7 +254,10 @@ namespace BlackSimPlugin
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
             CSimConnectObjects m_simConnectObjects;                             //!< AI objects and their object and request ids
-            CSimConnectObjects m_simConnectProbes;                              //!< AI terrain probes and their object / request ids
+
+            // probes
+            bool m_useFsxTerrainProbe = true;  //!< Use FSX Terrain probe?
+            int  m_addedProbes = 0; //!< added probes
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
 
         private:
@@ -231,7 +271,7 @@ namespace BlackSimPlugin
             };
 
             //! Mode as string
-            const QString &modeToString(AircraftAddMode mode);
+            static const QString &modeToString(AircraftAddMode mode);
 
             //! Dispatch SimConnect messages
             //! \remark very frequently called
@@ -243,7 +283,11 @@ namespace BlackSimPlugin
 
             //! Add AI object for terrain probe
             //! \remark experimental
-            bool physicallyAddAITerrainProbe(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+            bool physicallyAddAITerrainProbe(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, int number);
+
+            //! Add number probes (inits the probe objects)
+            //! \remark experimental
+            int physicallyInitAITerrainProbes(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, int number);
 
             //! Remove aircraft no longer in provider
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
@@ -253,6 +297,9 @@ namespace BlackSimPlugin
             //! \remark checks if the object was really added after an "add request" and not directly removed again
             //! \remark requests further data on remote aircraft (lights, ..) when correctly added
             void verifyAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
+
+            //! Verify the probe
+            void verifyAddedTerrainProbe(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 
             //! Add next aircraft based on timer
             void addPendingAircraftByTimer();
@@ -342,17 +389,11 @@ namespace BlackSimPlugin
             //! An AI aircraft was added in the simulator
             bool simulatorReportedObjectAdded(DWORD objectId);
 
-            //! An AI probe was added in the simulator
-            bool simulatorReportedProbeAdded(DWORD objectId);
-
             //! Simulator reported that AI aircraft was removed
             bool simulatorReportedObjectRemoved(DWORD objectID);
 
             //! Set ID of a SimConnect object, so far we only have an request id in the object
             bool setSimConnectObjectId(DWORD requestId, DWORD objectId);
-
-            //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectProbeId(DWORD requestId, DWORD objectId);
 
             //! Remember current lights
             bool setCurrentLights(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftLights &lights);
@@ -369,12 +410,6 @@ namespace BlackSimPlugin
             //! The SimConnect object for idxs
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
 
-            //! The simconnect related probes
-            const CSimConnectObjects &getSimConnectProbes() const { return m_simConnectProbes; }
-
-            //! Get probe for id
-            CSimConnectObject getProbeForObjectId(DWORD objectId) const;
-
             //! Format conversion
             //! \note must be valid situation
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
@@ -389,7 +424,7 @@ namespace BlackSimPlugin
             bool requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
             //! Request data for the terrain probe
-            bool requestTerrainProbeData(const BlackMisc::Aviation::CCallsign &callsign);
+            bool requestTerrainProbeData(const CSimConnectObject &simObject);
 
             //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
@@ -410,19 +445,22 @@ namespace BlackSimPlugin
             void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
 
             //! Trace the send id
-            void traceSendId(DWORD simObjectId, const QString &functionName, const QString &details = {});
+            void traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details = {}, bool forceTrace = false);
 
             //! Trace if required, log errors
-            HRESULT logAndTraceSendId(HRESULT hr, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
-
-            //! Trace if required, log errors
-            HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+            HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
             //! Trace if required, log errors
             HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
             //! Trace if required, log errors
             HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Send id trace or given send id
+            TraceFsxSendId getSendIdTrace(DWORD sendId) const;
+
+            //! Get the trace details, otherwise empty string
+            QString getSendIdTraceDetails(const TraceFsxSendId &trace) const;
 
             //! Get the trace details, otherwise empty string
             QString getSendIdTraceDetails(DWORD sendId) const;
@@ -432,6 +470,9 @@ namespace BlackSimPlugin
 
             //! Insert a new SimConnect object
             CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
+
+            //! Used for terrain probes
+            static const BlackMisc::Aviation::CAltitude &terrainProbeAltitude();
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
             static constexpr int SkipUpdateCyclesForCockpit    = 10; //!< skip x cycles before updating cockpit again
@@ -465,6 +506,7 @@ namespace BlackSimPlugin
             qint64 m_simulatingChangedTs = -1;   //!< timestamp, when simulating changed (used to avoid jitter)
             int m_syncDeferredCounter =  0;      //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
+            int m_ownAircraftUpdate = 0;         //!< own aircraft update
 
             // tracing dispatch performance
             int m_dispatchErrors         = 0;    //!< number of dispatched failed, \sa dispatch

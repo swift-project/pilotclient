@@ -64,23 +64,63 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EXCEPTION *exception = static_cast<SIMCONNECT_RECV_EXCEPTION *>(pData);
                     const DWORD exceptionId = exception->dwException;
                     const DWORD sendId = exception->dwSendID;
-                    const DWORD index = exception->dwIndex; // index of parameter that was source of error, 4294967295/0xFFFFFFFF means unknown, 0 means also UNKNOWN INDEX
-                    const DWORD data = cbData;
+                    const DWORD index  = exception->dwIndex; // index of parameter that was source of error, 4294967295/0xFFFFFFFF means unknown, 0 means also UNKNOWN INDEX
+                    const DWORD data   = cbData;
+                    const TraceFsxSendId trace = simulatorFsxP3D->getSendIdTrace(sendId);
+                    bool logGenericExceptionInfo = true;
+
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
                     case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID: break; // Specifies that the client event, request ID, data definition ID, or object ID was not recognized
-                    case SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED: break;
-                    default: break;
+                    case SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED:
+                        {
+                            if (trace.isValid())
+                            {
+                                // it can happen the object is not yet
+                                CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForTrace(trace);
+                                if (simObject.isInvalid()) { simObject = trace.simObject; } // take the one in the trace
+                                if (simObject.isValid())
+                                {
+                                    const bool removed = simulatorFsxP3D->m_simConnectObjects.remove(simObject.getCallsign());
+                                    if (removed)
+                                    {
+                                        if (simObject.isAircraft())
+                                        {
+                                            CLogMessage(simulatorFsxP3D).warning("Model failed to be added and will be disabled: '%1' details: %2")
+                                                    << simObject.getAircraftModelString()
+                                                    << simObject.getAircraft().toQString(true);
+                                            logGenericExceptionInfo = false;
+                                        }
+                                        else
+                                        {
+                                            CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2")
+                                                    << simObject.getCallsign().asString()
+                                                    << simObject.getAircraftModelString();
+                                            simulatorFsxP3D->setUsingFsxTerrainProbe(false);
+                                            logGenericExceptionInfo = false;
+                                        }
+                                    } // removed
+                                }
+                            }
+                        } // SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED:
+                        break;
+                    default:
+                        break;
+                    } // switch exception id
+
+                    // generic exception warning
+                    if (logGenericExceptionInfo)
+                    {
+                        QString ex;
+                        ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
+                        const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
+                        const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
+                        CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                                << exceptionString << ex
+                                << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
+                        simulatorFsxP3D->triggerAutoTraceSendId();
                     }
-                    QString ex;
-                    ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
-                    const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
-                    const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
-                    CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
-                            << exceptionString << ex
-                            << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
-                    simulatorFsxP3D->triggerAutoTraceSendId();
                     break; // SIMCONNECT_RECV_ID_EXCEPTION
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -145,19 +185,6 @@ namespace BlackSimPlugin
                             break;
                         }
                     }
-                    else if (simulatorFsxP3D->getSimConnectProbes().isKnownSimObjectId(objectId))
-                    {
-                        switch (event->uEventID)
-                        {
-                        case SystemEventObjectRemoved:
-                            CLogMessage(simulatorFsxP3D).info("Removed probe id: %2") << objectId;
-                            simulatorFsxP3D->m_simConnectProbes.removeByObjectId(objectId);
-                            break;
-                        case SystemEventObjectAdded:  // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
-                        default:
-                            break;
-                        }
-                    }
                     break; // SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
@@ -179,27 +206,11 @@ namespace BlackSimPlugin
                     const SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     const DWORD requestId = event->dwRequestID;
                     const DWORD objectId  = event->dwObjectID;
-                    bool success = false;
                     simulatorFsxP3D->m_dispatchRequestIdLast = requestId;
 
-                    if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
+                    if (CSimulatorFsxCommon::isRequestForSimConnectObject(requestId))
                     {
-                        success = simulatorFsxP3D->setSimConnectProbeId(requestId, objectId);
-                        if (!success) { break; } // not an request ID of ours
-                        success = simulatorFsxP3D->simulatorReportedProbeAdded(objectId);
-                        const CSimConnectObject simObject = simulatorFsxP3D->getProbeForObjectId(objectId);
-                        if (success)
-                        {
-                            CLogMessage(simulatorFsxP3D).info("Added probe '%1' id: %2") << simObject.getCallsign() << objectId;
-                        }
-                        else
-                        {
-                            CLogMessage(simulatorFsxP3D).error("Cannot add probe '%1' id: %2") << simObject.getCallsign() << objectId;
-                        }
-                    }
-                    else if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
-                    {
-                        success = simulatorFsxP3D->setSimConnectObjectId(requestId, objectId);
+                        bool success = simulatorFsxP3D->setSimConnectObjectId(requestId, objectId);
                         if (!success) { break; } // not an request ID of ours
                         success = simulatorFsxP3D->simulatorReportedObjectAdded(objectId); // trigger follow up actions
                         if (!success)
@@ -314,8 +325,9 @@ namespace BlackSimPlugin
                             }
                             else if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
                             {
-                                const CSimConnectObject probeObj = simulatorFsxP3D->getProbeForObjectId(objectId);
+                                const CSimConnectObject probeObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
                                 if (!probeObj.hasValidRequestAndObjectId()) { break; }
+                                Q_ASSERT_X(probeObj.isTerrainProbe(), Q_FUNC_INFO, "No probe");
                                 const CSimConnectDefinitions::SimObjectRequest subRequest = CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
 
                                 if (subRequest == CSimConnectDefinitions::SimObjectPositionData)
@@ -340,7 +352,6 @@ namespace BlackSimPlugin
                                     }
                                 }
                             } // probe
-                            break;
                         }
                         break; // default (SIMCONNECT_RECV_ID_SIMOBJECT_DATA)
                     }

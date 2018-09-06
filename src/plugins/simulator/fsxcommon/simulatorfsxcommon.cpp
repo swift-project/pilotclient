@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/country.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/threadutils.h"
@@ -279,16 +280,16 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
+            // this is the 32bit FSX version, the P3D x64 is overridden!
+
             if (this->isShuttingDownOrDisconnected()) { return false; }
+            if (!this->isUsingFsxTerrainProbe()) { return false; }
             if (reference.isNull()) { return false; }
+            const CSimConnectObject simObject = m_simConnectObjects.getNotPendingProbe();
+            if (!simObject.isConfirmedAdded()) { return false; }
 
-            static const CAltitude alt(50000, CLengthUnit::ft());
             CCoordinateGeodetic pos(reference);
-            pos.setGeodeticHeight(alt);
-
-            if (m_simConnectProbes.isEmpty()) { return this->physicallyAddAITerrainProbe(pos); }
-            if (m_simConnectProbes.countConfirmedAdded() < 1) { return false; } // pending probes
-            const CSimConnectObject simObject = m_simConnectProbes.values().front();
+            pos.setGeodeticHeight(terrainProbeAltitude());
 
             SIMCONNECT_DATA_INITPOSITION position = this->coordinateToFsxPosition(pos);
             const HRESULT hr = this->logAndTraceSendId(
@@ -299,7 +300,7 @@ namespace BlackSimPlugin
 
             if (isFailure(hr)) { return false; }
 
-            this->requestTerrainProbeData(callsign);
+            this->requestTerrainProbeData(simObject);
             emit this->requestedElevation(callsign);
             return true;
         }
@@ -372,11 +373,6 @@ namespace BlackSimPlugin
             return this->getSimConnectObjects().getSimObjectForObjectId(objectId);
         }
 
-        CSimConnectObject CSimulatorFsxCommon::getProbeForObjectId(DWORD objectId) const
-        {
-            return this->getSimConnectProbes().getSimObjectForObjectId(objectId);
-        }
-
         void CSimulatorFsxCommon::setSimConnected()
         {
             m_simConnected = true;
@@ -413,26 +409,26 @@ namespace BlackSimPlugin
             HRESULT hr1 = this->logAndTraceSendId(
                               SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                                       CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),
-                              0, "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+                              "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
             HRESULT hr2 = this->logAndTraceSendId(
                               SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
                                       CSimConnectDefinitions::DataOwnAircraftTitle,
                                       SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                              0, "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+                              "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
             HRESULT hr3 = this->logAndTraceSendId(
                               SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
                                       CSimConnectDefinitions::DataSimEnvironment,
                                       SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                              0, "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+                              "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
 
             // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
             HRESULT hr4 = this->logAndTraceSendId(
                               SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
                                       CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
-                              0, "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+                              "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
 
             if (isFailure(hr1, hr2, hr3, hr4)) { return; }
             this->emitSimulatorCombinedStatus(); // force sending status
@@ -497,6 +493,16 @@ namespace BlackSimPlugin
             if (simObject.isPendingRemoved()) { return false; }
             if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
             return true;
+        }
+
+        CSimConnectObject CSimulatorFsxCommon::getSimObjectForTrace(const TraceFsxSendId &trace) const
+        {
+            return m_simConnectObjects.getSimObjectForOtherSimObject(trace.simObject);
+        }
+
+        bool CSimulatorFsxCommon::removeSimObjectForTrace(const TraceFsxSendId &trace)
+        {
+            return m_simConnectObjects.removeByOtherSimObject(trace.simObject);
         }
 
         bool CSimulatorFsxCommon::triggerAutoTraceSendId(qint64 traceTimeMs)
@@ -609,17 +615,28 @@ namespace BlackSimPlugin
                 --m_skipCockpitUpdateCycles;
             }
 
-            if (m_isWeatherActivated)
+            // slower updates
+            if (m_ownAircraftUpdate % 10 == 0)
             {
-                const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
-                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                if (m_isWeatherActivated)
                 {
-                    m_lastWeatherPosition = currentPosition;
-                    const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                    requestWeatherGrid(weatherGrid, { this, &CSimulatorFsxCommon::injectWeatherGrid });
+                    const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
+                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    {
+                        m_lastWeatherPosition = currentPosition;
+                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                        requestWeatherGrid(weatherGrid, { this, &CSimulatorFsxCommon::injectWeatherGrid });
+                    }
+                }
+
+                if (this->m_useFsxTerrainProbe && m_addedProbes < 1)
+                {
+                    this->physicallyInitAITerrainProbes(position, 2);
                 }
             }
+
+            m_ownAircraftUpdate++; // with 50updates/sec long enough even for 32bit
         }
 
         void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData)
@@ -735,17 +752,14 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFsxCommon::simulatorReportedProbeAdded(DWORD objectId)
-        {
-            if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
-            const CSimConnectObject simObject = m_simConnectProbes.markObjectAsAdded(objectId);
-            const bool valid(simObject.hasValidRequestAndObjectId() && simObject.isConfirmedAdded());
-            return valid;
-        }
-
         void CSimulatorFsxCommon::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
+            if (remoteAircraftIn.isTerrainProbe())
+            {
+                this->verifyAddedTerrainProbe(remoteAircraftIn);
+                return;
+            }
 
             CStatusMessage msg;
             CSimulatedAircraft remoteAircraft = remoteAircraftIn;
@@ -836,6 +850,17 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorFsxCommon::verifyAddedTerrainProbe(const CSimulatedAircraft &remoteAircraftIn)
+        {
+            CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
+            simObject.setConfirmedAdded(true);
+            // trigger new adding from pending if any
+            if (!m_addPendingAircraft.isEmpty())
+            {
+                this->addPendingAircraftAfterAdded();
+            }
+        }
+
         void CSimulatorFsxCommon::addPendingAircraftByTimer()
         {
             this->addPendingAircraft(AddByTimer);
@@ -849,13 +874,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::addPendingAircraft(AircraftAddMode mode)
         {
             if (m_addPendingAircraft.isEmpty()) { return; }
-            const CCallsignSet aircraftCallsignsInRange(getAircraftInRangeCallsigns());
+            const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
             CSimulatedAircraftList toBeAddedAircraft;
             CCallsignSet toBeRemovedCallsigns;
             for (const CSimulatedAircraft &aircraft : as_const(m_addPendingAircraft))
             {
                 Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
-                if (aircraftCallsignsInRange.contains(aircraft.getCallsign()))
+                if (aircraft.isTerrainProbe() || aircraftCallsignsInRange.contains(aircraft.getCallsign()))
                 {
                     toBeAddedAircraft.push_back(aircraft);
                 }
@@ -954,11 +979,6 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)
         {
             return m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId);
-        }
-
-        bool CSimulatorFsxCommon::setSimConnectProbeId(DWORD requestId, DWORD objectId)
-        {
-            return m_simConnectProbes.setSimConnectObjectIdForRequestId(requestId, objectId);
         }
 
         bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
@@ -1092,6 +1112,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft, CSimulatorFsxCommon::AircraftAddMode addMode)
         {
             const CCallsign callsign(newRemoteAircraft.getCallsign());
+            const bool probe = newRemoteAircraft.isTerrainProbe();
 
             // entry checks
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
@@ -1170,8 +1191,8 @@ namespace BlackSimPlugin
 
             this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
-            // create AI
-            if (!this->isAircraftInRange(callsign))
+            // create AI after crosscheking it
+            if (!probe && !this->isAircraftInRange(callsign))
             {
                 CLogMessage(this).info("Skipping adding of '%1' since it is no longer in range") << callsign.asString();
                 return false;
@@ -1182,13 +1203,19 @@ namespace BlackSimPlugin
             const bool sendGround = setup.isSendingGndFlagToSimulator();
 
             // FSX/P3D adding
+            Q_ASSERT_X(!probe || m_useFsxTerrainProbe, Q_FUNC_INFO, "Adding probe, but FSX probe mode is off");
+
             bool adding = false; // will be added flag
-            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjAircraft(); // add
+            const SIMCONNECT_DATA_REQUEST_ID requestId = probe ?
+                    this->obtainRequestIdForSimObjTerrainProbe() :
+                    this->obtainRequestIdForSimObjAircraft();
             const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(newRemoteAircraft.getSituation(), sendGround);
             const QString modelString(newRemoteAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
-            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
+            const HRESULT hr = !probe ?
+                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId) :
+                               SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
             if (isFailure(hr))
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
@@ -1198,48 +1225,51 @@ namespace BlackSimPlugin
             else
             {
                 // we will request a new aircraft by request ID, later we will receive its object id
-                // so far this object id is -1
+                // so far this object id is 0 (DWORD)
+                static const QString mode("mode: %1");
                 const CSimConnectObject simObject = this->insertNewSimConnectObject(newRemoteAircraft, requestId);
-                if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
+                this->traceSendId(simObject, Q_FUNC_INFO, mode.arg(CSimulatorFsxCommon::modeToString(addMode)), true);
                 adding = true;
             }
             return adding;
         }
 
-        bool CSimulatorFsxCommon::physicallyAddAITerrainProbe(const ICoordinateGeodetic &coordinate)
+        bool CSimulatorFsxCommon::physicallyAddAITerrainProbe(const ICoordinateGeodetic &coordinate, int number)
         {
             if (coordinate.isNull()) { return false; }
+            if (!this->isUsingFsxTerrainProbe()) { return false; }
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
 
-            // static const QString modelString = this->getDefaultModel().getModelString();
-            static const QString modelString("OrcaWhale");
-            static const QString pseudoCallsign("swift pr: %1"); // max 12 chars
-            const int index = m_simConnectProbes.size() + 1;
-            const CCallsign cs(pseudoCallsign.arg(index));
-            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // add
-            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::coordinateToFsxPosition(coordinate);
-            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(cs.asString().right(12)), initialPosition, requestId);
-            // const HRESULT hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
-            if (this->isTracingSendId()) { this->traceSendId(0, Q_FUNC_INFO, QString("Adding probe, req.id: %1").arg(requestId));}
+            // static const QString modelString("OrcaWhale");
+            // static const QString modelString("Water Drop");
+            // static const QString modelString("A321ACA");
+            static const QString modelString("AI_Tracker_Object_0");
+            static const QString pseudoCallsign("PROBE%1"); // max 12 chars
+            static const CCountry ctry("SW", "SWIFT");
+            static const CAirlineIcaoCode swiftAirline("SWI", "swift probe", ctry, "SWIFT", false, false);
+            static const CLivery swiftLivery(CLivery::getStandardCode(swiftAirline), swiftAirline, "swift probe");
 
-            bool ok = false;
-            if (isOk(hr))
+            const CCallsign cs(pseudoCallsign.arg(number));
+            const CAircraftModel model(modelString, CAircraftModel::TypeTerrainProbe, QStringLiteral("swift terrain probe"), CAircraftIcaoCode::unassignedIcao(), swiftLivery);
+            CAircraftSituation situation(cs, coordinate);
+            situation.setAltitude(terrainProbeAltitude());
+            situation.setZeroPBH();
+            const CSimulatedAircraft pseudoAircraft(cs, model, CUser("123456", "swift", cs), situation);
+            return this->physicallyAddRemoteAircraftImpl(pseudoAircraft, ExternalCall);
+        }
+
+        int CSimulatorFsxCommon::physicallyInitAITerrainProbes(const ICoordinateGeodetic &coordinate, int number)
+        {
+            if (number < 1) { return 0; }
+            int c = 0;
+            for (int n = 1; n <= number; ++n)
             {
-                ok = true;
-                const CAircraftModel model(modelString, CAircraftModel::TypeTerrainProbe, QStringLiteral("swift terrain probe"), CAircraftIcaoCode::unassignedIcao());
-                const CAircraftSituation situation(cs, coordinate);
-                const CSimulatedAircraft pseudoAircraft(cs, model, CUser("123456", "swift", cs), situation);
-                CSimConnectObject simObject(CSimConnectObject::TerrainProbe);
-                simObject.setRequestId(requestId);
-                simObject.setAircraft(pseudoAircraft);
-                m_simConnectProbes.insert(cs, simObject);
+                if (this->physicallyAddAITerrainProbe(coordinate, n)) { c++; }
             }
-            else
-            {
-                const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create terrain AI: '%1'") << requestId;
-                CLogMessage::preformatted(msg);
-            }
-            return ok;
+
+            CLogMessage(this).info("Adding %1 FSX terrain probes") << number;
+            m_addedProbes = c;
+            return c;
         }
 
         bool CSimulatorFsxCommon::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
@@ -1255,20 +1285,23 @@ namespace BlackSimPlugin
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
+            if (simObject.isTerrainProbe())
+            {
+                return false;
+            }
 
             // check for pending objects
             m_addPendingAircraft.removeByCallsign(callsign); // just in case still in list of pending aircraft
             const bool pendingAdded = simObject.isPendingAdded(); // already added in simulator, but not yet confirmed
             const bool stillWaitingForLights = !simObject.hasCurrentLightsInSimulator();
-            if (pendingAdded || stillWaitingForLights)
+            if (!simObject.isRemovedWhileAdding() && (pendingAdded || stillWaitingForLights))
             {
                 // problem: we try to delete an aircraft just requested to be added
                 // best solution so far, call remove again with a delay
-                CLogMessage(this).warning("Object: '%1' requested to be removed, but pedning added (%2) / or pending lights(%3). CS '%4' will be removed again.")
+                CLogMessage(this).warning("Object: '%1' requested to be removed, but pending added (%2) / or pending lights(%3). CS '%4' will be removed again.")
                         << simObject.toQString() << boolToYesNo(pendingAdded)
                         << boolToYesNo(stillWaitingForLights) << callsign.asString();
-                simObject.fakeCurrentLightsInSimulator(); // next time looks like we have lights
-                simObject.setRemovedWhileAdding(true);
+                simObject.setRemovedWhileAdding(true); // next time kill
                 QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(2000, this, [ = ]
                 {
@@ -1290,7 +1323,7 @@ namespace BlackSimPlugin
             const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
             if (isOk(result))
             {
-                if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
+                if (this->isTracingSendId()) { this->traceSendId(simObject, Q_FUNC_INFO);}
             }
             else
             {
@@ -1673,13 +1706,15 @@ namespace BlackSimPlugin
 
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
-            position.Airspeed = static_cast<DWORD>(situation.getGroundSpeed().valueInteger(CSpeedUnit::kts()));
+            const double gsKts = situation.getGroundSpeed().value(CSpeedUnit::kts());
+            position.Airspeed = static_cast<DWORD>(qRound(gsKts));
 
             // sanity check
-            if (CBuildConfig::isLocalDeveloperDebugBuild() && situation.getGroundSpeed().isNegativeWithEpsilonConsidered())
+            if (gsKts < 0.0)
             {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Negative speed");
-                position.Airspeed = 0;
+                // we get negative GS for pushback and helicopters
+                // do do we handle them her with DWORD
+                position.Airspeed = 0U;
             }
 
             // MSFS has inverted pitch and bank angles
@@ -1783,13 +1818,9 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CSimulatorFsxCommon::requestTerrainProbeData(const CCallsign &callsign)
+        bool CSimulatorFsxCommon::requestTerrainProbeData(const CSimConnectObject &simObject)
         {
-            if (m_simConnectProbes.countConfirmedAdded() < 1) { return false; }
-            if (!m_simConnectObjects.contains(callsign)) { return false; } // removed in meantime
-
             static const QString w("Cannot request terrain probe data for id '%1'");
-            const CSimConnectObject simObject = m_simConnectProbes.values().front();
             const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectPositionData);
             const DWORD objectId = simObject.getObjectId();
             const HRESULT result =
@@ -1813,7 +1844,7 @@ namespace BlackSimPlugin
                                        SimConnect_RequestDataOnSimObject(
                                            m_hSimConnect, requestId, CSimConnectDefinitions::DataRemoteAircraftLights,
                                            simObject.getObjectId(), SIMCONNECT_PERIOD_SECOND),
-                                       true, simObject, "Cannot request lights data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+                                       simObject, "Cannot request lights data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             return isOk(result);
         }
 
@@ -1827,8 +1858,8 @@ namespace BlackSimPlugin
             const HRESULT result = this->logAndTraceSendId(
                                        SimConnect_RequestDataOnSimObject(
                                            m_hSimConnect, requestId,
-                                           CSimConnectDefinitions::DataRemoteAircraftModelData, simObject.getObjectId(),
-                                           SIMCONNECT_PERIOD_ONCE),
+                                           CSimConnectDefinitions::DataRemoteAircraftModelData,
+                                           simObject.getObjectId(), SIMCONNECT_PERIOD_ONCE),
                                        simObject, "Cannot request model info", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             return isOk(result);
         }
@@ -1851,8 +1882,8 @@ namespace BlackSimPlugin
             const HRESULT hr2 = this->logAndTraceSendId(
                                     SimConnect_RequestDataOnSimObject(
                                         m_hSimConnect, requestId,
-                                        CSimConnectDefinitions::DataRemoteAircraftLights, simObject.getObjectId(),
-                                        SIMCONNECT_PERIOD_NEVER),
+                                        CSimConnectDefinitions::DataRemoteAircraftLights,
+                                        simObject.getObjectId(), SIMCONNECT_PERIOD_NEVER),
                                     simObject, "Stopping lights request", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             return isOk(hr1, hr2);
         }
@@ -1882,9 +1913,11 @@ namespace BlackSimPlugin
             m_simSimulating = false;
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
+            m_ownAircraftUpdate = 0;
             m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
+            m_addedProbes = 0;
             m_sendIdTraces.clear();
         }
 
@@ -1908,39 +1941,27 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsxCommon::getCallsignsMissingInProvider() const
         {
-            const CCallsignSet simObjectCallsigns(m_simConnectObjects.keys());
+            const CCallsignSet simObjectCallsigns(m_simConnectObjects.getAllCallsigns(true));
             const CCallsignSet providerCallsigns(this->getAircraftInRangeCallsigns());
             return simObjectCallsigns.difference(providerCallsigns);
         }
 
-        void CSimulatorFsxCommon::traceSendId(DWORD simObjectId, const QString &functionName, const QString &details)
+        void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details, bool forceTrace)
         {
-            if (!this->isTracingSendId()) { return; }
+            if (!forceTrace && !this->isTracingSendId()) { return; }
             if (MaxSendIdTraces < 1) { return; }
             DWORD dwLastId = 0;
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
             if (isFailure(hr)) { return; }
             if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeLast(); }
-            const TraceFsxSendId trace(dwLastId, simObjectId, details.isEmpty() ? functionName : details % QStringLiteral(", ") % functionName);
+            const TraceFsxSendId trace(dwLastId, simObject, details.isEmpty() ? functionName : details % QStringLiteral(", ") % functionName);
             m_sendIdTraces.push_front(trace);
         }
 
-        HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails)
+        HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails)
         {
-            return this->logAndTraceSendId(hr, this->isTracingSendId(), simObjectId, warningMsg, functionName, functionDetails);
-        }
-
-        HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool traceSendId, DWORD simObjectId, const QString &warningMsg, const QString &functionName, const QString &functionDetails)
-        {
-            if (traceSendId) { this->traceSendId(simObjectId, functionName, functionDetails); }
-            if (isOk(hr)) { return hr; }
-            if (!warningMsg.isEmpty())
-            {
-                CSimConnectObject simObject = (simObjectId == 0) ? CSimConnectObject() : m_simConnectObjects.getSimObjectForObjectId(simObjectId);
-                CLogMessage(this).warning(warningMsg % QStringLiteral(" ") % simObject.toQString());
-            }
-            this->triggerAutoTraceSendId();
-            return hr;
+            const CSimConnectObject empty;
+            return this->logAndTraceSendId(hr, empty, warningMsg, functionName, functionDetails);
         }
 
         HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails)
@@ -1950,7 +1971,7 @@ namespace BlackSimPlugin
 
         HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails)
         {
-            if (traceSendId) { this->traceSendId(simObject.getObjectId(), functionName, functionDetails); }
+            if (traceSendId) { this->traceSendId(simObject, functionName, functionDetails); }
             if (isOk(hr)) { return hr; }
             if (!warningMsg.isEmpty())
             {
@@ -1960,26 +1981,42 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const
+        TraceFsxSendId CSimulatorFsxCommon::getSendIdTrace(DWORD sendId) const
         {
             for (const TraceFsxSendId &trace : m_sendIdTraces)
             {
-                if (trace.sendId == sendId)
-                {
-                    static const QString d("Send id: %1 obj.id.: %2 SimObj: %3 | '%4'");
-                    const CSimConnectObject simObj = m_simConnectObjects.getSimObjectForObjectId(trace.simObjectId);
-                    return d.arg(sendId).arg(trace.simObjectId).arg(simObj.toQString(), trace.comment);
-                }
+                if (trace.sendId == sendId) { return trace; }
+            }
+            return TraceFsxSendId::invalid();
+        }
+
+        QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const
+        {
+            const TraceFsxSendId trace = this->getSendIdTrace(sendId);
+            if (trace.sendId == sendId)
+            {
+                return this->getSendIdTraceDetails(trace);
             }
             return "";
+        }
+
+        QString CSimulatorFsxCommon::getSendIdTraceDetails(const TraceFsxSendId &trace) const
+        {
+            static const QString d("Send id: %1 obj.id.: %2 SimObj: %3 | '%4'");
+            if (trace.isInvalid()) { return QString(); }
+
+            // update with latest sim object
+            const CSimConnectObject simObject = this->getSimObjectForTrace(trace);
+            return d.arg(trace.sendId).arg(simObject.getObjectId()).arg(simObject.toQString(), trace.comment);
         }
 
         int CSimulatorFsxCommon::removeAllProbes()
         {
             if (!m_hSimConnect) { return 0; } // already disconnected
-            if (m_simConnectProbes.isEmpty()) { return 0; }
+            const QList<CSimConnectObject> probes = m_simConnectObjects.getProbes();
+
             int c = 0;
-            for (const CSimConnectObject &probeSimObject : m_simConnectProbes.values())
+            for (const CSimConnectObject &probeSimObject : probes)
             {
                 if (!probeSimObject.isConfirmedAdded()) { continue; }
                 const SIMCONNECT_DATA_REQUEST_ID requestId = probeSimObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
@@ -1993,7 +2030,7 @@ namespace BlackSimPlugin
                     CLogMessage(this).warning("Removing probe '%1' from simulator failed") << probeSimObject.getObjectId();
                 }
             }
-            m_simConnectProbes.clear();
+            m_simConnectObjects.removeAllProbes();
             m_pendingProbeRequests.clear();
             return c;
         }
@@ -2023,6 +2060,12 @@ namespace BlackSimPlugin
             }
             m_simConnectObjects.insert(aircraft.getCallsign(), simObject);
             return simObject;
+        }
+
+        const CAltitude &CSimulatorFsxCommon::terrainProbeAltitude()
+        {
+            static const CAltitude alt(10000, CLengthUnit::ft());
+            return alt;
         }
 
         QString CSimulatorFsxCommon::fsxCharToQString(const char *fsxChar, int size)
