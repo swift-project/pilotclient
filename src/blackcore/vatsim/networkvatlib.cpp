@@ -997,9 +997,12 @@ namespace BlackCore
             const int frequencyKHz = pos->frequency;
             CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-            emit cbvar_cast(cbvar)->atcPositionUpdate(
-                CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc), freq,
-                CCoordinateGeodetic(pos->latitude, pos->longitude, 0), CLength(pos->visibleRange, CLengthUnit::NM()));
+            CLength range(pos->visibleRange, CLengthUnit::NM());
+            QString cs = cbvar_cast(cbvar)->fromFSD(callsign);
+            // ATIS often have a range of 0 nm. Correct this to a proper value.
+            if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(50.0); }
+            CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
+            emit cbvar_cast(cbvar)->atcPositionUpdate( CCallsign(cs, CCallsign::Atc), freq, position, range);
         }
 
         void CNetworkVatlib::onKicked(VatFsdClient *, const char *reason, void *cbvar)
