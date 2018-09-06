@@ -1086,11 +1086,12 @@ namespace BlackCore
     void CApplication::onNetworkConfigurationsUpdateCompleted()
     {
         Q_ASSERT_X(m_networkConfigManager, Q_FUNC_INFO, "Need network config manager");
+        if (this->isShuttingDown()) { return; }
         const QList<QNetworkConfiguration> allConfigurations = m_networkConfigManager->allConfigurations();
         if (allConfigurations.isEmpty())
         {
             // this is an odd situation we cannot handle, network check will be disabled
-            if (m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
+            if (m_networkWatchDog && m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
             {
                 m_networkWatchDog->disableNetworkAccessibilityCheck(true);
                 m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
@@ -1110,7 +1111,7 @@ namespace BlackCore
 
             const bool canStartIAP = (m_networkConfigManager->capabilities() & QNetworkConfigurationManager::CanStartAndStopInterfaces);
             const bool disable = activeCount < 1; // only inactive
-            if (disable && m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
+            if (disable && m_networkWatchDog && m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
             {
                 CLogMessage(this).warning("Disabling network accessibility check in watchdog");
                 m_networkWatchDog->disableNetworkAccessibilityCheck(disable);
