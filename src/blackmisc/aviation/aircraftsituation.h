@@ -413,6 +413,9 @@ namespace BlackMisc
             //! Set bank (angle)
             void setBank(const PhysicalQuantities::CAngle &bank) { m_bank = bank; }
 
+            //! Set PBH values to 0 (zero)
+            void setZeroPBH();
+
             //! Get PBH info (all together)
             QString getPBHInfo() const;
 

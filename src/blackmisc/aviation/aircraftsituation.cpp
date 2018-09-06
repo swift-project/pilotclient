@@ -979,6 +979,15 @@ namespace BlackMisc
             m_pressureAltitude = altitude;
         }
 
+        void CAircraftSituation::setZeroPBH()
+        {
+            static const CAngle za(0, CAngleUnit::deg());
+            static const CHeading zh(za, CHeading::True);
+            this->setPitch(za);
+            this->setBank(za);
+            this->setHeading(zh);
+        }
+
         QString CAircraftSituation::getPBHInfo() const
         {
             static const QString pbh("P: %1 %2 B: %3 %4 H: %5 %6");

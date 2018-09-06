@@ -357,6 +357,9 @@ namespace BlackMisc
             //! Get model (model used for mapping)
             const Simulation::CAircraftModel &getModel() const { return m_models[CurrentModel]; }
 
+            //! Terrain probe?
+            bool isTerrainProbe() const { return this->getModel().isTerrainProbe(); }
+
             //! Get network model
             const Simulation::CAircraftModel &getNetworkModel() const { return m_models[NetworkModel]; }
 

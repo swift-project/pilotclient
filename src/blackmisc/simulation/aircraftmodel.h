@@ -277,6 +277,9 @@ namespace BlackMisc
             //! Model type
             ModelType getModelType() const { return m_modelType; }
 
+            //! Terrain probe?
+            bool isTerrainProbe() const { return m_modelType == TypeTerrainProbe; }
+
             //! Model type
             const QString &getModelTypeAsString() const { return modelTypeToString(getModelType()); }
 

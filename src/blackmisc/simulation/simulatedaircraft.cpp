@@ -40,7 +40,7 @@ namespace BlackMisc
         CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CUser &user, const CAircraftSituation &situation) :
             m_callsign(callsign), m_pilot(user), m_situation(situation)
         {
-            init();
+            this->init();
         }
 
         CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CAircraftModel &model, const CUser &user, const CAircraftSituation &situation) :
@@ -158,7 +158,7 @@ namespace BlackMisc
             if (this->getLivery().getAirlineIcaoCode() != airlineIcaoCode)
             {
                 // create a dummy livery for given ICAO code
-                CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
+                const CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
                 m_models[CurrentModel].setLivery(newLivery);
             }
             return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
@@ -171,7 +171,7 @@ namespace BlackMisc
 
         const QString &CSimulatedAircraft::getAirlineIcaoCodeDesignator() const
         {
-            return getAirlineIcaoCode().getDesignator();
+            return this->getAirlineIcaoCode().getDesignator();
         }
 
         void CSimulatedAircraft::setAircraftIcaoDesignator(const QString &designator)

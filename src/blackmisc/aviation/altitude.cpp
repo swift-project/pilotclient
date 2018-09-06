@@ -101,6 +101,7 @@ namespace BlackMisc
         void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
         {
             if (m_altitudeType == PressureAltitude) { return; }
+            if (this->isNull()) { return; }
             const CPressure deltaPressure = standardISASeaLevelPressure() - seaLevelPressure;
             const double deltaPressureV = deltaPressure.value(CPressureUnit::mbar());
             const double deltaAltitudeV = deltaPressureV * 30.0; // 30.0 ft per mbar
@@ -111,6 +112,8 @@ namespace BlackMisc
 
         CAltitude CAltitude::toPressureAltitude(const CPressure &seaLevelPressure) const
         {
+            if (seaLevelPressure.isNull()) { return CAltitude::null(); }
+            if (this->isNull()) { return CAltitude::null(); }
             CAltitude other(*this);
             other.convertToPressureAltitude(seaLevelPressure);
             return other;
