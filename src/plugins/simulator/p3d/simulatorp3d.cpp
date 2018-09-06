@@ -8,6 +8,7 @@
  */
 
 #include "simulatorp3d.h"
+#include "../fsxcommon/simconnectfunctions.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
@@ -23,6 +24,7 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::FsxCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackSimPlugin::FsxCommon;
 
 namespace BlackSimPlugin
 {
@@ -39,6 +41,8 @@ namespace BlackSimPlugin
             // set build/sim specific SimConnectProc, which is the FSX SimConnectProc on WIN32 systems
             if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)
             {
+                // modern x64 P3D
+                this->setUsingFsxTerrainProbe(false);
                 m_dispatchProc = &CSimulatorP3D::SimConnectProc;
             }
             this->setDefaultModel(CAircraftModel("LOCKHEED L049_2", CAircraftModel::TypeModelMatchingDefaultModel,
@@ -62,7 +66,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_GROUND_INFO:
                 {
                     // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_RECV_GROUND_INFO
-                    const SIMCONNECT_RECV_GROUND_INFO *pObjData = (SIMCONNECT_RECV_GROUND_INFO *) pData;
+                    const SIMCONNECT_RECV_GROUND_INFO *pObjData = static_cast<SIMCONNECT_RECV_GROUND_INFO *>(pData);
                     const DWORD requestId = pObjData->dwRequestID;
                     if (!CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { break; }
                     // valid elevation request
@@ -111,7 +115,7 @@ namespace BlackSimPlugin
                                    SIMCONNECT_GROUND_INFO_ALT_FORMAT_FEET,
                                    SIMCONNECT_GROUND_INFO_SOURCE_FLAG_PLATFORMS);
             bool ok = false;
-            if (hr == S_OK)
+            if (isOk(hr))
             {
                 ok = true;
                 emit this->requestedElevation(callsign);
@@ -142,7 +146,7 @@ namespace BlackSimPlugin
             Q_UNUSED(model);
 
             HRESULT hr = SimConnect_ChangeView(m_hSimConnect, view);
-            return hr == S_OK;
+            return isOk(hr);
 
             /**
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
