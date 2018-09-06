@@ -9,7 +9,6 @@
 
 
 #include "blackcore/audiodevice.h"
-#include "blackcore/audiomixer.h"
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
@@ -88,6 +87,9 @@ namespace BlackCore
             m_unusedVoiceChannels.push_back(m_channel1);
             m_unusedVoiceChannels.push_back(m_channel2);
 
+            m_voiceChannelOutputPortMapping[m_channel1] = IAudioMixer::OutputVoiceChannel1;
+            m_voiceChannelOutputPortMapping[m_channel2] = IAudioMixer::OutputVoiceChannel2;
+
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
             changeDeviceSettings();
@@ -134,7 +136,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CVoiceRoomList voiceRoomList;
 
-            auto voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
             if (voiceChannelCom1)
             {
                 CVoiceRoom room = voiceChannelCom1->getVoiceRoom();
@@ -145,7 +147,7 @@ namespace BlackCore
                 voiceRoomList.push_back(CVoiceRoom());
             }
 
-            auto voiceChannelCom2 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
+            QSharedPointer<IVoiceChannel> voiceChannelCom2 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
             if (voiceChannelCom2)
             {
                 CVoiceRoom room = voiceChannelCom2->getVoiceRoom();
@@ -314,7 +316,7 @@ namespace BlackCore
             // changed rooms?  But only compare on "URL",  not status as connected etc.
             if (currentRoomCom1.getVoiceRoomUrl() != newRoomCom1.getVoiceRoomUrl())
             {
-                auto oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+                QSharedPointer<IVoiceChannel> oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
                 if (oldVoiceChannel)
                 {
                     m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com1);
@@ -333,7 +335,7 @@ namespace BlackCore
 
                 if (newRoomCom1.isValid())
                 {
-                    auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
+                    QSharedPointer<IVoiceChannel> newVoiceChannel = getVoiceChannelBy(newRoomCom1);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                     bool inUse = m_voiceChannelMapping.key(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
@@ -514,8 +516,19 @@ namespace BlackCore
         void CContextAudio::ps_setVoiceTransmission(bool enable)
         {
             // FIXME: Use the 'active' channel instead of hardcoded COM1
-            if (enable) m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
-            else m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
+            if (!m_voiceChannelMapping.contains(BlackMisc::Aviation::CComSystem::Com1)) { return; }
+            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+            IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom1);
+            if (enable)
+            {
+                m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, mixerOutputPort);
+            }
+            else
+            {
+                // Remove for both output ports, just in case.
+                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
+                m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel2);
+            }
         }
 
         void CContextAudio::ps_connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,

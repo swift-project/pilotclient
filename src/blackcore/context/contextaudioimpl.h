@@ -18,6 +18,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/voicechannel.h"
+#include "blackcore/audiomixer.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroom.h"
@@ -154,6 +155,7 @@ namespace BlackCore
 
             QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
             QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
+            QHash<QSharedPointer<IVoiceChannel>, IAudioMixer::OutputPort> m_voiceChannelOutputPortMapping;
             BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
 
             // settings
