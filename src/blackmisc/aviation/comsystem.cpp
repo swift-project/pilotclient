@@ -45,7 +45,7 @@ namespace BlackMisc
         {
             if (frequency == this->getFrequencyActive()) { return; } // save all the comparisons / rounding
             CFrequency fRounded(frequency);
-            roundToChannelSpacing(fRounded, this->m_channelSpacing);
+            roundToChannelSpacing(fRounded, m_channelSpacing);
             this->CModulator::setFrequencyActive(fRounded);
         }
 
@@ -53,7 +53,7 @@ namespace BlackMisc
         {
             if (frequency == this->getFrequencyStandby()) { return; } // save all the comparisons / rounding
             CFrequency fRounded(frequency);
-            roundToChannelSpacing(fRounded, this->m_channelSpacing);
+            roundToChannelSpacing(fRounded, m_channelSpacing);
             this->CModulator::setFrequencyStandby(fRounded);
         }
 
@@ -118,16 +118,16 @@ namespace BlackMisc
             return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
         }
 
-        void CComSystem::roundToChannelSpacing(PhysicalQuantities::CFrequency &frequency, ChannelSpacing channelSpacing)
+        void CComSystem::roundToChannelSpacing(CFrequency &frequency, ChannelSpacing channelSpacing)
         {
-            double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
-            double f = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
-            quint32 d = static_cast<quint32>(f / channelSpacingKHz);
+            const double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
+            const double f = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
+            const quint32 d = static_cast<quint32>(f / channelSpacingKHz);
             frequency.switchUnit(CFrequencyUnit::MHz());
-            double f0 = frequency.valueRounded(CFrequencyUnit::MHz(), 3);
-            double f1 = CMathUtils::round(d * (channelSpacingKHz / 1000.0), 3);
-            double f2 = CMathUtils::round((d + 1) * (channelSpacingKHz / 1000.0), 3);
-            bool down = qAbs(f1 - f0) < qAbs(f2 - f0); // which is the closest value
+            const double f0 = frequency.valueRounded(CFrequencyUnit::MHz(), 3);
+            const double f1 = CMathUtils::round(d * (channelSpacingKHz / 1000.0), 3);
+            const double f2 = CMathUtils::round((d + 1) * (channelSpacingKHz / 1000.0), 3);
+            const bool down = qAbs(f1 - f0) < qAbs(f2 - f0); // which is the closest value
             frequency.setCurrentUnitValue(down ? f1 : f2);
         }
 
