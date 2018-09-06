@@ -585,6 +585,9 @@ namespace BlackCore
         //! Info about the backend system (if available)
         virtual QString backendInfo() const;
 
+        //! Running?
+        bool isRunning() const { return m_isRunning; }
+
     public slots:
         //! Start listening for the simulator to start.
         //! \threadsafe

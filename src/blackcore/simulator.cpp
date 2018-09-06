@@ -1165,7 +1165,7 @@ namespace BlackCore
 
     void ISimulatorListener::check()
     {
-        if (m_isRunning) { return; }
+        if (!m_isRunning) { return; }
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             // call in correct thread

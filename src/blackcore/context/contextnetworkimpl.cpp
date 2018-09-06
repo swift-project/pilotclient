@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/dbusserver.h"
@@ -296,7 +297,7 @@ namespace BlackCore
                 }
 
                 // set receiver
-                const QString receiver = parser.part(1).trimmed(); // receiver
+                const QString receiver = parser.part(1).trimmed().toLower(); // receiver
                 const CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
                 if (ownAircraft.getCallsign().isEmpty())
                 {
@@ -307,15 +308,15 @@ namespace BlackCore
                 CTextMessage tm;
                 tm.setSenderCallsign(ownAircraft.getCallsign());
 
-                if (receiver == "c1" || receiver == "com1")
+                if (receiver.startsWith("c") && receiver.endsWith("1"))
                 {
                     tm.setFrequency(ownAircraft.getCom1System().getFrequencyActive());
                 }
-                else if (receiver == "c2" || receiver == "com2")
+                else if (receiver.startsWith("c") && receiver.endsWith("2"))
                 {
                     tm.setFrequency(ownAircraft.getCom2System().getFrequencyActive());
                 }
-                else if (receiver == "u" || receiver == "unicom" || receiver == "uni")
+                else if (receiver == "u" || receiver.startsWith("uni"))
                 {
                     tm.setFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
                 }
@@ -326,6 +327,7 @@ namespace BlackCore
                     if (isNumber)
                     {
                         CFrequency radioFrequency = CFrequency(frequencyMhz, CFrequencyUnit::MHz());
+                        CComSystem::roundToChannelSpacing(radioFrequency, CComSystem::ChannelSpacing8_33KHz);
                         if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
                         {
                             tm.setFrequency(radioFrequency);
@@ -338,7 +340,7 @@ namespace BlackCore
                     }
                     else
                     {
-                        CCallsign toCallsign(receiver);
+                        const CCallsign toCallsign(receiver);
                         tm.setRecipientCallsign(toCallsign);
                     }
                 }

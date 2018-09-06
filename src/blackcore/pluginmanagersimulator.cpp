@@ -79,6 +79,7 @@ namespace BlackCore
         for (PluginExtended &pi : m_plugins.values())
         {
             if (!pi.listener) { continue; }
+            if (!pi.listener->isRunning()) { continue; }
             pi.listener->check();
             c++;
         }
