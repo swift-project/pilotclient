@@ -119,7 +119,7 @@ namespace BlackGui
 
         QString t(title.trimmed().toLower().simplified());
         QString c(comparison.trimmed().toLower().simplified());
-        Q_ASSERT_X(!t.isEmpty(), Q_FUNC_INFO, "missing value");
+        Q_ASSERT_X(!t.isEmpty(), Q_FUNC_INFO, "missing title");
         Q_ASSERT_X(!c.isEmpty(), Q_FUNC_INFO, "missing value");
         if (t == c) { return true; }
 
