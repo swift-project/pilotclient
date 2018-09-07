@@ -37,6 +37,7 @@
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QToolButton>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -73,8 +74,12 @@ namespace BlackGui
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(this, &CTextMessageComponent::commandEntered, sApp->getCoreFacade(), &CCoreFacade::parseCommandLine);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+
+            if (sGui && sGui->getCoreFacade())
+            {
+                c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            }
             Q_UNUSED(c);
         }
 
@@ -254,6 +259,7 @@ namespace BlackGui
         QWidget *CTextMessageComponent::addNewTextMessageTab(const QString &tabName)
         {
             QWidget *newTab = new QWidget(this);
+            newTab->setObjectName("Tab widget " + tabName);
             QPushButton *closeButton = new QPushButton("Close", newTab);
             QVBoxLayout *layout = new QVBoxLayout(newTab);
             CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTab);
@@ -265,13 +271,21 @@ namespace BlackGui
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
             const int index = ui->tw_TextMessages->addTab(newTab, tabName);
-            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
+            QToolButton *closeButtonInTab = new QToolButton(newTab);
+            closeButtonInTab->setText("[X]");
+            ui->tw_TextMessages->tabBar()->setTabButton(index, QTabBar::RightSide, closeButtonInTab);
             ui->tw_TextMessages->setCurrentIndex(index);
+
+            closeButton->setProperty("messageTabIndex", index);
+            closeButtonInTab->setProperty("messageTabIndex", index);
+
+            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
+            connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
 
             if (sGui && sGui->getIContextNetwork())
             {
-                QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
-                if (!realName.isEmpty()) ui->tw_TextMessages->setTabToolTip(index, realName);
+                const QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
+                if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(index, realName); }
             }
             return newTab;
         }
@@ -345,7 +359,11 @@ namespace BlackGui
             QWidget *parentWidget = qobject_cast<QWidget *>(sender->parent());
             Q_ASSERT(parentWidget);
             int index = -1;
+            const QVariant qvi = sender->property("messageTabIndex");
+            if (qvi.isValid()) { index = qvi.toInt(); }
 
+            // the while loop is the old version
+            // should not really be needed anymore
             while (index < 0 && parentWidget)
             {
                 index =  ui->tw_TextMessages->indexOf(parentWidget);

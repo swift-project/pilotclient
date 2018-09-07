@@ -24,8 +24,6 @@
 #include <QScopedPointer>
 #include <QString>
 
-class QWidget;
-
 namespace Ui { class CTextMessageComponent; }
 namespace BlackGui
 {
@@ -53,7 +51,7 @@ namespace BlackGui
             explicit CTextMessageComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CTextMessageComponent();
+            virtual ~CTextMessageComponent() override;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
