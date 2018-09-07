@@ -93,6 +93,9 @@ namespace BlackCore
         //! Constructor, only allowed from BlackCore::CApplication
         CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
 
+        //! Destructor
+        virtual ~CWebDataServices();
+
         //! Shutdown
         void gracefulShutdown();
 

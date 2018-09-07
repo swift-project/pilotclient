@@ -110,6 +110,11 @@ namespace BlackCore
         this->readDeferredInBackground(remainingEntities, 1500);
     }
 
+    CWebDataServices::~CWebDataServices()
+    {
+        this->gracefulShutdown();
+    }
+
     CServerList CWebDataServices::getVatsimFsdServers() const
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getFsdServers(); }
