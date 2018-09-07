@@ -17,7 +17,7 @@
 #include <QCoreApplication>
 
 #ifdef Q_OS_WIN32
-#include <windows.h>
+#include <Windows.h>
 #endif
 
 namespace BlackMisc

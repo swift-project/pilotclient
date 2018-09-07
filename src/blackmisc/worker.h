@@ -334,7 +334,7 @@ namespace BlackMisc
         using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
 
-        QPointer<QObject> m_owner; //!< owner, QPointer will detect if the owner is deleted
+        QObject *m_owner; //!< owner, QPointer will detect if the owner is deleted
         QString m_name; //!< worker's name
         std::atomic<bool> m_enabled { true }; //!< marker it is enabled
     };
