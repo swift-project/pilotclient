@@ -8,8 +8,8 @@
  */
 
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/dbus.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/dbus.h"
 
 #include <QDBusMetaType>
 #include <QtDebug>
@@ -102,24 +102,28 @@ namespace BlackMisc
         bool CComSystem::isValidCivilAviationFrequency(const CFrequency &f)
         {
             if (f.isNull()) return false;
-            double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
-            return fr >= 118.0 && fr <= 136.975;
+
+            // comparsion in int avoids double compare issues
+            const int fr = f.valueInteger(PhysicalQuantities::CFrequencyUnit::kHz());
+            return fr >= 118000 && fr <= 136975;
         }
 
         bool CComSystem::isValidMilitaryFrequency(const CFrequency &f)
         {
             if (f.isNull()) return false;
-            double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
-            return fr >= 220.0 && fr <= 399.95;
+            const int fr = f.valueInteger(PhysicalQuantities::CFrequencyUnit::kHz());
+            return fr >= 220000 && fr <= 399950;
         }
 
         bool CComSystem::isValidComFrequency(const CFrequency &f)
         {
+            if (f.isNull()) { return false; }
             return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
         }
 
         void CComSystem::roundToChannelSpacing(CFrequency &frequency, ChannelSpacing channelSpacing)
         {
+            if (frequency.isNull()) { return; }
             const double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
             const double f = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
             const quint32 d = static_cast<quint32>(f / channelSpacingKHz);
@@ -133,12 +137,45 @@ namespace BlackMisc
 
         bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
         {
+            if (setFrequency.isNull()) { return false; }
             if (setFrequency == compareFrequency) return true; // shortcut for many of such comparisons
             double channelSpacingKHz = 0.5 * CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
             double compareFrequencyKHz = compareFrequency.value(CFrequencyUnit::kHz());
             double setFrequencyKHz = setFrequency.value(CFrequencyUnit::kHz());
             return (setFrequencyKHz - channelSpacingKHz < compareFrequencyKHz) &&
                    (setFrequencyKHz + channelSpacingKHz > compareFrequencyKHz);
+        }
+
+        CFrequency CComSystem::parseComFrequency(const QString &input, CPqString::SeparatorMode sep)
+        {
+            if (input.isEmpty()) { return CFrequency::null(); }
+            CFrequency comFreq;
+            if (isDigitsOnlyString(input))
+            {
+                const double f = input.toDouble();
+                comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz());
+            }
+            else
+            {
+                comFreq.parseFromString(input, sep);
+                if (comFreq.isNull())
+                {
+                    bool ok;
+                    const double f = CPqString::parseNumber(input, ok, sep);
+                    if (ok)
+                    {
+                        comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz());
+                    }
+                    else
+                    {
+                        comFreq = CFrequency::null();
+                    }
+                }
+            }
+
+            if (comFreq.isNull()) { return CFrequency::null(); }
+            roundToChannelSpacing(comFreq, ChannelSpacing8_33KHz);
+            return isValidComFrequency(comFreq) ? comFreq : CFrequency::null();
         }
 
         double CComSystem::channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing)

@@ -322,12 +322,9 @@ namespace BlackCore
                 }
                 else
                 {
-                    bool isNumber;
-                    const double frequencyMhz = receiver.toDouble(&isNumber);
-                    if (isNumber)
+                    CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorsBestGuess);
+                    if (!radioFrequency.isNull())
                     {
-                        CFrequency radioFrequency = CFrequency(frequencyMhz, CFrequencyUnit::MHz());
-                        CComSystem::roundToChannelSpacing(radioFrequency, CComSystem::ChannelSpacing8_33KHz);
                         if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
                         {
                             tm.setFrequency(radioFrequency);

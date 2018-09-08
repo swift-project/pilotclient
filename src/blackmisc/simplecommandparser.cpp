@@ -58,9 +58,10 @@ namespace BlackMisc
 
     QString CSimpleCommandParser::remainingStringAfter(int index) const
     {
-        if (index < 0) { return m_originalLine.trimmed(); }
+        if (index < 0) { return m_cleanedLine; }
         const QString p = this->part(index);
-        int fi = m_originalLine.indexOf(p, 0, Qt::CaseInsensitive);
+        const int from = index < 1 ? 0 : nthIndexOf(m_cleanedLine, ' ', index, Qt::CaseInsensitive);
+        const int fi = m_cleanedLine.indexOf(p, from, Qt::CaseInsensitive);
         if (fi < 0) { return ""; }
         return m_originalLine.mid(fi).trimmed();
     }

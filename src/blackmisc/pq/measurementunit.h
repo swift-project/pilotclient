@@ -354,13 +354,80 @@ namespace BlackMisc
              */
             template <class U> static U unitFromSymbol(const QString &symbol, bool strict = true)
             {
-                if (symbol.isEmpty()) return U::defaultUnit();
-                for (const auto unit : U::allUnits())
+                if (symbol.isEmpty()) { return U::defaultUnit(); }
+
+                static const bool cs = hasCaseSensitiveSymbols<U>();
+                for (const auto &unit : U::allUnits())
                 {
-                    if (unit.getSymbol() == symbol) { return unit; }
+                    if (strict && cs)
+                    {
+                        if (unit.getSymbol() == symbol) { return unit; }
+                    }
+                    else
+                    {
+                        if (stringCompare(unit.getSymbol(), symbol, Qt::CaseInsensitive)) { return unit; }
+                    }
                 }
                 if (strict) qFatal("Illegal unit name");
                 return U::defaultUnit();
+            }
+
+            /**
+             * All symbols
+             */
+            template <class U> static const QStringList &allSymbols()
+            {
+                static const QStringList symbols = []
+                {
+                    QStringList s;
+                    for (const auto &unit : U::allUnits())
+                    {
+                        s.push_back(unit.getSymbol());
+                    }
+                    return s;
+                }();
+                return symbols;
+            }
+
+            /**
+             * All symbols case insensitive
+             */
+            template <class U> static const QStringList &allSymbolsLowerCase()
+            {
+                static const QStringList symbols = []
+                {
+                    QSet<QString> s;
+                    for (const QString &symbol : allSymbols<U>())
+                    {
+                        s.insert(symbol.toLower());
+                    }
+                    return s.toList();
+                }();
+                return symbols;
+            }
+
+            /**
+             * Are symbols case sensitive?
+             */
+            template <class U> static bool hasCaseSensitiveSymbols()
+            {
+                static const bool cs = []
+                {
+                    return (allSymbolsLowerCase<U>().size() != allSymbols<U>().size());
+                }();
+                return cs;
+            }
+
+            /*!
+             * Valid unit symbol?
+             * \param symbol to be tested
+             */
+            template <class U> static bool isValidUnitSymbol(const QString &symbol)
+            {
+                static const bool cs = hasCaseSensitiveSymbols<U>();
+                return cs ?
+                       isValidUnitSymbol<U>(symbol, Qt::CaseSensitive) :
+                       isValidUnitSymbol<U>(symbol, Qt::CaseInsensitive);
             }
 
             /*!
@@ -368,12 +435,12 @@ namespace BlackMisc
              * \param symbol to be tested
              * \param caseSensitivity check case sensitiv?
              */
-            template <class U> static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+            template <class U> static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity)
             {
                 if (symbol.isEmpty()) return false;
-                for (const auto unit : U::allUnits())
+                for (const auto &unit : U::allUnits())
                 {
-                    if (QString::compare(unit.getSymbol(), symbol, caseSensitivity) == 0) { return true; }
+                    if (stringCompare(unit.getSymbol(), symbol, caseSensitivity)) { return true; }
                 }
                 return false;
             }

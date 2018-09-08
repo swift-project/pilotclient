@@ -395,6 +395,22 @@ namespace BlackMisc
         if (question.endsWith("?")) { return question; }
         return question % QStringLiteral("?");
     }
+
+    int nthIndexOf(const QString &string, QChar ch, int nth, Qt::CaseSensitivity cs)
+    {
+        if (nth < 1 || string.isEmpty() || nth > string.length()) { return -1; }
+
+        int from = 0;
+        int ci = -1;
+        for (int t = 0; t < nth; ++t)
+        {
+            ci = string.indexOf(ch, from, cs);
+            if (ci < 0) { return -1; }
+            from = ci + 1;
+            if (from >= string.length()) { return -1; }
+        }
+        return ci;
+    }
 } // ns
 
 //! \endcond

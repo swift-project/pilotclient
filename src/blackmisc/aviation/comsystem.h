@@ -13,15 +13,16 @@
 #define BLACKMISC_AVIATION_COMSYSTEM_H
 
 #include "blackmisc/aviation/modulator.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/json.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/json.h"
 #include "blackmisc/variant.h"
 
 #include <QHash>
@@ -131,6 +132,9 @@ namespace BlackMisc
             static bool isWithinChannelSpacing(const PhysicalQuantities::CFrequency &setFrequency,
                                                const PhysicalQuantities::CFrequency &compareFrequency,
                                                ChannelSpacing channelSpacing);
+
+            //! Parses almost any shitty string to a valid COM frequency
+            static PhysicalQuantities::CFrequency parseComFrequency(const QString &input, PhysicalQuantities::CPqString::SeparatorMode sep);
 
             //! \copydoc BlackMisc::CValueObject::registerMetadata
             static void registerMetadata();

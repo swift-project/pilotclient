@@ -59,6 +59,9 @@ namespace BlackMisc
         return static_cast<int>(std::distance(s.begin(), it));
     }
 
+    //! nth index of ch
+    BLACKMISC_EXPORT int nthIndexOf(const QString &string, QChar ch, int nth = 1, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
+
     //! Split a string into multiple strings, using a predicate function to identify the split points.
     //! \warning The returned refs are only valid during the lifetime of the original string.
     template <class F> QList<QStringRef> splitStringRefs(const QString &s, F predicate)
