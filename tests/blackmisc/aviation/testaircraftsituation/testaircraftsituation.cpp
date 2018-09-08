@@ -229,26 +229,33 @@ namespace BlackMiscTest
 
     void CTestAircraftSituation::sortHint()
     {
+        constexpr int Max = 500000;
         CAircraftSituationList situations = testSituations();
         situations.sortAdjustedLatestFirst();
-
-        constexpr int Max = 500000;
-        QTime time;
-        time.start();
+        CSequence<CAircraftSituationList> listOfLists1;
+        CSequence<CAircraftSituationList> listOfLists2;
         for (int i = 0; i < Max; ++i)
         {
-            CAircraftSituation s1 = situations.oldestAdjustedObject();
-            CAircraftSituation s2 = situations.latestAdjustedObject();
+            listOfLists1.push_back(situations);
+            listOfLists2.push_back(situations);
+            listOfLists2.back().setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
+        }
+
+        QTime time;
+        time.start();
+        for (const CAircraftSituationList &s : as_const(listOfLists1))
+        {
+            const CAircraftSituation s1 = s.oldestAdjustedObject();
+            const CAircraftSituation s2 = s.latestAdjustedObject();
             QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
         }
         const int noHint = time.elapsed();
-        situations.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
 
         time.start();
-        for (int i = 0; i < Max; ++i)
+        for (const CAircraftSituationList &s : as_const(listOfLists2))
         {
-            CAircraftSituation s1 = situations.oldestAdjustedObject();
-            CAircraftSituation s2 = situations.latestAdjustedObject();
+            const CAircraftSituation s1 = s.oldestAdjustedObject();
+            const CAircraftSituation s2 = s.latestAdjustedObject();
             QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
         }
         const int hint = time.elapsed();
