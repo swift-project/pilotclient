@@ -53,6 +53,11 @@ namespace BlackCore
         virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
                                         const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) override;
 
+        //! \copydoc BlackMisc::Weather::IWeatherGridProvider::requestWeatherGrid
+        virtual void requestWeatherGridFromFile(const QString &filePath,
+                                                const BlackMisc::Weather::CWeatherGrid &weatherGrid,
+                                                const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) override;
+
 
     signals:
         //! The weather grid, requested from identified, is available
@@ -61,6 +66,7 @@ namespace BlackCore
     private:
         struct WeatherRequest
         {
+            QString filePath;
             BlackMisc::CIdentifier identifier;
             BlackMisc::Weather::CWeatherGrid weatherGrid;
             BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> callback;

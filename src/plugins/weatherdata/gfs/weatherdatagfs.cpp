@@ -90,6 +90,23 @@ namespace BlackWxPlugin
             }
         }
 
+        void CWeatherDataGfs::fetchWeatherDataFromFile(const QString &filePath, const CWeatherGrid &grid, const CLength &range)
+        {
+            m_grid = grid;
+            m_maxRange = range;
+
+            QFile file(filePath);
+            if (!file.exists() || !file.open(QIODevice::ReadOnly)) { return; }
+            m_gribData = file.readAll();
+
+            Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
+            m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+            {
+                parseGfsFileImpl(m_gribData);
+            });
+            m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
+        }
+
         CWeatherGrid CWeatherDataGfs::getWeatherData() const
         {
             QReadLocker l(&m_lockData);

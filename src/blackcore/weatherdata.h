@@ -34,6 +34,11 @@ namespace BlackCore
         virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
                                       const BlackMisc::PhysicalQuantities::CLength &range) = 0;
 
+        //! Fetch new weather around grid from file
+        virtual void fetchWeatherDataFromFile(const QString &filePath,
+                                              const BlackMisc::Weather::CWeatherGrid &grid,
+                                              const BlackMisc::PhysicalQuantities::CLength &range) = 0;
+
         //! Get fetched weather data
         virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const = 0;
 

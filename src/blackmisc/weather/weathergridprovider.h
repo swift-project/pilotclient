@@ -31,6 +31,11 @@ namespace BlackMisc
             //! Request weather grid
             virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
                                             const CSlot<void(const CWeatherGrid &)> &callback) = 0;
+
+            //! Request weather grid from file
+            virtual void requestWeatherGridFromFile(const QString &filePath,
+                                                    const BlackMisc::Weather::CWeatherGrid &weatherGrid,
+                                                    const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) = 0;
         };
 
         //! Delegating class which can be directly used to access an \sa IWeatherGridProvider instance
@@ -40,7 +45,6 @@ namespace BlackMisc
             //! \copydoc IWeatherGridProvider::requestWeatherGrid
             virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
                                             const CSlot<void(const CWeatherGrid &)> &callback);
-
         protected:
             //! Constructor
             CWeatherGridAware(IWeatherGridProvider *weatherGridProvider) : IProviderAware(weatherGridProvider) { Q_ASSERT(weatherGridProvider); }

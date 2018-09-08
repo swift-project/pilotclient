@@ -41,7 +41,7 @@ namespace BlackCore
 
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
     {
-        WeatherRequest request { identifier, weatherGrid, {} };
+        WeatherRequest request { {}, identifier, weatherGrid, {} };
         m_pendingRequests.append(request);
         // Serialize the requests, since plugins can handle only one at a time
         if (m_pendingRequests.size() == 1) { fetchNextWeatherData(); }
@@ -56,7 +56,23 @@ namespace BlackCore
             return;
         }
 
-        WeatherRequest weatherRequest { CIdentifier::null(), weatherGrid, callback };
+        WeatherRequest weatherRequest { {}, CIdentifier::null(), weatherGrid, callback };
+        m_pendingRequests.append(weatherRequest);
+
+        // Serialize the requests, since plugins can handle only one at a time
+        if (m_pendingRequests.size() == 1) { fetchNextWeatherData(); }
+    }
+
+    void CWeatherManager::requestWeatherGridFromFile(const QString &filePath, const CWeatherGrid &weatherGrid,
+            const CSlot<void(const CWeatherGrid &)> &callback)
+    {
+        if (m_isWeatherClear)
+        {
+            callback(CWeatherGrid::getClearWeatherGrid());
+            return;
+        }
+
+        WeatherRequest weatherRequest { filePath, CIdentifier::null(), weatherGrid, callback };
         m_pendingRequests.append(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
@@ -102,7 +118,8 @@ namespace BlackCore
 
         for (IWeatherData *plugin : as_const(m_weatherDataPlugins))
         {
-            plugin->fetchWeatherData(weatherRequest.weatherGrid, maxDistance);
+            if (weatherRequest.filePath.isEmpty()) { plugin->fetchWeatherData(weatherRequest.weatherGrid, maxDistance); }
+            else { plugin->fetchWeatherDataFromFile(weatherRequest.filePath, weatherRequest.weatherGrid, maxDistance); }
         }
     }
 
