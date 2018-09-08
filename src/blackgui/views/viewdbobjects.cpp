@@ -135,7 +135,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(CMenuActions &menuActions)
         {
-            if (m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
+            if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
             {
                 const int maxOrder = this->rowCount() - 1;
                 CMenuAction menu = menuActions.addMenuViewOrder();
@@ -193,7 +193,7 @@ namespace BlackGui
             if (this->isEmpty()) { return; }
             const ContainerType objs(this->selectedObjects());
             if (objs.isEmpty()) { return; }
-            m_model->moveItems(objs, order);
+            this->m_model->moveItems(objs, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
