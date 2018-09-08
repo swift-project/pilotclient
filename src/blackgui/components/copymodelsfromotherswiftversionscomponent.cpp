@@ -161,7 +161,7 @@ namespace BlackGui
                 sApp->processEventsFor(50);
                 return true;
             }
-            const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Confirm override"), withQUestionMark(msg), QMessageBox::Yes | QMessageBox::No);
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Confirm override"), withQuestionMark(msg), QMessageBox::Yes | QMessageBox::No);
             return reply == QMessageBox::Yes;
         }
 

@@ -318,7 +318,7 @@ namespace BlackGui
 
         QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign, bool callsignResolution) const
         {
-            QWidget *w = findTextMessageTabByName(callsign.asString());
+            QWidget *w = this->findTextMessageTabByName(callsign.asString());
             if (w) { return w; }
             if (!callsignResolution) { return nullptr; }
 

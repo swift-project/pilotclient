@@ -255,7 +255,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const
             {
-                argument << this->m_data->m_symbol;
+                argument << m_data->m_symbol;
             }
 
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
@@ -281,13 +281,13 @@ namespace BlackMisc
             //! Name such as "meter"
             QString getName(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_data->m_name.latin1()) : this->m_data->m_name;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", m_data->m_name.latin1()) : m_data->m_name;
             }
 
             //! Unit name such as "m"
             QString getSymbol(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_data->m_symbol.latin1()) : this->m_data->m_symbol;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", m_data->m_symbol.latin1()) : m_data->m_symbol;
             }
 
             //! Does a string end with name or symbol? E.g. 3meter, 3m, 3deg
@@ -317,13 +317,13 @@ namespace BlackMisc
             //! Threshold for comparions
             double getEpsilon() const
             {
-                return this->m_data->m_epsilon;
+                return m_data->m_epsilon;
             }
 
             //! Display digits
             int getDisplayDigits() const
             {
-                return this->m_data->m_displayDigits;
+                return m_data->m_displayDigits;
             }
 
             //! Convert from other unit to this unit.
@@ -334,13 +334,13 @@ namespace BlackMisc
             {
                 if (this->isNull()) return false;
                 if (qFuzzyIsNull(value)) return true;
-                return std::abs(value) <= this->m_data->m_epsilon;
+                return std::abs(value) <= m_data->m_epsilon;
             }
 
             //! Is unit null?
             bool isNull() const
             {
-                return this->m_data->m_toDefault == nullptr;
+                return m_data->m_toDefault == nullptr;
             }
 
             // --------------------------------------------------------------------

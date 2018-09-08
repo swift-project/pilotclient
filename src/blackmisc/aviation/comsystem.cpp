@@ -70,18 +70,18 @@ namespace BlackMisc
         void CComSystem::setActiveUnicom()
         {
             this->toggleActiveStandby();
-            this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
+            this->setFrequencyActive(PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
         }
 
         void CComSystem::setActiveInternationalAirDistress()
         {
             this->toggleActiveStandby();
-            this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
+            this->setFrequencyActive(PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
         }
 
         CComSystem CComSystem::getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz)
         {
-            return CComSystem(CModulator::NameCom1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+            return CComSystem(CModulator::NameCom1(), PhysicalQuantities::CFrequency(activeFrequencyMHz, PhysicalQuantities::CFrequencyUnit::MHz()), PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, PhysicalQuantities::CFrequencyUnit::MHz()));
         }
 
         CComSystem CComSystem::getCom1System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
@@ -91,7 +91,7 @@ namespace BlackMisc
 
         CComSystem CComSystem::getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz)
         {
-            return CComSystem(CModulator::NameCom2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+            return CComSystem(CModulator::NameCom2(), PhysicalQuantities::CFrequency(activeFrequencyMHz, PhysicalQuantities::CFrequencyUnit::MHz()), PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, PhysicalQuantities::CFrequencyUnit::MHz()));
         }
 
         CComSystem CComSystem::getCom2System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)

@@ -7,15 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/comparefunctions.h"
-#include "blackmisc/dictionary.h"
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/verify.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/pressure.h"
 #include "blackmisc/pq/frequency.h"
@@ -25,6 +20,11 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/acceleration.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QCoreApplication>
 #include <QDBusArgument>
@@ -432,7 +432,7 @@ namespace BlackMisc
         {
             const QJsonValue unit = json.value("unit");
             const QJsonValue value = json.value("value");
-            if (unit.isUndefined()) { throw CJsonException("Missing 'unit'"); }
+            if (unit.isUndefined())  { throw CJsonException("Missing 'unit'"); }
             if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
             this->setUnitBySymbol(unit.toString());

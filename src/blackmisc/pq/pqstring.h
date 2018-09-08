@@ -38,8 +38,8 @@ namespace BlackMisc
             //! Number separators / group separators
             enum SeparatorMode
             {
-                SeparatorsCLocale, //!< 100,000.00
-                SeparatorsLocale, //!< depending on QLocale, e.g. 100.000,00 in Germany
+                SeparatorsCLocale,  //!< 100,000.00
+                SeparatorsLocale,   //!< depending on QLocale, e.g. 100.000,00 in Germany
                 SeparatorsBestGuess //!< try to figure out
             };
 

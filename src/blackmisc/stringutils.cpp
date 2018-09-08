@@ -390,7 +390,7 @@ namespace BlackMisc
         return QStringLiteral("\"") % in % QStringLiteral("\"");
     }
 
-    QString withQUestionMark(const QString &question)
+    QString withQuestionMark(const QString &question)
     {
         if (question.endsWith("?")) { return question; }
         return question % QStringLiteral("?");

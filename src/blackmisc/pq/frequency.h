@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Physical unit frequency
          */

@@ -193,7 +193,7 @@ namespace BlackMisc
     BLACKMISC_EXPORT QString simplifyNameForSearch(const QString &name);
 
     //! Add a question mark at the end if not existing
-    BLACKMISC_EXPORT QString withQUestionMark(const QString &question);
+    BLACKMISC_EXPORT QString withQuestionMark(const QString &question);
 
     //! Same as QDateTime::fromString but QDateTime will be set to UTC
     //! \remark potentially slow, so only to be used when format is unknown

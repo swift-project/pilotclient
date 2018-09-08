@@ -376,7 +376,7 @@ namespace BlackCore
 
                 const bool added = this->testAddAltitudeOffset(cs, os);
                 if (added) { CLogMessage(this).info("Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
-                else { CLogMessage(this).info("Removed altitude offset %1") << cs.asString(); }
+                else       { CLogMessage(this).info("Removed altitude offset %1") << cs.asString(); }
 
                 return true;
             }
