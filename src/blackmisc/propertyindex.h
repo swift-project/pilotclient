@@ -93,11 +93,12 @@ namespace BlackMisc
             GlobalIndexCAircraftSituation               =  2100,
             GlobalIndexCAircraftSituationChange         =  2200,
             GlobalIndexCAtcStation                      =  2300,
-            GlobalIndexCAirport                         =  2400,
-            GlobalIndexCAircraftParts                   =  2500,
-            GlobalIndexCAircraftLights                  =  2600,
-            GlobalIndexCLivery                          =  2700,
-            GlobalIndexCFlightPlan                      =  2800,
+            GlobalIndexCInformationMessage              =  2400,
+            GlobalIndexCAirport                         =  2500,
+            GlobalIndexCAircraftParts                   =  2600,
+            GlobalIndexCAircraftLights                  =  2700,
+            GlobalIndexCLivery                          =  2800,
+            GlobalIndexCFlightPlan                      =  2900,
             GlobalIndexCComSystem                       =  3000,
             GlobalIndexCModulator                       =  3100,
             GlobalIndexCTransponder                     =  3200,
@@ -257,6 +258,9 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::CValueObject::convertFromJson
         void convertFromJson(const QJsonObject &json);
+
+        //! an empty property index
+        static const CPropertyIndex &empty() { static const CPropertyIndex pi; return pi; }
 
     protected:
         //! Parse indexes from string

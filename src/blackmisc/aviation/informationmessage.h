@@ -12,9 +12,10 @@
 #ifndef BLACKMISC_AVIATION_INFORMATIONMESSAGE_H
 #define BLACKMISC_AVIATION_INFORMATIONMESSAGE_H
 
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
 #include <QMetaType>
@@ -26,7 +27,9 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information message (ATIS, METAR, TAF)
-        class BLACKMISC_EXPORT CInformationMessage : public CValueObject<CInformationMessage>
+        class BLACKMISC_EXPORT CInformationMessage :
+            public CValueObject<CInformationMessage>,
+            public ITimestampBased
         {
         public:
             //! Type
@@ -38,8 +41,15 @@ namespace BlackMisc
                 TAF
             };
 
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexType = CPropertyIndex::GlobalIndexCInformationMessage,
+                IndexMessage,
+            };
+
             //! Default constructor.
-            CInformationMessage() : m_type(CInformationMessage::Unspecified), m_receivedTimestamp(QDateTime::currentDateTimeUtc())
+            CInformationMessage() : m_type(CInformationMessage::Unspecified)
             {}
 
             //! Information message of type
@@ -59,56 +69,68 @@ namespace BlackMisc
             //! Set message
             void setMessage(const QString &message)
             {
-                this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
-                this->m_message = message;
+                this->setCurrentUtcTime();
+                m_message = message;
             }
 
             //! Append message part
             void appendMessage(const QString &messagePart)
             {
-                this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
-                this->m_message.append(messagePart);
+                this->setCurrentUtcTime();
+                m_message.append(messagePart);
             }
 
             //! Type as string
             const QString &getTypeAsString() const;
 
             //! Type
-            InformationType getType() const { return this->m_type; }
+            InformationType getType() const { return m_type; }
 
             //! Set type
-            void setType(InformationType type) { this->m_type = type; }
-
-            //! Timestamp
-            const QDateTime &getReceivedTimestamp() const { return this->m_receivedTimestamp; }
+            void setType(InformationType type) { m_type = type; }
 
             //! Received before n ms
             qint64 timeDiffReceivedMs() const
             {
-                return this->m_receivedTimestamp.msecsTo(QDateTime::currentDateTimeUtc());
+                return this->getTimeDifferenceToNowMs();
             }
 
             //! Is empty?
-            bool isEmpty() const { return this->m_message.isEmpty(); }
+            bool isEmpty() const { return m_message.isEmpty(); }
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CInformationMessage &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
+
+            //! Unspecified object
+            static const CInformationMessage &unspecified();
+
         private:
             InformationType m_type;
             QString m_message;
-            QDateTime m_receivedTimestamp;
 
             BLACK_METACLASS(
                 CInformationMessage,
                 BLACK_METAMEMBER(type),
                 BLACK_METAMEMBER(message),
-                BLACK_METAMEMBER(receivedTimestamp)
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CInformationMessage)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CInformationMessage::InformationType)
 
 #endif // guard
