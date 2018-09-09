@@ -134,6 +134,28 @@ namespace BlackMisc
             return msgs;
         }
 
+        QString CUser::get7DigitId() const
+        {
+            if (!this->hasNumericId()) { return m_id; }
+            if (m_id.length() > 6) { return m_id; }
+
+            static const QString zeros("0000000");
+            return zeros.left(7 - m_id.length()) % m_id;
+        }
+
+        int CUser::getIntegerId() const
+        {
+            if (m_id.isEmpty()) { return -1; }
+            if (is09OnlyString(m_id)) { return m_id.toInt(); }
+            return -1;
+        }
+
+        bool CUser::hasNumericId() const
+        {
+            if (m_id.isEmpty()) { return false; }
+            return is09OnlyString(m_id);
+        }
+
         void CUser::updateMissingParts(const CUser &otherUser)
         {
             if (this == &otherUser) { return; }
@@ -153,9 +175,8 @@ namespace BlackMisc
         bool CUser::isValidVatsimId(const QString &id)
         {
             if (id.isEmpty()) { return false; }
-            bool ok;
-            const int i = id.toInt(&ok);
-            if (!ok) { return false; }
+            if (!is09OnlyString(id)) { return false; }
+            const int i = id.toInt();
             return i >= 100000 && i <= 9999999;
         }
 
@@ -205,10 +226,12 @@ namespace BlackMisc
             {
             case IndexEmail: return CVariant(m_email);
             case IndexId: return CVariant(m_id);
-            case IndexPassword: return CVariant(m_password);
-            case IndexRealName: return CVariant(m_realname);
-            case IndexHomebase: return m_homebase.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexId7Digit:  return CVariant(this->get7DigitId());
+            case IndexIdInteger: return CVariant::fromValue(this->getIntegerId());
+            case IndexPassword:  return CVariant(m_password);
+            case IndexRealName:  return CVariant(m_realname);
+            case IndexHomebase:  return m_homebase.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign:  return m_callsign.propertyByIndex(index.copyFrontRemoved());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -220,6 +243,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexEmail: this->setEmail(variant.value<QString>()); break;
+            case IndexIdInteger: this->setId(QString::number(variant.toInt())); break;
+            case IndexId7Digit: // fallthru
             case IndexId: this->setId(variant.value<QString>()); break;
             case IndexPassword: this->setPassword(variant.value<QString>()); break;
             case IndexRealName: this->setRealName(variant.value<QString>()); break;
@@ -237,6 +262,7 @@ namespace BlackMisc
             {
             case IndexEmail: return m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
             case IndexId: return m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
+            case IndexId7Digit: return this->get7DigitId().compare(compareValue.get7DigitId(), Qt::CaseInsensitive);
             case IndexRealName: return m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
             case IndexHomebase: return m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
             case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());

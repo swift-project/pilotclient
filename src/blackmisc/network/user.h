@@ -45,6 +45,8 @@ namespace BlackMisc
             {
                 IndexEmail = CPropertyIndex::GlobalIndexCUser,
                 IndexId,
+                IndexIdInteger,
+                IndexId7Digit,
                 IndexPassword,
                 IndexRealName,
                 IndexCallsign,
@@ -119,6 +121,15 @@ namespace BlackMisc
 
             //! Get id.
             const QString &getId() const { return m_id; }
+
+            //! Numeric ids get a leading zeros if required
+            QString get7DigitId() const;
+
+            //! Id as integer if possible, otherwise -1
+            int getIntegerId() const;
+
+            //! Has a numeric id?
+            bool hasNumericId() const;
 
             //! Set id
             void setId(const QString &id) { m_id = decode(id); }
