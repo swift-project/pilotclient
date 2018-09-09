@@ -242,8 +242,14 @@ namespace BlackMisc
             //! Destructor
             ~CMeasurementUnit() = default;
 
+            //! Copy constructor
+            CMeasurementUnit(const CMeasurementUnit &) = default;
+
+            //! Copy assignment operator
+            CMeasurementUnit &operator =(const CMeasurementUnit &) = default;
+
         private:
-            const Data *m_data = (throw std::logic_error("Uninitialized pimpl"), nullptr);
+            const Data *m_data = (static_cast<void>(throw std::logic_error("Uninitialized pimpl")), nullptr);
 
         public:
             //! \copydoc BlackMisc::Mixin::String::toQString
