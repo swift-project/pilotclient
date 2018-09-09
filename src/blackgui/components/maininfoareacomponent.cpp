@@ -126,6 +126,10 @@ namespace BlackGui
             {
                 ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange);
             }
+            else if (infoArea == InfoAreaAtc)
+            {
+                ui->comp_AtcStations->setTab(CAtcStationComponent::TabAtcOnline);
+            }
             else if (infoArea == InfoAreaMapping)
             {
                 ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft);
