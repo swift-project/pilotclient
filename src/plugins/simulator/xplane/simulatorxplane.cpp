@@ -432,9 +432,12 @@ namespace BlackSimPlugin
             }
         }
 
-        CAirportList CSimulatorXPlane::getAirportsInRange() const
+        CAirportList CSimulatorXPlane::getAirportsInRange(bool recalculateDistance) const
         {
-            return m_airportsInRange;
+            if (!recalculateDistance) { return m_airportsInRange; }
+            CAirportList airports(m_airportsInRange);
+            airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
+            return airports;
         }
 
         bool CSimulatorXPlane::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)

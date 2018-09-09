@@ -108,7 +108,7 @@ namespace BlackGui
                 const bool counter = ((m_updateCounter % 5) == 0); // less frequent than aircraft
                 if (this->countAirportsInRangeInView() < 1 || (visible && counter))
                 {
-                    ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange());
+                    ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange(true));
                 }
             }
 
@@ -142,8 +142,8 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int ac = this->indexOf(ui->tb_AircraftInRange);
-            int ap = this->indexOf(ui->tb_AirportsInRange);
+            const int ac = this->indexOf(ui->tb_AircraftInRange);
+            const int ap = this->indexOf(ui->tb_AirportsInRange);
             QString acs = this->tabBar()->tabText(ac);
             QString aps = this->tabBar()->tabText(ap);
             acs = CGuiUtility::replaceTabCountValue(acs, this->countAircraftInView());

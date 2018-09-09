@@ -166,7 +166,7 @@ namespace BlackCore
             return m_simulatorPlugin.second->getSimulatorInternals();
         }
 
-        CAirportList CContextSimulator::getAirportsInRange() const
+        CAirportList CContextSimulator::getAirportsInRange(bool recalculateDistance) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             // If no ISimulator object is available, return a dummy.
@@ -176,7 +176,7 @@ namespace BlackCore
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getAirportsInRange();
+            return m_simulatorPlugin.second->getAirportsInRange(recalculateDistance);
         }
 
         CAircraftModelList CContextSimulator::getModelSet() const

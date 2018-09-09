@@ -118,10 +118,15 @@ namespace BlackSimPlugin
             return true;
         }
 
-        CAirportList CSimulatorFsCommon::getAirportsInRange() const
+        CAirportList CSimulatorFsCommon::getAirportsInRange(bool recalculateDistance) const
         {
-            if (!m_airportsInRangeFromSimulator.isEmpty()) { return m_airportsInRangeFromSimulator; }
-            return ISimulator::getAirportsInRange();
+            if (!m_airportsInRangeFromSimulator.isEmpty())
+            {
+                CAirportList airports = m_airportsInRangeFromSimulator;
+                if (recalculateDistance) { airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); }
+                return airports;
+            }
+            return ISimulator::getAirportsInRange(recalculateDistance);
         }
 
         void CSimulatorFsCommon::onSwiftDbAirportsRead()

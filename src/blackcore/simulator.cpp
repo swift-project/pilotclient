@@ -796,7 +796,7 @@ namespace BlackCore
         return m_loopbackSituations.value(callsign);
     }
 
-    CAirportList ISimulator::getAirportsInRange() const
+    CAirportList ISimulator::getAirportsInRange(bool recalculateDistance) const
     {
         // default implementation
         if (this->isShuttingDown()) { return CAirportList(); }
@@ -805,9 +805,9 @@ namespace BlackCore
         const CAirportList airports = sApp->getWebDataServices()->getAirports();
         if (airports.isEmpty()) { return airports; }
         const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
-        CAirportList airportInRange = airports.findClosest(maxAirportsInRange(), ownPosition);
-        if (m_autoCalcAirportDistance) { airportInRange.calculcateAndUpdateRelativeDistanceAndBearing(ownPosition); }
-        return airportInRange;
+        CAirportList airportsInRange = airports.findClosest(maxAirportsInRange(), ownPosition);
+        if (recalculateDistance) { airportsInRange.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); }
+        return airportsInRange;
     }
 
     CAircraftModel ISimulator::reverseLookupModel(const CAircraftModel &model)

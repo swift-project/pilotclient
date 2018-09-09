@@ -78,7 +78,7 @@ namespace BlackCore
             virtual int checkListeners() override;
             virtual int getSimulatorStatus() const override;
             virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override;
             virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;

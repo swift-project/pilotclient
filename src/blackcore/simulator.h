@@ -144,7 +144,7 @@ namespace BlackCore
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
         //! Airports in range from simulator, or if not available from web service
-        virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
+        virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
@@ -499,7 +499,6 @@ namespace BlackCore
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
         bool   m_pausedSimFreezesInterpolation = false;   //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        bool   m_autoCalcAirportDistance = true;          //!< automatically calculate airport distance and bearing
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
         int    m_timerId = -1;                            //!< dispatch timer id
         int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count

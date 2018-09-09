@@ -101,9 +101,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<int>(QLatin1String("getSimulatorStatus"));
         }
 
-        CAirportList CContextSimulatorProxy::getAirportsInRange() const
+        CAirportList CContextSimulatorProxy::getAirportsInRange(bool recalculatePosition) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1String("getAirportsInRange"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1String("getAirportsInRange"), recalculatePosition);
         }
 
         CAircraftModelList CContextSimulatorProxy::getModelSet() const

@@ -73,8 +73,9 @@ namespace BlackCore
             }
 
             //! \copydoc IContextSimulator::getAirportsInRange
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override
             {
+                Q_UNUSED(recalculatePosition);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAirportList();
             }

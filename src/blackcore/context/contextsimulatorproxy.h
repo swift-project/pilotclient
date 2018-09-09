@@ -62,7 +62,7 @@ namespace BlackCore
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual int checkListeners() override;
             virtual int getSimulatorStatus() const override;
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override;
             virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override;

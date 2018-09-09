@@ -43,7 +43,7 @@ namespace BlackSimPlugin
             virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
             // ---------------------- ISimulator ------------------
 
         protected:
