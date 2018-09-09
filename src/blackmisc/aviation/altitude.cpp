@@ -11,6 +11,7 @@
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/pqstring.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
@@ -20,6 +21,7 @@
 #include <QStringBuilder>
 
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -73,7 +75,7 @@ namespace BlackMisc
             static const QString n("null");
             if (this->isNull()) { return n; }
 
-            if (this->m_datum == FlightLevel)
+            if (m_datum == FlightLevel)
             {
                 static const QString fls("FL%1");
                 const int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
@@ -88,14 +90,14 @@ namespace BlackMisc
 
         void CAltitude::toFlightLevel()
         {
-            Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
-            this->m_datum = FlightLevel;
+            Q_ASSERT(m_datum == MeanSeaLevel || m_datum == FlightLevel);
+            m_datum = FlightLevel;
         }
 
         void CAltitude::toMeanSeaLevel()
         {
-            Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
-            this->m_datum = MeanSeaLevel;
+            Q_ASSERT(m_datum == MeanSeaLevel || m_datum == FlightLevel);
+            m_datum = MeanSeaLevel;
         }
 
         void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
@@ -129,13 +131,23 @@ namespace BlackMisc
             QString v = value.trimmed();
 
             // special case FL
-            if (v.contains("FL", Qt::CaseInsensitive))
+            if (v.contains("FL", Qt::CaseInsensitive) || v.startsWith("F"))
             {
-                v = v.replace("FL", "", Qt::CaseInsensitive).trimmed();
+                v = char09OnlyString(value);
                 bool ok = false;
-                double dv = v.toDouble(&ok) * 100.0;
-                const CAltitude a(ok ? dv : 0.0, FlightLevel,
-                                  ok ? CLengthUnit::ft() : nullptr);
+                const int dv = v.toInt(&ok) * 100;
+                const CAltitude a(ok ? dv : 0.0, FlightLevel, ok ? CLengthUnit::ft() : nullptr);
+                *this = a;
+                return;
+            }
+
+            // special case A (altitude
+            if (v.contains("ALT", Qt::CaseInsensitive) || v.startsWith("A"))
+            {
+                v = char09OnlyString(value);
+                bool ok = false;
+                const int dv = v.toInt(&ok) * 100;
+                const CAltitude a(ok ? dv : 0.0, MeanSeaLevel, ok ? CLengthUnit::ft() : nullptr);
                 *this = a;
                 return;
             }
@@ -282,7 +294,7 @@ namespace BlackMisc
                         if (msgs) { msgs->push_back(CStatusMessage(this).validationError("FL range is 10-999")); }
                         return false;
                     }
-                    if (fmod(flInt, 5) != 0)
+                    if (!CMathUtils::epsilonZero(fmod(flInt, 5)))
                     {
                         if (msgs) { msgs->push_back(CStatusMessage(this).validationError("FL needs to end with 0 or 5")); }
                         return false;
@@ -295,8 +307,6 @@ namespace BlackMisc
         QString CAltitude::asFpAltitudeString() const
         {
             if (this->isNull()) { return QStringLiteral(""); }
-
-
             if (this->isFlightLevel())
             {
                 if (this->getUnit() == CLengthUnit::m())

@@ -101,7 +101,7 @@ namespace BlackMisc
             }
 
             //! Altitude as string
-            CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode = PhysicalQuantities::CPqString::SeparatorsLocale);
+            CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode = PhysicalQuantities::CPqString::SeparatorsBestGuess);
 
             //! Constructor by CLength
             CAltitude(const PhysicalQuantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}

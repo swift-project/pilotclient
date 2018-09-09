@@ -1243,15 +1243,15 @@ namespace BlackCore
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
         {
-            auto *self = cbvar_cast(cbvar);
+            QPointer<CNetworkVatlib> self(cbvar_cast(cbvar));
             const CCallsign callsign(self->fromFSD(callsignString));
             switch (type)
             {
             case vatClientQueryFreq:
-                QTimer::singleShot(0, self, [ = ]() { self->replyToFrequencyQuery(callsign); });
+                QTimer::singleShot(0, self, [ = ]() { if (self) self->replyToFrequencyQuery(callsign); });
                 break;
             case vatClientQueryName:
-                QTimer::singleShot(0, self, [ = ]() { self->replyToNameQuery(callsign); });
+                QTimer::singleShot(0, self, [ = ]() { if (self) self->replyToNameQuery(callsign); });
                 break;
             default:
                 break;
@@ -1326,17 +1326,41 @@ namespace BlackCore
             }
 
             auto *self = cbvar_cast(cbvar);
-            QString cruiseAltString = self->fromFSD(fp->cruiseAltitude);
-            thread_local const QRegularExpression withUnit("\\D+");
-            if (!cruiseAltString.isEmpty() && !withUnit.match(cruiseAltString).hasMatch())
+            QString cruiseAltString = self->fromFSD(fp->cruiseAltitude).trimmed();
+            if (!cruiseAltString.isEmpty() && is09OnlyString(cruiseAltString))
             {
-                cruiseAltString += "ft";
+                int ca = cruiseAltString.toInt();
+                // we have a 0-9 only string
+                // we assume values like 24000 as FL
+                // RefT323, also major tool such as PFPX and Simbrief do so
+                if (rules == CFlightPlan::IFR)
+                {
+                    if (ca >= 1000)
+                    {
+                        cruiseAltString = QStringLiteral("FL") % QString::number(ca / 100);
+                    }
+                    else
+                    {
+                        cruiseAltString = QStringLiteral("FL") % cruiseAltString;
+                    }
+                }
+                else // VFR
+                {
+                    if (ca >= 5000)
+                    {
+                        cruiseAltString = QStringLiteral("FL") % QString::number(ca / 100);
+                    }
+                    else
+                    {
+                        cruiseAltString = cruiseAltString % QStringLiteral("ft");
+                    }
+                }
             }
             CAltitude cruiseAlt;
-            cruiseAlt.parseFromString(cruiseAltString);
+            cruiseAlt.parseFromString(cruiseAltString, CPqString::SeparatorsBestGuess);
 
             const QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
-            const QString depTimeActual = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
+            const QString depTimeActual  = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
 
             const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const CFlightPlan flightPlan(
@@ -1347,10 +1371,10 @@ namespace BlackCore
                 self->fromFSD(fp->alternateAirport),
                 fromStringUtc(depTimePlanned, "hhmm"),
                 fromStringUtc(depTimeActual, "hhmm"),
-                CTime(fp->enrouteHrs * 60 + fp->enrouteMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
-                CTime(fp->fuelHrs * 60 + fp->fuelMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
+                CTime(fp->enrouteHrs * 60 + fp->enrouteMins, CTimeUnit::min()),
+                CTime(fp->fuelHrs * 60 + fp->fuelMins, CTimeUnit::min()),
                 cruiseAlt,
-                CSpeed(fp->trueCruisingSpeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
+                CSpeed(fp->trueCruisingSpeed, CSpeedUnit::kts()),
                 rules,
                 self->fromFSD(fp->route),
                 self->fromFSD(fp->remarks)
