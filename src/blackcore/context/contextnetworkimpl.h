@@ -281,7 +281,7 @@ namespace BlackCore
             void updateMetars(const BlackMisc::Weather::CMetarList &metars);
 
             //! An ATIS has been received
-            void onAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
+            void onChangedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Check if a supervisor message was received
             void checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);

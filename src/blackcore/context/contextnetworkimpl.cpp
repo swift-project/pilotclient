@@ -82,14 +82,14 @@ namespace BlackCore
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
             m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), m_network, this);
             m_network->setClientProvider(m_airspace);
-            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
-            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
-            connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
-            connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-            connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft); // DBus
-            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
-            connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
-            connect(m_airspace, &CAirspaceMonitor::atisReceived, this, &CContextNetwork::onAtisReceived);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
+            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
+            connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
         }
 
         CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
@@ -569,7 +569,7 @@ namespace BlackCore
             CLogMessage(this).info("%1 METARs updated") << metars.size();
         }
 
-        void CContextNetwork::onAtisReceived(const CCallsign &callsign)
+        void CContextNetwork::onChangedAtisReceived(const CCallsign &callsign)
         {
             Q_UNUSED(callsign);
             m_dsAtcStationsOnlineChanged.inputSignal(); // the ATIS data are stored in the station object

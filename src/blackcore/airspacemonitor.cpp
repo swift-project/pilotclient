@@ -602,12 +602,16 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
-        CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, CVariant::from(atisMessage));
-        this->updateOnlineStation(callsign, vm);
+        const int changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, true);
 
         // receiving an ATIS means station is online, update in bookings
-        vm.addValue(CAtcStation::IndexIsOnline, true);
-        this->updateBookedStation(callsign, vm);
+        m_atcStationsBooked.setOnline(callsign, true);
+
+        // signal
+        if (changedAtis > 0)
+        {
+            emit this->changedAtisReceived(callsign);
+        }
     }
 
     void CAirspaceMonitor::onAtisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
@@ -759,7 +763,7 @@ namespace BlackCore
         if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
         {
             // we have no valid aircraft ICAO, so we do a fuzzy search among those
-            CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
+            const CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
             if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
         }
 
@@ -773,7 +777,7 @@ namespace BlackCore
         const CCallsign callsign = aircraft.getCallsign();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-        if (!sApp || sApp->isShuttingDown()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return false; }
 
         CSimulatedAircraft newAircraft(aircraft);
         newAircraft.setRendered(false); // reset rendering
