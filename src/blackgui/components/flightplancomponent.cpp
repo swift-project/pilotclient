@@ -210,7 +210,7 @@ namespace BlackGui
             }
         }
 
-        void CFlightPlanComponent::fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+        void CFlightPlanComponent::fillWithFlightPlanData(const CFlightPlan &flightPlan)
         {
             ui->le_AlternateAirport->setText(flightPlan.getAlternateAirportIcao().asString());
             ui->le_DestinationAirport->setText(flightPlan.getDestinationAirportIcao().asString());
@@ -571,7 +571,7 @@ namespace BlackGui
             const CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
-                const int r = QMessageBox::warning(this, "Override current data?", "Loaded FP", QMessageBox::Yes | QMessageBox::No);
+                const int r = QMessageBox::warning(this, "Loaded FP", "Override current flight plan data?", QMessageBox::Yes | QMessageBox::No);
                 if (r != QMessageBox::Yes) { return; }
                 this->fillWithFlightPlanData(loadedPlan);
                 CLogMessage(this).info("Updated with loaded flight plan");
