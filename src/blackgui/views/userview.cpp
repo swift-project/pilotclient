@@ -26,8 +26,8 @@ namespace BlackGui
 
         void CUserView::setUserMode(CUserListModel::UserMode userMode)
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setUserMode(userMode);
+            Q_ASSERT(m_model);
+            m_model->setUserMode(userMode);
         }
-    }
-}
+    } // ns
+} // ns

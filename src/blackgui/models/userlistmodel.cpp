@@ -24,9 +24,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Constructor
-         */
         CUserListModel::CUserListModel(UserMode userMode, QObject *parent) :
             CListModelBase("ModelUserList", parent), m_userMode(NotSet)
         {
@@ -40,37 +37,34 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ModelUserList", "email");
         }
 
-        /*
-         * Mode
-         */
         void CUserListModel::setUserMode(CUserListModel::UserMode userMode)
         {
-            if (this->m_userMode == userMode) return;
-            this->m_userMode = userMode;
-            this->m_columns.clear();
+            if (m_userMode == userMode) return;
+            m_userMode = userMode;
+            m_columns.clear();
             switch (userMode)
             {
             case NotSet:
             case UserDetailed:
-                this->m_columns.addColumn(CColumn(CUser::IndexIcon));
-                this->m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
-                this->m_columns.addColumn(CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
-                this->m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase", { CUser::IndexHomebase, CAirportIcaoCode::IndexString }));
-                this->m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId));
+                m_columns.addColumn(CColumn(CUser::IndexIcon));
+                m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
+                m_columns.addColumn(CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
+                m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase", { CUser::IndexHomebase, CAirportIcaoCode::IndexString }));
+                m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CUser::IndexRealName);
-                this->m_sortOrder = Qt::AscendingOrder;
+                m_sortOrder = Qt::AscendingOrder;
                 break;
 
             case UserShort:
-                this->m_columns.addColumn(CColumn(CUser::IndexIcon));
-                this->m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
-                this->m_columns.addColumn(CColumn::standardValueObject("callsign", CUser::IndexCallsign));
+                m_columns.addColumn(CColumn(CUser::IndexIcon));
+                m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
+                m_columns.addColumn(CColumn::standardValueObject("callsign", CUser::IndexCallsign));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CUser::IndexCallsign);
-                this->m_sortOrder = Qt::AscendingOrder;
+                m_sortOrder = Qt::AscendingOrder;
                 break;
 
             default:
@@ -78,5 +72,5 @@ namespace BlackGui
                 break;
             }
         }
-    }
-}
+    } // ns
+} // ns

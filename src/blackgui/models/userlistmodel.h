@@ -14,10 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
-
-class QObject;
 
 namespace BlackGui
 {
@@ -49,7 +46,7 @@ namespace BlackGui
             void setUserMode(UserMode userMode);
 
         private:
-            UserMode m_userMode;
+            UserMode m_userMode = NotSet;
         };
     }
 }

@@ -17,9 +17,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/network/userlist.h"
 
-class QWidget;
 namespace BlackMisc { namespace Network { class CUser; } }
-
 namespace BlackGui
 {
     namespace Views
@@ -27,15 +25,14 @@ namespace BlackGui
         //! User view
         class BLACKGUI_EXPORT CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>
         {
-
         public:
-
             //! Constructor
             explicit CUserView(QWidget *parent = nullptr);
 
-            //! Set station mode
+            //! Set user mode
             void setUserMode(Models::CUserListModel::UserMode userMode);
         };
     }
 }
+
 #endif // guard
