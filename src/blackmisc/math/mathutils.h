@@ -64,7 +64,7 @@ namespace BlackMisc
 
             //! Epsilon safe zero @{
             static bool epsilonZero(double v, double epsilon) { return epsilonEqual(v, 0.0, epsilon); }
-            static bool epsilonZero(double v) { return epsilonEqual(v, 0.0, 1E-09); }
+            static bool epsilonZero(double v) { return epsilonEqual(v, 0.0, 1E-06); }
             static inline bool epsilonZeroLimits(double v) { return qAbs(v) <= std::numeric_limits<double>::epsilon(); }
             //! @}
 
