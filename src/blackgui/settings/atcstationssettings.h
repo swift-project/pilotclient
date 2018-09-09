@@ -21,8 +21,7 @@ namespace BlackGui
     namespace Settings
     {
         //! How to display ATC stations
-        class BLACKGUI_EXPORT CAtcStationsSettings :
-            public BlackMisc::CValueObject<CAtcStationsSettings>
+        class BLACKGUI_EXPORT CAtcStationsSettings : public BlackMisc::CValueObject<CAtcStationsSettings>
         {
         public:
             //! Properties by index

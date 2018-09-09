@@ -47,11 +47,23 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Tab
+            //! \remark needs to be in sync with tab order
+            enum AtcTab
+            {
+                TabAtcOnline = 0,
+                TabAtcOnlineTree,
+                TabAtcBooked
+            };
+
             //! Constructor
             explicit CAtcStationComponent(QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CAtcStationComponent() override;
+
+            //! Set tab
+            void setTab(AtcTab tab);
 
             //! Number of booked stations
             int countBookedStations() const;
@@ -86,7 +98,7 @@ namespace BlackGui
             void requestAtis();
 
             //! Online ATC station selected
-            void onlineAtcStationSelected(QModelIndex index);
+            void onlineAtcStationSelected(const BlackMisc::CVariant &object);
 
             //! Tab changed
             void atcStationsTabChanged();
@@ -140,7 +152,7 @@ namespace BlackGui
             QDateTime m_timestampLastReadBookedStations; //!< stations read
             QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::settingsChanged };
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc { this, &CAtcStationComponent::settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc  { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace
 } // namespace

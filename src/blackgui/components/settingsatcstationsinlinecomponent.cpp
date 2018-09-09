@@ -21,7 +21,7 @@ namespace BlackGui
             ui(new Ui::CSettingsAtcStationsInlineComponent)
         {
             ui->setupUi(this);
-            connect(ui->rb_InRange, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings);
+            connect(ui->rb_InRange, &QRadioButton::toggled, this, &CSettingsAtcStationsInlineComponent::changeSettings);
         }
 
         CSettingsAtcStationsInlineComponent::~CSettingsAtcStationsInlineComponent()
