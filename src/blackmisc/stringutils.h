@@ -114,6 +114,12 @@ namespace BlackMisc
         return s.trimmed();
     }
 
+    //! Is 0-9 char, isDigit allows a bunch of more characters
+    inline bool is09(const QChar &c) { return c >= u'0' && c <= u'9'; }
+
+    //! Is 0-9, or ","/";"
+    inline bool is09OrSeparator(const QChar &c) { return is09(c) || c == u',' || c == '.'; }
+
     //! Safe "at" function, returns empty string if index does not exists
     inline const QString &safeAt(const QStringList &stringList, int index)
     {
@@ -128,10 +134,34 @@ namespace BlackMisc
         return !containsChar(testString, [](QChar c) { return !c.isDigit(); });
     }
 
+    //! String with 0-9 only
+    inline bool is09OnlyString(const QString &testString)
+    {
+        return !containsChar(testString, [](QChar c) { return !is09(c); });
+    }
+
+    //! String with 0-9/separator only
+    inline bool is09OrSeparatorOnlyString(const QString &testString)
+    {
+        return !containsChar(testString, [](QChar c) { return !is09OrSeparator(c); });
+    }
+
     //! String only with digits
     inline QString digitOnlyString(const QString &string)
     {
         return removeChars(string, [](QChar c) { return !c.isDigit(); });
+    }
+
+    //! String only with 0-9
+    inline QString char09OnlyString(const QString &string)
+    {
+        return removeChars(string, [](QChar c) { return !is09(c); });
+    }
+
+    //! String only with 0-9
+    inline QString char09OrSeparatorOnlyString(const QString &string)
+    {
+        return removeChars(string, [](QChar c) { return !is09OrSeparator(c); });
     }
 
     //! Return string in apostrophes

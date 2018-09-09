@@ -21,7 +21,7 @@ namespace BlackMisc
     {
         return removeChars(s, [](QChar c)
         {
-            return c == ' ' || c == ':' || c == '_' || c == '-' || c == '.';
+            return c == u' ' || c == u':' || c == u'_' || c == u'-' || c == u'.';
         });
     }
 
@@ -177,14 +177,7 @@ namespace BlackMisc
     {
         const QString s(candidate.trimmed().toUpper());
         if (s.isEmpty()) { return QString(); }
-        if (s.contains(' '))
-        {
-            return s.left(s.indexOf(' '));
-        }
-        else
-        {
-            return s;
-        }
+        return s.contains(' ') ? s.left(s.indexOf(' ')) : s;
     }
 
     QStringList simpleTextCodecNamesImpl()
