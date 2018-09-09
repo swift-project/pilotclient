@@ -50,7 +50,7 @@ namespace BlackGui
                 m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
                 m_columns.addColumn(CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
                 m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase", { CUser::IndexHomebase, CAirportIcaoCode::IndexString }));
-                m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId));
+                m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId7Digit));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CUser::IndexRealName);
