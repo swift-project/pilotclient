@@ -40,6 +40,41 @@ namespace BlackMisc
             });
         }
 
+        int CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, bool overrideWithNewer)
+        {
+            int c = 0;
+            const CInformationMessage::InformationType t = im.getType();
+            for (CAtcStation &station : *this)
+            {
+                bool unequal = false;
+                const CInformationMessage m = station.getInformationMessage(t);
+                if (m.getType() == CInformationMessage::Unspecified) { continue; }
+                if (m.getMessage() == im.getMessage())
+                {
+                    if (!overrideWithNewer) { continue; }
+                    if (!im.isNewerThan(m)) { continue; }
+                }
+                else
+                {
+                    unequal = true;
+                }
+                station.setMessage(m);
+                if (unequal) c++; // only count unequals
+            }
+            return c;
+        }
+
+        int CAtcStationList::setOnline(const CCallsign &callsign, bool online)
+        {
+            int c = 0;
+            for (CAtcStation &station : *this)
+            {
+                if (station.getCallsign() != callsign) { continue; }
+                if (station.setOnline(online)) { c++; }
+            }
+            return c;
+        }
+
         CAtcStationList CAtcStationList::stationsWithValidVoiceRoom() const
         {
             return this->findBy(&CAtcStation::hasValidVoiceRoom, true);

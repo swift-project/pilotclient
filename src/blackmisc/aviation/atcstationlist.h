@@ -46,7 +46,13 @@ namespace BlackMisc
             CAtcStationList(const CSequence<CAtcStation> &other);
 
             //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
-            CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
+            CAtcStationList findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const;
+
+            //! Update if message changed
+            int updateIfMessageChanged(const CInformationMessage &im, bool overrideWithNewer);
+
+            //! Set online status
+            int setOnline(const CCallsign &callsign, bool online);
 
             //! Find 0..n stations with valid voice room
             //! \sa CAtcStation::hasValidVoiceRoom

@@ -48,7 +48,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = BlackMisc::CPropertyIndex::GlobalIndexCAtcStation,
+                IndexCallsign = CPropertyIndex::GlobalIndexCAtcStation,
                 IndexController,
                 IndexFrequency,
                 IndexPosition,
@@ -159,7 +159,7 @@ namespace BlackMisc
             bool isOnline() const { return m_isOnline; }
 
             //! Set online
-            void setOnline(bool online) { m_isOnline = online; }
+            bool setOnline(bool online);
 
             //! Get voice room
             const Audio::CVoiceRoom &getVoiceRoom() const { return m_voiceRoom; }
@@ -214,11 +214,17 @@ namespace BlackMisc
             //! Get METAR
             const CInformationMessage &getMetar() const { return m_metar; }
 
+            //! Message per type
+            const CInformationMessage &getInformationMessage(CInformationMessage::InformationType type) const;
+
             //! Set METAR
             void setMetar(const CInformationMessage &metar) { m_metar = metar;}
 
             //! Set METAR Message
             void setMetarMessage(const QString &metar) { m_metar.setMessage(metar); }
+
+            //! Set given message
+            bool setMessage(const CInformationMessage &message);
 
             //! Set booked until
             void setBookedUntilUtc(const QDateTime &until) { m_bookedUntilUtc = until; }
@@ -244,7 +250,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
