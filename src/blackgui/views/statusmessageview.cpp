@@ -24,7 +24,7 @@ namespace BlackGui
         {
             m_menus |= MenuClear;
             this->menuRemoveItems(MenuRefresh | MenuBackend | MenuToggleSelectionMode);
-            m_acceptRowSelected = true;
+            m_acceptRowSelection = true;
             this->standardInit(new CStatusMessageListModel(this));
         }
 

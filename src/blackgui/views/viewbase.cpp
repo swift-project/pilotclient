@@ -1712,7 +1712,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::ps_rowSelected(const QModelIndex &index)
         {
-            if (!m_acceptRowSelected) { return; }
+            if (!m_acceptRowSelection) { return; }
             if (!index.isValid()) { return; }
             emit objectSelected(CVariant::fromValue(at(index)));
         }

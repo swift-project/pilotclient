@@ -25,7 +25,7 @@ namespace BlackGui
         {
             const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories();
             this->updateContainer(others);
-            m_acceptRowSelected = others.size() > 0;
+            m_acceptRowSelection = others.size() > 0;
             return others.size();
         }
     } // namespace

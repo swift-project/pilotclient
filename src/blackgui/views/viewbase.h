@@ -250,6 +250,9 @@ namespace BlackGui
             //! Accept double click selection
             void acceptDoubleClickSelection(bool accept) { m_acceptDoubleClickSelection = accept; }
 
+            //! Accept row selection
+            void acceptRowSelection(bool accept) { m_acceptRowSelection = accept; }
+
             //! Remove given menu items
             void menuRemoveItems(Menu menusToRemove);
 
@@ -487,7 +490,7 @@ namespace BlackGui
             bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
             bool m_enabledLoadIndicator               = true;                  //!< loading indicator enabled/disabled
             bool m_acceptClickSelection               = false;                 //!< clicked
-            bool m_acceptRowSelected                  = false;                 //!< selection changed
+            bool m_acceptRowSelection                 = false;                 //!< selection changed
             bool m_acceptDoubleClickSelection         = false;                 //!< double clicked
             bool m_displayAutomatically               = true;                  //!< display directly when loaded
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
