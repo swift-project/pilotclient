@@ -175,6 +175,7 @@ namespace BlackCore
             QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
             std::function<const char **()> toFSD(const QStringList &qstrList) const;
             QString fromFSD(const char *cstr) const;
+            QString getNetworkHostApplicationString() const; //!< simulator version and details info string
             QStringList fromFSD(const char **cstrArray, int size) const;
             bool isInterimPositionUpdateEnabledForServer() const;
             const BlackMisc::Network::CFsdSetup &getSetupForServer() const;

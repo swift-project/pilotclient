@@ -34,6 +34,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
@@ -112,6 +113,7 @@ namespace BlackCore
         void CNetworkVatlib::initializeSession()
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "attempted to reinitialize session while still connected");
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
 
             int clientCapabilities = vatCapsAircraftInfo | vatCapsFastPos | vatCapsAtcInfo | vatCapsAircraftConfig;
             if (m_loginMode == LoginStealth)
@@ -134,10 +136,11 @@ namespace BlackCore
             default: serverType = vatServerLegacyFsd; break;
             }
 
+            const QString hostApplication = this->getNetworkHostApplicationString().replace(':', ' ');
             m_net.reset(Vat_CreateNetworkSession(serverType, sApp->swiftVersionChar(),
                                                  CBuildConfig::getVersion().majorVersion(),
                                                  CBuildConfig::getVersion().minorVersion(),
-                                                 "None", clientId, clientKey.toLocal8Bit().constData(),
+                                                 toFSD(hostApplication), clientId, toFSD(clientKey),
                                                  clientCapabilities));
 
             Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
@@ -333,6 +336,11 @@ namespace BlackCore
         {
             Q_ASSERT_X(m_fsdTextCodec, Q_FUNC_INFO, "Missing codec");
             return m_fsdTextCodec->toUnicode(cstr);
+        }
+
+        QString CNetworkVatlib::getNetworkHostApplicationString() const
+        {
+            return this->getSimulatorNameAndVersion();
         }
 
         QStringList CNetworkVatlib::fromFSD(const char **cstrArray, int size) const
@@ -1002,7 +1010,7 @@ namespace BlackCore
             // ATIS often have a range of 0 nm. Correct this to a proper value.
             if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(50.0); }
             CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
-            emit cbvar_cast(cbvar)->atcPositionUpdate( CCallsign(cs, CCallsign::Atc), freq, position, range);
+            emit cbvar_cast(cbvar)->atcPositionUpdate(CCallsign(cs, CCallsign::Atc), freq, position, range);
         }
 
         void CNetworkVatlib::onKicked(VatFsdClient *, const char *reason, void *cbvar)

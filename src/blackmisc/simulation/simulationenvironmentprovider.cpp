@@ -8,6 +8,7 @@
  */
 
 #include "simulationenvironmentprovider.h"
+#include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -210,6 +211,24 @@ namespace BlackMisc
             return this->getSimulatorPluginInfo().getSimulatorInfo();
         }
 
+        QString ISimulationEnvironmentProvider::getSimulatorNameAndVersion() const
+        {
+            QString n;
+            QString v;
+            {
+                QReadLocker l(&m_lockSimInfo);
+                n = m_simulatorName;
+                v = m_simulatorVersion;
+            }
+
+            if (!n.isEmpty() && !v.isEmpty()) { return n % QStringLiteral(" ") % v; }
+            if (!n.isEmpty()) { return n; }
+
+            const CSimulatorInfo simInfo = this->getSimulatorInfo();
+            if (!simInfo.isUnspecified()) { return simInfo.toQString(true); }
+            return "not available";
+        }
+
         CAircraftModel ISimulationEnvironmentProvider::getDefaultModel() const
         {
             QReadLocker l(&m_lockModel);
@@ -405,6 +424,12 @@ namespace BlackMisc
         {
             if (!this->hasProvider()) { return CSimulatorInfo(); }
             return this->provider()->getSimulatorInfo();
+        }
+
+        QString CSimulationEnvironmentAware::getSimulatorNameAndVersion() const
+        {
+            if (!this->hasProvider()) { return "not avialbale"; }
+            return this->provider()->getSimulatorNameAndVersion();
         }
 
         CAircraftModel CSimulationEnvironmentAware::getDefaultModel() const

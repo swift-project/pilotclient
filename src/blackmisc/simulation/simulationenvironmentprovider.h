@@ -78,6 +78,10 @@ namespace BlackMisc
             //! \threadsafe
             CSimulatorInfo getSimulatorInfo() const;
 
+            //! Version and simulator details info
+            //! \threadsafe
+            QString getSimulatorNameAndVersion() const;
+
             //! Default model
             //! \threadsafe
             CAircraftModel getDefaultModel() const;
@@ -129,14 +133,17 @@ namespace BlackMisc
 
             //! Simulator name as set from the running simulator
             //! \threadsafe
+            //! \remark something like "Name: 'Lockheed Martin® Prepar3D® v4"
             QString getSimulatorName() const;
 
             //! Simulator version as set from the running simulator
             //! \threadsafe
+            //! \remark something like "4.1.7.22841"
             QString getSimulatorVersion() const;
 
             //! Simulator details as set from the running simulator
             //! \threadsafe
+            //! \remark something like "Name: 'Lockheed Martin® Prepar3D® v4' Version: 4.1.7.22841 SimConnect: 4.1.0.0"
             QString getSimulatorDetails() const;
 
             //! Default model
@@ -199,7 +206,7 @@ namespace BlackMisc
             QString m_simulatorVersion;    //!< Simulator version
             CAircraftModel m_defaultModel; //!< default model
             int m_maxElevations = 100;     //!< How many elevations we keep
-            Geo::CCoordinateGeodeticList m_elvCoordinates; //!< elevation cache
+            Geo::CCoordinateGeodeticList    m_elvCoordinates; //!< elevation cache
             Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
@@ -251,6 +258,9 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
             CSimulatorInfo getSimulatorInfo() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getSimulatorNameAndVersion
+            QString getSimulatorNameAndVersion() const;
 
             //! \copydoc ISimulationEnvironmentProvider::getDefaultModel
             CAircraftModel getDefaultModel() const;
