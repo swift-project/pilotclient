@@ -51,6 +51,15 @@ namespace BlackGui
         //! \param correspondingWidget     the widget representing the window
         CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyname, QWidget *correspondingWidget);
 
+        //! Destructor
+        virtual ~CEnableForFramelessWindow() {}
+
+        //! Copy constructor
+        CEnableForFramelessWindow(const CEnableForFramelessWindow &) = delete ;
+
+        //! Copy assignment operator
+        CEnableForFramelessWindow &operator =(const CEnableForFramelessWindow &) = delete;
+
         //! Window mode
         void setMode(WindowMode mode);
 
@@ -76,7 +85,7 @@ namespace BlackGui
         static WindowMode stringToWindowMode(const QString &s);
 
         //! String to window mode
-        static QString windowModeToString(WindowMode m);
+        static const QString &windowModeToString(WindowMode m);
 
     protected:
         QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window */

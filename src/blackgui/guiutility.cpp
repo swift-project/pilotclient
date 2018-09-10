@@ -416,7 +416,29 @@ namespace BlackGui
 
     bool CGuiUtility::isTopLevelWidget(QWidget *widget)
     {
+        if (!widget) { return false; }
         return QApplication::topLevelWidgets().contains(widget);
+    }
+
+    bool CGuiUtility::isTopLevelWindow(QWidget *widget)
+    {
+        if (!widget) { return false; }
+        if (!widget->isWindow()) { return false; }
+        return QApplication::topLevelWidgets().contains(widget);
+    }
+
+    bool CGuiUtility::isQMainWindow(QWidget *widget)
+    {
+        if (!widget) { return false; }
+        QMainWindow *mw = qobject_cast<QMainWindow *>(widget);
+        return mw;
+    }
+
+    bool CGuiUtility::isDialog(QWidget *widget)
+    {
+        if (!widget) { return false; }
+        QDialog *mw = qobject_cast<QDialog *>(widget);
+        return mw;
     }
 
     QGraphicsOpacityEffect *CGuiUtility::fadeInWidget(int durationMs, QWidget *widget, double startValue, double endValue)
@@ -543,8 +565,8 @@ namespace BlackGui
         QWidget *w = CGuiUtility::mainApplicationWidget();
         if (!w) { return; }
         const QSize s = CGuiUtility::desktopSize();
-        const int minW = wRatio * s.width();
-        const int minH = hRatio * s.height();
+        const int minW = qRound(wRatio * s.width());
+        const int minH = qRound(hRatio * s.height());
         w->setMinimumWidth(qMin(minW, w->minimumWidth()));
         w->setMinimumHeight(qMin(minH, w->minimumHeight()));
     }

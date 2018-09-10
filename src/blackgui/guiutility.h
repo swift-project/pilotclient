@@ -147,6 +147,14 @@ namespace BlackGui
         //! Is top level widget?
         static bool isTopLevelWidget(QWidget *widget);
 
+        //! Is top level window?
+        static bool isTopLevelWindow(QWidget *widget);
+
+        //! Check window type @{
+        static bool isQMainWindow(QWidget *widget);
+        static bool isDialog(QWidget *widget);
+        //! @}
+
         //! Fade in a widget
         static QGraphicsOpacityEffect *fadeInWidget(int durationMs, QWidget *widget, double startValue = 0.0, double endValue = 1.0);
 

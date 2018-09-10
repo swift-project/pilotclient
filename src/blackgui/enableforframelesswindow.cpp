@@ -28,6 +28,7 @@
 #include <QThread>
 #include <QVariant>
 #include <QWidget>
+#include <QMainWindow>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -86,24 +87,27 @@ namespace BlackGui
 
     CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
     {
-        QString ws(s.trimmed().toLower());
+        const QString ws(s.trimmed().toLower());
         if (ws.isEmpty()) { return WindowNormal; }
         if (ws.contains("frameless") || ws.startsWith("f")) { return WindowFrameless; }
         if (ws.contains("tool") || ws.startsWith("t")) { return WindowTool; }
         return WindowNormal;
     }
 
-    QString CEnableForFramelessWindow::windowModeToString(CEnableForFramelessWindow::WindowMode m)
+    const QString &CEnableForFramelessWindow::windowModeToString(CEnableForFramelessWindow::WindowMode m)
     {
+        static const QString n("normal");
+        static const QString f("frameless");
+        static const QString t("tool");
+
         switch (m)
         {
-        case WindowFrameless: return "frameless";
-        case WindowNormal: return "normal";
-        case WindowTool: return "tool";
-        default:
-            break;
+        case WindowFrameless: return f;
+        case WindowNormal:    return n;
+        case WindowTool:      return t;
+        default: break;
         }
-        return "normal";
+        return n;
     }
 
     void CEnableForFramelessWindow::windowFlagsChanged()
@@ -117,13 +121,15 @@ namespace BlackGui
         Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
 
         bool frameless = (mode == WindowFrameless);
-        // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
-        m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
 
+        // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
         // https://bugreports.qt.io/browse/QTBUG-52206
-        if (CGuiUtility::isTopLevelWidget(m_widget))
+        // UpdateLayeredWindowIndirect failed for ptDst
+        if (m_isMainApplicationWindow && CGuiUtility::isTopLevelWindow(m_widget))
         {
-            m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
+            m_widget->setAttribute(Qt::WA_NativeWindow);
+            m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
+            m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless); // causing QTBUG-52206
         }
 
         // Qt::WA_PaintOnScreen leads to a warning
