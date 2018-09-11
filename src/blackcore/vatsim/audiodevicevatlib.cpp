@@ -43,23 +43,23 @@ namespace BlackCore
             m_currentDevice = getDefaultInputDevice();
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfoList &CAudioInputDeviceVatlib::getInputDevices() const
+        const CAudioDeviceInfoList &CAudioInputDeviceVatlib::getInputDevices() const
         {
             return m_devices;
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfo &CAudioInputDeviceVatlib::getDefaultInputDevice() const
+        const CAudioDeviceInfo &CAudioInputDeviceVatlib::getDefaultInputDevice() const
         {
-            static BlackMisc::Audio::CAudioDeviceInfo info(BlackMisc::Audio::CAudioDeviceInfo::InputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
+            static CAudioDeviceInfo info(CAudioDeviceInfo::InputDevice, CAudioDeviceInfo::defaultDeviceIndex(), "default");
             return info;
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfo &CAudioInputDeviceVatlib::getCurrentInputDevice() const
+        const CAudioDeviceInfo &CAudioInputDeviceVatlib::getCurrentInputDevice() const
         {
             return m_currentDevice;
         }
 
-        void CAudioInputDeviceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
+        void CAudioInputDeviceVatlib::setInputDevice(const CAudioDeviceInfo &device)
         {
             Q_ASSERT_X(m_inputCodec, "CAudioInputDeviceVatlib", "VatLocalCodec is invalid!");
             if (!device.isValid())
@@ -77,7 +77,7 @@ namespace BlackCore
 
         void CAudioInputDeviceVatlib::onInputHardwareDeviceReceived(int deviceIndex, const char *hardwareName, void *cbVar)
         {
-            BlackMisc::Audio::CAudioDeviceInfo inputDevice(BlackMisc::Audio::CAudioDeviceInfo::InputDevice, deviceIndex, QString(hardwareName));
+            CAudioDeviceInfo inputDevice(CAudioDeviceInfo::InputDevice, deviceIndex, QString(hardwareName));
             cbvar_cast_inputDevice(cbVar)->m_devices.push_back(inputDevice);
         }
 
@@ -89,23 +89,23 @@ namespace BlackCore
             m_currentDevice = getDefaultOutputDevice();
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfoList &CAudioOutputDeviceVatlib::getOutputDevices() const
+        const CAudioDeviceInfoList &CAudioOutputDeviceVatlib::getOutputDevices() const
         {
             return m_devices;
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfo &CAudioOutputDeviceVatlib::getDefaultOutputDevice() const
+        const CAudioDeviceInfo &CAudioOutputDeviceVatlib::getDefaultOutputDevice() const
         {
-            static BlackMisc::Audio::CAudioDeviceInfo info(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
+            static CAudioDeviceInfo info(CAudioDeviceInfo::OutputDevice, CAudioDeviceInfo::defaultDeviceIndex(), "default");
             return info;
         }
 
-        const BlackMisc::Audio::CAudioDeviceInfo &CAudioOutputDeviceVatlib::getCurrentOutputDevice() const
+        const CAudioDeviceInfo &CAudioOutputDeviceVatlib::getCurrentOutputDevice() const
         {
             return m_currentDevice;
         }
 
-        void CAudioOutputDeviceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
+        void CAudioOutputDeviceVatlib::setOutputDevice(const CAudioDeviceInfo &device)
         {
             Q_ASSERT_X(m_outputCodec, "CAudioOutputDeviceVatlib", "VatLocalCodec is invalid!");
             if (!device.isValid())
@@ -115,7 +115,7 @@ namespace BlackCore
             }
 
             Vat_SetAudioOutputDevice(m_outputCodec.data(), device.getIndex());
-            this->m_currentDevice = device;
+            m_currentDevice = device;
         }
 
         void CAudioOutputDeviceVatlib::setOutputVolume(int volume)
@@ -132,7 +132,7 @@ namespace BlackCore
 
         void CAudioOutputDeviceVatlib::onOutputHardwareDeviceReceived(int deviceIndex, const char *hardwareName, void *cbVar)
         {
-            BlackMisc::Audio::CAudioDeviceInfo outputDevice(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice, deviceIndex, QString(hardwareName));
+            CAudioDeviceInfo outputDevice(CAudioDeviceInfo::OutputDevice, deviceIndex, QString(hardwareName));
             cbvar_cast_outputDevice(cbVar)->m_devices.push_back(outputDevice);
         }
     } // ns
