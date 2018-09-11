@@ -455,17 +455,36 @@ namespace BlackMisc
         {
             const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
             const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
-            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[=] ") + icao.getDesignator(); }
+            if (!icao.hasDesignator()) { return QStringLiteral("[x] no sim."); }
+            if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw."); }
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[==] ") % icao.getDesignatorDbKey(); }
+            if (icao.getDesignator() == icaoNw.getDesignator()) { return QStringLiteral("[=] ") % icao.getDesignator(); }
             static const QString diff("%1 -> %2");
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
 
         QString CSimulatedAircraft::getNetworkModelAirlineIcaoDifference() const
         {
+            static const QString diff("%1 -> %2");
+
+            if (this->getModel().getLivery().isColorLivery() || this->getNetworkModel().getLivery().isColorLivery())
+            {
+                if (this->getModel().getLivery().isColorLivery() && this->getNetworkModel().getLivery().isColorLivery())
+                {
+                    return ("col/col");
+                }
+
+                if (this->getModel().getLivery().isColorLivery())
+                {
+                    return diff.arg("col", this->getNetworkModel().getAirlineIcaoCode().getDesignator());
+                }
+                return diff.arg(this->getNetworkModel().getAirlineIcaoCode().getDesignator(), "col");
+            }
+
             const CAirlineIcaoCode icao(this->getModel().getAirlineIcaoCode());
             const CAirlineIcaoCode icaoNw(this->getNetworkModel().getAirlineIcaoCode());
-            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[=] ") + icao.getDesignator(); }
-            static const QString diff("%1 -> %2");
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[==] ") % icao.getDesignatorDbKey(); }
+            if (icao.getDesignator() == icaoNw.getDesignator()) { return QStringLiteral("[=] ") % icao.getDesignatorDbKey(); }
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
 
