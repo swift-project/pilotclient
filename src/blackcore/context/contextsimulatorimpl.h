@@ -86,6 +86,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override;
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
+            virtual bool isKnownModel(const QString &modelString) const override;
             virtual int getModelSetCount() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override;
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;

@@ -304,7 +304,7 @@ namespace BlackGui
 
         void CMappingComponent::onSaveAircraft()
         {
-            if (!sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
+            if (!sGui || !sGui->getIContextSimulator() || !sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
             const CCallsign callsign(this->validateRenderedCallsign());
             if (callsign.isEmpty()) { return; }
             const QString modelString = ui->completer_ModelStrings->getModelString();
@@ -314,7 +314,13 @@ namespace BlackGui
                 return;
             }
 
-            const bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
+            // model in current view (data already in UI)
+            bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
+            if (!hasModel && sGui && sGui->getIContextSimulator())
+            {
+                hasModel = sGui->getIContextSimulator()->isKnownModel(modelString);
+            }
+
             if (!hasModel)
             {
                 this->showOverlayMessage(CStatusMessage(this).validationError("Invalid model for mapping, reloading model set"), OverlayMessageMs);
@@ -328,6 +334,8 @@ namespace BlackGui
             const CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
             const bool enabled = ui->cb_AircraftEnabled->isChecked();
             bool changed = false;
+
+            // changed  model?
             if (aircraftFromBackend.getModelString() != modelString)
             {
                 const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);

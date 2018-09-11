@@ -130,6 +130,14 @@ namespace BlackCore
                 return QStringList();
             }
 
+            //! \copydoc IContextSimulator::isKnownModel
+            virtual bool isKnownModel(const QString &modelstring) const override
+            {
+                Q_UNUSED(modelstring);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::getModelSetModelsStartingWith
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override
             {

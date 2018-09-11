@@ -247,6 +247,13 @@ namespace BlackCore
             return this->getModelSet().getModelStringList(false);
         }
 
+        bool CContextSimulator::isKnownModel(const QString &modelString) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            const bool known = this->getModelSet().containsModelString(modelString);
+            return known;
+        }
+
         QStringList CContextSimulator::getModelSetCompleterStrings(bool sorted) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << sorted; }
