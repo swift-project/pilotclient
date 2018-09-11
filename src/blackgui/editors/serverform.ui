@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>223</width>
-    <height>190</height>
+    <width>221</width>
+    <height>163</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,7 +53,7 @@
        </property>
        <item>
         <widget class="QFrame" name="fr_ServerGeneral">
-         <layout class="QGridLayout" name="gl_ServerGeneral" columnstretch="1,2,2">
+         <layout class="QFormLayout" name="fl_ServerGeneral">
           <property name="leftMargin">
            <number>1</number>
           </property>
@@ -68,16 +68,44 @@
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="lbl_Name">
+            <property name="toolTip">
+             <string>name and description</string>
+            </property>
             <property name="text">
-             <string>Name:</string>
+             <string>Name/desc.:</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QLineEdit" name="le_Name">
-            <property name="placeholderText">
-             <string>server name</string>
-            </property>
+          <item row="0" column="1">
+           <widget class="QWidget" name="wi_NameDesc" native="true">
+            <layout class="QHBoxLayout" name="hl_NameDesc" stretch="1,2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="le_Name">
+               <property name="placeholderText">
+                <string>server name</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_Description">
+               <property name="placeholderText">
+                <string>server description</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="1" column="0">
@@ -87,55 +115,80 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QComboBox" name="cb_ServerType"/>
+          <item row="1" column="1">
+           <widget class="QWidget" name="wi_EcoType" native="true">
+            <layout class="QHBoxLayout" name="hl_EcoType">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="BlackGui::CEcosystemComboBox" name="cbp_Ecosystem"/>
+             </item>
+             <item>
+              <widget class="QComboBox" name="cb_ServerType"/>
+             </item>
+            </layout>
+           </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="lbl_Description">
+           <widget class="QLabel" name="lbl_Address">
             <property name="text">
-             <string>Description:</string>
+             <string>Addr./port:</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QLineEdit" name="le_Description">
-            <property name="placeholderText">
-             <string>server description</string>
-            </property>
+          <item row="2" column="1">
+           <widget class="QWidget" name="wi_AddressPort" native="true">
+            <layout class="QHBoxLayout" name="hl_AdressPort" stretch="2,1">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="le_Address">
+               <property name="placeholderText">
+                <string>e.g. &quot;server.foo.com&quot;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_Port">
+               <property name="text">
+                <string>6809</string>
+               </property>
+               <property name="maxLength">
+                <number>5</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="lbl_Address">
-            <property name="text">
-             <string>Addr./ port:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="le_Address">
-            <property name="placeholderText">
-             <string>e.g. &quot;server.foo.com&quot;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLineEdit" name="le_Port">
-            <property name="text">
-             <string>6809</string>
-            </property>
-            <property name="maxLength">
-             <number>5</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
            <widget class="QLabel" name="lbl_RealName">
             <property name="text">
              <string>Real name:</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1" colspan="2">
+          <item row="3" column="1">
            <widget class="QLineEdit" name="le_RealName">
             <property name="text">
              <string/>
@@ -145,38 +198,53 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="lbl_IdPassword">
             <property name="text">
-             <string>Id/Password:</string>
+             <string>Id/password:</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="le_NetworkId">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>id</string>
-            </property>
+          <item row="4" column="1">
+           <widget class="QWidget" name="wi_IdPassword" native="true">
+            <layout class="QHBoxLayout" name="hl_IdPassword">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="le_NetworkId">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="placeholderText">
+                <string>id</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_Password">
+               <property name="maxLength">
+                <number>32</number>
+               </property>
+               <property name="echoMode">
+                <enum>QLineEdit::Password</enum>
+               </property>
+               <property name="placeholderText">
+                <string>password</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLineEdit" name="le_Password">
-            <property name="maxLength">
-             <number>32</number>
-            </property>
-            <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
-            </property>
-            <property name="placeholderText">
-             <string>password</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="BlackGui::CEcosystemComboBox" name="cbp_Ecosystem"/>
           </item>
          </layout>
         </widget>
@@ -236,15 +304,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>le_Name</tabstop>
-  <tabstop>cbp_Ecosystem</tabstop>
-  <tabstop>cb_ServerType</tabstop>
-  <tabstop>le_Description</tabstop>
-  <tabstop>le_Address</tabstop>
-  <tabstop>le_Port</tabstop>
   <tabstop>le_RealName</tabstop>
-  <tabstop>le_NetworkId</tabstop>
-  <tabstop>le_Password</tabstop>
   <tabstop>tw_ServerForm</tabstop>
  </tabstops>
  <resources/>
