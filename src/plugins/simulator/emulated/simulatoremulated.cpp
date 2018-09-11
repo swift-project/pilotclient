@@ -376,44 +376,51 @@ namespace BlackSimPlugin
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("simulatorStatusChanged", CSimulatorEmulated::statusToString(status));
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](CAircraftModel model)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::renderRestrictionsChanged, this, [ = ](bool restricted, bool enabled, int maxAircraft, const CLength & maxRenderedDistance)
             {
                 if (!m_monitorWidget) return;
                 static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
                 m_monitorWidget->appendSendingCall("renderRestrictionsChanged", params.arg(boolToYesNo(restricted), boolToYesNo(enabled)).arg(maxAircraft), maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::m(), 1));
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::interpolationAndRenderingSetupChanged, this, [ = ]()
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("interpolationAndRenderingSetupChanged");
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::aircraftRenderingChanged, this, [ = ](const CSimulatedAircraft & aircraft)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("aircraftRenderingChanged", aircraft.toQString());
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::physicallyAddingRemoteModelFailed, this, [ = ](const CSimulatedAircraft & aircraft)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("physicallyAddingRemoteModelFailed", aircraft.toQString());
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::airspaceSnapshotHandled, this, [ = ]
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
-            }, Qt::QueuedConnection));
+            },
+            Qt::QueuedConnection));
         }
 
         void CSimulatorEmulated::fetchFromInterpolator()

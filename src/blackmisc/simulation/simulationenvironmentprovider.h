@@ -207,7 +207,7 @@ namespace BlackMisc
             CAircraftModel m_defaultModel; //!< default model
             int m_maxElevations = 100;     //!< How many elevations we keep
             Geo::CCoordinateGeodeticList    m_elvCoordinates; //!< elevation cache
-            Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests
+            Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
             qint64 m_statsMaxElevRequestTimeMs = -1;

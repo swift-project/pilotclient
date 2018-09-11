@@ -958,7 +958,7 @@ namespace BlackCore
 
     QString ISimulator::getInvalidSituationLogMessage(const CCallsign &callsign, const CInterpolationStatus &status, const QString &details) const
     {
-        static const QString msg("CS: '%1' Interpolation: '%2'");
+        static const QString msg("Interpolation ('%1'): '%2'");
         const QString m = msg.arg(callsign.asString(), status.toQString());
         if (details.isEmpty()) { return m; }
 
