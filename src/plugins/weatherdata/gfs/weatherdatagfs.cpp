@@ -313,6 +313,8 @@ namespace BlackWxPlugin
                 CCloudLayerList cloudLayers;
                 for (auto cloudLayerIt = gfsGridPoint.cloudLayers.begin(); cloudLayerIt != gfsGridPoint.cloudLayers.end(); ++cloudLayerIt)
                 {
+                    if (std::isnan(cloudLayerIt.value().bottomLevel) || std::isnan(cloudLayerIt.value().topLevel)) { continue; }
+
                     CCloudLayer cloudLayer;
                     cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setTop(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
@@ -669,17 +671,21 @@ namespace BlackWxPlugin
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 static const g2float minimumLayer = 0.0;
+                double levelFt = std::numeric_limits<double>::quiet_NaN();
+                g2float fieldValue = fld[gridPoint.fieldPosition];
+                // A value of 9.999e20 is undefined. Check that the pressure value is below
+                if (fieldValue < 9.998e20f) { levelFt = millibarToLevel(fld[gridPoint.fieldPosition]); }
                 switch (surfaceType)
                 {
                 case LowCloudBottomLevel:
                 case MiddleCloudBottomLevel:
                 case HighCloudBottomLevel:
-                    if (fld[gridPoint.fieldPosition] > minimumLayer) { gridPoint.cloudLayers[level].bottomLevel = millibarToLevel(fld[gridPoint.fieldPosition]); }
+                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].bottomLevel = levelFt; }
                     break;
                 case LowCloudTopLevel:
                 case MiddleCloudTopLevel:
                 case HighCloudTopLevel:
-                    if (fld[gridPoint.fieldPosition] > minimumLayer) { gridPoint.cloudLayers[level].topLevel = millibarToLevel(fld[gridPoint.fieldPosition]); }
+                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].topLevel = levelFt; }
                     break;
                 default:
                     Q_ASSERT(false);
