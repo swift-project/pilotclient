@@ -41,9 +41,6 @@ namespace BlackCore
             //! \copydoc IAudioInputDevice::getInputDevices
             virtual const BlackMisc::Audio::CAudioDeviceInfoList &getInputDevices() const override;
 
-            //! \copydoc IAudioInputDevice::getDefaultInputDevice
-            virtual const BlackMisc::Audio::CAudioDeviceInfo &getDefaultInputDevice() const override;
-
             //! \copydoc IAudioInputDevice::getCurrentInputDevice
             virtual const BlackMisc::Audio::CAudioDeviceInfo &getCurrentInputDevice() const override;
 
@@ -86,9 +83,6 @@ namespace BlackCore
 
             //! \copydoc IAudioOutputDevice::getOutputDevices
             virtual const BlackMisc::Audio::CAudioDeviceInfoList &getOutputDevices() const override;
-
-            //! \copydoc IAudioOutputDevice::getDefaultOutputDevice
-            virtual const BlackMisc::Audio::CAudioDeviceInfo &getDefaultOutputDevice() const override;
 
             //! \copydoc IAudioOutputDevice::getCurrentOutputDevice
             virtual const BlackMisc::Audio::CAudioDeviceInfo &getCurrentOutputDevice() const override;

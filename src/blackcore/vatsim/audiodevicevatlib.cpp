@@ -39,19 +39,14 @@ namespace BlackCore
             : IAudioInputDevice(parent)
         {
             m_inputCodec.reset(Vat_CreateLocalInputCodec(audioService, vatCodecLegacy));
-            Vat_GetInputDeviceInfo(m_inputCodec.data(), onInputHardwareDeviceReceived, this, nullptr);
-            m_currentDevice = getDefaultInputDevice();
+            int currentDeviceIndex;
+            Vat_GetInputDeviceInfo(m_inputCodec.data(), onInputHardwareDeviceReceived, this, &currentDeviceIndex);
+            m_currentDevice = m_devices.findByDeviceIndex(currentDeviceIndex);
         }
 
         const CAudioDeviceInfoList &CAudioInputDeviceVatlib::getInputDevices() const
         {
             return m_devices;
-        }
-
-        const CAudioDeviceInfo &CAudioInputDeviceVatlib::getDefaultInputDevice() const
-        {
-            static CAudioDeviceInfo info(CAudioDeviceInfo::InputDevice, CAudioDeviceInfo::defaultDeviceIndex(), "default");
-            return info;
         }
 
         const CAudioDeviceInfo &CAudioInputDeviceVatlib::getCurrentInputDevice() const
@@ -85,19 +80,14 @@ namespace BlackCore
             : IAudioOutputDevice(parent)
         {
             m_outputCodec.reset(Vat_CreateLocalOutputCodec(audioService, vatCodecLegacy));
-            Vat_GetOutputDeviceInfo(m_outputCodec.data(), onOutputHardwareDeviceReceived, this, nullptr);
-            m_currentDevice = getDefaultOutputDevice();
+            int currentDeviceIndex;
+            Vat_GetOutputDeviceInfo(m_outputCodec.data(), onOutputHardwareDeviceReceived, this, &currentDeviceIndex);
+            m_currentDevice = m_devices.findByDeviceIndex(currentDeviceIndex);
         }
 
         const CAudioDeviceInfoList &CAudioOutputDeviceVatlib::getOutputDevices() const
         {
             return m_devices;
-        }
-
-        const CAudioDeviceInfo &CAudioOutputDeviceVatlib::getDefaultOutputDevice() const
-        {
-            static CAudioDeviceInfo info(CAudioDeviceInfo::OutputDevice, CAudioDeviceInfo::defaultDeviceIndex(), "default");
-            return info;
         }
 
         const CAudioDeviceInfo &CAudioOutputDeviceVatlib::getCurrentOutputDevice() const

@@ -37,9 +37,6 @@ namespace BlackCore
         //! Get available input devices
         virtual const BlackMisc::Audio::CAudioDeviceInfoList &getInputDevices() const = 0;
 
-        //! Default input device
-        virtual const BlackMisc::Audio::CAudioDeviceInfo &getDefaultInputDevice() const = 0;
-
         //! Current input device
         virtual const BlackMisc::Audio::CAudioDeviceInfo &getCurrentInputDevice() const = 0;
 
@@ -62,9 +59,6 @@ namespace BlackCore
 
         //! Get available output devices
         virtual const BlackMisc::Audio::CAudioDeviceInfoList &getOutputDevices() const = 0;
-
-        //! Default output device
-        virtual const BlackMisc::Audio::CAudioDeviceInfo &getDefaultOutputDevice() const = 0;
 
         //! Current output device
         virtual const BlackMisc::Audio::CAudioDeviceInfo &getCurrentOutputDevice() const = 0;

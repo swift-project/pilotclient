@@ -44,6 +44,9 @@ namespace BlackMisc
             //! Get output devices in that list
             CAudioDeviceInfoList getInputDevices() const;
 
+            //! Find device by its index
+            CAudioDeviceInfo findByDeviceIndex(int deviceIndex);
+
             //! Count (as of type)
             int count(CAudioDeviceInfo::DeviceType type) const;
         };

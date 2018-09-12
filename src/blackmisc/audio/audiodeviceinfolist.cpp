@@ -36,6 +36,11 @@ namespace BlackMisc
             return this->findBy(&CAudioDeviceInfo::getType, CAudioDeviceInfo::InputDevice);
         }
 
+        CAudioDeviceInfo CAudioDeviceInfoList::findByDeviceIndex(int deviceIndex)
+        {
+            return this->findBy(&CAudioDeviceInfo::getIndex, deviceIndex).frontOrDefault();
+        }
+
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
         {
             return std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo &device)
