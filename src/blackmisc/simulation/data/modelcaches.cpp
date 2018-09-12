@@ -200,12 +200,15 @@ namespace BlackMisc
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 CStatusMessage msg;
+                CAircraftModelList setModels(models);
+                setModels.setModelType(CAircraftModel::TypeOwnSimulatorModel); // unify type
+
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(models); break;
-                case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(models); break;
-                case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(models); break;
-                case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(models); break;
+                case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(setModels); break;
+                case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(setModels); break;
+                case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(setModels); break;
+                case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(setModels); break;
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CStatusMessage();
@@ -404,6 +407,7 @@ namespace BlackMisc
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 CAircraftModelList orderedModels(models);
+                orderedModels.setModelType(CAircraftModel::TypeOwnSimulatorModel); // unify type
                 if (orderedModels.needsOrder())
                 {
                     orderedModels.resetOrder();
