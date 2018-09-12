@@ -737,10 +737,10 @@ namespace BlackCore
 
     void ISimulator::initSimulatorInternals()
     {
-        const CSimulatorSettings s = this->getSimulatorSettings();
+        const CSpecializedSimulatorSettings s = this->getSimulatorSettings();
         m_simulatorInternals.setSimulatorName(this->getSimulatorName());
         m_simulatorInternals.setSwiftPluginName(this->getSimulatorPluginInfo().toQString());
-        m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectory());
+        m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
     void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const Geo::CElevationPlane &elevation, const CLength &cg)

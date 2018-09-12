@@ -126,13 +126,16 @@ namespace BlackMisc
                 //! Ctor
                 CSpecializedSimulatorSettings(const QString &simulatorDir, const CSimulatorInfo &simulator) : m_genericSettings(CSimulatorSettings(simulatorDir)), m_simulator(simulator) {}
 
+                //! The generic settings
+                const CSimulatorSettings &getSimulatorSettings() const { return m_genericSettings; }
+
                 //! Default simulator path per simulator
                 const QString &getDefaultSimulatorDirectory() const;
 
                 //! Simulator directory or empty if default dir
                 const QString &getSimulatorDirectoryIfNotDefault() const;
 
-                //! Simulator directory or default model path
+                //! Simulator directory or default path
                 const QString &getSimulatorDirectoryOrDefault() const;
 
                 //! Model directories or default

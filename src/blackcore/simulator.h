@@ -182,7 +182,7 @@ namespace BlackCore
         void reloadWeatherSettings();
 
         //! Settings for current simulator
-        BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const { return m_settings.getSettings(this->getSimulatorInfo()); }
+        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings() const { return m_settings.getSpecializedSettings(this->getSimulatorInfo()); }
 
         //! Driver will be unloaded
         virtual void unload();
