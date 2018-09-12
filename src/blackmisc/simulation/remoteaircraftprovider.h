@@ -302,10 +302,12 @@ namespace BlackMisc
             virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const override;
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual int updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
+            virtual int updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered) override;
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
@@ -529,6 +531,9 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
             bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering);
 
+            //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftEnabled
+            bool updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering);
+
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
             bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator);
 
@@ -537,6 +542,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
             bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered);
+
+            //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftRendered
+            bool updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
             int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info);

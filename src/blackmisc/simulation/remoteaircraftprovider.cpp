@@ -453,9 +453,22 @@ namespace BlackMisc
 
         bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
-            const int c = this->updateAircraftInRange(callsign, vm);
-            return c > 0;
+            QWriteLocker l(&m_lockAircraft);
+            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            return m_aircraftInRange[callsign].setEnabled(enabledForRendering);
+        }
+
+        int CRemoteAircraftProvider::updateMultipleAircraftEnabled(const CCallsignSet &callsigns, bool enabledForRendering)
+        {
+            if (callsigns.isEmpty()) { return 0; }
+            QWriteLocker l(&m_lockAircraft);
+            int c = 0;
+            for (const CCallsign &cs : callsigns)
+            {
+                if (!m_aircraftInRange.contains(cs)) { continue; }
+                if (m_aircraftInRange[cs].setEnabled(enabledForRendering)) { c++; }
+            }
+            return c;
         }
 
         bool CRemoteAircraftProvider::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
@@ -486,6 +499,18 @@ namespace BlackMisc
             QWriteLocker l(&m_lockAircraft);
             if (!m_aircraftInRange.contains(callsign)) { return false; }
             return m_aircraftInRange[callsign].setRendered(rendered);
+        }
+
+        int CRemoteAircraftProvider::updateMultipleAircraftRendered(const CCallsignSet &callsigns, bool rendered)
+        {
+            if (callsigns.isEmpty()) { return 0; }
+            int c = 0;
+            for (const CCallsign &cs : callsigns)
+            {
+                if (!m_aircraftInRange.contains(cs)) { continue; }
+                if (m_aircraftInRange[cs].setRendered(rendered)) { c++; }
+            }
+            return c;
         }
 
         int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
@@ -885,6 +910,12 @@ namespace BlackMisc
             return this->provider()->updateAircraftRendered(callsign, rendered);
         }
 
+        bool CRemoteAircraftAware::updateMultipleAircraftRendered(const CCallsignSet &callsigns, bool rendered)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->updateMultipleAircraftRendered(callsigns, rendered);
+        }
+
         int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
@@ -951,10 +982,16 @@ namespace BlackMisc
             return this->provider()->getRemoteAircraftSupportingPartsCount();
         }
 
-        bool CRemoteAircraftAware::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
+        bool CRemoteAircraftAware::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->updateAircraftEnabled(callsign, enabledForRedering);
+            return this->provider()->updateAircraftEnabled(callsign, enabledForRendering);
+        }
+
+        bool CRemoteAircraftAware::updateMultipleAircraftEnabled(const CCallsignSet &callsigns, bool enabledForRendering)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->updateMultipleAircraftEnabled(callsigns, enabledForRendering);
         }
 
         CAircraftParts IRemoteAircraftProvider::getLatestAircraftParts(const CCallsign &callsign) const
