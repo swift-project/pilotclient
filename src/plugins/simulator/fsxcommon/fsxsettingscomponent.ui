@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>FSX settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_FsxSettingsComponent">
+  <layout class="QGridLayout" name="gl_FsxSettingsComponent" columnstretch="0,1">
    <item row="0" column="0">
     <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
      <property name="text">
