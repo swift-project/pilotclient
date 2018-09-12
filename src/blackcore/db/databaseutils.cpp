@@ -159,7 +159,7 @@ namespace BlackCore
             return c;
         }
 
-        CAircraftModelList CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, bool processEvents)
+        CAircraftModelList CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, QStringList &removedModelStrings, bool processEvents)
         {
             if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
 
@@ -167,19 +167,37 @@ namespace BlackCore
             timer.start();
             const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
             CAircraftModelList consolidatedModels;
+            removedModelStrings.clear();
 
             int c = 0;
             for (const CAircraftModel &model : models)
             {
                 c++;
-                if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
+                if (processEvents && c % 125 == 0)
+                {
+                    if (!sApp || sApp->isShuttingDown()) { return models; }
+                    sApp->processEventsFor(25);
+                }
 
                 const QString ms(model.getModelString());
                 if (ms.isEmpty()) { continue; }
-                if (!allOwnModelsModelStrings.contains(ms)) { continue; }
-                consolidatedModels.push_back(model);
+                if (!allOwnModelsModelStrings.contains(ms))
+                {
+                    removedModelStrings.push_back(ms);
+                    continue;
+                }
+                CAircraftModel consolidated = simulatorModels.findFirstByModelStringOrDefault(ms);
+                if (consolidated.hasModelString())
+                {
+                    CDatabaseUtils::consolidateModelWithDbData(consolidated, true);
+                    consolidatedModels.push_back(consolidated);
+                }
+                else
+                {
+                    consolidatedModels.push_back(model);
+                }
             }
-            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1  vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
             return consolidatedModels;
         }
 

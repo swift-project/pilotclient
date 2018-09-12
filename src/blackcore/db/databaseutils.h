@@ -35,6 +35,10 @@ namespace BlackCore
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
+            //! Consolidate models with simulator model data (aka "models on disk")
+            //! \remark kept here with the other consolidate functions, but actually DB independent
+            static BlackMisc::Simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CAircraftModelList &simulatorModels, QStringList &removedModelStrings, bool processEvents);
+
             //! Consolidate own (aircraft) model data with DB data
             static BlackMisc::Simulation::CAircraftModel consolidateOwnAircraftModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
 
@@ -46,10 +50,6 @@ namespace BlackCore
 
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
-
-            //! Consolidate models with simulator model data (aka "models on disk")
-            //! \remark kept here with the other consolidate functions, but actually DB independent
-            static BlackMisc::Simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CAircraftModelList &simulatorModels, bool processEvents);
 
             //! Consolidate models with simulator model data (aka "models on disk")
             //! \remark kept here with the other consolidate functions, but actually DB independent
