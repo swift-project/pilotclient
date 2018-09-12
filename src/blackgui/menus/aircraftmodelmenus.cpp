@@ -304,8 +304,9 @@ namespace BlackGui
             bool filtered = false;
             const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
             if (models.isEmpty()) { return; }
+            QStringList removedModelStrings;
             const int i = this->modelView()->showLoadIndicator();
-            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), true);
+            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
             const CSimulatorInfo sim(this->getSimulator());
 
             if (!filtered)
@@ -324,6 +325,11 @@ namespace BlackGui
                 }
             }
             this->modelView()->hideLoadIndicator(i);
+            if (!removedModelStrings.isEmpty() && this->getMappingComponent())
+            {
+                const CStatusMessage m = CStatusMessage(this).info("Removed %1 model(s)") << removedModelStrings.size();
+                this->getMappingComponent()->showOverlayMessage(m, 5000);
+            }
         }
 
         void CConsolidateWithSimulatorModels::consolidateSelectedData()
@@ -337,12 +343,18 @@ namespace BlackGui
                 return;
             }
 
+            QStringList removedModelStrings;
             const int i = this->modelView()->showLoadIndicator();
-            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), true);
+            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
             const CSimulatorInfo sim(this->getSimulator());
 
             this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
             this->modelView()->hideLoadIndicator(i);
+            if (!removedModelStrings.isEmpty() && this->getMappingComponent())
+            {
+                const CStatusMessage m = CStatusMessage(this).info("Removed %1 model(s)") << removedModelStrings.size();
+                this->getMappingComponent()->showOverlayMessage(m, 5000);
+            }
         }
 
         CAircraftModelList CConsolidateWithSimulatorModels::getSimulatorModels() const
