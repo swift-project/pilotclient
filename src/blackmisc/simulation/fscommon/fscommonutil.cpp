@@ -17,6 +17,8 @@
 #include <QSettings>
 #include <QStringList>
 #include <QVariant>
+#include <QFileInfo>
+#include <QStringBuilder>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -312,6 +314,38 @@ namespace BlackMisc
             {
                 static const QStringList exclude;
                 return exclude;
+            }
+
+            bool CFsCommonUtil::adjustFileDirectory(CAircraftModel &model, const QString &simObjectsDirectory)
+            {
+                if (model.hasExistingCorrespondingFile()) { return true; }
+                if (simObjectsDirectory.isEmpty()) { return false; }
+                if (!model.hasFileName()) { return false; } // we can do nothing here
+
+                const QString simObjectsDirectoryFix = CFileUtils::fixWindowsUncPath(simObjectsDirectory);
+                const QDir dir(simObjectsDirectoryFix);
+                if (!dir.exists()) { return false; }
+
+                const QString lastSegment = QStringLiteral("/") % CFileUtils::lastPathSegment(simObjectsDirectoryFix) % QStringLiteral("/");
+                const int index = model.getFileName().lastIndexOf(lastSegment);
+                if (index < 0) { return false; }
+                const QString relPart = model.getFileName().mid(index + lastSegment.length());
+                if (relPart.isEmpty()) { return false; }
+                const QString newFile = CFileUtils::appendFilePathsAndFixUnc(simObjectsDirectory, relPart);
+                const QFileInfo nf(newFile);
+                if (!nf.exists()) { return false; }
+
+                model.setFileName(newFile);
+                return true;
+            }
+
+            bool CFsCommonUtil::adjustFileDirectory(CAircraftModel &model, const QStringList &simObjectsDirectories)
+            {
+                for (const QString &simObjectDir : simObjectsDirectories)
+                {
+                    if (CFsCommonUtil::adjustFileDirectory(model, simObjectDir)) { return true; }
+                }
+                return false;
             }
         } // namespace
     } // namespace

@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 #define BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/blackmiscexport.h"
-
 #include <QString>
 
 class QStringList;
@@ -84,6 +84,12 @@ namespace BlackMisc
 
                 //! Exclude directories for aircraft objects
                 static const QStringList &fs9AircraftObjectsExcludeDirectoryPatterns();
+
+                //! Adjust file directory
+                static bool adjustFileDirectory(CAircraftModel &model, const QString &simObjectsDirectory);
+
+                //! Adjust file directory
+                static bool adjustFileDirectory(CAircraftModel &model, const QStringList &simObjectsDirectories);
             };
         } // namespace
     } // namespace

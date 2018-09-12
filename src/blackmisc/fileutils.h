@@ -79,8 +79,11 @@ namespace BlackMisc
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePathsAndFixUnc(const QString &path1, const QString &path2, const QString &path3);
 
-        //! Strip file from path a/b/c.json a/b
+        //! Strip file from path a/b/c.json a/b, return path
         static QString stripFileFromPath(const QString &path);
+
+        //! Last path segment a/b/c => c
+        static QString lastPathSegment(const QString &path);
 
         //! Normalize file path to Qt standard, e.g by turning \ to /
         static QString normalizeFilePathToQtStandard(const QString &filePath);

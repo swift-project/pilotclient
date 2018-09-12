@@ -129,6 +129,14 @@ namespace BlackMisc
         return path.left(path.lastIndexOf('/'));
     }
 
+    QString CFileUtils::lastPathSegment(const QString &path)
+    {
+        if (path.isEmpty()) { return QStringLiteral(""); }
+        if (path.endsWith('/')) { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
+        if (!path.contains('/')) { return path; }
+        return path.mid(path.lastIndexOf('/') + 1);
+    }
+
     QString CFileUtils::appendFilePaths(const QString &path1, const QString &path2, const QString &path3)
     {
         return CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
