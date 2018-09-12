@@ -424,6 +424,9 @@ namespace BlackMisc
 
             // ---------------- end file related functions --------------
 
+            //! Verify the model data
+            CStatusMessageList verifyModelData() const;
+
             //! Model type
             static const QString &modelTypeToString(ModelType type);
 

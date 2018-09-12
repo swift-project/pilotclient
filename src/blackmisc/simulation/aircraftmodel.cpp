@@ -136,6 +136,26 @@ namespace BlackMisc
                    .arg(this->getLivery().asHtmlSummary("&nbsp;")).replace(" ", "&nbsp;");
         }
 
+        CStatusMessageList CAircraftModel::verifyModelData() const
+        {
+            CStatusMessageList msgs;
+            const ModelType t = this->getModelType();
+            if (t == TypeOwnSimulatorModel || t == TypeManuallySet || t == TypeDatabaseEntry)
+            {
+                if (!this->existsCorrespondingFile())
+                {
+                    const CStatusMessage m = CStatusMessage(this).validationError("File '%1' not readable") << this->getFileName();
+                    msgs.push_back(m);
+                }
+            }
+            else
+            {
+                const CStatusMessage m = CStatusMessage(this).validationError("Invalid model type to check: '%1'") << this->getModelTypeAsString();
+                msgs.push_back(m);
+            }
+            return msgs;
+        }
+
         bool CAircraftModel::canInitializeFromFsd() const
         {
             const bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
@@ -721,7 +741,7 @@ namespace BlackMisc
             static const QString db("database");
             static const QString def("map.default");
             static const QString ownSim("own simulator");
-            static const QString set("set");
+            static const QString set("manually set");
             static const QString fsinn("FSInn");
             static const QString probe("probe");
             static const QString unknown("unknown");

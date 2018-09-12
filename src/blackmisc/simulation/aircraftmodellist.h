@@ -215,7 +215,10 @@ namespace BlackMisc
             CSimulatorInfo simulatorsSupported() const;
 
             //! Set mode for all elements
-            int setModelMode(Simulation::CAircraftModel::ModelMode mode);
+            int setModelMode(CAircraftModel::ModelMode mode);
+
+            //! Set type for all elements
+            int setModelType(CAircraftModel::ModelType type);
 
             //! Set center of gravity
             int setCG(const PhysicalQuantities::CLength &cg);

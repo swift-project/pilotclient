@@ -474,6 +474,18 @@ namespace BlackMisc
             return c;
         }
 
+        int CAircraftModelList::setModelType(CAircraftModel::ModelType type)
+        {
+            int c = 0;
+            for (CAircraftModel &model : (*this))
+            {
+                if (model.getModelType() == type) { continue; }
+                model.setModelType(type);
+                c++;
+            }
+            return c;
+        }
+
         int CAircraftModelList::setCG(const CLength &cg)
         {
             int c = 0;

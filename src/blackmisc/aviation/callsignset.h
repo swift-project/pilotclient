@@ -47,6 +47,9 @@ namespace BlackMisc
             //! The callsign strings
             QStringList getCallsignStrings(bool sorted = false) const;
 
+            //! Callsigns as string
+            QString getCallsignsAsString(bool sorted = false, const QString &separator = ", ") const;
+
             //! Register metadata
             static void registerMetadata();
         };

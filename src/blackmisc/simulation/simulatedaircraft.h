@@ -412,7 +412,7 @@ namespace BlackMisc
             bool isEnabled() const;
 
             //! Enabled / disabled
-            void setEnabled(bool enabled) { m_enabled = enabled; }
+            bool setEnabled(bool enabled);
 
             //! Rendered?
             bool isRendered() const { return m_rendered; }

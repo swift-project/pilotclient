@@ -48,6 +48,12 @@ namespace BlackMisc
             return callsigns;
         }
 
+        QString CCallsignSet::getCallsignsAsString(bool sorted, const QString &separator) const
+        {
+            if (this->isEmpty()) { return QStringLiteral(""); }
+            return this->getCallsignStrings(sorted).join(separator);
+        }
+
         void CCallsignSet::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();

@@ -117,6 +117,13 @@ namespace BlackMisc
             return m_enabled;
         }
 
+        bool CSimulatedAircraft::setEnabled(bool enabled)
+        {
+            if (m_enabled == enabled) { return false; }
+            m_enabled = enabled;
+            return true;
+        }
+
         bool CSimulatedAircraft::setFastPositionUpdates(bool useFastPositions)
         {
             if (m_fastPositionUpdates == useFastPositions) { return false; }
@@ -494,7 +501,10 @@ namespace BlackMisc
 
             const CLivery livery(this->getModel().getLivery());
             const CLivery liveryNw(this->getNetworkModel().getLivery());
-            if (livery.isDbEqual(liveryNw) || livery == liveryNw) { return QStringLiteral("[=] ") + livery.getCombinedCodePlusInfo(); }
+            if (livery.isDbEqual(liveryNw) || livery == liveryNw) { return QStringLiteral("[==] ") + livery.getCombinedCodePlusInfo(); }
+            if (livery.getCombinedCode() == liveryNw.getCombinedCode()) { return QStringLiteral("[=] ") + livery.getCombinedCodePlusInfo(); }
+            if (livery.isAirlineLivery() && liveryNw.isAirlineLivery()) { return this->getNetworkModelAirlineIcaoDifference(); }
+
             static const QString diff("%1 -> %2");
             return diff.arg(liveryNw.getCombinedCodePlusInfo(), livery.getCombinedCodePlusInfo());
         }
