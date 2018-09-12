@@ -398,7 +398,7 @@ namespace BlackCore
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
             Q_ASSERT(c);
-            c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::addingRemoteAircraftFailed);
+            c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::onAddingRemoteAircraftFailed);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
             Q_ASSERT(c);
@@ -667,10 +667,10 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
+        void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled, const CStatusMessage &message)
         {
             if (!this->isSimulatorAvailable()) { return; }
-            emit this->addingRemoteModelFailed(remoteAircraft, message);
+            emit this->addingRemoteModelFailed(remoteAircraft, disabled, message);
         }
 
         void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)

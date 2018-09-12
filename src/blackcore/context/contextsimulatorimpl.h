@@ -203,7 +203,7 @@ namespace BlackCore
             void onCockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Failed adding remote aircraft
-            void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
+            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
 
             //! Relay status message to simulator under consideration of settings
             void relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
