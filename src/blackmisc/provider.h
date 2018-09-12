@@ -26,8 +26,18 @@ namespace BlackMisc
         //! Dtor
         virtual ~IProvider();
 
+        //! Copy constructor
+        IProvider(const IProvider &) = delete;
+
+        //! Copy assignment operator
+        IProvider &operator =(const IProvider &) = delete;
+
         //! Return as QObject
         virtual QObject *asQObject() { return nullptr; }
+
+    protected:
+        //! Constructor
+        IProvider() {}
     };
 
     //! Base class of provider aware classes

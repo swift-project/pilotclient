@@ -29,10 +29,7 @@ namespace BlackMisc
 {
     class CIcon;
     class CStatusMessageList;
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 namespace Ui { class CSimulatorComponent; }
 namespace BlackGui

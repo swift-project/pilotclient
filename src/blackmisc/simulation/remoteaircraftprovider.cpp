@@ -24,6 +24,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        IRemoteAircraftProvider::IRemoteAircraftProvider()
+        { }
+
         IRemoteAircraftProvider::~IRemoteAircraftProvider()
         { }
 
@@ -33,7 +36,10 @@ namespace BlackMisc
             return cats;
         }
 
-        CRemoteAircraftProvider::CRemoteAircraftProvider(QObject *parent) : QObject(parent), CIdentifiable(this)
+        CRemoteAircraftProvider::CRemoteAircraftProvider(QObject *parent) :
+            QObject(parent),
+            IRemoteAircraftProvider(),
+            CIdentifiable(this)
         { }
 
         CSimulatedAircraftList CRemoteAircraftProvider::getAircraftInRange() const

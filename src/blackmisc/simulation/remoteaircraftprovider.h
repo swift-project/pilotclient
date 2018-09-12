@@ -54,6 +54,12 @@ namespace BlackMisc
             //! Destructor
             virtual ~IRemoteAircraftProvider();
 
+            //! Copy constructor
+            IRemoteAircraftProvider(const IRemoteAircraftProvider &) = delete;
+
+            //! Copy assignment operator
+            IRemoteAircraftProvider &operator =(const IRemoteAircraftProvider &) = delete;
+
             //! All remote aircraft
             //! \threadsafe
             virtual CSimulatedAircraftList getAircraftInRange() const = 0;
@@ -143,13 +149,21 @@ namespace BlackMisc
             //! \threadsafe
             virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const = 0;
 
-            //! Enable/disable enabled aircraft
+            //! Enable/disable aircraft
             //! \threadsafe
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
 
-            //! Aircraft rendered?
+            //! Enable/disable aircraft
+            //! \threadsafe
+            virtual int updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering) = 0;
+
+            //! Set aircraft rendered
             //! \threadsafe
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) = 0;
+
+            //! Set aircraft rendered
+            //! \threadsafe
+            virtual int updateMultipleAircraftRendered(const Aviation::CCallsignSet &callsigns, bool rendered) = 0;
 
             //! Mark all as not rendered
             //! \threadsafe
@@ -236,6 +250,10 @@ namespace BlackMisc
 
             //! Remove outdated aircraft parts, but never the most recent one
             static void removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
+
+        protected:
+            //! Constructor
+            IRemoteAircraftProvider();
         };
     } //s
 } // ns

@@ -689,7 +689,7 @@ namespace BlackGui
                 if (containerSizeDependent < ResizeSubsetThreshold) { return -1; }
             }
             m_showingLoadIndicator = true;
-            emit loadIndicatorVisibilityChanged(m_showingLoadIndicator);
+            emit this->loadIndicatorVisibilityChanged(m_showingLoadIndicator);
 
             if (!m_loadIndicator)
             {

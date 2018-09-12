@@ -25,6 +25,13 @@ namespace BlackMisc
         public:
             //! Set models
             virtual void setModels(const CAircraftModelList &models) = 0;
+
+            //! Ctor, dtor, copy operators (CLANG warnings) @{
+            IModelsSetable() {}
+            virtual ~IModelsSetable() {}
+            IModelsSetable(const IModelsSetable &) = default;
+            IModelsSetable &operator =(const IModelsSetable &) = default;
+            //! @}
         };
 
         //! Interface to "something" backing models, which can be modified (updated)
@@ -33,6 +40,13 @@ namespace BlackMisc
         public:
             //! Update models
             virtual int updateModels(const CAircraftModelList &models) = 0;
+
+            //! Ctor, dtor, copy operators (CLANG warnings) @{
+            IModelsUpdatable() {}
+            virtual ~IModelsUpdatable() {}
+            IModelsUpdatable(const IModelsUpdatable &) = default;
+            IModelsUpdatable &operator =(const IModelsUpdatable &) = default;
+            //! @}
         };
 
         //! Interface to "something" backing models, which can be set
@@ -41,6 +55,13 @@ namespace BlackMisc
         public:
             //! Set models
             virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+
+            //! Ctor, dtor, copy operators (CLANG warnings) @{
+            IModelsForSimulatorSetable() {}
+            virtual ~IModelsForSimulatorSetable() {}
+            IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
+            IModelsForSimulatorSetable &operator =(const IModelsForSimulatorSetable &) = default;
+            //! @}
         };
 
         //! Interface to "something" backing models, which can be modified (updated)
@@ -49,6 +70,13 @@ namespace BlackMisc
         public:
             //! Set models
             virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
+
+            //! Ctor, dtor, copy operators (CLANG warnings) @{
+            IModelsForSimulatorUpdatable() {}
+            virtual ~IModelsForSimulatorUpdatable() {}
+            IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
+            IModelsForSimulatorUpdatable &operator =(const IModelsForSimulatorUpdatable &) = default;
+            //! @}
         };
 
         //! Interface to "something" allowing a simulator selection
@@ -57,6 +85,13 @@ namespace BlackMisc
         public:
             //! Simulator
             virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const = 0;
+
+            //! Ctor, dtor, copy operators (CLANG warnings) @{
+            ISimulatorSelectable() {}
+            virtual ~ISimulatorSelectable() {}
+            ISimulatorSelectable(const ISimulatorSelectable &) = default;
+            ISimulatorSelectable &operator =(const ISimulatorSelectable &) = default;
+            //! @}
         };
     } // namespace
 } // namespace

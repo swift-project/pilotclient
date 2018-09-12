@@ -115,7 +115,7 @@ namespace BlackMisc
             };
 
             //! Last selection
-            struct TSimulatorLastSelection : public BlackMisc::TDataTrait<CSimulatorInfo>
+            struct TSimulatorLastSelection : public TDataTrait<CSimulatorInfo>
             {
                 //! First load is synchronous
                 static constexpr bool isPinned() { return true; }
@@ -128,7 +128,7 @@ namespace BlackMisc
             };
 
             //! Last selections
-            struct TSimulatorLastSelections : public BlackMisc::TDataTrait<CSimulatorInfo>
+            struct TSimulatorLastSelections : public TDataTrait<CSimulatorInfo>
             {
                 //! First load is synchronous
                 static constexpr bool isPinned() { return true; }

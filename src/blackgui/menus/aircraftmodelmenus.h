@@ -144,8 +144,8 @@ namespace BlackGui
 
             BlackMisc::Simulation::IModelsForSimulatorSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsForSimulatorUpdatable *modelsTargetUpdatable() const;
-            BlackMisc::Simulation::ISimulatorSelectable *simulatorSelectable() const;
-            BlackGui::Components::CDbMappingComponent *getMappingComponent() const;
+            BlackMisc::Simulation::ISimulatorSelectable         *simulatorSelectable() const;
+            BlackGui::Components::CDbMappingComponent           *getMappingComponent() const;
 
             QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
             QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
