@@ -154,7 +154,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             //! \remark x86 FSX version, x64 version is overridden
             //! \sa CSimulatorFsxCommon::is
-            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &aircraftCallsign) override;
 
             //! Tracing?
             bool isTracingSendId() const;
@@ -258,7 +258,7 @@ namespace BlackSimPlugin
             // probes
             bool m_useFsxTerrainProbe = true;  //!< Use FSX Terrain probe?
             int  m_addedProbes = 0; //!< added probes
-            QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
+            QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
         private:
             //! Reason for adding an aircraft
@@ -298,6 +298,9 @@ namespace BlackSimPlugin
             //! \remark requests further data on remote aircraft (lights, ..) when correctly added
             void verifyAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 
+            //! Adding an aircraft failed
+            void addingAircraftFailed(const CSimConnectObject &simObject);
+
             //! Verify the probe
             void verifyAddedTerrainProbe(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 
@@ -311,7 +314,7 @@ namespace BlackSimPlugin
             void addPendingAircraft(AircraftAddMode mode);
 
             //! Remove as m_addPendingAircraft and m_aircraftToAddAgainWhenRemoved
-            void removeFromAddPendingAndAddAgainAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+            CSimConnectObject removeFromAddPendingAndAddAgainAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Call this method to declare the simulator connected
             void setSimConnected();
@@ -424,7 +427,7 @@ namespace BlackSimPlugin
             bool requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
             //! Request data for the terrain probe
-            bool requestTerrainProbeData(const CSimConnectObject &simObject);
+            bool requestTerrainProbeData(const CSimConnectObject &simObject, const BlackMisc::Aviation::CCallsign &aircraftCallsign);
 
             //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
@@ -469,7 +472,7 @@ namespace BlackSimPlugin
             int removeAllProbes();
 
             //! Insert a new SimConnect object
-            CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
+            CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId, const CSimConnectObject &removedPendingObject = {});
 
             //! Used for terrain probes
             static const BlackMisc::Aviation::CAltitude &terrainProbeAltitude();
@@ -480,6 +483,10 @@ namespace BlackSimPlugin
             static constexpr int MaxSendIdTraces     = 10000;        //!< max.traces of send id
             static constexpr DWORD MaxSimObjAircraft = 10000;        //!< max.number of SimObjects at the same time
             static constexpr DWORD MaxSimObjProbes   = 100;          //!< max. probes
+
+            // -- second chance tresholds --
+            static constexpr int ThresholdAddException = 1; //!< one failure allowed
+            static constexpr int ThresholdAddedAndDirectlyRemoved = 2; //!< two failures allowed
 
             // -- range for sim data, each sim object will get its own request id and use the offset ranges
             static constexpr int RequestSimObjAircraftStart    = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
@@ -529,9 +536,9 @@ namespace BlackSimPlugin
 
             // objects
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
+            CSimConnectObjects m_addPendingAircraft; //!< aircraft awaiting to be added;
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft     = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);     //!< request id, use obtainRequestIdForSimObjAircraft to get id
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
-            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
             QTimer m_addPendingSimObjTimer; //!< updating of SimObjects awaiting to be added
 
             //! Request id to string

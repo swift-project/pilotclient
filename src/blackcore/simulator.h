@@ -210,6 +210,17 @@ namespace BlackCore
         //! Shutting down or disconnected?
         virtual bool isShuttingDownOrDisconnected() const { return (this->isShuttingDown() || !this->isConnected()); }
 
+        //! Shutting down, disconnected, or no remote aircraft
+        virtual bool isShuttingDownDisconnectedOrNoAircraft() const { return (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1); }
+
+        //! Shutting down, disconnected, or no remote aircraft
+        virtual bool isShuttingDownDisconnectedOrNoAircraft(bool isProbe) const
+        {
+            return isProbe ?
+                   this->isShuttingDownOrDisconnected() :
+                   (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
+        }
+
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark needs to be overridden if the concrete driver supports such an option
         //! \sa ISimulator::callbackReceivedRequestedElevation
@@ -325,7 +336,7 @@ namespace BlackCore
         void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Adding the remote model failed
-        void physicallyAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
+        void physicallyAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();

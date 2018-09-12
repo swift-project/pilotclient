@@ -82,27 +82,23 @@ namespace BlackSimPlugin
                                 if (simObject.isInvalid()) { simObject = trace.simObject; } // take the one in the trace
                                 if (simObject.isValid())
                                 {
-                                    const bool removed = simulatorFsxP3D->m_simConnectObjects.remove(simObject.getCallsign());
-                                    if (removed)
+                                    if (simObject.isAircraft())
                                     {
-                                        if (simObject.isAircraft())
-                                        {
-                                            CLogMessage(simulatorFsxP3D).warning("Model failed to be added and will be disabled: '%1' details: %2")
-                                                    << simObject.getAircraftModelString()
-                                                    << simObject.getAircraft().toQString(true);
-                                            logGenericExceptionInfo = false;
-                                        }
-                                        else
-                                        {
-                                            CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2")
-                                                    << simObject.getCallsign().asString()
-                                                    << simObject.getAircraftModelString();
-                                            simulatorFsxP3D->setUsingFsxTerrainProbe(false);
-                                            logGenericExceptionInfo = false;
-                                        }
-                                    } // removed
-                                }
-                            }
+                                        simulatorFsxP3D->addingAircraftFailed(simObject);
+                                        logGenericExceptionInfo = false;
+                                    }
+                                    else
+                                    {
+                                        const bool removed = simulatorFsxP3D->m_simConnectObjects.remove(simObject.getCallsign());
+                                        Q_UNUSED(removed);
+                                        CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2")
+                                                << simObject.getCallsign().asString()
+                                                << simObject.getAircraftModelString();
+                                        simulatorFsxP3D->setUsingFsxTerrainProbe(false);
+                                        logGenericExceptionInfo = false;
+                                    } // aircraft
+                                } // valid
+                            } // trace
                         } // SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED:
                         break;
                     default:
@@ -219,7 +215,7 @@ namespace BlackSimPlugin
                             const CSimulatedAircraft remoteAircraft(simObject.getAircraft());
                             const CStatusMessage msg = CStatusMessage(simulatorFsxP3D).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
                             CLogMessage::preformatted(msg);
-                            emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
+                            emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, false, msg);
                         }
                     }
                     break; // SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
