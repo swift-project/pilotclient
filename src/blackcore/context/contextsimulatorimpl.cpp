@@ -855,8 +855,9 @@ namespace BlackCore
 
         bool CContextSimulator::resetToModelMatchingAircraft(const CCallsign &callsign)
         {
-            CSimulatedAircraft aircraft = getAircraftInRangeForCallsign(callsign);
+            CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
             if (aircraft.getCallsign() != callsign) { return false; } // not found
+            this->updateAircraftEnabled(callsign, true);
             aircraft.setModel(aircraft.getNetworkModel());
             xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
             return true;
