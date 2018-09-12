@@ -31,7 +31,8 @@ namespace BlackSimPlugin
             enum SimObjectType
             {
                 Aircraft,
-                TerrainProbe
+                TerrainProbe,
+                AllTypes
             };
 
             //! Constructor
@@ -58,6 +59,9 @@ namespace BlackSimPlugin
 
             //! Simulated aircraft (as added)
             const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
+
+            //! Simulated aircraft model
+            const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
 
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
@@ -135,7 +139,7 @@ namespace BlackSimPlugin
             bool isPendingAdded() const;
 
             //! Still pending
-            bool isOutdatedPendingAdded(qint64 thresholdMs = 2000, qint64 currentMsSinceEpoch = -1) const;
+            bool isOutdatedPendingAdded(qint64 thresholdMs = 5000, qint64 currentMsSinceEpoch = -1) const;
 
             //! Adding is confirmed
             bool isConfirmedAdded() const;
@@ -184,8 +188,11 @@ namespace BlackSimPlugin
             //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
             void resetState();
 
+            //! Reset so it can be added again
+            void resetToAddAgain();
+
             //! Reset the timestamp
-            void resetTimestamp() { m_tsCreated = QDateTime::currentMSecsSinceEpoch(); }
+            void resetTimestampToNow() { m_tsCreated = QDateTime::currentMSecsSinceEpoch(); }
 
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
@@ -196,11 +203,38 @@ namespace BlackSimPlugin
             //! Invalid?
             bool isInvalid() const { return !this->hasValidObjectId() && !this->hasValidRequestId(); }
 
+            //! Created timestamp?
+            bool hasCreatedTimestamp() const { return m_tsCreated >= 0; }
+
+            //! Created timestamp
+            qint64 getCreatedTimestamp() const { return m_tsCreated; }
+
             //! Engine count
             int getEngineCount() const { return m_aircraft.getEnginesCount(); }
 
             //! Was the object really added to simulator
             bool hasValidRequestAndObjectId() const;
+
+            //! Adding has been failed before
+            int getAddingExceptions() const { return m_addingExceptions; }
+
+            //! Set adding failed before
+            void setAddingExceptions(int number) { m_addingExceptions = number; }
+
+            //! Increase adding exception
+            void increaseAddingExceptions() { m_addingExceptions++; }
+
+            //! Adding and directly removed
+            int getAddingDirectlyRemoved() const { return m_addingDirectlyRemoved; }
+
+            //! Set adding and directly removed
+            void setAddingDirectlyRemoved(int number) { m_addingDirectlyRemoved = number; }
+
+            //! Increase adding and directly removed
+            void increaseAddingDirectlyRemoved() { m_addingDirectlyRemoved++; }
+
+            //! Copy the counters from another object
+            void copyAddingFailureCounters(const CSimConnectObject &otherObject);
 
             //! Callsign as LATIN1
             const QByteArray &getCallsignByteArray() const { return m_callsignByteArray; }
@@ -223,6 +257,9 @@ namespace BlackSimPlugin
             //! SimObject as string
             QString toQString() const;
 
+            //! Verification message when adding failed
+            BlackMisc::CStatusMessageList addingVerificationMessages();
+
             //! Type of id
             static SimObjectType requestIdToType(DWORD requestId);
 
@@ -241,8 +278,9 @@ namespace BlackSimPlugin
             bool m_camera         = false;
             bool m_removedWhileAdding = false;
             bool m_addedWhileRemoving = false;
-            int  m_lightsRequestedAt  = -1;
-            qint64 m_tsCreated    = -1;
+            int  m_addingExceptions      = 0; //!< exception when added
+            int  m_addingDirectlyRemoved = 0; //!< added, but removed directly afterwards
+            qint64 m_tsCreated = -1;
             GUID m_cameraGuid;
             SIMCONNECT_DATA_XYZ m_cameraPosition;
             SIMCONNECT_DATA_PBH m_cameraRotation;
@@ -257,6 +295,9 @@ namespace BlackSimPlugin
         class CSimConnectObjects : public QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject>
         {
         public:
+            //! Insert
+            bool insert(const CSimConnectObject &simObject, bool updateTimestamp = false);
+
             //! Set ID of a SimConnect object, so far we only have an request id in the object
             bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId);
 
@@ -275,6 +316,9 @@ namespace BlackSimPlugin
             //! Mark as added if existing
             CSimConnectObject markObjectAsAdded(DWORD objectId);
 
+            //! Get the oldest object
+            CSimConnectObject getOldestObject() const;
+
             //! Is the object id one of our AI objects?
             bool isKnownSimObjectId(DWORD objectId) const;
 
@@ -286,6 +330,12 @@ namespace BlackSimPlugin
 
             //! Remove all the probes
             int removeAllProbes();
+
+            //! Remove callsigns
+            int removeCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+
+            //! Remove all pending added objects
+            CSimConnectObjects removeOutdatedPendingAdded(CSimConnectObject::SimObjectType type);
 
             //! Pending add condition
             bool containsPendingAdded() const;
@@ -306,7 +356,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CCallsignSet getAllCallsigns(bool withoutProbes = true) const;
 
             //! Get all callsign strings
-            QStringList getAllCallsignStrings(bool sorted = false) const;
+            QStringList getAllCallsignStrings(bool sorted = false, bool withoutProbes = true) const;
 
             //! Get all callsign strings as string
             QString getAllCallsignStringsAsString(bool sorted = false, const QString &separator = ", ") const;

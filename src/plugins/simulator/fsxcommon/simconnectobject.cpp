@@ -111,6 +111,7 @@ namespace BlackSimPlugin
         {
             if (!this->isPendingAdded()) { return false; }
             if (currentMsSinceEpoch < 0) { currentMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
+            if (m_tsCreated < 0) { return true; } // no valid timestamp
             const qint64 delta = currentMsSinceEpoch - m_tsCreated;
             return delta > thresholdMs;
         }
@@ -173,16 +174,29 @@ namespace BlackSimPlugin
             m_lightsAsSent = CAircraftLights();
             m_requestId = 0;
             m_objectId  = 0;
-            m_lightsRequestedAt = -1;
+            m_addingExceptions = 0;
             m_validRequestId = false;
             m_validObjectId  = false;
-            m_tsCreated = QDateTime::currentMSecsSinceEpoch();
+            m_tsCreated = -1;
             this->resetCameraPositions();
+        }
+
+        void CSimConnectObject::resetToAddAgain()
+        {
+            const CSimConnectObject old(*this);
+            this->resetState();
+            this->copyAddingFailureCounters(old);
         }
 
         bool CSimConnectObject::hasValidRequestAndObjectId() const
         {
             return this->hasValidRequestId() && this->hasValidObjectId();
+        }
+
+        void CSimConnectObject::copyAddingFailureCounters(const CSimConnectObject &otherObject)
+        {
+            m_addingExceptions = otherObject.m_addingExceptions;
+            m_addingDirectlyRemoved = otherObject.m_addingDirectlyRemoved;
         }
 
         QString CSimConnectObject::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
@@ -211,8 +225,13 @@ namespace BlackSimPlugin
 
         QString CSimConnectObject::toQString() const
         {
-            static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7");
-            return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving));
+            static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7 aEx: %8 aRem: %9");
+            return s.arg(this->getCallsign().asString()). arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving)).arg(m_addingExceptions).arg(m_addingDirectlyRemoved);
+        }
+
+        CStatusMessageList CSimConnectObject::addingVerificationMessages()
+        {
+            return this->getAircraftModel().verifyModelData();
         }
 
         CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
@@ -235,6 +254,22 @@ namespace BlackSimPlugin
             default: break;
             }
             return u;
+        }
+
+        bool CSimConnectObjects::insert(const CSimConnectObject &simObject, bool updateTimestamp)
+        {
+            if (!simObject.hasCallsign()) { return false; }
+            if (updateTimestamp)
+            {
+                CSimConnectObject simObj(simObject);
+                simObj.resetTimestampToNow();
+                (*this)[simObj.getCallsign()] = simObj;
+            }
+            else
+            {
+                (*this)[simObject.getCallsign()] = simObject;
+            }
+            return true;
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)
@@ -264,9 +299,9 @@ namespace BlackSimPlugin
             return callsigns;
         }
 
-        QStringList CSimConnectObjects::getAllCallsignStrings(bool sorted) const
+        QStringList CSimConnectObjects::getAllCallsignStrings(bool sorted, bool withoutProbes) const
         {
-            return this->getAllCallsigns().getCallsignStrings(sorted);
+            return this->getAllCallsigns(withoutProbes).getCallsignStrings(sorted);
         }
 
         QString CSimConnectObjects::getAllCallsignStringsAsString(bool sorted, const QString &separator) const
@@ -293,6 +328,20 @@ namespace BlackSimPlugin
                 return simObject;
             }
             return CSimConnectObject();
+        }
+
+        CSimConnectObject CSimConnectObjects::getOldestObject() const
+        {
+            CSimConnectObject oldestSimObj = *this->begin();
+            for (const CSimConnectObject &simObj : this->values())
+            {
+                if (!simObj.hasCreatedTimestamp()) { continue; }
+                if (!oldestSimObj.hasCreatedTimestamp() || oldestSimObj.getCreatedTimestamp() > simObj.getCreatedTimestamp())
+                {
+                    oldestSimObj = simObj;
+                }
+            }
+            return oldestSimObj;
         }
 
         CSimConnectObject CSimConnectObjects::getSimObjectForRequestId(DWORD requestId) const
@@ -440,6 +489,37 @@ namespace BlackSimPlugin
                 if (simObject.getType() == type) { return true; }
             }
             return false;
+        }
+
+        int CSimConnectObjects::removeCallsigns(const CCallsignSet &callsigns)
+        {
+            int c = 0;
+            for (const CCallsign &cs : callsigns)
+            {
+                c += this->remove(cs);
+            }
+            return c;
+        }
+
+        CSimConnectObjects CSimConnectObjects::removeOutdatedPendingAdded(CSimConnectObject::SimObjectType type)
+        {
+            CCallsignSet removeCallsigns;
+            CSimConnectObjects removedObjects;
+
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                // verification takes at least a second, so we need some time before outdating
+                if (type != CSimConnectObject::AllTypes && simObject.getType() != type)  { continue; }
+                if (!simObject.isOutdatedPendingAdded(5000, ts)) { continue; }
+                removedObjects.insert(simObject);
+                removeCallsigns.insert(simObject.getCallsign());
+            }
+            if (!removeCallsigns.isEmpty())
+            {
+                this->removeCallsigns(removeCallsigns);
+            }
+            return removedObjects;
         }
     } // namespace
 } // namespace
