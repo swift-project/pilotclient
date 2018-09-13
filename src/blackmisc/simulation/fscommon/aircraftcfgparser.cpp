@@ -73,8 +73,8 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     emit this->diskLoadingStarted(simulator, mode);
-                    m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                     [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
+                    m_parserWorker = CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
+                                                       [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
                     {
                         bool ok = false;
                         CStatusMessageList msgs;
@@ -205,152 +205,16 @@ namespace BlackMisc
                         // unfortunately some files are malformed which could end up in wrong data
 
                         const QString fileName = fileInfo.absoluteFilePath();
-                        QFile file(fileName);
-                        if (!file.open(QFile::ReadOnly | QFile::Text))
+                        bool fileOk = false;
+                        CStatusMessageList fileMsgs;
+                        CAircraftCfgEntriesList fileResults = performParsingOfSingleFile(fileName, fileOk, fileMsgs);
+                        if (!fileOk)
                         {
-                            CLogMessage(this).warning("Unable to read file %1") << fileName;
+                            CLogMessage::preformatted(fileMsgs);
                             continue;
                         }
-                        QTextStream in(&file);
-                        QList<CAircraftCfgEntries> tempEntries;
 
-                        // parse through the file
-                        QString atcType;
-                        QString atcModel;
-                        QString fltSection("[FLTSIM.0]");
-                        int fltsimCounter = 0;
-                        FileSection currentSection = Unknown;
-                        bool isRotorcraftPath = fileName.contains("rotorcraft", Qt::CaseInsensitive);
-
-                        while (!in.atEnd())
-                        {
-                            const QString lineFixed(in.readLine().trimmed());
-                            if (lineFixed.isEmpty()) { continue; }
-                            if (lineFixed.startsWith("["))
-                            {
-                                if (lineFixed.startsWith("[GENERAL]", Qt::CaseInsensitive)) { currentSection = General; continue; }
-                                if (lineFixed.startsWith(fltSection, Qt::CaseInsensitive))
-                                {
-                                    CAircraftCfgEntries e(fileName, fltsimCounter);
-                                    if (isRotorcraftPath)
-                                    {
-                                        e.setRotorcraft(true);
-                                    }
-                                    tempEntries.append(e);
-                                    currentSection = Fltsim;
-                                    fltSection = QString("[FLTSIM.%1]").arg(++fltsimCounter);
-                                    continue;
-                                }
-                                currentSection = Unknown;
-                                continue;
-                            }
-                            switch (currentSection)
-                            {
-                            case General:
-                                {
-                                    if (lineFixed.startsWith("//")) { break; }
-                                    if (atcType.isEmpty() || atcModel.isEmpty())
-                                    {
-                                        const QString c = getFixedIniLineContent(lineFixed);
-                                        if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
-                                        {
-                                            atcType = c;
-                                        }
-                                        else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
-                                        {
-                                            atcModel = c;
-                                        }
-                                    }
-                                }
-                                break;
-                            case Fltsim:
-                                {
-                                    if (lineFixed.startsWith("//")) { break; }
-                                    CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
-                                    if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
-                                    {
-                                        if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
-                                        {
-                                            e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
-                                        }
-                                        else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
-                                        {
-                                            e.setAtcAirline(getFixedIniLineContent(lineFixed));
-                                        }
-                                        else if (lineFixed.startsWith("atc_id_color", Qt::CaseInsensitive))
-                                        {
-                                            e.setAtcIdColor(getFixedIniLineContent(lineFixed));
-                                        }
-                                    }
-                                    else if (lineFixed.startsWith("ui_", Qt::CaseInsensitive))
-                                    {
-                                        if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
-                                        {
-                                            e.setUiManufacturer(getFixedIniLineContent(lineFixed));
-                                        }
-                                        else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
-                                        {
-                                            bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
-                                            e.setRotorcraft(r);
-                                        }
-                                        else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
-                                        {
-                                            e.setUiType(getFixedIniLineContent(lineFixed));
-                                        }
-                                        else if (lineFixed.startsWith("ui_variation", Qt::CaseInsensitive))
-                                        {
-                                            e.setUiVariation(getFixedIniLineContent(lineFixed));
-                                        }
-                                    }
-                                    else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
-                                    {
-                                        e.setDescription(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
-                                    {
-                                        e.setTexture(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("createdBy", Qt::CaseInsensitive))
-                                    {
-                                        e.setCreatedBy(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("sim", Qt::CaseInsensitive))
-                                    {
-                                        e.setSimName(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("title", Qt::CaseInsensitive))
-                                    {
-                                        e.setTitle(getFixedIniLineContent(lineFixed));
-                                    }
-                                }
-                                break;
-                            default:
-                            case Unknown: break;
-                            }
-                        } // all lines
-                        file.close();
-
-                        // store all entries
-                        QDateTime fileTimestamp(fileInfo.lastModified());
-                        if (!fileTimestamp.isValid() || fileInfo.created() > fileTimestamp)
-                        {
-                            fileTimestamp = fileInfo.created();
-                        }
-                        Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
-                        for (const CAircraftCfgEntries &e : as_const(tempEntries))
-                        {
-                            if (e.getTitle().isEmpty())
-                            {
-                                CLogMessage(this).info("FS model in %1, index %2 has no title") << fileName << e.getIndex();
-                                continue;
-                            }
-                            CAircraftCfgEntries newEntries(e);
-                            newEntries.setAtcModel(atcModel);
-                            newEntries.setAtcType(atcType);
-                            newEntries.setUtcTimestamp(fileTimestamp);
-                            result.push_back(newEntries);
-                        }
-                        *ok = true;
+                        result.push_back(fileResults);
                         return result; // do not go any deeper in file tree, we found aircraft.cfg
                     }
                 }
@@ -359,6 +223,170 @@ namespace BlackMisc
                 // normally reached when no aircraft.cfg is found
                 *ok = true;
                 return result;
+            }
+
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsingOfSingleFile(const QString &fileName, bool &ok, CStatusMessageList &msgs)
+            {
+                // due to the filter we expect only "aircraft.cfg" here
+                // remark: in a 1st version I have used QSettings to parse to file as ini file
+                // unfortunately some files are malformed which could end up in wrong data
+
+                ok = false;
+                QFile file(fileName); // includes path
+                if (!file.open(QFile::ReadOnly | QFile::Text))
+                {
+                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning("Unable to read file '%1'") << fileName;
+                    msgs.push_back(m);
+                    return CAircraftCfgEntriesList();
+                }
+
+                QTextStream in(&file);
+                QList<CAircraftCfgEntries> tempEntries;
+
+                // parse through the file
+                QString atcType;
+                QString atcModel;
+                QString fltSection("[FLTSIM.0]");
+                static const QString fltSectionStr = QString("[FLTSIM.%1]");
+
+                int fltsimCounter = 0;
+                FileSection currentSection = Unknown;
+                const bool isRotorcraftPath = fileName.contains("rotorcraft", Qt::CaseInsensitive);
+
+                while (!in.atEnd())
+                {
+                    const QString lineFixed(in.readLine().trimmed());
+                    if (lineFixed.isEmpty()) { continue; }
+                    if (lineFixed.startsWith("["))
+                    {
+                        if (lineFixed.startsWith("[GENERAL]", Qt::CaseInsensitive)) { currentSection = General; continue; }
+                        if (lineFixed.startsWith(fltSection, Qt::CaseInsensitive))
+                        {
+                            CAircraftCfgEntries e(fileName, fltsimCounter);
+                            if (isRotorcraftPath)
+                            {
+                                e.setRotorcraft(true);
+                            }
+                            tempEntries.append(e);
+                            currentSection = Fltsim;
+                            fltSection = fltSectionStr.arg(++fltsimCounter);
+                            continue;
+                        }
+                        currentSection = Unknown;
+                        continue;
+                    }
+                    switch (currentSection)
+                    {
+                    case General:
+                        {
+                            if (lineFixed.startsWith("//")) { break; }
+                            if (atcType.isEmpty() || atcModel.isEmpty())
+                            {
+                                const QString c = getFixedIniLineContent(lineFixed);
+                                if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
+                                {
+                                    atcType = c;
+                                }
+                                else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
+                                {
+                                    atcModel = c;
+                                }
+                            }
+                        }
+                        break;
+                    case Fltsim:
+                        {
+                            if (lineFixed.startsWith("//")) { break; }
+                            CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
+                            if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
+                            {
+                                if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
+                                {
+                                    e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
+                                }
+                                else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
+                                {
+                                    e.setAtcAirline(getFixedIniLineContent(lineFixed));
+                                }
+                                else if (lineFixed.startsWith("atc_id_color", Qt::CaseInsensitive))
+                                {
+                                    e.setAtcIdColor(getFixedIniLineContent(lineFixed));
+                                }
+                            }
+                            else if (lineFixed.startsWith("ui_", Qt::CaseInsensitive))
+                            {
+                                if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
+                                {
+                                    e.setUiManufacturer(getFixedIniLineContent(lineFixed));
+                                }
+                                else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
+                                {
+                                    bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
+                                    e.setRotorcraft(r);
+                                }
+                                else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
+                                {
+                                    e.setUiType(getFixedIniLineContent(lineFixed));
+                                }
+                                else if (lineFixed.startsWith("ui_variation", Qt::CaseInsensitive))
+                                {
+                                    e.setUiVariation(getFixedIniLineContent(lineFixed));
+                                }
+                            }
+                            else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
+                            {
+                                e.setDescription(getFixedIniLineContent(lineFixed));
+                            }
+                            else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
+                            {
+                                e.setTexture(getFixedIniLineContent(lineFixed));
+                            }
+                            else if (lineFixed.startsWith("createdBy", Qt::CaseInsensitive))
+                            {
+                                e.setCreatedBy(getFixedIniLineContent(lineFixed));
+                            }
+                            else if (lineFixed.startsWith("sim", Qt::CaseInsensitive))
+                            {
+                                e.setSimName(getFixedIniLineContent(lineFixed));
+                            }
+                            else if (lineFixed.startsWith("title", Qt::CaseInsensitive))
+                            {
+                                e.setTitle(getFixedIniLineContent(lineFixed));
+                            }
+                        }
+                        break;
+                    default:
+                    case Unknown: break;
+                    }
+                } // all lines
+                file.close();
+
+                // store all entries
+                const QFileInfo fileInfo(fileName);
+                QDateTime fileTimestamp(fileInfo.lastModified());
+                if (!fileTimestamp.isValid() || fileInfo.created() > fileTimestamp)
+                {
+                    fileTimestamp = fileInfo.created();
+                }
+                Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
+
+                CAircraftCfgEntriesList result;
+                for (const CAircraftCfgEntries &e : as_const(tempEntries))
+                {
+                    if (e.getTitle().isEmpty())
+                    {
+                        const CStatusMessage m = CStatusMessage(getLogCategories()).info("FS model in %1, index %2 has no title") << fileName << e.getIndex();
+                        msgs.push_back(m);
+                        continue;
+                    }
+                    CAircraftCfgEntries newEntries(e);
+                    newEntries.setAtcModel(atcModel);
+                    newEntries.setAtcType(atcType);
+                    newEntries.setUtcTimestamp(fileTimestamp);
+                    result.push_back(newEntries);
+                }
+                ok = true;
+                return result; // do not go any deeper in file tree, we found aircraft.cfg
             }
 
             QString CAircraftCfgParser::fixedStringContent(const QSettings &settings, const QString &key)

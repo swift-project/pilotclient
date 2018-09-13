@@ -54,6 +54,9 @@ namespace BlackMisc
                 virtual bool isLoadingFinished() const override;
                 //! @}
 
+                //! Parse a single file
+                static CAircraftCfgEntriesList performParsingOfSingleFile(const QString &fileName, bool &ok, CStatusMessageList &msgs);
+
                 //! Create an parser object for given simulator
                 static CAircraftCfgParser *createModelLoader(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
 
