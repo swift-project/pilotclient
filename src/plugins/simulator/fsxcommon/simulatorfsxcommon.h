@@ -539,7 +539,7 @@ namespace BlackSimPlugin
 
             // objects
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
-            CSimConnectObjects m_addPendingAircraft; //!< aircraft awaiting to be added;
+            CSimConnectObjects m_addPendingAircraft; //!< aircraft/probes awaiting to be added;
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft     = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);     //!< request id, use obtainRequestIdForSimObjAircraft to get id
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
             QTimer m_addPendingSimObjTimer; //!< updating of SimObjects awaiting to be added
@@ -591,6 +591,7 @@ namespace BlackSimPlugin
             QString m_simConnectVersion;
             QString m_simulatorName;
             QString m_simulatorDetails;
+            BlackMisc::CStatusMessage m_lastMessage; //!< last listener message
 
             //! SimConnect Callback (simplified version for listener)
             //! \sa CSimConnectObjects::SimConnectProc

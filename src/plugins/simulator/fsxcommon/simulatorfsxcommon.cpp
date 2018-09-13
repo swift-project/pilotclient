@@ -13,6 +13,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
@@ -898,9 +899,28 @@ namespace BlackSimPlugin
             const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
             const QStringList modelDirectories = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
             const bool exists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
-            Q_UNUSED(exists);
 
-            const CStatusMessageList messages = model.verifyModelData();
+            CStatusMessageList messages;
+            if (exists)
+            {
+                // we can access the aircraft.cfg file
+                bool parsed = false;
+                const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(model.getFileName(), parsed, messages);
+                if (parsed && !entries.containsTitle(model.getModelString()))
+                {
+                    messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in file '%2'. Models are: %3") << model.getModelString());
+                }
+                else
+                {
+                    messages.push_back(CStatusMessage(this).warning("Cannot parse file: '%1'") << model.getFileName());
+                }
+            }
+            else
+            {
+                messages = model.verifyModelData();
+            }
+
+            // as single message
             return messages.toSingleMessage();
         }
 
@@ -908,6 +928,7 @@ namespace BlackSimPlugin
         {
             CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
             simObject.setConfirmedAdded(true);
+            CLogMessage(this).info("Probe: '%1' confirmed, %2") << simObject.getCallsignAsString() << simObject.toQString();
 
             // trigger new adding from pending if any
             if (!m_addPendingAircraft.isEmpty())
@@ -1011,11 +1032,11 @@ namespace BlackSimPlugin
                 CStatusMessage msg;
                 if (!simObject.getAircraftModelString().isEmpty() && simObject.getAddingDirectlyRemoved() < ThresholdAddedAndDirectlyRemoved)
                 {
-                    const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                     simObject.increaseAddingDirectlyRemoved();
-                    m_addPendingAircraft.insert(simObject, true); // insert and update ts
+                    m_addPendingAircraft.insert(simObject, true); // insert removed objects and update ts
                     m_simConnectObjects.removeByOtherSimObject(simObject); // we have it in pending now, no need to keep it in this list
 
+                    const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                     msg = CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
                           << callsign.toQString() << simObject.getAircraftModelString()
                           << objectID << simObject.getInterpolatorInfo(setup.getInterpolatorMode());
@@ -1293,6 +1314,7 @@ namespace BlackSimPlugin
             {
                 CSimConnectObject &addPendingObj = m_addPendingAircraft[newRemoteAircraft.getCallsign()];
                 addPendingObj.setAircraft(newRemoteAircraft);
+                addPendingObj.resetTimestampToNow();
                 return false;
             }
 
@@ -1349,7 +1371,8 @@ namespace BlackSimPlugin
             // static const QString modelString("OrcaWhale");
             // static const QString modelString("Water Drop");
             // static const QString modelString("A321ACA");
-            static const QString modelString("AI_Tracker_Object_0");
+            // static const QString modelString("AI_Tracker_Object_0");
+            static const QString modelString("Water Drop");
             static const QString pseudoCallsign("PROBE%1"); // max 12 chars
             static const CCountry ctry("SW", "SWIFT");
             static const CAirlineIcaoCode swiftAirline("SWI", "swift probe", ctry, "SWIFT", false, false);
@@ -2342,7 +2365,14 @@ namespace BlackSimPlugin
                     simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
                     simListener->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
+                    const CStatusMessage msg = CStatusMessage(simListener).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
+
+                    // avoid the same message over and over again
+                    if (msg.getMessage() != simListener->m_lastMessage.getMessage())
+                    {
+                        CLogMessage::preformatted(msg);
+                        simListener->m_lastMessage = msg;
+                    }
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION: break;
