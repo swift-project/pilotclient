@@ -27,8 +27,7 @@ namespace BlackGui
     {
         ui->setupUi(this);
         configureLoginModes();
-        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,
-                this, &CLoginModeButtons::configureLoginModes);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginModeButtons::configureLoginModes, Qt::QueuedConnection);
     }
 
     CLoginModeButtons::~CLoginModeButtons()

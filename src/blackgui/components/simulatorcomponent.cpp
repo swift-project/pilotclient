@@ -62,7 +62,7 @@ namespace BlackGui
             this->addOrUpdateLiveDataByName("info", "no data yet", CIcons::StandardIconWarning16);
 
             // connects
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::onSimulatorStatusChanged);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
             connect(&m_updateTimer, &QTimer::timeout, this, &CSimulatorComponent::update);
             connect(ui->pb_RefreshInternals, &QPushButton::pressed, this, &CSimulatorComponent::refreshInternals);
             if (sGui->supportsContexts() && sGui->getIContextSimulator())

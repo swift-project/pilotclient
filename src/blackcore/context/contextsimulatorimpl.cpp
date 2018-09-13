@@ -470,6 +470,7 @@ namespace BlackCore
 
             ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
             if (!listener) { return false; }
+            if (listener->isRunning()) { return true; } // already running
 
             if (listener->thread() != &m_listenersThread)
             {
@@ -510,7 +511,13 @@ namespace BlackCore
         {
             if (!m_simulatorPlugin.first.isUnspecified())
             {
-                ISimulator *sim = m_simulatorPlugin.second;
+                ISimulator *simulator = m_simulatorPlugin.second;
+                if (simulator->isConnected()) {
+                    // we are about to unload an connected simulator
+                    this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered
+                    emit this->simulatorStatusChanged(ISimulator::Disconnected);
+                }
+
                 m_simulatorPlugin.second = nullptr;
                 m_simulatorPlugin.first = CSimulatorPluginInfo();
 
@@ -518,12 +525,12 @@ namespace BlackCore
                 Q_ASSERT(this->getIContextNetwork()->isLocalObject());
 
                 // unload and disconnect
-                if (sim)
+                if (simulator)
                 {
                     // disconnect signals and delete
-                    sim->disconnect(this);
-                    sim->unload();
-                    sim->deleteLater();
+                    simulator->disconnect(this);
+                    simulator->unload();
+                    simulator->deleteLater();
                     emit this->simulatorPluginChanged(CSimulatorPluginInfo());
                 }
             }
@@ -600,6 +607,7 @@ namespace BlackCore
             if (!status.testFlag(ISimulator::Connected))
             {
                 // we got disconnected, plugin no longer needed
+                this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered
                 this->unloadSimulatorPlugin();
                 this->restoreSimulatorPlugins();
             }

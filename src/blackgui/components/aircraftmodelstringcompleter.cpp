@@ -47,7 +47,7 @@ namespace BlackGui
             CSimulatorInfo simulator = CSimulatorInfo(CSimulatorInfo::P3D); // default
             if (sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected, Qt::QueuedConnection);
                 CSimulatorInfo pluginSimulator = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
                 if (pluginSimulator.isSingleSimulator())
                 {

@@ -53,7 +53,7 @@ namespace BlackGui
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             if (sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::onMapperReady);
                 connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
 
