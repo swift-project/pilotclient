@@ -428,7 +428,7 @@ namespace BlackMisc
 
         QString CSimulationEnvironmentAware::getSimulatorNameAndVersion() const
         {
-            if (!this->hasProvider()) { return "not avialbale"; }
+            if (!this->hasProvider()) { return "not available"; }
             return this->provider()->getSimulatorNameAndVersion();
         }
 
