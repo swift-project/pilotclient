@@ -142,7 +142,7 @@ namespace BlackMisc
             const ModelType t = this->getModelType();
             if (t == TypeOwnSimulatorModel || t == TypeManuallySet || t == TypeDatabaseEntry)
             {
-                if (!this->existsCorrespondingFile())
+                if (!this->hasExistingCorrespondingFile())
                 {
                     const CStatusMessage m = CStatusMessage(this).validationError("File '%1' not readable") << this->getFileName();
                     msgs.push_back(m);
@@ -631,7 +631,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool CAircraftModel::existsCorrespondingFile() const
+        bool CAircraftModel::hasExistingCorrespondingFile() const
         {
             if (!this->hasFileName()) { return false; }
             const QFileInfo fi(this->getFileName());

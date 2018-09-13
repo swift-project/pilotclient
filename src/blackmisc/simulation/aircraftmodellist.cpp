@@ -349,7 +349,7 @@ namespace BlackMisc
         {
             return this->findBy([](const CAircraftModel & model)
             {
-                return !model.existsCorrespondingFile();
+                return !model.hasExistingCorrespondingFile();
             });
         }
 
@@ -357,7 +357,7 @@ namespace BlackMisc
         {
             return this->findBy([](const CAircraftModel & model)
             {
-                return model.existsCorrespondingFile();
+                return model.hasExistingCorrespondingFile();
             });
         }
 

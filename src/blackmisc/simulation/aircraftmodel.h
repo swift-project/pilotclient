@@ -374,10 +374,13 @@ namespace BlackMisc
             // ---------------- simulator file related functions -------------------
 
             //! File name (corresponding data for simulator, only available if representing simulator model
-            QString getFileName() const { return m_fileName; }
+            const QString &getFileName() const { return m_fileName; }
 
             //! File name?
             bool hasFileName() const { return !m_fileName.isEmpty(); }
+
+            //! Does the corresponding file exist?
+            bool hasExistingCorrespondingFile() const;
 
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
@@ -418,9 +421,6 @@ namespace BlackMisc
 
             //! Adjust file names to a new directory
             bool adjustLocalFileNames(const QString &newModelDir, const QString &stripModelDirIndicator = {});
-
-            //! Does the corresponding file exist?
-            bool existsCorrespondingFile() const;
 
             // ---------------- end file related functions --------------
 
