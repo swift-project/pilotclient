@@ -61,6 +61,8 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
                     if (!simulatorFsxP3D->stillDisplayReceiveExceptions()) { break; }
+                    simulatorFsxP3D->triggerAutoTraceSendId();
+
                     SIMCONNECT_RECV_EXCEPTION *exception = static_cast<SIMCONNECT_RECV_EXCEPTION *>(pData);
                     const DWORD exceptionId = exception->dwException;
                     const DWORD sendId = exception->dwSendID;
@@ -115,7 +117,6 @@ namespace BlackSimPlugin
                         CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
                                 << exceptionString << ex
                                 << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
-                        simulatorFsxP3D->triggerAutoTraceSendId();
                     }
                     break; // SIMCONNECT_RECV_ID_EXCEPTION
                 }
