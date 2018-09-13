@@ -886,7 +886,7 @@ namespace BlackSimPlugin
                 {
                     if (!myself) { return; }
                     if (this->isShuttingDownOrDisconnected()) { return; }
-                    m_addPendingAircraft.insert(simObjAddAgain, true);
+                    m_addPendingAircraft.insert(simObjAddAgain, true); // add failed object
                 });
             }
         }

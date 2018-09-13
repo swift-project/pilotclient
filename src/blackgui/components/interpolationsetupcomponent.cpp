@@ -55,14 +55,14 @@ namespace BlackGui
             QTimer::singleShot(1000, this, [ = ]
             {
                 if (!sGui || sGui->isShuttingDown()) { return; }
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 this->onModeChanged();
             });
 
             QTimer::singleShot(30 * 1000, this, [ = ]
             {
                 if (!sGui || sGui->isShuttingDown()) { return; }
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 this->onSetupChanged();
             });
         }
@@ -140,7 +140,7 @@ namespace BlackGui
                 const QPointer<CInterpolationSetupComponent> myself(this);
                 QTimer::singleShot(250, this, [ = ]
                 {
-                    if (myself.isNull()) { return; }
+                    if (!myself) { return; }
                     this->reloadSetup();
                 });
             }
@@ -166,7 +166,7 @@ namespace BlackGui
                 const QPointer<CInterpolationSetupComponent> myself(this);
                 QTimer::singleShot(250, this, [ = ]
                 {
-                    if (myself.isNull()) { return; }
+                    if (!myself) { return; }
                     this->displaySetupsPerCallsign();
                 });
             }
@@ -186,7 +186,7 @@ namespace BlackGui
             const QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (!myself) { return; }
                 this->displaySetupsPerCallsign();
             });
         }
@@ -220,7 +220,7 @@ namespace BlackGui
             {
                 if (showOverlay)
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationError("No simulator avialable");
+                    const CStatusMessage m = CStatusMessage(this).validationError("No simulator available");
                     this->showOverlayMessage(m);
                 }
                 return false;

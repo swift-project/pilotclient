@@ -68,52 +68,52 @@ namespace BlackMisc
                 CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description);
 
                 //! File name
-                const QString &getFileName() const { return this->m_fileName; }
+                const QString &getFileName() const { return m_fileName; }
 
                 //! Directory of entry
                 QString getFileDirectory() const;
 
                 //! Title
-                const QString &getTitle() const { return this->m_title; }
+                const QString &getTitle() const { return m_title; }
 
                 //! Index
-                int getIndex() const { return this->m_index; }
+                int getIndex() const { return m_index; }
 
                 //! ATC model
-                const QString &getAtcModel() const { return this->m_atcModel; }
+                const QString &getAtcModel() const { return m_atcModel; }
 
                 //! ATC type
-                const QString &getAtcType() const { return this->m_atcType; }
+                const QString &getAtcType() const { return m_atcType; }
 
                 //! ATC airline
-                const QString &getAtcAirline() const { return this->m_atcAirline; }
+                const QString &getAtcAirline() const { return m_atcAirline; }
 
                 //! ATC id color (e.g. 0xffffffff)
-                const QString &getAtcIdColor() const { return this->m_atcIdColor; }
+                const QString &getAtcIdColor() const { return m_atcIdColor; }
 
                 //! Sim name
-                const QString &getSimName() const { return this->m_simName; }
+                const QString &getSimName() const { return m_simName; }
 
                 //! Description
-                const QString &getDescription() const { return this->m_description; }
+                const QString &getDescription() const { return m_description; }
 
                 //! ATC parking code
-                const QString &getAtcParkingCode() const { return this->m_atcParkingCode; }
+                const QString &getAtcParkingCode() const { return m_atcParkingCode; }
 
                 //! UI type (e.g. A321-231 IAE)
-                const QString &getUiType() const { return this->m_uiType; }
+                const QString &getUiType() const { return m_uiType; }
 
                 //! UI variation (e.g. White,Green)
-                const QString &getUiVariation() const { return this->m_uiVariation; }
+                const QString &getUiVariation() const { return m_uiVariation; }
 
                 //! UI manufacturer (e.g. Airbus)
-                const QString &getUiManufacturer() const { return this->m_uiManufacturer; }
+                const QString &getUiManufacturer() const { return m_uiManufacturer; }
 
                 //! Texture
-                const QString &getTexture() const { return this->m_texture; }
+                const QString &getTexture() const { return m_texture; }
 
                 //! Created by
-                const QString &getCreatedBy() const { return this->m_createdBy; }
+                const QString &getCreatedBy() const { return m_createdBy; }
 
                 //! Is Rotorcraft?
                 bool isRotorcraft() const { return m_rotorcraft; }
@@ -128,7 +128,7 @@ namespace BlackMisc
                 void setTitle(const QString &title);
 
                 //! Index
-                void setIndex(int index) { this->m_index = index; }
+                void setIndex(int index) { m_index = index; }
 
                 //! ATC model
                 void setAtcModel(const QString &atcModel);
@@ -143,7 +143,7 @@ namespace BlackMisc
                 void setAtcAirline(const QString &airline);
 
                 //! ATC color (e.g. 0xffffffff)
-                void setAtcIdColor(const QString &color) { this->m_atcIdColor = color.trimmed(); }
+                void setAtcIdColor(const QString &color) { m_atcIdColor = color.trimmed(); }
 
                 //! Simulator name
                 void setSimName(const QString &simName);
@@ -161,10 +161,10 @@ namespace BlackMisc
                 void setUiType(const QString &type);
 
                 //! UI variation (e.g. White,Green)
-                void setUiVariation(const QString &variation) { this->m_uiVariation = variation.trimmed(); }
+                void setUiVariation(const QString &variation) { m_uiVariation = variation.trimmed(); }
 
                 //! UI manufacturer (e.g. Airbus)
-                void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
+                void setUiManufacturer(const QString &manufacturer) { m_uiManufacturer = manufacturer.trimmed(); }
 
                 //! Is Rotorcraft?
                 void setRotorcraft(bool isRotorcraft) { m_rotorcraft = isRotorcraft; }
