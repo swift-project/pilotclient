@@ -15,6 +15,7 @@
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -43,6 +44,7 @@ using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Fsx;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
@@ -864,7 +866,7 @@ namespace BlackSimPlugin
             if (!simObject.isAircraft()) { return; }
 
             CLogMessage(this).warning("Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-            CLogMessage::preformatted(simObject.getAircraftModel().verifyModelData());
+            CLogMessage::preformatted(this->verifyFailedAircraftInfo(simObject));
             m_simConnectObjects.removeByOtherSimObject(simObject);
 
             if (simObject.getAddingExceptions() >= ThresholdAddException)
@@ -887,6 +889,19 @@ namespace BlackSimPlugin
                     m_addPendingAircraft.insert(simObjAddAgain, true);
                 });
             }
+        }
+
+        CStatusMessage CSimulatorFsxCommon::verifyFailedAircraftInfo(const CSimConnectObject &simObject)
+        {
+            CAircraftModel model = simObject.getAircraftModel();
+
+            const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
+            const QStringList modelDirectories = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
+            const bool exists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
+            Q_UNUSED(exists);
+
+            const CStatusMessageList messages = model.verifyModelData();
+            return messages.toSingleMessage();
         }
 
         void CSimulatorFsxCommon::verifyAddedTerrainProbe(const CSimulatedAircraft &remoteAircraftIn)
@@ -1017,7 +1032,7 @@ namespace BlackSimPlugin
                 }
 
                 // in all cases add verification details
-                CLogMessage::preformatted(simObject.addingVerificationMessages());
+                CLogMessage::preformatted(this->verifyFailedAircraftInfo(simObject));
 
                 // relay messages
                 if (!msg.isEmpty()) { emit this->driverMessages(msg); }

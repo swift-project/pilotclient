@@ -257,9 +257,6 @@ namespace BlackSimPlugin
             //! SimObject as string
             QString toQString() const;
 
-            //! Verification message when adding failed
-            BlackMisc::CStatusMessageList addingVerificationMessages();
-
             //! Type of id
             static SimObjectType requestIdToType(DWORD requestId);
 

@@ -301,6 +301,9 @@ namespace BlackSimPlugin
             //! Adding an aircraft failed
             void addingAircraftFailed(const CSimConnectObject &simObject);
 
+            //! Create a detailed info about the failed aircraft
+            BlackMisc::CStatusMessage verifyFailedAircraftInfo(const CSimConnectObject &simObject);
+
             //! Verify the probe
             void verifyAddedTerrainProbe(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 

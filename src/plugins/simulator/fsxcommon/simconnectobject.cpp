@@ -229,11 +229,6 @@ namespace BlackSimPlugin
             return s.arg(this->getCallsign().asString()). arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving)).arg(m_addingExceptions).arg(m_addingDirectlyRemoved);
         }
 
-        CStatusMessageList CSimConnectObject::addingVerificationMessages()
-        {
-            return this->getAircraftModel().verifyModelData();
-        }
-
         CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
         {
             if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
