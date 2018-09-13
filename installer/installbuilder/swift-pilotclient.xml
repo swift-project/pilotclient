@@ -138,7 +138,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <windowsPath></windowsPath>
         </startMenuShortcut>
         <startMenuShortcut>
-            <comment>>Run swiftlauncher</comment>
+            <comment>Run swiftlauncher</comment>
             <name>swiftlauncher ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
