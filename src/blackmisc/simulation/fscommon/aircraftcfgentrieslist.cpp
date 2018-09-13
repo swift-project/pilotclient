@@ -7,11 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/predicates.h"
-#include "blackmisc/range.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "stringutils.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -26,9 +27,7 @@ namespace BlackMisc
             bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
             {
                 if (title.isEmpty()) { return false; }
-                return this->containsBy(
-                [ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; }
-                       );
+                return this->containsBy([ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
             }
 
             QStringList CAircraftCfgEntriesList::detectAmbiguousTitles() const
@@ -56,6 +55,21 @@ namespace BlackMisc
                 QStringList titles = this->transform(Predicates::MemberTransform(&CAircraftCfgEntries::getTitle));
                 if (sorted) { titles.sort(Qt::CaseInsensitive); }
                 return titles;
+            }
+
+            QString CAircraftCfgEntriesList::getTitlesAsString(bool sorted, const QString &separator) const
+            {
+                return this->getTitles(sorted).join(separator);
+            }
+
+            bool CAircraftCfgEntriesList::containsTitle(const QString &title) const
+            {
+                if (title.isEmpty()) { return false; }
+                for (const CAircraftCfgEntries &entries : (*this))
+                {
+                    if (stringCompare(entries.getTitle(), title, Qt::CaseInsensitive)) { return true; }
+                }
+                return false;
             }
 
             CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const

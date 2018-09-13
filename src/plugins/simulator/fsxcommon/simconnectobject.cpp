@@ -52,6 +52,7 @@ namespace BlackSimPlugin
         {
             m_aircraft = aircraft;
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
+            m_type = aircraft.isTerrainProbe() ? TerrainProbe : Aircraft;
         }
 
         void CSimConnectObject::setAircraftModelString(const QString &modelString)
@@ -327,6 +328,7 @@ namespace BlackSimPlugin
 
         CSimConnectObject CSimConnectObjects::getOldestObject() const
         {
+            if (this->isEmpty()) { return CSimConnectObject(); }
             CSimConnectObject oldestSimObj = *this->begin();
             for (const CSimConnectObject &simObj : this->values())
             {

@@ -49,6 +49,9 @@ namespace BlackMisc
                 //! All titles (aka model names)
                 QStringList getTitles(bool sorted = false) const;
 
+                //! All titles as string
+                QString getTitlesAsString(bool sorted, const QString &separator = ", ") const;
+
                 //! As aircraft models
                 BlackMisc::Simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
 
@@ -60,6 +63,9 @@ namespace BlackMisc
 
                 //! Find by title
                 CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
+
+                //! Can check if a title (model string) is known
+                bool containsTitle(const QString &title) const;
 
             private:
                 //! Section within file
