@@ -33,6 +33,7 @@ namespace BlackSimPlugin
             if (fsx)
             {
                 ui->cb_TraceSimConnectCalls->setChecked(fsx->isTracingSendId());
+                ui->cb_EnableTerrainProbe->setChecked(fsx->isUsingFsxTerrainProbe());
             }
         }
 
