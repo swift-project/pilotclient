@@ -19,6 +19,7 @@
 #include "blackmisc/input/keyboardkey.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include <QHash>
+#include <QTimer>
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -41,9 +42,6 @@ namespace BlackInput
         //! Destructor
         virtual ~CKeyboardWindows() override;
 
-        //! Keyboard hook handle
-        HHOOK keyboardHook() const { return m_keyboardHook; }
-
     protected:
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
@@ -57,12 +55,17 @@ namespace BlackInput
         void addKey(WPARAM vkcode);
         void removeKey(WPARAM vkcode);
         void processKeyEvent(DWORD vkCode, WPARAM event);
+        void pollKeyboardState();
+
+        const bool useWindowsHook = false;
 
         //! Keyboard hook procedure
         static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
         BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Set of virtual keys pressed in the last cycle
         HHOOK m_keyboardHook; //!< Keyboard hook handle
+        QTimer m_pollTimer;
+        QVector<int> m_pressedKeys;
     };
 }
 

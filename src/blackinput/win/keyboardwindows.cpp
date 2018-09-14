@@ -68,7 +68,9 @@ namespace BlackInput
     CKeyboardWindows::CKeyboardWindows(QObject *parent) :
         IKeyboard(parent),
         m_keyboardHook(nullptr)
-    { }
+    {
+        connect(&m_pollTimer, &QTimer::timeout, this, &CKeyboardWindows::pollKeyboardState);
+    }
 
     CKeyboardWindows::~CKeyboardWindows()
     {
@@ -77,9 +79,17 @@ namespace BlackInput
 
     bool CKeyboardWindows::init()
     {
-        Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
-        g_keyboardWindows = this;
-        m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, GetModuleHandle(nullptr), 0);
+        if (useWindowsHook)
+        {
+            Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
+            g_keyboardWindows = this;
+            HMODULE module;
+            GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, reinterpret_cast<LPCTSTR>(&CKeyboardWindows::keyboardProc), &module);
+            m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, module, 0);
+        }
+        {
+            m_pollTimer.start(50);
+        }
         return true;
     }
 
@@ -105,6 +115,36 @@ namespace BlackInput
         }
     }
 
+    void CKeyboardWindows::pollKeyboardState()
+    {
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
+        QList<int> vkeys = keyMapping().keys();
+        for (int vkey : vkeys)
+        {
+            if ((GetKeyState(vkey) & 0x8000) && !m_pressedKeys.contains(vkey))
+            {
+                // key down
+                auto key = keyMapping().value(vkey);
+                if (key == Key_Unknown) { return; }
+                m_pressedKeys.push_back(vkey);
+                m_keyCombination.addKeyboardKey(CKeyboardKey(key));
+            }
+            else if (!(GetKeyState(vkey) & 0x8000) && m_pressedKeys.contains(vkey))
+            {
+                // key up
+                auto key = keyMapping().value(vkey);
+                if (key == Key_Unknown) { return; }
+                m_pressedKeys.removeAll(vkey);
+                m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
+            }
+        }
+
+        if (oldCombination != m_keyCombination)
+        {
+            emit keyCombinationChanged(m_keyCombination);
+        }
+    }
+
     LRESULT CALLBACK CKeyboardWindows::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     {
         if (nCode == HC_ACTION)
@@ -113,6 +153,6 @@ namespace BlackInput
             DWORD vkCode = keyboardEvent->vkCode;
             g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }
-        return CallNextHookEx(g_keyboardWindows->keyboardHook(), nCode, wParam, lParam);
+        return CallNextHookEx(g_keyboardWindows->m_keyboardHook, nCode, wParam, lParam);
     }
 }
