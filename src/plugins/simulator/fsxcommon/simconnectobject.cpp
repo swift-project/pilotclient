@@ -314,18 +314,6 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
-        CSimConnectObject CSimConnectObjects::markObjectAsAdded(DWORD objectId)
-        {
-            for (const CCallsign &cs : this->keys())
-            {
-                CSimConnectObject &simObject = (*this)[cs];
-                if (simObject.getObjectId() != objectId) { continue; }
-                simObject.setConfirmedAdded(true);
-                return simObject;
-            }
-            return CSimConnectObject();
-        }
-
         CSimConnectObject CSimConnectObjects::getOldestObject() const
         {
             if (this->isEmpty()) { return CSimConnectObject(); }

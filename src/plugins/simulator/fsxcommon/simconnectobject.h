@@ -313,9 +313,6 @@ namespace BlackSimPlugin
             //! Get by request or object id, just as possible
             CSimConnectObject getSimObjectForOtherSimObject(const CSimConnectObject &otherSimObj) const;
 
-            //! Mark as added if existing
-            CSimConnectObject markObjectAsAdded(DWORD objectId);
-
             //! Get the oldest object
             CSimConnectObject getOldestObject() const;
 

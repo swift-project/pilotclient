@@ -93,9 +93,7 @@ namespace BlackSimPlugin
                                     {
                                         const bool removed = simulatorFsxP3D->m_simConnectObjects.remove(simObject.getCallsign());
                                         Q_UNUSED(removed);
-                                        CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2")
-                                                << simObject.getCallsign().asString()
-                                                << simObject.getAircraftModelString();
+                                        CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2") << simObject.getCallsign().asString() << simObject.getAircraftModelString();
                                         simulatorFsxP3D->setUsingFsxTerrainProbe(false);
                                         logGenericExceptionInfo = false;
                                     } // aircraft
