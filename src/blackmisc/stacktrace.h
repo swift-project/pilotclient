@@ -19,8 +19,15 @@ namespace BlackMisc
 {
     /*!
      * Returns a stack trace of the current thread of execution as a list of function names.
+     *
+     * Returns a dummy list in release build.
      */
     BLACKMISC_EXPORT QStringList getStackTrace();
+
+    /*!
+     * Returns a stack trace of the current thread of execution as a list of function names.
+     */
+    BLACKMISC_EXPORT QStringList getStackTraceAlways();
 }
 
 #endif

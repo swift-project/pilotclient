@@ -38,13 +38,20 @@
 namespace BlackMisc
 {
 
-#if defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG)
+    QStringList getStackTrace()
+    {
+        return getStackTraceAlways();
+    }
+#else
     QStringList getStackTrace()
     {
         return { "No stack trace with release build" };
     }
-#elif defined(Q_OS_WIN32)
-    QStringList getStackTrace()
+#endif
+
+#if defined(Q_OS_WIN32)
+    QStringList getStackTraceAlways()
     {
         static QMutex mutex;
         QMutexLocker lock(&mutex);
@@ -84,7 +91,7 @@ namespace BlackMisc
         return result;
     }
 #elif defined(Q_CC_GNU)
-    QStringList getStackTrace()
+    QStringList getStackTraceAlways()
     {
         std::array<void*, 100> stack;
         auto frames = backtrace(stack.data(), stack.size());
@@ -128,7 +135,7 @@ namespace BlackMisc
     }
 #else
     // cppcheck-suppress unusedFunction
-    QStringList getStackTrace()
+    QStringList getStackTraceAlways()
     {
         return { "No stack trace on this platform" };
     }

@@ -9,6 +9,7 @@
 
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/algorithm.h"
+#include "blackmisc/logmessage.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -148,8 +149,22 @@ namespace BlackMisc
             m_renameError = true;
             wchar_t *s = nullptr;
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
-            setErrorString((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified());
+            // MS 2018-09 Testing T321 ("failed to write session file")
+            //setErrorString((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified());
+            CLogMessage(this).error((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified() + "\n" + getStackTraceAlways().join("\n"));
             LocalFree(reinterpret_cast<HLOCAL>(s));
+
+            // fall back to non-atomic remove-and-rename
+            if (exists(m_originalFilename))
+            {
+                QFile old(m_originalFilename);
+                if (!old.remove())
+                {
+                    setErrorString(old.errorString());
+                    return;
+                }
+            }
+            rename(m_originalFilename);
         }
     }
 #else
