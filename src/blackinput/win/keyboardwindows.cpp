@@ -83,7 +83,7 @@ namespace BlackInput
         return true;
     }
 
-    void CKeyboardWindows::processKeyEvent(WPARAM vkcode, uint event)
+    void CKeyboardWindows::processKeyEvent(DWORD vkcode, WPARAM event)
     {
         BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
         if ((event == WM_KEYDOWN) || (event == WM_SYSKEYDOWN))
@@ -110,7 +110,7 @@ namespace BlackInput
         if (nCode == HC_ACTION)
         {
             KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
-            WPARAM vkCode = keyboardEvent->vkCode;
+            DWORD vkCode = keyboardEvent->vkCode;
             g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }
         return CallNextHookEx(g_keyboardWindows->keyboardHook(), nCode, wParam, lParam);

@@ -44,9 +44,6 @@ namespace BlackInput
         //! Keyboard hook handle
         HHOOK keyboardHook() const { return m_keyboardHook; }
 
-        //! \private
-        void processKeyEvent(WPARAM vkCode, uint event);
-
     protected:
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
@@ -59,6 +56,7 @@ namespace BlackInput
 
         void addKey(WPARAM vkcode);
         void removeKey(WPARAM vkcode);
+        void processKeyEvent(DWORD vkCode, WPARAM event);
 
         //! Keyboard hook procedure
         static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
