@@ -470,7 +470,6 @@ namespace BlackCore
 
             ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
             if (!listener) { return false; }
-            if (listener->isRunning()) { return true; } // already running
 
             if (listener->thread() != &m_listenersThread)
             {
@@ -486,10 +485,13 @@ namespace BlackCore
                 listener->moveToThread(&m_listenersThread);
             }
 
-            const bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
-            Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
-            Q_UNUSED(s);
-
+            // start if not already running
+            if (!listener->isRunning())
+            {
+                const bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
+                Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
+                Q_UNUSED(s);
+            }
             CLogMessage(this).info("Listening for simulator '%1'") << simulatorInfo.getIdentifier();
             return true;
         }
@@ -512,7 +514,8 @@ namespace BlackCore
             if (!m_simulatorPlugin.first.isUnspecified())
             {
                 ISimulator *simulator = m_simulatorPlugin.second;
-                if (simulator->isConnected()) {
+                if (simulator->isConnected())
+                {
                     // we are about to unload an connected simulator
                     this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered
                     emit this->simulatorStatusChanged(ISimulator::Disconnected);
