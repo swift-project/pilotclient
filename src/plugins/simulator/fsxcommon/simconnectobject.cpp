@@ -467,6 +467,22 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
+        CSimConnectObject CSimConnectObjects::getOldestNotPendingProbe() const
+        {
+            CSimConnectObject oldestProbe;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending())
+                {
+                    if (!oldestProbe.hasCreatedTimestamp() || oldestProbe.getCreatedTimestamp() > simObject.getCreatedTimestamp())
+                    {
+                        oldestProbe = simObject;
+                    }
+                }
+            }
+            return oldestProbe;
+        }
+
         bool CSimConnectObjects::containsType(CSimConnectObject::SimObjectType type) const
         {
             for (const CSimConnectObject &simObject : this->values())

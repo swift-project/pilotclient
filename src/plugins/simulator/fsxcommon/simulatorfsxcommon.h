@@ -238,6 +238,9 @@ namespace BlackSimPlugin
             //! Get new request id, overflow safe
             SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjTerrainProbe();
 
+            //! Release AI control
+            HRESULT releaseAIControl(SIMCONNECT_OBJECT_ID objectId, SIMCONNECT_DATA_REQUEST_ID requestId);
+
             //! Valid CSimConnectObject which is NOT pendig removed
             bool isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const;
 
@@ -256,7 +259,8 @@ namespace BlackSimPlugin
             CSimConnectObjects m_simConnectObjects;                             //!< AI objects and their object and request ids
 
             // probes
-            bool m_useFsxTerrainProbe = true;  //!< Use FSX Terrain probe?
+            bool m_useFsxTerrainProbe = true;   //!< Use FSX Terrain probe?
+            bool m_initFsxTerrainProbes = false; //!< initialized terrain probes
             int  m_addedProbes = 0; //!< added probes
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
@@ -302,7 +306,10 @@ namespace BlackSimPlugin
             void addingAircraftFailed(const CSimConnectObject &simObject);
 
             //! Create a detailed info about the failed aircraft
-            BlackMisc::CStatusMessage verifyFailedAircraftInfo(const CSimConnectObject &simObject);
+            bool verifyFailedAircraftInfo(const CSimConnectObject &simObject, BlackMisc::CStatusMessage &details) const;
+
+            //! Logging version of verifyFailedAircraftInfo
+            bool logVerifyFailedAircraftInfo(const CSimConnectObject &simObject) const;
 
             //! Verify the probe
             void verifyAddedTerrainProbe(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);

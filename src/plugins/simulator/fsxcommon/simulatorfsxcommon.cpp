@@ -288,8 +288,9 @@ namespace BlackSimPlugin
             if (this->isShuttingDownOrDisconnected()) { return false; }
             if (!this->isUsingFsxTerrainProbe()) { return false; }
             if (reference.isNull()) { return false; }
-            const CSimConnectObject simObject = m_simConnectObjects.getNotPendingProbe();
+            const CSimConnectObject simObject = m_simConnectObjects.getOldestNotPendingProbe(); // probes round robin
             if (!simObject.isConfirmedAdded()) { return false; }
+            m_simConnectObjects[simObject.getCallsign()].resetTimestampToNow(); // mark as just used
 
             CCoordinateGeodetic pos(reference);
             pos.setGeodeticHeight(terrainProbeAltitude());
@@ -494,6 +495,15 @@ namespace BlackSimPlugin
             return id;
         }
 
+        HRESULT CSimulatorFsxCommon::releaseAIControl(SIMCONNECT_OBJECT_ID objectId, SIMCONNECT_DATA_REQUEST_ID requestId)
+        {
+            HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId);
+            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            return hr;
+        }
+
         bool CSimulatorFsxCommon::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
@@ -640,7 +650,8 @@ namespace BlackSimPlugin
                     }
                 }
 
-                if (this->m_useFsxTerrainProbe && m_addedProbes < 1)
+                // init terrain probes here has the advantage we can also switch it on/off at runtime
+                if (m_useFsxTerrainProbe && !m_initFsxTerrainProbes)
                 {
                     this->physicallyInitAITerrainProbes(position, 2);
                 }
@@ -816,10 +827,7 @@ namespace BlackSimPlugin
                 // P3D also has SimConnect_AIReleaseControlEx which also allows to destroy the aircraft
                 const DWORD objectId = simObject.getObjectId();
                 const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectMisc);
-                HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId);
-                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                const HRESULT hr = this->releaseAIControl(objectId, requestId);
 
                 if (isFailure(hr))
                 {
@@ -867,12 +875,16 @@ namespace BlackSimPlugin
             if (!simObject.isAircraft()) { return; }
 
             CLogMessage(this).warning("Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-            CLogMessage::preformatted(this->verifyFailedAircraftInfo(simObject));
+            CStatusMessage verifyMsg;
+            const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg);
             m_simConnectObjects.removeByOtherSimObject(simObject);
+            if (verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
-            if (simObject.getAddingExceptions() >= ThresholdAddException)
+            if (!canBeUsed || simObject.getAddingExceptions() >= ThresholdAddException)
             {
-                const CStatusMessage m = CLogMessage(this).warning("Model %1 failed %2 time(s) before and will be disabled") << simObject.toQString() << simObject.getAddingExceptions();
+                const CStatusMessage m = !canBeUsed ?
+                                         CLogMessage(this).warning("Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString()  :
+                                         CLogMessage(this).warning("Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions();
                 this->updateAircraftEnabled(simObject.getCallsign(), false); // disable
                 emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, m);
             }
@@ -892,13 +904,14 @@ namespace BlackSimPlugin
             }
         }
 
-        CStatusMessage CSimulatorFsxCommon::verifyFailedAircraftInfo(const CSimConnectObject &simObject)
+        bool CSimulatorFsxCommon::verifyFailedAircraftInfo(const CSimConnectObject &simObject, CStatusMessage &details) const
         {
             CAircraftModel model = simObject.getAircraftModel();
 
             const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
             const QStringList modelDirectories = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
             const bool exists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
+            bool canBeUsed = true;
 
             CStatusMessageList messages;
             if (exists)
@@ -908,7 +921,8 @@ namespace BlackSimPlugin
                 const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(model.getFileName(), parsed, messages);
                 if (parsed && !entries.containsTitle(model.getModelString()))
                 {
-                    messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in file '%2'. Models are: %3") << model.getModelString());
+                    messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in re-parsed file '%2'. Models are: %3") << model.getModelString() << model.getFileName() << entries.getTitlesAsString(true));
+                    canBeUsed = false; // absolute no chance to use that one
                 }
                 else
                 {
@@ -921,14 +935,43 @@ namespace BlackSimPlugin
             }
 
             // as single message
-            return messages.toSingleMessage();
+            details = messages.toSingleMessage();
+
+            // status
+            return canBeUsed;
+        }
+
+        bool CSimulatorFsxCommon::logVerifyFailedAircraftInfo(const CSimConnectObject &simObject) const
+        {
+            CStatusMessage m;
+            const bool r = verifyFailedAircraftInfo(simObject, m);
+            if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+            return r;
         }
 
         void CSimulatorFsxCommon::verifyAddedTerrainProbe(const CSimulatedAircraft &remoteAircraftIn)
         {
-            CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
-            simObject.setConfirmedAdded(true);
-            CLogMessage(this).info("Probe: '%1' confirmed, %2") << simObject.getCallsignAsString() << simObject.toQString();
+            HRESULT hr;
+            CCallsign cs;
+
+            // no simObject reference outside that block, because it will be deleted
+            {
+                CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
+                simObject.setConfirmedAdded(true);
+                simObject.resetTimestampToNow();
+                CLogMessage(this).info("Probe: '%1' '%2' confirmed, %3") << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
+
+                SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
+                SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId();
+                hr = this->releaseAIControl(objectId, requestId);
+                cs = simObject.getCallsign();
+            }
+
+            if (isFailure(hr))
+            {
+                CLogMessage(this).info("Disable probes: '%1' failed to relase control") << cs.asString();
+                m_useFsxTerrainProbe = false;
+            }
 
             // trigger new adding from pending if any
             if (!m_addPendingAircraft.isEmpty())
@@ -1053,7 +1096,7 @@ namespace BlackSimPlugin
                 }
 
                 // in all cases add verification details
-                CLogMessage::preformatted(this->verifyFailedAircraftInfo(simObject));
+                this->logVerifyFailedAircraftInfo(simObject);
 
                 // relay messages
                 if (!msg.isEmpty()) { emit this->driverMessages(msg); }
@@ -1333,8 +1376,6 @@ namespace BlackSimPlugin
             const bool sendGround = setup.isSendingGndFlagToSimulator();
 
             // FSX/P3D adding
-            Q_ASSERT_X(!probe || m_useFsxTerrainProbe, Q_FUNC_INFO, "Adding probe, but FSX probe mode is off");
-
             bool adding = false; // will be added flag
             const SIMCONNECT_DATA_REQUEST_ID requestId = probe ? this->obtainRequestIdForSimObjTerrainProbe() : this->obtainRequestIdForSimObjAircraft();
             const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(newRemoteAircraft.getSituation(), sendGround);
@@ -1344,6 +1385,8 @@ namespace BlackSimPlugin
             const HRESULT hr = !probe ?
                                SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId) :
                                SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
+            // const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
+
             if (isFailure(hr))
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
@@ -1369,10 +1412,11 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
 
             // static const QString modelString("OrcaWhale");
-            // static const QString modelString("Water Drop");
+            // static const QString modelString("Water Drop"); // not working on P3Dx86/FSX, no requests on that id possible
             // static const QString modelString("A321ACA");
             // static const QString modelString("AI_Tracker_Object_0");
-            static const QString modelString("Water Drop");
+            // static const QString modelString("Piper Cub"); // P3Dv86 works as nonATC/SimulatedObject
+            static const QString modelString("Discovery Spaceshuttle"); // P3Dx86 works as nonATC/SimulatedObject
             static const QString pseudoCallsign("PROBE%1"); // max 12 chars
             static const CCountry ctry("SW", "SWIFT");
             static const CAirlineIcaoCode swiftAirline("SWI", "swift probe", ctry, "SWIFT", false, false);
@@ -1390,6 +1434,8 @@ namespace BlackSimPlugin
         int CSimulatorFsxCommon::physicallyInitAITerrainProbes(const ICoordinateGeodetic &coordinate, int number)
         {
             if (number < 1) { return 0; }
+            if (m_initFsxTerrainProbes) { return m_addedProbes; }
+            m_initFsxTerrainProbes = true; // no multiple inits
             int c = 0;
             for (int n = 1; n <= number; ++n)
             {
@@ -1728,7 +1774,7 @@ namespace BlackSimPlugin
             // in case we sent, we sent everything
             HRESULT hr1 = this->logAndTraceSendId(
                               SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
-                                      objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                                      static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                       sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
                               traceId, simObject, "Failed so set parts", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
 
@@ -1955,9 +2001,9 @@ namespace BlackSimPlugin
             const DWORD objectId = simObject.getObjectId();
             const HRESULT result = this->logAndTraceSendId(
                                        SimConnect_RequestDataOnSimObject(
-                                           m_hSimConnect, requestId,
+                                           m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId),
                                            CSimConnectDefinitions::DataRemoteAircraftGetPosition,
-                                           objectId, SIMCONNECT_PERIOD_ONCE),
+                                           static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_PERIOD_ONCE),
                                        simObject, w.arg(requestId), Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             const bool ok = isOk(result);
             if (ok) { m_pendingProbeRequests.insert(requestId, aircraftCallsign); }
@@ -2049,6 +2095,7 @@ namespace BlackSimPlugin
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             m_addedProbes = 0;
+            m_initFsxTerrainProbes = false;
             m_sendIdTraces.clear();
         }
 
@@ -2199,7 +2246,7 @@ namespace BlackSimPlugin
 
         const CAltitude &CSimulatorFsxCommon::terrainProbeAltitude()
         {
-            static const CAltitude alt(10000, CLengthUnit::ft());
+            static const CAltitude alt(50000, CLengthUnit::ft());
             return alt;
         }
 

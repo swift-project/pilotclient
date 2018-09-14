@@ -373,6 +373,9 @@ namespace BlackSimPlugin
             //! Get a non pending probe
             CSimConnectObject getNotPendingProbe() const;
 
+            //! Get a non pending probe
+            CSimConnectObject getOldestNotPendingProbe() const;
+
             //! Contains object of type
             bool containsType(CSimConnectObject::SimObjectType type) const;
         };
