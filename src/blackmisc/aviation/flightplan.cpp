@@ -24,13 +24,13 @@ namespace BlackMisc
         CFlightPlanRemarks::CFlightPlanRemarks()
         { }
 
-        CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(remarks)
+        CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(cleanRemarks(remarks))
         {
             if (parse) { this->parseFlightPlanRemarks(); }
         }
 
         CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse) :
-            m_remarks(remarks), m_voiceCapabilities(voiceCapabilities)
+            m_remarks(cleanRemarks(remarks)), m_voiceCapabilities(voiceCapabilities)
         {
             if (parse) { this->parseFlightPlanRemarks(); }
         }
@@ -76,7 +76,15 @@ namespace BlackMisc
             if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCaps, Qt::CaseInsensitive); return r; }
             if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCaps, Qt::CaseInsensitive); return r; }
             if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCaps, Qt::CaseInsensitive); return r; }
-            return newCaps + " " + r;
+            return newCaps % QStringLiteral(" ") % r;
+        }
+
+        QString CFlightPlanRemarks::cleanRemarks(const QString &remarksIn)
+        {
+            QString r = remarksIn;
+            r.replace(':', ' ');
+            r = asciiOnlyString(removeAccents(remarksIn));
+            return r;
         }
 
         void CFlightPlanRemarks::parseFlightPlanRemarks(bool force)
@@ -159,6 +167,13 @@ namespace BlackMisc
             m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(parts[1]) ? parts[1] : "";
             m_prefix = parts[0];
             m_equipmentSuffix = parts[2];
+        }
+
+        void CFlightPlan::setRoute(const QString &route)
+        {
+            QString r = route;
+            r.replace(':', ' ');
+            m_route =  asciiOnlyString(r).left(MaxRouteLength).toUpper();
         }
 
         void CFlightPlan::setRemarks(const QString &remarks)

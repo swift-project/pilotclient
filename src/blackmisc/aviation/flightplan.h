@@ -104,6 +104,9 @@ namespace BlackMisc
             //! Replace the voice capabilities remarks part
             static QString replaceVoiceCapabilities(const QString &newCaps, const QString &oldRemarks);
 
+            //! Clean up remarks string
+            static QString cleanRemarks(const QString &remarksIn);
+
         private:
             QString m_remarks;        //!< the unparsed string
             QString m_radioTelephony; //!< radio telephony designator
@@ -226,7 +229,7 @@ namespace BlackMisc
             void setFlightRule(FlightRules flightRules) { m_flightRules = flightRules; }
 
             //! Set route string
-            void setRoute(const QString &route) { m_route = route.trimmed().left(MaxRouteLength).toUpper(); }
+            void setRoute(const QString &route);
 
             //! Set remarks string (max 100 characters)
             void setRemarks(const QString &remarks);

@@ -164,6 +164,12 @@ namespace BlackMisc
         return removeChars(string, [](QChar c) { return !is09OrSeparator(c); });
     }
 
+    //! String only with 0-9
+    inline QString asciiOnlyString(const QString &string)
+    {
+        return removeChars(string.simplified(), [](QChar c) { return c.unicode() > 127; });
+    }
+
     //! Return string in apostrophes
     BLACKMISC_EXPORT const QString inApostrophes(const QString &in, bool ignoreEmpty = false);
 
