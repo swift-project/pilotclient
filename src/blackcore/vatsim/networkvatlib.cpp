@@ -301,6 +301,14 @@ namespace BlackCore
             }
         }
 
+        QByteArray CNetworkVatlib::toFSDnoColon(const QString &qstr) const
+        {
+            if (!qstr.contains(':')) { return toFSD(qstr); }
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Illegal char :");
+            QString copy(qstr);
+            return toFSD(copy.remove(':'));
+        }
+
         QByteArray CNetworkVatlib::toFSD(const QString &qstr) const
         {
             Q_ASSERT_X(m_fsdTextCodec, Q_FUNC_INFO, "Missing codec");
@@ -625,20 +633,24 @@ namespace BlackCore
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
 
             VatFlightPlan vatlibFP;
-            const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
-            const QString remarks = QString(flightPlan.getRemarks()).replace(":", ";").trimmed();
+
+            // Removed with T353 although it is standard
+            // const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
+            const QString route = flightPlan.getRoute();
+            const QString remarks = QString(flightPlan.getRemarks());
+
             const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeSimpleVatsimString();
-            //! \fixme that would be the official string, can this be used
+            //! \fixme that would be the official string, can this be used?
             // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
-            vatlibFP.aircraftType = acTypeTemp = toFSD(flightPlan.getCombinedPrefixIcaoSuffix());
-            vatlibFP.alternateAirport = altAptTemp = toFSD(flightPlan.getAlternateAirportIcao().asString());
-            vatlibFP.cruiseAltitude = cruiseAltTemp = toFSD(alt);
-            vatlibFP.departAirport = depAptTemp = toFSD(flightPlan.getOriginAirportIcao().asString());
+            vatlibFP.aircraftType = acTypeTemp = toFSDnoColon(flightPlan.getCombinedPrefixIcaoSuffix());
+            vatlibFP.alternateAirport = altAptTemp = toFSDnoColon(flightPlan.getAlternateAirportIcao().asString());
+            vatlibFP.cruiseAltitude = cruiseAltTemp = toFSDnoColon(alt);
+            vatlibFP.departAirport = depAptTemp = toFSDnoColon(flightPlan.getOriginAirportIcao().asString());
             vatlibFP.departTimeActual = flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt();
             vatlibFP.departTime = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
-            vatlibFP.destAirport = destAptTemp = toFSD(flightPlan.getDestinationAirportIcao().asString());
+            vatlibFP.destAirport = destAptTemp = toFSDnoColon(flightPlan.getDestinationAirportIcao().asString());
 
             QList<int> timeParts = flightPlan.getEnrouteTime().getHrsMinSecParts();
             vatlibFP.enrouteHrs = timeParts[CTime::Hours];
@@ -647,8 +659,8 @@ namespace BlackCore
             timeParts = flightPlan.getFuelTime().getHrsMinSecParts();
             vatlibFP.fuelHrs = timeParts[CTime::Hours];
             vatlibFP.fuelMins = timeParts[CTime::Minutes];
-            vatlibFP.remarks = remarksTemp = toFSD(remarks);
-            vatlibFP.route = routeTemp = toFSD(route);
+            vatlibFP.remarks = remarksTemp = toFSDnoColon(remarks);
+            vatlibFP.route = routeTemp = toFSDnoColon(route);
             vatlibFP.trueCruisingSpeed = flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts());
             switch (flightPlan.getFlightRules())
             {

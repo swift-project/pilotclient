@@ -171,6 +171,7 @@ namespace BlackCore
             static void onRawFsdMessage(VatFsdClient *, const char *message, void *cbvar);
             //! @}
 
+            QByteArray toFSDnoColon(const QString &qstr) const;
             QByteArray toFSD(const QString &qstr) const;
             QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
             std::function<const char **()> toFSD(const QStringList &qstrList) const;
