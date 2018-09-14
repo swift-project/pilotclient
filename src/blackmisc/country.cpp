@@ -208,7 +208,7 @@ namespace BlackMisc
 
     void CCountry::setSimplifiedNameIfNotSame()
     {
-        const QString simplified = removeAccents(m_name);
+        const QString simplified = simplifyAccents(m_name);
         m_simplifiedName = m_name == simplified ? "" : simplified;
     }
 } // namespace

@@ -99,8 +99,8 @@ namespace BlackMisc
         const QString bStr = str1.length() >= str2.length() ? str2 : str1;
 
         // starts/ends with
-        float s1 = aStr.length();
-        float s2 = bStr.length();
+        const double s1 = aStr.length();
+        const double s2 = bStr.length();
         if (aStr.endsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
         if (aStr.startsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
 
@@ -108,7 +108,7 @@ namespace BlackMisc
         if (aStr.contains(bStr, cs)) { return qRound(s1 / s2 * 100); }
 
         // char by char
-        float points = 0;
+        double points = 0;
         for (int p = 0; p < aStr.length(); p++)
         {
             if (p < bStr.length() && aStr[p] == bStr[p])
@@ -150,7 +150,7 @@ namespace BlackMisc
         QString h;
         for (int i = 0; i < bytes.size(); i++)
         {
-            int b = static_cast<int>(bytes.at(i));
+            const int b = static_cast<int>(bytes.at(i));
             h.append(intToHex(b, 2));
         }
         return h;
@@ -163,7 +163,7 @@ namespace BlackMisc
         while (pos + 1 < hexString.length())
         {
             bool ok;
-            QString h = hexString.mid(pos, 2);
+            const QString h = hexString.mid(pos, 2);
             int hex = h.toInt(&ok, 16);
             Q_ASSERT_X(ok, Q_FUNC_INFO, "Invalid hex");
             if (!ok) { return QByteArray(); }
@@ -219,7 +219,7 @@ namespace BlackMisc
     }
 
     // http://www.codegur.online/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
-    QString removeAccents(const QString &candidate)
+    QString simplifyAccents(const QString &candidate)
     {
         static const QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
         static const QStringList noDiacriticLetters({"S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A", "A", "A", "A", "A", "A", "AE", "C", "E", "E", "E", "E", "I", "I", "I", "I", "D", "N", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i", "i", "i", "i", "o", "n", "o", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y"});

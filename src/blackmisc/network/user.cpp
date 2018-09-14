@@ -91,7 +91,7 @@ namespace BlackMisc
 
         void CUser::setRealName(const QString &realname)
         {
-            QString rn(removeAccents(decode(realname).simplified()));
+            QString rn(simplifyAccents(decode(realname).simplified()));
             if (rn.isEmpty())
             {
                 m_realname.clear();
