@@ -10,6 +10,7 @@
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/algorithm.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/stacktrace.h"
 
 #include <QDir>
 #include <QFileInfo>
