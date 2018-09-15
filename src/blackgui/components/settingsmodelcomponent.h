@@ -45,7 +45,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CSettingsModelComponent> ui;
             BlackMisc::CSetting<Settings::TBackgroundConsolidation> m_consolidationSetting { this, &CSettingsModelComponent::cacheChanged }; //!< consolidation time
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this, &CSettingsModelComponent::cacheChanged }; //!< model setting
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this, &CSettingsModelComponent::cacheChanged };   //!< model setting
             const BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< externally (i.e. other component) provided existing updater
 
             //! Consolidation time entered
