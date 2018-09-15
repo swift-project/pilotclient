@@ -306,7 +306,7 @@ namespace BlackCore
         CInterpolationAndRenderingSetupGlobal CContextSimulator::getInterpolationAndRenderingSetupGlobal() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupGlobal(); }
+            if (m_simulatorPlugin.first.isUnspecified()) { return m_renderSettings.get(); }
             Q_ASSERT(m_simulatorPlugin.second);
             return m_simulatorPlugin.second->getInterpolationSetupGlobal();
         }
@@ -338,6 +338,12 @@ namespace BlackCore
         void CContextSimulator::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup; }
+
+            // anyway save for future reference
+            const CStatusMessage m = m_renderSettings.setAndSave(setup);
+            CLogMessage::preformatted(m);
+
+            // transfer to sim
             if (m_simulatorPlugin.first.isUnspecified()) { return; }
             Q_ASSERT(m_simulatorPlugin.second);
             m_simulatorPlugin.second->setInterpolationSetupGlobal(setup);
@@ -439,8 +445,9 @@ namespace BlackCore
             // when everything is set up connected, update the current plugin info
             m_simulatorPlugin.first = simulatorPluginInfo;
             m_simulatorPlugin.second = simulator;
+            m_simulatorPlugin.second->setInterpolationSetupGlobal(m_renderSettings.get());
 
-            // Emit signal after this function completes
+            // Emit signal after this function completes completely decoupled
             QPointer<CContextSimulator> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {

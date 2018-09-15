@@ -68,7 +68,7 @@ namespace BlackGui
             void saveSetup();
 
             //! Delete a setup
-            void removeSetup();
+            void removeOrResetSetup();
 
             //! Values from global setup
             void setUiValuesFromGlobal();
@@ -77,7 +77,7 @@ namespace BlackGui
             void displaySetupsPerCallsign();
 
             //! Check prerequisites before saving etc.
-            bool checkPrerequisites(bool showOverlay);
+            bool checkPrerequisites(bool checkSim, bool showOverlay);
 
             //! Send to context
             bool setSetupsToContext(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool force = false);

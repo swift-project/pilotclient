@@ -23,6 +23,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "blackmisc/simulation/settings/interpolationrenderingsetupsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -244,18 +245,20 @@ namespace BlackCore
             CWeatherManager  m_weatherManager  { this };   //!< weather management
             CAircraftMatcher m_aircraftMatcher { this };   //!< model matcher
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList>  m_matchingMessages; //!< all matching log messages per callsign
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
 
             bool m_initallyAddAircraft = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
 
-            // settings
-            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetSimulator  { this }; //!< current simulator (used with radio buttons)
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
-            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty
+
+            // settings
+            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators>           m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching>   m_matchingSettings  { this }; //!< settings
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetSimulator { this }; //!< current simulator (used with radio buttons)
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings               m_simulatorSettings { this }; //!< for directories of XPlane
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TInterpolationAndRenderingSetupGlobal> m_renderSettings  { this }; //!< rendering/interpolation settings
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages>            m_messageSettings { this }; //!< settings for messages
         };
     } // namespace
 } // namespace
