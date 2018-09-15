@@ -77,9 +77,6 @@ namespace BlackCore
             //! Default constructor
             CGlobalSetup();
 
-            //! Destructor.
-            ~CGlobalSetup() {}
-
             //! Has data loaded from web
             bool wasLoaded() const { return m_wasLoaded; }
 
