@@ -17,6 +17,7 @@
 #include <QScopedPointer>
 
 namespace Ui { class CFsxSettingsComponent; }
+namespace BlackGui { class COverlayMessagesFrame; }
 namespace BlackSimPlugin
 {
     namespace FsxCommon
@@ -38,6 +39,9 @@ namespace BlackSimPlugin
             //! Simulator, P3D/FSX
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
 
+            //! Represented simulator
+            BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+
         private:
             //! Trace checkbox changed
             void onSimConnectTraceChanged();
@@ -45,10 +49,14 @@ namespace BlackSimPlugin
             //! Terrain probe checkbox changed
             void onEnableTerrainProbeChanged();
 
+            //! Copy the terrain probe
+            void copyTerrainProbe();
+
             //! Access the concrete implementation
-            CSimulatorFsxCommon *getFsxSimulator () const;
+            CSimulatorFsxCommon *getFsxSimulator() const;
 
             BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
+            BlackGui::COverlayMessagesFrame *m_mf = nullptr;
             QScopedPointer<Ui::CFsxSettingsComponent> ui;
         };
     } // ns

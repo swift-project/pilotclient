@@ -10,10 +10,15 @@
 #include "fsxsettingscomponent.h"
 #include "ui_fsxsettingscomponent.h"
 #include "simulatorfsxcommon.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/context/contextsimulator.h"
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackGui;
+using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 
 namespace BlackSimPlugin
 {
@@ -28,6 +33,7 @@ namespace BlackSimPlugin
 
             connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
             connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+            connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
 
             const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
             if (fsx)
@@ -39,6 +45,12 @@ namespace BlackSimPlugin
 
         CFsxSettingsComponent::~CFsxSettingsComponent()
         { }
+
+        CSimulatorInfo CFsxSettingsComponent::getSimulator() const
+        {
+            const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
+            return fsx ? fsx->getSimulatorInfo() : m_simulator;
+        }
 
         void CFsxSettingsComponent::onSimConnectTraceChanged()
         {
@@ -52,6 +64,16 @@ namespace BlackSimPlugin
             CSimulatorFsxCommon *fsx = this->getFsxSimulator();
             if (!fsx) { return; }
             fsx->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
+        }
+
+        void CFsxSettingsComponent::copyTerrainProbe()
+        {
+            if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown()) { return; }
+            const CSimulatorInfo simulator(this->getSimulator());
+            const CStatusMessageList msgs = sGui->getIContextSimulator()->copyFsxTerrainProbe(simulator);
+            CLogMessage::preformatted(msgs);
+            if (!m_mf) { m_mf = CGuiUtility::nextOverlayMessageFrame(this); }
+            if (m_mf)  { m_mf->showOverlayMessages(msgs); }
         }
 
         CSimulatorFsxCommon *CFsxSettingsComponent::getFsxSimulator() const
