@@ -96,6 +96,8 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
+            connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
+
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
@@ -152,6 +154,12 @@ namespace BlackGui
             return c && parentDockableWidget;
         }
 
+        void CAtcStationComponent::forceUpdate()
+        {
+            m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
+            this->update();
+        }
+
         void CAtcStationComponent::update()
         {
             if (!this->canAccessContext()) { return; }
@@ -180,7 +188,7 @@ namespace BlackGui
                 // update
                 if (m_timestampOnlineStationsChanged > m_timestampLastReadOnlineStations)
                 {
-                    const CAtcStationsSettings settings = m_settingsAtc.getThreadLocal();
+                    const CAtcStationsSettings settings = ui->comp_AtcStationsSettings->getSettings();
                     CAtcStationList onlineStations =
                         sGui->getIContextNetwork()->getAtcStationsOnline(true).stationsWithValidFrequency(); // alternatively: stationsWithValidVoiceRoom()
 

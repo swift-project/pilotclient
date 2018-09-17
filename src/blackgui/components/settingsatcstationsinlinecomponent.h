@@ -34,15 +34,22 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsAtcStationsInlineComponent();
 
+            //! Get the settings
+            Settings::CAtcStationsSettings getSettings() const { return m_atcSettings.get(); }
+
+        signals:
+            //! Changed value
+            void changed();
+
         private:
             //! Settings have been changed
-            void settingsChanged();
+            void onSettingsChanged();
 
             //! Change the settings
             void changeSettings();
 
             QScopedPointer<Ui::CSettingsAtcStationsInlineComponent> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TAtcStationsSettings> m_atcSettings { this, &CSettingsAtcStationsInlineComponent::settingsChanged };
+            BlackMisc::CSetting<BlackGui::Settings::TAtcStationsSettings> m_atcSettings { this, &CSettingsAtcStationsInlineComponent::onSettingsChanged };
         };
     } // ns
 } // ns

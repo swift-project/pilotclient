@@ -88,6 +88,9 @@ namespace BlackGui
             void requestAudioWidget();
 
         private:
+            //! Set timestampd and call update
+            void forceUpdate();
+
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
@@ -155,7 +158,6 @@ namespace BlackGui
             QDateTime m_timestampLastReadBookedStations; //!< stations read
             QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::settingsChanged };
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc  { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace
 } // namespace

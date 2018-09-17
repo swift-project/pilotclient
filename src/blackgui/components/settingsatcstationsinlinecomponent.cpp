@@ -27,7 +27,7 @@ namespace BlackGui
         CSettingsAtcStationsInlineComponent::~CSettingsAtcStationsInlineComponent()
         { }
 
-        void CSettingsAtcStationsInlineComponent::settingsChanged()
+        void CSettingsAtcStationsInlineComponent::onSettingsChanged()
         {
             const CAtcStationsSettings s = m_atcSettings.getThreadLocal();
             ui->rb_InRange->setChecked(s.showOnlyInRange());
@@ -35,9 +35,13 @@ namespace BlackGui
 
         void CSettingsAtcStationsInlineComponent::changeSettings()
         {
+            const bool onlyInRange = ui->rb_InRange->isChecked();
             CAtcStationsSettings s = m_atcSettings.getThreadLocal();
-            s.setShowOnlyInRange(ui->rb_InRange->isChecked());
+            if (s.showOnlyInRange() && onlyInRange) { return; }
+            s.setShowOnlyInRange(onlyInRange);
             m_atcSettings.setAndSave(s);
+
+            emit this->changed();
         }
     } // ns
 } // ns
