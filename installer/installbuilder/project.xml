@@ -163,7 +163,8 @@
     <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
     <osxUninstallerApplicationBundleIcon>../images/swiftinstaller.icns</osxUninstallerApplicationBundleIcon>
     <outputDirectory>.</outputDirectory>
-    <productDisplayIcon>../images/swiftinstaller.ico</productDisplayIcon>
+    <productDisplayIcon>${installdir}/share/icons/swiftinstaller.ico</productDisplayIcon>
+    <productDisplayName>${product_fullname} ${project.version} ${architecture}bit</productDisplayName>
     <requestedExecutionLevel>highestAvailable</requestedExecutionLevel>
     <saveRelativePaths>1</saveRelativePaths>
     <startMenuGroupName>swift ${project.version} ${architecture}bit</startMenuGroupName>

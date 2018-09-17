@@ -105,6 +105,17 @@ This installs the binaries to run all swift applications.</detailedDescription>
                 </distributionFile>
             </distributionFileList>
         </folder>
+        <folder>
+            <description>icons</description>
+            <destination>${installdir}/share/icons</destination>
+            <name>icons</name>
+            <platforms>windows</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../images/swiftinstaller.ico</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
     </folderList>
     <startMenuShortcutList>
         <startMenuShortcut>
