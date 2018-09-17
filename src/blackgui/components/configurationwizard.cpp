@@ -10,10 +10,12 @@
 #include "configurationwizard.h"
 #include "ui_configurationwizard.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/directoryutils.h"
 #include <QPointer>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Math;
 
 namespace BlackGui
 {
@@ -26,7 +28,7 @@ namespace BlackGui
             ui->setupUi(this);
             ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
-            ui->wp_XSwiftBus->setConfigComponent(ui->comp_XSwiftBus);
+            ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_XSwiftBus, ui->comp_FsxTerrainProbe);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
             ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
             ui->wp_Legal->setConfigComponent(ui->comp_LegalInformation);
@@ -118,7 +120,7 @@ namespace BlackGui
         {
             QWidget *parent = this->parentWidget();
             if (!parent) { return; }
-            if (parent->windowOpacity() == opacity) { return; }
+            if (CMathUtils::epsilonEqual(parent->windowOpacity(), opacity)) { return; }
             parent->setWindowOpacity(opacity);
         }
     } // ns

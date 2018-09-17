@@ -22,9 +22,6 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <property name="wizardStyle">
-   <enum>QWizard::ClassicStyle</enum>
-  </property>
   <property name="options">
    <set>QWizard::HaveCustomButton1</set>
   </property>
@@ -194,12 +191,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="BlackGui::Components::CInstallXSwiftBusWizardPage" name="wp_XSwiftBus">
+  <widget class="BlackGui::Components::CInstallSimulatorSpecificWizardPage" name="wp_SimulatorSpecific">
    <property name="title">
-    <string>XSwiftBus</string>
+    <string>Simulator specific installations</string>
    </property>
    <property name="subTitle">
-    <string>Install XSwiftBus (X-Plane only)</string>
+    <string>Install XSwiftBus (X-Plane only) or swift terrain probe (FSX/P3D only)</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
@@ -219,21 +216,18 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>100</height>
+        <height>150</height>
        </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
       </property>
      </widget>
     </item>
-    <item row="0" column="0" alignment="Qt::AlignRight">
-     <widget class="QPushButton" name="pb_SkipXSwiftBus">
-      <property name="text">
-       <string> I do not have X-Plane / I will do this later / Is already installed </string>
+    <item row="0" column="0">
+     <widget class="BlackGui::Components::CInstallFsxTerrainProbeComponent" name="comp_FsxTerrainProbe" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>75</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -330,12 +324,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInstallXSwiftBusWizardPage</class>
-   <extends>QWizardPage</extends>
-   <header>blackgui/components/installxswiftbuscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CFirstModelSetWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/firstmodelsetcomponent.h</header>
@@ -377,25 +365,21 @@
    <header>blackgui/components/copysettingsandcachescomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInstallSimulatorSpecificWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/installsimulatorspecificwizardpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInstallFsxTerrainProbeComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/installfsxterrainprobecomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>pb_SkipXSwiftBus</sender>
-   <signal>clicked()</signal>
-   <receiver>CConfigurationWizard</receiver>
-   <slot>next()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>713</x>
-     <y>63</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>791</x>
-     <y>64</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>pb_SkipFirstModelSet</sender>
    <signal>clicked()</signal>

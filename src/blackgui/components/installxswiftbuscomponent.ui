@@ -66,7 +66,19 @@
      <property name="title">
       <string>Download and install XSwiftBus</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gl_DownloadAndInstall">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_XSwiftBusPluginDir">
         <property name="text">
@@ -156,7 +168,7 @@
       <item row="0" column="0" colspan="4">
        <widget class="QLabel" name="lbl_Warning">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Warning: &lt;/span&gt;There might be conflicts with other XPlane plugins using the same libraries as &lt;span style=&quot; font-style:italic;&quot;&gt;swift&lt;/span&gt;, such as &lt;span style=&quot; font-style:italic;&quot;&gt;XSquawkBox&lt;/span&gt;. You have to disable those pluigns before you can use &lt;span style=&quot; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XSwiftBus&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Warning: &lt;/span&gt;Possible conflicts with plugins using the same libraries &lt;span style=&quot; font-style:italic;&quot;&gt;(e.g. XSquawkBox&lt;/span&gt;). You have to disable those pluigns before you can use &lt;span style=&quot; font-style:italic;&quot;&gt;swiftXSwiftBus&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -172,6 +184,18 @@
       <string>XSwiftBus settings</string>
      </property>
      <layout class="QVBoxLayout" name="vl_XSwiftBusSettings">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
       <item>
        <widget class="BlackGui::Components::CSettingsXSwiftBusComponent" name="comp_SettingsXSwiftBus">
         <property name="minimumSize">
