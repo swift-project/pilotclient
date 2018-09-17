@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CSettingsSimulatorBasicsComponent</class>
  <widget class="QFrame" name="CSettingsSimulatorBasicsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>472</width>
+    <height>355</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Simulator basic settings</string>
   </property>
@@ -64,11 +72,11 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="1" colspan="2" alignment="Qt::AlignLeft">
     <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
      <property name="minimumSize">
       <size>
-       <width>0</width>
+       <width>150</width>
        <height>25</height>
       </size>
      </property>
