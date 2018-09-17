@@ -245,6 +245,11 @@ it and relaunch the uninstaller.</text>
         </runProgram>
         <deleteFile>
             <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
         </deleteFile>
         <kill>
             <name>dbus-daemon.exe</name>
