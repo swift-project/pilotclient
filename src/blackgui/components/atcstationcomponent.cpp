@@ -282,6 +282,7 @@ namespace BlackGui
             else if (INetwork::isDisconnectedStatus(to))
             {
                 m_updateTimer.stop();
+                this->clearOnlineViews();
             }
         }
 
@@ -402,7 +403,7 @@ namespace BlackGui
             }
             if (stationClicked.hasMetar())
             {
-                if (!infoMessage.isEmpty()) infoMessage.append("\n\n");
+                if (!infoMessage.isEmpty()) { infoMessage.append("\n\n"); }
                 infoMessage.append(stationClicked.getMetar().getMessage());
             }
             ui->te_AtcStationsOnlineInfo->setText(infoMessage);
@@ -429,6 +430,13 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return false; }
             return true;
+        }
+
+        void CAtcStationComponent::clearOnlineViews()
+        {
+            ui->tvp_AtcStationsOnline->clear();
+            QAbstractItemModel *treeModelOld = (ui->tvp_AtcStationsOnlineTree->model());
+            if (treeModelOld) { CGuiUtility::clearModel(treeModelOld); }
         }
     } // namespace
 } // namespace

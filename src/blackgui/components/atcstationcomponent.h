@@ -145,6 +145,9 @@ namespace BlackGui
             //! Contexts?
             bool canAccessContext() const;
 
+            //! Clear the online views
+            void clearOnlineViews();
+
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
