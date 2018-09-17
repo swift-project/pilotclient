@@ -17,7 +17,10 @@
             <file>qt5-binaries.xml</file>
         </include>
         <include>
-            <file>vcredist.xml</file>
+            <file>vcredist-x86.xml</file>
+        </include>
+        <include>
+            <file>vcredist-x64.xml</file>
         </include>
     </componentList>
     <preInstallationActionList>

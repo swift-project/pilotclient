@@ -1,0 +1,72 @@
+<component>
+    <name>vcruntime64</name>
+    <description>Visual Studio 2017 x64 Redistributables</description>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>1</show>
+    <folderList>
+        <folder>
+            <description>vcredist</description>
+            <destination>${installdir}/vcredist</destination>
+            <name>vcredist64</name>
+            <platforms>windows</platforms>
+            <actionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}/vcredist/vcredist_x64.exe</program>
+                    <programArguments>/install /quiet /norestart</programArguments>
+                    <progressText>Installing Visual Studio 2017 x64 Redistributables</progressText>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text>${architecture}</text>
+                            <value>64</value>
+                        </compareText>
+                    </ruleList>
+                </runProgram>
+                <showWarning>
+                    <text>Installation of MS Visual Studio 2017 x64 Redistributables failed! 
+Error Code: ${program_exit_code}
+Check if another version was already installed and if not, try to run the installer manually from
+${installdir}\vcredist\
+
+The installation will now continue, but swift might not work properly. If this is the case, raise a bugreport on https://dev.swift-project.org with the error code, you received.</text>
+                    <ruleList>
+                        <!-- No error -->
+                        <compareValues>
+                            <logic>does_not_equal</logic>
+                            <value1>${program_exit_code}</value1>
+                            <value2>0</value2>
+                        </compareValues>
+
+                        <!-- A newer version of this product is already installed -->
+                        <compareValues>
+                            <logic>does_not_equal</logic>
+                            <value1>${program_exit_code}</value1>
+                            <value2>1638</value2>
+                        </compareValues>
+                    </ruleList>
+                </showWarning>
+            </actionList>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/vcredist/vcredist_x64.exe</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+    </folderList>
+    <shouldPackRuleList>
+        <platformTest>
+            <type>windows</type>
+        </platformTest>
+        <compareValues>
+            <logic>equals</logic>
+            <value1>${architecture}</value1>
+            <value2>64</value2>
+        </compareValues>
+    </shouldPackRuleList>
+</component>
