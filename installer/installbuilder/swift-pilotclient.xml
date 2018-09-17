@@ -109,7 +109,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
     <startMenuShortcutList>
         <startMenuShortcut>
             <comment>Run swiftgui</comment>
-            <name>swiftgui ${architecture}bit</name>
+            <name>swiftgui ${project.version} ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftguistd.exe</windowsExec>
@@ -119,7 +119,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment>Run swiftcore</comment>
-            <name>swiftcore ${architecture}bit</name>
+            <name>swiftcore ${project.version} ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftcore.exe</windowsExec>
@@ -129,7 +129,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment>Run swiftdata</comment>
-            <name>swiftdata ${architecture}bit</name>
+            <name>swiftdata ${project.version} ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftdata.exe</windowsExec>
@@ -139,7 +139,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment>Run swiftlauncher</comment>
-            <name>swiftlauncher ${architecture}bit</name>
+            <name>swiftlauncher ${project.version} ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftlauncher.exe</windowsExec>
@@ -149,7 +149,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment>Uninstall swift</comment>
-            <name>Uninstall swift ${architecture}bit</name>
+            <name>Uninstall swift ${project.version} ${architecture}bit</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/uninstall.exe</windowsExec>
