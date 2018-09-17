@@ -223,7 +223,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
         INSTALLER_EXT = run
         ARCHITECTURE = 64
     }
-    create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
+    create_installer.commands = $${bitrock_builder_bin} quickbuild $${bitrock_project} $${INSTALLER_PLATFORM} \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
                                               project.version=$${BLACK_VERSION} \
