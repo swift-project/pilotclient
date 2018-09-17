@@ -13,9 +13,7 @@
 #define BLACKGUI_PLUGINCONFIGWINDOW_H
 
 #include "blackgui/blackguiexport.h"
-
-#include <QObject>
-#include <QWidget>
+#include "blackgui/overlaymessagesframe.h"
 
 class QShowEvent;
 
@@ -24,7 +22,7 @@ namespace BlackGui
     /**
      * Base class for plugin config window.
      */
-    class BLACKGUI_EXPORT CPluginConfigWindow : public QWidget
+    class BLACKGUI_EXPORT CPluginConfigWindow : public COverlayMessagesFrame
     {
         Q_OBJECT
     public:

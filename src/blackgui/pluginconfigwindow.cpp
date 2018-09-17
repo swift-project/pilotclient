@@ -15,11 +15,12 @@
 #include <Qt>
 #include <QtGlobal>
 
-namespace BlackGui {
+namespace BlackGui
+{
 
-    CPluginConfigWindow::CPluginConfigWindow(QWidget *parent) : QWidget(parent, Qt::Window)
+    CPluginConfigWindow::CPluginConfigWindow(QWidget *parent) : COverlayMessagesFrame(parent, Qt::Window)
     {
-        setWindowModality(Qt::WindowModal);
+        this->setWindowModality(Qt::WindowModal);
     }
 
     void CPluginConfigWindow::showEvent(QShowEvent *event)
