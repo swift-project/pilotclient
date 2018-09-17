@@ -154,6 +154,14 @@ namespace BlackGui
             });
         }
 
+        void CSimulatorSelector::setFsxP3DOnly()
+        {
+            ui->cb_FS9->setVisible(false);
+            ui->cb_XPlane->setVisible(false);
+            ui->rb_FS9->setVisible(false);
+            ui->rb_XPlane->setVisible(false);
+        }
+
         void CSimulatorSelector::checkAll()
         {
             // checkboxes

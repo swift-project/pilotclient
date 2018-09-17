@@ -53,7 +53,7 @@ namespace BlackGui
             void setMode(Mode mode);
 
             //! No selection treated same as all selected (filters)
-            void setNoSelectionMeansAll(bool v) { this->m_noSelectionMeansAll = v; }
+            void setNoSelectionMeansAll(bool v) { m_noSelectionMeansAll = v; }
 
             //! Get the value
             BlackMisc::Simulation::CSimulatorInfo getValue() const;
@@ -69,6 +69,9 @@ namespace BlackGui
 
             //! Set to the connected simulator but deferred
             void setToConnectedSimulator(int deferredMs, bool makeReadOnly = true);
+
+            //! Only show FSX/P3D
+            void setFsxP3DOnly();
 
             //! Set all, only making sense with checkboxes
             void checkAll();
