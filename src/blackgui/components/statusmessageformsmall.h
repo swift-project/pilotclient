@@ -20,8 +20,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CStatusMessageFormSmall; }
 namespace BlackGui
 {

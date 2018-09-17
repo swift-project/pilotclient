@@ -108,7 +108,7 @@ namespace BlackMisc
             QString getControllerId() const { return m_controller.getId(); }
 
             //! Set controller
-            void setController(const BlackMisc::Network::CUser &controller);
+            void setController(const Network::CUser &controller);
 
             //! Set controller's name
             void setControllerRealName(const QString &controllerName) { m_controller.setRealName(controllerName); }
