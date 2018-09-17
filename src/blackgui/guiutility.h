@@ -38,6 +38,8 @@ namespace BlackGui
 {
     class CEnableForFramelessWindow;
     class COverlayMessagesFrame;
+    class COverlayMessagesWizardPage;
+    class COverlayMessagesTabWidget;
 
     //! GUI utilities
     class BLACKGUI_EXPORT CGuiUtility
@@ -102,8 +104,32 @@ namespace BlackGui
         //! Is representing existing JSON file
         static bool isMimeRepresentingReadableJsonFile(const QMimeData *mime);
 
-        //! Find next BlackGui::COverlayMessages QFrame
+        //! Find next BlackGui::COverlayMessages QFrame or other implementing widget
+        template <class OverlayWidget> static OverlayWidget *nextOverlayMessageWidget(QWidget *widget, int maxLevels = 10)
+        {
+            if (!widget || maxLevels < 1) { return nullptr; }
+            OverlayWidget *o = qobject_cast<OverlayWidget *> (widget);
+            if (o) { return o; }
+            int cl = 0;
+            QWidget *cw = widget->parentWidget();
+            while (cl < maxLevels && cw)
+            {
+                o = qobject_cast<OverlayWidget *> (cw);
+                if (o) { return o; }
+                cl++;
+                cw = cw->parentWidget();
+            }
+            return nullptr;
+        }
+
+        //! Find next COverlayMessagesFrame
         static COverlayMessagesFrame *nextOverlayMessageFrame(QWidget *widget, int maxLevels = 10);
+
+        //! Find next COverlayMessagesTabWidget
+        static COverlayMessagesTabWidget *nextOverlayMessageTabWidget(QWidget *widget, int maxLevels = 10);
+
+        //! Find next COverlayMessagesWizardPage
+        static COverlayMessagesWizardPage *nextOverlayMessageWizardPage(QWidget *widget, int maxLevels = 10);
 
         //! Metatype
         static const QString &swiftJsonDragAndDropMimeType();

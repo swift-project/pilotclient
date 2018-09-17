@@ -203,23 +203,6 @@ namespace BlackGui
         return typeId;
     }
 
-    COverlayMessagesFrame *CGuiUtility::nextOverlayMessageFrame(QWidget *widget, int maxLevels)
-    {
-        if (!widget || maxLevels < 1) { return nullptr; }
-        COverlayMessagesFrame *o = qobject_cast<COverlayMessagesFrame *> (widget);
-        if (o) { return o; }
-        int cl = 0;
-        QWidget *cw = widget->parentWidget();
-        while (cl < maxLevels && cw)
-        {
-            o = qobject_cast<COverlayMessagesFrame *> (cw);
-            if (o) { return o; }
-            cl++;
-            cw = cw->parentWidget();
-        }
-        return nullptr;
-    }
-
     const QString &CGuiUtility::swiftJsonDragAndDropMimeType()
     {
         static const QString m("text/json/swift");
@@ -249,6 +232,21 @@ namespace BlackGui
         if (!fi.isReadable()) { return false; }
         const QString fn = fi.fileName();
         return fn.endsWith("json", Qt::CaseInsensitive);
+    }
+
+    COverlayMessagesFrame *CGuiUtility::nextOverlayMessageFrame(QWidget *widget, int maxLevels)
+    {
+        return nextOverlayMessageWidget<COverlayMessagesFrame>(widget, maxLevels);
+    }
+
+    COverlayMessagesTabWidget *CGuiUtility::nextOverlayMessageTabWidget(QWidget *widget, int maxLevels)
+    {
+        return nextOverlayMessageWidget<COverlayMessagesTabWidget>(widget, maxLevels);
+    }
+
+    COverlayMessagesWizardPage *CGuiUtility::nextOverlayMessageWizardPage(QWidget *widget, int maxLevels)
+    {
+        return nextOverlayMessageWidget<COverlayMessagesWizardPage>(widget, maxLevels);
     }
 
     void CGuiUtility::checkBoxReadOnly(QCheckBox *checkBox, bool readOnly)

@@ -51,7 +51,7 @@ namespace BlackGui
         explicit COverlayMessages(const QString &headerText, int w, int h, QWidget *parent);
 
         //! Destructor
-        virtual ~COverlayMessages();
+        virtual ~COverlayMessages() override;
 
         //! Messages mode
         void setModeToMessages(bool withKillButton = false);

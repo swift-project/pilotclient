@@ -26,10 +26,13 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
-    COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent) : COverlayMessagesBase(parent)
+    COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesBase(parent, f)
     { }
 
     COverlayMessagesTabWidget::COverlayMessagesTabWidget(QWidget *parent) : COverlayMessagesBase(parent)
+    { }
+
+    COverlayMessagesWizardPage::COverlayMessagesWizardPage(QWidget *parent) : COverlayMessagesBase(parent)
     { }
 } // ns
 

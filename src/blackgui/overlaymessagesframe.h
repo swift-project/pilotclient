@@ -23,6 +23,7 @@
 
 #include <QFrame>
 #include <QTabWidget>
+#include <QWizardPage>
 #include <QMessageBox>
 #include <QObject>
 #include <QSize>
@@ -31,7 +32,6 @@
 
 class QKeyEvent;
 class QPaintEvent;
-class QWidget;
 
 namespace BlackGui
 {
@@ -167,8 +167,9 @@ namespace BlackGui
         COverlayMessages *m_overlayMessages = nullptr; //!< embedded QFrame with status messages
 
         //! Constructor
-        COverlayMessagesBase(QWidget *parent) : WIDGET(parent)
+        COverlayMessagesBase(QWidget *parent, Qt::WindowFlags f = Qt::WindowFlags()) : WIDGET(parent)
         {
+            this->setWindowFlags(f);
             const bool isFrameless = CGuiUtility::isMainWindowFrameless();
             m_middleFactor = isFrameless ? 1.25 : 1.5; // 2 is middle in normal window
         }
@@ -253,7 +254,7 @@ namespace BlackGui
 
     public:
         //! Constructor
-        explicit COverlayMessagesFrame(QWidget *parent = nullptr);
+        explicit COverlayMessagesFrame(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     };
 
     /*!
@@ -267,6 +268,19 @@ namespace BlackGui
         //! Constructor
         explicit COverlayMessagesTabWidget(QWidget *parent = nullptr);
     };
+
+    /*!
+     * Using this class provides a QWizardPage with the overlay functionality already integrated.
+     */
+    class BLACKGUI_EXPORT COverlayMessagesWizardPage : public COverlayMessagesBase<QWizardPage>
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit COverlayMessagesWizardPage(QWidget *parent = nullptr);
+    };
+
 } // ns
 
 #endif // guard
