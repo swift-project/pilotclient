@@ -67,6 +67,11 @@ namespace BlackMisc
             return rv;
         }
 
+        bool CMathUtils::epsilonEqual(float v1, float v2, float epsilon)
+        {
+            return qAbs(v1 - v2) <= epsilon;
+        }
+
         bool CMathUtils::epsilonEqual(double v1, double v2, double epsilon)
         {
             return qAbs(v1 - v2) <= epsilon;
