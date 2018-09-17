@@ -90,6 +90,9 @@ namespace BlackMisc
 
                 //! Adjust file directory
                 static bool adjustFileDirectory(CAircraftModel &model, const QStringList &simObjectsDirectories);
+
+                //! Copy the terrain probe
+                static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
             };
         } // namespace
     } // namespace

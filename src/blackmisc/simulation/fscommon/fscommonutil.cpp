@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackmisc/fileutils.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDir>
 #include <QList>
@@ -346,6 +347,44 @@ namespace BlackMisc
                     if (CFsCommonUtil::adjustFileDirectory(model, simObjectDir)) { return true; }
                 }
                 return false;
+            }
+
+            int CFsCommonUtil::copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages)
+            {
+                static const CLogCategoryList cats({ CLogCategory::validation(), CLogCategory::driver() });
+                messages.clear();
+                if (!CDirectoryUtils::existsUnemptyDirectory(CDirectoryUtils::shareTerrainProbeDirectory()))
+                {
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
+                    return -1;
+                }
+
+                if (simObjectDir.isEmpty())
+                {
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No simObject directory"));
+                    return -1;
+                }
+
+                QString targetDir = CFileUtils::appendFilePathsAndFixUnc(simObjectDir, "Misc");
+                QDir td(targetDir);
+                if (!td.exists())
+                {
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("Cannot access target directory '%1'").arg(targetDir)));
+                    return -1;
+                }
+
+                const QString lastSegment = CFileUtils::lastPathSegment(CDirectoryUtils::shareTerrainProbeDirectory());
+                targetDir = CFileUtils::appendFilePathsAndFixUnc(targetDir, lastSegment);
+                const bool hasDir = td.mkpath(targetDir);
+                if (!hasDir)
+                {
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("Cannot create target directory '%1'").arg(targetDir)));
+                    return -1;
+                }
+
+                const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
+                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, QString("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
+                return copied;
             }
         } // namespace
     } // namespace

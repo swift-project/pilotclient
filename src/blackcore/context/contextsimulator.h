@@ -248,10 +248,10 @@ namespace BlackCore
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
 
-            //! Repeat all mappings
+            //! Repeat all matchings
             virtual int doMatchingsAgain() = 0;
 
-            //! Repeat the mapping
+            //! Repeat the matching
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
             //! Current matching statistics
@@ -262,6 +262,9 @@ namespace BlackCore
 
             //! Get matching setup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
+
+            //! Copy the terrain probe
+            virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
         protected:
             //! Constructor

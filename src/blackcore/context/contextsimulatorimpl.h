@@ -112,6 +112,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
+            virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 
             //! \addtogroup swiftdotcommands

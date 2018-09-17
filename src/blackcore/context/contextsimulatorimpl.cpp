@@ -18,6 +18,7 @@
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
@@ -48,6 +49,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::XPlane;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
@@ -809,6 +811,34 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_aircraftMatcher.getSetup();
+        }
+
+        CStatusMessageList CContextSimulator::copyFsxTerrainProbe(const CSimulatorInfo &simulator)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << simulator.toQString(); }
+
+            CStatusMessageList msgs;
+            if (!simulator.isFsxP3DFamily())
+            {
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Wrong simulator " + simulator.toQString()));
+                return msgs;
+            }
+
+            const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(simulator);
+            if (modelDirs.isEmpty() || modelDirs.front().isEmpty())
+            {
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No model directory"));
+                return msgs;
+            }
+
+            const int copied = CFsCommonUtil::copyFsxTerrainProbeFiles(modelDirs.front(), msgs);
+            if (copied < 1 && !msgs.hasWarningOrErrorMessages())
+            {
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No files copied"));
+                return msgs;
+            }
+
+            return msgs;
         }
 
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)

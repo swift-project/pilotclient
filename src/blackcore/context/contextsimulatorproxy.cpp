@@ -295,5 +295,10 @@ namespace BlackCore
         {
             return m_dBusInterface->callDBusRet<CAircraftMatcherSetup>(QLatin1String("getMatchingSetup"));
         }
+
+        CStatusMessageList CContextSimulatorProxy::copyFsxTerrainProbe(const CSimulatorInfo &simulator)
+        {
+            return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("copyFsxTerrainProbe"), simulator);
+        }
     } // namespace
 } // namespace
