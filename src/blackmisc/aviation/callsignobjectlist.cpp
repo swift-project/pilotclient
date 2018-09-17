@@ -232,6 +232,7 @@ namespace BlackMisc
             QHash<CCallsign, OBJ> hash;
             for (const OBJ &obj : this->container())
             {
+                if (obj.getCallsign().isEmpty()) { continue; }
                 hash.insert(obj.getCallsign(), obj);
             }
             return hash;

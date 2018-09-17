@@ -202,12 +202,14 @@ namespace BlackCore
         CUserList users;
         for (const CAtcStation &station : m_atcStationsOnline)
         {
-            const CUser user = station.getController();
+            CUser user = station.getController();
+            if (!user.hasCallsign()) { user.setCallsign(station.getCallsign()); }
             users.push_back(user);
         }
         for (const CSimulatedAircraft &aircraft : this->getAircraftInRange())
         {
-            const CUser user = aircraft.getPilot();
+            CUser user = aircraft.getPilot();
+            if (!user.hasCallsign()) { user.setCallsign(aircraft.getCallsign()); }
             users.push_back(user);
         }
         return users;
