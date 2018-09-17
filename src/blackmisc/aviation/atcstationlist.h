@@ -49,7 +49,7 @@ namespace BlackMisc
             CAtcStationList findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const;
 
             //! Update if message changed
-            int updateIfMessageChanged(const CInformationMessage &im, bool overrideWithNewer);
+            bool updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer);
 
             //! Set online status
             int setOnline(const CCallsign &callsign, bool online);

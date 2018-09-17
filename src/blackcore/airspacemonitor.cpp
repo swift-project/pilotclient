@@ -604,16 +604,13 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
-        const int changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, true);
+        bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
 
         // receiving an ATIS means station is online, update in bookings
         m_atcStationsBooked.setOnline(callsign, true);
 
         // signal
-        if (changedAtis > 0)
-        {
-            emit this->changedAtisReceived(callsign);
-        }
+        if (changedAtis) { emit this->changedAtisReceived(callsign); }
     }
 
     void CAirspaceMonitor::onAtisVoiceRoomReceived(const CCallsign &callsign, const QString &url)

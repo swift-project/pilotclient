@@ -40,28 +40,32 @@ namespace BlackMisc
             });
         }
 
-        int CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, bool overrideWithNewer)
+        bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
         {
-            int c = 0;
             const CInformationMessage::InformationType t = im.getType();
+
+            // for loop just to get reference
+            bool unequal = false;
             for (CAtcStation &station : *this)
             {
-                bool unequal = false;
+                if (station.getCallsign() != callsign) { continue; }
+
                 const CInformationMessage m = station.getInformationMessage(t);
-                if (m.getType() == CInformationMessage::Unspecified) { continue; }
+                if (m.getType() == CInformationMessage::Unspecified) { break; }
+
                 if (m.getMessage() == im.getMessage())
                 {
-                    if (!overrideWithNewer) { continue; }
-                    if (!im.isNewerThan(m)) { continue; }
+                    if (!overrideWithNewer) { break; }
+                    if (!im.isNewerThan(m)) { break; }
                 }
                 else
                 {
                     unequal = true;
                 }
-                station.setMessage(m);
-                if (unequal) c++; // only count unequals
+                station.setMessage(im);
+                break; // only count unequals
             }
-            return c;
+            return unequal;
         }
 
         int CAtcStationList::setOnline(const CCallsign &callsign, bool online)
