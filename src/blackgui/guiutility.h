@@ -32,6 +32,7 @@ class QLayout;
 class QMimeData;
 class QTabWidget;
 class QGraphicsOpacityEffect;
+class QAbstractItemModel;
 
 namespace BlackMisc { class CIcon; }
 namespace BlackGui
@@ -169,6 +170,9 @@ namespace BlackGui
 
         //! Only the row part and unique (so no rows is twice in the list)
         static QList<int> indexToUniqueRows(const QModelIndexList &indexes);
+
+        //! Clear a model
+        static int clearModel(QAbstractItemModel *model);
 
         //! Is top level widget?
         static bool isTopLevelWidget(QWidget *widget);

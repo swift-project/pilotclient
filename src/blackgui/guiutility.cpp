@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QAbstractItemModel>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
@@ -410,6 +411,15 @@ namespace BlackGui
             rows.append(r);
         }
         return rows;
+    }
+
+    int CGuiUtility::clearModel(QAbstractItemModel *model)
+    {
+        if (!model) { return 0; }
+        const int count = model->rowCount();
+        if (count < 1) { return 0; }
+        model->removeRows(0, count);
+        return count;
     }
 
     bool CGuiUtility::isTopLevelWidget(QWidget *widget)
