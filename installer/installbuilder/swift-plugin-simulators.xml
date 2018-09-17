@@ -29,9 +29,11 @@
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
-                <fileExists>
-                    <path>${build_project_directory}/../../dist/bin/plugins/simulator/simulatorfs9.dll</path>
-                </fileExists>
+                <compareText>
+                    <logic>equals</logic>
+                    <text>${architecture}</text>
+                    <value>32</value>
+                </compareText>
             </shouldPackRuleList>
         </component>
         <component>
@@ -62,9 +64,11 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
-                <fileExists>
-                    <path>${build_project_directory}/../../dist/bin/plugins/simulator/simulatorfsx.dll</path>
-                </fileExists>
+                <compareText>
+                    <logic>equals</logic>
+                    <text>${architecture}</text>
+                    <value>32</value>
+                </compareText>
             </shouldPackRuleList>
         </component>
         <component>
@@ -95,9 +99,6 @@ This plugin acts as the interface between swift and P3D.</detailedDescription>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
-                <fileExists>
-                    <path>${build_project_directory}/../../dist/bin/plugins/simulator/simulatorp3d.dll</path>
-                </fileExists>
             </shouldPackRuleList>
         </component>
         <component>
