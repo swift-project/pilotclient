@@ -246,6 +246,14 @@ it and relaunch the uninstaller.</text>
         <deleteFile>
             <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
         </deleteFile>
+        <kill>
+            <name>dbus-daemon.exe</name>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </kill>
     </preUninstallationActionList>
     <allowComponentSelection>1</allowComponentSelection>
     <compressionAlgorithm>lzma</compressionAlgorithm>
