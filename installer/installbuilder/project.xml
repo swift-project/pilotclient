@@ -122,6 +122,14 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+        <createDirectory>
+            <path>${windows_folder_local_appdata}/org.swift-project</path>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </createDirectory>
         <writeFile>
             <path>${windows_folder_local_appdata}/org.swift-project/lastinstallpath.txt</path>
             <text>${installdir}</text>
