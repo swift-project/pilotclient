@@ -59,6 +59,8 @@ namespace BlackMisc
             const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
             const QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
             const CUser user(id, usr);
+            const CInformationMessage atis(CInformationMessage::ATIS, "ATIS for " + QString::number(index));
+            const CInformationMessage metar(CInformationMessage::METAR, "Metar for " + QString::number(index));
 
             CAtcStation station;
             if (byPropertyIndex)
@@ -72,6 +74,8 @@ namespace BlackMisc
                 station.setPropertyByIndex(CAtcStation::IndexBookedFrom, CVariant::from(dtFrom));
                 station.setPropertyByIndex(CAtcStation::IndexBookedUntil, CVariant::from(dtUntil));
                 station.setPropertyByIndex(CAtcStation::IndexRelativeDistance, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
+                station.setPropertyByIndex(CAtcStation::IndexAtis, CVariant::from(atis));
+                station.setPropertyByIndex(CAtcStation::IndexMetar, CVariant::from(metar));
             }
             else
             {
@@ -79,6 +83,8 @@ namespace BlackMisc
                                       CFrequency(f, CFrequencyUnit::MHz()),
                                       geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
                 station.setRelativeDistance(CLength(index + 1, CLengthUnit::NM()));
+                station.setAtis(atis);
+                station.setMetar(metar);
             }
 
             station.setVoiceRoomUrl("vvl://foo.bar.baz/room" + QString::number(index));
