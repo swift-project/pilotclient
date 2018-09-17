@@ -24,6 +24,49 @@
         </include>
     </componentList>
     <preInstallationActionList>
+        <actionGroup>
+            <explanation>Check that no swift applications running</explanation>
+            <actionList>
+                <showWarning>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <text>It seems that some swift application is still in use, please close
+it and relaunch the installer.</text>
+                </showWarning>
+                <exit>
+                    <exitCode>1</exitCode>
+                </exit>
+            </actionList>
+            <ruleList>
+                <ruleGroup>
+                    <ruleList>
+                        <ruleGroup>
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftcore.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftguistd.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftlauncher.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftdata.exe</name>
+                                </processTest>
+                            </ruleList>
+                        </ruleGroup>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </actionGroup>
         <!-- TODO Linux/MacOS: Save and load last install dir -->
         <setInstallerVariable>
             <name>installBaseDir</name>
@@ -144,6 +187,49 @@
         </writeFile>
     </postInstallationActionList>
     <preUninstallationActionList>
+        <actionGroup>
+            <explanation>Check that no swift applications running</explanation>
+            <actionList>
+                <showWarning>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <text>It seems that some swift application is still in use, please close
+it and relaunch the uninstaller.</text>
+                </showWarning>
+                <exit>
+                    <exitCode>1</exitCode>
+                </exit>
+            </actionList>
+            <ruleList>
+                <ruleGroup>
+                    <ruleList>
+                        <ruleGroup>
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftcore.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftguistd.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftlauncher.exe</name>
+                                </processTest>
+                                <processTest>
+                                    <logic>is_running</logic>
+                                    <name>swiftdata.exe</name>
+                                </processTest>
+                            </ruleList>
+                        </ruleGroup>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </actionGroup>
         <deleteFile>
             <path>${installdir}/update.ini</path>
         </deleteFile>
