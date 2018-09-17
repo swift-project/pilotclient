@@ -219,6 +219,12 @@ namespace BlackMisc
         return test;
     }
 
+    const QString &CDirectoryUtils::shareTerrainProbeDirectory()
+    {
+        static const QString tpd(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "simulator/swiftTerrainProbe"));
+        return tpd;
+    }
+
     const QString &CDirectoryUtils::bootstrapFileName()
     {
         static const QString n("bootstrap.json");
