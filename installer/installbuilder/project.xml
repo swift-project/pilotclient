@@ -230,9 +230,6 @@ it and relaunch the uninstaller.</text>
                 </ruleGroup>
             </ruleList>
         </actionGroup>
-        <deleteFile>
-            <path>${installdir}/update.ini</path>
-        </deleteFile>
         <runProgram>
             <program>launchctl</program>
             <programArguments>remove org.freedesktop.dbus-session.plist</programArguments>
