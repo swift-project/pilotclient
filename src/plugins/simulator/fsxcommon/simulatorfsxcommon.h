@@ -239,7 +239,7 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjTerrainProbe();
 
             //! Release AI control
-            HRESULT releaseAIControl(SIMCONNECT_OBJECT_ID objectId, SIMCONNECT_DATA_REQUEST_ID requestId);
+            bool releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId);
 
             //! Valid CSimConnectObject which is NOT pendig removed
             bool isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const;

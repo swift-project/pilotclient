@@ -495,13 +495,23 @@ namespace BlackSimPlugin
             return id;
         }
 
-        HRESULT CSimulatorFsxCommon::releaseAIControl(SIMCONNECT_OBJECT_ID objectId, SIMCONNECT_DATA_REQUEST_ID requestId)
+        bool CSimulatorFsxCommon::releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId)
         {
-            HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId);
-            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            return hr;
+            const SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
+            const HRESULT hr1 = this->logAndTraceSendId(
+                                    SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId),
+                                    simObject, "Release control", Q_FUNC_INFO, "SimConnect_AIReleaseControl");
+            const HRESULT hr2 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeLat", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+            const HRESULT hr3 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAlt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+            const HRESULT hr4 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAtt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+
+            return isOk(hr1, hr2, hr3, hr4);
         }
 
         bool CSimulatorFsxCommon::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
@@ -825,13 +835,12 @@ namespace BlackSimPlugin
                 simObject.setConfirmedAdded(true);
 
                 // P3D also has SimConnect_AIReleaseControlEx which also allows to destroy the aircraft
-                const DWORD objectId = simObject.getObjectId();
-                const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectMisc);
-                const HRESULT hr = this->releaseAIControl(objectId, requestId);
+                const SIMCONNECT_DATA_REQUEST_ID requestReleaseId = this->obtainRequestIdForSimObjAircraft();
+                const bool released = this->releaseAIControl(simObject, requestReleaseId);
 
-                if (isFailure(hr))
+                if (!released)
                 {
-                    msg = CStatusMessage(this).error("Cannot confirm object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
+                    msg = CStatusMessage(this).error("Cannot confirm model '%1' %2") << remoteAircraft.getModelString() << simObject.toQString();
                     break;
                 }
 
@@ -846,11 +855,11 @@ namespace BlackSimPlugin
                 {
                     emit this->aircraftRenderingChanged(simObject.getAircraft());
                     static const QString debugMsg("CS: '%1' model: '%2' verified, request/object id: %3 %4");
-                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, debugMsg.arg(callsign.toQString(), remoteAircraft.getModelString()).arg(requestId).arg(objectId)); }
+                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, debugMsg.arg(callsign.toQString(), remoteAircraft.getModelString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
                 }
                 else
                 {
-                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 was already marked rendered") << callsign.asString() << remoteAircraft.getModelString() << requestId << objectId;
+                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 was already marked rendered") << callsign.asString() << remoteAircraft.getModelString() << simObject.getRequestId() << simObject.getObjectId();
                 }
             }
             while (false);
@@ -951,7 +960,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::verifyAddedTerrainProbe(const CSimulatedAircraft &remoteAircraftIn)
         {
-            HRESULT hr;
+            bool verified = false;
             CCallsign cs;
 
             // no simObject reference outside that block, because it will be deleted
@@ -959,15 +968,16 @@ namespace BlackSimPlugin
                 CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
                 simObject.setConfirmedAdded(true);
                 simObject.resetTimestampToNow();
+                cs = simObject.getCallsign();
                 CLogMessage(this).info("Probe: '%1' '%2' confirmed, %3") << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
 
-                SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
-                SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId();
-                hr = this->releaseAIControl(objectId, requestId);
-                cs = simObject.getCallsign();
+                // fails for probe
+                // SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe();
+                // verified = this->releaseAIControl(simObject, requestId); // release probe
+                verified = true;
             }
 
-            if (isFailure(hr))
+            if (!verified)
             {
                 CLogMessage(this).info("Disable probes: '%1' failed to relase control") << cs.asString();
                 m_useFsxTerrainProbe = false;
@@ -1382,9 +1392,9 @@ namespace BlackSimPlugin
             const QString modelString(newRemoteAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
-            const HRESULT hr = !probe ?
-                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId) :
-                               SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
+            const HRESULT hr = probe ?
+                               SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId) :
+                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
             // const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
 
             if (isFailure(hr))
@@ -1416,7 +1426,8 @@ namespace BlackSimPlugin
             // static const QString modelString("A321ACA");
             // static const QString modelString("AI_Tracker_Object_0");
             // static const QString modelString("Piper Cub"); // P3Dv86 works as nonATC/SimulatedObject
-            static const QString modelString("Discovery Spaceshuttle"); // P3Dx86 works as nonATC/SimulatedObject
+            // static const QString modelString("Discovery Spaceshuttle"); // P3Dx86 works as nonATC/SimulatedObject
+            static const QString modelString("swiftTerrainProbe0");
             static const QString pseudoCallsign("PROBE%1"); // max 12 chars
             static const CCountry ctry("SW", "SWIFT");
             static const CAirlineIcaoCode swiftAirline("SWI", "swift probe", ctry, "SWIFT", false, false);
@@ -1436,8 +1447,10 @@ namespace BlackSimPlugin
             if (number < 1) { return 0; }
             if (m_initFsxTerrainProbes) { return m_addedProbes; }
             m_initFsxTerrainProbes = true; // no multiple inits
+            this->triggerAutoTraceSendId();
+
             int c = 0;
-            for (int n = 1; n <= number; ++n)
+            for (int n = 0; n < number; ++n)
             {
                 if (this->physicallyAddAITerrainProbe(coordinate, n)) { c++; }
             }
