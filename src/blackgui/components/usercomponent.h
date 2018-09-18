@@ -23,8 +23,6 @@
 #include <QtGlobal>
 #include <QTimer>
 
-class QWidget;
-
 namespace Ui { class CUserComponent; }
 namespace BlackGui
 {
@@ -42,7 +40,7 @@ namespace BlackGui
             explicit CUserComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CUserComponent();
+            virtual ~CUserComponent();
 
             //! Number of clients
             int countClients() const;
@@ -54,20 +52,19 @@ namespace BlackGui
             //! Update users
             void update();
 
-        private slots:
+        private:
             //! Number of elements changed
-            void ps_onCountChanged(int count, bool withFilter);
+            void onCountChanged(int count, bool withFilter);
 
             //! Connection status
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Settings have been changed
-            void ps_settingsChanged();
+            void onSettingsChanged();
 
-        private:
             QScopedPointer<Ui::CUserComponent> ui;
             QTimer m_updateTimer;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::ps_settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
         };
     }
 }

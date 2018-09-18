@@ -38,11 +38,11 @@ namespace BlackGui
             this->setCurrentIndex(0);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
-            connect(ui->tvp_AllUsers, &CUserView::modelDataChangedDigest, this, &CUserComponent::ps_onCountChanged);
-            connect(ui->tvp_Clients, &CClientView::modelDataChangedDigest, this, &CUserComponent::ps_onCountChanged);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
+            connect(ui->tvp_AllUsers, &CUserView::modelDataChangedDigest, this, &CUserComponent::onCountChanged);
+            connect(ui->tvp_Clients, &CClientView::modelDataChangedDigest, this, &CUserComponent::onCountChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::onConnectionStatusChanged);
             connect(&m_updateTimer, &QTimer::timeout, this, &CUserComponent::update);
-            this->ps_settingsChanged();
+            this->onSettingsChanged();
         }
 
         CUserComponent::~CUserComponent()
@@ -81,7 +81,7 @@ namespace BlackGui
             }
         }
 
-        void CUserComponent::ps_onCountChanged(int count, bool withFilter)
+        void CUserComponent::onCountChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -95,26 +95,26 @@ namespace BlackGui
             this->tabBar()->setTabText(ic, c);
         }
 
-        void CUserComponent::ps_connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CUserComponent::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
             {
                 ui->tvp_AllUsers->clear();
                 ui->tvp_Clients->clear();
-                this->m_updateTimer.stop();
+                m_updateTimer.stop();
             }
             else if (INetwork::isConnectedStatus(to))
             {
-                this->m_updateTimer.start();
+                m_updateTimer.start();
             }
         }
 
-        void CUserComponent::ps_settingsChanged()
+        void CUserComponent::onSettingsChanged()
         {
-            const CViewUpdateSettings settings = this->m_settings.get();
+            const CViewUpdateSettings settings = m_settings.get();
             const int ms = settings.getAtcUpdateTime().toMs();
-            this->m_updateTimer.setInterval(ms);
+            m_updateTimer.setInterval(ms);
         }
     } // namespace
 } // namespace

@@ -392,7 +392,7 @@ namespace BlackGui
             if (!m_menus.testFlag(MenuCanStashModels)) { return; }
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects());
-            emit requestStash(models);
+            emit this->requestStash(models);
             if (m_stashingClearsSelection)
             {
                 this->clearSelection();

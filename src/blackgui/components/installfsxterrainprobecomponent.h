@@ -27,6 +27,7 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Constructor
             explicit CInstallFsxTerrainProbeComponent(QWidget *parent = nullptr);
 
             //! Destructors

@@ -15,7 +15,6 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/datacache.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"

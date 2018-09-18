@@ -38,17 +38,17 @@ namespace BlackMisc
         static const QString &persistentStore();
 
         //! Save settings to disk.
-        BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
+        CStatusMessage saveToStore(const QString &keyPrefix = {});
 
         //! Save settings to disk.
-        BlackMisc::CStatusMessage saveToStore(const QStringList &keys);
+        CStatusMessage saveToStore(const QStringList &keys);
 
         //! Connects signal CValueCache::valuesSaveRequested to a private slot that saves the values.
         //! In a dbus distributed scenario, only call this method in the core process.
         void enableLocalSave();
 
         //! Load settings from disk.
-        BlackMisc::CStatusMessage loadFromStore();
+        CStatusMessage loadFromStore();
 
         //! Return the filename where the value with the given key may be stored.
         static QString filenameForKey(const QString &key);

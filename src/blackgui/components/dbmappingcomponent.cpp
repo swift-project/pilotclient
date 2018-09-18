@@ -141,7 +141,7 @@ namespace BlackGui
 
         CDbMappingComponent::~CDbMappingComponent()
         {
-            gracefulShutdown();
+            this->gracefulShutdown();
         }
 
         void CDbMappingComponent::initVPilotLoading()
@@ -197,22 +197,10 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
 
             // check if we have an explicit sender
-            if (sender == ui->tvp_AircraftModelsForVPilot)
-            {
-                return ui->tvp_AircraftModelsForVPilot->at(index);
-            }
-            else if (sender == ui->comp_OwnAircraftModels->view())
-            {
-                return ui->comp_OwnAircraftModels->view()->at(index);
-            }
-            else if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view())
-            {
-                return ui->comp_StashAircraft->view()->at(index);
-            }
-            else if (sender == ui->comp_OwnModelSet->view())
-            {
-                return ui->comp_OwnModelSet->view()->at(index);
-            }
+            if (sender == ui->tvp_AircraftModelsForVPilot) { return ui->tvp_AircraftModelsForVPilot->at(index); }
+            if (sender == ui->comp_OwnAircraftModels->view()) { return ui->comp_OwnAircraftModels->view()->at(index); }
+            if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view()) { return ui->comp_StashAircraft->view()->at(index); }
+            if (sender == ui->comp_OwnModelSet->view()) { return ui->comp_OwnModelSet->view()->at(index); }
 
             // no sender, use current tab
             const CAircraftModelView *v = this->currentModelView();
@@ -245,9 +233,10 @@ namespace BlackGui
             const TabIndex tab = currentTabIndex();
             switch (tab)
             {
-            case TabOwnModels: return ui->comp_OwnAircraftModels->view();
-            case TabVPilot: return ui->tvp_AircraftModelsForVPilot;
-            case TabStash: return ui->comp_StashAircraft->view();
+            case TabOwnModels:   return ui->comp_OwnAircraftModels->view();
+            case TabVPilot:      return ui->tvp_AircraftModelsForVPilot;
+            case TabWorkbench:   return ui->comp_ModelWorkbench->view();
+            case TabStash:       return ui->comp_StashAircraft->view();
             case TabOwnModelSet: return ui->comp_OwnModelSet->view();
             default: return nullptr;
             }

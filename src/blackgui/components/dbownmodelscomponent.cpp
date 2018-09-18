@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/databaseutils.h"
 #include "blackgui/components/dbownmodelscomponent.h"
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/guiapplication.h"
@@ -16,6 +14,8 @@
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/views/aircraftmodelview.h"
+#include "blackcore/webdataservices.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"

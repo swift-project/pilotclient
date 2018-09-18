@@ -24,8 +24,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CDbModelComponent; }
 namespace BlackGui
 {
