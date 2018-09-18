@@ -131,6 +131,12 @@
           </property>
           <item>
            <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
             <attribute name="verticalHeaderVisible">
              <bool>false</bool>
             </attribute>
