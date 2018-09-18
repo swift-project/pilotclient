@@ -61,6 +61,11 @@ namespace BlackCore
             return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
         }
 
+        bool IContextSimulator::isSimulatorAvailable() const
+        {
+            return BlackConfig::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified();
+        }
+
         bool IContextSimulator::isSimulatorSimulating() const
         {
             if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }

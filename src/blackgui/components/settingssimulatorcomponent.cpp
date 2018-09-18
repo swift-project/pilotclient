@@ -103,6 +103,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::setGuiValues()
         {
+            if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown()) { return; }
             const CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
 
             // time sync

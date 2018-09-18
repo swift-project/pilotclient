@@ -216,7 +216,7 @@ namespace BlackCore
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
             //! Simulator avialable (driver available)?
-            bool isSimulatorAvailable() const { return BlackConfig::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
+            bool isSimulatorAvailable() const;
 
             //! Is available simulator simulating? Returns false if no simulator is available
             bool isSimulatorSimulating() const;

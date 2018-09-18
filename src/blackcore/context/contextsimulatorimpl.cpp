@@ -140,18 +140,15 @@ namespace BlackCore
         int CContextSimulator::getSimulatorStatus() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
-
-            Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return 0; }
             return m_simulatorPlugin.second->getSimulatorStatus();
         }
 
         CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
         {
+            static const CSimulatorPluginInfo unspecified;
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CSimulatorPluginInfo(); }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return unspecified; }
             if (m_simulatorPlugin.first.getSimulator().contains("emulated", Qt::CaseInsensitive)) { return m_simulatorPlugin.second->getSimulatorPluginInfo(); }
             return m_simulatorPlugin.first;
         }
@@ -159,12 +156,7 @@ namespace BlackCore
         CSimulatorInternals CContextSimulator::getSimulatorInternals() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return CSimulatorInternals();
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CSimulatorInternals(); }
             return m_simulatorPlugin.second->getSimulatorInternals();
         }
 
@@ -172,12 +164,7 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             // If no ISimulator object is available, return a dummy.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return CAirportList();
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAirportList(); }
             return m_simulatorPlugin.second->getAirportsInRange(recalculateDistance);
         }
 
@@ -265,30 +252,23 @@ namespace BlackCore
         int CContextSimulator::getModelSetCount() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return 0; }
             return this->getModelSet().size();
         }
 
         CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return CAircraftModelList();
-            }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
 
-            Q_ASSERT(m_simulatorPlugin.second);
             return this->getModelSet().findModelsStartingWith(modelString);
         }
 
         bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
 
-            Q_ASSERT(m_simulatorPlugin.second);
             const bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
             if (!c) { return false; }
 
@@ -299,41 +279,35 @@ namespace BlackCore
         bool CContextSimulator::isTimeSynchronized() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
             return m_simulatorPlugin.second->isTimeSynchronized();
         }
 
         CInterpolationAndRenderingSetupGlobal CContextSimulator::getInterpolationAndRenderingSetupGlobal() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return m_renderSettings.get(); }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return m_renderSettings.get(); }
             return m_simulatorPlugin.second->getInterpolationSetupGlobal();
         }
 
         CInterpolationSetupList CContextSimulator::getInterpolationAndRenderingSetupsPerCallsign() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationSetupList(); }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CInterpolationSetupList(); }
             return m_simulatorPlugin.second->getInterpolationSetupsPerCallsign();
         }
 
         CInterpolationAndRenderingSetupPerCallsign CContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupPerCallsign(); }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupPerCallsign(); }
             return m_simulatorPlugin.second->getInterpolationSetupPerCallsignOrDefault(callsign);
         }
 
         bool CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
             return m_simulatorPlugin.second->setInterpolationSetupsPerCallsign(setups, ignoreSameAsGlobal);
         }
 
@@ -346,16 +320,14 @@ namespace BlackCore
             CLogMessage::preformatted(m);
 
             // transfer to sim
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
             m_simulatorPlugin.second->setInterpolationSetupGlobal(setup);
         }
 
         CTime CContextSimulator::getTimeSynchronizationOffset() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CTime(0, CTimeUnit::hrmin()); }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CTime(0, CTimeUnit::hrmin()); }
             return m_simulatorPlugin.second->getTimeSynchronizationOffset();
         }
 
@@ -631,6 +603,7 @@ namespace BlackCore
         {
             if (!this->isSimulatorAvailable()) { return; }
             if (!this->getIContextOwnAircraft()) { return; }
+
             const CSimulatorMessagesSettings settings = m_messageSettings.getThreadLocal();
             const CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
             for (const auto &tm : textMessages)
@@ -721,7 +694,7 @@ namespace BlackCore
         {
             if (!this->isSimulatorAvailable()) { return; }
             const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
-            if (simMsg.relayThisStatusMessage(message))
+            if (simMsg.relayThisStatusMessage(message) && m_simulatorPlugin.second)
             {
                 m_simulatorPlugin.second->displayStatusMessage(message);
             }
@@ -759,8 +732,7 @@ namespace BlackCore
 
         CPixmap CContextSimulator::iconForModel(const QString &modelString) const
         {
-            if (m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
-            Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
 
             // load from file
             CStatusMessage msg;
@@ -890,14 +862,14 @@ namespace BlackCore
         void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << aircraftToHighlight << enableHighlight << displayTime; }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second) { return; }
             m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
         }
 
         bool CContextSimulator::followAircraft(const CCallsign &callsign)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!m_simulatorPlugin.second) { return false; }
             return m_simulatorPlugin.second->followAircraft(callsign);
         }
 
@@ -916,7 +888,7 @@ namespace BlackCore
             m_isWeatherActivated = activated;
 
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
             m_simulatorPlugin.second->setWeatherActivated(activated);
         }
 
