@@ -51,16 +51,11 @@ namespace BlackCore
             IContextAudio(mode, runtime),
             m_voice(new CVoiceVatlib())
         {
-            // own aircraft may or may not be available
-            const CCallsign ownCallsign = (this->getIContextOwnAircraft()) ? getIContextOwnAircraft()->getOwnAircraft().getCallsign() : CCallsign();
-
             m_channel1 = m_voice->createVoiceChannel();
-            m_channel1->setOwnAircraftCallsign(ownCallsign);
             connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
             connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
             connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
             m_channel2 = m_voice->createVoiceChannel();
-            m_channel2->setOwnAircraftCallsign(ownCallsign);
             connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
             connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
             connect(m_channel2.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
@@ -401,14 +396,6 @@ namespace BlackCore
             Q_UNUSED(changed);
         }
 
-        void CContextAudio::setOwnCallsignForRooms(const CCallsign &callsign)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-
-            if (m_channel1) { m_channel1->setOwnAircraftCallsign(callsign); }
-            if (m_channel2) { m_channel2->setOwnAircraftCallsign(callsign); }
-        }
-
         CCallsignSet CContextAudio::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
         {
             Q_ASSERT(m_voice);
@@ -553,12 +540,6 @@ namespace BlackCore
                 CLogMessage(this).warning("Voice channel disconnecting error");
             // intentional fall-through
             case IVoiceChannel::Disconnected:
-                if (this->getIContextOwnAircraft())
-                {
-                    // good chance to update aircraft
-                    m_channel1->setOwnAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-                    m_channel2->setOwnAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-                }
                 emit this->changedVoiceRooms(getComVoiceRooms(), false);
                 break;
             default:

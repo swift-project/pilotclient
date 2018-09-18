@@ -59,13 +59,6 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
-            //! \copydoc IContextAudio::setOwnCallsignForRooms
-            virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override
-            {
-                Q_UNUSED(callsign);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
             //! \copydoc IContextAudio::getRoomCallsigns()
             virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override
             {

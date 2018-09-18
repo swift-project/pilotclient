@@ -119,9 +119,6 @@ namespace BlackCore
             //! Set voice rooms
             virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
 
-            //! Own callsign as displayed in voice room
-            virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-
             //! Leave all voice rooms
             virtual void leaveAllVoiceRooms() = 0;
 
