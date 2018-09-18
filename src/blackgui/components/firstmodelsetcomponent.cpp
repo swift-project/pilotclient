@@ -104,8 +104,9 @@ namespace BlackGui
             this->onSimulatorChanged(simulator);
         }
 
-        void CFirstModelSetComponent::onModelsLoaded(const CSimulatorInfo &simulator)
+        void CFirstModelSetComponent::onModelsLoaded(const CSimulatorInfo &simulator, int count)
         {
+            Q_UNUSED(count);
             const CSimulatorInfo currentSimulator = ui->comp_SimulatorSelector->getValue();
             if (simulator != currentSimulator) { return; } // ignore changes not for my selected simulator
             this->onSimulatorChanged(simulator);

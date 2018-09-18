@@ -51,7 +51,7 @@ namespace BlackGui
 
         signals:
             //! \copydoc CDbOwnModelsComponent::successfullyLoadedModels
-            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
 
         private:
             QScopedPointer<Ui::CDbOwnModelsDialog> ui;

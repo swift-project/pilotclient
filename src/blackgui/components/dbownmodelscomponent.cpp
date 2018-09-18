@@ -555,13 +555,22 @@ namespace BlackGui
                 const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
                 const int modelsLoaded = models.size();
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+                CStatusMessage m;
                 if (modelsLoaded < 1)
                 {
                     // loading ok, but no data
-                    CLogMessage(this).warning("Loading completed for simulator '%1', but no models") << simulator;
+                    m = CLogMessage(this).warning("Loading completed for simulator '%1', but no models") << simulator;
+                }
+                else
+                {
+                    m = CLogMessage(this).info("Loading completed for simulator '%1' with %2 models") << simulator << modelsLoaded;
                 }
 
-                emit this->successfullyLoadedModels(simulator);
+                // overlay
+                if (!m.isEmpty() && info == IAircraftModelLoader::ParsedData) { this->showOverlayMessage(m, 5000); }
+
+                // signal
+                emit this->successfullyLoadedModels(simulator, modelsLoaded);
             }
             else
             {

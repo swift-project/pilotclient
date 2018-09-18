@@ -123,7 +123,7 @@ namespace BlackGui
 
         signals:
             //! Models have been successfully loaded
-            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;

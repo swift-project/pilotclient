@@ -60,7 +60,7 @@ namespace BlackGui
             void onSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Models have been loaded
-            void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
 
             //! Asynchronously call onSettingsChanged
             void triggerSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
