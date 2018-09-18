@@ -79,13 +79,13 @@ namespace BlackMisc
                 //! \threadsafe
                 CAircraftCfgEntriesList performParsing(
                     const QStringList &directories, const QStringList &excludeDirectories,
-                    BlackMisc::CStatusMessageList &messages, bool *ok);
+                    BlackMisc::CStatusMessageList &messages);
 
                 //! Perform the parsing for one directory
                 //! \threadsafe
                 CAircraftCfgEntriesList performParsing(
                     const QString &directory, const QStringList &excludeDirectories,
-                    BlackMisc::CStatusMessageList &messages, bool *ok);
+                    BlackMisc::CStatusMessageList &messages);
 
                 //! Fix the content read
                 static QString fixedStringContent(const QVariant &qv);

@@ -44,7 +44,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             // response for async. loading
-            using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, BlackMisc::CStatusMessageList, bool>;
+            using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, CStatusMessageList>;
 
             CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent) : IAircraftModelLoader(simInfo, parent)
             { }
@@ -73,25 +73,23 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     emit this->diskLoadingStarted(simulator, mode);
-                    m_parserWorker = CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
+                    m_parserWorker = CWorker::fromTask(this, "CAircraftCfgParser::startLoadingFromDisk",
                                                        [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
                     {
-                        bool ok = false;
                         CStatusMessageList msgs;
-                        const auto aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs, &ok);
+                        const CAircraftCfgEntriesList aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
                         CAircraftModelList models;
-                        if (ok)
+                        if (msgs.isSuccess())
                         {
                             models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
                             if (modelConsolidation) { modelConsolidation(models, true); }
                         }
-                        return std::make_tuple(aircraftCfgEntriesList, models, msgs, ok);
+                        return std::make_tuple(aircraftCfgEntriesList, models, msgs);
                     });
                     m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse & tuple)
                     {
-                        const bool ok = std::get<3>(tuple);
                         m_loadingMessages = std::get<2>(tuple);
-                        if (ok)
+                        if (m_loadingMessages.isSuccess())
                         {
                             m_parsedCfgEntriesList = std::get<0>(tuple);
                             const CAircraftModelList models(std::get<1>(tuple));
@@ -113,9 +111,8 @@ namespace BlackMisc
                 {
                     emit this->diskLoadingStarted(simulator, mode);
 
-                    bool ok;
                     CStatusMessageList msgs;
-                    m_parsedCfgEntriesList = performParsing(modelDirs, excludedDirectoryPatterns, msgs, &ok);
+                    m_parsedCfgEntriesList = performParsing(modelDirs, excludedDirectoryPatterns, msgs);
                     const CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
                     m_loadingMessages = msgs;
                     const bool hasData = !models.isEmpty();
@@ -133,34 +130,28 @@ namespace BlackMisc
                 return !m_parserWorker || m_parserWorker->isFinished();
             }
 
-            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QStringList &directories, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QStringList &directories, const QStringList &excludeDirectories, CStatusMessageList &messages)
             {
                 CAircraftCfgEntriesList entries;
-                bool dirOk = false;
-                bool success = true;
                 for (const QString &dir : directories)
                 {
-                    entries.push_back(performParsing(dir, excludeDirectories, messages, &dirOk));
-                    success &= dirOk;
+                    entries.push_back(performParsing(dir, excludeDirectories, messages));
                 }
-                *ok = success;
                 return entries;
             }
 
-            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages)
             {
                 //
                 // function has to be threadsafe
                 //
 
-                *ok = false;
                 if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
 
                 // excluded?
                 if (CFileUtils::isExcludedDirectory(directory, excludeDirectories))
                 {
                     CLogMessage(this).debug() << "Skipping directory " << directory;
-                    *ok = true;
                     return CAircraftCfgEntriesList();
                 }
 
@@ -169,7 +160,6 @@ namespace BlackMisc
                 dir.setNameFilters(fileNameFilters());
                 if (!dir.exists())
                 {
-                    *ok = true;
                     return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
                 }
 
@@ -187,15 +177,15 @@ namespace BlackMisc
                         if (currentDir.startsWith(nextDir, Qt::CaseInsensitive)) { continue; } // do not go up
                         if (dir == currentDir) { continue; } // do not recursively call same directory
 
-                        bool dirOk;
-                        const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, messages, &dirOk));
-                        if (dirOk)
+                        const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, messages));
+                        if (messages.isSuccess())
                         {
                             result.push_back(subList);
                         }
                         else
                         {
-                            CLogMessage(this).warning("Parsing failed for %1") << nextDir;
+                            const CStatusMessage m = CStatusMessage(this).warning("Parsing failed for '%1'") << nextDir;
+                            messages.push_back(m);
                         }
                     }
                     else
@@ -207,10 +197,11 @@ namespace BlackMisc
                         const QString fileName = fileInfo.absoluteFilePath();
                         bool fileOk = false;
                         CStatusMessageList fileMsgs;
-                        CAircraftCfgEntriesList fileResults = performParsingOfSingleFile(fileName, fileOk, fileMsgs);
+                        CAircraftCfgEntriesList fileResults = CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
                         if (!fileOk)
                         {
-                            CLogMessage::preformatted(fileMsgs);
+                            const CStatusMessage m = CStatusMessage(this).warning("Parsing of '%1' failed") << fileName;
+                            messages.push_back(fileMsgs);
                             continue;
                         }
 
@@ -221,7 +212,6 @@ namespace BlackMisc
 
                 // all files finished,
                 // normally reached when no aircraft.cfg is found
-                *ok = true;
                 return result;
             }
 
