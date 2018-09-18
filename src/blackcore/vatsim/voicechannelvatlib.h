@@ -55,6 +55,9 @@ namespace BlackCore
             //! \copydoc IVoiceChannel::setOwnAircraftCallsign
             virtual void setOwnAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc IVoiceChannel::setUserId
+            virtual void setUserId(const QString &id) override;
+
             //! \copydoc IVoiceChannel::getVoiceRoom
             virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const override;
 
@@ -94,6 +97,7 @@ namespace BlackCore
             static void roomStatusUpdate(VatVoiceChannel *channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar);
 
             BlackMisc::Aviation::CCallsign m_callsign; // Own callsign
+            QString m_userId; // Pilot user id
             BlackMisc::Audio::CVoiceRoom m_voiceRoom; // Voice Room
             BlackMisc::Aviation::CCallsignSet m_listCallsigns; // Callsigns connected to room
             IVoiceChannel::ConnectionStatus m_roomStatus = IVoiceChannel::Disconnected; // Room connection status

@@ -58,9 +58,10 @@ namespace BlackCore
 
             // No one else is using this voice room, so prepare to join
             m_voiceRoom = voiceRoom;
+            QString callsign = QString("%1 (%2)").arg(m_callsign.toQString()).arg(m_userId);
             Vat_SetRoomInfo(m_voiceChannel.data(), qPrintable(voiceRoom.getHostname()), 3782,
                             qPrintable(voiceRoom.getChannel()),
-                            qPrintable(m_callsign.toQString()));
+                            qPrintable(callsign));
 
             CLogMessage(this).debug() << "Joining voice room " << m_voiceRoom.getVoiceRoomUrl();
             Vat_JoinRoom(m_voiceChannel.data());
@@ -86,6 +87,11 @@ namespace BlackCore
         void CVoiceChannelVatlib::setOwnAircraftCallsign(const CCallsign &callsign)
         {
             m_callsign = callsign;
+        }
+
+        void CVoiceChannelVatlib::setUserId(const QString &id)
+        {
+            m_userId = id;
         }
 
         BlackMisc::Audio::CVoiceRoom CVoiceChannelVatlib::getVoiceRoom() const

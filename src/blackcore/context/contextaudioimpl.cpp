@@ -310,6 +310,7 @@ namespace BlackCore
             CVoiceRoom newRoomCom1 = newRooms[0];
             CVoiceRoom newRoomCom2 = newRooms[1];
             const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            QString id = this->getIContextOwnAircraft()->getOwnAircraft().getPilotId();
 
             bool changed = false;
 
@@ -337,6 +338,7 @@ namespace BlackCore
                 {
                     QSharedPointer<IVoiceChannel> newVoiceChannel = this->getVoiceChannelBy(newRoomCom1);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
+                    newVoiceChannel->setUserId(id);
                     bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
 
@@ -377,6 +379,7 @@ namespace BlackCore
                 {
                     auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
+                    newVoiceChannel->setUserId(id);
                     bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com2, newVoiceChannel);
 

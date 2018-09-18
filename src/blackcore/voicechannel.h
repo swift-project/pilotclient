@@ -58,6 +58,9 @@ namespace BlackCore
         //! Set own aircraft's callsign
         virtual void setOwnAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+        //! Set user id
+        virtual void setUserId(const QString &id) = 0;
+
         //! Get voice room
         virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const = 0;
 
