@@ -46,6 +46,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ByForceCivilian, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScoreIgnoreZeros, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScorePreferColorLiveries, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetRemoveFailed, readonly);
 
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
@@ -80,6 +81,7 @@ namespace BlackGui
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
             ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
             ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
+            ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel));
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
@@ -115,7 +117,8 @@ namespace BlackGui
                        ui->cb_ByForceCivilian->isChecked(),
                        ui->cb_ByVtol->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
-                       ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked()
+                       ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
+                       ui->cb_ModelSetRemoveFailed->isChecked()
                    );
         }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>293</width>
-    <height>375</height>
+    <height>438</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,10 +105,40 @@
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
+      <item row="3" column="1" colspan="2">
+       <widget class="QCheckBox" name="cb_ByVtol">
+        <property name="toolTip">
+         <string>Vertical Takeoff or Landing</string>
+        </property>
         <property name="text">
-         <string>by ICAO: airline first</string>
+         <string>VTOL (helicopters and such)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cb_ByForceMilitary">
+        <property name="toolTip">
+         <string>inbound military force matched military</string>
+        </property>
+        <property name="text">
+         <string>force military</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="cb_ByForceCivilian">
+        <property name="toolTip">
+         <string>inbound civilian force matched civilian</string>
+        </property>
+        <property name="text">
+         <string>force civilian</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="cb_ByLivery">
+        <property name="text">
+         <string> livery</string>
         </property>
        </widget>
       </item>
@@ -119,6 +149,13 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="rb_ByIcaoDataAirline1st">
+        <property name="text">
+         <string>by ICAO: airline first</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <widget class="QCheckBox" name="cb_ByCombinedCode">
         <property name="text">
@@ -126,10 +163,10 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="cb_ByLivery">
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="cb_ByFamily">
         <property name="text">
-         <string> livery</string>
+         <string>family</string>
         </property>
        </widget>
       </item>
@@ -147,40 +184,19 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="cb_ByFamily">
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_FailureHandling">
+     <property name="title">
+      <string>Failure handling</string>
+     </property>
+     <layout class="QHBoxLayout" name="hFailureHandling">
+      <item>
+       <widget class="QCheckBox" name="cb_ModelSetRemoveFailed">
         <property name="text">
-         <string>family</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="cb_ByForceMilitary">
-        <property name="toolTip">
-         <string>inbound military force matched military</string>
-        </property>
-        <property name="text">
-         <string>force military</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QCheckBox" name="cb_ByVtol">
-        <property name="toolTip">
-         <string>Vertical Takeoff or Landing</string>
-        </property>
-        <property name="text">
-         <string>VTOL (helicopters and such)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="cb_ByForceCivilian">
-        <property name="toolTip">
-         <string>inbound civilian force matched civilian</string>
-        </property>
-        <property name="text">
-         <string>force civilian</string>
+         <string>removed failed from set</string>
         </property>
        </widget>
       </item>

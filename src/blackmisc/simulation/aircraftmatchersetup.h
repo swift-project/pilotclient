@@ -54,6 +54,8 @@ namespace BlackMisc
                 ExcludeNoDbData   = 1 << 13,
                 ExcludeNoExcluded = 1 << 14,
                 ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
+                // --- model set ---
+                ModelSetRemoveFailedModel = 1 << 15,
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
@@ -106,6 +108,9 @@ namespace BlackMisc
             //! Dynamic offset values?
             void setMatchingMode(MatchingMode mode) { m_mode = static_cast<int>(mode); }
 
+            //! Remove if failed?
+            bool removeFromSetIfFailed() const { return this->getMatchingMode().testFlag(ModelSetRemoveFailedModel); }
+
             //! Strategy among equally suitable models
             PickSimilarStrategy getPickStrategy() const { return static_cast<PickSimilarStrategy>(m_strategy); }
 
@@ -144,7 +149,8 @@ namespace BlackMisc
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
                                              bool byVtol,
-                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded);
+                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
+                                             bool modelSetRemoveFailedModel);
 
         private:
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);

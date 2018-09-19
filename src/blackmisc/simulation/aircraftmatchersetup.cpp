@@ -134,6 +134,7 @@ namespace BlackMisc
             static const QString preferColorLiveries("scoring, prefer color liveries");
             static const QString exNoDb("excl.without DB data");
             static const QString exExcl("excl.excluded");
+            static const QString remModelSet("rem.from model set");
 
             switch (modeFlag)
             {
@@ -151,6 +152,7 @@ namespace BlackMisc
             case ScorePreferColorLiveries: return preferColorLiveries;
             case ExcludeNoDbData:          return exNoDb;
             case ExcludeNoExcluded:        return exExcl;
+            case ModelSetRemoveFailedModel: return remModelSet;
             default: break;
             }
 
@@ -172,7 +174,8 @@ namespace BlackMisc
             if (mode.testFlag(ByForceMilitary))  { modes << modeFlagToString(ByForceMilitary); }
             if (mode.testFlag(ByVtol))           { modes << modeFlagToString(ByVtol); }
             if (mode.testFlag(ScoreIgnoreZeros)) { modes << modeFlagToString(ScoreIgnoreZeros); }
-            if (mode.testFlag(ScorePreferColorLiveries)) { modes << modeFlagToString(ScorePreferColorLiveries); }
+            if (mode.testFlag(ScorePreferColorLiveries))  { modes << modeFlagToString(ScorePreferColorLiveries); }
+            if (mode.testFlag(ModelSetRemoveFailedModel)) { modes << modeFlagToString(ModelSetRemoveFailedModel); }
             return modes.join(", ");
         }
 
@@ -198,7 +201,8 @@ namespace BlackMisc
                 bool byForceMilitary, bool byForceCivilian,
                 bool byVtol,
                 bool scoreIgnoreZeros, bool scorePreferColorLiveries,
-                bool excludeNoDbData, bool excludeNoExcluded)
+                bool excludeNoDbData, bool excludeNoExcluded,
+                bool modelSetRemoveFailedModel)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
             if (byIcaoDataAircraft1st)    { mode |= ByIcaoOrderAircraftFirst; }
@@ -213,6 +217,7 @@ namespace BlackMisc
             if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }
             if (excludeNoDbData)          { mode |= ExcludeNoDbData; }
             if (excludeNoExcluded)        { mode |= ExcludeNoExcluded; }
+            if (modelSetRemoveFailedModel) { mode |= ModelSetRemoveFailedModel; }
             return mode;
         }
     } // namespace
