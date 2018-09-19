@@ -164,7 +164,7 @@ namespace BlackInput
         Q_ASSERT_X(m_directInput, Q_FUNC_INFO, "We should not get here without direct input");
         if (FAILED(hr = m_directInput->CreateDevice(deviceData.guidDevice, &m_directInputDevice, nullptr)))
         {
-            // FIXME: print error message
+            CLogMessage(this).warning("IDirectInput8::CreateDevice failed: ") << hr;
             return hr;
         }
 
@@ -173,14 +173,14 @@ namespace BlackInput
         // Set cooperative level
         if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(m_helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
         {
-            // FIXME: print error message
+            CLogMessage(this).warning("IDirectInputDevice8::SetCooperativeLevel failed: ") << hr;
             return hr;
         }
 
         // Set data format to c_dfDIJoystick2
         if (FAILED(hr = m_directInputDevice->SetDataFormat(&c_dfDIJoystick2)))
         {
-            // FIXME: print error message
+            CLogMessage(this).warning("IDirectInputDevice8::SetDataFormat failed: ") << hr;
             return hr;
         }
 
@@ -189,14 +189,14 @@ namespace BlackInput
         // Get device capabilities - we are interested in the number of buttons.
         if (FAILED(hr = m_directInputDevice->GetCapabilities(&deviceCaps)))
         {
-            // FIXME: print error message
+            CLogMessage(this).warning("IDirectInputDevice8::GetCapabilities failed: ") << hr;
             return hr;
         }
 
         m_joystickDeviceInputs.clear();
         if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_BUTTON)))
         {
-            // FIXME: print error message
+            CLogMessage(this).warning("IDirectInputDevice8::EnumObjects failed: ") << hr;
             return hr;
         }
 
