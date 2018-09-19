@@ -50,6 +50,7 @@ class QPaintEvent;
 class QPoint;
 class QShowEvent;
 class QWidget;
+class QTabWidget;
 
 namespace BlackMisc { class CWorker; }
 namespace BlackGui
@@ -707,6 +708,9 @@ namespace BlackGui
 
             //! Drop actions
             void setDropActions(Qt::DropActions dropActions) { Q_ASSERT(m_model); m_model->setDropActions(dropActions); }
+
+            //! Set a tab widget text based on row count, filter etc.
+            void setTabWidgetViewText(QTabWidget *tw, int index);
 
         protected:
             ModelClass *m_model = nullptr; //!< corresponding model

@@ -1373,6 +1373,16 @@ namespace BlackGui
             this->addContainerTypesAsDropTypes(true, true);
         }
 
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::setTabWidgetViewText(QTabWidget *tw, int index)
+        {
+            if (!tw) { return; }
+            QString o = tw->tabText(index);
+            const QString f = this->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, this->rowCount()) + f;
+            tw->setTabText(index, o);
+        }
+
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
         {
