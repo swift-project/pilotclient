@@ -229,6 +229,10 @@ namespace BlackMisc
 
             //! Remove those models with given model strings
             //! \return number of elements removed
+            int removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity);
+
+            //! Remove those models with given model strings
+            //! \return number of elements removed
             int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
 
             //! Remove if not matching simulator
