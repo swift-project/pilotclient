@@ -31,26 +31,71 @@ namespace
 
 namespace BlackInput
 {
+    CJoystickDevice::CJoystickDevice(const QString &path, QFile *fd, QObject *parent)
+        : QObject(parent), m_path(path), m_fd(fd)
+    {
+        m_fd->setParent(this);
+        char deviceName[256];
+        if (ioctl(m_fd->handle(), JSIOCGNAME(sizeof(deviceName)), deviceName) < 0)
+        {
+            strncpy(deviceName, "Unknown", sizeof(deviceName));
+        }
+
+        CLogMessage(this).info("Found joystick: %1") << deviceName;
+
+        fcntl(m_fd->handle(), F_SETFL, O_NONBLOCK);
+
+        /* Forward */
+        struct js_event event;
+        while (m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event)) {}
+        QSocketNotifier *notifier = new QSocketNotifier(m_fd->handle(), QSocketNotifier::Read, m_fd);
+        connect(notifier, &QSocketNotifier::activated, this, &CJoystickDevice::processInput);
+        m_name = QString(deviceName);
+    }
+
+    CJoystickDevice::~CJoystickDevice()
+    {
+        if (m_fd)
+        {
+            m_fd->close();
+            m_fd->deleteLater();
+        }
+    }
+
+    void CJoystickDevice::processInput()
+    {
+        struct js_event event;
+        while (m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
+        {
+            switch (event.type & ~JS_EVENT_INIT)
+            {
+            case JS_EVENT_BUTTON:
+                if (event.value) { emit buttonChanged(m_name, event.number, true); }
+                else { emit buttonChanged(m_name, event.number, false); }
+                break;
+            }
+        }
+    }
+
     CJoystickLinux::CJoystickLinux(QObject *parent) :
         IJoystick(parent),
-        m_mapper(new QSignalMapper(this)),
         m_inputWatcher(new QFileSystemWatcher(this))
     {
-        connect(m_mapper, static_cast<void (QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), this, &CJoystickLinux::ps_readInput);
-
         m_inputWatcher->addPath(inputDevicesDir());
-        connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::ps_directoryChanged);
-        ps_directoryChanged(inputDevicesDir());
+        connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::reloadDevices);
+        reloadDevices(inputDevicesDir());
     }
 
     void CJoystickLinux::cleanupJoysticks()
     {
-        for (auto it = m_joysticks.begin(); it != m_joysticks.end();)
+        for (auto it = m_joystickDevices.begin(); it != m_joystickDevices.end();)
         {
-            if (!it.value()->exists())
+            // Remove all joysticks that do not exist anymore (/dev/input/js* removed).
+            if (!(*it)->isAttached())
             {
-                it.value()->deleteLater();
-                it = m_joysticks.erase(it);
+                CJoystickDevice *joystickDevice = *it;
+                it = m_joystickDevices.erase(it);
+                joystickDevice->deleteLater();
             }
             else
             {
@@ -61,39 +106,39 @@ namespace BlackInput
 
     void CJoystickLinux::addJoystickDevice(const QString &path)
     {
-        Q_ASSERT(!m_joysticks.contains(path));
-
-        QFile *joystick = new QFile(path, this);
-        if (joystick->open(QIODevice::ReadOnly))
+        QFile *fd = new QFile(path);
+        if (fd->open(QIODevice::ReadOnly))
         {
-            char name[256];
-            if (ioctl(joystick->handle(), JSIOCGNAME(sizeof(name)), name) < 0)
-            {
-                strncpy(name, "Unknown", sizeof(name));
-            }
-
-            CLogMessage(this).info("Found joystick: %1") << name;
-
-            fcntl(joystick->handle(), F_SETFL, O_NONBLOCK);
-
-            /* Forward */
-            struct js_event event;
-            while (joystick->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event)) {}
-
-            QSocketNotifier *notifier = new QSocketNotifier(joystick->handle(), QSocketNotifier::Read, joystick);
-            m_mapper->setMapping(notifier, joystick);
-            connect(notifier, &QSocketNotifier::activated, m_mapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
-            notifier->setEnabled(true);
-
-            m_joysticks.insert(path, joystick);
+            CJoystickDevice *joystickDevice = new CJoystickDevice(path, fd, this);
+            connect(joystickDevice, &CJoystickDevice::buttonChanged, this, &CJoystickLinux::joystickButtonChanged);
+            m_joystickDevices.push_back(joystickDevice);
         }
         else
         {
-            joystick->deleteLater();
+            fd->close();
+            fd->deleteLater();
         }
     }
 
-    void CJoystickLinux::ps_directoryChanged(QString path)
+    void CJoystickLinux::joystickButtonChanged(const QString &name, int index, bool isPressed)
+    {
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
+        if (isPressed)
+        {
+            m_buttonCombination.addJoystickButton({name, index});
+        }
+        else
+        {
+            m_buttonCombination.removeJoystickButton({name, index});
+        }
+
+        if (oldCombination != m_buttonCombination)
+        {
+            emit buttonCombinationChanged(m_buttonCombination);
+        }
+    }
+
+    void CJoystickLinux::reloadDevices(QString path)
     {
         cleanupJoysticks();
 
@@ -101,41 +146,15 @@ namespace BlackInput
         for (const auto &entry : dir.entryInfoList())
         {
             QString f = entry.absoluteFilePath();
-            if (!m_joysticks.contains(f))
+            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(), [path] (const CJoystickDevice *device)
+            {
+                return device->getPath() == path;
+            });
+            if (it == m_joystickDevices.end())
             {
                 addJoystickDevice(f);
             }
         }
     }
 
-    void CJoystickLinux::ps_readInput(QObject *object)
-    {
-        QFile *joystick = qobject_cast<QFile *>(object);
-        Q_ASSERT(joystick);
-
-
-        struct js_event event;
-        while (joystick->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
-        {
-            BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
-            switch (event.type & ~JS_EVENT_INIT)
-            {
-            case JS_EVENT_BUTTON:
-                if (event.value)
-                {
-                    m_buttonCombination.addJoystickButton(event.number);
-                }
-                else
-                {
-                    m_buttonCombination.removeJoystickButton(event.number);
-                }
-
-                if (oldCombination != m_buttonCombination)
-                {
-                    emit buttonCombinationChanged(m_buttonCombination);
-                }
-                break;
-            }
-        }
-    }
 } // ns

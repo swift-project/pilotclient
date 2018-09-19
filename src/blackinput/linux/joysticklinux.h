@@ -24,6 +24,38 @@ class QSignalMapper;
 
 namespace BlackInput
 {
+    //! Linux Joystick device
+    class CJoystickDevice : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        CJoystickDevice(const QString &path, QFile *fd, QObject *parent);
+        ~CJoystickDevice();
+
+        //! Get device name
+        QString getName() const { return m_name; }
+
+        //! Get device path, e.g. /dev/input/js0
+        QString getPath() const { return m_path; }
+
+        //! Is joystick device still attached?
+        bool isAttached() const { return m_fd->exists(); }
+
+    signals:
+        //! Joystick button changed
+        void buttonChanged(const QString &name, int index, bool isPressed);
+
+    private:
+        //! Slot for reading the device handle
+        void processInput();
+
+        QString m_name;  //!< Device name
+        QString m_path;  //!< Device path, e.g. /dev/input/js0
+        QFile *m_fd = nullptr; //!< Linux file descriptor
+    };
+
     //! Linux implemenation of IJoystick
     //! \sa https://www.kernel.org/doc/Documentation/input/joystick-api.txt
     class CJoystickLinux : public IJoystick
@@ -42,7 +74,6 @@ namespace BlackInput
         virtual ~CJoystickLinux() = default;
 
     private:
-
         friend class IJoystick;
 
         //! Removes all joysticks that are no longer present.
@@ -51,23 +82,18 @@ namespace BlackInput
         //! Adds new joystick input for reading
         void addJoystickDevice(const QString &path);
 
+        void joystickButtonChanged(const QString &name, int index, bool isPressed);
+
         //! Constructor
         CJoystickLinux(QObject *parent = nullptr);
 
-    private slots:
-
         //! Slot for handling directory changes
         //! \param path Watched directory path.
-        void ps_directoryChanged(QString path);
-
-        //! Slot for reading the device handle
-        //! \param object QFile that has data to be read.
-        void ps_readInput(QObject *object);
+        void reloadDevices(QString path);
 
     private:
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
-        QSignalMapper *m_mapper = nullptr; //!< Maps device handles
-        QMap<QString, QFile *> m_joysticks; //!< All read joysticks, file path <-> file instance pairs
+        QVector<CJoystickDevice *> m_joystickDevices; //!< All joystick devices
         QFileSystemWatcher *m_inputWatcher = nullptr;
     };
 

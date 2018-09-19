@@ -20,168 +20,43 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-    const TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("HelperWindow");
-    const TCHAR *CJoystickWindows::m_helperWindowName = TEXT("JoystickCatcherWindow");
-    ATOM CJoystickWindows::m_helperWindowClass = 0;
-    HWND CJoystickWindows::m_helperWindow = nullptr;
-
-    CJoystickWindows::CJoystickWindows(QObject *parent) : IJoystick(parent)
+    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent)
+        : QObject(parent),
+          m_directInput(directInputPtr)
     {
-        // Initialize COM
-        CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-        this->initDirectInput();
-        this->enumJoystickDevices();
-        this->filterJoystickDevices();
-        if (!m_availableJoystickDevices.isEmpty()) { this->createJoystickDevice(); }
+        m_deviceName = QString::fromWCharArray(pdidInstance->tszInstanceName);
+        m_productName = QString::fromWCharArray(pdidInstance->tszProductName);
+        m_guidDevice = pdidInstance->guidInstance;
+        m_guidProduct = pdidInstance->guidProduct;
     }
 
-    CJoystickWindows::~CJoystickWindows()
+    bool CJoystickDevice::init(HWND helperWindow)
     {
-        if (m_directInputDevice)
-        {
-            // currently disabled as it causes crashi
-            // m_directInputDevice->Release();
-            // m_directInputDevice = nullptr;
-        }
-
-        if (m_directInput)
-        {
-            //! \todo hack without input device this crashes
-            if (m_directInputDevice) { m_directInput->Release(); }
-            m_directInput = nullptr;
-        }
-
-        CoUninitialize();
-    }
-
-    void CJoystickWindows::timerEvent(QTimerEvent *event)
-    {
-        Q_UNUSED(event);
-        this->pollDeviceState();
-    }
-
-    HRESULT CJoystickWindows::initDirectInput()
-    {
-        HRESULT hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectInput8, (LPVOID *)&m_directInput);
-        if (FAILED(hr))
-        {
-            CLogMessage(this).error("Cannot create instance %1") << GetLastError();
-            return hr;
-        }
-
-        HINSTANCE instance = GetModuleHandle(nullptr);
-        if (instance == nullptr)
-        {
-            CLogMessage(this).error("GetModuleHandle() failed with error code: %1") << GetLastError();
-            return E_FAIL;
-        }
-
-        hr = m_directInput->Initialize(instance, DIRECTINPUT_VERSION);
-        if (FAILED(hr))
-        {
-            CLogMessage(this).error("Direct input init failed");
-            return hr;
-        }
-        return hr;
-    }
-
-    HRESULT CJoystickWindows::enumJoystickDevices()
-    {
-        if (!m_directInput)
-        {
-            CLogMessage(this).warning("No direct input");
-            return E_FAIL;
-        }
-
         HRESULT hr;
-        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
-        {
-            CLogMessage(this).error("Error reading joystick devices");
-            return hr;
-        }
-
-        if (m_availableJoystickDevices.isEmpty())
-        {
-            CLogMessage(this).info("No joystick device found");
-        }
-        return hr;
-    }
-
-    void CJoystickWindows::filterJoystickDevices()
-    {
-        IDirectInputDevice8 *directInputDevice = nullptr;
-        DIDEVCAPS deviceCaps;
-        deviceCaps.dwSize = sizeof(DIDEVCAPS);
-        HRESULT hr = S_OK;
-        for (auto i = m_availableJoystickDevices.begin(); i != m_availableJoystickDevices.end();)
-        {
-            // Create device
-            hr = m_directInput->CreateDevice(i->guidDevice, &directInputDevice, nullptr);
-            if (FAILED(hr))
-            {
-                i = m_availableJoystickDevices.erase(i);
-                continue;
-            }
-
-            hr = directInputDevice->GetCapabilities(&deviceCaps);
-            if (FAILED(hr))
-            {
-                i = m_availableJoystickDevices.erase(i);
-                continue;
-            }
-
-            // Filter devices with 0 buttons
-            if (deviceCaps.dwButtons == 0)
-            {
-                i = m_availableJoystickDevices.erase(i);
-                continue;
-            }
-
-            if (directInputDevice)
-            {
-                directInputDevice->Release();
-                directInputDevice = nullptr;
-            }
-
-            ++i;
-        }
-    }
-
-    HRESULT CJoystickWindows::createJoystickDevice()
-    {
-        HRESULT hr = S_OK;
-
-        // Check if device list is empty first
-        if (m_availableJoystickDevices.isEmpty()) { return E_FAIL; }
-
-        // FIXME: Take the first device with number of buttons > 0
-        // For the future, the user should be able to choose which device
-        // he wants to use.
-        const CJoystickDeviceData &deviceData = m_availableJoystickDevices.constFirst();
-
         // Create device
-        Q_ASSERT_X(m_directInput, Q_FUNC_INFO, "We should not get here without direct input");
-        if (FAILED(hr = m_directInput->CreateDevice(deviceData.guidDevice, &m_directInputDevice, nullptr)))
         {
-            CLogMessage(this).warning("IDirectInput8::CreateDevice failed: ") << hr;
-            return hr;
+            IDirectInputDevice8 *diDevice = nullptr;
+            if (FAILED(hr = m_directInput->CreateDevice(m_guidDevice, &diDevice, nullptr)))
+            {
+                CLogMessage(this).warning("IDirectInput8::CreateDevice failed: ") << hr;
+                return false;
+            }
+            m_directInputDevice.reset(diDevice);
         }
-
-        this->createHelperWindow();
 
         // Set cooperative level
-        if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(m_helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
+        if(!helperWindow) { return false; }
+        if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
         {
             CLogMessage(this).warning("IDirectInputDevice8::SetCooperativeLevel failed: ") << hr;
-            return hr;
+            return false;
         }
 
         // Set data format to c_dfDIJoystick2
         if (FAILED(hr = m_directInputDevice->SetDataFormat(&c_dfDIJoystick2)))
         {
             CLogMessage(this).warning("IDirectInputDevice8::SetDataFormat failed: ") << hr;
-            return hr;
+            return false;
         }
 
         DIDEVCAPS deviceCaps;
@@ -190,105 +65,33 @@ namespace BlackInput
         if (FAILED(hr = m_directInputDevice->GetCapabilities(&deviceCaps)))
         {
             CLogMessage(this).warning("IDirectInputDevice8::GetCapabilities failed: ") << hr;
-            return hr;
+            return false;
         }
 
-        m_joystickDeviceInputs.clear();
+        // Filter devices with 0 buttons
+        if (deviceCaps.dwButtons == 0) { return false; }
+
         if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_BUTTON)))
         {
             CLogMessage(this).warning("IDirectInputDevice8::EnumObjects failed: ") << hr;
-            return hr;
+            return false;
         }
 
-        CLogMessage(this).info("Created joystick device '%1' with %2 buttons") << deviceData.deviceName << deviceCaps.dwButtons;
-
+        CLogMessage(this).info("Created joystick device '%1' with %2 buttons") << m_deviceName << deviceCaps.dwButtons;
         this->startTimer(50);
-        return hr;
+        return true;
     }
 
-    int CJoystickWindows::createHelperWindow()
+    void CJoystickDevice::timerEvent(QTimerEvent *event)
     {
-        HINSTANCE hInstance = GetModuleHandle(nullptr);
-        WNDCLASS wce;
-
-        // Make sure window isn't created twice
-        if (m_helperWindow != nullptr)
-        {
-            return 0;
-        }
-
-        // Create the class
-        ZeroMemory(&wce, sizeof(WNDCLASS));
-        wce.lpfnWndProc = DefWindowProc;
-        wce.lpszClassName = (LPCWSTR) m_helperWindowClassName;
-        wce.hInstance = hInstance;
-
-        /* Register the class. */
-        m_helperWindowClass = RegisterClass(&wce);
-        if (m_helperWindowClass == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
-        {
-            return -1;
-        }
-
-        /* Create the window. */
-        m_helperWindow = CreateWindowEx(0, m_helperWindowClassName,
-                                        m_helperWindowName,
-                                        WS_OVERLAPPED, CW_USEDEFAULT,
-                                        CW_USEDEFAULT, CW_USEDEFAULT,
-                                        CW_USEDEFAULT, HWND_MESSAGE, nullptr,
-                                        hInstance, nullptr);
-        if (m_helperWindow == nullptr)
-        {
-            UnregisterClass(m_helperWindowClassName, hInstance);
-            return -1;
-        }
-
-        return 0;
+        Q_UNUSED(event);
+        pollDeviceState();
     }
 
-    void CJoystickWindows::updateAndSendButtonStatus(qint32 buttonIndex, bool isPressed)
-    {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
-        if (isPressed) { m_buttonCombination.addJoystickButton(buttonIndex); }
-        else { m_buttonCombination.removeJoystickButton(buttonIndex); }
-
-        if (oldCombination != m_buttonCombination)
-        {
-            emit buttonCombinationChanged(m_buttonCombination);
-        }
-    }
-
-    void CJoystickWindows::addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance)
-    {
-        CJoystickDeviceData deviceData;
-        deviceData.deviceName = QString::fromWCharArray(pdidInstance->tszInstanceName);
-        deviceData.productName = QString::fromWCharArray(pdidInstance->tszProductName);
-        deviceData.guidDevice = pdidInstance->guidInstance;
-        deviceData.guidProduct = pdidInstance->guidProduct;
-
-        if (!m_availableJoystickDevices.contains(deviceData)) m_availableJoystickDevices.push_back(deviceData);
-    }
-
-    void CJoystickWindows::addJoystickDeviceInput(const DIDEVICEOBJECTINSTANCE *dev)
-    {
-        CJoystickDeviceInput deviceInput;
-        deviceInput.m_number = m_joystickDeviceInputs.size();
-        deviceInput.m_offset = DIJOFS_BUTTON(deviceInput.m_number);
-        deviceInput.m_name = QString::fromWCharArray(dev->tszName);
-
-        m_joystickDeviceInputs.append(deviceInput);
-    }
-
-    HRESULT CJoystickWindows::pollDeviceState()
+    HRESULT CJoystickDevice::pollDeviceState()
     {
         DIJOYSTATE2 state;
         HRESULT hr = S_OK;
-
-        if (!m_directInputDevice)
-        {
-            CLogMessage(this).warning("No input device");
-            return S_FALSE;
-        }
 
         if (FAILED(hr = m_directInputDevice->Poll()))
         {
@@ -319,10 +122,147 @@ namespace BlackInput
         for (CJoystickDeviceInput input : m_joystickDeviceInputs)
         {
             const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
-            updateAndSendButtonStatus(buttonIndex, state.rgbButtons[buttonIndex] & 0x80);
+            bool isPressed = state.rgbButtons[buttonIndex] & 0x80;
+
+            if (isPressed) { emit buttonChanged(m_deviceName, buttonIndex, true); }
+            else { emit buttonChanged(m_deviceName, buttonIndex, false); }
+
+        }
+        return hr;
+    }
+
+    BOOL CALLBACK CJoystickDevice::enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef)
+    {
+        CJoystickDevice *joystickDevice = static_cast<CJoystickDevice *>(pvRef);
+
+        // Make sure we only got GUID_Button types
+        if (dev->guidType != GUID_Button) return DIENUM_CONTINUE;
+
+        CJoystickDeviceInput deviceInput;
+        deviceInput.m_number = joystickDevice->m_joystickDeviceInputs.size();
+        deviceInput.m_offset = DIJOFS_BUTTON(deviceInput.m_number);
+        deviceInput.m_name = QString::fromWCharArray(dev->tszName);
+
+        joystickDevice->m_joystickDeviceInputs.append(deviceInput);
+
+        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
+
+        return DIENUM_CONTINUE;
+    }
+
+    CJoystickWindows::CJoystickWindows(QObject *parent) : IJoystick(parent)
+    {
+        this->createHelperWindow();
+        this->initDirectInput();
+        this->enumJoystickDevices();
+    }
+
+    CJoystickWindows::~CJoystickWindows()
+    {
+        m_joystickDevices.clear();
+        m_directInput.reset();
+    }
+
+    void ReleaseDirectInput(IDirectInput8 *obj)
+    {
+        if (obj) { obj->Release(); }
+    };
+
+    HRESULT CJoystickWindows::initDirectInput()
+    {
+        IDirectInput8 *directInput = nullptr;
+        HRESULT hr = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<LPVOID *>(&directInput), nullptr);
+        m_directInput = DirectInput8Ptr(directInput, ReleaseDirectInput);
+        return hr;
+    }
+
+    HRESULT CJoystickWindows::enumJoystickDevices()
+    {
+        if (!m_directInput)
+        {
+            CLogMessage(this).warning("No direct input");
+            return E_FAIL;
         }
 
+        HRESULT hr;
+        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
+        {
+            CLogMessage(this).error("Error reading joystick devices");
+            return hr;
+        }
+
+        if (m_joystickDevices.empty())
+        {
+            CLogMessage(this).info("No joystick device found");
+        }
         return hr;
+    }
+
+    int CJoystickWindows::createHelperWindow()
+    {
+        HINSTANCE hInstance = GetModuleHandle(nullptr);
+        WNDCLASS wce;
+
+        // Make sure window isn't created twice
+        if (helperWindow != nullptr)
+        {
+            return 0;
+        }
+
+        // Create the class
+        ZeroMemory(&wce, sizeof(WNDCLASS));
+        wce.lpfnWndProc = DefWindowProc;
+        wce.lpszClassName = (LPCWSTR) helperWindowClassName;
+        wce.hInstance = hInstance;
+
+        /* Register the class. */
+        helperWindowClass = RegisterClass(&wce);
+        if (helperWindowClass == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
+        {
+            return -1;
+        }
+
+        /* Create the window. */
+        helperWindow = CreateWindowEx(0, helperWindowClassName,
+                                        helperWindowName,
+                                        WS_OVERLAPPED, CW_USEDEFAULT,
+                                        CW_USEDEFAULT, CW_USEDEFAULT,
+                                        CW_USEDEFAULT, HWND_MESSAGE, nullptr,
+                                        hInstance, nullptr);
+        if (helperWindow == nullptr)
+        {
+            UnregisterClass(helperWindowClassName, hInstance);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    void CJoystickWindows::addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance)
+    {
+        CJoystickDevice *device = new CJoystickDevice(m_directInput, pdidInstance, this);
+        bool success = device->init(helperWindow);
+        if (success)
+        {
+            connect(device, &CJoystickDevice::buttonChanged, this, &CJoystickWindows::joystickButtonChanged);
+            m_joystickDevices.push_back(device);
+        }
+        else
+        {
+            device->deleteLater();
+        }
+    }
+
+    void CJoystickWindows::joystickButtonChanged(const QString &name, int index, bool isPressed)
+    {
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
+        if (isPressed) { m_buttonCombination.addJoystickButton({name, index}); }
+        else { m_buttonCombination.removeJoystickButton({name, index}); }
+
+        if (oldCombination != m_buttonCombination)
+        {
+            emit buttonCombinationChanged(m_buttonCombination);
+        }
     }
 
     BOOL CALLBACK CJoystickWindows::enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext)
@@ -337,25 +277,12 @@ namespace BlackInput
         return true;
     }
 
-    BOOL CALLBACK CJoystickWindows::enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef)
+    bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs)
     {
-        CJoystickWindows *joystick = static_cast<CJoystickWindows *>(pvRef);
-
-        // Make sure we only got GUID_Button types
-        if (dev->guidType != GUID_Button) return DIENUM_CONTINUE;
-
-        joystick->addJoystickDeviceInput(dev);
-        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
-
-        return DIENUM_CONTINUE;
-    }
-
-    bool operator == (CJoystickDeviceData const &lhs, CJoystickDeviceData const &rhs)
-    {
-        return lhs.guidDevice == rhs.guidDevice &&
-               lhs.guidProduct == rhs.guidProduct &&
-               lhs.deviceName == rhs.deviceName &&
-               lhs.productName == rhs.productName;
+        return lhs.m_guidDevice == rhs.m_guidDevice &&
+               lhs.m_guidProduct == rhs.m_guidProduct &&
+               lhs.m_deviceName == rhs.m_deviceName &&
+               lhs.m_productName == rhs.m_productName;
     }
 
     bool operator == (CJoystickDeviceInput const &lhs, CJoystickDeviceInput const &rhs)

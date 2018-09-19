@@ -17,6 +17,7 @@
 #include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QVector>
+#include <memory>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -26,14 +27,8 @@
 
 namespace BlackInput
 {
-    //! Joystick device data
-    struct CJoystickDeviceData
-    {
-        GUID guidDevice;     //!< Device GUID
-        GUID guidProduct;    //!< Product GUID
-        QString deviceName;  //!< Device name
-        QString productName; //!< Product name
-    };
+    //! Shared IDirectInput8 ptr
+    using DirectInput8Ptr = std::shared_ptr<IDirectInput8>;
 
     //! Joystick device input/button
     struct CJoystickDeviceInput
@@ -43,8 +38,60 @@ namespace BlackInput
         QString m_name; //!< Input name
     };
 
+    //! Joystick device
+    class CJoystickDevice : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent = nullptr);
+
+        //! Initialize DirectInput device
+        bool init(HWND helperWindow);
+
+    signals:
+        //! Joystick button changed
+        void buttonChanged(const QString &name, int index, bool isPressed);
+
+    protected:
+        //! Timer based updates
+        virtual void timerEvent(QTimerEvent *event) override;
+
+    private:
+        friend bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs);
+
+        struct DirectInputDevice8Deleter
+        {
+            void operator()(IDirectInputDevice8 *obj)
+            {
+                if (obj)
+                {
+                    obj->Unacquire();
+                    obj->Release();
+                }
+            }
+        };
+
+        using DirectInputDevice8Ptr = std::unique_ptr<IDirectInputDevice8, DirectInputDevice8Deleter>;
+
+        //! Poll the device buttons
+        HRESULT pollDeviceState();
+
+        //! Joystick button enumeration callback
+        static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
+
+        GUID m_guidDevice;     //!< Device GUID
+        GUID m_guidProduct;    //!< Product GUID
+        QString m_deviceName;  //!< Device name
+        QString m_productName; //!< Product name
+        DirectInput8Ptr m_directInput;
+        DirectInputDevice8Ptr m_directInputDevice;
+        QVector<CJoystickDeviceInput> m_joystickDeviceInputs;
+    };
+
     //! Equal operator
-    bool operator == (CJoystickDeviceData const &lhs, CJoystickDeviceData const &rhs);
+    bool operator == (CJoystickDevice const &lhs, CJoystickDevice const &rhs);
 
     //! Windows implemenation of IJoystick with DirectInput
     class BLACKINPUT_EXPORT CJoystickWindows : public IJoystick
@@ -61,10 +108,6 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickWindows() override;
 
-    protected:
-        //! Timer based updates
-        virtual void timerEvent(QTimerEvent *event) override;
-
     private:
         friend class IJoystick;
 
@@ -77,45 +120,26 @@ namespace BlackInput
         //! Enumerate all attached joystick devices
         HRESULT enumJoystickDevices();
 
-        void filterJoystickDevices();
-
-        //! Create a joystick device
-        HRESULT createJoystickDevice();
-
-        //! Poll the device buttons
-        HRESULT pollDeviceState();
-
         //! Creates a hidden DI helper window
         int createHelperWindow();
-
-        //! Update and signal button status to InputManager
-        void updateAndSendButtonStatus(qint32 buttonIndex, bool isPressed);
 
         //! Add new joystick device
         void addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance);
 
-        //! Add new joystick input/button
-        void addJoystickDeviceInput(const DIDEVICEOBJECTINSTANCE *dev);
+        void joystickButtonChanged(const QString &name, int index, bool isPressed);
 
         //! Joystick enumeration callback
         static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
 
-        //! Joystick button enumeration callback
-        static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
-
-        // todo RW: Try to use QScopedPointer. So far I could not find out how to use it with IDirectInput8::CreateDevice
-        // remark KB: if created with CoCreateInstance we do not "own" the object and cannot free the memory, and must use release
-        IDirectInput8 *m_directInput = nullptr;                  //!< DirectInput object
-        IDirectInputDevice8 *m_directInputDevice = nullptr;      //!< DirectInput device
-        QVector<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
-        QVector<CJoystickDeviceInput> m_joystickDeviceInputs;    //!< List of available device buttons
+        DirectInput8Ptr m_directInput;                   //!< DirectInput object
+        QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
 
-        static const WCHAR *m_helperWindowClassName; //!< Helper window class name
-        static const WCHAR *m_helperWindowName; //!< Helper window name
-        static ATOM m_helperWindowClass;
-        static HWND m_helperWindow; //!< Helper window handle
+        const TCHAR *helperWindowClassName = TEXT("HelperWindow");
+        const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
+        ATOM helperWindowClass = 0;
+        HWND helperWindow = nullptr;
     };
 } // ns
 
