@@ -663,6 +663,7 @@ namespace BlackCore
         void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled, const CStatusMessage &message)
         {
             if (!this->isSimulatorAvailable()) { return; }
+            if (disabled) { m_aircraftMatcher.addingRemoteModelFailed(remoteAircraft); }
             emit this->addingRemoteModelFailed(remoteAircraft, disabled, message);
         }
 

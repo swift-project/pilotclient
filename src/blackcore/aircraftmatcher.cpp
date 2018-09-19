@@ -665,6 +665,21 @@ namespace BlackCore
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
+    void CAircraftMatcher::addingRemoteModelFailed(const CSimulatedAircraft &remoteAircraft)
+    {
+        if (!m_setup.removeFromSetIfFailed()) { return; }
+        if (remoteAircraft.hasCallsign() && remoteAircraft.hasModelString())
+        {
+            const QString modelString = remoteAircraft.getModelString();
+            const int r = m_modelSet.removeModelWithString(modelString, Qt::CaseInsensitive);
+            if (r > 0)
+            {
+                CLogMessage(this).warning("Removed model '%1' from matching model set") << modelString;
+                m_removedModels.insert(modelString);
+            }
+        }
+    }
+
     CAircraftModelList CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log)
     {
         CAircraftModelList matchedModels(modelSet);

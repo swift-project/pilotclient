@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QString>
 #include <QPair>
+#include <QSet>
 
 namespace BlackMisc
 {
@@ -175,6 +176,9 @@ namespace BlackCore
         //! Evaluate if a statistics entry makes sense and add it
         void evaluateStatisticsEntry(const QString &sessionId, const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
+        //! Adding a model failed
+        void addingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+
     signals:
         //! Setup changed
         void setupChanged();
@@ -261,6 +265,7 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatorInfo        m_simulator;     //!< simulator (optional)
         BlackMisc::Simulation::CMatchingStatistics   m_statistics;    //!< matching statistics
         QString                                      m_modelSetInfo;  //!< info string
+        QSet<QString>                                m_removedModels; //!< models have been removed
     };
 } // namespace
 
