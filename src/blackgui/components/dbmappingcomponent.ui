@@ -138,6 +138,38 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tab_Workbench">
+          <attribute name="title">
+           <string>Workbench</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="hl_Workbench">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="BlackGui::Components::CDbModelWorkbenchComponent" name="comp_ModelWorkbench">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tab_StashAircraftModels">
           <attribute name="title">
            <string>Stashed models</string>
@@ -287,7 +319,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>882</width>
+            <width>885</width>
             <height>450</height>
            </rect>
           </property>
@@ -376,6 +408,12 @@
    <class>BlackGui::Components::CModelMatcherComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/modelmatchercomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbModelWorkbenchComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbmodelworkbenchcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

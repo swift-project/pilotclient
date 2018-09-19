@@ -96,6 +96,10 @@ namespace BlackGui
             ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this));
             ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this));
 
+            ui->comp_ModelWorkbench->view()->setCustomMenu(new CApplyDbDataMenu(this));
+            ui->comp_ModelWorkbench->view()->setCustomMenu(new COwnModelSetMenu(this));
+            ui->comp_ModelWorkbench->view()->setCustomMenu(new CStashToolsMenu(this));
+
             // connects
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
 
@@ -103,6 +107,11 @@ namespace BlackGui
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+            connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
@@ -129,6 +138,7 @@ namespace BlackGui
             ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
             ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModelSet, CIcons::appModels16());
+            ui->tw_ModelsToBeMapped->setTabIcon(TabWorkbench, CIcons::wrench16());
 
             // custom menu and shortcut
             this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -203,9 +213,9 @@ namespace BlackGui
             if (sender == ui->comp_OwnModelSet->view()) { return ui->comp_OwnModelSet->view()->at(index); }
 
             // no sender, use current tab
-            const CAircraftModelView *v = this->currentModelView();
-            if (!v) { return CAircraftModel(); }
-            return v->at(index);
+            const CAircraftModelView *mv = this->currentModelView();
+            if (!mv) { return CAircraftModel(); }
+            return mv->at(index);
         }
 
         void CDbMappingComponent::gracefulShutdown()
@@ -217,20 +227,19 @@ namespace BlackGui
 
         bool CDbMappingComponent::hasSelectedModelsToStash() const
         {
-            const TabIndex tab = currentTabIndex();
-            switch (tab)
-            {
-            case TabOwnModels: return ui->comp_OwnAircraftModels->view()->hasSelectedModelsToStash();
-            case TabOwnModelSet: return ui->comp_OwnModelSet->view()->hasSelectedModelsToStash();
-            case TabVPilot: return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
-            default: break;
-            }
-            return false;
+            const CAircraftModelView *mv = this->currentModelView();
+            if (!mv) { return false; }
+            return mv->hasSelectedModelsToStash();
         }
 
         CAircraftModelView *CDbMappingComponent::currentModelView() const
         {
             const TabIndex tab = currentTabIndex();
+            return this->modelView(tab);
+        }
+
+        CAircraftModelView *CDbMappingComponent::modelView(TabIndex tab) const
+        {
             switch (tab)
             {
             case TabOwnModels:   return ui->comp_OwnAircraftModels->view();
@@ -285,16 +294,9 @@ namespace BlackGui
 
         CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
         {
-            if (!hasSelectedModelsToStash()) { return CAircraftModelList(); }
-            const TabIndex tab = currentTabIndex();
-            switch (tab)
-            {
-            case TabOwnModels: return ui->comp_OwnAircraftModels->view()->selectedObjects();
-            case TabOwnModelSet: return ui->comp_OwnModelSet->view()->selectedObjects();
-            case TabVPilot: return ui->tvp_AircraftModelsForVPilot->selectedObjects();
-            default: break;
-            }
-            return CAircraftModelList();
+            const CAircraftModelView *mv = this->currentModelView();
+            if (!mv || !mv->hasSelectedModelsToStash()) { return CAircraftModelList(); }
+            return mv->selectedObjects();
         }
 
         const CAircraftModelList &CDbMappingComponent::getStashedModels() const
@@ -388,17 +390,8 @@ namespace BlackGui
         {
             const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
             if (modelStrings.isEmpty()) { return; }
-            switch (currentTabIndex())
-            {
-            case TabVPilot:
-            case TabOwnModels:
-            case TabOwnModelSet:
-            case TabStash:
-                this->currentModelView()->removeModelsWithModelString(modelStrings);
-                break;
-            default:
-                break;
-            }
+            CAircraftModelView *mv = this->currentModelView();
+            if (mv) { mv->removeModelsWithModelString(modelStrings); }
         }
 
         void CDbMappingComponent::showChangedAttributes()
@@ -627,17 +620,22 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot);
-            QString o = ui->tw_ModelsToBeMapped->tabText(i);
-            const QString f = ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, ui->tvp_AircraftModelsForVPilot->rowCount()) + f;
-            ui->tw_ModelsToBeMapped->setTabText(i, o);
+            ui->tvp_AircraftModelsForVPilot->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot));
+        }
+
+        void CDbMappingComponent::onWorkbenchDataChanged(int count, bool withFilter)
+        {
+            Q_UNUSED(count);
+            Q_UNUSED(withFilter);
+            ui->comp_ModelWorkbench->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_Workbench));
         }
 
         void CDbMappingComponent::onOwnModelsChangedDigest(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
+
+            // non standard with sim
             const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModels);
             static const QString ot(ui->tw_ModelsToBeMapped->tabText(i));
             QString o(ot);
@@ -702,11 +700,7 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels);
-            QString o = ui->tw_ModelsToBeMapped->tabText(i);
-            const QString f = ui->comp_StashAircraft->view()->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, ui->comp_StashAircraft->view()->rowCount()) + f;
-            ui->tw_ModelsToBeMapped->setTabText(i, o);
+            ui->comp_StashAircraft->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels));
 
             // update editors
             this->updateEditorsWhenApplicable();
@@ -716,6 +710,8 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
+
+            // none standard with simulator
             int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModelSet);
             QString o = "Model set " + ui->comp_OwnModelSet->getModelSetSimulator().toQString(true);
             const QString f = ui->comp_OwnModelSet->view()->hasFilter() ? "F" : "";

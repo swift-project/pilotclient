@@ -72,15 +72,16 @@ namespace BlackGui
 
         public:
             //! Tab index.
-            //! Must match real tab index
+            //! \remark Must match real tab index
             enum TabIndex
             {
                 NoValidTab      =  -1,
                 TabOwnModelSet  =   0,
                 TabOwnModels    =   1,
-                TabStash        =   2,
-                TabModelMatcher =   3,
-                TabVPilot      =    4
+                TabWorkbench    =   2,
+                TabStash        =   3,
+                TabModelMatcher =   4,
+                TabVPilot      =    5
             };
 
             //! Constructor
@@ -112,6 +113,9 @@ namespace BlackGui
 
             //! Current model view
             Views::CAircraftModelView *currentModelView() const;
+
+            //! Current model view
+            Views::CAircraftModelView *modelView(TabIndex tab) const;
 
             //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
@@ -246,6 +250,9 @@ namespace BlackGui
 
             //! vPilot data changed
             void onVPilotDataChanged(int count, bool withFilter);
+
+            //! Workbench data changed
+            void onWorkbenchDataChanged(int count, bool withFilter);
 
             //! Tab index changed
             void onTabIndexChanged(int index);
