@@ -9,19 +9,19 @@
         "url": "https://datastore.swift-project.org"
     },
     "development": false,
-    "mappingMinimumVersion" : "0.8.3",
+    "mappingMinimumVersion" : "0.8.6",
     "fsdTestServers": {
         "containerbase": []
     },
     "newsUrls": {
-        "containerbase": [{
-            "url": "http://swift-project.org/"
-        }]
+        "containerbase": [
+			{ "url": "http://swift-project.net/" },
+			{ "url": "http://swift-project.org/" }]
     },
     "onlineHelpUrls": {
-        "containerbase": [{
-            "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
-        }]
+        "containerbase": [
+			{ "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html" },
+			{ "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html" }]
     },
     "mapUrls": {
         "containerbase": [{
@@ -30,18 +30,10 @@
     },
     "sharedUrls": {
         "containerbase": [
-		{
-            "url": "https://datastore.swift-project.net/shared"
-        },
-		{
-            "url": "https://datastore.swift-project.org/shared"
-        },
-        {
-            "url": "http://www.siliconmind.de/datastore/shared"
-        },
-        {
-            "url": "http://swift-project.org/datastore/shared"
-        }]
+			{ "url": "https://datastore.swift-project.net/shared" },
+			{ "url": "https://datastore.swift-project.org/shared" },
+			{ "url": "http://www.siliconmind.de/datastore/shared" },
+			{ "url": "http://swift-project.org/datastore/shared"  }]
     },
     "timestampMSecsSinceEpoch": 1476907647000,
     "vatsimBookingsUrl": {
