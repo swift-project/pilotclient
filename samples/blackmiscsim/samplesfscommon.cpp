@@ -23,6 +23,7 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QTime>
+#include <QDir>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -39,6 +40,13 @@ namespace BlackSample
             "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
             "C:/Flight Simulator 9/Aircraft"
         }, streamOut, streamIn);
+
+        const QDir dir(fsDir);
+        if (!dir.exists())
+        {
+            streamOut << "Directory does not exist:" << dir.absolutePath();
+            return;
+        }
 
         const CSimulatorInfo sim = fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
         CMultiSimulatorSettings multiSettings;

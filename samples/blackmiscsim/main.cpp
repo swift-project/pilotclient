@@ -12,6 +12,7 @@
 
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
+#include "samplesp3d.h"
 #include "samplesmodelmapping.h"
 #include "samplesvpilotrules.h"
 #include "blackcore/application.h"
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
     streamOut << "2 .. FSX" << endl;
     streamOut << "3 .. Mappings" << endl;
     streamOut << "4 .. vPilot rules" << endl;
+    streamOut << "5 .. P3D cfg files" << endl;
     streamOut << "x .. exit" << endl;
     QString i = streamIn.readLine().toLower().trimmed();
 
@@ -63,6 +65,10 @@ int main(int argc, char *argv[])
     else if (i.startsWith("4"))
     {
         BlackSample::CSamplesVPilotRules::samples(streamOut, streamIn);
+    }
+    else if (i.startsWith("5"))
+    {
+        BlackSample::CSamplesP3D::samplesMisc(streamOut);
     }
     else if (i.startsWith("x"))
     {
