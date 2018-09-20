@@ -506,10 +506,12 @@ namespace BlackMisc
             return d;
         }
 
-        int CAircraftModelList::removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity)
+        bool CAircraftModelList::removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity)
         {
-            if (modelString.isEmpty()) { return 0; }
-            return this->removeIf([&](const CAircraftModel & model) { return model.matchesModelString(modelString, sensitivity); });
+            if (modelString.isEmpty()) { return false; }
+            if (this->isEmpty()) { return false; }
+            const int r = this->removeIf([&](const CAircraftModel & model) { return model.matchesModelString(modelString, sensitivity); });
+            return r > 0;
         }
 
         int CAircraftModelList::removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
@@ -568,6 +570,14 @@ namespace BlackMisc
             if (diff < 1) { return 0; }
             *this = onlyIncluded;
             return diff;
+        }
+
+        bool CAircraftModelList::replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity)
+        {
+            bool r = false;
+            if (!this->isEmpty()) { r = this->removeModelWithString(addOrReplaceModel.getModelString(), sensitivity); }
+            this->push_back(addOrReplaceModel);
+            return r;
         }
 
         int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)

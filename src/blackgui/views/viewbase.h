@@ -273,10 +273,10 @@ namespace BlackGui
             QWidget *mainApplicationWindowWidget() const;
 
             //! Show file load dialog
-            BlackMisc::CStatusMessage showFileLoadDialog();
+            BlackMisc::CStatusMessage showFileLoadDialog(const QString &directory = {});
 
             //! Show file save dialog
-            BlackMisc::CStatusMessage showFileSaveDialog();
+            BlackMisc::CStatusMessage showFileSaveDialog(const QString &directory = {});
 
             //! Save file name (optional)
             void setSaveFileName(const QString &saveName) { m_saveFileName = saveName; }
@@ -529,10 +529,10 @@ namespace BlackGui
             virtual void ps_rowSelected(const QModelIndex &index) = 0;
 
             //! Load JSON
-            virtual BlackMisc::CStatusMessage ps_loadJson() = 0;
+            virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) = 0;
 
             //! Save JSON
-            virtual BlackMisc::CStatusMessage ps_saveJson() = 0;
+            virtual BlackMisc::CStatusMessage ps_saveJson(const QString &directory = {}) = 0;
 
             //! Trigger reload from backend by signal requestUpdate();
             void ps_triggerReload();
@@ -763,8 +763,8 @@ namespace BlackGui
             virtual void ps_clicked(const QModelIndex &index) override;
             virtual void ps_doubleClicked(const QModelIndex &index) override;
             virtual void ps_rowSelected(const QModelIndex &index) override;
-            virtual BlackMisc::CStatusMessage ps_loadJson() override;
-            virtual BlackMisc::CStatusMessage ps_saveJson() override;
+            virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) override;
+            virtual BlackMisc::CStatusMessage ps_saveJson(const QString &directory = {}) override;
             //! @}
         };
     } // namespace

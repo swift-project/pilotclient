@@ -229,7 +229,7 @@ namespace BlackMisc
 
             //! Remove those models with given model strings
             //! \return number of elements removed
-            int removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity);
+            bool removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity);
 
             //! Remove those models with given model strings
             //! \return number of elements removed
@@ -246,6 +246,10 @@ namespace BlackMisc
             //! Remove if excluded CAircraftModel::Exclude
             //! \return number of elements removed
             int removeIfExcluded();
+
+            //! Replace or add based on model string
+            //! \return element removed?
+            bool replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity);
 
             //! Replace or add based on model string
             //! \return number of elements removed

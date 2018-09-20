@@ -206,14 +206,14 @@ namespace BlackGui
             return CGuiUtility::mainApplicationWidget();
         }
 
-        CStatusMessage CViewBaseNonTemplate::showFileLoadDialog()
+        CStatusMessage CViewBaseNonTemplate::showFileLoadDialog(const QString &directory)
         {
-            return this->ps_loadJson();
+            return this->ps_loadJson(directory);
         }
 
-        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog()
+        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog(const QString &directory)
         {
-            return this->ps_saveJson();
+            return this->ps_saveJson(directory);
         }
 
         IMenuDelegate *CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
@@ -1587,19 +1587,21 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson(const QString &directory)
         {
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                     tr("Load data file"), this->getFileDialogFileName(true),
+                                     tr("Load data file"),
+                                     directory.isEmpty() ? this->getFileDialogFileName(true) : directory,
                                      tr("swift (*.json *.txt)"));
             return this->loadJsonFile(fileName);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson()
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson(const QString &directory)
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                     tr("Save data file"), getFileDialogFileName(false),
+                                     tr("Save data file"),
+                                     directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
             const QString json(this->toJsonString()); // save as CVariant JSON
