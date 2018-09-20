@@ -276,22 +276,10 @@ namespace BlackMisc
         if (isDigitsOnlyString(dateTimeString))
         {
             // 2017 0301 124421 321
-            if (dateTimeString.length() == 17)
-            {
-                return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz");
-            }
-            if (dateTimeString.length() == 14)
-            {
-                return fromStringUtc(dateTimeString, "yyyyMMddHHmmss");
-            }
-            if (dateTimeString.length() == 12)
-            {
-                return fromStringUtc(dateTimeString, "yyyyMMddHHmm");
-            }
-            if (dateTimeString.length() == 8)
-            {
-                return fromStringUtc(dateTimeString, "yyyyMMdd");
-            }
+            if (dateTimeString.length() == 17) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz"); }
+            if (dateTimeString.length() == 14) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmss"); }
+            if (dateTimeString.length() == 12) { return fromStringUtc(dateTimeString, "yyyyMMddHHmm"); }
+            if (dateTimeString.length() == 8)  { return fromStringUtc(dateTimeString, "yyyyMMdd"); }
             return QDateTime();
         }
 
