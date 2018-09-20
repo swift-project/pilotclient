@@ -20,6 +20,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/directoryutils.h"
 
 #include <QList>
 #include <QStringList>
@@ -39,16 +40,23 @@ namespace BlackCore
         return cats;
     }
 
-    CAircraftMatcher::CAircraftMatcher(const CAircraftMatcherSetup &setup, QObject *parent) :
-        QObject(parent),
-        m_setup(setup)
+    CAircraftMatcher::CAircraftMatcher(const CAircraftMatcherSetup &setup, QObject *parent) : QObject(parent), m_setup(setup)
     { }
 
     CAircraftMatcher::CAircraftMatcher(QObject *parent) : CAircraftMatcher(CAircraftMatcherSetup(), parent)
     { }
 
     CAircraftMatcher::~CAircraftMatcher()
-    { }
+    {
+        if (!m_removedModels.isEmpty())
+        {
+            // log the models
+            const QString fileName("removed models %1.json");
+            const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
+            const QString json = m_removedModels.toJsonString();
+            CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), fileName.arg(ts)));
+        }
+    }
 
     bool CAircraftMatcher::setSetup(const CAircraftMatcherSetup &setup)
     {
@@ -671,11 +679,11 @@ namespace BlackCore
         if (remoteAircraft.hasCallsign() && remoteAircraft.hasModelString())
         {
             const QString modelString = remoteAircraft.getModelString();
-            const int r = m_modelSet.removeModelWithString(modelString, Qt::CaseInsensitive);
-            if (r > 0)
+            const bool r = m_modelSet.removeModelWithString(modelString, Qt::CaseInsensitive);
+            if (r)
             {
                 CLogMessage(this).warning("Removed model '%1' from matching model set") << modelString;
-                m_removedModels.insert(modelString);
+                m_removedModels.replaceOrAddModelWithString(remoteAircraft.getModel(), Qt::CaseInsensitive);
             }
         }
     }

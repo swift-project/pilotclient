@@ -54,6 +54,7 @@ namespace BlackCore
         CAircraftMatcher(QObject *parent = nullptr);
 
         //! Destructor
+        //! \remark saves a log of removed models if any
         virtual ~CAircraftMatcher();
 
         //! Set the setup
@@ -262,10 +263,10 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftMatcherSetup m_setup;         //!< setup
         BlackMisc::Simulation::CAircraftModel        m_defaultModel;  //!< model to be used as default model
         BlackMisc::Simulation::CAircraftModelList    m_modelSet;      //!< models used for model matching
+        BlackMisc::Simulation::CAircraftModelList    m_removedModels; //!< removed models
         BlackMisc::Simulation::CSimulatorInfo        m_simulator;     //!< simulator (optional)
         BlackMisc::Simulation::CMatchingStatistics   m_statistics;    //!< matching statistics
         QString                                      m_modelSetInfo;  //!< info string
-        QSet<QString>                                m_removedModels; //!< models have been removed
     };
 } // namespace
 
