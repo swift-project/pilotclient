@@ -10,23 +10,22 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QDir>
 #include <QList>
 #include <QPair>
+#include <QFileInfo>
 #include <QSettings>
 #include <QStringList>
 #include <QVariant>
 #include <QFileInfo>
+#include <QStandardPaths>
+#include <QSettings>
 #include <QStringBuilder>
 
 using namespace BlackConfig;
-using namespace BlackMisc;
-
-//
-// all FSX/P3D keys: http://www.fsdeveloper.com/forum/threads/registry-keys-fsx-fsx-se-p3dv1-p3dv2.432633/
-//
 
 namespace BlackMisc
 {
@@ -385,6 +384,123 @@ namespace BlackMisc
                 const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
                 messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, QString("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
                 return copied;
+            }
+
+            QSet<QString> CFsCommonUtil::findP3dAddOnConfigFiles(const QString &versionHint)
+            {
+                const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
+                QSet<QString> files;
+                for (const QString &path : locations)
+                {
+                    QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
+                    const QDir d(pathUp);
+                    if (!d.exists()) { continue; }
+
+                    // all version sub directories
+                    // looking for "add-ons.cfg"
+                    static const QString cfgFile("add-ons.cfg");
+                    const QStringList entries = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+                    for (const QString &entry : entries)
+                    {
+                        if (entry.contains(versionHint, Qt::CaseInsensitive))
+                        {
+                            const QString f = CFileUtils::appendFilePaths(d.absolutePath(), entry, cfgFile);
+                            const QFileInfo fi(f);
+                            if (fi.exists()) { files.insert(f); }
+                        }
+                    }
+                }
+                return files;
+            }
+
+            QSet<QString> CFsCommonUtil::allP3dAddOnPaths(const QStringList &addOnConfigsFiles, bool checked)
+            {
+                if (addOnConfigsFiles.isEmpty()) { return QSet<QString>(); }
+                QSet<QString> paths;
+                for (const QString &configFile : addOnConfigsFiles)
+                {
+                    // manually parsing because QSettings did not work properly
+                    const QString fileContent = CFileUtils::readFileToString(configFile);
+                    if (fileContent.isEmpty()) { continue; }
+                    const QList<QStringRef> lines = splitLinesRefs(fileContent);
+                    static const QString p("PATH=");
+                    for (const QStringRef &line : lines)
+                    {
+                        const int i = line.lastIndexOf(p, Qt::CaseInsensitive);
+                        if (i < 0 || line.endsWith('=')) { continue; }
+                        const QStringRef path = line.mid(i + p.length());
+                        const QDir dir(QDir::fromNativeSeparators(path.toString()));
+                        if (!checked || dir.exists()) { paths.insert(dir.absolutePath()); }
+                    }
+                }
+                return paths;
+            }
+
+            QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked)
+            {
+                if (addOnPaths.isEmpty()) { return QSet<QString>(); }
+                QSet<QString> simObjectPaths;
+                for (const QString &addOnPath : addOnPaths)
+                {
+                    const QString so = CFileUtils::appendFilePaths(addOnPath, "SimObjects");
+                    const QFileInfo fi(so);
+                    if (!checked || fi.exists()) { simObjectPaths.insert(fi.absolutePath()); }
+                }
+                return simObjectPaths;
+            }
+
+            QStringList CFsCommonUtil::findFsxConfigFiles()
+            {
+                const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
+                QStringList files;
+                for (const QString &path : locations)
+                {
+                    QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/FSX/fsx.cfg");
+                    const QFileInfo fi(file);
+                    if (fi.exists()) { files.push_back(fi.absoluteFilePath()); }
+                }
+                return files;
+            }
+
+            QSet<QString> CFsCommonUtil::fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked)
+            {
+                QSet<QString> paths;
+                for (const QString &fsxFile : fsxFiles)
+                {
+                    paths.unite(fsxSimObjectsPaths(fsxFile, checked));
+                }
+                return paths;
+            }
+
+            QSet<QString> CFsCommonUtil::fsxSimObjectsPaths(const QString &fsxFile, bool checked)
+            {
+                const QString fileContent = CFileUtils::readFileToString(fsxFile);
+                if (fileContent.isEmpty()) { return QSet<QString>(); }
+                const QList<QStringRef> lines = splitLinesRefs(fileContent);
+                static const QString p("SimObjectPaths.");
+
+                QSet<QString> paths;
+                for (const QStringRef &line : lines)
+                {
+                    const int i1 = line.lastIndexOf(p, Qt::CaseInsensitive);
+                    if (i1 < 0) { continue; }
+                    const int i2 = line.lastIndexOf('=');
+                    if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
+                    const QStringRef path = line.mid(i2 + 1);
+                    const QString soPath = QDir::fromNativeSeparators(path.toString());
+                    const QFileInfo fi(soPath);
+
+                    // relative or absolute paths
+                    if (fi.isAbsolute() && (!checked || fi.exists()))
+                    {
+                        paths.insert(fi.absolutePath());
+                    }
+                    else
+                    {
+                        paths.insert(soPath);
+                    }
+                }
+                return paths;
             }
         } // namespace
     } // namespace

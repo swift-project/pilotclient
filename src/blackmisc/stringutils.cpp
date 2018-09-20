@@ -404,6 +404,12 @@ namespace BlackMisc
         }
         return ci;
     }
+
+    QString joinStringSet(const QSet<QString> &set, const QString &separator)
+    {
+        if (set.isEmpty()) { return QStringLiteral(""); }
+        return set.toList().join(separator);
+    }
 } // ns
 
 //! \endcond

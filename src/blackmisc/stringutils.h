@@ -25,6 +25,7 @@
 #include <QStringRef>
 #include <QTextStream>
 #include <QtGlobal>
+#include <QSet>
 #include <iosfwd>
 #include <string>
 #include <algorithm>
@@ -251,6 +252,9 @@ namespace BlackMisc
     //! \remark string needs to be cleaned up and containing only numbers
     //! \remark TZ is UTC
     BLACKMISC_EXPORT QDateTime parseDateTimeStringOptimized(const QString &dateTimeString);
+
+    //! Convert string to bool
+    BLACKMISC_EXPORT QString joinStringSet(const QSet<QString> &set, const QString &separator);
 
     namespace Mixin
     {

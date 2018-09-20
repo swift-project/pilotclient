@@ -14,9 +14,8 @@
 
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/blackmiscexport.h"
-#include <QString>
-
-class QStringList;
+#include <QSet>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -24,7 +23,7 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-            //! FS9/X/P3D utils
+            //! FS9/FSX/P3D utils
             class BLACKMISC_EXPORT CFsCommonUtil
             {
             public:
@@ -93,6 +92,29 @@ namespace BlackMisc
 
                 //! Copy the terrain probe
                 static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
+
+                //! Find the config files
+                //! \note C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
+                //! \param versionHint like "v4"
+                static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint);
+
+                //! All add-on paths from the config files
+                static QSet<QString> allP3dAddOnPaths(const QStringList &addOnConfigsFiles, bool checked);
+
+                //! All add-on paths from the config files
+                static QSet<QString> allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked);
+
+                //! Find the config files
+                // C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
+                static QStringList findFsxConfigFiles();
+
+                //! Get all the SimObjects files from fsx.cfg
+                // SimObjectPaths.0=SimObjects\Airplanes
+                static QSet<QString> fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked);
+
+                //! Get all the SimObjects files from fsx.cfg
+                // SimObjectPaths.0=SimObjects\Airplanes
+                static QSet<QString> fsxSimObjectsPaths(const QString &fsxFile, bool checked);
             };
         } // namespace
     } // namespace

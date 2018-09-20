@@ -150,6 +150,13 @@ namespace BlackMisc
                CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
     }
 
+    QString CFileUtils::pathUp(const QString &path)
+    {
+        const int i = path.lastIndexOf('/');
+        if (i < 0) { return path; }
+        return path.left(i);
+    }
+
     QString CFileUtils::normalizeFilePathToQtStandard(const QString &filePath)
     {
         if (filePath.isEmpty()) { return ""; }
