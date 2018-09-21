@@ -78,22 +78,21 @@ namespace BlackGui
 
         void CFontMenu::fontSizePlus()
         {
-            Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
+            if (!m_widget) { return; }
             const int pt = m_widget->font().pointSize() + 1;
             if (pt > 24) { return; }
-            m_widget->setStyleSheet(
-                CStyleSheetUtility::asStylesheet(m_widget, pt)
-            );
+
+            m_widget->setStyleSheet(""); // avoid Qt crash
+            m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));
         }
 
         void CFontMenu::fontSizeMinus()
         {
-            Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
+            if (!m_widget) { return; }
             const int pt = m_widget->font().pointSize() - 1;
             if (pt < 5) { return; }
-            m_widget->setStyleSheet(
-                CStyleSheetUtility::asStylesheet(m_widget, pt)
-            );
+            m_widget->setStyleSheet(""); // avoid Qt crash
+            m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));
         }
 
         void CFontMenu::fontReset()
