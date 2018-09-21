@@ -7,15 +7,15 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/internalscomponent.h"
+#include "blackgui/components/remoteaircraftselector.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackgui/components/internalscomponent.h"
-#include "blackgui/components/remoteaircraftselector.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
@@ -23,6 +23,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "ui_internalscomponent.h"
@@ -41,6 +42,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
@@ -177,20 +179,21 @@ namespace BlackGui
 
         void CInternalsComponent::sendTextMessage()
         {
-            if (ui->le_TxtMsgTo->text().isEmpty()) { return; }
-            if (ui->le_TxtMsgFrom->text().isEmpty()) { return; }
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
+            if (ui->le_TxtMsgFrom->text().isEmpty())  { return; }
             if (ui->pte_TxtMsg->toPlainText().isEmpty()) { return; }
-            if (!sGui->getIContextNetwork()) { return; }
+            if (ui->le_TxtMsgTo->text().isEmpty() && ui->dsb_TxtMsgFrequency->text().isEmpty()) { return; }
 
             const CCallsign sender(ui->le_TxtMsgFrom->text().trimmed());
             const CCallsign recipient(ui->le_TxtMsgTo->text().trimmed());
             const QString msgTxt(ui->pte_TxtMsg->toPlainText().trimmed());
-            const double freqMHz = ui->dsb_TxtMsgFrequency->value();
+            const double freqMHz = CMathUtils::round(ui->dsb_TxtMsgFrequency->value(), 3);
             CTextMessage tm;
-            CFrequency f;
-            if (freqMHz >= 118.0)
+            if (recipient.isEmpty() && freqMHz >= 117.995) // 118.000 actually plus epsilon
             {
-                f = CFrequency(freqMHz, CFrequencyUnit::MHz());
+                // remark: the internal double value can be still something like 127.999997
+                CFrequency f = CFrequency(freqMHz, CFrequencyUnit::MHz());
+                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
                 tm = CTextMessage(msgTxt, f, sender);
             }
             else
