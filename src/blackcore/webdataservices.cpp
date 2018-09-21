@@ -66,7 +66,7 @@ namespace BlackCore
 
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
-        const bool writeToSwiftDb = dbReaderConfig.possiblyWritesToSwiftDb(); // DB write access
+        const bool writeToSwiftDb  = dbReaderConfig.possiblyWritesToSwiftDb();  // DB write access
         if (!readFromSwiftDb && readers.testFlag(CWebReaderFlags::DbInfoDataReader))
         {
             // will remove info reader because not needed
@@ -1153,21 +1153,13 @@ namespace BlackCore
 
             // start in own thread
             m_dbInfoDataReader->start(QThread::LowPriority);
-        }
 
-        // and trigger read
-        if (sApp->isInternetAccessible())
-        {
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, m_dbInfoDataReader, [ = ]()
+            QTimer::singleShot(25, m_dbInfoDataReader, [ = ]()
             {
-                if (!myself) { return; }
-                m_dbInfoDataReader->read();
+                if (!myself || m_shuttingDown) { return; }
+                m_dbInfoDataReader->read(); // trigger read of info objects
             });
-        }
-        else
-        {
-            CLogMessage(this).warning("No network/internet access, skipping read of info objects");
         }
     }
 
@@ -1180,7 +1172,7 @@ namespace BlackCore
             const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || m_shuttingDown) { return; }
                 this->initSharedInfoObjectReaderAndTriggerRead();
             });
             return;
@@ -1203,19 +1195,12 @@ namespace BlackCore
         }
 
         // and trigger read
-        if (sApp->isInternetAccessible())
+        const QPointer<CWebDataServices> myself(this);
+        QTimer::singleShot(25, m_sharedInfoDataReader, [ = ]()
         {
-            const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, m_sharedInfoDataReader, [ = ]()
-            {
-                if (!myself) { return; }
-                m_sharedInfoDataReader->read();
-            });
-        }
-        else
-        {
-            CLogMessage(this).warning("No network/internet access, skipping read of shared data");
-        }
+            if (!myself || m_shuttingDown) { return; }
+            m_sharedInfoDataReader->read();
+        });
     }
 
     CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const
@@ -1357,7 +1342,7 @@ namespace BlackCore
         const QPointer<CWebDataServices> myself(this);
         QTimer::singleShot(delayMs, [ = ]()
         {
-            if (!myself) { return; }
+            if (!myself || m_shuttingDown) { return; }
             this->readInBackground(entities); // deferred
         });
     }
@@ -1452,7 +1437,7 @@ namespace BlackCore
             {
                 // ok, this means we are parsing
                 this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                CLogMessage(this).info("Waiting for objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                CLogMessage(this).info("Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
                 return false; // wait
             }
             else
@@ -1467,6 +1452,7 @@ namespace BlackCore
         else
         {
             // wait for 1st reply
+            // we call read again in some time
             this->readDeferredInBackground(entities, waitForInfoObjectsMs);
             return false; // wait
         }

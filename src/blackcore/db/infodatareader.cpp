@@ -179,6 +179,11 @@ namespace BlackCore
             const CDbInfoList infoObjects = CDbInfoList::fromDatabaseJson(res.getJsonArray());
             const int n = infoObjects.size();
 
+            // Service URL => DB data
+            // DB data directory => shared files
+            const QString urlStr = nwReply->url().toString();
+            Q_UNUSED(urlStr); // debug only
+
             // this part needs to be synchronized
             {
                 QWriteLocker wl(&m_lockInfoObjects);
