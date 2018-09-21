@@ -762,7 +762,7 @@ namespace BlackGui
         const QPointer<const QWidget> wp(widget);
         QTimer::singleShot(0, sGui, [ = ]
         {
-            if (wp.isNull() || !sGui || sGui->isShuttingDown()) { return; }
+            if (!wp || !sGui || sGui->isShuttingDown()) { return; }
             sGui->showHelp(widget);
         });
         return true;

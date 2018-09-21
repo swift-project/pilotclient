@@ -27,14 +27,14 @@ namespace BlackMisc
     {
         //! Information about accessing one URL over the network
         class BLACKMISC_EXPORT CUrlLog :
-            public BlackMisc::CValueObject<CUrlLog>,
-            public BlackMisc::ITimestampBased
+            public CValueObject<CUrlLog>,
+            public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexId = BlackMisc::CPropertyIndex::GlobalIndexCUrlLog,
+                IndexId = CPropertyIndex::GlobalIndexCUrlLog,
                 IndexSuccess,
                 IndexUrl,
                 IndexResponseTimestamp,

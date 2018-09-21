@@ -48,7 +48,7 @@ namespace BlackCore
 
         bool CInfoDataReader::areAllInfoObjectsRead() const
         {
-            return getInfoObjectCount() > 4;
+            return this->getInfoObjectCount() > 4;
         }
 
         void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
@@ -152,7 +152,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});
-                emit dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
+                emit this->dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
             }
             else
             {

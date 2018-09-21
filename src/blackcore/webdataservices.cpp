@@ -1227,8 +1227,8 @@ namespace BlackCore
         switch (wr)
         {
         case CWebReaderFlags::IcaoDataReader: return m_icaoDataReader;
-        case CWebReaderFlags::ModelReader: return m_modelDataReader;
-        case CWebReaderFlags::AirportReader: return m_airportDataReader;
+        case CWebReaderFlags::ModelReader:    return m_modelDataReader;
+        case CWebReaderFlags::AirportReader:  return m_airportDataReader;
         default: break;
         }
         return nullptr;

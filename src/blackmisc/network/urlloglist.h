@@ -27,8 +27,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CUrlLogList :
             public CSequence<CUrlLog>,
-            public BlackMisc::ITimestampObjectList<CUrlLog, CUrlLogList>,
-            public BlackMisc::Mixin::MetaType<CUrlLogList>
+            public ITimestampObjectList<CUrlLog, CUrlLogList>,
+            public Mixin::MetaType<CUrlLogList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUrlLogList)
