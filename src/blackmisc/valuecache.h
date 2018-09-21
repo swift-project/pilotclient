@@ -418,6 +418,13 @@ namespace BlackMisc
         //! \threadsafe with tiny risk of mismatch of value and timestamp
         QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_page->getTimestamp(*m_element)); }
 
+        //! Return the time when this value was updated.
+        //! \threadsafe with tiny risk of mismatch of value and timestamp
+        qint64 getTimestampMsSinceEpoch() const { return this->getTimestamp().toMSecsSinceEpoch(); }
+
+        //! How old is that cache (ms)?
+        qint64 lastUpdatedAge() const { return QDateTime::currentMSecsSinceEpoch() - this->getTimestampMsSinceEpoch(); }
+
         //! Return true if this value was already saved.
         bool isSaved() const { return m_page->isSaved(*m_element); }
 

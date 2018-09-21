@@ -221,6 +221,14 @@ namespace BlackCore
             return msgs;
         }
 
+        if (m_setup.lastUpdatedAge() < 5000)
+        {
+            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Update info just updated, skip read");
+            CStatusMessageList msgs(m);
+            this->setLastSetupReadErrorMessages(msgs);
+            return msgs;
+        }
+
         // trigger two reads, the file size is small
         const CUrlList randomUrls = m_bootstrapUrls.randomElements(2);
         CUrl url = randomUrls.front();
@@ -252,8 +260,14 @@ namespace BlackCore
         const CUrlList randomUrls = m_updateInfoUrls.randomElements(2);
         if (randomUrls.isEmpty())
         {
-            CStatusMessage(this).warning("Cannot read update info, no URLs");
+            CLogMessage(this).warning("Cannot read update info, no URLs");
             this->manageUpdateInfoAvailability(false);
+            return;
+        }
+
+        if (m_updateInfo.lastUpdatedAge() < 5000)
+        {
+            CLogMessage(this).info("Update info just updated, skip read");
             return;
         }
 
