@@ -105,8 +105,11 @@ namespace BlackGui
             //! Current tab index
             TabIndex currentTabIndex() const;
 
-            //! Is stashed view
+            //! Is stashed view?
             bool isStashTab() const;
+
+            //! Is workbench tab?
+            bool isWorkbenchTab() const;
 
             //! Tab can contribute to model set
             bool canAddToModelSetTab() const;
@@ -232,6 +235,9 @@ namespace BlackGui
         private:
             //! Data for vPilot have been loaded
             void onLoadVPilotDataFinished(bool success);
+
+            //! Load removed models
+            void loadRemovedModels();
 
             //! Merge with vPilot models
             void mergeWithVPilotModels();
@@ -400,6 +406,25 @@ namespace BlackGui
             public:
                 //! Constructor
                 COwnModelSetMenu(CDbMappingComponent *mappingComponent) :
+                    Menus::IMenuDelegate(mappingComponent)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
+
+            private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+
+                QAction *m_menuAction = nullptr;
+            };
+
+            //! Menu for removed models
+            class CRemovedModelsMenu : public Menus::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CRemovedModelsMenu(CDbMappingComponent *mappingComponent) :
                     Menus::IMenuDelegate(mappingComponent)
                 {}
 

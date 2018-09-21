@@ -437,9 +437,9 @@ namespace BlackGui
         CMenuAction CMenuActions::addMenuStash()
         {
             if (this->containsMenu(CMenuAction::pathModelStash())) { return CMenuAction(); }
-            const bool canConnectDb = sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb();
-            const QString txt(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
-            return this->addMenu(CIcons::appDbStash16(), txt, CMenuAction::pathModelStash());
+            const bool canConnectDb = sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb();
+            const QString text(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
+            return this->addMenu(CIcons::appDbStash16(), text, CMenuAction::pathModelStash());
         }
 
         CMenuAction CMenuActions::addMenuStashEditor()

@@ -48,6 +48,7 @@
 #include <QTabWidget>
 #include <QVariant>
 #include <QWidget>
+#include <QFileDialog>
 #include <Qt>
 #include <QtGlobal>
 
@@ -99,6 +100,7 @@ namespace BlackGui
             ui->comp_ModelWorkbench->view()->setCustomMenu(new CApplyDbDataMenu(this));
             ui->comp_ModelWorkbench->view()->setCustomMenu(new COwnModelSetMenu(this));
             ui->comp_ModelWorkbench->view()->setCustomMenu(new CStashToolsMenu(this));
+            ui->comp_ModelWorkbench->view()->setCustomMenu(new CRemovedModelsMenu(this));
 
             // connects
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
@@ -323,7 +325,12 @@ namespace BlackGui
 
         bool CDbMappingComponent::isStashTab() const
         {
-            return currentTabIndex() == TabStash;
+            return this->currentTabIndex() == TabStash;
+        }
+
+        bool CDbMappingComponent::isWorkbenchTab() const
+        {
+            return this->currentTabIndex() == TabWorkbench;
         }
 
         bool CDbMappingComponent::canAddToModelSetTab() const
@@ -529,6 +536,13 @@ namespace BlackGui
                 CLogMessage(this).error("Loading vPilot ruleset failed");
             }
             ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
+        }
+
+        void CDbMappingComponent::loadRemovedModels()
+        {
+            if (!ui->comp_ModelWorkbench->view()) { return; }
+            const QString logDir = CDirectoryUtils::logDirectory();
+            ui->comp_ModelWorkbench->view()->showFileLoadDialog(logDir);
         }
 
         void CDbMappingComponent::onVPilotCacheChanged()
@@ -1019,6 +1033,24 @@ namespace BlackGui
                 m_menuActions[1] = menuActions.addAction(m_menuActions[1], "Selected only", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::mergeSelectedWithVPilotModels });
             }
             this->nestedCustomMenu(menuActions);
+        }
+
+        void CDbMappingComponent::CRemovedModelsMenu::customMenu(CMenuActions &menuActions)
+        {
+            CDbMappingComponent *mapComp = mappingComponent();
+            Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
+            if (mapComp->isWorkbenchTab())
+            {
+                menuActions.addMenuModelSet();
+                m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(), "Removed models", CMenuAction::pathModel(),
+                                                     this, { mapComp, &CDbMappingComponent::loadRemovedModels });
+            }
+            this->nestedCustomMenu(menuActions);
+        }
+
+        CDbMappingComponent *CDbMappingComponent::CRemovedModelsMenu::mappingComponent() const
+        {
+            return qobject_cast<CDbMappingComponent *>(this->parent());
         }
 
         CDbMappingComponent *CDbMappingComponent::CMergeWithVPilotMenu::mappingComponent() const
