@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
-    <height>337</height>
+    <width>460</width>
+    <height>333</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,6 +112,9 @@
       </item>
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
+        <property name="currentIndex">
+         <number>4</number>
+        </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">
           <property name="spacing">
@@ -234,7 +237,21 @@
             <property name="spacing">
              <number>9</number>
             </property>
-            <item row="0" column="2">
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="le_TmTo">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="lbl_Receiver">
+              <property name="text">
+               <string>Received</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
              <widget class="QLabel" name="lbl_TmTo">
               <property name="text">
                <string>to</string>
@@ -242,38 +259,37 @@
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="lbl_Receiver">
-              <property name="text">
-               <string>Received</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="le_TmReceived"/>
-            </item>
-            <item row="0" column="0">
              <widget class="QLabel" name="lbl_TmFrom">
               <property name="text">
                <string>From</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
-             <widget class="QLineEdit" name="le_TmTo">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="le_TmReceived"/>
             </item>
-            <item row="0" column="1">
+            <item row="1" column="1">
              <widget class="QLineEdit" name="le_TmFrom">
               <property name="readOnly">
                <bool>true</bool>
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="4">
+            <item row="3" column="0" colspan="4">
              <widget class="QTextEdit" name="te_TmText"/>
+            </item>
+            <item row="0" column="0" colspan="4">
+             <widget class="QWidget" name="wi_TmSupervisor" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="lbl_Supervisor">
+                 <property name="text">
+                  <string>This is a supervisor message</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </item>

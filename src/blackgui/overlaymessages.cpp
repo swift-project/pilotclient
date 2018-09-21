@@ -234,6 +234,8 @@ namespace BlackGui
         ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
         ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
         ui->te_TmText->setText(textMessage.getMessage());
+        ui->wi_TmSupervisor->setVisible(textMessage.isSupervisorMessage());
+        ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
 
         this->display(timeOutMs);
     }
@@ -339,6 +341,7 @@ namespace BlackGui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_TextMessage);
         this->setHeader("Text message");
+        this->showKill(false);
     }
 
     void COverlayMessages::setModeToImage()
