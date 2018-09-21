@@ -53,13 +53,7 @@ namespace BlackCore
 
     QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
     {
-        return QList<QCommandLineOption>
-        {
-            {
-                m_cmdBootstrapUrl,
-                m_cmdBootstrapMode
-            }
-        };
+        return QList<QCommandLineOption> {{ m_cmdBootstrapUrl, m_cmdBootstrapMode }};
     }
 
     CStatusMessageList CSetupReader::asyncLoad()
@@ -219,46 +213,69 @@ namespace BlackCore
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
         if (!sApp || m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
-        if (!sApp->isInternetAccessible())
+        if (m_bootstrapUrls.isEmpty())
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "No network/internet, will try to recover");
+            const CStatusMessage m(this, CStatusMessage::SeverityError, "No bootstrap URLs");
             CStatusMessageList msgs(m);
-            msgs.push_back(this->manageSetupAvailability(false, false));
             this->setLastSetupReadErrorMessages(msgs);
             return msgs;
         }
 
-        const CUrl url(m_bootstrapUrls.obtainNextWorkingUrl(false, CNetworkUtils::getLongTimeoutMs()));
-        if (url.isEmpty())
-        {
-            m_bootstrapUrls.reset();
-            const CStatusMessage m(this, CStatusMessage::SeverityError,
-                                   "Cannot read setup, URLs: " + m_bootstrapUrls.toQString() +
-                                   " failed URLs: " + m_bootstrapUrls.getFailedUrls().toQString());
-            CStatusMessageList msgs(m);
-            msgs.push_back(CNetworkUtils::createNetworkReport(sApp->getNetworkAccessManager()));
-            msgs.push_back(this->manageSetupAvailability(false, false));
-            this->setLastSetupReadErrorMessages(msgs);
-            return msgs;
-        }
-        const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Start reading URL: " + url.toQString());
+        // trigger two reads, the file size is small
+        const CUrlList randomUrls = m_bootstrapUrls.randomElements(2);
+        CUrl url = randomUrls.front();
+        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, "Start reading bootstrap 1st URL: " + url.toQString());
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
-        this->setLastSetupReadErrorMessages(m); // clear errors
-        return m;
+
+        url = randomUrls.back();
+        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, "Will also trigger deferred bootstrap reading 2nd URL: " + url.toQString());
+        QPointer<CSetupReader> myself(this);
+        QTimer::singleShot(2000, this, [ = ]
+        {
+            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!m_lastSuccessfulSetupUrl.isEmpty())
+            {
+                // already read
+                CLogMessage(this).info("Cancel second bootstrap read, as there was a 1st read: " + url.toQString());
+                return;
+            }
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+        });
+
+        CStatusMessageList msgs({m1, m2});
+        this->setLastSetupReadErrorMessages(msgs);
+        return msgs;
     }
 
     void CSetupReader::readUpdateInfo()
     {
-        const CUrl url(m_updateInfoUrls.obtainNextWorkingUrl());
-        if (url.isEmpty())
+        const CUrlList randomUrls = m_updateInfoUrls.randomElements(2);
+        if (randomUrls.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'") << m_updateInfoUrls << m_updateInfoUrls.getFailedUrls();
-            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(sApp->getNetworkAccessManager()));
+            CStatusMessage(this).warning("Cannot read update info, no URLs");
             this->manageUpdateInfoAvailability(false);
             return;
         }
-        if (m_shutdown) { return; }
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile});
+
+        if (!sApp || m_shutdown) { return; }
+        CUrl url = randomUrls.front();
+        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, "Start reading update info 1st URL: " + url.toQString());
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
+
+        url = randomUrls.back();
+        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, "Will also trigger deferred update info reading 2nd URL: " + url.toQString());
+        QPointer<CSetupReader> myself(this);
+        QTimer::singleShot(2000, this, [ = ]
+        {
+            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!m_lastSuccessfulUpdateInfoUrl.isEmpty())
+            {
+                // already read
+                CLogMessage(this).info("Cancel second update info read, as there was a 1st read: " + url.toQString());
+                return;
+            }
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
+        });
     }
 
     CSetupReader::BootstrapMode CSetupReader::stringToEnum(const QString &s)
@@ -392,7 +409,8 @@ namespace BlackCore
             nwReply->abort();
         }
 
-        // try next one if any
+        /**
+        // try next one if any Removed with T367
         if (m_bootstrapUrls.addFailedUrl(url))
         {
             CStatusMessage msg = CStatusMessage(this).warning("Reading setup failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
@@ -407,6 +425,7 @@ namespace BlackCore
             const CStatusMessageList msgs = this->manageSetupAvailability(false);
             CLogMessage::preformatted(msgs);
         }
+        **/
     }
 
     void CSetupReader::parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
@@ -481,7 +500,7 @@ namespace BlackCore
             nwReply->abort();
         }
 
-        // try next one if any
+        /** try next one if any Removed with T367
         if (m_updateInfoUrls.addFailedUrl(url))
         {
             CLogMessage(this).warning("Reading update info failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
@@ -494,6 +513,7 @@ namespace BlackCore
             this->manageUpdateInfoAvailability(false);
             CLogMessage(this).error("Reading update info failed %1 %2, failed URLs %3") << replyMessage << urlString << m_updateInfoUrls.getFailedUrlsSize();
         }
+        **/
     }
 
     const CLogCategoryList &CSetupReader::getLogCategories()

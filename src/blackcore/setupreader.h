@@ -170,8 +170,8 @@ namespace BlackCore
         QString m_localSetupFileValue;                           //!< Local file for setup, passed by cmd line arguments
         QString m_bootstrapUrlFileValue;                         //!< Bootstrap URL if not local
         BootstrapMode m_bootstrapMode = Explicit;                //!< How to bootstrap
-        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;    //!< location of setup files
-        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls;   //!< location of info files
+        BlackMisc::Network::CUrlList m_bootstrapUrls;            //!< location of setup files
+        BlackMisc::Network::CUrlList m_updateInfoUrls;           //!< location of info files
         QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode;                   //!< bootstrap mode
         mutable QReadWriteLock m_lockSetup;                      //!< lock for setup
