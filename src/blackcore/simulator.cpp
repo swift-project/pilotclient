@@ -625,7 +625,10 @@ namespace BlackCore
         m_simulatorInternals.setSwiftPluginName(this->getSimulatorPluginInfo().toQString());
 
         // info
-        CLogMessage(this).info("Initialized simulator driver: '%1'") << this->getSimulatorInfo().toQString();
+        CLogMessage(this).info("Initialized simulator driver: '%1'") <<
+                (this->getSimulatorInfo().isUnspecified() ?
+                 this->getSimulatorPluginInfo().toQString() :
+                 this->getSimulatorInfo().toQString());
     }
 
     void ISimulator::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
