@@ -2,44 +2,19 @@
 /** does not(!) affect text edit **/
 /** http://doc.qt.io/qt-5/richtext-html-subset.html **/
 
-table {
-  font-size: 8pt;
-}
+table { font-size: 8pt; }
 
-tr {
-}
+tr { }
+td { vertical-align: middle; }
+td.timestamp { color: green; }
+td.message{ }
 
-td {
-  vertical-align: middle;
-}
+/** recipient info normal/supervisor **/
+td.recipient{ color: yellow; }
+.sent td.recipient{ color: blue; }
+.supervisor td.recipient{ background-color: red; }
 
-td.timestamp {
-  color: green;
-}
-
-td.recipient{
-  color: yellow;
-}
-
-.sent td.recipient{
-  color: blue;
-}
-
-.supervisor td.recipient{
-  background-color: red;
-}
-
-td.sender{
-  color: yellow;
-}
-
-.sent td.sender{
-  color: blue;
-}
-
-.supervisor td.sender{
-  background-color: red;
-}
-
-td.message{
-}
+/** sent info normal/supervisor **/
+td.sender{ color: yellow; }
+.sent td.sender{ color: blue; }
+.supervisor td.sender{ background-color: red; }

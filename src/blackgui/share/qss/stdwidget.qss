@@ -345,7 +345,7 @@ QPlainTextEdit {
 QGroupBox {
   border: 1px solid green;
   margin-top: 1.0em; /* leave space at the top for the title */
-  padding-top: 0.25em;
+  padding-top: 0.5em;
   border-radius: 5px;
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
@@ -355,12 +355,16 @@ QGroupBox::disabled {
   background: rgba(4, 105, 105, 105);
 }
 
+/* QGroupBox::flat { border: 0px; } */
+QGroupBox::unchecked { border: 0px; }
+
 QGroupBox::title {
   top: 2px;
-  left: 5px;
+  left: 1em;
   subcontrol-origin: margin;
   subcontrol-position: middle left; /* position at the top center */
-  padding: 0px 10px 0px 10px;
+  padding: 0px 2em 0px 2em;
+  min-width: 15em;
   background-color: darkblue;
   border: 1px solid green;
   border-radius: 5px;
