@@ -22,7 +22,6 @@
 class QAction;
 class QPoint;
 class QTextDocument;
-class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace BlackGui
@@ -46,16 +45,21 @@ namespace BlackGui
         //! Number of displayed messages
         int count() const;
 
-    public slots:
+        //! Stylesheet for content
+        void setStyleSheetForContent(const QString &styleSheet);
+
         //! Clear
         void clear();
+
+        //! Has text document
+        bool hasTextDocument() const { return m_textDocument; }
+
+        //! Redraw HTML
+        void redrawHtml();
 
     private:
         //! Context menu
         void showContextMenuForTextEdit(const QPoint &pt);
-
-        //! Stylesheet has been changed
-        void onStyleSheetChanged();
 
         //! Keep last n messages
         void keepLastNMessages();
@@ -68,9 +72,6 @@ namespace BlackGui
 
         //! Convert to HTML
         static QString toHtml(const BlackMisc::Network::CTextMessage &message, bool withFrom, bool withTo);
-
-        //! Stylesheet for content
-        void setStyleSheetForContent(const QString &styleSheet);
 
         //! Word wrap
         void setWordWrap(bool wordWrap);

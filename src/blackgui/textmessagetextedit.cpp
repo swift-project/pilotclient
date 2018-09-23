@@ -8,7 +8,6 @@
  */
 
 #include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackgui/textmessagetextedit.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/textmessage.h"
@@ -20,6 +19,7 @@
 #include <QTextOption>
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -55,10 +55,6 @@ namespace BlackGui
         connect(m_actionWordWrap, &QAction::triggered, this, &CTextMessageTextEdit::setWordWrap);
 
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::showContextMenuForTextEdit);
-
-        // style sheet
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::onStyleSheetChanged, Qt::QueuedConnection);
-        onStyleSheetChanged();
     }
 
     CTextMessageTextEdit::~CTextMessageTextEdit()
@@ -75,7 +71,7 @@ namespace BlackGui
         {
             m_messages.push_front(textMessage);
         }
-        QString html(toHtml(m_messages, m_withSender, m_withRecipient));
+        const QString html(toHtml(m_messages, m_withSender, m_withRecipient));
         m_textDocument->setHtml(html);
     }
 
@@ -90,9 +86,18 @@ namespace BlackGui
         QTextEdit::clear();
     }
 
+    void CTextMessageTextEdit::redrawHtml()
+    {
+        Q_ASSERT_X(m_textDocument, Q_FUNC_INFO, "Missing text document");
+        const QString html(toHtml(m_messages, m_withSender, m_withRecipient));
+        m_textDocument->setHtml(html);
+    }
+
     void CTextMessageTextEdit::setStyleSheetForContent(const QString &styleSheet)
     {
+        Q_ASSERT_X(m_textDocument, Q_FUNC_INFO, "Missing text document");
         m_textDocument->setDefaultStyleSheet(styleSheet);
+        this->redrawHtml();
     }
 
     QString CTextMessageTextEdit::toHtml(const CTextMessageList &messages, bool withFrom, bool withTo)
@@ -170,13 +175,6 @@ namespace BlackGui
         subMenu->addAction(m_actionWithRecipient);
         menu->addAction(m_actionClearTextEdit);
         menu->exec(this->mapToGlobal(pt));
-    }
-
-    void CTextMessageTextEdit::onStyleSheetChanged()
-    {
-        Q_ASSERT(m_textDocument);
-        QString style(sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()));
-        m_textDocument->setDefaultStyleSheet(style);
     }
 
     void CTextMessageTextEdit::keepLastNMessages()

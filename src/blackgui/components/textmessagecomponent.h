@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 #define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/variant.h"
@@ -28,6 +28,8 @@ namespace Ui { class CTextMessageComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
+    class CTextMessageTextEdit;
+
     namespace Components
     {
         //! Text message widget
@@ -56,14 +58,6 @@ namespace BlackGui
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
 
-        signals:
-            //! Message to be displayed in info window
-            void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
-
-            //! Command line was entered
-            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &originator);
-
-        public slots:
             //! Text messages received
             void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
 
@@ -77,13 +71,23 @@ namespace BlackGui
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
+        signals:
+            //! Message to be displayed in info window
+            void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
+
+            //! Command line was entered
+            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &originator);
+
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
-            BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
+            BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
 
             //! Enum to widget
             QWidget *getTabWidget(Tab tab) const;
+
+            //! Related text edit
+            CTextMessageTextEdit *getTextEdit(Tab tab) const;
 
             //! Select given tab
             void selectTabWidget(Tab tab);
@@ -130,6 +134,24 @@ namespace BlackGui
 
             //! Cockpit values changed, used to updated some components
             void onChangedAircraftCockpit();
+
+            //! Settings have been checked (group box visible/invisible)
+            void onSettingsChecked(bool checked);
+
+            //! Settings have been changed
+            void onSettingsChanged();
+
+            //! Style sheet has been changed
+            void onStyleSheetChanged();
+
+            //! Update settings
+            void updateSettings();
+
+            //! Get all CTextMessageTextEdit child objects
+            QList<CTextMessageTextEdit *> findAllTextEdit() const;
+
+            //! Global or settings stylesheet
+            QString getStyleSheet() const;
 
             //! Close text message tab
             void closeTextMessageTab();

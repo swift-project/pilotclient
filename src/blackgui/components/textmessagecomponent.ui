@@ -6,25 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>260</width>
+    <height>297</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Text messages</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
-  </property>
   <layout class="QVBoxLayout" name="vl_TextMessages">
    <property name="spacing">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -36,7 +27,7 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>5</number>
    </property>
    <item>
     <widget class="QTabWidget" name="tw_TextMessages">
@@ -231,12 +222,45 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::Components::CSettingsTextMessageInlineComponent" name="comp_Settings"/>
+    <widget class="QGroupBox" name="gb_Settings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="vl_Settings">
+      <property name="spacing">
+       <number>1</number>
+      </property>
+      <property name="leftMargin">
+       <number>1</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>1</number>
+      </property>
+      <property name="bottomMargin">
+       <number>1</number>
+      </property>
+      <item>
+       <widget class="BlackGui::Components::CSettingsTextMessageInlineComponent" name="comp_SettingsOverlay"/>
+      </item>
+      <item>
+       <widget class="BlackGui::Components::CSettingsTextMessageStyle" name="comp_SettingsStyle"/>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="BlackGui::CLineEditHistory" name="le_textMessages">
      <property name="toolTip">
       <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+     </property>
+     <property name="placeholderText">
+      <string>text message text goes here</string>
      </property>
     </widget>
    </item>
@@ -264,14 +288,21 @@
    <extends>QLineEdit</extends>
    <header>blackgui/lineedithistory.h</header>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsTextMessageStyle</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingstextmessagestyle.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tw_TextMessages</tabstop>
-  <tabstop>le_textMessages</tabstop>
   <tabstop>tvp_TextMessagesAll</tabstop>
-  <tabstop>tep_TextMessagesUnicom</tabstop>
+  <tabstop>gb_Settings</tabstop>
+  <tabstop>le_textMessages</tabstop>
   <tabstop>tep_TextMessagesCOM1</tabstop>
   <tabstop>tep_TextMessagesCOM2</tabstop>
+  <tabstop>tep_TextMessagesUnicom</tabstop>
  </tabstops>
  <resources/>
  <connections/>

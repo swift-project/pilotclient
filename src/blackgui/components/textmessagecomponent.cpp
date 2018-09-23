@@ -7,32 +7,31 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/corefacade.h"
+#include "ui_textmessagecomponent.h"
 #include "blackgui/components/textmessagecomponent.h"
+#include "blackgui/views/textmessageview.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/textmessagetextedit.h"
-#include "blackgui/views/textmessageview.h"
-#include "blackgui/views/viewbase.h"
-#include "blackmisc/verify.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/application.h"
+#include "blackcore/corefacade.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/user.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"
-#include "ui_textmessagecomponent.h"
+#include "blackmisc/verify.h"
 
 #include <QLayout>
 #include <QLineEdit>
@@ -72,7 +71,15 @@ namespace BlackGui
             // le_textMessages is the own line edit
             bool c = connect(ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::textMessageEntered);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+
+            // style sheet
+            c = connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageComponent::onStyleSheetChanged, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(ui->comp_SettingsStyle, &CSettingsTextMessageStyle::changed, this, &CTextMessageComponent::updateSettings, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
             if (sGui && sGui->getCoreFacade())
@@ -81,6 +88,15 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             }
             Q_UNUSED(c);
+
+            // init by settings
+            QPointer<CTextMessageComponent> myself(this);
+            QTimer::singleShot(250, this, [ = ]
+            {
+                // init decoupled when sub components are fully init
+                if (!myself) { return; }
+                this->onSettingsChanged();
+            });
         }
 
         CTextMessageComponent::~CTextMessageComponent()
@@ -98,9 +114,9 @@ namespace BlackGui
         {
             switch (tab)
             {
-            case TextMessagesAll: return ui->tb_TextMessagesAll;
-            case TextMessagesCom1: return ui->tb_TextMessagesCOM1;
-            case TextMessagesCom2: return ui->tb_TextMessagesCOM2;
+            case TextMessagesAll:    return ui->tb_TextMessagesAll;
+            case TextMessagesCom1:   return ui->tb_TextMessagesCOM1;
+            case TextMessagesCom2:   return ui->tb_TextMessagesCOM2;
             case TextMessagesUnicom: return ui->tb_TextMessagesUnicom;
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index");
@@ -109,9 +125,16 @@ namespace BlackGui
             return nullptr;
         }
 
+        CTextMessageTextEdit *CTextMessageComponent::getTextEdit(CTextMessageComponent::Tab tab) const
+        {
+            QWidget *w = this->getTabWidget(tab);
+            if (!w) { return nullptr; }
+            return this->findChild<CTextMessageTextEdit *>();
+        }
+
         void CTextMessageComponent::selectTabWidget(CTextMessageComponent::Tab tab)
         {
-            QWidget *w = getTabWidget(tab);
+            QWidget *w = this->getTabWidget(tab);
             if (w)
             {
                 ui->tw_TextMessages->setCurrentWidget(w);
@@ -191,13 +214,62 @@ namespace BlackGui
                             emit this->displayInInfoWindow(CVariant::from(message), 5 * 1000);
                         }
                     }
-                }
-            }
+                } // message
+            } // for
         }
 
         void CTextMessageComponent::onChangedAircraftCockpit()
         {
             this->showCurrentFrequenciesFromCockpit();
+        }
+
+        void CTextMessageComponent::onSettingsChecked(bool checked)
+        {
+            ui->comp_SettingsOverlay->setVisible(checked);
+            ui->comp_SettingsStyle->setVisible(checked);
+            ui->gb_Settings->setFlat(!checked);
+        }
+
+        void CTextMessageComponent::onSettingsChanged()
+        {
+            QList<CTextMessageTextEdit *> textEdits = this->findAllTextEdit();
+            const QString style = this->getStyleSheet();
+            for (CTextMessageTextEdit *textEdit : textEdits)
+            {
+                if (textEdit->hasTextDocument())
+                {
+                    textEdit->setStyleSheetForContent(style);
+                }
+            }
+            ui->comp_SettingsStyle->setStyle(this->getStyleSheet());
+        }
+
+        void CTextMessageComponent::onStyleSheetChanged()
+        {
+            this->onSettingsChanged();
+        }
+
+        void CTextMessageComponent::updateSettings()
+        {
+            const QString style = ui->comp_SettingsStyle->getStyle();
+            CTextMessageSettings s = m_messageSettings.get();
+            s.setStyleSheet(style);
+            const CStatusMessage m = m_messageSettings.setAndSave(s);
+            CLogMessage::preformatted(m);
+            this->onStyleSheetChanged();
+        }
+
+        QList<CTextMessageTextEdit *> CTextMessageComponent::findAllTextEdit() const
+        {
+            return this->findChildren<CTextMessageTextEdit *>();
+        }
+
+        QString CTextMessageComponent::getStyleSheet() const
+        {
+            const QString styleSheet = m_messageSettings.get().getStyleSheet();
+            return styleSheet.isEmpty() && sGui ?
+                   sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()) :
+                   styleSheet;
         }
 
         bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(CTextMessage textMessage) const
@@ -233,7 +305,7 @@ namespace BlackGui
 
         bool CTextMessageComponent::isNetworkConnected() const
         {
-            return sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected() ;
+            return sGui && sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected();
         }
 
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
@@ -253,7 +325,7 @@ namespace BlackGui
         QWidget *CTextMessageComponent::addNewTextMessageTab(const CCallsign &callsign)
         {
             Q_ASSERT(!callsign.isEmpty());
-            return addNewTextMessageTab(callsign.asString());
+            return this->addNewTextMessageTab(callsign.asString());
         }
 
         QWidget *CTextMessageComponent::addNewTextMessageTab(const QString &tabName)
