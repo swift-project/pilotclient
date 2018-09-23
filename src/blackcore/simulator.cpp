@@ -143,6 +143,7 @@ namespace BlackCore
     void ISimulator::clearAllRemoteAircraftData()
     {
         // rendering related stuff
+        this->physicallyRemoveAllRemoteAircraft();
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
         m_clampedLogMsg.clear();
@@ -695,7 +696,6 @@ namespace BlackCore
         // a default implementation, but normally overridden by the sims
         const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
         const int r = this->physicallyRemoveMultipleRemoteAircraft(callsigns);
-        this->debugVerifyStateAfterAllAircraftRemoved();
         this->clearAllRemoteAircraftData();
         return r;
     }

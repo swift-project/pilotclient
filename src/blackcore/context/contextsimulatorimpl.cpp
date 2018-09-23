@@ -652,10 +652,8 @@ namespace BlackCore
 
                 if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
                 {
-                    const CStatusMessageList verifyMessages = m_simulatorPlugin.second->debugVerifyStateAfterAllAircraftRemoved();
-                    m_simulatorPlugin.second->clearAllRemoteAircraftData();
+                    m_simulatorPlugin.second->clearAllRemoteAircraftData(); // also removes aircraft
                     m_simulatorPlugin.second->setFlightNetworkConnected(false);
-                    if (!verifyMessages.isEmpty()) { emit this->driverMessages(verifyMessages); }
                 }
             }
         }

@@ -251,7 +251,7 @@ namespace BlackCore
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
 
-            QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty
+            QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)
 
             // settings
             BlackMisc::CSettingReadOnly<Application::TEnabledSimulators>           m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };

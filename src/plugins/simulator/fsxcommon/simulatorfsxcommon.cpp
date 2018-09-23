@@ -263,7 +263,7 @@ namespace BlackSimPlugin
         CStatusMessageList CSimulatorFsxCommon::debugVerifyStateAfterAllAircraftRemoved() const
         {
             CStatusMessageList msgs;
-            if (CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
+            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
             msgs = CSimulatorFsCommon::debugVerifyStateAfterAllAircraftRemoved();
             if (!m_simConnectObjects.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjects not empty: '%1'") << m_simConnectObjects.getAllCallsignStringsAsString(true)); }
             if (!m_simConnectObjectsPositionAndPartsTraces.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjectsPositionAndPartsTraces not empty: '%1'") << m_simConnectObjectsPositionAndPartsTraces.getAllCallsignStringsAsString(true)); }
@@ -1473,10 +1473,7 @@ namespace BlackSimPlugin
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
-            if (simObject.isTerrainProbe())
-            {
-                return false;
-            }
+            if (simObject.isTerrainProbe()) { return false; }
 
             // check for pending objects
             m_addPendingAircraft.remove(callsign); // just in case still in list of pending aircraft
@@ -2088,9 +2085,9 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::reset()
         {
             this->safeKillTimer();
-            this->removeAllProbes(); // still requires connection
 
             // cleared below:
+            // physicallyRemoveAllRemoteAircraft
             // m_simConnectObjects
             // m_simConnectObjectsPositionAndPartsTraces
             // m_addPendingAircraft
@@ -2114,12 +2111,13 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::clearAllRemoteAircraftData()
         {
+            this->removeAllProbes();
+
+            // m_addAgainAircraftWhenRemoved cleared below
+            CSimulatorFsCommon::clearAllRemoteAircraftData(); // also removes aircraft
             m_simConnectObjects.clear();
             m_addPendingAircraft.clear();
             m_simConnectObjectsPositionAndPartsTraces.clear();
-            this->removeAllProbes();
-            // m_addAgainAircraftWhenRemoved cleared below
-            CSimulatorFsCommon::clearAllRemoteAircraftData();
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
