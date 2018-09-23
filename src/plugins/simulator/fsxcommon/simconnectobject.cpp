@@ -286,7 +286,8 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimConnectObjects::getAllCallsigns(bool withoutProbes) const
         {
-            if (!withoutProbes) { return CCallsignSet(this->keys()); }
+            if (this->isEmpty()) { return CCallsignSet(); }
+            if (!withoutProbes)  { return CCallsignSet(this->keys()); }
             CCallsignSet callsigns;
             for (const CSimConnectObject &simObject : this->values())
             {

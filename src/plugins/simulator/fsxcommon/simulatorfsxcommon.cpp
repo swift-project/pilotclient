@@ -65,12 +65,12 @@ namespace BlackSimPlugin
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
 
-            m_addPendingSimObjTimer.setInterval(AddPendingAircraftIntervalMs);
+            m_simObjectTimer.setInterval(AddPendingAircraftIntervalMs);
             m_useFsuipc = false;
             // default model will be set in derived class
 
             CSimulatorFsxCommon::registerHelp();
-            connect(&m_addPendingSimObjTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraftByTimer);
+            connect(&m_simObjectTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::timerBasedObjectAddOrRemove);
         }
 
         CSimulatorFsxCommon::~CSimulatorFsxCommon()
@@ -990,9 +990,10 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsxCommon::addPendingAircraftByTimer()
+        void CSimulatorFsxCommon::timerBasedObjectAddOrRemove()
         {
             this->addPendingAircraft(AddByTimer);
+            this->physicallyRemoveAircraftNotInProvider();
         }
 
         void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
@@ -1281,7 +1282,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
             // reset timer
-            m_addPendingSimObjTimer.start(AddPendingAircraftIntervalMs); // restart
+            m_simObjectTimer.start(AddPendingAircraftIntervalMs); // restart
 
             const CSimConnectObjects outdatedAdded = m_simConnectObjects.removeOutdatedPendingAdded(CSimConnectObject::AllTypes);
             if (!outdatedAdded.isEmpty())
@@ -1526,12 +1527,7 @@ namespace BlackSimPlugin
             }
 
             // cleanup function, actually this should not be needed
-            const QPointer<CSimulatorFsxCommon> myself(this);
-            QTimer::singleShot(100, this, [ = ]
-            {
-                if (!myself) { return; }
-                CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
-            });
+            this->physicallyRemoveAircraftNotInProviderAsync();
 
             // bye
             return true;
@@ -2130,6 +2126,7 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsxCommon::getCallsignsMissingInProvider() const
         {
+            if (m_simConnectObjects.isEmpty()) { return CCallsignSet(); }
             const CCallsignSet simObjectCallsigns(m_simConnectObjects.getAllCallsigns(true));
             const CCallsignSet providerCallsigns(this->getAircraftInRangeCallsigns());
             return simObjectCallsigns.difference(providerCallsigns);
@@ -2310,6 +2307,16 @@ namespace BlackSimPlugin
 
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1'").arg(callsignsToBeRemoved.toStringList().join(", "))); }
             return callsignsToBeRemoved;
+        }
+
+        void CSimulatorFsxCommon::physicallyRemoveAircraftNotInProviderAsync()
+        {
+            const QPointer<CSimulatorFsxCommon> myself(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
+            });
         }
 
         CSimulatorFsxCommonListener::CSimulatorFsxCommonListener(const CSimulatorPluginInfo &info) :

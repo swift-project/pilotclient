@@ -294,8 +294,11 @@ namespace BlackSimPlugin
             int physicallyInitAITerrainProbes(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, int number);
 
             //! Remove aircraft no longer in provider
-            //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
+            //! \remark kind of cleanup function, in an ideal scenario this should never need to cleanup something
             BlackMisc::Aviation::CCallsignSet physicallyRemoveAircraftNotInProvider();
+
+            //! ASynchronous version of physicallyRemoveAircraftNotInProvider
+            void physicallyRemoveAircraftNotInProviderAsync();
 
             //! Verify that an object has been added in simulator
             //! \remark checks if the object was really added after an "add request" and not directly removed again
@@ -315,7 +318,7 @@ namespace BlackSimPlugin
             void verifyAddedTerrainProbe(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
 
             //! Add next aircraft based on timer
-            void addPendingAircraftByTimer();
+            void timerBasedObjectAddOrRemove();
 
             //! Add next aircraft after another has been confirmed
             void addPendingAircraftAfterAdded();
@@ -549,7 +552,7 @@ namespace BlackSimPlugin
             CSimConnectObjects m_addPendingAircraft; //!< aircraft/probes awaiting to be added;
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft     = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);     //!< request id, use obtainRequestIdForSimObjAircraft to get id
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
-            QTimer m_addPendingSimObjTimer; //!< updating of SimObjects awaiting to be added
+            QTimer m_simObjectTimer; //!< updating of SimObjects awaiting to be added
 
             //! Request id to string
             static QString requestIdToString(DWORD requestId);
