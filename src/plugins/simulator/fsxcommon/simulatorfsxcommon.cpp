@@ -2107,6 +2107,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::clearAllRemoteAircraftData()
         {
+            const bool reinitProbe = m_useFsxTerrainProbe;
             this->removeAllProbes();
 
             // m_addAgainAircraftWhenRemoved cleared below
@@ -2114,6 +2115,18 @@ namespace BlackSimPlugin
             m_simConnectObjects.clear();
             m_addPendingAircraft.clear();
             m_simConnectObjectsPositionAndPartsTraces.clear();
+
+            if (reinitProbe)
+            {
+                // if we are still alive we re-init the probes
+                QPointer<CSimulatorFsxCommon> myself(this);
+                QTimer::singleShot(2000, this, [ = ]
+                {
+                    // Shutdown or unloaded
+                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                    m_initFsxTerrainProbes = false; // probes will re-init
+                });
+            }
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
