@@ -37,7 +37,8 @@ namespace BlackGui
                 IndexPopupSupervisorMessages,
                 IndexPopupFrequencyMessages,
                 IndexPopupAllMessages,
-                IndexPopupSelcalMessages
+                IndexPopupSelcalMessages,
+                IndexStyle
             };
 
             //! Default constructor
@@ -91,6 +92,15 @@ namespace BlackGui
             //! Popup the given message? Complete check including frequencies.
             bool popup(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) const;
 
+            //! CSS style sheet
+            const QString &getStyleSheet() const { return m_styleSheet; }
+
+            //! CSS style sheet
+            void setStyleSheet(const QString &styleSheet) { m_styleSheet = styleSheet; }
+
+            //! Reset style sheet
+            void resetStyleSheet() { m_styleSheet.clear(); }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -101,11 +111,12 @@ namespace BlackGui
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
         private:
-            bool m_popupPrivateMessages = true;
+            bool m_popupPrivateMessages    = true;
             bool m_popupSupervisorMessages = true;
-            bool m_popupFrequencyMessages = false; //!< show if tuned in
-            bool m_popupAllMessages = false;
-            bool m_popupSelcalMessages = true;
+            bool m_popupFrequencyMessages  = false; //!< show if tuned in
+            bool m_popupAllMessages        = false;
+            bool m_popupSelcalMessages     = true;
+            QString m_styleSheet;
 
             BLACK_METACLASS(
                 CTextMessageSettings,
@@ -113,7 +124,8 @@ namespace BlackGui
                 BLACK_METAMEMBER(popupSupervisorMessages),
                 BLACK_METAMEMBER(popupFrequencyMessages),
                 BLACK_METAMEMBER(popupAllMessages),
-                BLACK_METAMEMBER(popupSelcalMessages)
+                BLACK_METAMEMBER(popupSelcalMessages),
+                BLACK_METAMEMBER(styleSheet)
             );
         };
 

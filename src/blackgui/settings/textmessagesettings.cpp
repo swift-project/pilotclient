@@ -85,6 +85,7 @@ namespace BlackGui
             case IndexPopupPrivateMessages: return CVariant::fromValue(this->popupPrivateMessages());
             case IndexPopupSupervisorMessages: return CVariant::fromValue(this->popupSupervisorMessages());
             case IndexPopupSelcalMessages: return CVariant::fromValue(this->popupSelcalMessages());
+            case IndexStyle: return CVariant::fromValue(this->getStyleSheet());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -95,24 +96,13 @@ namespace BlackGui
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPopupAllMessages:
-                this->setPopupAllMessages(variant.toBool());
-                break;
-            case IndexPopupFrequencyMessages:
-                this->setPopupFrequencyMessages(variant.toBool());
-                break;
-            case IndexPopupSupervisorMessages:
-                this->setSupervisorMessages(variant.toBool());
-                break;
-            case IndexPopupPrivateMessages:
-                this->setPopupPrivateMessages(variant.toBool());
-                break;
-            case IndexPopupSelcalMessages:
-                this->setPopupSelcalMessages(variant.toBool());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexPopupAllMessages: this->setPopupAllMessages(variant.toBool()); break;
+            case IndexPopupFrequencyMessages: this->setPopupFrequencyMessages(variant.toBool()); break;
+            case IndexPopupSupervisorMessages: this->setSupervisorMessages(variant.toBool()); break;
+            case IndexPopupPrivateMessages: this->setPopupPrivateMessages(variant.toBool()); break;
+            case IndexPopupSelcalMessages: this->setPopupSelcalMessages(variant.toBool()); break;
+            case IndexStyle: this->setStyleSheet(variant.toQString()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // ns
