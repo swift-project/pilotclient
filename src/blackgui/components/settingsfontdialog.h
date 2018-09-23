@@ -13,6 +13,8 @@
 #define BLACKGUI_COMPONENTS_SETTINGSFONTDIALOG_H
 
 #include <QDialog>
+#include <QFont>
+#include <QStringList>
 
 namespace Ui { class CSettingsFontDialog; }
 namespace BlackGui
@@ -38,7 +40,16 @@ namespace BlackGui
             const QString &getQss() const;
 
             //! Set the current font
-            void setCurrentFont(const QFont &font);
+            void setFont(const QFont &font);
+
+            //! Get font
+            QFont getFont() const;
+
+            //! Family, size and style
+            QStringList getFamilySizeStyle() const;
+
+            //! With color selection
+            void setWithColorSelection(bool withColor);
 
         private:
             QScopedPointer<Ui::CSettingsFontDialog> ui;

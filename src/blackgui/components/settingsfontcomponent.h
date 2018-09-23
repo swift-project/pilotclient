@@ -47,7 +47,16 @@ namespace BlackGui
             const QString &getQss() const { return m_qss; }
 
             //! Set the current font
-            void setCurrentFont(const QFont &font);
+            void setFont(const QFont &font);
+
+            //! Get font selection
+            QFont getFont() const;
+
+            //! Strings such as
+            QStringList getFamilySizeStyle() const;
+
+            //! With color selection
+            void setWithColorSelection(bool withColor);
 
         signals:
             //! To be used with dialogs

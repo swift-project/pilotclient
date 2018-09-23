@@ -54,10 +54,29 @@ namespace BlackGui
             }
         }
 
-        void CSettingsFontComponent::setCurrentFont(const QFont &font)
+        void CSettingsFontComponent::setFont(const QFont &font)
         {
             m_cancelFont = font;
             this->resetFont();
+        }
+
+        QFont CSettingsFontComponent::getFont() const
+        {
+            return ui->cb_SettingsGuiFont->font();
+        }
+
+        QStringList CSettingsFontComponent::getFamilySizeStyle() const
+        {
+            const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
+            const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
+            const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
+            return QStringList ({ fontFamily, fontSize, fontStyleCombined });
+        }
+
+        void CSettingsFontComponent::setWithColorSelection(bool withColor)
+        {
+            ui->le_SettingsGuiFontColor->setVisible(withColor);
+            ui->tb_SettingsGuiFontColor->setVisible(withColor);
         }
 
         void CSettingsFontComponent::changeFont()
@@ -65,6 +84,8 @@ namespace BlackGui
             const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
             const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
             const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
+
+            const QStringList familySizeStyle = this->getFamilySizeStyle();
             QString fontColor = m_selectedColor.name();
             if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
             {

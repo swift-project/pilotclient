@@ -19,6 +19,7 @@ namespace BlackGui
             ui(new Ui::CSettingsFontDialog)
         {
             ui->setupUi(this);
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             ui->comp_FontSettings->setMode(CSettingsFontComponent::GenerateQssOnly);
 
             connect(ui->comp_FontSettings, &CSettingsFontComponent::accept, this, &CSettingsFontDialog::accept);
@@ -33,9 +34,24 @@ namespace BlackGui
             return ui->comp_FontSettings->getQss();
         }
 
-        void CSettingsFontDialog::setCurrentFont(const QFont &font)
+        void CSettingsFontDialog::setFont(const QFont &font)
         {
-            ui->comp_FontSettings->setCurrentFont(font);
+            ui->comp_FontSettings->setFont(font);
+        }
+
+        QFont CSettingsFontDialog::getFont() const
+        {
+            return ui->comp_FontSettings->getFont();
+        }
+
+        QStringList CSettingsFontDialog::getFamilySizeStyle() const
+        {
+            return ui->comp_FontSettings->getFamilySizeStyle();
+        }
+
+        void CSettingsFontDialog::setWithColorSelection(bool withColor)
+        {
+            ui->comp_FontSettings->setWithColorSelection(withColor);
         }
     } // ns
 } // ns

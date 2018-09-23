@@ -69,7 +69,7 @@ namespace BlackGui
                 m_dialog.reset(new CSettingsFontDialog(m_widget));
                 m_dialog->setModal(true);
             }
-            m_dialog->setCurrentFont(m_widget->font());
+            m_dialog->setFont(m_widget->font());
             const int r = m_dialog->exec();
             if (r == QDialog::Rejected) { return; }
             const QString qss(m_dialog->getQss());
