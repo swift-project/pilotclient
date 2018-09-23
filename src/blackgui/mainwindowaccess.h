@@ -31,6 +31,15 @@ namespace BlackGui
         //! Destructor
         virtual ~IMainWindowAccess();
 
+        //! Ctor
+        IMainWindowAccess() {}
+
+        //! Copy constructor
+        IMainWindowAccess(const IMainWindowAccess &) = delete;
+
+        //! Copy assignment operator
+        IMainWindowAccess &operator =(const IMainWindowAccess &) = delete;
+
         //! Display in console
         virtual bool displayTextInConsole(const QString &message);
 
