@@ -54,7 +54,7 @@ namespace XSwiftBus
     {
         assert(! name.empty());
         m_data->items->emplace_back(
-        CMenuItem { m_data->id, 0, false, false, [callback](bool) { callback(); } }
+            CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } }
         );
         auto &menuItem = m_data->items->back();
         menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
@@ -65,10 +65,11 @@ namespace XSwiftBus
     {
         assert(!name.empty());
         m_data->items->emplace_back(
-            CMenuItem{ m_data->id, 0, true, checked, callback }
+            CMenuItem{ m_data->id, 0, true, callback }
         );
         auto &menuItem = m_data->items->back();
-        menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false));
+        menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
+        menuItem.setChecked(checked);
         return menuItem;
     }
 
@@ -113,13 +114,9 @@ namespace XSwiftBus
         }
     }
 
-    CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked, std::function<void(bool)> callback)
+    CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, std::function<void(bool)> callback)
         : m_data(std::make_shared<Data>(parent, item, checkable, callback))
     {
-        if (checkable)
-        {
-            setChecked(checked);
-        }
     }
 
     bool CMenuItem::getChecked() const
@@ -131,7 +128,7 @@ namespace XSwiftBus
 
     void CMenuItem::setChecked(bool checked)
     {
-        XPLMCheckMenuItem(m_data->parent, m_data->index, checked);
+        XPLMCheckMenuItem(m_data->parent, m_data->index, checked ? xplm_Menu_Checked : xplm_Menu_Unchecked);
     }
 
     void CMenuItem::setEnabled(bool enabled)

@@ -43,7 +43,7 @@ namespace XSwiftBus
     private:
         friend class CMenu;
 
-        CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked, std::function<void(bool)> callback);
+        CMenuItem(XPLMMenuID parent, int item, bool checkable, std::function<void(bool)> callback);
 
         void setIndex(int index) { m_data->index = index; }
 
