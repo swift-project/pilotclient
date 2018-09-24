@@ -290,7 +290,7 @@ namespace BlackSimPlugin
             if (reference.isNull()) { return false; }
             const CSimConnectObject simObject = m_simConnectObjects.getOldestNotPendingProbe(); // probes round robin
             if (!simObject.isConfirmedAdded()) { return false; }
-            m_simConnectObjects[simObject.getCallsign()].resetTimestampToNow(); // mark as just used
+            m_simConnectObjects[simObject.getCallsign()].resetTimestampToNow(); // mark probe as just used
 
             CCoordinateGeodetic pos(reference);
             pos.setGeodeticHeight(terrainProbeAltitude());
