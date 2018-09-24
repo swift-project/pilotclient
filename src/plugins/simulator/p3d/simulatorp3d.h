@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_P3D_H
 
 #include "../fsxcommon/simulatorfsxcommon.h"
+#include "../fsxcommon/simconnectobject.h"
 
 namespace BlackSimPlugin
 {
@@ -41,15 +42,23 @@ namespace BlackSimPlugin
                           BlackMisc::Network::IClientProvider *clientProvider,
                           QObject *parent = nullptr);
 
+#ifdef Q_OS_WIN64
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::ISimulator::followAircraft
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+#endif // guard
 
         protected:
             //! \copydoc FsxCommon::CSimulatorFsxCommon::initEventsP3D
             virtual HRESULT initEventsP3D() override;
+
+#ifdef Q_OS_WIN64
+            //! \copydoc FsxCommon::CSimulatorFsxCommon::releaseAIControl
+            //! \remark P3D API release of control
+            virtual bool releaseAIControl(const FsxCommon::CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId) override;
+#endif
 
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);

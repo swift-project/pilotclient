@@ -108,12 +108,15 @@ namespace BlackSimPlugin
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // P3D we use new request id each time (no simobject)
 
             // returns SIMCONNECT_RECV_GROUND_INFO -> SIMCONNECT_DATA_GROUND_INFO
-            const HRESULT hr = SimConnect_RequestGroundInfo(
-                                   m_hSimConnect, requestId, latDeg, lngDeg, 0, latDeg, lngDeg, maxAltFt,
-                                   dwGridWidth, dwGridHeight,
-                                   SIMCONNECT_GROUND_INFO_LATLON_FORMAT_DEGREES,
-                                   SIMCONNECT_GROUND_INFO_ALT_FORMAT_FEET,
-                                   SIMCONNECT_GROUND_INFO_SOURCE_FLAG_PLATFORMS);
+            const HRESULT hr = this->logAndTraceSendId(
+                                   SimConnect_RequestGroundInfo(
+                                       m_hSimConnect, requestId, latDeg, lngDeg, 0, latDeg, lngDeg, maxAltFt,
+                                       dwGridWidth, dwGridHeight,
+                                       SIMCONNECT_GROUND_INFO_LATLON_FORMAT_DEGREES,
+                                       SIMCONNECT_GROUND_INFO_ALT_FORMAT_FEET,
+                                       SIMCONNECT_GROUND_INFO_SOURCE_FLAG_PLATFORMS),
+                                   Q_FUNC_INFO, "SimConnect_RequestGroundInfo");
+
             bool ok = false;
             if (isOk(hr))
             {
@@ -188,26 +191,35 @@ namespace BlackSimPlugin
             }
             return hr;
         }
-#else
-        bool CSimulatorP3D::followAircraft(const CCallsign &callsign)
-        {
-            Q_UNUSED(callsign);
-            return false;
-        }
 
+        bool CSimulatorP3D::releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId)
+        {
+            // completely remove AI control
+            const SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
+            const HRESULT hr1 = this->logAndTraceSendId(
+                                    SimConnect_AIReleaseControlEx(m_hSimConnect, objectId, requestId, TRUE),
+                                    simObject, "Release control", Q_FUNC_INFO, "SimConnect_AIReleaseControlEx");
+            const HRESULT hr2 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLatLng, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeLatLng", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+            const HRESULT hr3 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAlt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+            const HRESULT hr4 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAtt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+
+            return isOk(hr1, hr2, hr3, hr4);
+        }
+#else
         HRESULT CSimulatorP3D::initEventsP3D()
         {
-            return S_OK;
+            return s_ok();
         }
 
         void CSimulatorP3D::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
             CSimulatorFsxCommon::SimConnectProc(pData, cbData, pContext);
-        }
-
-        bool CSimulatorP3D::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
-        {
-            return CSimulatorFsxCommon::requestElevation(reference, callsign);
         }
 #endif
     } // namespace
