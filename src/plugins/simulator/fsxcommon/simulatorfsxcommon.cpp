@@ -502,13 +502,13 @@ namespace BlackSimPlugin
                                     SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId),
                                     simObject, "Release control", Q_FUNC_INFO, "SimConnect_AIReleaseControl");
             const HRESULT hr2 = this->logAndTraceSendId(
-                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                    simObject, "EventFreezeLat", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLatLng, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeLatLng", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
             const HRESULT hr3 = this->logAndTraceSendId(
-                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
                                     simObject, "EventFreezeAlt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
             const HRESULT hr4 = this->logAndTraceSendId(
-                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
                                     simObject, "EventFreezeAtt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
 
             return isOk(hr1, hr2, hr3, hr4);
@@ -1590,9 +1590,9 @@ namespace BlackSimPlugin
             // http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/event_ids.html
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPauseToggle, "PAUSE_TOGGLE");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, SystemEventSlewToggle, "SLEW_TOGGLE");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLatLng, "FREEZE_LATITUDE_LONGITUDE_SET"); // FSX old standard
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET"); // FSX old standard
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET"); // FSX old standard
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Active, "COM_RADIO_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Standby, "COM_STBY_RADIO_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
@@ -1709,7 +1709,7 @@ namespace BlackSimPlugin
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    if (!this->isEqualLastSent(result))
+                    if (!this->isEqualLastSent(result.getInterpolatedSituation()))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         const HRESULT hr = this->logAndTraceSendId(
@@ -2004,8 +2004,7 @@ namespace BlackSimPlugin
             const SIMCONNECT_DATA_REQUEST_ID reqId = static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObject.getRequestId(CSimConnectDefinitions::SimObjectPositionData));
             const HRESULT result = this->logAndTraceSendId(
                                        SimConnect_RequestDataOnSimObject(
-                                           m_hSimConnect, reqId,
-                                           CSimConnectDefinitions::DataRemoteAircraftGetPosition,
+                                           m_hSimConnect, reqId, CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                            simObject.getObjectId(), period),
                                        simObject, "Cannot request simulator data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
@@ -2058,8 +2057,7 @@ namespace BlackSimPlugin
             const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectModel);
             const HRESULT result = this->logAndTraceSendId(
                                        SimConnect_RequestDataOnSimObject(
-                                           m_hSimConnect, requestId,
-                                           CSimConnectDefinitions::DataRemoteAircraftModelData,
+                                           m_hSimConnect, requestId, CSimConnectDefinitions::DataRemoteAircraftModelData,
                                            simObject.getObjectId(), SIMCONNECT_PERIOD_ONCE),
                                        simObject, "Cannot request model info", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             return isOk(result);
@@ -2074,16 +2072,14 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectPositionData);
             const HRESULT hr1 = this->logAndTraceSendId(
                                     SimConnect_RequestDataOnSimObject(
-                                        m_hSimConnect, requestId,
-                                        CSimConnectDefinitions::DataRemoteAircraftGetPosition,
+                                        m_hSimConnect, requestId, CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                         simObject.getObjectId(), SIMCONNECT_PERIOD_NEVER),
                                     simObject, "Stopping position request", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
             requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectLights);
             const HRESULT hr2 = this->logAndTraceSendId(
                                     SimConnect_RequestDataOnSimObject(
-                                        m_hSimConnect, requestId,
-                                        CSimConnectDefinitions::DataRemoteAircraftLights,
+                                        m_hSimConnect, requestId, CSimConnectDefinitions::DataRemoteAircraftLights,
                                         simObject.getObjectId(), SIMCONNECT_PERIOD_NEVER),
                                     simObject, "Stopping lights request", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
             return isOk(hr1, hr2);

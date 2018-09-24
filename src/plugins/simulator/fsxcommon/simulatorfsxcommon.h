@@ -49,7 +49,7 @@ namespace BlackSimPlugin
             SystemEventPause,
             SystemEventFlightLoaded,
             EventPauseToggle,
-            EventFreezeLat,
+            EventFreezeLatLng,
             EventFreezeAlt,
             EventFreezeAtt,
             EventSetCom1Active,
@@ -239,7 +239,8 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjTerrainProbe();
 
             //! Release AI control
-            bool releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId);
+            //! \remark P3D version is overridden
+            virtual bool releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId);
 
             //! Valid CSimConnectObject which is NOT pendig removed
             bool isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const;
@@ -249,6 +250,15 @@ namespace BlackSimPlugin
 
             //! Remove the CSimConnectObject linked in the trace
             bool removeSimObjectForTrace(const TraceFsxSendId &trace);
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+
+            //! Trace if required, log errors
+            HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
             //! Register help
             static void registerHelp();
@@ -462,15 +472,6 @@ namespace BlackSimPlugin
 
             //! Trace the send id
             void traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details = {}, bool forceTrace = false);
-
-            //! Trace if required, log errors
-            HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
-
-            //! Trace if required, log errors
-            HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
-
-            //! Trace if required, log errors
-            HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
             //! Send id trace or given send id
             TraceFsxSendId getSendIdTrace(DWORD sendId) const;
