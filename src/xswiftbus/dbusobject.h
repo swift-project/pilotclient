@@ -35,9 +35,6 @@ namespace XSwiftBus
         //! \warning Before calling this method, make sure that a valid DBus connection was set.
         void registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath);
 
-        //! Process DBus messages. Needs to be implemented by deriving classes
-        virtual int processDBus() = 0;
-
     protected:
         //! DBus message handler
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) = 0;

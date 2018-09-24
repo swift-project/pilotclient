@@ -118,7 +118,8 @@ namespace XSwiftBus
         //! Sets the aircraft with callsign to be followed in plane view
         void setFollowedAircraft(const std::string &callsign);
 
-        int processDBus() override;
+        //! Perform generic processing
+        int process();
 
     protected:
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;

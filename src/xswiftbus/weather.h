@@ -97,7 +97,9 @@ namespace XSwiftBus
         //! \param turbulence Amount of turbulence [0,10].
         void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
 
-        virtual int processDBus() override;
+        //! Perform generic processing
+        int process();
+
     protected:
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 

@@ -241,7 +241,7 @@ namespace XSwiftBus
         return DBUS_HANDLER_RESULT_HANDLED;
     }
 
-    int CWeather::processDBus()
+    int CWeather::process()
     {
         invokeQueuedDBusCalls();
         return 1;

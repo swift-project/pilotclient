@@ -625,7 +625,7 @@ namespace XSwiftBus
         return DBUS_HANDLER_RESULT_HANDLED;
     }
 
-    int CService::processDBus()
+    int CService::process()
     {
         invokeQueuedDBusCalls();
         return 1;

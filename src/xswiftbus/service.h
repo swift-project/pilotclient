@@ -226,7 +226,8 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CMessageBoxControl::toggle
         void toggleMessageBoxVisibility() { m_messages.toggle(); }
 
-        int processDBus() override;
+        //! Perform generic processing
+        int process();
 
     protected:
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;

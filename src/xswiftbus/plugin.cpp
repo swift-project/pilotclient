@@ -156,9 +156,9 @@ namespace XSwiftBus
     {
         auto *plugin = static_cast<CPlugin *>(refcon);
         plugin->m_dbusDispatcher.runOnce();
-        if (plugin->m_service) { plugin->m_service->processDBus(); }
-        if (plugin->m_weather) { plugin->m_weather->processDBus(); }
-        if (plugin->m_traffic) { plugin->m_traffic->processDBus(); }
+        if (plugin->m_service) { plugin->m_service->process(); }
+        if (plugin->m_weather) { plugin->m_weather->process(); }
+        if (plugin->m_traffic) { plugin->m_traffic->process(); }
         return -1;
     }
 

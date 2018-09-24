@@ -723,7 +723,7 @@ namespace XSwiftBus
         return DBUS_HANDLER_RESULT_HANDLED;
     }
 
-    int CTraffic::processDBus()
+    int CTraffic::process()
     {
         invokeQueuedDBusCalls();
         return 1;
