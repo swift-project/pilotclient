@@ -15,8 +15,8 @@ namespace BlackMisc
 {
     namespace Input
     {
-        CJoystickButton::CJoystickButton(int buttonIndex) :
-            m_buttonIndex(buttonIndex)
+        CJoystickButton::CJoystickButton(const QString deviceName, int index) :
+            m_deviceName(deviceName), m_buttonIndex(index)
         {}
 
         void CJoystickButton::setButtonIndex(int buttonIndex)
@@ -35,6 +35,9 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexDeviceName:
+                this->setDeviceName(variant.value<QString>());
+                break;
             case IndexButton:
             case IndexButtonAsString:
                 this->setButtonIndex(buttonIndexFromString(variant.value<QString>()));
@@ -54,6 +57,8 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexDeviceName:
+                return CVariant::from(this->getDeviceName());
             case IndexButton:
                 return CVariant::from(this->getButtonIndex());
             case IndexButtonAsString:

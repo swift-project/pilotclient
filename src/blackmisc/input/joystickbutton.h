@@ -33,7 +33,8 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexButton = 0,
+                IndexDeviceName = 0,
+                IndexButton,
                 IndexButtonAsString,
                 IndeButtonObject, // just for updates
             };
@@ -42,7 +43,10 @@ namespace BlackMisc
             CJoystickButton() = default;
 
             //! Constructor
-            CJoystickButton(int buttonIndex);
+            CJoystickButton(const QString deviceName, int index);
+
+            //! Get device name
+            QString getDeviceName() const { return m_deviceName; }
 
             //! Get button index
             int getButtonIndex() const { return m_buttonIndex; }
@@ -50,11 +54,14 @@ namespace BlackMisc
             //! Get button as String
             QString getButtonAsString() const { return buttonIndexToString(m_buttonIndex); }
 
+            //! Set owning device name
+            void setDeviceName(const QString &deviceName) { m_deviceName = deviceName; }
+
             //! Set button index
             void setButtonIndex(int buttonIndex);
 
             //! Is valid?
-            bool isValid() const { return m_buttonIndex >= 0 ? true : false; }
+            bool isValid() const { return !m_deviceName.isEmpty() && m_buttonIndex >= 0 ? true : false; }
 
             //! Set button object
             void setButtonObject(CJoystickButton button);
@@ -78,12 +85,14 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
+            QString m_deviceName;
             int m_buttonIndex = m_invalidIndex;
 
             static constexpr int m_invalidIndex = -1;
 
             BLACK_METACLASS(
                 CJoystickButton,
+                BLACK_METAMEMBER(deviceName),
                 BLACK_METAMEMBER(buttonIndex)
             );
         };
