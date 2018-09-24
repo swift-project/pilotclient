@@ -698,8 +698,34 @@ namespace BlackSimPlugin
 
             // Near ground we use faster updates
             const CCallsign cs(simObject.getCallsign());
-            const CAircraftSituation lastSituation = m_lastSentSituations[cs];
+            CAircraftSituation lastSituation = m_lastSentSituations[cs];
             const bool moving = lastSituation.isMoving();
+
+            // CElevationPlane: deg, deg, feet
+            // we only remember near ground
+            CElevationPlane elevation;
+            if (remoteAircraftData.aboveGroundFt() < 250)
+            {
+                const CLength cg(remoteAircraftData.cgToGroundFt, CLengthUnit::ft());
+                this->rememberElevationAndCG(cs, simObject.getAircraftModelString(), elevation, cg);
+            }
+
+            const bool log = this->isLogCallsign(cs);
+            if (log)
+            {
+                if (elevation.isNull())
+                {
+                    elevation = CElevationPlane(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
+                }
+
+                // update lat/lng/alt with real data from sim
+                const CAltitude alt(remoteAircraftData.altitudeFt, CAltitude::MeanSeaLevel, CAltitude::TrueAltitude, CLengthUnit::ft());
+                lastSituation.setPosition(elevation);
+                lastSituation.setAltitude(alt);
+                lastSituation.setGroundElevation(elevation, CAircraftSituation::FromProvider);
+                this->addLoopbackSituation(lastSituation);
+            }
+
             if (moving && remoteAircraftData.aboveGroundFt() <= 100.0)
             {
                 // switch to fast updates
@@ -715,16 +741,6 @@ namespace BlackSimPlugin
                 {
                     this->requestPositionDataForSimObject(simObject, SIMCONNECT_PERIOD_SECOND);
                 }
-            }
-
-            // CElevationPlane: deg, deg, feet
-            // we only remember near ground
-            if (remoteAircraftData.aboveGroundFt() < 250)
-            {
-                const CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
-                const CLength cg(remoteAircraftData.cgToGroundFt, CLengthUnit::ft());
-                this->rememberElevationAndCG(cs, simObject.getAircraftModelString(), elevation, cg);
-                this->addLoopbackSituation(cs, elevation, cg);
             }
         }
 
