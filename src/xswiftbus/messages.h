@@ -103,6 +103,9 @@ namespace XSwiftBus
         //! Toggles the visibility of the message box
         void toggle() { if (m_visible) { hide(); } else { show(); } }
 
+        //! Is message box currently visible?
+        bool isVisible() const { return m_visible; }
+
     private:
         void show() { m_messageBox.show(); m_visible = true; }
         void hide() { m_messageBox.hide(); m_visible = false; }

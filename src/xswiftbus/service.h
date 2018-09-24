@@ -22,6 +22,7 @@
 #include "navdatareference.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
+#include <chrono>
 
 //! \cond PRIVATE
 #define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
@@ -226,6 +227,12 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CMessageBoxControl::toggle
         void toggleMessageBoxVisibility() { m_messages.toggle(); }
 
+        //! Enable/disable message window popping up for new messages
+        void setPopupMessageWindow(bool enabled) { m_popupMessageWindow = enabled; }
+
+        //! Enable/disable message window disappearing again after 5 seconds
+        void setDisappearMessageWindow(bool enabled) { m_disappearMessageWindow = enabled; }
+
         //! Perform generic processing
         int process();
 
@@ -241,6 +248,9 @@ namespace XSwiftBus
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
         CMessageBoxControl m_messages { 16, 16, 16 };
+        bool m_popupMessageWindow = true;
+        bool m_disappearMessageWindow = true;
+        std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
         void readAirportsDatabase();
 

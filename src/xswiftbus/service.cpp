@@ -22,7 +22,7 @@ namespace XSwiftBus
 
     CService::CService() : CDBusObject()
     {
-        m_messages.addMessage({ "xswiftbus started.", 0, 255, 255 });
+        addTextMessage("xswiftbus started.", 0, 255, 255);
         updateAirportsInRange();
     }
 
@@ -59,6 +59,13 @@ namespace XSwiftBus
         for (const auto &line : wrappedLines)
         {
             m_messages.addMessage({ line, static_cast<float>(red), static_cast<float>(green), static_cast<float>(blue) });
+        }
+
+        if (!m_messages.isVisible() && m_popupMessageWindow) { m_messages.toggle(); }
+
+        if (m_disappearMessageWindow)
+        {
+            m_disappearMessageWindowTime = std::chrono::system_clock::now() + std::chrono::seconds(5);
         }
     }
 
@@ -628,6 +635,15 @@ namespace XSwiftBus
     int CService::process()
     {
         invokeQueuedDBusCalls();
+
+        if (m_disappearMessageWindowTime != std::chrono::system_clock::time_point()
+                && std::chrono::system_clock::now() > m_disappearMessageWindowTime
+                && m_messages.isVisible())
+        {
+            m_messages.toggle();
+            m_disappearMessageWindowTime = std::chrono::system_clock::time_point();
+        }
+
         return 1;
     }
 

@@ -30,9 +30,24 @@ namespace XSwiftBus
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
         m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
-        m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
-        // m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
-        // m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
+        m_messageWindowSubMenu = m_menu.subMenu("Message Window");
+        m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
+        {
+            m_service->toggleMessageBoxVisibility();
+        });
+        m_toggleMessageWindowMenuItem.setEnabled(false);
+        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Nessage", true, [this] (bool checked)
+        {
+            m_popupMessageWindowMenuItem.setChecked(!checked);
+            m_service->setPopupMessageWindow(!checked);
+        });
+        m_popupMessageWindowMenuItem.setEnabled(false);
+        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window after 5s", true, [this] (bool checked)
+        {
+            m_disappearMessageWindowMenuItem.setChecked(!checked);
+            m_service->setDisappearMessageWindow(!checked);
+        });
+        m_disappearMessageWindowMenuItem.setEnabled(false);
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
@@ -77,6 +92,10 @@ namespace XSwiftBus
         m_weather = std::make_unique<CWeather>();
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
+
+        m_toggleMessageWindowMenuItem.setEnabled(true);
+        m_popupMessageWindowMenuItem.setEnabled(true);
+        m_disappearMessageWindowMenuItem.setEnabled(true);
 
         if (m_pluginConfig.getDBusMode() == CConfig::DBusP2P)
         {
