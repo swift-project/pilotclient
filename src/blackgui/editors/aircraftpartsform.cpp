@@ -36,6 +36,7 @@ namespace BlackGui
             connect(ui->pb_AircraftPartsEnginesOn, &QPushButton::pressed, this, &CAircraftPartsForm::setAllEngines);
             connect(ui->pb_AircraftPartsEnginesOff, &QPushButton::pressed, this, &CAircraftPartsForm::setAllEngines);
             connect(ui->pb_AircraftPartsUiToJson, &QPushButton::pressed, this, &CAircraftPartsForm::guiToJson);
+            connect(ui->pb_Set, &QPushButton::pressed, this, &CAircraftPartsForm::changeAircraftParts); // force change signal
         }
 
         CAircraftPartsForm::~CAircraftPartsForm()
@@ -162,7 +163,7 @@ namespace BlackGui
             return parts;
         }
 
-        void CAircraftPartsForm::partsToGui(const Aviation::CAircraftParts &parts)
+        void CAircraftPartsForm::partsToGui(const CAircraftParts &parts)
         {
             ui->cb_AircraftPartsGearDown->setChecked(parts.isGearDown());
             ui->cb_AircraftPartsIsOnGround->setChecked(parts.isOnGround());

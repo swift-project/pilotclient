@@ -43,7 +43,7 @@ namespace BlackSimPlugin
 
             m_simulator = simulator;
             m_uiUpdateTimer.setObjectName(this->objectName() + ":uiUpdateTimer");
-            m_uiUpdateTimer.start(2.5 * 1000);
+            m_uiUpdateTimer.start(2500);
 
             connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
             connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);

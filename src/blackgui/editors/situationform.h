@@ -77,6 +77,9 @@ namespace BlackGui
             //! Get barometric pressure at MSL (mean sea level)
             BlackMisc::PhysicalQuantities::CPressure getBarometricPressureMsl() const;
 
+            //! Get ground speed
+            BlackMisc::PhysicalQuantities::CSpeed getGroundSpeed() const;
+
             //! Get pressure at mean sea level
             double getBarometricPressureMslMillibar() const;
 

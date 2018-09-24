@@ -52,7 +52,7 @@ namespace BlackGui
     {
         CCockpitComComponent::CCockpitComComponent(QWidget *parent) :
             QFrame(parent),
-            BlackMisc::CIdentifiable(this),
+            CIdentifiable(this),
             ui(new Ui::CCockpitComComponent)
         {
             ui->setupUi(this);

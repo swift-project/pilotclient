@@ -125,8 +125,6 @@ namespace BlackSimPlugin
         protected:
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            // just logged
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
             //! \copydoc BlackCore::ISimulator::parseDetails

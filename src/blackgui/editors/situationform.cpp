@@ -64,7 +64,12 @@ namespace BlackGui
             CAircraftSituation s(position);
             s.setBank(this->getBankAngle());
             s.setPitch(this->getPitchAngle());
-            s.setPressureAltitude(pressureAltitude);
+            s.setGroundSpeed(this->getGroundSpeed());
+
+            if (!pressureAltitude.isNull() && pressureAltitude.getAltitudeType() == CAltitude::PressureAltitude)
+            {
+                s.setPressureAltitude(pressureAltitude);
+            }
             return s;
         }
 
@@ -108,6 +113,11 @@ namespace BlackGui
         CPressure CSituationForm::getBarometricPressureMsl() const
         {
             return CPressure(getBarometricPressureMslMillibar(), CPressureUnit::mbar());
+        }
+
+        CSpeed CSituationForm::getGroundSpeed() const
+        {
+            return CSpeed(0, CSpeedUnit::kts());
         }
 
         void CSituationForm::setReadOnly(bool readonly)

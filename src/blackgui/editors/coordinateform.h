@@ -17,8 +17,6 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/statusmessagelist.h"
 
-class QWidget;
-
 namespace Ui { class CCoordinateForm; }
 namespace BlackGui
 {
