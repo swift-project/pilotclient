@@ -119,6 +119,13 @@ namespace BlackCore
         //! \sa logicallyAddRemoteAircraft
         virtual bool logicallyReAddRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Public version to remove all aircraft
+        //! \sa physicallyRemoveAllRemoteAircraft
+        int removeAllRemoteAircraft()
+        {
+            return this->physicallyRemoveAllRemoteAircraft();
+        }
+
         //! Find the unrendered enabled aircraft
         virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const;
 
@@ -195,9 +202,6 @@ namespace BlackCore
 
         //! Simulator running?
         virtual bool isSimulating() const { return this->isConnected(); }
-
-        //! Clear all aircraft related data
-        virtual void clearAllRemoteAircraftData();
 
         //! Debug function to check state after all aircraft have been removed
         //! \remarks only in local developer builds
@@ -400,8 +404,13 @@ namespace BlackCore
         //! Remove remote aircraft from simulator
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
-        //! Remove all remote aircraft
-        virtual int physicallyRemoveAllRemoteAircraft() = 0;
+        //! Clear all aircraft related data, but do not physically remove the aircraft
+        virtual void clearAllRemoteAircraftData();
+
+        //! Remove all remote aircraft and their data via ISimulator::clearAllRemoteAircraftData
+        //! \remark each driver is supposed to override that, implement the "physically removing part" (simulator specific) and the call the base class
+        //! \sa ISimulator::clearAllRemoteAircraftData
+        virtual int physicallyRemoveAllRemoteAircraft();
 
         //! Set elevation and CG in the providers
         void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);

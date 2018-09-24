@@ -652,7 +652,7 @@ namespace BlackCore
 
                 if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
                 {
-                    m_simulatorPlugin.second->clearAllRemoteAircraftData(); // also removes aircraft
+                    m_simulatorPlugin.second->removeAllRemoteAircraft(); // also removes aircraft
                     m_simulatorPlugin.second->setFlightNetworkConnected(false);
                 }
             }

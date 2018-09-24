@@ -144,7 +144,6 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-            virtual void clearAllRemoteAircraftData() override;
             virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
             virtual QString getStatisticsSimulatorSpecific() const override;
             virtual void resetAircraftStatistics() override;
@@ -207,6 +206,7 @@ namespace BlackSimPlugin
             virtual void reset() override;
             virtual void initSimulatorInternals() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
+            virtual void clearAllRemoteAircraftData() override;
             //! @}
 
             //! Timer event (our SimConnect event loop), runs dispatch

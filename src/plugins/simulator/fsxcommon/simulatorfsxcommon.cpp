@@ -1548,6 +1548,8 @@ namespace BlackSimPlugin
             {
                 if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
+
+            CSimulatorFsCommon::physicallyRemoveAllRemoteAircraft();
             return r;
         }
 

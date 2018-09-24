@@ -138,7 +138,6 @@ namespace BlackSimPlugin
             virtual void unload() override;
             virtual QString getStatisticsSimulatorSpecific() const override;
             virtual void resetAircraftStatistics() override;
-            virtual void clearAllRemoteAircraftData() override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -154,6 +153,7 @@ namespace BlackSimPlugin
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual int physicallyRemoveAllRemoteAircraft() override;
+            virtual void clearAllRemoteAircraftData() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual bool isPaused() const override
             {
