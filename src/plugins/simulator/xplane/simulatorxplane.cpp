@@ -768,12 +768,19 @@ namespace BlackSimPlugin
 
             PlanesPositions planesPositions;
             PlanesSurfaces planesSurfaces;
+            PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+
+                planesTransponders.callsigns.push_back(callsign.asString());
+                planesTransponders.codes.push_back(xplaneAircraft.getAircraft().getTransponderCode());
+                CTransponder::TransponderMode transponderMode = xplaneAircraft.getAircraft().getTransponderMode();
+                planesTransponders.idents.push_back(transponderMode == CTransponder::StateIdent);
+                planesTransponders.modeCs.push_back(transponderMode == CTransponder::ModeC);
 
                 // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
@@ -829,6 +836,11 @@ namespace BlackSimPlugin
                 }
 
             } // all callsigns
+
+            if (!planesTransponders.isEmpty())
+            {
+                m_trafficProxy->setPlanesTransponders(planesTransponders);
+            }
 
             if (!planesPositions.isEmpty())
             {

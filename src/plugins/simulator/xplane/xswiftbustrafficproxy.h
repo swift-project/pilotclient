@@ -93,10 +93,10 @@ namespace BlackSimPlugin
             //! Is empty?
             bool isEmpty() const { return callsigns.isEmpty(); }
 
-            QStringList callsigns;
-            QList<int> codes;
-            QList<bool> modeCs;
-            QList<bool> idents;
+            QStringList callsigns;  //!< List of callsigns
+            QList<int> codes;       //!< List of transponder codes
+            QList<bool> modeCs;     //!< List of active mode C's
+            QList<bool> idents;     //!< List of active idents
         };
 
         /*!
