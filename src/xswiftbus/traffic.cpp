@@ -370,18 +370,22 @@ namespace XSwiftBus
         }
     }
 
-    void CTraffic::setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident)
+    void CTraffic::setPlanesTransponders(const std::vector<std::string> &callsigns, const std::vector<int> &codes, const std::vector<bool> &modeCs, const std::vector<bool> &idents)
     {
-        auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return; }
+        for (size_t i = 0; i < callsigns.size(); i++)
+        {
+            auto planeIt = m_planesByCallsign.find(callsigns.at(i));
+            if (planeIt == m_planesByCallsign.end()) { return; }
 
-        Plane *plane = planeIt->second;
-        if (!plane) { return; }
-        plane->hasXpdr = true;
-        plane->xpdr.code = code;
-        if (ident) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
-        else if (modeC) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
-        else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
+            Plane *plane = planeIt->second;
+            if (!plane) { return; }
+
+            plane->hasXpdr = true;
+            plane->xpdr.code = codes.at(i);
+            if (idents.at(i)) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
+            else if (modeCs.at(i)) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
+            else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
+        }
     }
 
     void CTraffic::getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
@@ -642,21 +646,21 @@ namespace XSwiftBus
                                       rudders, ailerons, landLights, beaconLights, strobeLights, navLights, lightPatterns);
                 });
             }
-            else if (message.getMethodName() == "setPlaneTransponder")
+            else if (message.getMethodName() == "setPlanesTransponders")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                std::string callsign;
-                int code = 0;
-                bool modeC = false;
-                bool ident = false;
+                std::vector<std::string> callsigns;
+                std::vector<int> codes;
+                std::vector<bool> modeCs;
+                std::vector<bool> idents;
                 message.beginArgumentRead();
-                message.getArgument(callsign);
-                message.getArgument(code);
-                message.getArgument(modeC);
-                message.getArgument(ident);
+                message.getArgument(callsigns);
+                message.getArgument(codes);
+                message.getArgument(modeCs);
+                message.getArgument(idents);
                 queueDBusCall([ = ]()
                 {
-                    setPlaneTransponder(callsign, code, modeC, ident);
+                    setPlanesTransponders(callsigns, codes, modeCs, idents);
                 });
             }
             else if (message.getMethodName() == "getRemoteAircraftData")

@@ -105,8 +105,8 @@ namespace XSwiftBus
                                const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
                                const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns);
 
-        //! Set the transponder of a traffic aircraft
-        void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
+        //! Set the transponder of multiple traffic aircraft
+        void setPlanesTransponders(const std::vector<std::string> &callsigns, const std::vector<int> &codes, const std::vector<bool> &modeCs, const std::vector<bool> &idents);
 
         //! Get remote aircrafts data (lat, lon, elevation and CG)
         void getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,

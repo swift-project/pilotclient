@@ -64,11 +64,11 @@ R"(<node>
       <arg name="navLights" type="ab" direction="in"/>
       <arg name="lightPatterns" type="ai" direction="in"/>
     </method>
-    <method name="setPlaneTransponder">
-      <arg name="callsign" type="s" direction="in"/>
-      <arg name="code" type="i" direction="in"/>
-      <arg name="modeC" type="b" direction="in"/>
-      <arg name="ident" type="b" direction="in"/>
+    <method name="setPlanesTransponders">
+      <arg name="callsigns" type="as" direction="in"/>
+      <arg name="codes" type="ai" direction="in"/>
+      <arg name="modeCs" type="ab" direction="in"/>
+      <arg name="idents" type="ab" direction="in"/>
     </method>
     <method name="getRemoteAircraftData">
       <arg name="callsigns" type="as" direction="in"/>

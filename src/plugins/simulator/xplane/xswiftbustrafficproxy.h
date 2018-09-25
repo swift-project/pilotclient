@@ -87,6 +87,18 @@ namespace BlackSimPlugin
             QList<int> lightPatterns;   //!< List of lightPatterns
         };
 
+        //! Plane Transponders
+        struct PlanesTransponders
+        {
+            //! Is empty?
+            bool isEmpty() const { return callsigns.isEmpty(); }
+
+            QStringList callsigns;
+            QList<int> codes;
+            QList<bool> modeCs;
+            QList<bool> idents;
+        };
+
         /*!
          * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
          */
@@ -172,8 +184,8 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::setPlanesSurfaces
             void setPlanesSurfaces(const PlanesSurfaces &planesSurfaces);
 
-            //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
-            void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
+            //! \copydoc XSwiftBus::CTraffic::setPlanesTransponders
+            void setPlanesTransponders(const PlanesTransponders &planesTransponders);
 
             //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);

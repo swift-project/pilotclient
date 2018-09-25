@@ -115,9 +115,11 @@ namespace BlackSimPlugin
                                       planesSurfaces.navLights, planesSurfaces.lightPatterns);
         }
 
-        void CXSwiftBusTrafficProxy::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)
+        void CXSwiftBusTrafficProxy::setPlanesTransponders(const PlanesTransponders &planesTransponders)
         {
-            m_dbusInterface->callDBus(QLatin1String("setPlaneTransponder"), callsign, code, modeC, ident);
+            m_dbusInterface->callDBus(QLatin1String("setPlanesTransponders"),
+                                      planesTransponders.callsigns, planesTransponders.codes,
+                                      planesTransponders.modeCs, planesTransponders.idents);
         }
 
         void CXSwiftBusTrafficProxy::setInterpolatorMode(const QString &callsign, bool spline)
