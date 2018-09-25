@@ -52,9 +52,9 @@ namespace BlackMisc
             //! Channel spacing frequency
             enum ChannelSpacing
             {
-                ChannelSpacing50KHz,
-                ChannelSpacing25KHz,
-                ChannelSpacing8_33KHz
+                ChannelSpacing50KHz,  //!< 50kHz
+                ChannelSpacing25KHz,  //!< 25kHz
+                ChannelSpacing8_33KHz //!< 8.33kHz
             };
 
             //! COM unit

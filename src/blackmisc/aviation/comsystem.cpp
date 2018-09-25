@@ -137,7 +137,7 @@ namespace BlackMisc
 
         bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
         {
-            if (setFrequency.isNull()) { return false; }
+            if (setFrequency.isNull() || compareFrequency.isNull()) { return false; }
             if (setFrequency == compareFrequency) return true; // shortcut for many of such comparisons
             double channelSpacingKHz = 0.5 * CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
             double compareFrequencyKHz = compareFrequency.value(CFrequencyUnit::kHz());
