@@ -11,9 +11,12 @@
 #include "ui_settingstextmessagestyle.h"
 #include "settingsfontdialog.h"
 #include "texteditdialog.h"
+#include "settingstextmessagestyle.h"
 
 #include <QTextEdit>
 #include <QPushButton>
+#include <QRegularExpression>
+#include <QStringBuilder>
 
 namespace BlackGui
 {
@@ -53,6 +56,8 @@ namespace BlackGui
             const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_fontSettingsDialog->exec());
             if (r == QDialog::Accepted)
             {
+                const QStringList familySizeStyle = this->getFamilySizeStyle();
+                this->setFontFamilySizeStyle(familySizeStyle);
                 emit this->changed();
             }
         }
@@ -72,6 +77,21 @@ namespace BlackGui
                 m_style = m_textEditDialog->textEdit()->toPlainText();
                 emit this->changed();
             }
+        }
+
+        bool CSettingsTextMessageStyle::setFontFamilySizeStyle(const QStringList &familySizeStlye)
+        {
+            if (familySizeStlye.size() != 3) { return false; }
+            static const QString f("font-family: \"%1\"; font-size: %2; font-style: %3");
+
+            QString style = m_style;
+            const QString tableStyle = QStringLiteral("table { ") % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % QStringLiteral(" }");
+
+            thread_local const QRegularExpression re("table\\s*\\{.*\\}");
+            style.replace(re, tableStyle);
+
+            m_style = style;
+            return true;
         }
     } // ns
 } // ns

@@ -63,6 +63,9 @@ namespace BlackGui
 
             //! Change style
             void changeStyle();
+
+            //! Update the font part
+            bool setFontFamilySizeStyle(const QStringList &familySizeStlye);
         };
     } // ns
 } // ns
