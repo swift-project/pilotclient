@@ -132,6 +132,7 @@ namespace BlackGui
             connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::tokenBucketUpdate, Qt::QueuedConnection);
             connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CMappingComponent::onAddingRemoteAircraftFailed, Qt::QueuedConnection);
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CMappingComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CMappingComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
@@ -149,7 +150,7 @@ namespace BlackGui
             QPointer<CMappingComponent> myself(this);
             QTimer::singleShot(10000, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
                 myself->onModelSetSimulatorChanged(simulator);
                 myself->onModelSetChanged(simulator);
@@ -185,7 +186,7 @@ namespace BlackGui
 
         void CMappingComponent::onModelSetChanged(const CSimulatorInfo &dummy)
         {
-            // change model set, which can be any model set
+            // changed model set, which can be any model set
             Q_UNUSED(dummy); // we do not use the passed simulator
 
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue()); // UI value
@@ -293,6 +294,17 @@ namespace BlackGui
         {
             Q_UNUSED(pluginInfo);
             ui->comp_SimulatorSelector->setToConnectedSimulator(50);
+        }
+
+        void CMappingComponent::onSimulatorStatusChanged(int status)
+        {
+            const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+
+            // make sure the selector represents connected simulator
+            if (simStatus.testFlag(ISimulator::Connected) && sGui && sGui->getIContextSimulator())
+            {
+                ui->comp_SimulatorSelector->setToConnectedSimulator(50);
+            }
         }
 
         void CMappingComponent::doMatchingsAgain()
