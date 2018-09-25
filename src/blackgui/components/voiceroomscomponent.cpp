@@ -44,8 +44,8 @@ namespace BlackGui
             connect(ui->cb_CockpitVoiceRoom2Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::onVoiceRoomOverrideChanged);
             connect(ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::onVoiceRoomUrlsReturnPressed);
             connect(ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::onVoiceRoomUrlsReturnPressed);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::updateAudioVoiceRoomsFromContext);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::updateVoiceRoomMembers);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::updateAudioVoiceRoomsFromContext, Qt::QueuedConnection);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::updateVoiceRoomMembers, Qt::QueuedConnection);
         }
 
         CVoiceRoomsComponent::~CVoiceRoomsComponent()
