@@ -613,12 +613,6 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::onCockpitChangedFromSimulator(const CSimulatedAircraft &ownAircraft)
-        {
-            Q_ASSERT(getIContextOwnAircraft());
-            emit getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
-        }
-
         void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
         {
             if (CIdentifiable::isMyIdentifier(originator)) { return; }

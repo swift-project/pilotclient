@@ -201,9 +201,6 @@ namespace BlackCore
             //! Listener reports the simulator has started
             void onSimulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-            //! Simulator has changed cockpit
-            void onCockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
-
             //! Failed adding remote aircraft
             void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
 
