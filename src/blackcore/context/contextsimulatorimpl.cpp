@@ -629,7 +629,7 @@ namespace BlackCore
         void CContextSimulator::xCtxNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
-            BLACK_VERIFY_X(getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+            BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
             if (to == INetwork::Connected && this->getIContextNetwork())
             {
                 m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();

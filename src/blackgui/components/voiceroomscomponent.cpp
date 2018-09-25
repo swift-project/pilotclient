@@ -37,6 +37,7 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CVoiceRoomsComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             ui->setupUi(this);
             this->setVoiceRoomUrlFieldsReadOnlyState();
             connect(ui->cb_CockpitVoiceRoom1Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::onVoiceRoomOverrideChanged);

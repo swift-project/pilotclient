@@ -261,8 +261,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_contextApplication);
             Q_ASSERT(m_contextOwnAircraft);
-            c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
-                        this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
+            c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom, this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
             Q_ASSERT(c);
             c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
             Q_ASSERT(c);

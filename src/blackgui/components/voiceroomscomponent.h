@@ -19,17 +19,13 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CVoiceRoomsComponent; }
-
 namespace BlackGui
 {
     namespace Components
     {
         //! Displays the voice rooms
-        class BLACKGUI_EXPORT CVoiceRoomsComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CVoiceRoomsComponent : public QFrame
         {
             Q_OBJECT
 

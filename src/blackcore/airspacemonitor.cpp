@@ -617,6 +617,8 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
+
+        // URL
         const QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
         const int changedOnline = this->updateOnlineStation(callsign, vm, true, true);

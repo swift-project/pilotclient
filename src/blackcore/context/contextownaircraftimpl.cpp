@@ -151,15 +151,12 @@ namespace BlackCore
             // voice rooms, if network is already available
             if (this->getIContextNetwork())
             {
-                this->resolveVoiceRooms();
+                this->resolveVoiceRooms(); // init own aircraft
             }
         }
 
         void CContextOwnAircraft::resolveVoiceRooms()
         {
-            Q_ASSERT(this->getIContextAudio());
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextApplication());
             if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextApplication()) { return; } // no chance to resolve rooms
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
@@ -168,11 +165,11 @@ namespace BlackCore
 
             // requires correct frequencies set
             // but local network uses exactly this object here, so if frequencies are set here,
-            // they are for network context as well
+            // they are set for network context as well
             CVoiceRoomList rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
 
-            if (!m_voiceRoom1UrlOverride.isEmpty()) rooms[0] = CVoiceRoom(m_voiceRoom1UrlOverride);
-            if (!m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(m_voiceRoom2UrlOverride);
+            if (!m_voiceRoom1UrlOverride.isEmpty()) { rooms[0] = CVoiceRoom(m_voiceRoom1UrlOverride); }
+            if (!m_voiceRoom2UrlOverride.isEmpty()) { rooms[1] = CVoiceRoom(m_voiceRoom2UrlOverride); }
 
             // set the rooms
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
@@ -233,7 +230,7 @@ namespace BlackCore
             return changed;
         }
 
-        bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const CIdentifier &originator)
+        bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
             bool changed;
@@ -245,7 +242,7 @@ namespace BlackCore
             if (changed)
             {
                 emit this->changedAircraftCockpit(m_ownAircraft, originator);
-                this->resolveVoiceRooms();
+                this->resolveVoiceRooms(); // cockpit COM changed
             }
             return changed;
         }
@@ -326,9 +323,13 @@ namespace BlackCore
         {
             // any of our active frequencies?
             Q_UNUSED(connected);
-            CSimulatedAircraft myAircraft(getOwnAircraft());
-            if (atcStation.getFrequency() != myAircraft.getCom1System().getFrequencyActive() && atcStation.getFrequency() != myAircraft.getCom2System().getFrequencyActive()) { return; }
-            this->resolveVoiceRooms();
+            const CSimulatedAircraft myAircraft(this->getOwnAircraft());
+
+            // relevant frequency
+            if (myAircraft.getCom1System().isActiveFrequencyWithin8_33kHzChannel(atcStation.getFrequency()) || myAircraft.getCom2System().isActiveFrequencyWithin8_33kHzChannel(atcStation.getFrequency()))
+            {
+                this->resolveVoiceRooms(); // online status changed
+            }
         }
 
         void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model)
@@ -347,7 +348,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url; }
             m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
             m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
-            this->resolveVoiceRooms();
+            this->resolveVoiceRooms(); // override
         }
 
         void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)

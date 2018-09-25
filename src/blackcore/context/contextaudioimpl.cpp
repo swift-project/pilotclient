@@ -232,7 +232,7 @@ namespace BlackCore
 
             if (changed)
             {
-                emit changedSelectedAudioDevices(this->getCurrentAudioDevices());
+                emit this->changedSelectedAudioDevices(this->getCurrentAudioDevices());
             }
         }
 
@@ -304,7 +304,7 @@ namespace BlackCore
             Q_ASSERT(getIContextOwnAircraft());
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
 
-            CVoiceRoomList currentRooms = getComVoiceRooms();
+            CVoiceRoomList currentRooms = this->getComVoiceRooms();
             CVoiceRoom currentRoomCom1 = currentRooms[0];
             CVoiceRoom currentRoomCom2 = currentRooms[1];
             CVoiceRoom newRoomCom1 = newRooms[0];
@@ -313,13 +313,13 @@ namespace BlackCore
 
             bool changed = false;
 
-            // changed rooms?  But only compare on "URL",  not status as connected etc.
+            // changed rooms?  But only compare on "URL", not status as connected etc.
             if (currentRoomCom1.getVoiceRoomUrl() != newRoomCom1.getVoiceRoomUrl())
             {
-                QSharedPointer<IVoiceChannel> oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+                QSharedPointer<IVoiceChannel> oldVoiceChannel = m_voiceChannelMapping.value(CComSystem::Com1);
                 if (oldVoiceChannel)
                 {
-                    m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com1);
+                    m_voiceChannelMapping.remove(CComSystem::Com1);
 
                     // If the voice channel is not used by anybody else
                     if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
@@ -329,13 +329,13 @@ namespace BlackCore
                     }
                     else
                     {
-                        emit this->changedVoiceRooms(getComVoiceRooms(), false);
+                        emit this->changedVoiceRooms(this->getComVoiceRooms(), false);
                     }
                 }
 
                 if (newRoomCom1.isValid())
                 {
-                    QSharedPointer<IVoiceChannel> newVoiceChannel = getVoiceChannelBy(newRoomCom1);
+                    QSharedPointer<IVoiceChannel> newVoiceChannel = this->getVoiceChannelBy(newRoomCom1);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                     bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
@@ -356,10 +356,10 @@ namespace BlackCore
             // changed rooms?  But only compare on "URL",  not status as connected etc.
             if (currentRoomCom2.getVoiceRoomUrl() != newRoomCom2.getVoiceRoomUrl())
             {
-                auto oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
+                auto oldVoiceChannel = m_voiceChannelMapping.value(CComSystem::Com2);
                 if (oldVoiceChannel)
                 {
-                    m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com2);
+                    m_voiceChannelMapping.remove(CComSystem::Com2);
 
                     // If the voice channel is not used by anybody else
                     if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
@@ -369,7 +369,7 @@ namespace BlackCore
                     }
                     else
                     {
-                        emit this->changedVoiceRooms(getComVoiceRooms(), false);
+                        emit this->changedVoiceRooms(this->getComVoiceRooms(), false);
                     }
                 }
 
