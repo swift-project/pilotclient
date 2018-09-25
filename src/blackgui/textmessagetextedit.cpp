@@ -28,8 +28,7 @@ namespace BlackGui
 {
     CTextMessageTextEdit::CTextMessageTextEdit(QWidget *parent) : QTextEdit(parent)
     {
-        m_textDocument = new QTextDocument(this);
-        this->setDocument(m_textDocument);
+        this->setDocument(&m_textDocument);
         this->setReadOnly(true);
         this->setWordWrap(true);
 
@@ -72,7 +71,7 @@ namespace BlackGui
             m_messages.push_front(textMessage);
         }
         const QString html(toHtml(m_messages, m_withSender, m_withRecipient));
-        m_textDocument->setHtml(html);
+        m_textDocument.setHtml(html);
     }
 
     int CTextMessageTextEdit::count() const
@@ -88,15 +87,13 @@ namespace BlackGui
 
     void CTextMessageTextEdit::redrawHtml()
     {
-        Q_ASSERT_X(m_textDocument, Q_FUNC_INFO, "Missing text document");
         const QString html(toHtml(m_messages, m_withSender, m_withRecipient));
-        m_textDocument->setHtml(html);
+        m_textDocument.setHtml(html);
     }
 
     void CTextMessageTextEdit::setStyleSheetForContent(const QString &styleSheet)
     {
-        Q_ASSERT_X(m_textDocument, Q_FUNC_INFO, "Missing text document");
-        m_textDocument->setDefaultStyleSheet(styleSheet);
+        m_textDocument.setDefaultStyleSheet(styleSheet);
         this->redrawHtml();
     }
 

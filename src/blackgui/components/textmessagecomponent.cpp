@@ -236,12 +236,10 @@ namespace BlackGui
             const QString style = this->getStyleSheet();
             for (CTextMessageTextEdit *textEdit : textEdits)
             {
-                if (textEdit->hasTextDocument())
-                {
-                    textEdit->setStyleSheetForContent(style);
-                }
+                textEdit->setStyleSheetForContent(style);
             }
             ui->comp_SettingsStyle->setStyle(this->getStyleSheet());
+            this->update(); // refresh window
         }
 
         void CTextMessageComponent::onStyleSheetChanged()
@@ -335,6 +333,7 @@ namespace BlackGui
             QPushButton *closeButton = new QPushButton("Close", newTab);
             QVBoxLayout *layout = new QVBoxLayout(newTab);
             CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTab);
+            textEdit->setObjectName("tep_" + tabName);
             int marginLeft, marginRight, marginTop, marginBottom;
             ui->tb_TextMessagesAll->layout()->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
             newTab->layout()->setContentsMargins(marginLeft, marginTop, marginRight, 2);

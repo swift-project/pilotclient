@@ -18,10 +18,10 @@
 #include <QObject>
 #include <QString>
 #include <QTextEdit>
+#include <QTextDocument>
 
 class QAction;
 class QPoint;
-class QTextDocument;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace BlackGui
@@ -29,6 +29,8 @@ namespace BlackGui
     //! Specialized text edit for displaying text messages
     class BLACKGUI_EXPORT CTextMessageTextEdit : public QTextEdit
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CTextMessageTextEdit(QWidget *parent = nullptr);
@@ -50,9 +52,6 @@ namespace BlackGui
 
         //! Clear
         void clear();
-
-        //! Has text document
-        bool hasTextDocument() const { return m_textDocument; }
 
         //! Redraw HTML
         void redrawHtml();
@@ -77,7 +76,7 @@ namespace BlackGui
         void setWordWrap(bool wordWrap);
 
         BlackMisc::Network::CTextMessageList m_messages;
-        QTextDocument *m_textDocument = nullptr;
+        QTextDocument m_textDocument;
         int m_keepMaxMessages = -1; //!< max number of messages to keep, or -1 to keep all messages
         bool m_withSender = true;
         bool m_withRecipient = false;
