@@ -65,6 +65,7 @@ namespace XSwiftBus
         std::unique_ptr<CWeather> m_weather;
         CMenu m_menu;
         CMenuItem m_startServerMenuItem;
+        CMenuItem m_showHideLabelsMenuItem;
         CMenu m_messageWindowSubMenu;
         CMenuItem m_toggleMessageWindowMenuItem;
         CMenuItem m_popupMessageWindowMenuItem;

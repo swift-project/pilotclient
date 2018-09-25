@@ -30,6 +30,11 @@ namespace XSwiftBus
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
         m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
+        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this]
+        {
+            m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
+        });
+        m_showHideLabelsMenuItem.setEnabled(false);
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
         m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
         {
@@ -93,6 +98,7 @@ namespace XSwiftBus
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
+        m_showHideLabelsMenuItem.setEnabled(true);
         m_toggleMessageWindowMenuItem.setEnabled(true);
         m_popupMessageWindowMenuItem.setEnabled(true);
         m_disappearMessageWindowMenuItem.setEnabled(true);
