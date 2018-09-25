@@ -338,22 +338,22 @@ namespace XSwiftBus
         }
     }
 
-    void CTraffic::setPlanesSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoilers,
+    void CTraffic::setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears, const std::vector<double> &flaps, const std::vector<double> &spoilers,
                                      const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
                                      const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
                                      const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns)
     {
-        for (size_t i = 0; i < callsign.size(); i++)
+        for (size_t i = 0; i < callsigns.size(); i++)
         {
-            auto planeIt = m_planesByCallsign.find(callsign.at(i));
+            auto planeIt = m_planesByCallsign.find(callsigns.at(i));
             if (planeIt == m_planesByCallsign.end()) { return; }
 
             Plane *plane = planeIt->second;
             if (!plane) { return; }
 
             plane->hasSurfaces = true;
-            plane->targetGearPosition = static_cast<float>(gear.at(i));
-            plane->surfaces.flapRatio = static_cast<float>(flap.at(i));
+            plane->targetGearPosition = static_cast<float>(gears.at(i));
+            plane->surfaces.flapRatio = static_cast<float>(flaps.at(i));
             plane->surfaces.spoilerRatio = static_cast<float>(spoilers.at(i));
             plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrakes.at(i));
             plane->surfaces.slatRatio = static_cast<float>(slats.at(i));
