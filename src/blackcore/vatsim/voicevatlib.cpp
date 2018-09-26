@@ -36,7 +36,7 @@ namespace BlackCore
         CVoiceVatlib::CVoiceVatlib(QObject *parent) :
             IVoice(parent),
             m_audioService(Vat_CreateAudioService()),
-            m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), 0))
+            m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), m_vatsimVoicePortSetting.getThreadLocal()))
         {
             Vat_SetVoiceLogHandler(SeverityLevel::SeverityError, CVoiceVatlib::voiceLogHandler);
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_VOICE_VATLIB_H
 #define BLACKCORE_VOICE_VATLIB_H
 
+#include "blackcore/audio/audiosettings.h"
 #include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/voice.h"
@@ -115,6 +116,9 @@ namespace BlackCore
             };
 
             static void voiceLogHandler(SeverityLevel severity, const char *context, const char *message);
+
+            // settings
+            BlackMisc::CSettingReadOnly<BlackCore::Audio::TVatsimVoiceUdpPort> m_vatsimVoicePortSetting { this };
 
             QScopedPointer<VatAudioService, VatAudioServiceDeleter> m_audioService;
             QScopedPointer<VatUDPAudioPort, VatUDPAudioPortDeleter> m_udpPort;
