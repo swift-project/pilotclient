@@ -2,16 +2,8 @@
 <ui version="4.0">
  <class>CSettingsTextMessageStyle</class>
  <widget class="QFrame" name="CSettingsTextMessageStyle">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>301</width>
-    <height>26</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Text message style</string>
   </property>
   <layout class="QHBoxLayout" name="hl_SettingsTextMessageStyle">
    <property name="leftMargin">
@@ -27,17 +19,32 @@
     <number>3</number>
    </property>
    <item>
-    <spacer name="hs_TextMessageStyle">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QPushButton" name="pb_FontPlus">
+     <property name="toolTip">
+      <string>font enlarge (plus)</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="text">
+      <string>+</string>
      </property>
-    </spacer>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/font-enlarge.png</normaloff>:/pastel/icons/pastel/16/font-enlarge.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pb_FontMinus">
+     <property name="toolTip">
+      <string>font shrink (minus)</string>
+     </property>
+     <property name="text">
+      <string>-</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/font-shrink.png</normaloff>:/pastel/icons/pastel/16/font-shrink.png</iconset>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="pb_Reset">
@@ -62,6 +69,15 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <tabstops>
+  <tabstop>pb_FontPlus</tabstop>
+  <tabstop>pb_FontMinus</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_Style</tabstop>
+  <tabstop>pb_Font</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

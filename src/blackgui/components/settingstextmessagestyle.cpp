@@ -12,11 +12,17 @@
 #include "settingsfontdialog.h"
 #include "texteditdialog.h"
 #include "settingstextmessagestyle.h"
+#include "blackgui/shortcut.h"
 
 #include <QTextEdit>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QStringBuilder>
+#include <QKeySequence>
+#include <QStringBuilder>
+
+#include <QShortcut>
+
 
 namespace BlackGui
 {
@@ -32,6 +38,12 @@ namespace BlackGui
             connect(ui->pb_Style, &QPushButton::released, this, &CSettingsTextMessageStyle::changeStyle);
             connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsTextMessageStyle::resetStyle);
             connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsTextMessageStyle::changed);
+            connect(ui->pb_FontMinus, &QPushButton::released, this, &CSettingsTextMessageStyle::fontSizeMinus);
+            connect(ui->pb_FontPlus, &QPushButton::released, this, &CSettingsTextMessageStyle::fontSizePlus);
+
+//            QShortcut *sc = new QShortcut(CShortcut::keyFontMinus(), this);
+//            sc->setContext(Qt::WidgetWithChildrenShortcut);
+//            QObject::connect(sc, &QShortcut::activatedAmbiguously, this, &CSettingsTextMessageStyle::fontSizePlus);
         }
 
         CSettingsTextMessageStyle::~CSettingsTextMessageStyle()
@@ -84,13 +96,62 @@ namespace BlackGui
             if (familySizeStlye.size() != 3) { return false; }
             static const QString f("font-family: \"%1\"; font-size: %2; font-style: %3");
 
-            QString style = m_style;
             const QString tableStyle = QStringLiteral("table { ") % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % QStringLiteral(" }");
+            this->replaceTableStyle(tableStyle);
+            return true;
+        }
 
+        void CSettingsTextMessageStyle::replaceTableStyle(const QString &newTableStyle)
+        {
+            QString style = m_style;
             thread_local const QRegularExpression re("table\\s*\\{.*\\}");
-            style.replace(re, tableStyle);
-
+            style.replace(re, newTableStyle);
             m_style = style;
+        }
+
+        void CSettingsTextMessageStyle::fontSizeMinus()
+        {
+            if (this->changeFontSize(false))
+            {
+                emit this->changed();
+            }
+        }
+
+        void CSettingsTextMessageStyle::fontSizePlus()
+        {
+            if (this->changeFontSize(true))
+            {
+                emit this->changed();
+            }
+        }
+
+        bool CSettingsTextMessageStyle::changeFontSize(bool increase)
+        {
+            QString style = m_style;
+            thread_local const QRegularExpression re("table\\s*\\{.*:\\s*(\\d{1,2}).*\\}");
+            const QRegularExpressionMatch match = re.match(style);
+            const QStringList matches = match.capturedTexts();
+            if (matches.size() != 2) { return false; }
+
+            bool ok;
+            int ptSize = matches.last().toInt(&ok);
+            if (!ok) { return false; }
+            if (increase)
+            {
+                ptSize++;
+                if (ptSize > 16) { return false; }
+            }
+            else
+            {
+                ptSize--;
+                if (ptSize < 6) { return false; }
+            }
+
+            const QString pt = QString::number(ptSize) % "pt";
+            QString tableStyle = matches.front();
+            thread_local const QRegularExpression rePt("\\d{1,2}pt");
+            tableStyle.replace(rePt, pt);
+            this->replaceTableStyle(tableStyle);
             return true;
         }
     } // ns

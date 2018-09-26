@@ -45,6 +45,11 @@ namespace BlackGui
             //! Style
             void setStyle(const QString &style) { m_style = style; }
 
+            //! Font size @{
+            void fontSizeMinus();
+            void fontSizePlus();
+            //! @}
+
             //! Reset style
             void resetStyle() { m_style.clear(); }
 
@@ -66,6 +71,12 @@ namespace BlackGui
 
             //! Update the font part
             bool setFontFamilySizeStyle(const QStringList &familySizeStlye);
+
+            //! Replace the table style in style
+            void replaceTableStyle(const QString &newTableStyle);
+
+            //! Increase/decrease font size
+            bool changeFontSize(bool increase);
         };
     } // ns
 } // ns
