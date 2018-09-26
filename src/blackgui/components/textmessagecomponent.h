@@ -71,6 +71,11 @@ namespace BlackGui
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Font size @{
+            void fontSizeMinus();
+            void fontSizePlus();
+            //! @}
+
         signals:
             //! Message to be displayed in info window
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;

@@ -245,11 +245,25 @@
       <property name="bottomMargin">
        <number>1</number>
       </property>
-      <item>
-       <widget class="BlackGui::Components::CSettingsTextMessageInlineComponent" name="comp_SettingsOverlay"/>
+      <item alignment="Qt::AlignRight">
+       <widget class="BlackGui::Components::CSettingsTextMessageInlineComponent" name="comp_SettingsOverlay">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
       </item>
-      <item>
-       <widget class="BlackGui::Components::CSettingsTextMessageStyle" name="comp_SettingsStyle"/>
+      <item alignment="Qt::AlignRight">
+       <widget class="BlackGui::Components::CSettingsTextMessageStyle" name="comp_SettingsStyle">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

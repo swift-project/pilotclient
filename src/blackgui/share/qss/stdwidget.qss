@@ -214,7 +214,7 @@ QPushButton {
   color: yellow;  /* font color */
   padding: 0px;
   margin-right: 5px;
-  min-width:60px;
+  min-width:40px;
   min-height:20px;
 }
 

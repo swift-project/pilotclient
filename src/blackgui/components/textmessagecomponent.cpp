@@ -577,5 +577,15 @@ namespace BlackGui
             this->displayMyself();
         }
 
+        void CTextMessageComponent::fontSizeMinus()
+        {
+            ui->comp_SettingsStyle->fontSizeMinus();
+        }
+
+        void CTextMessageComponent::fontSizePlus()
+        {
+            ui->comp_SettingsStyle->fontSizePlus();
+        }
+
     } // namespace
 } // namespace
