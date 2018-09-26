@@ -29,25 +29,25 @@ namespace BlackGui
         CFontMenu::CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext) :
             IMenuDelegate(widget), m_widget(widget)
         {
-            this->m_fontDialogAction.reset(new QAction(CIcons::font16(), "Font", this));
-            QObject::connect(this->m_fontDialogAction.data(), &QAction::triggered, this, &CFontMenu::changeFontDialog);
+            m_fontDialogAction.reset(new QAction(CIcons::font16(), "Font", this));
+            QObject::connect(m_fontDialogAction.data(), &QAction::triggered, this, &CFontMenu::changeFontDialog);
 
-            m_fontSizePlusShortcut = new QShortcut(CShortcut::keyFontPlus(), this->m_widget);
+            m_fontSizePlusShortcut = new QShortcut(CShortcut::keyFontPlus(), m_widget);
             m_fontSizePlusShortcut->setContext(shortcutContext);
-            QObject::connect(this->m_fontSizePlusShortcut, &QShortcut::activated, this, &CFontMenu::fontSizePlus);
+            QObject::connect(m_fontSizePlusShortcut, &QShortcut::activated, this, &CFontMenu::onFontSizePlus);
 
-            m_fontSizeMinusShortcut = new QShortcut(CShortcut::keyFontMinus(), this->m_widget);
+            m_fontSizeMinusShortcut = new QShortcut(CShortcut::keyFontMinus(), m_widget);
             m_fontSizeMinusShortcut->setContext(shortcutContext);
-            QObject::connect(this->m_fontSizeMinusShortcut, &QShortcut::activated, this, &CFontMenu::fontSizeMinus);
+            QObject::connect(m_fontSizeMinusShortcut, &QShortcut::activated, this, &CFontMenu::onFontSizeMinus);
 
-            m_fontResetShortcut = new QShortcut(CShortcut::keyFontReset(), this->m_widget);
+            m_fontResetShortcut = new QShortcut(CShortcut::keyFontReset(), m_widget);
             m_fontResetShortcut->setContext(shortcutContext);
-            QObject::connect(this->m_fontResetShortcut, &QShortcut::activated, this, &CFontMenu::fontReset);
+            QObject::connect(m_fontResetShortcut, &QShortcut::activated, this, &CFontMenu::onFontReset);
         }
 
         void CFontMenu::customMenu(CMenuActions &menuActions)
         {
-            menuActions.addAction(this->m_fontDialogAction.data(), CMenuAction::pathFont());
+            menuActions.addAction(m_fontDialogAction.data(), CMenuAction::pathFont());
             this->nestedCustomMenu(menuActions);
         }
 
@@ -76,7 +76,7 @@ namespace BlackGui
             m_widget->setStyleSheet(qss);
         }
 
-        void CFontMenu::fontSizePlus()
+        void CFontMenu::onFontSizePlus()
         {
             if (!m_widget) { return; }
             const int pt = m_widget->font().pointSize() + 1;
@@ -84,18 +84,23 @@ namespace BlackGui
 
             m_widget->setStyleSheet(""); // avoid Qt crash
             m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));
+
+            emit this->fontSizePlus();
         }
 
-        void CFontMenu::fontSizeMinus()
+        void CFontMenu::onFontSizeMinus()
         {
             if (!m_widget) { return; }
             const int pt = m_widget->font().pointSize() - 1;
             if (pt < 5) { return; }
+
             m_widget->setStyleSheet(""); // avoid Qt crash
             m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));
+
+            emit this->fontSizeMinus();
         }
 
-        void CFontMenu::fontReset()
+        void CFontMenu::onFontReset()
         {
             Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
             m_widget->setStyleSheet("");

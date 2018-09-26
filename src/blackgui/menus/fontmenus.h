@@ -47,11 +47,17 @@ namespace BlackGui
             //! The shortcus owned by QWidget
             QList<QShortcut *> getShortcuts() const;
 
-        private:
-            void changeFontDialog();
+        signals:
+            //! Font size signals @{
             void fontSizePlus();
             void fontSizeMinus();
-            void fontReset();
+            //! @}
+
+        private:
+            void changeFontDialog();
+            void onFontSizePlus();
+            void onFontSizeMinus();
+            void onFontReset();
 
             QWidget *m_widget = nullptr;
             QShortcut *m_fontSizePlusShortcut = nullptr;  //! owned by widget

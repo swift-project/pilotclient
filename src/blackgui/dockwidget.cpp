@@ -63,9 +63,11 @@ namespace BlackGui
         connect(m_input, &CMarginsInput::changedMargins, this, &CDockWidget::menuChangeMargins);
 
         // connect
-        connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged);
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
+        connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged);
+        connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus);
+        connect(m_fontMenu, &CFontMenu::fontSizePlus, this, &CDockWidget::fontSizePlus);
     }
 
     void CDockWidget::setMargins()
@@ -334,20 +336,20 @@ namespace BlackGui
     {
         if (this->isFloating())
         {
-            contextMenu->addAction(BlackMisc::CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
+            contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
             if (this->isFrameless())
             {
-                contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Normal window", this, &CDockWidget::toggleFrameless);
+                contextMenu->addAction(CIcons::tableSheet16(), "Normal window", this, &CDockWidget::toggleFrameless);
             }
             else
             {
-                contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Frameless", this, &CDockWidget::toggleFrameless);
+                contextMenu->addAction(CIcons::tableSheet16(), "Frameless", this, &CDockWidget::toggleFrameless);
             }
-            contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Redraw", this, SLOT(update()));
+            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, SLOT(update()));
         }
         else
         {
-            contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
+            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
         }
 
         // Font actions
@@ -358,13 +360,13 @@ namespace BlackGui
         }
 
         // State actions (windows state)
-        contextMenu->addAction(BlackMisc::CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
-        contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
-        contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
-        contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
+        contextMenu->addAction(CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
+        contextMenu->addAction(CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
 
         m_input->setMargins(this->contentsMargins());
-        contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Margins", this, &CDockWidget::dummy);
+        contextMenu->addAction(CIcons::tableSheet16(), "Margins", this, &CDockWidget::dummy);
         contextMenu->addAction(m_marginMenuAction);
     }
 

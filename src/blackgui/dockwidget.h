@@ -140,6 +140,11 @@ namespace BlackGui
         //! Top level has changed for given widget
         void widgetTopLevelChanged(CDockWidget *, bool topLevel);
 
+        //! Font size signals @{
+        void fontSizePlus();
+        void fontSizeMinus();
+        //! @}
+
     protected:
         //! Constructor
         explicit CDockWidget(QWidget *parent = nullptr);
