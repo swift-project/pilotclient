@@ -355,16 +355,15 @@ namespace BlackGui
 
             //! The menu for loading and handling VPilot rules for mapping tasks
             //! \note This is a specific menu for that very component
-            class CMappingVPilotMenu : public BlackGui::Menus::IMenuDelegate
+            class CMappingVPilotMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) :
-                    BlackGui::Menus::IMenuDelegate(mappingComponent)
+                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) : Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component

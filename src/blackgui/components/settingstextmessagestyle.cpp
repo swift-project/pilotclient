@@ -23,7 +23,6 @@
 
 #include <QShortcut>
 
-
 namespace BlackGui
 {
     namespace Components
