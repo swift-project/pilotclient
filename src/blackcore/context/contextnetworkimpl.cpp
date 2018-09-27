@@ -322,7 +322,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorsBestGuess);
+                    const CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorsBestGuess);
                     if (!radioFrequency.isNull())
                     {
                         if (CComSystem::isValidCivilAviationFrequency(radioFrequency))

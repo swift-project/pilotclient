@@ -89,7 +89,7 @@ namespace BlackMisc
             bool isEmpty() const { return m_message.isEmpty(); }
 
             //! Set message
-            void setMessage(const QString &message) { m_message = message.trimmed().simplified(); }
+            void setMessage(const QString &message);
 
             //! Get frequency
             const PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }

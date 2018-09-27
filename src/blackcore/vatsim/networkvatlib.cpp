@@ -460,7 +460,7 @@ namespace BlackCore
             updateOwnCallsign(callsign);
         }
 
-        void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
+        void CNetworkVatlib::presetIcaoCodes(const CSimulatedAircraft &ownAircraft)
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
             m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
@@ -530,7 +530,7 @@ namespace BlackCore
             this->clearState();
         }
 
-        void CNetworkVatlib::sendTextMessages(const BlackMisc::Network::CTextMessageList &messages)
+        void CNetworkVatlib::sendTextMessages(const CTextMessageList &messages)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
 
@@ -554,7 +554,7 @@ namespace BlackCore
                 // currently I send individual messages
                 freqsVec.clear();
                 freqsVec.push_back(message.getFrequency().valueInteger(CFrequencyUnit::kHz()));
-                Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSD(message.getMessage()));
+                Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSDnoColon(message.getMessage()));
                 emit this->textMessageSent(message);
             }
         }

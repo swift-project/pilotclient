@@ -87,7 +87,7 @@ namespace BlackMisc
         {
             if (textMessage.isEmpty()) { return false; }
             if (!this->canBeAppended(textMessage)) { return false; }
-            m_message += " " + textMessage.getMessage();
+            m_message += QStringLiteral(" ") % textMessage.getMessage();
             return true;
         }
 
@@ -98,7 +98,7 @@ namespace BlackMisc
             return m_frequency.valueRoundedWithUnit(CFrequencyUnit::MHz(), 3);
         }
 
-        bool CTextMessage::isSendToFrequency(const PhysicalQuantities::CFrequency &frequency) const
+        bool CTextMessage::isSendToFrequency(const CFrequency &frequency) const
         {
             if (!this->isRadioMessage()) { return false; }
             return m_frequency == frequency;
@@ -106,13 +106,18 @@ namespace BlackMisc
 
         bool CTextMessage::isSendToUnicom() const
         {
-            return this->isSendToFrequency(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
+            return this->isSendToFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
         }
 
         bool CTextMessage::hasValidRecipient() const
         {
-            if (!m_recipientCallsign.isEmpty()) return true;
+            if (!m_recipientCallsign.isEmpty()) { return true; }
             return CComSystem::isValidCivilAviationFrequency(m_frequency);
+        }
+
+        void CTextMessage::setMessage(const QString &message)
+        {
+            m_message = asciiOnlyString(simplifyAccents(message.simplified().trimmed()));
         }
 
         bool CTextMessage::isRadioMessage() const
@@ -122,7 +127,7 @@ namespace BlackMisc
 
         bool CTextMessage::isServerMessage() const
         {
-            if (!this->isPrivateMessage()) return false;
+            if (!this->isPrivateMessage()) { return false; }
             const CCallsign cs = this->getSenderCallsign();
             return (cs.asString().startsWith("SERVER", Qt::CaseInsensitive));
         }
@@ -134,8 +139,7 @@ namespace BlackMisc
             {
                 if (!m_senderCallsign.isEmpty())
                 {
-                    if (!s.isEmpty()) s.append(separator);
-                    s.append(m_senderCallsign.getStringAsSet());
+                    if (!s.isEmpty()) { s += separator % m_senderCallsign.getStringAsSet(); }
                 }
             }
 
@@ -143,22 +147,19 @@ namespace BlackMisc
             {
                 if (!m_recipientCallsign.isEmpty())
                 {
-                    if (!s.isEmpty()) s.append(separator);
-                    s.append(m_recipientCallsign.getStringAsSet());
+                    if (!s.isEmpty()) { s += separator % m_recipientCallsign.getStringAsSet(); }
                 }
                 else
                 {
                     if (CComSystem::isValidCivilAviationFrequency(m_frequency))
                     {
-                        if (!s.isEmpty()) s.append(separator);
-                        s.append(m_frequency.valueRoundedWithUnit(3, true));
+                        if (!s.isEmpty()) { s += separator % m_frequency.valueRoundedWithUnit(3, true); }
                     }
                 }
             } // to
 
-            if (m_message.isEmpty()) return s;
-            if (!s.isEmpty()) s.append(separator);
-            s.append(m_message);
+            if (m_message.isEmpty()) { return s; }
+            if (!s.isEmpty()) { s += separator % m_message; }
             return s;
         }
 
@@ -181,9 +182,9 @@ namespace BlackMisc
         bool CTextMessage::isSelcalMessage() const
         {
             // some first level checks, before really parsing the message
-            if (this->isEmpty()) return false;
-            if (this->isPrivateMessage()) return false;
-            if (m_message.length() > 15 || m_message.length() < 10) return false; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+            if (this->isEmpty()) { return false; }
+            if (this->isPrivateMessage()) { return false; }
+            if (m_message.length() > 15 || m_message.length() < 10) { return false; } // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
             return this->getSelcalCode().length() == 4;
         }
 
