@@ -26,6 +26,7 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
 
 HEADERS +=  *.h \
             $$PWD/audio/*.h \
+            $$PWD/audio/settings/*.h \
             $$PWD/aviation/*.h \
             $$PWD/db/*.h \
             $$PWD/geo/*.h \
@@ -47,6 +48,7 @@ HEADERS +=  *.h \
 
 SOURCES +=  *.cpp \
             $$PWD/audio/*.cpp \
+#           $$PWD/audio/settings/*.cpp \
             $$PWD/aviation/*.cpp \
             $$PWD/db/*.cpp \
             $$PWD/geo/*.cpp \

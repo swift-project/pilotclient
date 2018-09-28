@@ -22,5 +22,6 @@
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/audio/audiosettings.h"
+#include "blackmisc/audio/voicesetup.h"
 
 #endif // guard

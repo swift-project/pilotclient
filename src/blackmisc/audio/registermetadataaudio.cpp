@@ -9,7 +9,6 @@
 
 #include "registermetadataaudio.h"
 #include "audio.h"
-
 #include <QDBusMetaType>
 
 namespace BlackMisc
@@ -24,6 +23,9 @@ namespace BlackMisc
             CVoiceRoom::registerMetadata();
             CVoiceRoomList::registerMetadata();
             CSettings::registerMetadata();
+            CVoiceSetup::registerMetadata();
+
+            // struct
             qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::PlayMode>();
             qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::Notification>();
         }
