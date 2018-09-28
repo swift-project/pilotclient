@@ -47,6 +47,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
@@ -363,7 +364,8 @@ namespace BlackCore
                             const QString description(fsdServerParts.at(2)); // part(3) could be added
                             const CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809,
                                                     CUser("id", "real name", "email", "password"),
-                                                    CFsdSetup::vatsimStandard(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                                    CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(),
+                                                    CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
                             fsdServers.push_back(fsdServer);
                         }
                         break;
@@ -375,7 +377,8 @@ namespace BlackCore
                             if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
                             const CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1,
                                                       CUser(),
-                                                      CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::VoiceServerVatsim);
+                                                      CFsdSetup(), CVoiceSetup::vatsimStandard(),
+                                                      CEcosystem(CEcosystem::VATSIM), CServer::VoiceServerVatsim);
                             voiceServers.push_back(voiceServer);
                         }
                         break;

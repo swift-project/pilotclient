@@ -20,6 +20,7 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
@@ -36,7 +37,7 @@ namespace BlackMisc
         {
             static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
                                                CUser("112233", "Some real name", "email@xyz.com", "secret"),
-                                               CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                               CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
             return trafficServer;
         }
 
@@ -318,7 +319,7 @@ namespace BlackMisc
         {
             CUser pilot = CTestData::getRandomPilot();
             CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxAerosoftA320(), pilot, CTestData::getAircraftSituationAboveFrankfurtTower());
-            CTransponder t = CTransponder(7000, CTransponder::ModeC);
+            const CTransponder t = CTransponder(7000, CTransponder::ModeC);
             aircraft.setTransponder(t);
             aircraft.setCom1ActiveFrequency(CTestData::getRandomAtcStation().getFrequency());
             aircraft.setCom2ActiveFrequency(CTestData::getRandomAtcStation().getFrequency());
