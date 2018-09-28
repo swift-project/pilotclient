@@ -14,6 +14,7 @@
 //! \file
 //! \ingroup testblacksimplugin
 
+#include "test.h"
 #include <QObject>
 
 namespace BlackSimPluginFsxP3D
@@ -28,6 +29,9 @@ namespace BlackSimPluginFsxP3D
         explicit CTestFsxP3DCommon(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
+        //! Resolve SimConnect Symbols
+        void resolveSymbols();
+
         //! Request IDs
         void requestIds();
     };

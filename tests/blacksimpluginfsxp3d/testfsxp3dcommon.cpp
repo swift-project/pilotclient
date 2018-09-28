@@ -16,6 +16,7 @@
 
 #include "testfsxp3dcommon.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
+#include "plugins/simulator/fsxcommon/simconnectsymbols.h"
 #include "plugins/simulator/fsxcommon/simulatorfsxcommon.h"
 #include <QTest>
 
@@ -23,6 +24,14 @@ using namespace BlackSimPlugin::FsxCommon;
 
 namespace BlackSimPluginFsxP3D
 {
+    void CTestFsxP3DCommon::resolveSymbols()
+    {
+        QVERIFY2(loadAndResolveSimConnect(false), "Could not load and resolve SimConnect library!");
+        HANDLE hSimConnect;
+        SimConnect_Open(&hSimConnect, "Test", nullptr, 0, nullptr, 0);
+        SimConnect_Close(hSimConnect);
+    }
+
     void CTestFsxP3DCommon::requestIds()
     {
         DWORD objectId = 666;
@@ -60,5 +69,8 @@ namespace BlackSimPluginFsxP3D
         QVERIFY(sor == CSimConnectDefinitions::SimObjectMisc);
     }
 } // ns
+
+//! main
+BLACKTEST_APPLESS_MAIN(BlackSimPluginFsxP3D::CTestFsxP3DCommon);
 
 //! \endcond

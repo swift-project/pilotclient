@@ -2,18 +2,24 @@ load(common_pre)
 
 QT       += core testlib dbus network gui widgets
 
-TARGET   = testsimpluginfsxp3d
-TEMPLATE = app
-
-CONFIG   += console
+TARGET = testsimpluginfsxp3d
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore blackconfig blackgui
 CONFIG   += simulatorfsxcommon simulatorfscommon simulatorplugincommon fsuipc simconnect
 CONFIG   += testcase
 CONFIG   += no_testcase_installs
 
-DEPENDPATH += . $$SourceRoot/src
-INCLUDEPATH += . $$SourceRoot/src
+TEMPLATE = app
+
+DEPENDPATH += \
+    . \
+    $$SourceRoot/src \
+    $$SourceRoot/tests \
+
+INCLUDEPATH += \
+    $$SourceRoot/src \
+    $$SourceRoot/tests \
+
 HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = $$DestRoot/bin
