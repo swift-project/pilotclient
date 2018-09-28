@@ -12,10 +12,10 @@
 #ifndef BLACKGUI_EDITORS_FSDSETUPCOMPONENT_H
 #define BLACKGUI_EDITORS_FSDSETUPCOMPONENT_H
 
-#include "blackmisc/network/fsdsetup.h"
 #include "form.h"
 #include <QFrame>
 #include <QScopedPointer>
+#include "blackmisc/network/fsdsetup.h"
 
 namespace Ui { class CFsdSetupForm; }
 namespace BlackGui

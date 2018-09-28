@@ -121,13 +121,8 @@ namespace BlackGui
 
         void CFsdSetupForm::resetToDefaultValues()
         {
-            ui->cb_AircraftPartsReceive->setChecked(true);
-            ui->cb_AircraftPartsSend->setChecked(true);
-            ui->cb_FastPositionReceive->setChecked(true);
-            ui->cb_FastPositionSend->setChecked(true);
-            ui->cb_GndFlagReceive->setChecked(true);
-            ui->cb_GndFlagSend->setChecked(true);
-            ui->le_TextCodec->setText("latin1");
+            CFsdSetup s;
+            this->setValue(s);
         }
     } // ns
 } // ns
