@@ -52,22 +52,6 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Output device"); return name; }
         };
-
-        //! Audio input device settings
-        struct TVatsimVoiceUdpPort : public BlackMisc::TSettingTrait<int>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/vatsimvoiceudpport"; }
-
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Vatsim voice UDP port"); return name; }
-
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static int defaultValue() { return 3290; }
-
-            //! \copydoc BlackCore::TSettingTrait::isValid
-            static bool isValid(int port) { return port >= 0 && port <= 65535; }
-        };
     } // ns
 } // ns
 
