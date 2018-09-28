@@ -89,7 +89,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="pg_NetworkVatsim">
          <property name="toolTip">
@@ -241,17 +241,29 @@
            <number>3</number>
           </property>
           <item>
-           <widget class="BlackGui::Editors::CFsdSetupForm" name="comp_FsdDetails">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
-            </property>
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
-           </widget>
+           <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pg_Voice">
+         <attribute name="title">
+          <string>Voice</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="vl_Voice">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item alignment="Qt::AlignTop">
+           <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice"/>
           </item>
          </layout>
         </widget>
@@ -705,6 +717,24 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Editors::CServerForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/serverform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CFsdSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/fsdsetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CVoiceSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/voicesetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Components::CModelMatcherLogEnable</class>
    <extends>QFrame</extends>
    <header>blackgui/components/modelmatcherlogenable.h</header>
@@ -714,12 +744,6 @@
    <class>BlackGui::CTickLabel</class>
    <extends>QLabel</extends>
    <header>blackgui/ticklabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Editors::CFsdSetupForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/editors/fsdsetupform.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CDbAircraftIcaoSelectorComponent</class>
@@ -737,12 +761,6 @@
    <class>BlackGui::Components::CServerListSelector</class>
    <extends>QComboBox</extends>
    <header>blackgui/components/serverlistselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Editors::CServerForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/editors/serverform.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>BlackGui::CLoginModeButtons</class>

@@ -53,6 +53,7 @@
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
@@ -95,8 +96,11 @@ namespace BlackGui
             connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
             connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadSetup, Qt::QueuedConnection);
 
-            ui->comp_FsdDetails->showEnableInfo(true);
-            ui->comp_FsdDetails->setFsdSetupEnabled(false);
+            ui->form_FsdDetails->showEnableInfo(true);
+            ui->form_FsdDetails->setFsdSetupEnabled(false);
+
+            ui->form_Voice->showEnableInfo(true);
+            ui->form_Voice->setVoiceSetupEnabled(false);
 
             ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
             ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
@@ -260,10 +264,16 @@ namespace BlackGui
                 currentServer.setUser(user);
 
                 // FSD setup, then override
-                if (ui->comp_FsdDetails->isFsdSetupEnabled())
+                if (ui->form_FsdDetails->isFsdSetupEnabled())
                 {
-                    const CFsdSetup fsd = ui->comp_FsdDetails->getValue();
+                    const CFsdSetup fsd = ui->form_FsdDetails->getValue();
                     currentServer.setFsdSetup(fsd);
+                }
+
+                if (ui->form_Voice->isVoiceSetupEnabled())
+                {
+                    const CVoiceSetup voice = ui->form_Voice->getValue();
+                    currentServer.setVoiceSetup(voice);
                 }
 
                 ui->frp_CurrentServer->setServer(currentServer);
@@ -273,6 +283,11 @@ namespace BlackGui
                 ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
 
                 // Login
+                if (sGui->getIContextAudio())
+                {
+                    sGui->getIContextAudio()->setVoiceSetup(currentServer.getVoiceSetup());
+                }
+
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
                 if (msg.isSuccess())
                 {
