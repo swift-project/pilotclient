@@ -20,6 +20,8 @@
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackMisc::Audio;
+
 namespace BlackMisc
 {
     namespace Network
@@ -30,12 +32,12 @@ namespace BlackMisc
             return all;
         }
 
-        CServer::CServer(
-            const QString &name, const QString &description, const QString &address, int port, const CUser &user,
-            const CFsdSetup &setup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
+        CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
+                         const CFsdSetup &fsdSetup, const CVoiceSetup &voiceSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
             : m_name(decode(name)), m_description(decode(description)), m_address(decode(address)), m_port(port), m_user(user),
-              m_fsdSetup(setup), m_ecosystem(ecosytem),
-              m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections)
+              m_ecosystem(ecosytem),
+              m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections),
+              m_fsdSetup(fsdSetup), m_voiceSetup(voiceSetup)
         {}
 
         CServer::CServer(
@@ -65,21 +67,21 @@ namespace BlackMisc
         const CServer &CServer::swiftFsdTestServer(bool withPw)
         {
             // CUser("guest", "Guest Client project", "", "guest")
-            // use CObfuscation::endocde to get the strings
+            // PW!!!!! => use CObfuscation::endocde to get the strings
             static const CServer dvp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
                                      CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", "OBF:AwKi3JkHNAczBno="),
-                                     CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
-            static const CServer dvnp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                      CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
-                                      CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
-            return withPw ? dvp : dvnp;
+                                     CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+            static const CServer dvnWithPw("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
+                                           CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
+                                           CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+            return withPw ? dvp : dvnWithPw;
         }
 
         const CServer &CServer::fscServer()
         {
             static const CServer fsc("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
                                      CUser(),
-                                     CFsdSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+                                     CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
             return fsc;
         }
 
@@ -166,6 +168,7 @@ namespace BlackMisc
             if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Wrong port")); }
             msgs.push_back(this->getUser().validate());
             msgs.push_back(this->getFsdSetup().validate());
+            msgs.push_back(this->getVoiceSetup().validate());
             msgs.addCategories(cats);
             msgs.sortBySeverity();
             return msgs;
@@ -192,6 +195,7 @@ namespace BlackMisc
             case IndexPort: return CVariant::fromValue(m_port);
             case IndexUser: return m_user.propertyByIndex(index.copyFrontRemoved());
             case IndexFsdSetup: return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
+            case IndexVoiceSetup: return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
             case IndexEcosystem: return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections: return CVariant::fromValue(m_isAcceptingConnections);
             case IndexServerType: return CVariant::fromValue(m_serverType);
@@ -214,6 +218,7 @@ namespace BlackMisc
             case IndexName: this->setName(variant.value<QString>()); break;
             case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexFsdSetup: m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexVoiceSetup: m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexEcosystem: m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIsAcceptingConnections: this->setIsAcceptingConnections(variant.value<bool>()); break;
             case IndexServerType: this->setServerType(static_cast<ServerType>(variant.toInt())); break;
@@ -230,7 +235,8 @@ namespace BlackMisc
             {
             case IndexAddress: return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
             case IndexDescription: return this->getDescription().compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexFsdSetup: return this->getFsdSetup().toQString().compare(compareValue.getFsdSetup().toQString());
+            case IndexFsdSetup: return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
+            case IndexVoiceSetup: return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
             case IndexName: return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexIsAcceptingConnections: return Compare::compare(this->isAcceptingConnections(), compareValue.isAcceptingConnections());
             case IndexPort: return Compare::compare(this->getPort(), compareValue.getPort());

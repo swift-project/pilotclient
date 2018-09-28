@@ -12,12 +12,11 @@
 #ifndef BLACKMISC_NETWORK_FSDSETUP_H
 #define BLACKMISC_NETWORK_FSDSETUP_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/metaclass.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
@@ -105,6 +104,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CFsdSetup &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

@@ -8,12 +8,13 @@
  */
 
 #include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
+#include "blackmisc/comparefunctions.h"
 
 #include <Qt>
 #include <QtGlobal>
@@ -84,34 +85,41 @@ namespace BlackMisc
         CVariant CFsdSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTextCodec:
-                return CVariant::fromValue(this->m_textCodec);
-            case IndexSendReceiveDetails:
-                return CVariant::fromValue(this->m_sendReceive);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexTextCodec: return CVariant::fromValue(m_textCodec);
+            case IndexSendReceiveDetails: return CVariant::fromValue(m_sendReceive);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
         void CFsdSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CFsdSetup>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTextCodec:
-                this->setTextCodec(variant.value<QString>());
-                break;
-            case IndexSendReceiveDetails:
-                this->setSendReceiveDetails(variant.value<SendReceiveDetails>());
-                break;
+            case IndexTextCodec: this->setTextCodec(variant.value<QString>()); break;
+            case IndexSendReceiveDetails: this->setSendReceiveDetails(variant.value<SendReceiveDetails>()); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
+        }
+
+        int CFsdSetup::comparePropertyByIndex(const CPropertyIndex &index, const CFsdSetup &compareValue) const
+        {
+            if (index.isMyself()) { return this->convertToQString(true).compare(compareValue.convertToQString()); }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexTextCodec: return this->getTextCodec().compare(compareValue.getTextCodec());
+            case IndexSendReceiveDetails: return Compare::compare(m_sendReceive, compareValue.m_sendReceive);
+            default: break;
+            }
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
+            return 0;
         }
     } // namespace
 } // namespace

@@ -12,9 +12,10 @@
 #ifndef BLACKMISC_NETWORK_SERVER_H
 #define BLACKMISC_NETWORK_SERVER_H
 
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/network/ecosystem.h"
+#include "user.h"
+#include "fsdsetup.h"
+#include "ecosystem.h"
+#include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/obfuscation.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
@@ -47,6 +48,7 @@ namespace BlackMisc
                 IndexPort,
                 IndexUser,
                 IndexFsdSetup,
+                IndexVoiceSetup,
                 IndexEcosystem,
                 IndexIsAcceptingConnections,
                 IndexServerType,
@@ -76,7 +78,8 @@ namespace BlackMisc
             //! Constructor.
             CServer(const QString &name, const QString &description, const QString &address, int port,
                     const CUser &user,
-                    const CFsdSetup &setup, const CEcosystem &ecosytem, ServerType serverType,
+                    const CFsdSetup &fsdSetup, const Audio::CVoiceSetup &voiceSetup,
+                    const CEcosystem &ecosytem, ServerType serverType,
                     bool isAcceptingConnections = true);
 
             //! Constructor (minimal for testing)
@@ -148,20 +151,26 @@ namespace BlackMisc
             //! Address and port?
             bool hasAddressAndPort() const;
 
-            //! Get setup
+            //! Get FSD setup
             const CFsdSetup &getFsdSetup() const { return m_fsdSetup; }
+
+            //! Set FSD setup
+            void setFsdSetup(const CFsdSetup &setup) { m_fsdSetup = setup; }
 
             //! A FSD server?
             bool isFsdServer() const;
-
-            //! Set setup
-            void setFsdSetup(const CFsdSetup &setup) { m_fsdSetup = setup; }
 
             //! Set server type
             bool setServerType(ServerType serverType);
 
             //! Get server type
             ServerType getServerType() const { return static_cast<ServerType>(m_serverType); }
+
+            //! Get voice setup
+            const Audio::CVoiceSetup &getVoiceSetup() const { return m_voiceSetup; }
+
+            //! Set voice setup
+            void setVoiceSetup(const Audio::CVoiceSetup &setup) { m_voiceSetup = setup; }
 
             //! Unspecified?
             bool hasUnspecifiedServerType() const;
@@ -209,15 +218,16 @@ namespace BlackMisc
             static const CServer &fscServer();
 
         private:
-            QString    m_name;
-            QString    m_description;
-            QString    m_address;
-            int        m_port = -1;
-            CUser      m_user;
-            CFsdSetup  m_fsdSetup;
-            CEcosystem m_ecosystem;
-            int        m_serverType = static_cast<int>(Unspecified);
-            bool       m_isAcceptingConnections = true; //!< disable server for connections
+            QString     m_name;
+            QString     m_description;
+            QString     m_address;
+            int         m_port = -1;
+            CUser       m_user;
+            CEcosystem  m_ecosystem;
+            int         m_serverType = static_cast<int>(Unspecified);
+            bool        m_isAcceptingConnections = true; //!< disable server for connections
+            CFsdSetup          m_fsdSetup;
+            Audio::CVoiceSetup m_voiceSetup;
 
             BLACK_METACLASS(
                 CServer,
@@ -227,6 +237,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(port),
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(fsdSetup),
+                BLACK_METAMEMBER(voiceSetup),
                 BLACK_METAMEMBER(ecosystem),
                 BLACK_METAMEMBER(serverType),
                 BLACK_METAMEMBER(isAcceptingConnections),
