@@ -9,12 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISC_NETWORK_SETTINGS_SERVERS_H
-#define BLACKMISC_NETWORK_SETTINGS_SERVERS_H
+#ifndef BLACKMISC_NETWORK_SETTINGS_SERVERSSETTINGS_H
+#define BLACKMISC_NETWORK_SETTINGS_SERVERSSETTINGS_H
 
+#include "blackmisc/network/serverlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/network/serverlist.h"
+
 
 namespace BlackMisc
 {

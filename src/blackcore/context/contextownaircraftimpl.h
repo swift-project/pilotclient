@@ -16,7 +16,7 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackmisc/network/settings/servers.h"
+#include "blackmisc/network/settings/serversettings.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"

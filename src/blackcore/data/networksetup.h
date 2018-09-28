@@ -16,7 +16,7 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/settings/servers.h"
+#include "blackmisc/network/settings/serversettings.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/metaclass.h"

@@ -28,7 +28,7 @@
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/settings/servers.h"
+#include "blackmisc/network/settings/serversettings.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/applicationinfo.h"
 

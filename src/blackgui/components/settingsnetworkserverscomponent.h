@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/settings/servers.h"
+#include "blackmisc/network/settings/serversettings.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
