@@ -35,16 +35,30 @@ namespace BlackCore
 
         CVoiceVatlib::CVoiceVatlib(QObject *parent) :
             IVoice(parent),
-            m_audioService(Vat_CreateAudioService()),
-            m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), m_vatsimVoicePortSetting.getThreadLocal()))
+            m_audioService(Vat_CreateAudioService())
         {
+            const int udpPort = m_vatsimVoiceSettings.get().getVatsimUdpVoicePort();
             Vat_SetVoiceLogHandler(SeverityLevel::SeverityError, CVoiceVatlib::voiceLogHandler);
+            m_udpPort.reset(Vat_CreateUDPAudioPort(m_audioService.data(), udpPort));
 
             // do processing
             this->startTimer(10);
         }
 
         CVoiceVatlib::~CVoiceVatlib() {}
+
+        void CVoiceVatlib::setVoiceSetup(const CVoiceSetup &setup)
+        {
+            if (m_vatsimVoiceSettings.get() == setup) { return; }
+            m_vatsimVoiceSettings.setAndSave(setup);
+
+            // CHANGE VOICE PORT WOULD NEED TO GO HERE
+        }
+
+        CVoiceSetup CVoiceVatlib::getVoiceSetup() const
+        {
+            return m_vatsimVoiceSettings.get();
+        }
 
         QSharedPointer<IVoiceChannel> CVoiceVatlib::createVoiceChannel()
         {
@@ -143,7 +157,7 @@ namespace BlackCore
 
         void CVoiceVatlib::voiceLogHandler(SeverityLevel /** severity **/, const char *context, const char *message)
         {
-            QString errorMessage ("vatlib ");
+            QString errorMessage("vatlib ");
             errorMessage += context;
             errorMessage += ": ";
             errorMessage += message;

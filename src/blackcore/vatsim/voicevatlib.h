@@ -12,12 +12,13 @@
 #ifndef BLACKCORE_VOICE_VATLIB_H
 #define BLACKCORE_VOICE_VATLIB_H
 
-#include "blackcore/audio/audiosettings.h"
 #include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/voice.h"
+#include "blackmisc/audio/settings/voicesettings.h"
 #include "blackmisc/logcategorylist.h"
 #include <vatlib/vatlib.h>
+
 #include <QObject>
 #include <QScopedPointer>
 #include <QSharedPointer>
@@ -33,7 +34,7 @@ template <class T> class QSharedPointer;
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <windows.h>
+#include <Windows.h>
 #endif
 
 namespace BlackCore
@@ -57,7 +58,13 @@ namespace BlackCore
             CVoiceVatlib(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CVoiceVatlib();
+            virtual ~CVoiceVatlib() override;
+
+            //! \copydoc IVoice::setVoiceSetup()
+            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override;
+
+            //! \copydoc IVoice::getVoiceSetup()
+            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override;
 
             //! \copydoc IVoice::createVoiceChannel()
             virtual QSharedPointer<IVoiceChannel> createVoiceChannel() override;
@@ -117,9 +124,7 @@ namespace BlackCore
 
             static void voiceLogHandler(SeverityLevel severity, const char *context, const char *message);
 
-            // settings
-            BlackMisc::CSettingReadOnly<BlackCore::Audio::TVatsimVoiceUdpPort> m_vatsimVoicePortSetting { this };
-
+            BlackMisc::CSetting<BlackMisc::Audio::Settings::TVoiceSetup> m_vatsimVoiceSettings { this };
             QScopedPointer<VatAudioService, VatAudioServiceDeleter> m_audioService;
             QScopedPointer<VatUDPAudioPort, VatUDPAudioPortDeleter> m_udpPort;
         };

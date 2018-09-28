@@ -12,6 +12,7 @@
 
 #include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/audio/voicesetup.h"
 
 #include <QObject>
 #include <QSharedPointer>
@@ -38,6 +39,12 @@ namespace BlackCore
 
         //! Virtual destructor.
         virtual ~IVoice() {}
+
+        //! Set voice setup
+        virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) = 0;
+
+        //! Get voice setup
+        virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const = 0;
 
         //! Create voice channel object
         virtual QSharedPointer<IVoiceChannel> createVoiceChannel() = 0;
