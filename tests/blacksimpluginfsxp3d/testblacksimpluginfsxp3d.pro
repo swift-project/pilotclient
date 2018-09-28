@@ -14,11 +14,11 @@ TEMPLATE = app
 DEPENDPATH += \
     . \
     $$SourceRoot/src \
-    $$SourceRoot/tests \
+    $$SourceRoot/tests
 
 INCLUDEPATH += \
     $$SourceRoot/src \
-    $$SourceRoot/tests \
+    $$SourceRoot/tests
 
 HEADERS += *.h
 SOURCES += *.cpp

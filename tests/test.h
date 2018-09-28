@@ -49,8 +49,12 @@ args.append({ "-o", resultsFileName + "_testresults.xml,xml" }); \
 #define BLACKTEST_APPLESS_MAIN(TestObject) \
 int main(int argc, char *argv[]) \
 { \
-    BLACKTEST_INIT(TestObject) \
-    return QTest::qExec(&to, args); \
+    try { \
+        BLACKTEST_INIT(TestObject) \
+        return QTest::qExec(&to, args); \
+    } catch (...) { \
+        return EXIT_FAILURE; \
+    } \
 }
 
 //! Implements a main() function that executes all tests in TestObject
@@ -59,9 +63,13 @@ int main(int argc, char *argv[]) \
 #define BLACKTEST_MAIN(TestObject) \
 int main(int argc, char *argv[]) \
 { \
-    QCoreApplication app(argc, argv); \
-    BLACKTEST_INIT(TestObject) \
-    return QTest::qExec(&to, args); \
+    try { \
+        QCoreApplication app(argc, argv); \
+        BLACKTEST_INIT(TestObject) \
+        return QTest::qExec(&to, args); \
+    } catch (...) { \
+        return EXIT_FAILURE; \
+    } \
 }
 
 //! \endcond
