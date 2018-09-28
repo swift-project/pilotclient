@@ -15,6 +15,8 @@
 #include <QLabel>
 #include <QLineEdit>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -49,9 +51,10 @@ namespace BlackGui
             ui->le_Address->setText(server.getAddress());
             ui->le_Port->setText(QString::number(server.getPort()));
             ui->form_ServerFsd->setValue(server.getFsdSetup());
+            ui->form_Voice->setValue(server.getVoiceSetup());
         }
 
-        BlackMisc::Network::CServer CServerForm::getServer() const
+        CServer CServerForm::getServer() const
         {
             const CUser user(
                 ui->le_NetworkId->text().trimmed(),
@@ -59,13 +62,15 @@ namespace BlackGui
                 QStringLiteral(""),
                 ui->le_Password->text().trimmed()
             );
-            const CFsdSetup setup(ui->form_ServerFsd->getValue());
+            const CFsdSetup fsdSetup(ui->form_ServerFsd->getValue());
+            const CVoiceSetup voiceSetup(ui->form_Voice->getValue());
             const CServer server(
                 ui->le_Name->text().trimmed().simplified(),
                 ui->le_Description->text().trimmed().simplified(),
                 ui->le_Address->text().trimmed(),
                 ui->le_Port->text().trimmed().toInt(),
-                user, setup,
+                user,
+                fsdSetup, voiceSetup,
                 ui->cbp_Ecosystem->getSelectedEcosystem(),
                 this->getServerType(),
                 true
@@ -133,10 +138,10 @@ namespace BlackGui
             ui->cb_ServerType->setCurrentText(dummy.getServerTypeAsString());
         }
 
-        BlackMisc::CStatusMessageList CServerForm::validate(bool nested) const
+        CStatusMessageList CServerForm::validate(bool nested) const
         {
             Q_UNUSED(nested);
-            const CServer server = getServer();
+            const CServer server = this->getServer();
             return server.validate();
         }
     } // ns

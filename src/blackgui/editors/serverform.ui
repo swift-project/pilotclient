@@ -286,6 +286,23 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tb_ServerVoicce">
+      <attribute name="title">
+       <string>Voice</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item alignment="Qt::AlignTop">
+        <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -301,6 +318,12 @@
    <class>BlackGui::CEcosystemComboBox</class>
    <extends>QComboBox</extends>
    <header>blackgui/ecosystemcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CVoiceSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/voicesetupform.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
