@@ -20,6 +20,7 @@
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
@@ -170,6 +171,12 @@ namespace BlackCore
 
             //! Is loobback enabled?
             virtual bool isAudioLoopbackEnabled() const = 0;
+
+            //! Get voice setup
+            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const = 0;
+
+            //! Set voice setup
+            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) = 0;
         };
     } // ns
 } // ns

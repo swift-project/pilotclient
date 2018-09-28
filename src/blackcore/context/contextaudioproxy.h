@@ -52,7 +52,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextAudioProxy() {}
+            virtual ~CContextAudioProxy() override {}
 
             //! Unit test relay signals
             //! \private
@@ -82,6 +82,8 @@ namespace BlackCore
             virtual void enableAudioLoopback(bool enable = true) override;
             virtual bool isAudioLoopbackEnabled() const override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override;
+            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override;
             //! @}
 
         private:

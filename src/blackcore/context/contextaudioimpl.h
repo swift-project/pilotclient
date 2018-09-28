@@ -68,7 +68,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            virtual ~CContextAudio();
+            virtual ~CContextAudio() override;
 
         public slots:
             // Interface implementations
@@ -93,6 +93,8 @@ namespace BlackCore
             virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override;
             virtual void enableAudioLoopback(bool enable = true) override;
             virtual bool isAudioLoopbackEnabled() const override;
+            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override;
+            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override;
             //! @}
 
             //! \addtogroup swiftdotcommands

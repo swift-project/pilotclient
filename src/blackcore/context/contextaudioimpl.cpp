@@ -468,6 +468,18 @@ namespace BlackCore
             return m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
         }
 
+        void CContextAudio::setVoiceSetup(const CVoiceSetup &setup)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_voice) { m_voice->setVoiceSetup(setup); }
+        }
+
+        CVoiceSetup CContextAudio::getVoiceSetup() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_voice ? m_voice->getVoiceSetup() : CVoiceSetup();
+        }
+
         bool CContextAudio::parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
         {
             Q_UNUSED(originator);

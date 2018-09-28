@@ -67,14 +67,14 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1String("leaveAllVoiceRooms"));
         }
 
-        BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
+        BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(CComSystem::ComUnit comUnitValue) const
         {
             return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getRoomCallsigns"), comUnitValue);
         }
 
-        BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
+        BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(CComSystem::ComUnit comUnitValue) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getRoomUsers"), comUnitValue);
+            return this->m_dBusInterface->callDBusRet<CUserList>(QLatin1String("getRoomUsers"), comUnitValue);
         }
 
         CAudioDeviceInfoList CContextAudioProxy::getAudioDevices() const
@@ -107,12 +107,12 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRooms"));
         }
 
-        CVoiceRoom CContextAudioProxy::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
+        CVoiceRoom CContextAudioProxy::getVoiceRoom(CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
         {
             return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1String("getVoiceRoom"), comUnitValue, withAudioStatus);
         }
 
-        void CContextAudioProxy::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms)
+        void CContextAudioProxy::setComVoiceRooms(const CVoiceRoomList &voiceRooms)
         {
             this->m_dBusInterface->callDBus(QLatin1String("setComVoiceRooms"), voiceRooms);
         }
@@ -160,6 +160,16 @@ namespace BlackCore
         bool CContextAudioProxy::parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
         {
             return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
+        }
+
+        CVoiceSetup CContextAudioProxy::getVoiceSetup() const
+        {
+            return this->m_dBusInterface->callDBusRet<CVoiceSetup>(QLatin1String("getVoiceSetup"));
+        }
+
+        void CContextAudioProxy::setVoiceSetup(const CVoiceSetup &setup)
+        {
+            this->m_dBusInterface->callDBus(QLatin1String("setVoiceSetup"), setup);
         }
     } // namespace
 } // namespace

@@ -175,6 +175,20 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
+
+            //! \copydoc IContextAudio::getVoiceSetup
+            virtual BlackMisc::Audio::CVoiceSetup getVoiceSetup() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Audio::CVoiceSetup();
+            }
+
+            //! \copydoc IContextAudio::setVoiceSetup
+            virtual void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup) override
+            {
+                Q_UNUSED(setup);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
         };
     } // ns
 } // ns
