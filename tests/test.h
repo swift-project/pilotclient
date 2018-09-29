@@ -35,9 +35,6 @@ for (int i = 0; i < argc; ++i) \
 /* Output to stdout */ \
 args.append({ "-o", "-,txt" }); \
 \
-/* Be silent */ \
-args.append("-silent"); \
-\
 /* Output to file */ \
 QString resultsFileName = QString(#TestObject).replace("::", "_").toLower(); \
 args.append({ "-o", resultsFileName + "_testresults.xml,xml" }); \
