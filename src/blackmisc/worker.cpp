@@ -89,12 +89,14 @@ namespace BlackMisc
         QThread *workerThread = this->thread();
         Q_ASSERT_X(workerThread->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
-        this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        Q_ASSERT_X(this->thread() == workerThread->thread(), Q_FUNC_INFO, "moveToThread failed");
+        // MS 2018-09 Now we post the DeferredDelete event from within the worker thread, but rely on it being dispatched
+        //            by the owner thread. Posted events are moved along with the object when moveToThread is called.
+        //            We also connect its destroyed signal to delete the worker thread at the same time.
+        this->deleteLater();
+        connect(this, &QObject::destroyed, workerThread, &QObject::deleteLater);
 
-        //! \todo KB 2018-97 new syntax not yet supported on Jenkins QMetaObject::invokeMethod(workerThread, &CWorker::deleteLater)
-        QMetaObject::invokeMethod(workerThread, "deleteLater");
-        QMetaObject::invokeMethod(this, "deleteLater");
+        this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
     }
 
     const CLogCategoryList &CWorkerBase::getLogCategories()
@@ -166,8 +168,8 @@ namespace BlackMisc
     {
         this->setEnabled(false);
 
-        // already in different thread? otherwise return
-        if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
+        // already in owner's thread? then return
+        if (this->thread() == m_owner->thread()) { return; }
 
         // remark: cannot stop timer here, as I am normally not in the correct thread
         thread()->quit();
@@ -177,8 +179,8 @@ namespace BlackMisc
     {
         this->setEnabled(false);
 
-        // already in application (main) thread? => return
-        if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
+        // already in owner's thread? then return
+        if (this->thread() == m_owner->thread()) { return; }
 
         // called by own thread, will deadlock, return
         if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
@@ -229,12 +231,13 @@ namespace BlackMisc
 
         Q_ASSERT_X(m_owner->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
-        QThread *workerThread = this->thread();
-        this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        Q_ASSERT_X(this->thread() == m_owner->thread(), Q_FUNC_INFO, "moveToThread failed");
+        // MS 2018-09 Now we post the DeferredDelete event from within the worker thread, but rely on it being dispatched
+        //            by the owner thread. Posted events are moved along with the object when moveToThread is called.
+        //            We also connect its destroyed signal to delete the worker thread at the same time.
+        this->deleteLater();
+        connect(this, &QObject::destroyed, this->thread(), &QObject::deleteLater);
 
-        //! \todo new syntax not yet supported on Jenkins QMetaObject::invokeMethod(workerThread, &CWorker::deleteLater)
-        QMetaObject::invokeMethod(workerThread, "deleteLater");
-        QMetaObject::invokeMethod(this, "deleteLater");
+        this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
     }
 } // ns
