@@ -86,14 +86,14 @@ namespace BlackMisc
 
         this->setFinished();
 
-        QThread *ownThread = this->thread();
-        Q_ASSERT_X(ownThread->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
+        QThread *workerThread = this->thread();
+        Q_ASSERT_X(workerThread->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
-        this->moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
-        Q_ASSERT_X(this->thread() == ownThread->thread(), Q_FUNC_INFO, "moveToThread failed");
+        this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        Q_ASSERT_X(this->thread() == workerThread->thread(), Q_FUNC_INFO, "moveToThread failed");
 
-        //! \todo KB 2018-97 new syntax not yet supported on Jenkins QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater)
-        QMetaObject::invokeMethod(ownThread, "deleteLater");
+        //! \todo KB 2018-97 new syntax not yet supported on Jenkins QMetaObject::invokeMethod(workerThread, &CWorker::deleteLater)
+        QMetaObject::invokeMethod(workerThread, "deleteLater");
         QMetaObject::invokeMethod(this, "deleteLater");
     }
 
@@ -183,10 +183,10 @@ namespace BlackMisc
         // called by own thread, will deadlock, return
         if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
 
-        QThread *ownThread = thread(); // must be before quit()
+        QThread *workerThread = thread(); // must be before quit()
         this->quit();
 
-        bool ok = ownThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        bool ok = workerThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
         Q_ASSERT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
         Q_UNUSED(ok);
     }
@@ -229,12 +229,12 @@ namespace BlackMisc
 
         Q_ASSERT_X(m_owner->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
-        QThread *ownThread = this->thread();
+        QThread *workerThread = this->thread();
         this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         Q_ASSERT_X(this->thread() == m_owner->thread(), Q_FUNC_INFO, "moveToThread failed");
 
-        //! \todo new syntax not yet supported on Jenkins QMetaObject::invokeMethod(ownThread, &CWorker::deleteLater)
-        QMetaObject::invokeMethod(ownThread, "deleteLater");
+        //! \todo new syntax not yet supported on Jenkins QMetaObject::invokeMethod(workerThread, &CWorker::deleteLater)
+        QMetaObject::invokeMethod(workerThread, "deleteLater");
         QMetaObject::invokeMethod(this, "deleteLater");
     }
 } // ns
