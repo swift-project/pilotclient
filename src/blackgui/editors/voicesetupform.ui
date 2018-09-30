@@ -71,7 +71,7 @@
       <item alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="pb_SetDefaults">
         <property name="text">
-         <string>set defaults</string>
+         <string> set defaults </string>
         </property>
        </widget>
       </item>
@@ -80,6 +80,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cb_Override</tabstop>
+  <tabstop>pb_SetDefaults</tabstop>
+  <tabstop>le_VatsimUdpPort</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

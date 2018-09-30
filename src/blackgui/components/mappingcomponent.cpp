@@ -388,14 +388,14 @@ namespace BlackGui
 
         void CMappingComponent::onResetAircraft()
         {
-            if (!sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
+            if (!sGui || !sGui->getIContextSimulator() || !sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
             const CCallsign callsign(this->validateRenderedCallsign());
             if (callsign.isEmpty()) { return; }
             const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
             const CStatusMessage msg = reset ?
                                        CStatusMessage(this).info("Model reset for '%1'") << callsign.toQString() :
                                        CStatusMessage(this).info("Reset failed for '%1'") << callsign.toQString();
-            this->showOverlayMessage(msg, 5000);
+            this->showOverlayMessage(msg, 3000);
         }
 
         void CMappingComponent::onModelPreviewChanged(int state)
