@@ -162,6 +162,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
+            //! Clear this callsign
+            void clear();
+
             //! Register metadata
             static void registerMetadata();
 

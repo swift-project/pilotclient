@@ -33,6 +33,11 @@ namespace BlackMisc
             return m_callsign;
         }
 
+        void CCallsign::clear()
+        {
+            *this = CCallsign();
+        }
+
         QString CCallsign::unifyCallsign(const QString &callsign)
         {
             return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
