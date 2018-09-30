@@ -80,7 +80,7 @@ namespace BlackMisc
 
         CAircraftSituation CRemoteAircraftProvider::remoteAircraftSituation(const CCallsign &callsign, int index) const
         {
-            CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
+            const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
             if (index < 0 || index >= situations.size()) { return CAircraftSituation::null(); }
             return situations[index];
         }
@@ -235,6 +235,20 @@ namespace BlackMisc
                 emit this->changedAircraftInRange();
             }
             return c;
+        }
+
+        bool CRemoteAircraftProvider::updateAircraftInRangeDistanceBearing(const CCallsign &callsign, const CAircraftSituation &situation, const CLength &distance, const CAngle &bearing)
+        {
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
+            {
+                QWriteLocker l(&m_lockAircraft);
+                if (!m_aircraftInRange.contains(callsign)) { return false; }
+                CSimulatedAircraft &aircraft =  m_aircraftInRange[callsign];
+                aircraft.setSituation(situation);
+                if (!bearing.isNull())  { aircraft.setRelativeBearing(bearing); }
+                if (!distance.isNull()) { aircraft.setRelativeDistance(distance); }
+            }
+            return true;
         }
 
         CAircraftSituation CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)

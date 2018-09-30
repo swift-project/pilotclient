@@ -414,6 +414,11 @@ namespace BlackMisc
             //! \threadsafe
             int updateAircraftInRange(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
 
+            //! Update aircraft bearing, distance and situation
+            //! \threadsafe
+            //! \remark does NOT emit signals
+            bool updateAircraftInRangeDistanceBearing(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &distance, const PhysicalQuantities::CAngle &bearing);
+
             //! Store an aircraft situation
             //! \remark latest situations are kept first
             //! \threadsafe
