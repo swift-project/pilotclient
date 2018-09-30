@@ -20,13 +20,13 @@
 namespace BlackSimPluginFsxP3D
 {
     //! FSX/P3D common tests
-    class CTestFsxP3DCommon : public QObject
+    class CSimPluginFsxP3d : public QObject
     {
         Q_OBJECT
 
     public:
         //! Standard test case constructor
-        explicit CTestFsxP3DCommon(QObject *parent = nullptr) : QObject(parent) {}
+        explicit CSimPluginFsxP3d(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
         //! Resolve SimConnect Symbols

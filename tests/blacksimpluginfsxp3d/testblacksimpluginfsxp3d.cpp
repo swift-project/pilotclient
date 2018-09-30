@@ -14,7 +14,7 @@
  * \ingroup testblacksimplugin
  */
 
-#include "testfsxp3dcommon.h"
+#include "testblacksimpluginfsxp3d.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "plugins/simulator/fsxcommon/simconnectsymbols.h"
 #include "plugins/simulator/fsxcommon/simulatorfsxcommon.h"
@@ -24,7 +24,7 @@ using namespace BlackSimPlugin::FsxCommon;
 
 namespace BlackSimPluginFsxP3D
 {
-    void CTestFsxP3DCommon::resolveSymbols()
+    void CSimPluginFsxP3d::resolveSymbols()
     {
         QVERIFY2(loadAndResolveSimConnect(false), "Could not load and resolve SimConnect library!");
         HANDLE hSimConnect;
@@ -32,7 +32,7 @@ namespace BlackSimPluginFsxP3D
         SimConnect_Close(hSimConnect);
     }
 
-    void CTestFsxP3DCommon::requestIds()
+    void CSimPluginFsxP3d::requestIds()
     {
         DWORD objectId = 666;
         DWORD requestId = CSimulatorFsxCommon::unitTestRequestId(CSimConnectObject::Aircraft);
@@ -71,6 +71,6 @@ namespace BlackSimPluginFsxP3D
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackSimPluginFsxP3D::CTestFsxP3DCommon);
+BLACKTEST_APPLESS_MAIN(BlackSimPluginFsxP3D::CSimPluginFsxP3d);
 
 //! \endcond

@@ -2,7 +2,7 @@ load(common_pre)
 
 QT       += core testlib dbus network gui widgets
 
-TARGET = testsimpluginfsxp3d
+TARGET = testblacksimpluginfsxp3d
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore blackconfig blackgui
 CONFIG   += simulatorfsxcommon simulatorfscommon simulatorplugincommon fsuipc simconnect
