@@ -167,7 +167,7 @@ namespace BlackCore
             m_setupReader.reset(new CSetupReader(this));
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
-            connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog.data(), &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog, &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
             this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 
@@ -710,7 +710,7 @@ namespace BlackCore
 
     CNetworkWatchdog *CApplication::getNetworkWatchdog() const
     {
-        return m_networkWatchDog.data();
+        return m_networkWatchDog;
     }
 
     void CApplication::setSwiftDbAccessibility(bool accessible)
@@ -895,7 +895,7 @@ namespace BlackCore
             // watchdog
             if (m_networkWatchDog)
             {
-                connect(m_webDataServices.data(), &CWebDataServices::swiftDbDataRead, m_networkWatchDog.data(), &CNetworkWatchdog::setDbAccessibility);
+                connect(m_webDataServices.data(), &CWebDataServices::swiftDbDataRead, m_networkWatchDog, &CNetworkWatchdog::setDbAccessibility);
             }
 
             emit this->webDataServicesStarted(true);
@@ -1015,7 +1015,7 @@ namespace BlackCore
         if (m_networkWatchDog)
         {
             m_networkWatchDog->quitAndWait();
-            m_networkWatchDog.reset();
+            m_networkWatchDog = nullptr;
         }
 
         m_fileLogger->close();
@@ -1139,7 +1139,7 @@ namespace BlackCore
         {
             // CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(this->isNetworkAccessible(), this);
             CNetworkWatchdog *nwWatchdog = new CNetworkWatchdog(true, this); // WLAN bug, default to true
-            m_networkWatchDog.reset(nwWatchdog); // not yet started
+            m_networkWatchDog = nwWatchdog; // not yet started
             m_cookieManager = new CCookieManager({}, this);
             m_cookieManager->setParent(m_accessManager);
             m_accessManager->setCookieJar(m_cookieManager);
@@ -1150,16 +1150,16 @@ namespace BlackCore
         Q_ASSERT_X(m_networkConfigManager, Q_FUNC_INFO, "Need config manager");
 
         // into watchdog
-        connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setNetworkAccessibility, Qt::QueuedConnection);
-        connect(m_networkConfigManager, &QNetworkConfigurationManager::onlineStateChanged, m_networkWatchDog.data(), &CNetworkWatchdog::setOnline, Qt::QueuedConnection);
-        connect(m_networkConfigManager, &QNetworkConfigurationManager::updateCompleted, m_networkWatchDog.data(), &CNetworkWatchdog::networkConfigurationsUpdateCompleted, Qt::QueuedConnection);
+        connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog, &CNetworkWatchdog::setNetworkAccessibility, Qt::QueuedConnection);
+        connect(m_networkConfigManager, &QNetworkConfigurationManager::onlineStateChanged, m_networkWatchDog, &CNetworkWatchdog::setOnline, Qt::QueuedConnection);
+        connect(m_networkConfigManager, &QNetworkConfigurationManager::updateCompleted, m_networkWatchDog, &CNetworkWatchdog::networkConfigurationsUpdateCompleted, Qt::QueuedConnection);
         connect(m_networkConfigManager, &QNetworkConfigurationManager::updateCompleted, this, &CApplication::onNetworkConfigurationsUpdateCompleted, Qt::QueuedConnection);
         m_networkConfigManager->updateConfigurations();
 
         // out from watchdog to application
-        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedNetworkAccessible, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
-        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
-        connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
+        connect(m_networkWatchDog, &CNetworkWatchdog::changedNetworkAccessible, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
+        connect(m_networkWatchDog, &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
+        connect(m_networkWatchDog, &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
 
         CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
         m_networkWatchDog->start(QThread::LowestPriority);

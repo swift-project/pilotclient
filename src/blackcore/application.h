@@ -633,11 +633,11 @@ namespace BlackCore
 
         QNetworkConfigurationManager   *m_networkConfigManager = nullptr; //!< configuration
         QNetworkAccessManager                 *m_accessManager = nullptr; //!< single network access manager
+        Db::CNetworkWatchdog                *m_networkWatchDog = nullptr; //!< checking DB/internet access
         BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
         QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
         QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
         QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
-        QScopedPointer<Db::CNetworkWatchdog>   m_networkWatchDog;         //!< checking DB/internet access
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
         QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager
         const QString                          m_applicationName;         //!< application name
