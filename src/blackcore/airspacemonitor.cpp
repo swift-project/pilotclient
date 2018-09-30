@@ -921,7 +921,7 @@ namespace BlackCore
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
         if (history.empty()) { return; } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
-        if (lastSituation.getPosition() == interimSituation.getPosition()) { return; } // same position, ignore
+        const bool samePosition = (lastSituation.getPosition() == interimSituation.getPosition());
 
         // changed position, continue and copy values
         interimSituation.setCurrentUtcTime();
@@ -930,15 +930,16 @@ namespace BlackCore
         // store situation history
         this->storeAircraftSituation(interimSituation);
 
-        // if we have not aircraft in range yer, we stop here
+        // if we have no aircraft in range yet, we stop here
         if (!this->isAircraftInRange(callsign)) { return; }
+        if (samePosition) { return; } // nothing to update
 
         // update aircraft
-        CPropertyIndexVariantMap vm;
-        vm.addValue(CSimulatedAircraft::IndexSituation, interimSituation);
-        vm.addValue(CSimulatedAircraft::IndexRelativeDistance, this->calculateDistanceToOwnAircraft(interimSituation));
-        vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(interimSituation));
-        this->updateAircraftInRange(callsign, vm);
+        this->updateAircraftInRangeDistanceBearing(
+            callsign, interimSituation,
+            this->calculateDistanceToOwnAircraft(interimSituation),
+            this->calculateBearingToOwnAircraft(interimSituation)
+        );
     }
 
     void CAirspaceMonitor::onConnectionStatusChanged(INetwork::ConnectionStatus oldStatus, INetwork::ConnectionStatus newStatus)
@@ -1141,7 +1142,7 @@ namespace BlackCore
 
     CAngle CAirspaceMonitor::calculateBearingToOwnAircraft(const CAircraftSituation &situation) const
     {
-        CAngle angle = getOwnAircraft().calculateBearing(situation);
+        CAngle angle = this->getOwnAircraft().calculateBearing(situation);
         angle.switchUnit(CAngleUnit::deg());
         return angle;
     }
