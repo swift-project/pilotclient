@@ -37,7 +37,7 @@
         <x>0</x>
         <y>0</y>
         <width>296</width>
-        <height>400</height>
+        <height>450</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="vl_ScrollAreaContent">
@@ -58,7 +58,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>400</height>
+           <height>450</height>
           </size>
          </property>
         </widget>
@@ -89,7 +89,7 @@
          <string>do matching for all models again</string>
         </property>
         <property name="text">
-         <string>re-matching</string>
+         <string> re-matching </string>
         </property>
        </widget>
       </item>

@@ -185,6 +185,9 @@ namespace BlackCore
         void setupChanged();
 
     private:
+        //! Save the removed models if any
+        bool saveRemovedModels();
+
         //! The search based implementation
         static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,  const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr);
 

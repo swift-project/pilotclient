@@ -48,14 +48,7 @@ namespace BlackCore
 
     CAircraftMatcher::~CAircraftMatcher()
     {
-        if (!m_removedModels.isEmpty())
-        {
-            // log the models
-            const QString fileName("removed models %1.json");
-            const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
-            const QString json = m_removedModels.toJsonString();
-            CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), fileName.arg(ts)));
-        }
+        this->saveRemovedModels();
     }
 
     bool CAircraftMatcher::setSetup(const CAircraftMatcherSetup &setup)
@@ -686,6 +679,16 @@ namespace BlackCore
                 m_removedModels.replaceOrAddModelWithString(remoteAircraft.getModel(), Qt::CaseInsensitive);
             }
         }
+    }
+
+    bool CAircraftMatcher::saveRemovedModels()
+    {
+        if (m_removedModels.isEmpty()) { return false; }
+        // log the models
+        const QString fileName("removed models %1.json");
+        const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
+        const QString json = m_removedModels.toJsonString();
+        return CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), fileName.arg(ts)));
     }
 
     CAircraftModelList CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log)
