@@ -125,14 +125,14 @@ namespace BlackMisc
         {
             if (frequency.isNull()) { return; }
             const double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
-            const double f = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
-            const quint32 d = static_cast<quint32>(f / channelSpacingKHz);
+            const double fKHz = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
+            const int dDown = static_cast<int>(fKHz / channelSpacingKHz);
+            const double fDownKHz = dDown * channelSpacingKHz;
+            const double fUpKHz = (dDown + 1) * channelSpacingKHz;
+            const bool down = qAbs(fKHz - fDownKHz) < qAbs(fUpKHz - fKHz); // which is the closest value
+            const double fMHz(CMathUtils::round((down ? fDownKHz : fUpKHz) / 1000.0, 3));
             frequency.switchUnit(CFrequencyUnit::MHz());
-            const double f0 = frequency.valueRounded(CFrequencyUnit::MHz(), 3);
-            const double f1 = CMathUtils::round(d * (channelSpacingKHz / 1000.0), 3);
-            const double f2 = CMathUtils::round((d + 1) * (channelSpacingKHz / 1000.0), 3);
-            const bool down = qAbs(f1 - f0) < qAbs(f2 - f0); // which is the closest value
-            frequency.setCurrentUnitValue(down ? f1 : f2);
+            frequency.setCurrentUnitValue(fMHz);
         }
 
         bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)

@@ -59,6 +59,9 @@ namespace BlackMiscTest
         //! COM and NAV units
         void comAndNav();
 
+        //! COM frequency rounding
+        void comFrequencyRounding();
+
         //! Transponder
         void transponder();
 
@@ -106,6 +109,25 @@ namespace BlackMiscTest
         QVERIFY2(c1 == c2, "COM system shall be equal");
         QVERIFY2(CNavSystem::isValidCivilNavigationFrequency(CFrequency(110.0, CFrequencyUnit::MHz())), "Expect valid nav frequency");
         QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())), "Expect invalid nav frequency");
+    }
+
+    void CTestAviation::comFrequencyRounding()
+    {
+        const CFrequency f1 = CFrequency(122.8, CFrequencyUnit::MHz());
+        const CFrequency f2 = CFrequency(122.795, CFrequencyUnit::MHz());
+        const CFrequency f3 = CFrequency(122.805, CFrequencyUnit::MHz());
+
+        QVERIFY2(f1 == f1, "Ups, how can this fail");
+        QVERIFY2(f1 != f2, "Ups, how can this fail");
+        QVERIFY2(f1 != f3, "Ups, how can this fail");
+
+        CFrequency up(f2);
+        CComSystem::roundToChannelSpacing(up, CComSystem::ChannelSpacing25KHz);
+        QVERIFY2(up == f1, "Expect rounding up");
+
+        CFrequency down(f3);
+        CComSystem::roundToChannelSpacing(down, CComSystem::ChannelSpacing25KHz);
+        QVERIFY2(down == f1, "Expect rounding up");
     }
 
     void CTestAviation::transponder()
