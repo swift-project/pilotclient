@@ -899,10 +899,13 @@ namespace BlackSimPlugin
             if (CBuildConfig::isLocalDeveloperDebugBuild()) { Q_ASSERT_X(simObject.isAircraft(), Q_FUNC_INFO, "Need aircraft"); }
             if (!simObject.isAircraft()) { return; }
 
+            // clean up
+            m_simConnectObjects.removeByOtherSimObject(simObject);
+            this->removeFromAddPendingAndAddAgainAircraft(simObject.getCallsign());
+
             CLogMessage(this).warning("Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
             CStatusMessage verifyMsg;
-            const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg);
-            m_simConnectObjects.removeByOtherSimObject(simObject);
+            const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
             if (verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
             if (!canBeUsed || simObject.getAddingExceptions() >= ThresholdAddException)
@@ -1340,7 +1343,12 @@ namespace BlackSimPlugin
                 // same model, nothing will change, otherwise add again when removed
                 if (sameModel)
                 {
-                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' re-added same model '%2'").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
+                    CLogMessage(this).info("CS: '%1' re-added same model '%2'") << newRemoteAircraft.getCallsignAsString() << newModelString;
+
+                    // we restore rendered flag in case we are sure we are rendered
+                    // this is used with rematching
+                    const bool rendered = simObject.isConfirmedAdded() && simObject.isPending();
+                    if (rendered) { this->updateAircraftRendered(callsign, rendered); }
                     return true;
                 }
 
@@ -1509,6 +1517,7 @@ namespace BlackSimPlugin
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     if (!myself) { return; }
+                    CLogMessage(this).info("Next trail to remove '%1'") << callsign.asString();
                     myself->physicallyRemoveRemoteAircraft(callsign);
                 });
                 return false; // not yet deleted
@@ -1709,13 +1718,13 @@ namespace BlackSimPlugin
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    if (!this->isEqualLastSent(result.getInterpolatedSituation()))
+                    if (setup.isForcingFullInterpolation() || !this->isEqualLastSent(result.getInterpolatedSituation()))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         const HRESULT hr = this->logAndTraceSendId(
                                                SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                                        static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0, sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                                               traceSendId, simObject, "Failed so set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                                               traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
                         if (isOk(hr))
                         {
                             this->rememberLastSent(result); // remember
