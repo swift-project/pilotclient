@@ -14,6 +14,7 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/airspacemonitor.h"
+#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/stringutils.h"
 
 using namespace BlackCore;
@@ -55,7 +56,7 @@ namespace BlackGui
             ui->tvp_InboundAircraftSituations->setWithMenuRequestElevation(true);
 
             connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinished, this, &CInterpolationLogDisplay::onCallsignEntered);
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
@@ -195,29 +196,32 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onCallsignEntered()
         {
-            const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
             if (!m_simulator)
             {
                 this->stop();
                 return;
             }
+
+            const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
             if (m_callsign == cs) { return; }
+
+            // empty callsign, just stop
+            if (cs.isEmpty())
+            {
+                this->stop();
+                m_callsign.clear();
+                return;
+            }
 
             // clear last callsign
             if (!m_callsign.isEmpty())
             {
                 m_simulator->setLogInterpolation(false, m_callsign); // stop logging "old" callsign
-                m_callsign = CCallsign(); // clear callsign
+                m_callsign.clear(); // clear callsign
                 this->clear();
             }
 
             // set new callsign or stop
-            if (cs.isEmpty())
-            {
-                this->stop();
-                return;
-            }
-
             m_callsign = cs;
             m_simulator->setLogInterpolation(true, cs);
             if (!this->start())
@@ -299,12 +303,17 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onSituationAdded(const CAircraftSituation &situation)
         {
+            static const QString info("times: %1 offset %2");
+
             const CCallsign cs = situation.getCallsign();
             if (!this->logCallsign(cs)) { return; }
             const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(cs);
+            const MillisecondsMinMaxMean tsDiffMsMinMaxMean = situations.getTimestampDifferenceMinMaxMean();
+            const MillisecondsMinMaxMean offsetMsMinMaxMean = situations.getOffsetMinMaxMean();
             const CAircraftSituationChangeList changes = m_airspaceMonitor->remoteAircraftSituationChanges(cs);
             ui->tvp_InboundAircraftSituations->updateContainerAsync(situations);
             ui->tvp_Changes->updateContainerMaybeAsync(changes);
+            ui->le_InboundSituationsInfo->setText(info.arg(tsDiffMsMinMaxMean.asString(), offsetMsMinMaxMean.asString()));
             ui->led_Situation->blink();
         }
 
@@ -392,8 +401,8 @@ namespace BlackGui
                 if (!sApp || sApp->isShuttingDown()) { break; } // stop and return
                 if (m_callsign.isEmpty())
                 {
-                    static const CStatusMessage ms = CStatusMessage(this).validationError("No callsign");
-                    m = ms;
+                    // static const CStatusMessage ms = CStatusMessage(this).validationError("No callsign for logging");
+                    // m = ms;
                     break;
                 }
 

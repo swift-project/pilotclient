@@ -532,6 +532,13 @@
              </property>
              <layout class="QVBoxLayout" name="vl_InboundSituations">
               <item>
+               <widget class="QLineEdit" name="le_InboundSituationsInfo">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_InboundAircraftSituations">
                 <property name="selectionMode">
                  <enum>QAbstractItemView::NoSelection</enum>
