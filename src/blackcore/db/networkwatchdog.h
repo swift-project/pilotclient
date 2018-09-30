@@ -36,7 +36,7 @@ namespace BlackCore
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Ctor
-            explicit CNetworkWatchdog(bool networkAccessible, QObject *parent);
+            explicit CNetworkWatchdog(bool networkAccessible, QObject *owner);
 
             //! Network status changed, use this function to inform the watchdog
             //! \threadsafe

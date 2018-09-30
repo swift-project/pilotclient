@@ -32,9 +32,9 @@ namespace BlackCore
             return cats;
         }
 
-        CNetworkWatchdog::CNetworkWatchdog(bool networkAccessible, QObject *parent) : CContinuousWorker(parent, "swift DB watchdog")
+        CNetworkWatchdog::CNetworkWatchdog(bool networkAccessible, QObject *owner) : CContinuousWorker(owner, "swift DB watchdog")
         {
-            Q_ASSERT_X(parent, Q_FUNC_INFO, "Need parent (normally sApp)");
+            Q_ASSERT_X(owner, Q_FUNC_INFO, "Need owner (normally sApp)");
 
             m_networkAccessible = networkAccessible;
             m_internetAccessible = networkAccessible;
