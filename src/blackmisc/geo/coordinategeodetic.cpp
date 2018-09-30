@@ -52,6 +52,7 @@ namespace BlackMisc
 
         CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
+            if (coordinate1.isNull() || coordinate2.isNull()) { return CAngle::null(); }
             static const QVector3D northPole { 0, 0, 1 };
             const QVector3D c1 = QVector3D::crossProduct(coordinate1.normalVector(), coordinate2.normalVector());
             const QVector3D c2 = QVector3D::crossProduct(coordinate1.normalVector(), northPole);
