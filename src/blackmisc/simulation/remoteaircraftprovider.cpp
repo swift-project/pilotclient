@@ -85,6 +85,12 @@ namespace BlackMisc
             return situations[index];
         }
 
+        MillisecondsMinMaxMean CRemoteAircraftProvider::remoteAircraftSituationsTimestampDifferenceMinMaxMean(const CCallsign &callsign) const
+        {
+            const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
+            return situations.getOffsetMinMaxMean();
+        }
+
         CAircraftSituationList CRemoteAircraftProvider::latestRemoteAircraftSituations() const
         {
             QReadLocker l(&m_lockSituations);

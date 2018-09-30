@@ -43,8 +43,6 @@
 
 using namespace BlackConfig;
 
-
-
 namespace BlackMisc
 {
     template <class OBJ, class CONTAINER>
@@ -346,11 +344,13 @@ namespace BlackMisc
     {
         MillisecondsMinMaxMean mmm;
         mmm.reset();
-        if (this->container().size() < 2) { return mmm; }
+        const CONTAINER &container = this->container();
+        if (container.size() < 2) { return mmm; }
 
-        if (m_tsSortHint == NoTimestampSortHint)
+        // Do not confuse with adjusted sort hint!
+        if (container.m_tsSortHint == NoTimestampSortHint)
         {
-            CONTAINER copy(this->container());
+            CONTAINER copy(container);
             copy.sortLatestFirst();
             copy.m_tsSortHint = TimestampLatestFirst;
             return copy.getTimestampDifferenceMinMaxMean();
@@ -362,23 +362,52 @@ namespace BlackMisc
         int c = 0;
         OBJ last;
 
-        for (const OBJ &object : this->container())
+        for (const OBJ &object : container)
         {
+            if (c > 0)
+            {
+                const ITimestampBased &l = last;
+                const ITimestampBased &o = object;
+                const qint64 diff = l.getAbsTimeDifferenceMs(o);
+                if (diff > mmm.max) { mmm.max  = diff; }
+                if (diff < mmm.min) { mmm.min = diff;  }
+                mean += diff;
+            }
             c++;
             last = object;
-            if (c < 2) { continue; }
-
-            const ITimestampBased &l = last;
-            const ITimestampBased &o = object;
-            const qint64 diff = l.getAbsTimeDifferenceMs(o);
-            if (diff > mmm.max) { mmm.max  = diff; }
-            if (diff < mmm.min) { mmm.min = diff;  }
-            mean += diff;
         }
 
         mmm.mean = mean / c;
         return mmm;
     }
+
+    template<class OBJ, class CONTAINER>
+    MillisecondsMinMaxMean ITimestampWithOffsetObjectList<OBJ, CONTAINER>::getOffsetMinMaxMean() const
+    {
+        MillisecondsMinMaxMean mmm;
+        mmm.reset();
+        const CONTAINER &container = this->container();
+        if (container.size() < 1) { return mmm; }
+
+        mmm.max = std::numeric_limits<qint64>::min();
+        mmm.min = std::numeric_limits<qint64>::max();
+        qint64 mean = 0;
+        int c = 0;
+
+        for (const ITimestampWithOffsetBased &object : container)
+        {
+            if (!object.hasNonZeroOffsetTime()) { continue; }
+            const qint64 os = object.getTimeOffsetMs();
+            if (os > mmm.max) { mmm.max  = os; }
+            if (os < mmm.min) { mmm.min  = os; }
+            mean += os;
+            c++;
+        }
+
+        if (c >0) { mmm.mean = mean / c; }
+        return mmm;
+    }
+
 
     template <class OBJ, class CONTAINER>
     void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::sortAdjustedLatestFirst()
@@ -593,7 +622,7 @@ namespace BlackMisc
     OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::latestAdjustedObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        if (m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
+        if (this->container().m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
         {
             return this->container().front();
         }
@@ -605,7 +634,7 @@ namespace BlackMisc
     OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::oldestAdjustedObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        if (m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
+        if (this->container().m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
         {
             return this->container().back();
         }
@@ -646,7 +675,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::setAdjustedSortHint(HintAdjustedTimestampSort hint)
     {
-        m_tsAdjustedSortHint = hint;
+        this->container().m_tsAdjustedSortHint = hint;
     }
 
     // see here for the reason of thess forward instantiations

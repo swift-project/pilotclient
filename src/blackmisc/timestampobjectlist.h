@@ -35,7 +35,7 @@ namespace BlackMisc
         void reset() { min = -1; max = -1; mean = -1;}
 
         //! As string
-        QString asString() const { static const QString s("Min: %1 Max: %2 Mean: %3"); return s.arg(min).arg(max).arg(mean, 0, 'f', 2); }
+        QString asString() const { static const QString s("Min: %1ms Max: %2ms Mean: %3ms"); return s.arg(min).arg(max).arg(mean, 0, 'f', 2); }
     };
 
     //! List of objects with timestamp.
@@ -146,12 +146,12 @@ namespace BlackMisc
         //! Adds a time to all values
         void addMsecs(qint64 msToAdd);
 
-        //! Difference of timestamp values
-        //! \cond timestamp list has to be sorted to get meaninful values
-        MillisecondsMinMaxMean getTimestampDifferenceMinMaxMean() const;
-
         //! Set the hint
         void setSortHint(HintTimestampSort hint) { m_tsSortHint = hint; }
+
+        //! Difference of timestamp values
+        //! \cond timestamp list has to be sorted to get meaningful values
+        MillisecondsMinMaxMean getTimestampDifferenceMinMaxMean() const;
 
     protected:
         //! Constructor
@@ -252,6 +252,10 @@ namespace BlackMisc
 
         //! Set the hint
         void setAdjustedSortHint(HintAdjustedTimestampSort hint);
+
+        //! Difference of timestamp values
+        //! \cond timestamp list has to be sorted to get meaningful values
+        MillisecondsMinMaxMean getOffsetMinMaxMean() const;
 
     protected:
         //! Constructor

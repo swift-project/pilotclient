@@ -96,6 +96,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const = 0;
 
+            //! Average update time
+            //! \threadsafe
+            virtual MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const Aviation::CCallsign &callsign) const = 0;
+
             //! Rendered aircraft situations (per callsign and index)
             //! \remark if situation does not exist, an NULL situation is returned
             //! \param callsign
