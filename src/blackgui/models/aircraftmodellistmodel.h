@@ -51,7 +51,7 @@ namespace BlackGui
             explicit CAircraftModelListModel(AircraftModelMode mode, QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelListModel() {}
+            virtual ~CAircraftModelListModel() override {}
 
             //! Mode
             void setAircraftModelMode(CAircraftModelListModel::AircraftModelMode stationMode);

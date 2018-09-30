@@ -290,7 +290,10 @@ namespace BlackGui
         void CAircraftModelView::customMenu(CMenuActions &menuActions)
         {
             // Statistics
-            menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
+            if (!this->isEmpty())
+            {
+                menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
+            }
 
             // Stash menus
             bool addStashMenu = false;
