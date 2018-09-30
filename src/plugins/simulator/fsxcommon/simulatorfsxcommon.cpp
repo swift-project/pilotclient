@@ -1409,10 +1409,11 @@ namespace BlackSimPlugin
             const QString modelString(newRemoteAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
+            const QByteArray modelStringBa = toFsxChar(modelString);
+            const QByteArray csBa = toFsxChar(callsign.toQString().left(12));
             const HRESULT hr = probe ?
-                               SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId) :
-                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
-            // const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
+                               SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition, requestId) :
+                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, modelStringBa.constData(), csBa.constData(), initialPosition, requestId);
 
             if (isFailure(hr))
             {
@@ -1987,9 +1988,10 @@ namespace BlackSimPlugin
             auto glob = weatherGrid.frontOrDefault();
             glob.setIdentifier("GLOB");
             const QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob);
+            const QByteArray metarBa = toFsxChar(metar);
             SimConnect_WeatherSetModeCustom(m_hSimConnect);
             SimConnect_WeatherSetModeGlobal(m_hSimConnect);
-            SimConnect_WeatherSetObservation(m_hSimConnect, 0, qPrintable(metar));
+            SimConnect_WeatherSetObservation(m_hSimConnect, 0, metarBa.constData());
         }
 
         bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
@@ -2192,6 +2194,11 @@ namespace BlackSimPlugin
             }
             this->triggerAutoTraceSendId();
             return hr;
+        }
+
+        QByteArray CSimulatorFsxCommon::toFsxChar(const QString &string)
+        {
+            return string.toLatin1();
         }
 
         TraceFsxSendId CSimulatorFsxCommon::getSendIdTrace(DWORD sendId) const

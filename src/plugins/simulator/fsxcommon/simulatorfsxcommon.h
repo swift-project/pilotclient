@@ -260,6 +260,9 @@ namespace BlackSimPlugin
             //! Trace if required, log errors
             HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
+            //! Convert to FSX char array
+            static QByteArray toFsxChar(const QString &string);
+
             //! Register help
             static void registerHelp();
 
