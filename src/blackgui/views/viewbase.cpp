@@ -1334,7 +1334,7 @@ namespace BlackGui
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
             QTableView::setObjectName(name);
-            QString modelName = QString(name).append(':').append(m_model->getTranslationContext());
+            const QString modelName = QString(name).append(':').append(m_model->getTranslationContext());
             m_model->setObjectName(modelName);
         }
 
@@ -1555,14 +1555,26 @@ namespace BlackGui
                         break;
                     }
 
-                    CVariant containerVariant;
-                    containerVariant.convertFromJson(jsonObject);
-                    if (!containerVariant.canConvert<ContainerType>())
+                    ContainerType container;
+
+                    if (jsonObject.contains("type") && jsonObject.contains("value"))
                     {
-                        m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
-                        break;
+                        // read from variant format
+                        CVariant containerVariant;
+                        containerVariant.convertFromJson(jsonObject);
+                        if (!containerVariant.canConvert<ContainerType>())
+                        {
+                            m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
+                            break;
+                        }
+                        container = containerVariant.value<ContainerType>();
                     }
-                    ContainerType container = containerVariant.value<ContainerType>();
+                    else
+                    {
+                        // container format directly
+                        container.convertFromJson(jsonObject);
+                    }
+
                     const int countBefore = container.size();
                     m = this->modifyLoadedJsonData(container);
                     if (m.isFailure()) { break; } // modification error
