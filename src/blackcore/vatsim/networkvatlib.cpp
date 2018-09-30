@@ -1258,6 +1258,7 @@ namespace BlackCore
             if (callsign.isEmpty()) { return; }
             m_pendingAtisQueries.remove(callsign);
             m_lastPositionUpdate.remove(callsign);
+            m_interimPositionReceivers.remove(callsign);
             m_lastOffsetTime.remove(callsign);
         }
 
