@@ -208,9 +208,14 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("requestAtisUpdates"));
         }
 
-        bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
+        bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftEnabled"), callsign, enabledForRedering);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftEnabled"), callsign, enabledForRendering);
+        }
+
+        bool CContextNetworkProxy::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setEnabledFlag"), callsign, enabledForRendering);
         }
 
         bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)

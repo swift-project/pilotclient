@@ -153,9 +153,14 @@ namespace BlackMisc
             //! \threadsafe
             virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const = 0;
 
-            //! Enable/disable aircraft
+            //! Enable/disable aircraft and follow up logic like sending signals
             //! \threadsafe
+            //! \remark depending on implementation similar or more sophisticated as setEnabledFlag
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
+
+            //! Just set enable/disable aircraft flag, no further logic
+            //! \threadsafe
+            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
 
             //! Enable/disable aircraft
             //! \threadsafe
@@ -295,6 +300,7 @@ namespace BlackMisc
             virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const override;
+            virtual MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
             virtual Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
@@ -306,6 +312,7 @@ namespace BlackMisc
             virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const override;
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual int updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
@@ -538,7 +545,10 @@ namespace BlackMisc
             int getRemoteAircraftSupportingPartsCount() const;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering);
+            bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering);
+
+            //! \copydoc IRemoteAircraftProvider::setAircraftEnabledFlag
+            bool setAircraftEnabledFlag(const Aviation::CCallsign &callsign, bool enabledForRendering);
 
             //! \copydoc IRemoteAircraftProvider::updateMultipleAircraftEnabled
             bool updateMultipleAircraftEnabled(const Aviation::CCallsignSet &callsigns, bool enabledForRendering);

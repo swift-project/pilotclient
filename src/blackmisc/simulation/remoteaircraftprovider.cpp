@@ -473,6 +473,12 @@ namespace BlackMisc
 
         bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
+            // here just synonym
+            return this->setAircraftEnabledFlag(callsign, enabledForRendering);
+        }
+
+        bool CRemoteAircraftProvider::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
+        {
             QWriteLocker l(&m_lockAircraft);
             if (!m_aircraftInRange.contains(callsign)) { return false; }
             return m_aircraftInRange[callsign].setEnabled(enabledForRendering);
@@ -1006,6 +1012,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             return this->provider()->updateAircraftEnabled(callsign, enabledForRendering);
+        }
+
+        bool CRemoteAircraftAware::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->setAircraftEnabledFlag(callsign, enabledForRendering);
         }
 
         bool CRemoteAircraftAware::updateMultipleAircraftEnabled(const CCallsignSet &callsigns, bool enabledForRendering)

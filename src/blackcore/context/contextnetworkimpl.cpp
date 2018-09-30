@@ -122,6 +122,12 @@ namespace BlackCore
             return m_airspace->remoteAircraftSituation(callsign, index);
         }
 
+        MillisecondsMinMaxMean CContextNetwork::remoteAircraftSituationsTimestampDifferenceMinMaxMean(const CCallsign &callsign) const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->remoteAircraftSituationsTimestampDifferenceMinMaxMean(callsign);
+        }
+
         CAircraftSituationList CContextNetwork::latestRemoteAircraftSituations() const
         {
             Q_ASSERT(m_airspace);
@@ -774,6 +780,12 @@ namespace BlackCore
             return c;
         }
 
+        bool CContextNetwork::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            return m_airspace->setAircraftEnabledFlag(callsign, enabledForRendering);
+        }
+
         bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             Q_ASSERT(m_airspace);
@@ -807,7 +819,7 @@ namespace BlackCore
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+                CLogMessage(this).info("Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
                 emit this->changedFastPositionUpdates(aircraft);
             }
             return c;
@@ -876,6 +888,7 @@ namespace BlackCore
 
         int CContextNetwork::reInitializeAllAircraft()
         {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->reInitializeAllAircraft();
         }
 

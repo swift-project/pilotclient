@@ -870,9 +870,10 @@ namespace BlackCore
         {
             CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
             if (aircraft.getCallsign() != callsign) { return false; } // not found
-            this->updateAircraftEnabled(callsign, true);
-            aircraft.setModel(aircraft.getNetworkModel());
-            xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
+            this->setAircraftEnabledFlag(callsign, true);  // plain vanilla flag
+            this->updateAircraftRendered(callsign, false); // this is flag only anyway
+            aircraft.setModel(aircraft.getNetworkModel()); // like originally from network
+            this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
             return true;
         }
 

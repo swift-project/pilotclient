@@ -269,6 +269,9 @@ namespace BlackCore
             //! Enable/disable rendering
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
 
+            //! Set the enabled flag without any further logic like sending signals
+            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
+
             //! Enable/disable support of gnd. flag
             virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) = 0;
 

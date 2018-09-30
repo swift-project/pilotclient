@@ -93,6 +93,7 @@ namespace BlackCore
             //! @{
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftSituation remoteAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, int index) const override;
+            virtual BlackMisc::MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
             virtual BlackMisc::Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -153,12 +154,18 @@ namespace BlackCore
             // from context and provider interface
             //! \ingroup remoteaircraftprovider
             //! @{
+
+            // emit signal when changed
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
-            virtual int reInitializeAllAircraft() override;
             virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual void enableReverseLookupMessages(bool enabled) override;
+
+            // plain vanilla passing to airspace monitor
+            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual int reInitializeAllAircraft() override;
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg, const QString &modelString) override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
@@ -170,7 +177,6 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isReverseLookupMessagesEnabled() const override;
-            virtual void enableReverseLookupMessages(bool enabled) override;
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;

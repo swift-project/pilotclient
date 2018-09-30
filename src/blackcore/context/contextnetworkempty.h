@@ -354,6 +354,15 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextNetwork::setAircraftEnabledFlag
+            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(callsign);
+                Q_UNUSED(enabledForRendering);
+                return false;
+            }
+
             //! \copydoc IContextNetwork::reInitializeAllAircraft
             virtual int reInitializeAllAircraft() override
             {
