@@ -43,7 +43,7 @@ namespace BlackMisc
             CJoystickButton() = default;
 
             //! Constructor
-            CJoystickButton(const QString deviceName, int index);
+            CJoystickButton(const QString &deviceName, int index);
 
             //! Get device name
             QString getDeviceName() const { return m_deviceName; }

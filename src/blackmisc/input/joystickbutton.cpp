@@ -15,7 +15,7 @@ namespace BlackMisc
 {
     namespace Input
     {
-        CJoystickButton::CJoystickButton(const QString deviceName, int index) :
+        CJoystickButton::CJoystickButton(const QString &deviceName, int index) :
             m_deviceName(deviceName), m_buttonIndex(index)
         {}
 
