@@ -24,6 +24,12 @@ namespace BlackMisc
             m_buttonIndex = buttonIndex;
         }
 
+        bool CJoystickButton::isValid() const
+        {
+            if (!m_deviceName.isEmpty() && m_buttonIndex >= 0)  { return true; }
+            else { return false; }
+        }
+
         void CJoystickButton::setButtonObject(CJoystickButton button)
         {
             this->m_buttonIndex = button.m_buttonIndex;

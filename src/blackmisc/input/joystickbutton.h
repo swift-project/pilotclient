@@ -61,7 +61,7 @@ namespace BlackMisc
             void setButtonIndex(int buttonIndex);
 
             //! Is valid?
-            bool isValid() const { return !m_deviceName.isEmpty() && m_buttonIndex >= 0 ? true : false; }
+            bool isValid() const;
 
             //! Set button object
             void setButtonObject(CJoystickButton button);
