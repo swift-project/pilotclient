@@ -131,15 +131,16 @@ namespace BlackInput
         //! Joystick enumeration callback
         static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
 
-        DirectInput8Ptr m_directInput;                   //!< DirectInput object
+        ATOM helperWindowClass = 0;
+        HWND helperWindow = nullptr;
+
+        DirectInput8Ptr m_directInput;                 //!< DirectInput object
         QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
 
         const TCHAR *helperWindowClassName = TEXT("HelperWindow");
         const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
-        ATOM helperWindowClass = 0;
-        HWND helperWindow = nullptr;
     };
 } // ns
 
