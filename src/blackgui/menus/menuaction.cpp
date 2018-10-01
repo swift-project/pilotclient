@@ -22,7 +22,6 @@
 #include <algorithm>
 
 using namespace BlackMisc;
-using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -93,6 +92,24 @@ namespace BlackGui
         const CMenuAction &CMenuAction::subMenuConsolidateModels()
         {
             static const CMenuAction subdir(CIcons::appModels16(), "Consolidate models", CMenuAction::pathModelConsolidate());
+            return subdir;
+        }
+
+        const CMenuAction &CMenuAction::subMenuCom()
+        {
+            static const CMenuAction subdir(CIcons::appAtc16(), "COM", CMenuAction::pathClientCom());
+            return subdir;
+        }
+
+        const CMenuAction &CMenuAction::subMenuDisplayModels()
+        {
+            static const CMenuAction subdir(CIcons::appAircraft16(), "Display models", CMenuAction::pathClientSimulationDisplay());
+            return subdir;
+        }
+
+        const CMenuAction &CMenuAction::subMenuDataTransfer()
+        {
+            static const CMenuAction subdir(CIcons::appAircraft16(), "Data transfer", CMenuAction::pathClientSimulationTransfer());
             return subdir;
         }
 
@@ -252,25 +269,25 @@ namespace BlackGui
             return menuActions;
         }
 
-        CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             if (action) { return this->addAction(action, path); }
             return this->addAction(text, path, slot, shortcut);
         }
 
-        CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             if (action) { return this->addAction(action, path); }
             return this->addAction(text, path, actionOwner, slot, shortcut);
         }
 
-        CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             if (action) { return this->addAction(action, path); }
             return this->addAction(icon, text, path, slot, shortcut);
         }
 
-        CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             if (action) { return this->addAction(action, path); }
             Q_ASSERT_X(actionOwner, Q_FUNC_INFO, "Need action owner"); // in this case nullptr as actionOwner is not allowed
@@ -290,7 +307,7 @@ namespace BlackGui
             return this->addAction(ma);
         }
 
-        CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             CMenuAction action = this->addAction(actionIcon, text, path, actionOwner, shortcut);
             QAction::connect(action.getQAction(), &QAction::triggered, [slot](bool checked)
@@ -306,17 +323,17 @@ namespace BlackGui
             return this->addAction(actionIcon, text, path, nullptr);
         }
 
-        CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             return this->addAction(actionIcon, text, path, slot.object(), slot, shortcut);
         }
 
-        CMenuAction CMenuActions::addAction(const QString &text, const QString &path, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             return this->addAction(QIcon(), text, path, slot.object(), slot, shortcut);
         }
 
-        CMenuAction CMenuActions::addAction(const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)
+        CMenuAction CMenuActions::addAction(const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
         {
             return this->addAction(QIcon(), text, path, actionOwner, slot, shortcut);
         }
@@ -450,30 +467,38 @@ namespace BlackGui
 
         CMenuAction CMenuActions::addMenuDatabase()
         {
-            if (this->containsMenu(CMenuAction::pathViewDatabase())) { CMenuAction(); }
+            if (this->containsMenu(CMenuAction::pathViewDatabase())) { return CMenuAction(); }
             return this->addMenu(CMenuAction::subMenuDatabase());
         }
 
         CMenuAction CMenuActions::addMenuConsolidateModels()
         {
-            if (this->containsMenu(CMenuAction::pathModelConsolidate())) { CMenuAction(); }
+            if (this->containsMenu(CMenuAction::pathModelConsolidate())) { return CMenuAction(); }
             return this->addMenu(CMenuAction::subMenuConsolidateModels());
         }
 
         CMenuAction CMenuActions::addMenuModelSet()
         {
-            if (this->containsMenu(CMenuAction::pathModelSet())) { CMenuAction(); }
+            if (this->containsMenu(CMenuAction::pathModelSet())) { return CMenuAction(); }
             return this->addMenu(CIcons::appModels16(), "Model set", CMenuAction::pathModelSet());
         }
 
-        const CMenuActions &CMenuActions::predefinedSubmenus()
+        CMenuAction CMenuActions::addMenuCom()
         {
-            static const CMenuActions pd(
-            {
-                CMenuAction::subMenuDatabase(),
-                CMenuAction::subMenuSimulator()
-            });
-            return pd;
+            if (this->containsMenu(CMenuAction::subMenuCom().getPath())) { return CMenuAction(); }
+            return this->addAction(CMenuAction::subMenuCom());
+        }
+
+        CMenuAction CMenuActions::addMenuDisplayModels()
+        {
+            if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath())) { return CMenuAction(); }
+            return this->addAction(CMenuAction::subMenuDisplayModels());
+        }
+
+        CMenuAction CMenuActions::addMenuDataTransfer()
+        {
+            if (this->containsMenu(CMenuAction::subMenuDataTransfer().getPath())) { return CMenuAction(); }
+            return this->addAction(CMenuAction::subMenuDataTransfer());
         }
 
         QMenu *CMenuActions::currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pathDepth)

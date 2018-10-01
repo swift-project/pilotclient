@@ -158,10 +158,16 @@ namespace BlackGui
             // ---- client ----
 
             //! Client COM related
-            static const QString &pathClientCom() { static const QString p("Client.ATC"); return p; }
+            static const QString &pathClientCom() { static const QString p("Client.ATC/COM"); return p; }
 
             //! Client simulation related
-            static const QString &pathClientSimulation() { static const QString p("Client.Simulation"); return p; }
+            static const QString &pathClientSimulation() { static const QString p("ClientSimulation"); return p; }
+
+            //! Client simulation/display related
+            static const QString &pathClientSimulationDisplay() { static const QString p("ClientSimulation.Display/Display"); return p; }
+
+            //! Client simulation/display related
+            static const QString &pathClientSimulationTransfer() { static const QString p("ClientSimulation.Transfer/Transfer"); return p; }
 
             // ---- standard view paths --------
 
@@ -206,6 +212,9 @@ namespace BlackGui
             static const CMenuAction &subMenuDatabase();
             static const CMenuAction &subMenuSimulator();
             static const CMenuAction &subMenuConsolidateModels();
+            static const CMenuAction &subMenuCom();
+            static const CMenuAction &subMenuDisplayModels();
+            static const CMenuAction &subMenuDataTransfer();
             //! @}
 
         private:
@@ -349,10 +358,16 @@ namespace BlackGui
             //! Add ModelConverterX menu (optional)
             CMenuAction addMenuModelConverterX();
 
-            //! @}
+            //! Add COM model menu
+            CMenuAction addMenuCom();
 
-            //! Predfefined sub menus
-            static const CMenuActions &predefinedSubmenus();
+            //! Add display model menu
+            CMenuAction addMenuDisplayModels();
+
+            //! Add data transfer menu
+            CMenuAction addMenuDataTransfer();
+
+            //! @}
 
         private:
             QMultiMap<QString, CMenuAction> m_actions; //!< actions sorted by path

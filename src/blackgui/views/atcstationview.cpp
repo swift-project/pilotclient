@@ -18,6 +18,7 @@
 #include <QFlags>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
@@ -53,7 +54,8 @@ namespace BlackGui
 
         void CAtcStationView::customMenu(CMenuActions &menuActions)
         {
-            if (BlackConfig::CBuildConfig::isDebugBuild())
+            menuActions.addMenuCom();
+            if (CBuildConfig::isDebugBuild())
             {
                 if (m_debugActions.isEmpty()) { m_actions = QList<QAction *>({nullptr, nullptr}); }
                 m_actions[0] = menuActions.addAction(m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
