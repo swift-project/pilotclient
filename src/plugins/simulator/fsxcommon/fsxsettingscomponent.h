@@ -49,6 +49,12 @@ namespace BlackSimPlugin
             //! Terrain probe checkbox changed
             void onEnableTerrainProbeChanged();
 
+            //! FSUIPC setting changed
+            void onFsuipcChanged();
+
+            //! Offsets on/off
+            void onSBOffsetsChanged();
+
             //! Copy the terrain probe
             void copyTerrainProbe();
 

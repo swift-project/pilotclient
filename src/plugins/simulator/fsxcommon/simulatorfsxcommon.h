@@ -168,6 +168,12 @@ namespace BlackSimPlugin
             //! FSX terrain probe
             void setUsingFsxTerrainProbe(bool use) { m_useFsxTerrainProbe = use; }
 
+            //! Using the SB offsets?
+            bool isUsingSbOffsetValues() const { return m_useSbOffsets; }
+
+            //! Use SB offset values
+            void setUsingSbOffsetValues(bool use) { m_useSbOffsets = use; }
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
 
@@ -220,7 +226,7 @@ namespace BlackSimPlugin
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .drv sendid  on|off      tracing simCOnnect sendId on/off
+            //! .drv sendid  on|off      tracing simConnect sendId on/off
             //! </pre>
             //! @}
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
@@ -272,9 +278,9 @@ namespace BlackSimPlugin
             CSimConnectObjects m_simConnectObjects;                             //!< AI objects and their object and request ids
 
             // probes
-            bool m_useFsxTerrainProbe = true;   //!< Use FSX Terrain probe?
+            bool m_useFsxTerrainProbe = true;    //!< Use FSX Terrain probe?
             bool m_initFsxTerrainProbes = false; //!< initialized terrain probes
-            int  m_addedProbes = 0; //!< added probes
+            int  m_addedProbes = 0;              //!< added probes
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
         private:

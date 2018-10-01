@@ -33,6 +33,8 @@ namespace BlackSimPlugin
 
             connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
             connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+            connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
+            connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
             connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
 
             const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
@@ -40,6 +42,8 @@ namespace BlackSimPlugin
             {
                 ui->cb_TraceSimConnectCalls->setChecked(fsx->isTracingSendId());
                 ui->cb_EnableTerrainProbe->setChecked(fsx->isUsingFsxTerrainProbe());
+                ui->cb_SBOffsets->setChecked(fsx->isUsingSbOffsetValues());
+                ui->cb_UseFsuipc->setChecked(fsx->isFsuipcConnected());
             }
         }
 
@@ -64,6 +68,20 @@ namespace BlackSimPlugin
             CSimulatorFsxCommon *fsx = this->getFsxSimulator();
             if (!fsx) { return; }
             fsx->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
+        }
+
+        void CFsxSettingsComponent::onFsuipcChanged()
+        {
+            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
+            if (!fsx) { return; }
+            fsx->useFsuipc(ui->cb_UseFsuipc->isChecked());
+        }
+
+        void CFsxSettingsComponent::onSBOffsetsChanged()
+        {
+            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
+            if (!fsx) { return; }
+            fsx->setUsingSbOffsetValues(ui->cb_SBOffsets->isChecked());
         }
 
         void CFsxSettingsComponent::copyTerrainProbe()

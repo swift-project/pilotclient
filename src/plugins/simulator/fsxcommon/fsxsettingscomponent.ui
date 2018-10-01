@@ -7,20 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>180</width>
-    <height>87</height>
+    <height>121</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FSX/P3D settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_SettingsComponent" columnstretch="0,1">
-   <item row="1" column="1">
-    <widget class="QLabel" name="lbl_TraceTerrainProbe">
-     <property name="text">
-      <string>Use the terrain probe</string>
-     </property>
-    </widget>
-   </item>
+  <layout class="QGridLayout" name="gl_Settings" columnstretch="0,1">
    <item row="0" column="0">
     <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
      <property name="text">
@@ -28,10 +21,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" alignment="Qt::AlignLeft">
-    <widget class="QPushButton" name="pb_CopyTerrainProbe">
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_UseFsuipc">
      <property name="text">
-      <string>  copy terrain probe  </string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -45,15 +38,57 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="1">
+    <widget class="QLabel" name="lbl_SBOffsets">
+     <property name="text">
+      <string>Enable SB SimConnect offsets</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="lbl_TraceTerrainProbe">
+     <property name="text">
+      <string>Use the terrain probe</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
     <widget class="QCheckBox" name="cb_EnableTerrainProbe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="cb_SBOffsets">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lbl_UseFsuipc">
+     <property name="text">
+      <string>Enable FSUIPC support</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="pb_CopyTerrainProbe">
+     <property name="text">
+      <string>  copy terrain probe  </string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cb_TraceSimConnectCalls</tabstop>
+  <tabstop>cb_UseFsuipc</tabstop>
+  <tabstop>cb_SBOffsets</tabstop>
+  <tabstop>cb_EnableTerrainProbe</tabstop>
+  <tabstop>pb_CopyTerrainProbe</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -1198,6 +1198,16 @@ namespace BlackSimPlugin
                 CLogMessage(this, CLogCategory::cmdLine()).info("Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
                 return true;
             }
+
+            // .driver sboffsets on|off
+            if (parser.matchesPart(1, "sboffsets") && parser.hasPart(2))
+            {
+                const bool on = parser.toBool(2);
+                this->setUsingSbOffsetValues(on);
+                CLogMessage(this, CLogCategory::cmdLine()).info("SB offsets is '%1'") << boolToOnOff(on);
+                return true;
+            }
+
             return CSimulatorFsCommon::parseDetails(parser);
         }
 
@@ -1206,6 +1216,7 @@ namespace BlackSimPlugin
             if (CSimpleCommandParser::registered("BlackSimPlugin::CSimulatorFsxCommon::CSimulatorFsxCommon")) { return; }
             CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
             CSimpleCommandParser::registerCommand({".drv sendid on|off", "Trace simConnect sendId on|off"});
+            CSimpleCommandParser::registerCommand({".drv sboffsets on|off", "SB offsets via simConnect on|off"});
         }
 
         CCallsign CSimulatorFsxCommon::getCallsignForPendingProbeRequests(DWORD requestId, bool remove)
