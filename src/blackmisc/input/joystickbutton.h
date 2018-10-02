@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDeviceName = 0,
+                IndexDeviceName = CPropertyIndex::GlobalIndexCJoystickButton,
                 IndexButton,
                 IndexButtonAsString,
                 IndeButtonObject, // just for updates

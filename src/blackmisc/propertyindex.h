@@ -144,6 +144,8 @@ namespace BlackMisc
             GlobalIndexCVPilotModelRule                 =  9000,
             GlobalIndexCVoiceRoom                       = 10000,
             GlobalIndexCSettingKeyboardHotkey           = 11000,
+            GlobalIndexCKeyboardKey                     = 11100,
+            GlobalIndexCJoystickButton                  = 11200,
             GlobalIndexIDatastoreInteger                = 12000,
             GlobalIndexIDatastoreString                 = 12100,
             GlobalIndexCDbInfo                          = 12200,
