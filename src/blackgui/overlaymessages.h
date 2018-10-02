@@ -12,8 +12,9 @@
 #ifndef BLACKGUI_OVERLAYMESSAGES_H
 #define BLACKGUI_OVERLAYMESSAGES_H
 
-#include "blackgui/blackguiexport.h"
+#include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
@@ -30,7 +31,6 @@
 class QKeyEvent;
 class QPaintEvent;
 class QPixmap;
-class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace Ui { class COverlayMessages; }
@@ -97,6 +97,9 @@ namespace BlackGui
 
         //! Info message, based on text message
         void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+
+        //! Inline text message
+        void showOverlayInlineTextMessage(BlackGui::Components::TextMessageTab tab);
 
         //! Image
         void showOverlayImage(const BlackMisc::CPixmap &image, int timeOutMs = -1);

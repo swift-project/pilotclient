@@ -113,7 +113,7 @@
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
         <property name="currentIndex">
-         <number>4</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">
@@ -295,6 +295,32 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="pg_OverlayTextMessage">
+         <layout class="QVBoxLayout" name="vl_OverlayTextMessage">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="BlackGui::Components::CTextMessageComponent" name="comp_OverlayTextMessage">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -373,6 +399,12 @@
    <class>BlackGui::Components::CStatusMessageFormSmall</class>
    <extends>QFrame</extends>
    <header>blackgui/components/statusmessageformsmall.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CTextMessageComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/textmessagecomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

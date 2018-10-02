@@ -12,13 +12,13 @@
 #ifndef BLACKGUI_OVERLAYMESSAGES_FRAME_H
 #define BLACKGUI_OVERLAYMESSAGES_FRAME_H
 
-#include "blackgui/blackguiexport.h"
+#include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/overlaymessages.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>
@@ -160,6 +160,14 @@ namespace BlackGui
         {
             this->initInnerFrame();
             m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
+            WIDGET::repaint();
+        }
+
+        //! \copydoc BlackGui::COverlayMessages::showOverlayImage
+        void showOverlayInlineTextMessage(Components::TextMessageTab tab)
+        {
+            this->initInnerFrame();
+            m_overlayMessages->showOverlayInlineTextMessage(tab);
             WIDGET::repaint();
         }
 

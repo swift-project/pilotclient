@@ -63,6 +63,11 @@ namespace BlackGui
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multiline entries, with T138 we need multiline messages
         ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         ui->fr_Confirmation->setVisible(false);
+
+        ui->comp_OverlayTextMessage->showSettings(false);
+        ui->comp_OverlayTextMessage->showTextMessageEntry(true);
+        ui->comp_OverlayTextMessage->setAsUsedInOverlayMode();
+
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
@@ -145,7 +150,7 @@ namespace BlackGui
         return s.popup(textMessage, ownAircraft);
     }
 
-    void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    void COverlayMessages::showOverlayMessages(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -212,7 +217,7 @@ namespace BlackGui
     void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
-        if (!displayTextMessage(textMessage)) { return; }
+        if (!this->displayTextMessage(textMessage)) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
 
         if (this->hasPendingConfirmation())
@@ -238,6 +243,15 @@ namespace BlackGui
         ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
 
         this->display(timeOutMs);
+    }
+
+    void COverlayMessages::showOverlayInlineTextMessage(Components::TextMessageTab tab)
+    {
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
+        ui->comp_OverlayTextMessage->setTab(tab);
+        this->setHeader("Text message");
+        this->showKill(false);
+        this->display();
     }
 
     void COverlayMessages::showOverlayImage(const CPixmap &image, int timeOutMs)
