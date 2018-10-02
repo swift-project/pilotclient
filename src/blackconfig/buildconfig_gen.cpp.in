@@ -141,6 +141,12 @@ const QString &BlackConfig::CBuildConfig::gitHeadSha1()
     return gitHeadSha1;
 }
 
+const QString &BlackConfig::CBuildConfig::p3dX64BuildVersion()
+{
+    static const QString p3dX64BuildVersion(\"$$P3D_X64_VERSION\"); // libraries.pri
+    return p3dX64BuildVersion;
+}
+
 namespace Private
 {
     const QDateTime lastCommitTimestampImpl()

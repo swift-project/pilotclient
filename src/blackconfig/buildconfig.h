@@ -147,6 +147,9 @@ namespace BlackConfig
         //! \returns 32, 64 or -1 (in case no info is possible)
         static int buildWordSize();
 
+        //! P3D 64 bit build version
+        static const QString &p3dX64BuildVersion(); // defined in buildconfig_gen.cpp.in
+
     private:
         //! Major version
         static int versionMajor(); // defined in buildconfig_gen.cpp.in
