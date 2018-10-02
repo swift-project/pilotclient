@@ -187,7 +187,7 @@ namespace BlackCore
             bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
             static QString convertToUnicodeEscaped(const QString &str);
             static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
-            static void networkLogHandler(SeverityLevel severity, const char *context, const char *message);
+            static void networkLogHandler(VatSeverityLevel severity, const char *context, const char *message);
             void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
             static const QString &defaultModelString()

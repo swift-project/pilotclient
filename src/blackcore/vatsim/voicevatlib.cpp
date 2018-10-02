@@ -38,7 +38,7 @@ namespace BlackCore
             m_audioService(Vat_CreateAudioService())
         {
             const int udpPort = m_vatsimVoiceSettings.get().getVatsimUdpVoicePort();
-            Vat_SetVoiceLogHandler(SeverityLevel::SeverityError, CVoiceVatlib::voiceLogHandler);
+            Vat_SetVoiceLogHandler(vatSeverityDebug, CVoiceVatlib::voiceLogHandler);
             m_udpPort.reset(Vat_CreateUDPAudioPort(m_audioService.data(), udpPort));
 
             // do processing
@@ -155,13 +155,15 @@ namespace BlackCore
             Vat_ExecuteVoiceTasks(m_audioService.data());
         }
 
-        void CVoiceVatlib::voiceLogHandler(SeverityLevel /** severity **/, const char *context, const char *message)
+        void CVoiceVatlib::voiceLogHandler(VatSeverityLevel severity, const char *context, const char *message)
         {
-            QString errorMessage("vatlib ");
-            errorMessage += context;
-            errorMessage += ": ";
-            errorMessage += message;
-            CLogMessage(static_cast<CVoiceVatlib *>(nullptr)).error(errorMessage);
+            QString logMessage(context);
+            logMessage += ": ";
+            logMessage += message;
+            if (severity == vatSeverityDebug) { CLogMessage(static_cast<CVoiceVatlib *>(nullptr)).debug(logMessage); }
+            else if (severity == vatSeverityInfo) { CLogMessage(static_cast<CVoiceVatlib *>(nullptr)).info(logMessage); }
+            else if (severity == vatSeverityWarning) { CLogMessage(static_cast<CVoiceVatlib *>(nullptr)).warning(logMessage); }
+            else if (severity == vatSeverityError) { CLogMessage(static_cast<CVoiceVatlib *>(nullptr)).error(logMessage); }
         }
     } // namespace
 } // namespace

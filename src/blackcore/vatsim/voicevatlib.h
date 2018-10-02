@@ -122,7 +122,7 @@ namespace BlackCore
                 }
             };
 
-            static void voiceLogHandler(SeverityLevel severity, const char *context, const char *message);
+            static void voiceLogHandler(VatSeverityLevel severity, const char *context, const char *message);
 
             BlackMisc::CSetting<BlackMisc::Audio::Settings::TVoiceSetup> m_vatsimVoiceSettings { this };
             QScopedPointer<VatAudioService, VatAudioServiceDeleter> m_audioService;

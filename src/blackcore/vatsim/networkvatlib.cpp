@@ -95,7 +95,7 @@ namespace BlackCore
 
             Q_ASSERT_X(Vat_GetVersion() == VAT_LIBVATLIB_VERSION, "swift.network", "Wrong vatlib shared library installed");
 
-            Vat_SetNetworkLogHandler(SeverityLevel::SeverityError, CNetworkVatlib::networkLogHandler);
+            Vat_SetNetworkLogHandler(vatSeverityError, CNetworkVatlib::networkLogHandler);
 
             m_processingTimer.setObjectName(this->objectName().append(":m_processingTimer"));
             m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
@@ -1453,7 +1453,7 @@ namespace BlackCore
             );
         }
 
-        void CNetworkVatlib::networkLogHandler(SeverityLevel /** severity **/, const char *context, const char *message)
+        void CNetworkVatlib::networkLogHandler(VatSeverityLevel /** severity **/, const char *context, const char *message)
         {
             const QString errorMessage = QStringLiteral("vatlib ") % context % QStringLiteral(": ") % message;
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(errorMessage);
