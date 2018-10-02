@@ -792,6 +792,7 @@ namespace XSwiftBus
                 }
                 else { return xpmpData_Unchanged; }
             }
+            break;
 
         case xpmpDataType_Radar:
             if (plane->hasXpdr)
@@ -805,10 +806,8 @@ namespace XSwiftBus
                 }
                 else { return xpmpData_Unchanged; }
             }
-            else { return xpmpData_Unavailable; }
-
-        default: return xpmpData_Unavailable;
         }
+        return xpmpData_Unavailable;
     }
 
     int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)

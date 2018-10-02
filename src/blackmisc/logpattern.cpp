@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/fallthrough.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logpattern.h"
@@ -155,8 +156,11 @@ namespace BlackMisc
         // there are deliberately no break statements in this switch block
         default:
         case CStatusMessage::SeverityDebug:     result.m_severities.insert(CStatusMessage::SeverityDebug);
+        BLACK_FALLTHROUGH;
         case CStatusMessage::SeverityInfo:      result.m_severities.insert(CStatusMessage::SeverityInfo);
+        BLACK_FALLTHROUGH;
         case CStatusMessage::SeverityWarning:   result.m_severities.insert(CStatusMessage::SeverityWarning);
+        BLACK_FALLTHROUGH;
         case CStatusMessage::SeverityError:     result.m_severities.insert(CStatusMessage::SeverityError);
         }
         return result;
@@ -273,6 +277,7 @@ namespace BlackMisc
             case EndsWith:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
             case Contains:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
             default:            ;
+            BLACK_FALLTHROUGH   ;
             }
         case AllOf:
             switch (other.m_strategy)
@@ -284,6 +289,7 @@ namespace BlackMisc
             case EndsWith:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
             case Contains:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
             default:            ;
+            BLACK_FALLTHROUGH   ;
             }
         case StartsWith:
             switch (other.m_strategy)

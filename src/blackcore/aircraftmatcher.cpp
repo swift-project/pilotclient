@@ -10,6 +10,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/fallthrough.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
@@ -226,7 +227,7 @@ namespace BlackCore
                         matchedModel = candidates.minOrderOrDefault();
                         break;
                     }
-                // [[clang::fallthrough]];
+                    BLACK_FALLTHROUGH;
                 case CAircraftMatcherSetup::PickFirst:
                 default:
                     usedStrategy = CAircraftMatcherSetup::PickFirst; // re-assigned if fall-through

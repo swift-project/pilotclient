@@ -10,6 +10,7 @@
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
+#include "blackmisc/fallthrough.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
@@ -75,6 +76,7 @@ namespace BlackGui
             case OwnModelSet:
                 // intentional fall thru
                 m_columns.addColumn(CColumn::orderColumn());
+                BLACK_FALLTHROUGH;
 
             case OwnAircraftModelMappingTool:
             case StashModel:

@@ -113,8 +113,8 @@ namespace BlackMisc
             {
             case IndexName: this->setName(variant.value<QString>()); break;
             case IndexDescription: this->setDescription(variant.value<QString>()); break;
-            case IndexUrl: m_url.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            case IndexSize: this->setSize(variant.toInt());
+            case IndexUrl: m_url.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSize: this->setSize(variant.toInt()); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

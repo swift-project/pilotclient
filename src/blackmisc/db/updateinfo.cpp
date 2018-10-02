@@ -113,7 +113,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexArtifactsPilotClient: return CVariant::fromValue(m_artifactsPilotClient);
-            case IndexArtifactsXSwiftBus: CVariant::fromValue(m_artifactsXSwiftBus);
+            case IndexArtifactsXSwiftBus: return CVariant::fromValue(m_artifactsXSwiftBus);
             case IndexDistributions: return CVariant::fromValue(m_distributions);
             default: return CValueObject::propertyByIndex(index);
             }
