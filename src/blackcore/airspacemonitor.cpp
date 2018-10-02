@@ -306,7 +306,7 @@ namespace BlackCore
         const CAtcStationList stations(this->getAtcStationsOnline());
         for (const CAtcStation &station : stations)
         {
-            m_network->sendAtisQuery(station.getCallsign());
+            m_network->sendAtisQuery(station.getCallsign()); // for each online station
         }
     }
 
