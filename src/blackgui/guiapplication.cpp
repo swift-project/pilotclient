@@ -298,6 +298,8 @@ namespace BlackGui
         if (g.isEmpty() || s.isEmpty()) { return false; }
         window->restoreGeometry(g);
         window->restoreState(s);
+        const QString location = settings.fileName();
+        CLogMessage(this).info("GUI settings are here: '%1'") << location;
         return true;
     }
 
@@ -325,7 +327,10 @@ namespace BlackGui
         }
         if (m_saveMainWidgetState && !this->isSet(m_cmdWindowSizeReset))
         {
-            this->restoreWindowGeometryAndState();
+
+            const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+            const bool shiftAlt = km.testFlag(Qt::ShiftModifier) && km.testFlag(Qt::AltModifier);
+            if (!shiftAlt) { this->restoreWindowGeometryAndState(); }
         }
 
         if (m_splashScreen)
