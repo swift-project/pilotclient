@@ -1096,7 +1096,7 @@ namespace BlackCore
             {
                 if (fsdMessageFiltered.startsWith("FSD Sent=>#AP"))
                 {
-                    thread_local const QRegularExpression re("^(FSD Sent=>#AP\\w+:SERVER:\\d+:)[^:]+(:\\d:\\d+:\\d:.+)$");
+                    thread_local const QRegularExpression re("^(FSD Sent=>#AP\\w+:SERVER:\\d+:)[^:]+(:\\d+:\\d+:\\d+:.+)$");
                     fsdMessageFiltered.replace(re, "\\1<password>\\2");
                     m_filterPasswordFromLogin = false;
                 }
@@ -1198,7 +1198,7 @@ namespace BlackCore
             // 4 digits followed by z (e.g. 0200z) is always the last atis line.
             // Some controllers leave the logoff time empty. Hence we accept anything
             // between 0-4 digits.
-            thread_local const QRegularExpression reLogoff("\\d{0,4}z");
+            thread_local const QRegularExpression reLogoff("^\\d{0,4}z$");
             if (reLogoff.match(message).hasMatch())
             {
                 emit atisLogoffTimeReplyReceived(sender, message);
