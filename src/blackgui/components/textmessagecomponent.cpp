@@ -110,7 +110,7 @@ namespace BlackGui
             return c;
         }
 
-        QWidget *CTextMessageComponent::getTabWidget(CTextMessageComponent::Tab tab) const
+        QWidget *CTextMessageComponent::getTabWidget(TextMessageTab tab) const
         {
             switch (tab)
             {
@@ -125,14 +125,14 @@ namespace BlackGui
             return nullptr;
         }
 
-        CTextMessageTextEdit *CTextMessageComponent::getTextEdit(CTextMessageComponent::Tab tab) const
+        CTextMessageTextEdit *CTextMessageComponent::getTextEdit(TextMessageTab tab) const
         {
             QWidget *w = this->getTabWidget(tab);
             if (!w) { return nullptr; }
             return this->findChild<CTextMessageTextEdit *>();
         }
 
-        void CTextMessageComponent::selectTabWidget(CTextMessageComponent::Tab tab)
+        void CTextMessageComponent::selectTabWidget(TextMessageTab tab)
         {
             QWidget *w = this->getTabWidget(tab);
             if (w)
@@ -272,7 +272,7 @@ namespace BlackGui
 
         bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(CTextMessage textMessage) const
         {
-            if (!this->isVisibleWidget()) { return false; }
+            if (!this->isVisibleWidgetHack()) { return false; }
             if (!textMessage.hasValidRecipient()) { return false; }
             if (textMessage.isEmpty()) { return false; } // ignore empty message
             if (textMessage.isPrivateMessage())
@@ -460,9 +460,14 @@ namespace BlackGui
             this->handleEnteredTextMessage(cl);
         }
 
+        bool CTextMessageComponent::isVisibleWidgetHack() const
+        {
+            return m_usedAsOverlayWidget ? true : this->isVisibleWidget();
+        }
+
         void CTextMessageComponent::handleEnteredTextMessage(const QString &textMessage)
         {
-            if (!this->isVisibleWidget()) { return; }
+            if (!this->isVisibleWidgetHack()) { return; }
 
             QString cl(textMessage.trimmed().simplified());
             if (cl.isEmpty()) { return; }
@@ -549,7 +554,7 @@ namespace BlackGui
             if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
 
             // no "dot" command input
-            if (!this->isVisibleWidget()) { return false; } // invisible, do ignore
+            if (!this->isVisibleWidgetHack()) { return false; } // invisible, do ignore
             this->handleEnteredTextMessage(commandLine); // handle as it was entered by own command line
 
             return false; // we never handle the message directly, but forward it
@@ -585,6 +590,21 @@ namespace BlackGui
         void CTextMessageComponent::fontSizePlus()
         {
             ui->comp_SettingsStyle->fontSizePlus();
+        }
+
+        void CTextMessageComponent::setTab(TextMessageTab tab)
+        {
+            ui->tw_TextMessages->setCurrentIndex(tab);;
+        }
+
+        void CTextMessageComponent::showSettings(bool show)
+        {
+            ui->gb_Settings->setVisible(show);
+        }
+
+        void CTextMessageComponent::showTextMessageEntry(bool show)
+        {
+            ui->le_textMessages->setVisible(show);
         }
 
     } // namespace

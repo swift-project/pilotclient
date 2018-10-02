@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 #define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
+#include "textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
@@ -40,15 +41,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-            //! Tabs
-            enum Tab
-            {
-                TextMessagesAll,
-                TextMessagesUnicom,
-                TextMessagesCom1,
-                TextMessagesCom2
-            };
-
             //! Constructor
             explicit CTextMessageComponent(QWidget *parent = nullptr);
 
@@ -76,6 +68,18 @@ namespace BlackGui
             void fontSizePlus();
             //! @}
 
+            //! Set tab
+            void setTab(TextMessageTab tab);
+
+            //! Show the settings
+            void showSettings(bool show);
+
+            //! Show an text entry field
+            void showTextMessageEntry(bool show);
+
+            //! Used as overlay and not dock widget
+            void setAsUsedInOverlayMode() { m_usedAsOverlayWidget = true; }
+
         signals:
             //! Message to be displayed in info window
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
@@ -87,15 +91,16 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
+            bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts
 
             //! Enum to widget
-            QWidget *getTabWidget(Tab tab) const;
+            QWidget *getTabWidget(TextMessageTab tab) const;
 
             //! Related text edit
-            CTextMessageTextEdit *getTextEdit(Tab tab) const;
+            CTextMessageTextEdit *getTextEdit(TextMessageTab tab) const;
 
             //! Select given tab
-            void selectTabWidget(Tab tab);
+            void selectTabWidget(TextMessageTab tab);
 
             //! New message tab for given callsign
             QWidget *addNewTextMessageTab(const BlackMisc::Aviation::CCallsign &callsign);
@@ -166,6 +171,9 @@ namespace BlackGui
 
             //! Command line entered
             void textMessageEntered();
+
+            //! Visible widget hack
+            bool isVisibleWidgetHack() const;
         };
     } // ns
 } // ns
