@@ -27,7 +27,7 @@ namespace BlackMisc
         //! Cubic spline interpolator
         class BLACKMISC_EXPORT CInterpolatorSpline : public CInterpolator<CInterpolatorSpline>
         {
-            virtual void anchor();
+            virtual void anchor() override;
 
         public:
             //! Constructor

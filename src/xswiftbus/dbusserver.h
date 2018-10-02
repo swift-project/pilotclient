@@ -50,7 +50,7 @@ namespace XSwiftBus
         //! Is connected?
         bool isConnected() const;
 
-        void dispatch() {}
+        void dispatch() override {}
 
         //! Close connection
         void close();

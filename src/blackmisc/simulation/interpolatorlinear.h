@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Linear interpolator, calculation inbetween positions
         class BLACKMISC_EXPORT CInterpolatorLinear : public CInterpolator<CInterpolatorLinear>
         {
-            virtual void anchor();
+            virtual void anchor() override;
 
         public:
             //! Constructor

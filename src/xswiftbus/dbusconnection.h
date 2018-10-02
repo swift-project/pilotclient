@@ -77,7 +77,7 @@ namespace XSwiftBus
         CDBusError lastError() const { return m_lastError; }
 
     protected:
-        virtual void dispatch();
+        virtual void dispatch() override;
 
     private:
         void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status);
