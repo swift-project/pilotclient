@@ -63,6 +63,7 @@ namespace BlackGui
 
             ui->le_TxtMsgFrom->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
+            ui->le_AtisCallsign->setValidator(new CUpperCaseValidator(ui->le_AtisCallsign));
 
             connect(ui->pb_SendAircraftPartsGui, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
             connect(ui->pb_SendAircraftPartsJson, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
@@ -82,6 +83,8 @@ namespace BlackGui
             connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
             connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
             connect(ui->pb_DisplayLog, &QPushButton::pressed, this, &CInternalsComponent::displayLogInSimulator);
+
+            connect(ui->pb_SendAtis, &QPushButton::pressed, this, &CInternalsComponent::sendAtis);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
             this->contextFlagsToGui();
@@ -202,6 +205,18 @@ namespace BlackGui
             }
             tm.setCurrentUtcTime();
             sGui->getIContextNetwork()->testReceivedTextMessages(CTextMessageList({ tm }));
+        }
+
+        void CInternalsComponent::sendAtis()
+        {
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
+            if (ui->le_AtisCallsign->text().isEmpty())   { return; }
+            if (ui->pte_Atis->toPlainText().isEmpty()) { return; }
+            const CCallsign cs(ui->le_AtisCallsign->text());
+            const QString text(ui->pte_Atis->toPlainText());
+
+            const CInformationMessage im(CInformationMessage::ATIS, text);
+            sGui->getIContextNetwork()->testReceivedAtisMessage(cs, im);
         }
 
         void CInternalsComponent::logStatusMessage()

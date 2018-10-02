@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>590</height>
+    <width>306</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -239,17 +239,34 @@
         </widget>
        </item>
        <item>
-        <spacer name="vs_DebugWidget">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QGroupBox" name="gb_Atis">
+         <property name="title">
+          <string>ATIS</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_SendAtis">
+            <property name="text">
+             <string>send</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLineEdit" name="le_AtisCallsign">
+            <property name="placeholderText">
+             <string>callsign</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QPlainTextEdit" name="pte_Atis">
+            <property name="placeholderText">
+             <string>ATIS</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -597,6 +614,36 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tw_Internals</tabstop>
+  <tabstop>cb_DebugContextAudio</tabstop>
+  <tabstop>cb_DebugContextNetwork</tabstop>
+  <tabstop>cb_DebugContextOwnAircraft</tabstop>
+  <tabstop>cb_DebugContextSimulator</tabstop>
+  <tabstop>cb_DebugContextApplication</tabstop>
+  <tabstop>le_StatusMessage</tabstop>
+  <tabstop>tb_LogStatusMessage</tabstop>
+  <tabstop>rb_StatusMessageInfo</tabstop>
+  <tabstop>rb_StatusMessageWarning</tabstop>
+  <tabstop>rb_StatusMessageError</tabstop>
+  <tabstop>le_TxtMsgFrom</tabstop>
+  <tabstop>le_TxtMsgTo</tabstop>
+  <tabstop>dsb_TxtMsgFrequency</tabstop>
+  <tabstop>pb_SendTextMessage</tabstop>
+  <tabstop>pte_TxtMsg</tabstop>
+  <tabstop>le_AtisCallsign</tabstop>
+  <tabstop>pb_SendAtis</tabstop>
+  <tabstop>pte_Atis</tabstop>
+  <tabstop>pb_LatestInterpolationLog</tabstop>
+  <tabstop>pb_LatestPartsLog</tabstop>
+  <tabstop>pb_DisplayLog</tabstop>
+  <tabstop>pb_RequestFromNetwork</tabstop>
+  <tabstop>tb_History</tabstop>
+  <tabstop>pb_SendAircraftPartsGui</tabstop>
+  <tabstop>cb_AircraftPartsIncremental</tabstop>
+  <tabstop>pb_SendAircraftPartsJson</tabstop>
+  <tabstop>pb_CurrentParts</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>

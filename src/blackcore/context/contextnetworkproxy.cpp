@@ -308,6 +308,11 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("testReceivedTextMessages"), textMessages);
         }
 
+        void CContextNetworkProxy::testReceivedAtisMessage(const CCallsign &callsign, const CInformationMessage &msg)
+        {
+            m_dBusInterface->callDBus(QLatin1String("testReceivedAtisMessage"), callsign, msg);
+        }
+
         void CContextNetworkProxy::testRequestAircraftConfig(const CCallsign &callsign)
         {
             m_dBusInterface->callDBus(QLatin1String("testRequestAircraftConfig"), callsign);

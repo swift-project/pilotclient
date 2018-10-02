@@ -56,6 +56,9 @@ namespace BlackGui
             //! Send the text message
             void sendTextMessage();
 
+            //! Send ATIS
+            void sendAtis();
+
             //! Send a dummy status message
             void logStatusMessage();
 

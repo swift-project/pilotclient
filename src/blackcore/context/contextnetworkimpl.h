@@ -255,6 +255,7 @@ namespace BlackCore
             virtual QString getLibraryInfo(bool detailed) const override;
             virtual void testCreateDummyOnlineAtcStations(int number) override;
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
+            virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}

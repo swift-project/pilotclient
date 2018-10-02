@@ -972,6 +972,15 @@ namespace BlackCore
             m_airspace->testAddAircraftParts(callsign, parts, incremental);
         }
 
+        void CContextNetwork::testReceivedAtisMessage(const CCallsign &callsign, const CInformationMessage &msg)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
+            if (this->network())
+            {
+                emit this->network()->atisReplyReceived(callsign, msg);
+            }
+        }
+
         void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString(); }

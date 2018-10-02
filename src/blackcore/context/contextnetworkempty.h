@@ -284,6 +284,15 @@ namespace BlackCore
                 return false;
             }
 
+
+            //! \copydoc IContextNetwork::testReceivedAtisMessage
+            virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override
+            {
+                Q_UNUSED(callsign);
+                Q_UNUSED(msg);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {

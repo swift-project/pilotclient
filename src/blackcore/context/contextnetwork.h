@@ -322,6 +322,9 @@ namespace BlackCore
             //! Inject a text message as received
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
+            //! Inject an ATIS
+            virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) = 0;
+
             //! Request parts for callsign (from another client)
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
