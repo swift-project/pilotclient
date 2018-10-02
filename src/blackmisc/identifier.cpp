@@ -86,6 +86,9 @@ namespace BlackMisc
     void CIdentifier::appendName(const QString &name)
     {
         if (m_name.endsWith(name)) { return; }
+        if (name.isEmpty()) { return; }
+        const int index = m_name.lastIndexOf(':');
+        if (index >= 0) { m_name = m_name.left(index); }
         m_name += QStringLiteral(":") + name;
     }
 

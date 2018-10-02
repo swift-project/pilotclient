@@ -58,6 +58,7 @@ namespace BlackMisc
         CIdentifier(const QString &name);
 
         //! Constructor using object's name
+        //! \remark automatically changes if object's name changes
         CIdentifier(const QString &name, QObject *object);
 
         //! Returns an anonymous identifier, which is a valid identifier without name
