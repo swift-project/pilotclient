@@ -65,15 +65,13 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->tw_TextMessages->setCurrentIndex(0);
-            ui->le_textMessages->setVisible(false);
+            ui->lep_textMessages->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 
-            // le_textMessages is the own line edit
-            bool c = connect(ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::textMessageEntered);
+            // lep_textMessages is the own line edit
+            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressed, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
             // style sheet
@@ -82,20 +80,27 @@ namespace BlackGui
             c = connect(ui->comp_SettingsStyle, &CSettingsTextMessageStyle::changed, this, &CTextMessageComponent::updateSettings, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
-            if (sGui && sGui->getCoreFacade())
+            if (sGui && sGui->getCoreFacade() && sGui->getIContextNetwork() && sGui->getIContextOwnAircraft())
             {
                 c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+                c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this, &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+                c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this, &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+                c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             }
             Q_UNUSED(c);
 
             // init by settings
-            QPointer<CTextMessageComponent> myself(this);
-            QTimer::singleShot(250, this, [ = ]
+            const QPointer<CTextMessageComponent> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
             {
                 // init decoupled when sub components are fully init
                 if (!myself) { return; }
                 this->onSettingsChanged();
+                this->onChangedAircraftCockpit();
             });
         }
 
@@ -143,7 +148,7 @@ namespace BlackGui
 
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
-            if (messages.isEmpty()) return;
+            if (messages.isEmpty()) { return; }
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
             const CTextMessageSettings msgSettings(m_messageSettings.getThreadLocal());
 
@@ -152,7 +157,7 @@ namespace BlackGui
                 bool relevantForMe = false;
 
                 // SELCAL
-                if (message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
+                if (!m_usedAsOverlayWidget && message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
                 {
                     // this is SELCAL for me
                     if (sGui && sGui->getIContextAudio())
@@ -197,7 +202,7 @@ namespace BlackGui
                 }
 
                 // message for me? right frequency? otherwise quit
-                if (relevantForMe || message.isServerMessage())
+                if (this->hasAllMessagesTab() && (relevantForMe || message.isServerMessage()))
                 {
                     ui->tvp_TextMessagesAll->insert(message);
                 }
@@ -375,7 +380,7 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (sGui && sGui->getIContextAudio())
+            if (!m_usedAsOverlayWidget && sGui && sGui->getIContextAudio())
             {
                 sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
@@ -383,7 +388,7 @@ namespace BlackGui
 
         CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
         {
-            Q_ASSERT(sGui && sGui->getIContextOwnAircraft());
+            if (!sGui || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
             return sGui->getIContextOwnAircraft()->getOwnAircraft();
         }
 
@@ -447,17 +452,19 @@ namespace BlackGui
         {
             // own input field if floating window
             Q_UNUSED(widget);
-            ui->le_textMessages->setVisible(topLevel);
+            ui->lep_textMessages->setVisible(topLevel);
         }
 
         void CTextMessageComponent::textMessageEntered()
         {
-            if (!ui->le_textMessages->isVisible()) { return; }
+            if (!ui->lep_textMessages->isVisible()) { return; }
             if (!this->isVisible()) { return; }
 
-            const QString cl(ui->le_textMessages->text().trimmed().simplified());
-            ui->le_textMessages->clear();
-            this->handleEnteredTextMessage(cl);
+            const QString cl(ui->lep_textMessages->getLastEnteredLineFormatted());
+            if (!cl.isEmpty())
+            {
+                this->handleEnteredTextMessage(cl);
+            }
         }
 
         bool CTextMessageComponent::isVisibleWidgetHack() const
@@ -594,7 +601,20 @@ namespace BlackGui
 
         void CTextMessageComponent::setTab(TextMessageTab tab)
         {
-            ui->tw_TextMessages->setCurrentIndex(tab);;
+            // set via widget, as ALL can be removed
+            switch (tab)
+            {
+            case TextMessagesAll : ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesAll); break;
+            case TextMessagesCom1: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM1); break;
+            case TextMessagesCom2: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM2); break;
+            case TextMessagesUnicom: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesUnicom); break;
+            default: break;
+            }
+        }
+
+        bool CTextMessageComponent::hasAllMessagesTab() const
+        {
+            return ui->tw_TextMessages->widget(0) == ui->tb_TextMessagesAll;
         }
 
         void CTextMessageComponent::showSettings(bool show)
@@ -604,8 +624,12 @@ namespace BlackGui
 
         void CTextMessageComponent::showTextMessageEntry(bool show)
         {
-            ui->le_textMessages->setVisible(show);
+            ui->lep_textMessages->setVisible(show);
         }
 
+        void CTextMessageComponent::removeAllMessagesTab()
+        {
+            ui->tw_TextMessages->removeTab(0);
+        }
     } // namespace
 } // namespace

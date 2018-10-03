@@ -129,10 +129,6 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);
     Q_ASSERT(s);
-    s = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
-    Q_ASSERT(s);
-    s = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
-    Q_ASSERT(s);
     s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, [ = ](const QString & logMsg, bool clear)
     {
         if (logMsg.isEmpty()) { return; }

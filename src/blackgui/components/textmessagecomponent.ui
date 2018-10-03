@@ -269,7 +269,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLineEditHistory" name="le_textMessages">
+    <widget class="BlackGui::CLineEditHistory" name="lep_textMessages">
      <property name="toolTip">
       <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
      </property>
@@ -313,7 +313,7 @@
   <tabstop>tw_TextMessages</tabstop>
   <tabstop>tvp_TextMessagesAll</tabstop>
   <tabstop>gb_Settings</tabstop>
-  <tabstop>le_textMessages</tabstop>
+  <tabstop>lep_textMessages</tabstop>
   <tabstop>tep_TextMessagesCOM1</tabstop>
   <tabstop>tep_TextMessagesCOM2</tabstop>
   <tabstop>tep_TextMessagesUnicom</tabstop>

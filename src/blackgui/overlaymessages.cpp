@@ -67,6 +67,7 @@ namespace BlackGui
         ui->comp_OverlayTextMessage->showSettings(false);
         ui->comp_OverlayTextMessage->showTextMessageEntry(true);
         ui->comp_OverlayTextMessage->setAsUsedInOverlayMode();
+        ui->comp_OverlayTextMessage->removeAllMessagesTab();
 
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }

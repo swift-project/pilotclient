@@ -50,12 +50,6 @@ namespace BlackGui
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
 
-            //! Text messages received
-            void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
-
-            //! Text messages sent
-            void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
-
             //! Used to allow direct input from global command line when visible
             //! \remark takes the messages, turns it into a ".msg" command, and emits it
             bool handleGlobalCommandLineText(const QString &commandLine, const BlackMisc::CIdentifier &originator);
@@ -71,11 +65,17 @@ namespace BlackGui
             //! Set tab
             void setTab(TextMessageTab tab);
 
+            //! Has an all tab
+            bool hasAllMessagesTab() const;
+
             //! Show the settings
             void showSettings(bool show);
 
             //! Show an text entry field
             void showTextMessageEntry(bool show);
+
+            //! Remove the all tab, the operation cannot be undone
+            void removeAllMessagesTab();
 
             //! Used as overlay and not dock widget
             void setAsUsedInOverlayMode() { m_usedAsOverlayWidget = true; }
@@ -141,6 +141,12 @@ namespace BlackGui
 
             //! Handle a text message entered
             void handleEnteredTextMessage(const QString &textMessage);
+
+            //! Text messages received
+            void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+            //! Text messages sent
+            void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Cockpit values changed, used to updated some components
             void onChangedAircraftCockpit();
