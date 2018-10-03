@@ -59,6 +59,11 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
+            //! Request COM text messages @{
+            void requestCom1TextMessage();
+            void requestCom2TextMessage();
+            //! @}
+
         protected:
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;

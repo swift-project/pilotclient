@@ -86,6 +86,11 @@ namespace BlackGui
             //! GUI values changed
             void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Request COM text messages @{
+            void requestCom1TextMessage();
+            void requestCom2TextMessage();
+            //! @}
+
         private:
             //! Init LEDs
             void initLeds();

@@ -128,7 +128,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0" colspan="2">
+         <item row="1" column="0" colspan="3">
           <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Standby">
            <property name="decimals">
             <number>3</number>
@@ -147,7 +147,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="2">
           <widget class="QToolButton" name="tb_ComPanelCom1Toggle">
            <property name="toolTip">
             <string>Toggle COM 1 standby/active</string>
@@ -158,6 +158,13 @@
            <property name="icon">
             <iconset resource="../../blackmisc/blackmisc.qrc">
              <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QToolButton" name="tb_RequestTextMessageCom1">
+           <property name="text">
+            <string>T</string>
            </property>
           </widget>
          </item>
@@ -254,7 +261,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0" colspan="2">
+         <item row="1" column="0" colspan="3">
           <widget class="QDoubleSpinBox" name="ds_ComPanelCom2Standby">
            <property name="decimals">
             <number>3</number>
@@ -273,7 +280,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="2">
           <widget class="QToolButton" name="tb_ComPanelCom2Toggle">
            <property name="toolTip">
             <string>Toggle COM 2 standby/active</string>
@@ -284,6 +291,13 @@
            <property name="icon">
             <iconset resource="../../blackmisc/blackmisc.qrc">
              <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QToolButton" name="tb_RequestTextMessageCom2">
+           <property name="text">
+            <string>T</string>
            </property>
           </widget>
          </item>
@@ -517,7 +531,9 @@
   <tabstop>ds_ComPanelCom2Standby</tabstop>
   <tabstop>sbp_ComPanelTransponder</tabstop>
   <tabstop>cbp_ComPanelTransponderMode</tabstop>
+  <tabstop>tb_RequestTextMessageCom1</tabstop>
   <tabstop>tb_ComPanelCom1Toggle</tabstop>
+  <tabstop>tb_RequestTextMessageCom2</tabstop>
   <tabstop>tb_ComPanelCom2Toggle</tabstop>
   <tabstop>tb_ComPanelSelcalTest</tabstop>
  </tabstops>

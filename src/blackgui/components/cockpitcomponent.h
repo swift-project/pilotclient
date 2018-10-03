@@ -12,12 +12,13 @@
 #ifndef BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
+
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
-#include <QWidget>
 
 namespace Ui { class CCockpitComponent; }
 namespace BlackGui
@@ -28,7 +29,8 @@ namespace BlackGui
     {
         //! Cockpit component: COM unit, show / hide bar, voice rooms
         class BLACKGUI_EXPORT CCockpitComponent :
-            public QWidget,
+            // making a widget overlay and dock widget is semi-optimal but a special case here because of text messages
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
@@ -53,6 +55,10 @@ namespace BlackGui
             //! Show the audio UI
             void showAudio();
 
+        protected:
+            //! \copydoc QWidget::mouseDoubleClickEvent
+            virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+
         private:
             //! Show or hide cockpit details
             void onToggleShowHideDetails(bool show);
@@ -60,8 +66,13 @@ namespace BlackGui
             //! Toggle floating
             void onToggleFloating(bool floating);
 
-            // toggle area on show/hide details
+            //! Toggle area on show/hide details
             void toggleShowHideDetails(bool show, bool considerCurrentSize);
+
+            //! Request text message COM1 @{
+            void onRequestTextMessageCom1();
+            void onRequestTextMessageCom2();
+            //! @}
 
             QScopedPointer<Ui::CCockpitComponent> ui;
             QSize m_sizeFloatingShown;    //! size when info area is shown

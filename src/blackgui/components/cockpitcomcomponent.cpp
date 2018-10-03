@@ -65,6 +65,8 @@ namespace BlackGui
             connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
             connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CCockpitComComponent::updateSelcalInContext);
+            connect(ui->editor_Com, &CCockpitComForm::requestCom1TextMessage, this, &CCockpitComComponent::requestCom1TextMessage);
+            connect(ui->editor_Com, &CCockpitComForm::requestCom2TextMessage, this, &CCockpitComComponent::requestCom2TextMessage);
 
             // Relay COM form signals
             connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);

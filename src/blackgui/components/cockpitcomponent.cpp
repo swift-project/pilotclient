@@ -22,13 +22,16 @@ namespace BlackGui
     namespace Components
     {
         CCockpitComponent::CCockpitComponent(QWidget *parent) :
-            QWidget(parent),
+            COverlayMessagesFrame(parent),
             CEnableForDockWidgetInfoArea(),
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
             this->m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
-            connect(ui->wip_CockpitComPanelShowHideBar, &BlackGui::CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
+
+            connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
+            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1);
+            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2);
         }
 
         CCockpitComponent::~CCockpitComponent()
@@ -114,6 +117,25 @@ namespace BlackGui
                     this->m_sizeFloatingHidden = this->window()->size();
                 }
             }
+        }
+
+        void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
+        {
+            if (event)
+            {
+                this->showOverlayInlineTextMessage(TextMessagesAll);
+            }
+            COverlayMessagesFrame::mouseDoubleClickEvent(event);
+        }
+
+        void CCockpitComponent::onRequestTextMessageCom1()
+        {
+            this->showOverlayInlineTextMessage(TextMessagesCom1);
+        }
+
+        void CCockpitComponent::onRequestTextMessageCom2()
+        {
+            this->showOverlayInlineTextMessage(TextMessagesCom2);
         }
 
         void CCockpitComponent::onToggleFloating(bool floating)
