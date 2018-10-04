@@ -267,6 +267,15 @@ namespace BlackMisc
                     m_modelMode = variant.value<ModelMode>();
                 }
                 break;
+            // no setter indexes ignored
+            case IndexHasQueriedModelString: break;
+            case IndexModelTypeAsString: break;
+            case IndexModelModeAsString: break;
+            case IndexModelModeAsIcon: break;
+            case IndexFileTimestampFormattedYmdhms: break;
+            case IndexSimulatorInfoAsString: break;
+            case IndexMembersDbStatus: break;
+
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -280,6 +289,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexModelString: return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
+            case IndexHasQueriedModelString: return Compare::compare(this->hasQueriedModelString(), compareValue.hasQueriedModelString());
             case IndexAircraftIcaoCode: return m_aircraftIcao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAircraftIcaoCode());
             case IndexLivery: return m_livery.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
             case IndexDistributor: return m_distributor.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistributor());
@@ -289,6 +299,7 @@ namespace BlackMisc
             case IndexFileName: return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
             case IndexIconPath: return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
             case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
+            case IndexModelTypeAsString:
             case IndexModelType: return Compare::compare(m_modelType, compareValue.getModelType());
             case IndexSimulatorInfoAsString:
             case IndexSimulatorInfo: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSimulator());
@@ -571,19 +582,14 @@ namespace BlackMisc
 
         QString CAircraftModel::getMembersDbStatus() const
         {
-            QString s(hasValidDbKey() ? "M" : "m");
-            s = s.append(getDistributor().hasValidDbKey() ? 'D' : 'd');
-            s = s.append(getAircraftIcaoCode().hasValidDbKey() ? 'A' : 'a');
-            if (getLivery().isLoadedFromDb() && getLivery().isColorLivery())
-            {
-                s = s.append("C-");
-            }
-            else
-            {
-                s = s.append(getLivery().isLoadedFromDb() ? 'L' : 'l');
-                s = s.append(getLivery().getAirlineIcaoCode().hasValidDbKey() ? 'A' : 'a');
-            }
-            return s;
+            return
+                (this->isLoadedFromDb() ? QStringLiteral("M") : QStringLiteral("m")) %
+                (this->getDistributor().isLoadedFromDb() ? QStringLiteral("D") : QStringLiteral("d")) %
+                (this->getAircraftIcaoCode().isLoadedFromDb() ? QStringLiteral("A") : QStringLiteral("a")) %
+                (this->getLivery().isLoadedFromDb() && getLivery().isColorLivery() ?
+                 QStringLiteral("C-") :
+                 (this->getLivery().isLoadedFromDb() ? QStringLiteral("L") : QStringLiteral("l")) %
+                 (this->getLivery().getAirlineIcaoCode().isLoadedFromDb() ? QStringLiteral("A") : QStringLiteral("a")));
         }
 
         void CAircraftModel::normalizeFileNameForDb()
