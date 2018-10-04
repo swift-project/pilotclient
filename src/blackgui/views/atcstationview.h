@@ -68,8 +68,8 @@ namespace BlackGui
             void tuneInAtcCom2();
             void requestTextMessage();
 
-            QList<QAction *> m_actions;
-            QList<QAction *> m_debugActions;
+            QList<QAction *> m_actions;      //!< real actions
+            QList<QAction *> m_debugActions; //!< used for debug context menu
         };
     }
 } // ns
