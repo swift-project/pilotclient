@@ -663,10 +663,8 @@ namespace BlackCore
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
         // 1) checking if they are already in the list checks again ATC position which is safe
         // 2) the ATC alike callsign check is guessing
-
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
-        BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
-        if (!callsign.isValid()) { return; }
+        if (!callsign.isValid()) { return; } // aircraft OBS, other invalid callsigns
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const bool isAircraft = this->isAircraftInRange(callsign);
@@ -685,9 +683,16 @@ namespace BlackCore
 
         if (isAircraft)
         {
+            if (callsign.isCopilotCallsign())
+            {
+                this->copilotDetected();
+                return;
+            }
+
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
-            CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
+            CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
+                                                QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
                                                 arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
 
             this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
@@ -696,13 +701,19 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceMonitor::onIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
+    void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
+        if (callsign.isCopilotCallsign())
+        {
+            // We already know that plane by its normall callsign
+            this->copilotDetected();
+            return;
+        }
+
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
         CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("Data from network: aircraft '%1', airline '%2', livery '%3'").
@@ -830,6 +841,11 @@ namespace BlackCore
             emit this->changedAtcStationsBooked();
         }
         return c;
+    }
+
+    void CAirspaceMonitor::copilotDetected()
+    {
+        // for future usage
     }
 
     void CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)

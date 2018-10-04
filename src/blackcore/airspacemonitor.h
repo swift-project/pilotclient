@@ -251,6 +251,9 @@ namespace BlackCore
         //! Update booked station by callsign
         int updateBookedStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
+        //! Co-pilot detected
+        void copilotDetected();
+
         //! Call CAirspaceMonitor::onCustomFSInnPacketReceived with stored packet
         void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
 

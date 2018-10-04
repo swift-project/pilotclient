@@ -87,6 +87,11 @@ namespace BlackMisc
             return m_callsign.endsWith("SUP");
         }
 
+        bool CCallsign::isCopilotCallsign() const
+        {
+            return (this->getTypeHint() == Aircraft) && this->isObserverCallsign();
+        }
+
         QString CCallsign::getIcaoCode() const
         {
             if (this->isAtcCallsign())
@@ -96,7 +101,7 @@ namespace BlackMisc
                     return m_callsign.left(4).toUpper();
                 }
             }
-            return "";
+            return QStringLiteral("");
         }
 
         bool CCallsign::isAtcAlikeCallsign() const
@@ -108,7 +113,6 @@ namespace BlackMisc
 
         bool CCallsign::isObserverCallsign() const
         {
-            if (this->getTypeHint() == Aircraft) { return false; }
             return m_callsignAsSet.endsWith("_OBS", Qt::CaseInsensitive);
         }
 

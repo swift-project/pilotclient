@@ -84,6 +84,9 @@ namespace BlackMisc
             //! Supervisor?
             bool isSupervisorCallsign() const;
 
+            //! Pilot OBS callsign, normally a co-pilot
+            bool isCopilotCallsign() const;
+
             //! Get callsign (normalized)
             const QString &asString() const { return m_callsign; }
 
