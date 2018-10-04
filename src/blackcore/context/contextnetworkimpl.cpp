@@ -618,6 +618,14 @@ namespace BlackCore
             return stations;
         }
 
+        CAtcStationList CContextNetwork::getClosestAtcStationsOnline(int number) const
+        {
+            if (!this->getIContextOwnAircraft()) { return CAtcStationList(); }
+            const CAircraftSituation ownSituation = this->getIContextOwnAircraft()->getOwnAircraftSituation();
+            const CAtcStationList stations = m_airspace->getAtcStationsOnline().findClosest(number, ownSituation);
+            return stations;
+        }
+
         CAtcStationList CContextNetwork::getAtcStationsBooked(bool recalculateDistance) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

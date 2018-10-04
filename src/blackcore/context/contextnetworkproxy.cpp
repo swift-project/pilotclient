@@ -108,9 +108,14 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("requestAtcBookingsUpdate"));
         }
 
-        BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsOnline(bool recalculateDistance) const
+        CAtcStationList CContextNetworkProxy::getAtcStationsOnline(bool recalculateDistance) const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"), recalculateDistance);
+        }
+
+        CAtcStationList CContextNetworkProxy::getClosestAtcStationsOnline(int number) const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getClosestAtcStationsOnline"), number);
         }
 
         CAtcStationList CContextNetworkProxy::getAtcStationsBooked(bool recalculateDistance) const

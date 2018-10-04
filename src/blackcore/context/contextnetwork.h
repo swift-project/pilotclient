@@ -174,6 +174,11 @@ namespace BlackCore
             //! The ATC list with online ATC controllers
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const = 0;
 
+            //! The ATC list with online ATC controllers
+            //! \remark recalculates distance and picks closest elements
+            //! \remark sorted by distance, nearest first
+            virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const = 0;
+
             //! ATC list, with booked controllers
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const = 0;
 

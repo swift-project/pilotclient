@@ -151,7 +151,7 @@ namespace BlackMisc
             {
                 return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
             });
-            Q_ASSERT_X(closest.size() > number, Q_FUNC_INFO, "size exceeded");
+            closest.truncate(number);
             return closest;
         }
 

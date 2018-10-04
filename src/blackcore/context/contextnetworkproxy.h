@@ -77,6 +77,7 @@ namespace BlackCore
             //! @{
             virtual void requestAtcBookingsUpdate() const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
+            virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;

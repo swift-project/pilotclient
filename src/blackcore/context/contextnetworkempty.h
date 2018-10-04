@@ -44,6 +44,14 @@ namespace BlackCore
                 return BlackMisc::Aviation::CAtcStationList();
             }
 
+            //! \copydoc IContextNetwork::getClosestAtcStationsOnline()
+            virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override
+            {
+                Q_UNUSED(number);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Aviation::CAtcStationList();
+            }
+
             //! \copydoc IContextNetwork::getAtcStationsBooked()
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override
             {
