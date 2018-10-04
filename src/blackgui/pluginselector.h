@@ -17,8 +17,7 @@
 #include <QObject>
 #include <QString>
 #include <QWidget>
-
-class QSignalMapper;
+#include <QSignalMapper>
 
 namespace BlackGui
 {
@@ -54,12 +53,12 @@ namespace BlackGui
         //! Enables/disabled the given plugin.
         void setEnabled(const QString &identifier, bool enabled);
 
-    private slots:
-        void ps_handlePluginStateChange();
 
     private:
-        QSignalMapper *m_detailsButtonMapper;
-        QSignalMapper *m_configButtonMapper;
+        void handlePluginStateChange();
+
+        QSignalMapper *m_detailsButtonMapper = new QSignalMapper(this);
+        QSignalMapper *m_configButtonMapper  = new QSignalMapper(this);
     };
 } // ns
 

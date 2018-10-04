@@ -14,7 +14,6 @@
 #include <QHBoxLayout>
 #include <QLayout>
 #include <QPushButton>
-#include <QSignalMapper>
 #include <QVBoxLayout>
 #include <QVariant>
 #include <Qt>
@@ -22,9 +21,7 @@
 
 namespace BlackGui
 {
-    CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent),
-        m_detailsButtonMapper(new QSignalMapper(this)),
-        m_configButtonMapper(new QSignalMapper(this))
+    CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent)
     {
         setObjectName("CPluginSelector");
 
@@ -49,7 +46,7 @@ namespace BlackGui
         QCheckBox *cb = new QCheckBox(name);
         cb->setObjectName(identifier);
         cb->setProperty("pluginIdentifier", identifier);
-        connect(cb, &QCheckBox::stateChanged, this, &CPluginSelector::ps_handlePluginStateChange);
+        connect(cb, &QCheckBox::stateChanged, this, &CPluginSelector::handlePluginStateChange);
         if (enabled)
         {
             cb->setCheckState(Qt::Checked);
@@ -88,14 +85,14 @@ namespace BlackGui
         cb->setChecked(enabled);
     }
 
-    void CPluginSelector::ps_handlePluginStateChange()
+    void CPluginSelector::handlePluginStateChange()
     {
         QCheckBox *cb = qobject_cast<QCheckBox *>(sender());
         Q_ASSERT(cb);
 
         bool enabled = cb->checkState() != Qt::Unchecked;
         Q_ASSERT(cb->property("pluginIdentifier").isValid());
-        QString identifier = cb->property("pluginIdentifier").toString();
+        const QString identifier = cb->property("pluginIdentifier").toString();
         Q_ASSERT(!identifier.isEmpty());
 
         emit pluginStateChanged(identifier, enabled);
