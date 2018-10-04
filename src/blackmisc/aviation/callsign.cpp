@@ -161,6 +161,12 @@ namespace BlackMisc
             return this->getStringAsSet().contains('_');
         }
 
+        bool CCallsign::hasAtcSuffix() const
+        {
+            const QString s = this->getSuffix();
+            return !s.isEmpty() && atcCallsignSuffixes().contains(s);
+        }
+
         bool CCallsign::equalsString(const QString &callsignString) const
         {
             CCallsign other(callsignString);

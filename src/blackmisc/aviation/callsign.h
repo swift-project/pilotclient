@@ -117,6 +117,9 @@ namespace BlackMisc
             //! Suffix such as "_TWR"?
             bool hasSuffix() const;
 
+            //! Has an ATC suffix?
+            bool hasAtcSuffix() const;
+
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
