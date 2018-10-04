@@ -26,7 +26,7 @@ namespace BlackGui
         ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);
-        configureLoginModes();
+        this->configureLoginModes();
         connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginModeButtons::configureLoginModes, Qt::QueuedConnection);
     }
 
@@ -73,7 +73,14 @@ namespace BlackGui
 
     void CLoginModeButtons::configureLoginModes()
     {
-        if (!sGui->isDeveloperFlagSet() && !sGui->getIContextSimulator()->isSimulatorSimulating())
+        // we have no idea how we can get here without the context existing Ref T389
+        if (CBuildConfig::isLocalDeveloperDebugBuild() && (!sGui || !sGui->getIContextSimulator()))
+        {
+            // how is this possible
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No context or sGUI");
+        }
+
+        if (!sGui || !sGui->getIContextSimulator() || (!sGui->isDeveloperFlagSet() && !sGui->getIContextSimulator()->isSimulatorSimulating()))
         {
             // Disable pilot login modes
             ui->rb_LoginNormal->setEnabled(false);
