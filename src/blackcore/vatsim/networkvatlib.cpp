@@ -482,9 +482,9 @@ namespace BlackCore
             if (!m_net) { initializeSession(); }
             this->clearState();
             m_filterPasswordFromLogin = true;
-            QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
-                                        m_ownCallsign.getAsObserverCallsignString() :
-                                        m_ownCallsign.asString());
+            QByteArray callsign = toFSDnoColon(m_loginMode == LoginAsObserver ?
+                                               m_ownCallsign.getAsObserverCallsignString() :
+                                               m_ownCallsign.asString());
             QByteArray name;
             if (m_loginMode == LoginAsObserver)
             {
@@ -532,8 +532,8 @@ namespace BlackCore
 
         void CNetworkVatlib::sendTextMessages(const CTextMessageList &messages)
         {
-            Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
-
+            BLACK_VERIFY_X(this->isConnected(), Q_FUNC_INFO, "Sending text message, but not connected");
+            if (!this->isConnected()) { return; }
             if (messages.isEmpty()) { return; }
             CTextMessageList privateMessages = messages.getPrivateMessages();
             privateMessages.markAsSent();
@@ -557,6 +557,14 @@ namespace BlackCore
                 Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSDnoColon(message.getMessage()));
                 emit this->textMessageSent(message);
             }
+        }
+
+        void CNetworkVatlib::sendWallopMessage(const QString &message)
+        {
+            if (message.isEmpty()) {return; }
+            BLACK_VERIFY_X(this->isConnected(), Q_FUNC_INFO, "Sending wallop, but not connected");
+            if (!this->isConnected()) { return; }
+            Vat_SendWallop(m_net.data(), toFSDnoColon(simplifyAccents(message)));
         }
 
         void CNetworkVatlib::sendCustomPacket(const CCallsign &callsign, const QString &packetId, const QStringList &data)

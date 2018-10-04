@@ -280,7 +280,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".watchdog", ".reinit", ".reinitialize" });
+            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -400,6 +400,15 @@ namespace BlackCore
                 {
                     CLogMessage(this).info("Re-init %1 aircraft") << count;
                 }
+            }
+            else if (parser.matchesCommand(".wallop"))
+            {
+                if (parser.countParts() < 2) { return false; }
+                if (!m_network) { return false; }
+                if (!this->isConnected()) { return false; }
+                const QString wallopMsg = simplifyAccents(parser.part(1).simplified().trimmed());
+                m_network->sendWallopMessage(wallopMsg);
+                return true;
             }
 
             return false;

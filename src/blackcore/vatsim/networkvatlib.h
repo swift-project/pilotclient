@@ -101,6 +101,7 @@ namespace BlackCore
             //! \name Text message functions
             //! @{
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
+            virtual void sendWallopMessage(const QString &message) override;
             //! @}
 
             //! \name ATC functions

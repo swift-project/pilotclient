@@ -209,6 +209,7 @@ namespace BlackCore
             //! .altos .altoffset       altitude offset for testing
             //! .reinit .reinitialize   re-initialize all aircraft
             //! .watchdog on|off        watchdog on/off
+            //! .wallop message         send wallop message
             //! </pre>
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine
@@ -223,6 +224,7 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign offsetvalue", "set altitude offset value (testing)"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".wallop message", "send a wallop message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".reinit", "re-initialize all aircraft"});
             }
 

@@ -245,6 +245,12 @@ namespace BlackCore
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) = 0;
 
+        /*!
+         * Send a wallop message.
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendWallopMessage(const QString &message) = 0;
+
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Custom packets
