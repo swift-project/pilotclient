@@ -66,8 +66,17 @@ namespace BlackSample
         CCoordinateGeodetic geo2(geoVector);
         deltaLat = geo2.latitude() - lat;
         deltaLng = geo2.longitude() - lng;
-
         out << deltaLat.valueRoundedWithUnit(digits) << " " << deltaLng.valueRoundedWithUnit(digits) << endl;
+
+        // Heading/bearing of same values
+        CAngle bearing = geo.calculateBearing(geo);
+        CLength distance = geo.calculateGreatCircleDistance(geo);
+        out << bearing.valueRoundedWithUnit(CAngleUnit::deg(), 2) << " " << distance.valueRoundedWithUnit(CLengthUnit::m(), 2) << endl;
+
+        const CCoordinateGeodetic nullCoordinate;
+        bearing = geo.calculateBearing(nullCoordinate);
+        distance = geo.calculateGreatCircleDistance(nullCoordinate);
+        out << bearing.valueRoundedWithUnit(CAngleUnit::deg(), 2) << " " << distance.valueRoundedWithUnit(CLengthUnit::m(), 2) << endl;
 
         // bye
         out << "-----------------------------------------------" << endl;

@@ -43,6 +43,7 @@ namespace BlackMisc
         CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
+            // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CLength(0, CLengthUnit::defaultUnit()); }
             static const float earthRadiusMeters = 6371000.8f;
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
@@ -53,6 +54,7 @@ namespace BlackMisc
         CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             if (coordinate1.isNull() || coordinate2.isNull()) { return CAngle::null(); }
+            // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CAngle(0, CAngleUnit::defaultUnit()); } // null or 0?
             static const QVector3D northPole { 0, 0, 1 };
             const QVector3D c1 = QVector3D::crossProduct(coordinate1.normalVector(), coordinate2.normalVector());
             const QVector3D c2 = QVector3D::crossProduct(coordinate1.normalVector(), northPole);
