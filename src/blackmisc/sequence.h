@@ -462,7 +462,7 @@ namespace BlackMisc
         //! In-place move the smallest n elements to the beginning and sort them.
         template <class Predicate> void partiallySort(size_type n, Predicate p)
         {
-            std::partial_sort(begin(), begin() + n, end(), p);
+            std::partial_sort(begin(), begin() + std::min(n, size()), end(), p);
         }
 
         //! In-place partially sort by some particular key(s).
