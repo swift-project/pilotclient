@@ -12,15 +12,16 @@
 #ifndef BLACKGUI_ATCSTATIONCOMPONENT_H
 #define BLACKGUI_ATCSTATIONCOMPONENT_H
 
-#include "blackcore/network.h"
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/atcstationssettings.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/network.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/identifiable.h"
 #include "blackmisc/pq/frequency.h"
+#include "blackmisc/identifiable.h"
 
 #include <QDateTime>
 #include <QModelIndex>
@@ -40,7 +41,7 @@ namespace BlackGui
     {
         //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
-            public QTabWidget,
+            public COverlayMessagesTabWidget,
             public CEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {
@@ -150,6 +151,9 @@ namespace BlackGui
 
             //! Clear the online views
             void clearOnlineViews();
+
+            //! Inline message
+            void showOverlayInlineTextMessage();
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;

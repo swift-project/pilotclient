@@ -110,12 +110,6 @@
        </item>
        <item row="0" column="3">
         <widget class="QToolButton" name="tb_AtcStationsAtisReload">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="toolTip">
           <string>Reload ATIS</string>
          </property>
@@ -126,12 +120,6 @@
        </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="tb_AtcStationsLoadMetar">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="toolTip">
           <string>Load METAR</string>
          </property>
@@ -160,6 +148,16 @@
          </property>
          <property name="text">
           <string>audio</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QToolButton" name="tb_TextMessageOverlay">
+         <property name="toolTip">
+          <string>text message</string>
+         </property>
+         <property name="text">
+          <string>tm</string>
          </property>
         </widget>
        </item>
@@ -301,6 +299,7 @@
   <tabstop>tb_AtcStationsLoadMetar</tabstop>
   <tabstop>tb_AtcStationsAtisReload</tabstop>
   <tabstop>tb_Audio</tabstop>
+  <tabstop>tb_TextMessageOverlay</tabstop>
   <tabstop>comp_AtcStationsSettings</tabstop>
   <tabstop>te_AtcStationsOnlineInfo</tabstop>
   <tabstop>tvp_AtcStationsOnlineTree</tabstop>

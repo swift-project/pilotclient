@@ -55,7 +55,7 @@ namespace BlackGui
     namespace Components
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-            QTabWidget(parent),
+            COverlayMessagesTabWidget(parent),
             CIdentifiable(this),
             ui(new Ui::CAtcStationComponent)
         {
@@ -74,6 +74,8 @@ namespace BlackGui
             ui->tb_AtcStationsLoadMetar->setText("");
             ui->tb_Audio->setIcon(CIcons::appAudio16());
             ui->tb_Audio->setText("");
+            ui->tb_TextMessageOverlay->setIcon(CIcons::appTextMessages16());
+            ui->tb_TextMessageOverlay->setText("");
 
             // set station mode
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
@@ -86,6 +88,7 @@ namespace BlackGui
             connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
             connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
             connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
+            connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this, &CAtcStationComponent::onlineAtcStationSelected);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onlineAtcStationSelected);
@@ -445,6 +448,11 @@ namespace BlackGui
             ui->tvp_AtcStationsOnline->clear();
             QAbstractItemModel *treeModelOld = (ui->tvp_AtcStationsOnlineTree->model());
             if (treeModelOld) { CGuiUtility::clearModel(treeModelOld); }
+        }
+
+        void CAtcStationComponent::showOverlayInlineTextMessage()
+        {
+            COverlayMessagesTabWidget::showOverlayInlineTextMessage(TextMessagesCom1);
         }
     } // namespace
 } // namespace
