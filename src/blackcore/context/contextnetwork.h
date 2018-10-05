@@ -203,6 +203,9 @@ namespace BlackCore
             //! Online station for callsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Online station for callsign?
+            virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Get all users
             virtual BlackMisc::Network::CUserList getUsers() const = 0;
 

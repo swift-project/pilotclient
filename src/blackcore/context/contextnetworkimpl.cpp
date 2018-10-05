@@ -764,6 +764,12 @@ namespace BlackCore
             return m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
         }
 
+        bool CContextNetwork::isOnlineStation(const CCallsign &callsign) const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            return m_airspace->getAtcStationsOnline().containsCallsign(callsign);
+        }
+
         void CContextNetwork::requestDataUpdates()
         {
             Q_ASSERT(m_airspace);

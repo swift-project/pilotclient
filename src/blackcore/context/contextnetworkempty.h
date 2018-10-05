@@ -105,6 +105,14 @@ namespace BlackCore
                 return BlackMisc::Aviation::CAtcStation();
             }
 
+            //! \copydoc IContextNetwork::isOnlineStation
+            virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextNetwork::connectToNetwork
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override
             {

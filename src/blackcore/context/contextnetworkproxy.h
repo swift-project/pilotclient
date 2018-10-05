@@ -85,6 +85,7 @@ namespace BlackCore
             virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override;
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
             virtual bool isConnected() const override;

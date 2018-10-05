@@ -235,6 +235,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
             virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override;
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
             virtual INetwork::LoginMode getLoginMode() const override;

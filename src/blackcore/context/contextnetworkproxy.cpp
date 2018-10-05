@@ -153,6 +153,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStation>(QLatin1String("getOnlineStationForCallsign"), callsign);
         }
 
+        bool CContextNetworkProxy::isOnlineStation(const CCallsign &callsign) const
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isOnlineStation"), callsign);
+        }
+
         CUserList CContextNetworkProxy::getUsers() const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsers"));
