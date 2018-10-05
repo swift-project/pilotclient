@@ -36,8 +36,14 @@ namespace XSwiftBus
         void registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath);
 
     protected:
+        //! Handler which is called when DBusCconnection is established
+        virtual void dbusConnectedHandler() {}
+
         //! DBus message handler
         virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) = 0;
+
+        //! Handler which is called when DBusConnection disconnected
+        virtual void dbusDisconnectedHandler() {}
 
         //! Send DBus signal
         void sendDBusSignal(const std::string &name);

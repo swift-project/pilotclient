@@ -34,6 +34,9 @@ namespace XSwiftBus
         //! Bus type
         enum BusType { SessionBus };
 
+        //! Disconnect Callback
+        using DisconnectedCallback = std::function<void()>;
+
         //! Default constructor
         CDBusConnection();
 
@@ -41,7 +44,7 @@ namespace XSwiftBus
         CDBusConnection(DBusConnection *connection);
 
         //! Destructor
-        ~CDBusConnection();
+        ~CDBusConnection() override;
 
         // The ones below are not implemented yet.
         // If you need them, make sure that connection reference count is correct
@@ -59,6 +62,9 @@ namespace XSwiftBus
 
         //! Is connected?
         bool isConnected() const;
+
+        //! Register a disconnected callback
+        void registerDisconnectedCallback(DisconnectedCallback func);
 
         //! Register DBus object with interfaceName and objectPath.
         //! \param object
@@ -82,6 +88,7 @@ namespace XSwiftBus
     private:
         void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status);
         static void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status, void *data);
+        static DBusHandlerResult filterDisconnectedFunction(DBusConnection *connection, DBusMessage *message, void *data);
 
         struct DBusConnectionDeleter
         {
@@ -91,6 +98,7 @@ namespace XSwiftBus
         CDBusDispatcher *m_dispatcher = nullptr;
         std::unique_ptr<DBusConnection, DBusConnectionDeleter> m_connection;
         CDBusError m_lastError;
+        std::vector<DisconnectedCallback> m_disconnectedCallbacks;
     };
 
 }

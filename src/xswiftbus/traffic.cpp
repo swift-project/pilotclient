@@ -445,6 +445,11 @@ namespace XSwiftBus
         enableFollowPlaneView(callsign);
     }
 
+    void CTraffic::dbusDisconnectedHandler()
+    {
+        removeAllPlanes();
+    }
+
     const char *introspection_traffic =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.traffic.xml"

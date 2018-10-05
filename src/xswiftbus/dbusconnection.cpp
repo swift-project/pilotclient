@@ -26,10 +26,11 @@ namespace XSwiftBus
 
     CDBusConnection::CDBusConnection(DBusConnection *connection)
     {
+        m_connection.reset(connection);
         dbus_connection_ref(connection);
         // Don't exit application, if the connection is disconnected
         dbus_connection_set_exit_on_disconnect(connection, false);
-        m_connection.reset(connection);
+        dbus_connection_add_filter(connection, filterDisconnectedFunction, this, nullptr);
     }
 
     CDBusConnection::~CDBusConnection()
@@ -98,6 +99,11 @@ namespace XSwiftBus
         return m_connection && dbus_connection_get_is_connected(m_connection.get());
     }
 
+    void CDBusConnection::registerDisconnectedCallback(DisconnectedCallback func)
+    {
+        m_disconnectedCallbacks.push_back(func);
+    }
+
     void CDBusConnection::registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath, const DBusObjectPathVTable &dbusObjectPathVTable)
     {
         (void) interfaceName;
@@ -147,6 +153,26 @@ namespace XSwiftBus
     {
         auto *obj = static_cast<CDBusConnection *>(data);
         return obj->setDispatchStatus(connection, status);
+    }
+
+    DBusHandlerResult CDBusConnection::filterDisconnectedFunction(DBusConnection *connection, DBusMessage *message, void *data)
+    {
+        (void)connection; // unused
+
+        auto *obj = static_cast<CDBusConnection *>(data);
+
+        DBusError err;
+        dbus_error_init(&err);
+
+        if (dbus_message_is_signal (message, DBUS_INTERFACE_LOCAL, "Disconnected"))
+        {
+            for (const auto &cb : obj->m_disconnectedCallbacks)
+            {
+                cb();
+            }
+            return DBUS_HANDLER_RESULT_HANDLED;
+        }
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
 
 }

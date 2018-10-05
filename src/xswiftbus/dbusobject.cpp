@@ -20,6 +20,9 @@ namespace XSwiftBus
     void CDBusObject::setDBusConnection(const std::shared_ptr<CDBusConnection> &dbusConnection)
     {
         m_dbusConnection = dbusConnection;
+        dbusConnectedHandler();
+        CDBusConnection::DisconnectedCallback disconnectedHandler = std::bind(&CDBusObject::dbusDisconnectedHandler, this);
+        m_dbusConnection->registerDisconnectedCallback(disconnectedHandler);
     }
 
     void CDBusObject::registerDBusObjectPath(const std::string &interfaceName, const std::string &objectPath)

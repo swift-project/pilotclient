@@ -122,6 +122,8 @@ namespace XSwiftBus
         int process();
 
     protected:
+        virtual void dbusDisconnectedHandler() override;
+
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
