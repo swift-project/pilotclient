@@ -29,30 +29,27 @@ namespace XSwiftBus
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
-        m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
+        // m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
+
         m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this]
         {
             m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
         });
-        m_showHideLabelsMenuItem.setEnabled(false);
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
         m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
         {
             m_service->toggleMessageBoxVisibility();
         });
-        m_toggleMessageWindowMenuItem.setEnabled(false);
         m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Nessage", true, [this] (bool checked)
         {
             m_popupMessageWindowMenuItem.setChecked(!checked);
             m_service->setPopupMessageWindow(!checked);
         });
-        m_popupMessageWindowMenuItem.setEnabled(false);
         m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window after 5s", true, [this] (bool checked)
         {
             m_disappearMessageWindowMenuItem.setChecked(!checked);
             m_service->setDisappearMessageWindow(!checked);
         });
-        m_disappearMessageWindowMenuItem.setEnabled(false);
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
@@ -67,6 +64,8 @@ namespace XSwiftBus
         });*/
 
         XPLMRegisterFlightLoopCallback(flightLoopCallback, -1, this);
+
+        startServer();
     }
 
     CPlugin::~CPlugin()
@@ -86,22 +85,13 @@ namespace XSwiftBus
         m_pluginConfig.print();
     }
 
-    void CPlugin::startServer(CDBusConnection::BusType bus)
+    void CPlugin::startServer()
     {
-        (void) bus;
-        // for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
-        m_startServerMenuItem.setEnabled(false);
-
         m_service = std::make_unique<CService>();
         m_traffic = std::make_unique<CTraffic>();
         m_weather = std::make_unique<CWeather>();
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
-
-        m_showHideLabelsMenuItem.setEnabled(true);
-        m_toggleMessageWindowMenuItem.setEnabled(true);
-        m_popupMessageWindowMenuItem.setEnabled(true);
-        m_disappearMessageWindowMenuItem.setEnabled(true);
 
         if (m_pluginConfig.getDBusMode() == CConfig::DBusP2P)
         {

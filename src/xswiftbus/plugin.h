@@ -81,7 +81,7 @@ namespace XSwiftBus
         bool m_shouldStop = false;
 
         void readConfig();
-        void startServer(CDBusConnection::BusType bus);
+        void startServer();
         void switchToOwnAircraftView();
 
         static float flightLoopCallback(float, float, int, void *refcon);
