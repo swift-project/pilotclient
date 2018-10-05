@@ -69,9 +69,11 @@ namespace BlackGui
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 
             // lep_textMessages is the own line edit
-            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressed, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
+            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressed, this, &CTextMessageComponent::textMessageEntered);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
             // style sheet
@@ -252,6 +254,12 @@ namespace BlackGui
             this->onSettingsChanged();
         }
 
+        void CTextMessageComponent::onAtcButtonClicked(const CAtcStation &station)
+        {
+            if (station.getCallsign().isEmpty()) { return; }
+            this->addNewTextMessageTab(station.getCallsign());
+        }
+
         void CTextMessageComponent::updateSettings()
         {
             const QString style = ui->comp_SettingsStyle->getStyle();
@@ -327,7 +335,9 @@ namespace BlackGui
 
         QWidget *CTextMessageComponent::addNewTextMessageTab(const CCallsign &callsign)
         {
-            Q_ASSERT(!callsign.isEmpty());
+            if (callsign.isEmpty()) { return nullptr; }
+            QWidget *w = this->findTextMessageTabByCallsign(callsign, false);
+            if (w) { return w; }
             return this->addNewTextMessageTab(callsign.asString());
         }
 
@@ -349,11 +359,10 @@ namespace BlackGui
             const int index = ui->tw_TextMessages->addTab(newTab, tabName);
             QToolButton *closeButtonInTab = new QToolButton(newTab);
             closeButtonInTab->setText("[X]");
-            ui->tw_TextMessages->tabBar()->setTabButton(index, QTabBar::RightSide, closeButtonInTab);
+            ui->tw_TextMessages->tabBar()->setTabButton(index, QTabBar::RightSide, closeButtonInTab); // changes parent
             ui->tw_TextMessages->setCurrentIndex(index);
-
-            closeButton->setProperty("messageTabIndex", index);
-            closeButtonInTab->setProperty("messageTabIndex", index);
+            closeButton->setProperty("tabName", tabName);
+            closeButtonInTab->setProperty("tabName", tabName);
 
             connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
@@ -398,18 +407,19 @@ namespace BlackGui
             if (w) { return w; }
             if (!callsignResolution) { return nullptr; }
 
-            // resolve callsign
+            // resolve callsign to COM tab
+            if (!sGui || !sGui->getIContextNetwork()) { return nullptr; }
             const CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
             if (!station.getCallsign().isEmpty())
             {
                 const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
                 if (ownAircraft.getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
                 {
-                    return getTabWidget(TextMessagesCom1);
+                    return this->getTabWidget(TextMessagesCom1);
                 }
                 else if (ownAircraft.getCom2System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
                 {
-                    return getTabWidget(TextMessagesCom2);
+                    return this->getTabWidget(TextMessagesCom2);
                 }
             }
             return nullptr;
@@ -433,17 +443,12 @@ namespace BlackGui
         {
             QObject *sender = QObject::sender();
             QWidget *parentWidget = qobject_cast<QWidget *>(sender->parent());
-            Q_ASSERT(parentWidget);
-            int index = -1;
-            const QVariant qvi = sender->property("messageTabIndex");
-            if (qvi.isValid()) { index = qvi.toInt(); }
-
-            // the while loop is the old version
-            // should not really be needed anymore
-            while (index < 0 && parentWidget)
+            int index =  ui->tw_TextMessages->indexOf(parentWidget);
+            if (index < 0)
             {
-                index =  ui->tw_TextMessages->indexOf(parentWidget);
-                parentWidget = parentWidget->parentWidget();
+                const QString tabName = sender->property("tabName").toString();
+                QWidget *tw =  this->findTextMessageTabByName(tabName);
+                if (tw) { index = ui->tw_TextMessages->indexOf(tw); }
             }
             if (index >= 0) { ui->tw_TextMessages->removeTab(index); }
         }
@@ -574,14 +579,18 @@ namespace BlackGui
                 CLogMessage(this).warning("No callsign to display text message");
                 return;
             }
-            QWidget *w = findTextMessageTabByCallsign(callsign, true);
-            if (!w && sGui->getIContextNetwork())
+            QWidget *w = this->findTextMessageTabByCallsign(callsign, true);
+            if (!w && sGui && sGui->getIContextNetwork())
             {
-                CSimulatedAircraft aircraft(sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign));
-                if (!aircraft.getCallsign().isEmpty())
+                if (callsign.isAtcCallsign() && sGui->getIContextNetwork()->isAircraftInRange(callsign))
                 {
                     // we assume a private message
-                    w = this->addNewTextMessageTab(aircraft.getCallsign());
+                    w = this->addNewTextMessageTab(callsign);
+                }
+                else if (sGui->getIContextNetwork()->isOnlineStation(callsign))
+                {
+                    // we assume a private message
+                    w = this->addNewTextMessageTab(callsign);
                 }
             }
             if (!w) { return; }
@@ -610,6 +619,21 @@ namespace BlackGui
             case TextMessagesUnicom: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesUnicom); break;
             default: break;
             }
+        }
+
+        void CTextMessageComponent::setAtcButtonsRowsColumns(int rows, int cols, bool setMaxElements)
+        {
+            ui->comp_AtcStations->setRowsColumns(rows, cols, setMaxElements);
+        }
+
+        void CTextMessageComponent::setAtcButtonsBackgroundUpdates(bool backgroundUpdates)
+        {
+            ui->comp_AtcStations->setBackgroundUpdates(backgroundUpdates);
+        }
+
+        void CTextMessageComponent::updateAtcButtonStations()
+        {
+            ui->comp_AtcStations->updateStations();
         }
 
         bool CTextMessageComponent::hasAllMessagesTab() const

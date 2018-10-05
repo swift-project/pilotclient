@@ -1065,7 +1065,7 @@ namespace BlackMisc
 
     const QPixmap &CIcons::atis()
     {
-        return text16();
+        return tableSheet16();
     }
 
     const QPixmap &CIcons::geoPosition16()

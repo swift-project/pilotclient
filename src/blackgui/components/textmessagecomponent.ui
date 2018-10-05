@@ -222,6 +222,16 @@
     </widget>
    </item>
    <item>
+    <widget class="BlackGui::Components::CAtcButtonComponent" name="comp_AtcStations">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="gb_Settings">
      <property name="title">
       <string>Settings</string>
@@ -306,6 +316,12 @@
    <class>BlackGui::Components::CSettingsTextMessageStyle</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingstextmessagestyle.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAtcButtonComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/atcbuttoncomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

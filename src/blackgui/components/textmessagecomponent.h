@@ -16,6 +16,7 @@
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/variant.h"
@@ -77,8 +78,19 @@ namespace BlackGui
             //! Remove the all tab, the operation cannot be undone
             void removeAllMessagesTab();
 
+            // ---------- overlay test messages -------------
+
             //! Used as overlay and not dock widget
             void setAsUsedInOverlayMode() { m_usedAsOverlayWidget = true; }
+
+            //! Rows/columns
+            void setAtcButtonsRowsColumns(int rows, int cols, bool setMaxElements);
+
+            //! Background updates or explicitly called
+            void setAtcButtonsBackgroundUpdates(bool backgroundUpdates);
+
+            //! Update buttons
+            void updateAtcButtonStations();
 
         signals:
             //! Message to be displayed in info window
@@ -159,6 +171,9 @@ namespace BlackGui
 
             //! Style sheet has been changed
             void onStyleSheetChanged();
+
+            //! ATC Button
+            void onAtcButtonClicked(const BlackMisc::Aviation::CAtcStation &station);
 
             //! Update settings
             void updateSettings();

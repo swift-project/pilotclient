@@ -68,6 +68,8 @@ namespace BlackGui
         ui->comp_OverlayTextMessage->showTextMessageEntry(true);
         ui->comp_OverlayTextMessage->setAsUsedInOverlayMode();
         ui->comp_OverlayTextMessage->removeAllMessagesTab();
+        ui->comp_OverlayTextMessage->setAtcButtonsRowsColumns(2, 3, true);
+        ui->comp_OverlayTextMessage->setAtcButtonsBackgroundUpdates(false);
 
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
@@ -250,6 +252,7 @@ namespace BlackGui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
         ui->comp_OverlayTextMessage->setTab(tab);
+        ui->comp_OverlayTextMessage->updateAtcButtonStations();
         this->setHeader("Text message");
         this->showKill(false);
         this->display();
