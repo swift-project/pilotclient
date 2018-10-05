@@ -25,12 +25,8 @@ using namespace BlackMisc::Input;
 namespace BlackCore
 {
     CInputManager::CInputManager(QObject *parent) :
-        QObject(parent),
-        m_keyboard(IKeyboard::create(this)),
-        m_joystick(IJoystick::create(this))
+        QObject(parent)
     {
-        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::processKeyCombinationChanged, Qt::QueuedConnection);
-        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
         reloadHotkeySettings();
     }
 
@@ -127,6 +123,14 @@ namespace BlackCore
         callFunctionsBy(previousAction, false);
         callFunctionsBy(action, true);
         m_lastCombination = combination;
+    }
+
+    void CInputManager::createDevices()
+    {
+        m_keyboard = IKeyboard::create(this);
+        m_joystick = IJoystick::create(this);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::processKeyCombinationChanged, Qt::QueuedConnection);
+        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
     }
 
     void CInputManager::releaseDevices()

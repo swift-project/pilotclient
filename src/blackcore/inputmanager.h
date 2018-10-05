@@ -87,6 +87,9 @@ namespace BlackCore
         //! Triggers a key event manually and calls the registered functions.
         void triggerKey(const BlackMisc::Input::CHotkeyCombination &combination, bool isPressed);
 
+        //! Creates low level input devices. Once completed, hotkeys start to be processed.
+        void createDevices();
+
         //! Releases all devices
         void releaseDevices();
 

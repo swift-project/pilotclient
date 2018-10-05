@@ -175,6 +175,11 @@ namespace BlackCore
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
             connect(this, &CApplication::coreFacadeStarted, this, &CApplication::onCoreFacadeStarted, Qt::QueuedConnection);
+
+            if (!this->getApplicationInfo().isUnitTest())
+            {
+                CInputManager::instance()->createDevices();
+            }
         }
     }
 
