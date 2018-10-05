@@ -12,6 +12,7 @@
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
+#include <algorithm>
 
 // clazy:excludeall=reserve-candidates
 
@@ -683,6 +684,8 @@ namespace XSwiftBus
         {
             return calculateGreatCircleDistance(a, ref) < calculateGreatCircleDistance(b, ref);
         };
+
+        number = std::min(static_cast<int>(m_airports.size()), number);
 
         auto closestAirports = m_airports;
         std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(), compareFunction);
