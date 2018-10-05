@@ -36,7 +36,7 @@ namespace BlackMisc
                 IndexDeviceName = CPropertyIndex::GlobalIndexCJoystickButton,
                 IndexButton,
                 IndexButtonAsString,
-                IndeButtonObject, // just for updates
+                IndexButtonObject, // just for updates
             };
 
             //! Default constructor

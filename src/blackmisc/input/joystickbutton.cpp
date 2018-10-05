@@ -32,7 +32,8 @@ namespace BlackMisc
 
         void CJoystickButton::setButtonObject(CJoystickButton button)
         {
-            this->m_buttonIndex = button.m_buttonIndex;
+            m_deviceName = button.m_deviceName;
+            m_buttonIndex = button.m_buttonIndex;
         }
 
         void CJoystickButton::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
@@ -48,7 +49,7 @@ namespace BlackMisc
             case IndexButtonAsString:
                 this->setButtonIndex(buttonIndexFromString(variant.value<QString>()));
                 break;
-            case IndeButtonObject:
+            case IndexButtonObject:
                 this->setButtonObject(variant.value<BlackMisc::Input::CJoystickButton>());
                 break;
             default:
@@ -63,14 +64,10 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDeviceName:
-                return CVariant::from(this->getDeviceName());
-            case IndexButton:
-                return CVariant::from(this->getButtonIndex());
-            case IndexButtonAsString:
-                return CVariant::from(this->getButtonAsString());
-            default:
-                break;
+            case IndexDeviceName: return CVariant::from(this->getDeviceName());
+            case IndexButton: return CVariant::from(this->getButtonIndex());
+            case IndexButtonAsString: return CVariant::from(this->getButtonAsString());
+            case IndexButtonObject: return CVariant::from(*this);
             }
 
             Q_ASSERT_X(false, "CJoystickButton", "index unknown");
