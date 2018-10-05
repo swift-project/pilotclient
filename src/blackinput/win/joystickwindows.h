@@ -134,13 +134,13 @@ namespace BlackInput
         ATOM helperWindowClass = 0;
         HWND helperWindow = nullptr;
 
+        const TCHAR *helperWindowClassName = TEXT("HelperWindow");
+        const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
+
         DirectInput8Ptr m_directInput;                 //!< DirectInput object
         QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
-
-        const TCHAR *helperWindowClassName = TEXT("HelperWindow");
-        const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
     };
 } // ns
 

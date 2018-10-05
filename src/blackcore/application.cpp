@@ -19,6 +19,7 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/inputmanager.h"
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/datacache.h"
@@ -974,6 +975,10 @@ namespace BlackCore
 
         // info that we will shutdown
         emit this->aboutToShutdown();
+
+        // Release all input devices to not cause any accidental hotkey triggers anymore.
+        // This is also necessary to properly free platform specific instances at a defined point in time.
+        CInputManager::instance()->releaseDevices();
 
         // mark as shutdown
         if (m_networkWatchDog) { m_networkWatchDog->gracefulShutdown(); }

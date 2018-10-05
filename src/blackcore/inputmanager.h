@@ -87,6 +87,9 @@ namespace BlackCore
         //! Triggers a key event manually and calls the registered functions.
         void triggerKey(const BlackMisc::Input::CHotkeyCombination &combination, bool isPressed);
 
+        //! Releases all devices
+        void releaseDevices();
+
         //! Creates a native keyboard handler object
         static CInputManager *instance();
 

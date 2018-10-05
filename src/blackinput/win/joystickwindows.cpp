@@ -165,6 +165,8 @@ namespace BlackInput
 
     CJoystickWindows::~CJoystickWindows()
     {
+        m_joystickDevices.clear();
+        m_directInput.reset();
         CoUninitialize();
     }
 

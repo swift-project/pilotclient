@@ -129,6 +129,12 @@ namespace BlackCore
         m_lastCombination = combination;
     }
 
+    void CInputManager::releaseDevices()
+    {
+        m_keyboard.reset();
+        m_joystick.reset();
+    }
+
     int CInputManager::bindImpl(const QString &action, QObject *receiver, std::function<void (bool)> function)
     {
         static int index = 0;
