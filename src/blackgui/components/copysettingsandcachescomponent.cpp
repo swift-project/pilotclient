@@ -407,7 +407,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(cb, readOnly);
             if (readOnly) { cb->setChecked(false); }
             cb->setEnabled(!readOnly);
-            cb->setIcon(readOnly ? CIcons::cross16() : CIcons::tick16());
+            // cb->setIcon(readOnly ? CIcons::cross16() : CIcons::tick16());
         }
 
         QString CCopySettingsAndCachesComponent::checkBoxText(const QString &text, bool setting)
