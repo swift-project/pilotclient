@@ -194,8 +194,12 @@ void CSwiftLauncher::initStyleSheet()
 
 void CSwiftLauncher::loadLatestNews()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
+
     CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
     const CUrl newsUrl(newsUrls.obtainNextWorkingUrl(true, 10 * 1000));
+    // const CUrl newsUrl("https://dev.swift-project.org/phame/blog/view/1/");
+
     if (newsUrl.isEmpty())
     {
         CLogMessage(this).warning("No working news URL in %1") << newsUrls.toQString();

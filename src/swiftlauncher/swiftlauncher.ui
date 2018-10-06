@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>4</number>
+             <number>0</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -561,6 +561,9 @@
               </property>
               <property name="bottomMargin">
                <number>3</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>1</number>
               </property>
               <item row="0" column="0" colspan="5">
                <widget class="BlackGui::Components::CScaleScreenFactor" name="comp_Scale">
