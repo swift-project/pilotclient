@@ -12,12 +12,13 @@
 #ifndef BLACKGUI_COMPONENTS_COPYSETTINGSANDCACHESCOMPONENT_H
 #define BLACKGUI_COMPONENTS_COPYSETTINGSANDCACHESCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/settings/dockwidgetsettings.h"
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/settings/atcstationssettings.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/data/vatsimsetup.h"
 #include "blackcore/audio/audiosettings.h"
@@ -33,7 +34,6 @@
 #include "blackmisc/applicationinfo.h"
 
 #include <QWizardPage>
-#include <QFrame>
 #include <QScopedPointer>
 #include <QCheckBox>
 #include <QList>
@@ -46,7 +46,7 @@ namespace BlackGui
         /**
          * Copy settings and caches
          */
-        class CCopySettingsAndCachesComponent : public QFrame
+        class CCopySettingsAndCachesComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -83,7 +83,7 @@ namespace BlackGui
             void initModel();
 
             //! Copy
-            void copy();
+            int copy();
 
             //! Select all
             void selectAll();

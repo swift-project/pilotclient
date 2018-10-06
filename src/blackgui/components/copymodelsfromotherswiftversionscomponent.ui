@@ -96,7 +96,7 @@
       <item>
        <widget class="QPushButton" name="pb_StartCopying">
         <property name="text">
-         <string>start copy</string>
+         <string> start copy </string>
         </property>
        </widget>
       </item>
@@ -161,15 +161,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::COtherSwiftVersionsComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/otherswiftversionscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSimulatorSelector</class>
    <extends>QFrame</extends>
    <header>blackgui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::COtherSwiftVersionsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/otherswiftversionscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

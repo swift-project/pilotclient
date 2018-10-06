@@ -45,7 +45,8 @@ namespace BlackGui
 
         void CCopyModelsFromOtherSwiftVersionsComponent::copy()
         {
-            const QSet<CSimulatorInfo> sims = ui->comp_SimulatorSelector->getValue().asSingleSimulatorSet();
+            const CSimulatorInfo selectedSimulators = ui->comp_SimulatorSelector->getValue();
+            const QSet<CSimulatorInfo> sims = selectedSimulators.asSingleSimulatorSet();
             if (sims.isEmpty())
             {
                 static const CStatusMessage m = CStatusMessage(this).validationError("No simulators selected");
@@ -69,6 +70,8 @@ namespace BlackGui
                 return;
             }
 
+            int sets = 0;
+            int caches = 0;
             const CApplicationInfo otherVersion = ui->comp_OtherSwiftVersions->selectedOtherVersion();
             for (const CSimulatorInfo &sim : sims)
             {
@@ -88,6 +91,7 @@ namespace BlackGui
                             m_modelSetCaches.setModelsForSimulator(otherSet, sim);
                         }
                     }
+                    sets++;
                 } // set
 
                 if (cache)
@@ -106,8 +110,15 @@ namespace BlackGui
                             m_modelCaches.setModelsForSimulator(otherCache, sim);
                         }
                     }
+                    caches++;
                 }
             } // all sims
+
+            if (sets > 0 || caches > 0)
+            {
+                const CStatusMessage m = CStatusMessage(this).validationError("Copied %1 sets and %2 caches for '%3'") << sets << caches << selectedSimulators.toQString(true);
+                this->showOverlayMessage(m);
+            }
         }
 
         bool CCopyModelsFromOtherSwiftVersionsComponent::readDataFile(const QString &thisVersionModelFile, CAircraftModelList &models, const CApplicationInfo &otherVersion, const CSimulatorInfo &sim)

@@ -38,7 +38,7 @@ namespace BlackGui
     namespace Components
     {
         CCopySettingsAndCachesComponent::CCopySettingsAndCachesComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CCopySettingsAndCachesComponent)
         {
             ui->setupUi(this);
@@ -134,14 +134,15 @@ namespace BlackGui
             ui->cb_SettingsConsolidation->setText(checkBoxText(TBackgroundConsolidation::humanReadable(), true));
         }
 
-        void CCopySettingsAndCachesComponent::copy()
+        int CCopySettingsAndCachesComponent::copy()
         {
             ui->le_Status->clear();
 
             const CApplicationInfo otherVersionInfo = ui->comp_OtherSwiftVersions->selectedOtherVersion();
-            if (otherVersionInfo.isNull()) { return; }
+            if (otherVersionInfo.isNull()) { return 0; }
 
             bool success = false;
+            int copied = 0;
             QString errMsg;
             ui->le_Status->setText("Starting to copy from '" + otherVersionInfo.toQString(true) + "'");
 
@@ -152,7 +153,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const Audio::CSettings audioSettings = Audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey())) { this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -163,6 +168,7 @@ namespace BlackGui
                 if (!audioInputSettings.isEmpty())
                 {
                     this->displayStatusMessage(m_settingsAudioInputDevice.setAndSave(audioInputSettings), audioInputSettings);
+                    copied++;
                 }
             }
 
@@ -173,6 +179,7 @@ namespace BlackGui
                 if (!audioOutputSettings.isEmpty())
                 {
                     this->displayStatusMessage(m_settingsAudioOutputDevice.setAndSave(audioOutputSettings), audioOutputSettings);
+                    copied++;
                 }
             }
 
@@ -184,6 +191,7 @@ namespace BlackGui
                 {
                     const CDirectories directories = CDirectories::fromJsonNoThrow(joStr, true, success, errMsg);
                     if (this->parsingMessage(success, errMsg, m_settingsDirectories.getKey())) { this->displayStatusMessage(m_settingsDirectories.setAndSave(directories), directories.toQString(true)); }
+                    copied++;
                 }
             }
 
@@ -194,7 +202,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CServerList networkServers = CServerList::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsNetworkServers.getKey())) { this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsNetworkServers.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -204,7 +216,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_cacheLastNetworkServer.getKey())) { this->displayStatusMessage(m_cacheLastNetworkServer.set(server), server.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_cacheLastNetworkServer.getKey()))
+                    {
+                        this->displayStatusMessage(m_cacheLastNetworkServer.set(server), server.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -214,7 +230,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_cacheLastVatsimServer.getKey())) { this->displayStatusMessage(m_cacheLastVatsimServer.set(server), server.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_cacheLastVatsimServer.getKey()))
+                    {
+                        this->displayStatusMessage(m_cacheLastVatsimServer.set(server), server.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -226,6 +246,7 @@ namespace BlackGui
                 {
                     const CGeneralGuiSettings guiGeneral = CGeneralGuiSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsGuiGeneral.setAndSave(guiGeneral), guiGeneral.toQString(true));
+                    copied++;
                 }
             }
 
@@ -236,6 +257,7 @@ namespace BlackGui
                 {
                     const CDockWidgetSettings dwSettings = CDockWidgetSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsDockWidget.setAndSave(dwSettings), dwSettings.toQString(true));
+                    copied++;
                 }
             }
 
@@ -246,6 +268,7 @@ namespace BlackGui
                 {
                     const CViewUpdateSettings viewUpdate = CViewUpdateSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     this->displayStatusMessage(m_settingsViewUpdate.setAndSave(viewUpdate), viewUpdate.toQString(true));
+                    copied++;
                 }
             }
 
@@ -259,6 +282,7 @@ namespace BlackGui
                     if (!enabledSims.isEmpty())
                     {
                         this->displayStatusMessage(m_settingsEnabledSimulators.setAndSave(enabledSims), enabledSims.join(", "));
+                        copied++;
                     }
                 }
             }
@@ -270,6 +294,7 @@ namespace BlackGui
                 {
                     const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     if (this->parsingMessage(success, errMsg, m_settingsSimulatorFsx.getKey())) { this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true)); }
+                    copied++;
                 }
             }
 
@@ -280,6 +305,7 @@ namespace BlackGui
                 {
                     const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     if (this->parsingMessage(success, errMsg, m_settingsSimulatorP3D.getKey())) { this->displayStatusMessage(m_settingsSimulatorP3D.setAndSave(settings), settings.toQString(true)); }
+                    copied++;
                 }
             }
 
@@ -290,6 +316,7 @@ namespace BlackGui
                 {
                     const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                     if (this->parsingMessage(success, errMsg, m_settingsSimulatorXPlane.getKey())) { this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings), settings.toQString(true)); }
+                    copied++;
                 }
             }
 
@@ -300,7 +327,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CModelSettings settings = CModelSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsModel.getKey())) { this->displayStatusMessage(m_settingsModel.setAndSave(settings), settings.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsModel.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsModel.setAndSave(settings), settings.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -314,6 +345,7 @@ namespace BlackGui
                     if (ok)
                     {
                         this->displayStatusMessage(m_settingsConsolidation.setAndSave(consolidation), QString::number(consolidation));
+                        copied++;
                     }
                 }
             }
@@ -325,7 +357,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CActionHotkeyList hotkeys = CActionHotkeyList::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsActionHotkeys.getKey())) { this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsActionHotkeys.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -335,7 +371,11 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CAtcStationsSettings settings = CAtcStationsSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsAtcStations.getKey())) { this->displayStatusMessage(m_settingsAtcStations.setAndSave(settings), settings.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsAtcStations.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsAtcStations.setAndSave(settings), settings.toQString(true));
+                        copied++;
+                    }
                 }
             }
 
@@ -345,9 +385,21 @@ namespace BlackGui
                 if (!joStr.isEmpty())
                 {
                     const CTextMessageSettings settings = CTextMessageSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                    if (this->parsingMessage(success, errMsg, m_settingsTextMessage.getKey())) { this->displayStatusMessage(m_settingsTextMessage.setAndSave(settings), settings.toQString(true)); }
+                    if (this->parsingMessage(success, errMsg, m_settingsTextMessage.getKey()))
+                    {
+                        this->displayStatusMessage(m_settingsTextMessage.setAndSave(settings), settings.toQString(true));
+                        copied++;
+                    }
                 }
             }
+
+            if (copied > 0)
+            {
+                const CStatusMessage m = CStatusMessage(this).info("Copied %1 settings") << copied;
+                this->showOverlayMessage(m);
+            }
+
+            return copied;
         }
 
         void CCopySettingsAndCachesComponent::selectAll()
