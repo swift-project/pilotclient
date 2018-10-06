@@ -15,6 +15,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/htmlutils.h"
 
 #include <QPointer>
 #include <QMessageBox>
@@ -216,11 +217,10 @@ namespace BlackGui
 
             // Shared URLs
             const CUrlList sharedUrls(sGui->getGlobalSetup().getSwiftSharedUrls());
-            const QString tableHtml("<table>%1</table>");
-            const QString rowHtml("<tr><td><img src=\"%1\">&nbsp;</td><td>%2</td></tr>");
+            const QString valueHtml("<img src=\"%1\">&nbsp;%2");
             const QString urlLinkHtml("<a href=\"%1\">%2</a>");
 
-            QString allRowsHtml;
+            QStringList values;
             for (const CUrl &sharedUrl : sharedUrls)
             {
                 if (!sGui || sGui->isShuttingDown())
@@ -230,9 +230,13 @@ namespace BlackGui
                     return;
                 }
                 canConnect = CNetworkUtils::canConnect(sharedUrl);
-                allRowsHtml += rowHtml.arg(canConnect ? imgOk : imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()));
+                values.push_back(
+                    valueHtml.arg(canConnect ? imgOk : imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()))
+                );
             }
-            ui->lbl_SharedUrls->setText(tableHtml.arg(allRowsHtml.trimmed()));
+
+            const QString sharedUrlTable = toHtmTable(values, 2);
+            ui->lbl_SharedUrls->setText(sharedUrlTable);
             ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
             const QString currentlyUsedSharedUrl = sGui->getWorkingSharedUrl().toQString();
             ui->lbl_SharedUrls->setToolTip(

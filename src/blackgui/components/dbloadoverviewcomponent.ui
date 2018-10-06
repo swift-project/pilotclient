@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>644</width>
-    <height>367</height>
+    <height>253</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -140,7 +140,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="10" column="0" alignment="Qt::AlignVCenter">
     <widget class="QLabel" name="lbl_DbUrl">
      <property name="text">
       <string>DB URL:</string>
@@ -258,16 +258,10 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="2" colspan="9" alignment="Qt::AlignTop">
+   <item row="11" column="2" colspan="9">
     <widget class="QLabel" name="lbl_SharedUrls">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>125</height>
-      </size>
-     </property>
      <property name="text">
-      <string>Checking shared servers' URLs</string>
+      <string>Shared URL will go here</string>
      </property>
     </widget>
    </item>
@@ -532,7 +526,7 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0" alignment="Qt::AlignTop">
+   <item row="11" column="0" alignment="Qt::AlignVCenter">
     <widget class="QLabel" name="lbl_SharedUrl">
      <property name="text">
       <string>Shared:</string>

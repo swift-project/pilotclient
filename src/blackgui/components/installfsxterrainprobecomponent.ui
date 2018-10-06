@@ -7,13 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>427</width>
-    <height>194</height>
+    <height>189</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Copy swift probe</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="vl_InstallFsxTerrainProbe">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QFrame" name="fr_InfoHeader">
      <layout class="QHBoxLayout" name="hl_InfoHeader" stretch="1,1,3">

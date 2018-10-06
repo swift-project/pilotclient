@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>700</width>
     <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>500</height>
+    <width>700</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -198,37 +198,43 @@
    <property name="subTitle">
     <string>Install XSwiftBus (X-Plane only) or swift terrain probe (FSX/P3D only)</string>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <item row="1" column="0">
-     <widget class="BlackGui::Components::CInstallXSwiftBusComponent" name="comp_XSwiftBus">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>150</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="BlackGui::Components::CInstallFsxTerrainProbeComponent" name="comp_FsxTerrainProbe" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>75</height>
-       </size>
-      </property>
+   <layout class="QVBoxLayout" name="vl_SimulatorSpecific">
+    <item>
+     <widget class="QToolBox" name="tb_SimulatorSpecific">
+      <widget class="QWidget" name="pg_InstallFsxTerrainProbe" native="true">
+       <attribute name="label">
+        <string extracomment="FSX/P3D: Needed with the x86 legacy 32bit SimConnect">Install FSX terrain probe</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_P3DFsx">
+        <item alignment="Qt::AlignTop">
+         <widget class="BlackGui::Components::CInstallFsxTerrainProbeComponent" name="comp_InstallFsxTerrainProbe">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pg_InstallXSwiftBus" native="true">
+       <attribute name="label">
+        <string extracomment="Install the XSwiftBus component">XPlane: Install XSwiftBus</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_XPlane">
+        <item alignment="Qt::AlignTop">
+         <widget class="BlackGui::Components::CInstallXSwiftBusComponent" name="comp_InstallXSwiftBus">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -373,7 +379,7 @@
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CInstallFsxTerrainProbeComponent</class>
-   <extends>QWidget</extends>
+   <extends>QFrame</extends>
    <header>blackgui/components/installfsxterrainprobecomponent.h</header>
    <container>1</container>
   </customwidget>
