@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_HTMLUTILS_H
 #define BLACKMISC_HTMLUTILS_H
 
+#include <QStringBuilder>
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexlist.h"
-
 
 //! Free functions in BlackMisc
 namespace BlackMisc
@@ -29,12 +29,16 @@ namespace BlackMisc
             QString rowHtml;
             for (const CPropertyIndex &index : indexes)
             {
-                rowHtml += "<td>" + obj.propertyByIndex(index).toQString(true) + "</td>";
+                rowHtml += QStringLiteral("<td>") % obj.propertyByIndex(index).toQString(true) % QStringLiteral("</td>");
             }
-            html += "<tr>" + rowHtml + "</tr>";
+            html += QStringLiteral("<tr>") % rowHtml % QStringLiteral("</tr>");
         }
-        return "<table>" + html + "</table>";
+        return QStringLiteral("<table>") % html % QStringLiteral("</table>");
     }
+
+    //! Values as HTML table
+    BLACKMISC_EXPORT QString toHtmTable(const QStringList &values, int columns);
+
 } // ns
 
 #endif // guard
