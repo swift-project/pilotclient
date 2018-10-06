@@ -163,6 +163,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QToolButton" name="tb_RequestTextMessageCom1">
+           <property name="toolTip">
+            <string>Overlay text message</string>
+           </property>
+           <property name="whatsThis">
+            <string>Overlay text message</string>
+           </property>
            <property name="text">
             <string>T</string>
            </property>
@@ -296,6 +302,12 @@
          </item>
          <item row="0" column="1">
           <widget class="QToolButton" name="tb_RequestTextMessageCom2">
+           <property name="toolTip">
+            <string>Overlay text message</string>
+           </property>
+           <property name="whatsThis">
+            <string>Overlay text message</string>
+           </property>
            <property name="text">
             <string>T</string>
            </property>

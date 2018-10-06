@@ -9,8 +9,9 @@
 
 #include "cockpitcomform.h"
 #include "ui_cockpitcomform.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/icons.h"
 
 #include <QPushButton>
 
@@ -56,6 +57,8 @@ namespace BlackGui
 
             ui->led_ComPanelCom1->setShape(CLedWidget::Rounded);
             ui->led_ComPanelCom2->setShape(CLedWidget::Rounded);
+            ui->tb_RequestTextMessageCom1->setIcon(CIcons::appTextMessages16());
+            ui->tb_RequestTextMessageCom2->setIcon(CIcons::appTextMessages16());
         }
 
         CCockpitComForm::~CCockpitComForm()
