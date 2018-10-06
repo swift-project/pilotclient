@@ -126,7 +126,7 @@
       <string>copy (materialize) defaults</string>
      </property>
      <property name="text">
-      <string>copy def.</string>
+      <string> copy def. </string>
      </property>
     </widget>
    </item>

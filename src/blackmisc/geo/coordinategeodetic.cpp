@@ -100,7 +100,7 @@ namespace BlackMisc
         bool ICoordinateGeodetic::isWithinRange(const ICoordinateGeodetic &otherCoordinate, const CLength &range) const
         {
             if (range.isNull()) { return false; }
-            const CLength distance = calculateGreatCircleDistance(otherCoordinate);
+            const CLength distance = this->calculateGreatCircleDistance(otherCoordinate);
             if (distance.isNull()) { return false; }
             return distance <= range;
         }

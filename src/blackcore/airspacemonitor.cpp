@@ -369,7 +369,7 @@ namespace BlackCore
         if (callsign.hasSuffix())
         {
             // very likely and ATC callsign
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CAtcStation::IndexController, CUser::IndexRealName}, realname);
+            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, realname);
             const int c1 = this->updateOnlineStation(callsign, vm, false, true);
             const int c2 = this->updateBookedStation(callsign, vm, false, true);
             wasAtc = c1 > 0 || c2 > 0;
@@ -382,8 +382,9 @@ namespace BlackCore
         }
 
         // Client
+        if (!sApp || !sApp->getWebDataServices()) { return; }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
-        CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
+        CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CClient::IndexUser, CUser::IndexRealName }, realname);
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
     }
@@ -548,7 +549,7 @@ namespace BlackCore
             station.setFrequency(frequency);
             station.setPosition(position);
             station.setOnline(true);
-            station.calculcateAndUpdateRelativeDistanceAndBearing(getOwnAircraftPosition());
+            station.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
 
             // sync with bookings
             if (m_atcStationsBooked.containsCallsign(callsign))
@@ -1151,7 +1152,7 @@ namespace BlackCore
 
     CLength CAirspaceMonitor::calculateDistanceToOwnAircraft(const CAircraftSituation &situation) const
     {
-        CLength distance = getOwnAircraft().calculateGreatCircleDistance(situation);
+        CLength distance = this->getOwnAircraft().calculateGreatCircleDistance(situation);
         distance.switchUnit(CLengthUnit::NM());
         return distance;
     }

@@ -41,7 +41,7 @@ namespace BlackMisc
         {
             if (this->isEmpty()) { return CUrl(); }
             if (this->size() == 1) { return this->front();}
-            int i = CMathUtils::randomInteger(0, this->size() - 1);
+            const int i = CMathUtils::randomInteger(0, this->size() - 1);
             return (*this)[i];
         }
 
@@ -54,7 +54,7 @@ namespace BlackMisc
             if (timeoutMs < 0) { timeoutMs = CNetworkUtils::getTimeoutMs(); }
             for (int t = 0; t < maxTrials && t < this->size(); t++)
             {
-                CUrl url(getRandomWithout(trials));
+                const CUrl url(this->getRandomWithout(trials));
                 trials.push_back(url);
                 QString message;
                 if (CNetworkUtils::canConnect(url, message, timeoutMs)) { return url; }
