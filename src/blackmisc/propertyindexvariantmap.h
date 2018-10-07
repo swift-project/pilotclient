@@ -260,7 +260,7 @@ namespace BlackMisc
         CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return myself<Derived>(); }
-            const auto i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>(); // keep that "auto", otherwise I won's compile
             switch (i)
             {
             case IndexIcon: return CVariant::from(derived()->toIcon());

@@ -12,13 +12,7 @@ namespace BlackMisc
 
         QString CAirportIcaoCode::convertToQString(bool /** i18n **/) const
         {
-            return this->m_icaoCode;
-        }
-
-        int CAirportIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAirportIcaoCode &compareValue) const
-        {
-            Q_UNUSED(index);
-            return this->m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);
+            return m_icaoCode;
         }
 
         bool CAirportIcaoCode::hasValidIcaoCode() const
@@ -50,5 +44,24 @@ namespace BlackMisc
         {
             return (containsChar(icaoCode, [](QChar c) { return c.isDigit(); }));
         }
+
+        CVariant CAirportIcaoCode::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return CVariant::from(*this); }
+            return CValueObject::propertyByIndex(index);
+        }
+
+        void CAirportIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        {
+            if (index.isMyself()) { (*this) = variant.to<CAirportIcaoCode>(); return; }
+            CValueObject::setPropertyByIndex(index, variant);
+        }
+
+        int CAirportIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAirportIcaoCode &compareValue) const
+        {
+            Q_UNUSED(index);
+            return m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);
+        }
+
     } // namespace
 } // namespace

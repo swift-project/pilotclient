@@ -218,7 +218,7 @@ namespace BlackMisc
             return newRealName;
         }
 
-        CVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CUser::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
