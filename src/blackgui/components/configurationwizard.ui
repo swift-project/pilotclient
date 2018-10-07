@@ -114,7 +114,7 @@
    <property name="subTitle">
     <string>Copy settings and caches from other swift versions</string>
    </property>
-   <layout class="QVBoxLayout" name="vl_CopySettingsAndCaches">
+   <layout class="QVBoxLayout" name="vl_CopySettingsAndCache">
     <property name="leftMargin">
      <number>4</number>
     </property>
@@ -128,7 +128,38 @@
      <number>4</number>
     </property>
     <item>
-     <widget class="BlackGui::Components::CCopySettingsAndCachesComponent" name="comp_CopySettingsAndCachesComponen"/>
+     <widget class="QScrollArea" name="sa_CopySettingsAndCache">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="wi_CopySettingsAndCache">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>672</width>
+         <height>497</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="vl_CopySettingsAndCacheWidget">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CCopySettingsAndCachesComponent" name="comp_CopySettingsAndCachesComponent"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -201,7 +232,15 @@
    <layout class="QVBoxLayout" name="vl_SimulatorSpecific">
     <item>
      <widget class="QToolBox" name="tb_SimulatorSpecific">
-      <widget class="QWidget" name="pg_InstallFsxTerrainProbe" native="true">
+      <widget class="QWidget" name="pg_InstallFsxTerrainProbe">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>75</width>
+         <height>64</height>
+        </rect>
+       </property>
        <attribute name="label">
         <string extracomment="FSX/P3D: Needed with the x86 legacy 32bit SimConnect">Install FSX terrain probe</string>
        </attribute>
@@ -218,7 +257,15 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="pg_InstallXSwiftBus" native="true">
+      <widget class="QWidget" name="pg_InstallXSwiftBus">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>89</width>
+         <height>64</height>
+        </rect>
+       </property>
        <attribute name="label">
         <string extracomment="Install the XSwiftBus component">XPlane: Install XSwiftBus</string>
        </attribute>
