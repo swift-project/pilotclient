@@ -45,7 +45,7 @@ namespace BlackInput
         }
 
         // Set cooperative level
-        if(!helperWindow) { return false; }
+        if (!helperWindow) { return false; }
         if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
         {
             CLogMessage(this).warning("IDirectInputDevice8::SetCooperativeLevel failed: ") << hr;
@@ -236,11 +236,11 @@ namespace BlackInput
 
         /* Create the window. */
         helperWindow = CreateWindowEx(0, helperWindowClassName,
-                                        helperWindowName,
-                                        WS_OVERLAPPED, CW_USEDEFAULT,
-                                        CW_USEDEFAULT, CW_USEDEFAULT,
-                                        CW_USEDEFAULT, HWND_MESSAGE, nullptr,
-                                        hInstance, nullptr);
+                                      helperWindowName,
+                                      WS_OVERLAPPED, CW_USEDEFAULT,
+                                      CW_USEDEFAULT, CW_USEDEFAULT,
+                                      CW_USEDEFAULT, HWND_MESSAGE, nullptr,
+                                      hInstance, nullptr);
         if (helperWindow == nullptr)
         {
             UnregisterClass(helperWindowClassName, hInstance);
