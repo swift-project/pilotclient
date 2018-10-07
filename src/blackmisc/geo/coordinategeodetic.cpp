@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -47,7 +48,16 @@ namespace BlackMisc
             static const float earthRadiusMeters = 6371000.8f;
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
+
+            Q_ASSERT_X(!std::isnan(v1.x()) && !std::isnan(v1.y()) && !std::isnan(v1.z()) && !std::isnan(v2.x()) && !std::isnan(v2.y()) && !std::isnan(v2.z()), Q_FUNC_INFO, "Distance calculation: NaN in argument");
             const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
+
+            BLACK_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
+            if (std::isnan(d))
+            {
+                CLogMessage().debug("Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)") << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z()) << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
+                return CLength::null();
+            }
             return { static_cast<double>(d), CLengthUnit::m() };
         }
 
