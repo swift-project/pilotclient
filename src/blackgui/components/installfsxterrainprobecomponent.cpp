@@ -67,7 +67,12 @@ namespace BlackGui
 
         void CInstallFsxTerrainProbeComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
-            const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(simulator);
+            // avoid invalid simulators
+            CSimulatorInfo sim = simulator;
+            if (!sim.isFsxP3DFamily()) { sim = CSimulatorInfo::p3d(); }
+
+            // model directories
+            const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(sim);
             if (!modelDirs.isEmpty() && !modelDirs.front().isEmpty())
             {
                 ui->le_Target->setText(modelDirs.front());
