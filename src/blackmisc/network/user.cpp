@@ -84,7 +84,16 @@ namespace BlackMisc
             {
                 if (m_callsign.isAtcCallsign())
                 {
-                    m_homebase = m_callsign.getIcaoCode();
+                    // option 1: real ATC station
+                    // option 2: a copilot cmoning in Observer
+                    if (m_callsign.isObserverCallsign())
+                    {
+                        // copilot
+                    }
+                    else
+                    {
+                        m_homebase = m_callsign.getIcaoCode();
+                    }
                 }
             }
         }
@@ -102,10 +111,8 @@ namespace BlackMisc
             {
                 // only apply stripping if home base is not explicitly given
                 // try to strip homebase: I understand the limitations, but we will have more correct hits as failures I assume
-                static QThreadStorage<QRegularExpression> tsRegex;
-                if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("(-\\s*|\\s)([A-Z]{4})$")); }
-                const auto &regex = tsRegex.localData();
-                const QRegularExpressionMatch match = regex.match(rn);
+                thread_local QRegularExpression tsRegex("(-\\s*|\\s)([A-Z]{4})$");
+                const QRegularExpressionMatch match = tsRegex.match(rn);
                 if (match.hasMatch())
                 {
                     const int pos = match.capturedStart(0);
