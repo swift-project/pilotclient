@@ -172,15 +172,17 @@ namespace BlackInput
 
     void ReleaseDirectInput(IDirectInput8 *obj)
     {
-        if (obj) { obj->Release(); }
-    };
+        Q_UNUSED(obj);
+        //! \todo temp workaround for crash when shutting down T391
+        // if (obj) { obj->Release(); }
+    }
 
     HRESULT CJoystickWindows::initDirectInput()
     {
         IDirectInput8 *directInput = nullptr;
         // HRESULT hr = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<LPVOID *>(&directInput), nullptr);
         HRESULT hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectInput8, reinterpret_cast<LPVOID *>(&directInput));
-        if(FAILED(hr)) { return hr; }
+        if (FAILED(hr)) { return hr; }
         m_directInput = DirectInput8Ptr(directInput, ReleaseDirectInput);
 
         HINSTANCE instance = GetModuleHandle(nullptr);
