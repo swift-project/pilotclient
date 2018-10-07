@@ -192,9 +192,9 @@ namespace BlackGui
                 if (m_timestampOnlineStationsChanged > m_timestampLastReadOnlineStations)
                 {
                     const CAtcStationsSettings settings = ui->comp_AtcStationsSettings->getSettings();
-                    CAtcStationList onlineStations =
-                        sGui->getIContextNetwork()->getAtcStationsOnline(true).stationsWithValidFrequency(); // alternatively: stationsWithValidVoiceRoom()
-
+                    CAtcStationList onlineStations = sGui->getIContextNetwork()->getAtcStationsOnline(true);
+                    if (settings.showOnlyWithValidFrequency()) { onlineStations = onlineStations.stationsWithValidFrequency(); }
+                    if (settings.showOnlyWithValidVoiceRoom()) { onlineStations = onlineStations.stationsWithValidVoiceRoom(); }
                     if (settings.showOnlyInRange())
                     {
                         onlineStations.removeIfOutsideRange();

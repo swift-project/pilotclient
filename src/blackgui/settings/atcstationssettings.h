@@ -28,16 +28,30 @@ namespace BlackGui
             enum ColumnIndex
             {
                 IndexInRangeOnly = BlackMisc::CPropertyIndex::GlobalIndexCAtcStationsSettings,
+                IndexValidFrequencyOnly,
+                IndexValidVoiceRoomOnly
             };
 
             //! Default constructor
             CAtcStationsSettings();
 
-            //! Show in range ATC stations only
+            //! Show in range ATC stations only?
             bool showOnlyInRange() const { return m_showOnlyInRange; }
 
-            //! Show in range ATC stations only?
+            //! Show in range ATC stations only
             void setShowOnlyInRange(bool onlyInRange) { m_showOnlyInRange = onlyInRange; }
+
+            //! Show only with valid frequency?
+            bool showOnlyWithValidFrequency() const { return m_onlyWithValidFrequency; }
+
+            //! Show only with valid frequency
+            void setShowOnlyWithValidFrequency(bool onlyValidFrequency) { m_onlyWithValidFrequency = onlyValidFrequency; }
+
+            //! Show only with valid voice room?
+            bool showOnlyWithValidVoiceRoom() const { return m_onlyWithValidVoiceRoom; }
+
+            //! Show only with valid voice room
+            void setShowOnlyWithValidVoiceRoom(bool onlyValidVoiceRoom) { m_onlyWithValidVoiceRoom = onlyValidVoiceRoom; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -50,10 +64,14 @@ namespace BlackGui
 
         private:
             bool m_showOnlyInRange = true;
+            bool m_onlyWithValidFrequency = true;
+            bool m_onlyWithValidVoiceRoom = false;
 
             BLACK_METACLASS(
                 CAtcStationsSettings,
-                BLACK_METAMEMBER(showOnlyInRange)
+                BLACK_METAMEMBER(showOnlyInRange),
+                BLACK_METAMEMBER(onlyWithValidFrequency),
+                BLACK_METAMEMBER(onlyWithValidVoiceRoom)
             );
         };
 

@@ -21,8 +21,8 @@ namespace BlackGui
         QString CAtcStationsSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("In range only: %1");
-            return s.arg(boolToOnOff(this->showOnlyInRange()));
+            static const QString s("In range only: %1 valid freq: %2 valid voice room: %3");
+            return s.arg(boolToOnOff(this->showOnlyInRange()), boolToOnOff(this->showOnlyWithValidFrequency()), boolToOnOff(this->showOnlyWithValidVoiceRoom()));
         }
 
         CVariant CAtcStationsSettings::propertyByIndex(const CPropertyIndex &index) const
@@ -32,6 +32,8 @@ namespace BlackGui
             switch (i)
             {
             case IndexInRangeOnly: return CVariant::fromValue(m_showOnlyInRange);
+            case IndexValidFrequencyOnly: return CVariant::fromValue(m_onlyWithValidFrequency);
+            case IndexValidVoiceRoomOnly: return CVariant::fromValue(m_onlyWithValidVoiceRoom);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -42,12 +44,10 @@ namespace BlackGui
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInRangeOnly:
-                this->setShowOnlyInRange(variant.toBool());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexInRangeOnly: this->setShowOnlyInRange(variant.toBool()); break;
+            case IndexValidFrequencyOnly: this->setShowOnlyWithValidFrequency(variant.toBool()); break;
+            case IndexValidVoiceRoomOnly: this->setShowOnlyWithValidVoiceRoom(variant.toBool()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // ns

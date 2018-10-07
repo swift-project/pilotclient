@@ -10,6 +10,9 @@
 #include "settingsatcstationsinlinecomponent.h"
 #include "ui_settingsatcstationsinlinecomponent.h"
 
+#include <QTimer>
+#include <QPointer>
+
 using namespace BlackGui::Settings;
 
 namespace BlackGui
@@ -22,6 +25,15 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(ui->rb_InRange, &QRadioButton::toggled, this, &CSettingsAtcStationsInlineComponent::changeSettings);
+            connect(ui->cb_Frequency, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings);
+            connect(ui->cb_VoiceRoom, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings);
+
+            QPointer<CSettingsAtcStationsInlineComponent> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->onSettingsChanged();
+            });
         }
 
         CSettingsAtcStationsInlineComponent::~CSettingsAtcStationsInlineComponent()
@@ -31,16 +43,22 @@ namespace BlackGui
         {
             const CAtcStationsSettings s = m_atcSettings.getThreadLocal();
             ui->rb_InRange->setChecked(s.showOnlyInRange());
+            ui->cb_Frequency->setChecked(s.showOnlyWithValidFrequency());
+            ui->cb_VoiceRoom->setChecked(s.showOnlyWithValidVoiceRoom());
         }
 
         void CSettingsAtcStationsInlineComponent::changeSettings()
         {
             const bool onlyInRange = ui->rb_InRange->isChecked();
+            const bool freq = ui->cb_Frequency->isChecked();
+            const bool voice = ui->cb_VoiceRoom->isChecked();
             CAtcStationsSettings s = m_atcSettings.getThreadLocal();
-            if (s.showOnlyInRange() && onlyInRange) { return; }
+            const CAtcStationsSettings oldSettings = s;
             s.setShowOnlyInRange(onlyInRange);
+            s.setShowOnlyWithValidFrequency(freq);
+            s.setShowOnlyWithValidVoiceRoom(voice);
+            if (oldSettings == s) { return; }
             m_atcSettings.setAndSave(s);
-
             emit this->changed();
         }
     } // ns
