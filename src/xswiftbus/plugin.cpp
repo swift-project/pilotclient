@@ -53,8 +53,6 @@ namespace XSwiftBus
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
-        readConfig();
-
         /*m_dbusThread = std::thread([this]()
         {
             while(!m_shouldStop)
@@ -63,9 +61,9 @@ namespace XSwiftBus
             }
         });*/
 
-        XPLMRegisterFlightLoopCallback(flightLoopCallback, -1, this);
-
-        startServer();
+        // Delay the start of XSwiftBus.
+        // http://www.xsquawkbox.net/xpsdk/mediawiki/DeferredInitialization
+        XPLMRegisterFlightLoopCallback(startServerDeferred, -1, this);
     }
 
     CPlugin::~CPlugin()
@@ -87,6 +85,10 @@ namespace XSwiftBus
 
     void CPlugin::startServer()
     {
+        XPLMRegisterFlightLoopCallback(flightLoopCallback, -1, this);
+
+        readConfig();
+
         m_service = std::make_unique<CService>();
         m_traffic = std::make_unique<CTraffic>();
         m_weather = std::make_unique<CWeather>();
@@ -167,9 +169,21 @@ namespace XSwiftBus
         }
     }
 
+    float CPlugin::startServerDeferred(float, float, int, void *refcon)
+    {
+        auto *plugin = static_cast<CPlugin *>(refcon);
+        if (! plugin->m_isRunning)
+        {
+            plugin->startServer();
+            plugin->m_isRunning = true;
+        }
+        return 0;
+    }
+
     float CPlugin::flightLoopCallback(float, float, int, void *refcon)
     {
         auto *plugin = static_cast<CPlugin *>(refcon);
+
         plugin->m_dbusDispatcher.runOnce();
         if (plugin->m_service) { plugin->m_service->process(); }
         if (plugin->m_weather) { plugin->m_weather->process(); }
