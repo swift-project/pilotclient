@@ -34,7 +34,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
             this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CAltitudeFormatter()));
             this->m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
-            this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLatitude, new CLatLonFormatter()));
+            this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLongitude, new CLatLonFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAirport::IndexRelativeDistance);
