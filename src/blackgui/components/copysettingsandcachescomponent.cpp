@@ -395,7 +395,7 @@ namespace BlackGui
 
             if (copied > 0)
             {
-                const CStatusMessage m = CStatusMessage(this).info("Copied %1 settings") << copied;
+                const CStatusMessage m = CStatusMessage(this).validationInfo("Copied %1 settings") << copied;
                 this->showOverlayMessage(m);
             }
 

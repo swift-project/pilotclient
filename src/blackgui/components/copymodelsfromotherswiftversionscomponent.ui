@@ -59,7 +59,7 @@
       <item>
        <widget class="QLabel" name="lbl_Of">
         <property name="text">
-         <string>of simulator:</string>
+         <string>simulator:</string>
         </property>
        </widget>
       </item>
@@ -89,7 +89,7 @@
       <item>
        <widget class="QCheckBox" name="cb_Silent">
         <property name="text">
-         <string>silent mode (no dialogs)</string>
+         <string>silent (no dialogs)</string>
         </property>
        </widget>
       </item>
