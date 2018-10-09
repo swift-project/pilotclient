@@ -95,6 +95,7 @@ namespace BlackGui
         void CDbOwnModelSetFormDialog::simulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             this->setSimulator(simulator);
             this->getMappingComponent()->setOwnModelsSimulator(simulator);
             this->getMappingComponent()->setOwnModelSetSimulator(simulator);

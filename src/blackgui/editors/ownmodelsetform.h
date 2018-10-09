@@ -34,7 +34,7 @@ namespace BlackGui
             explicit COwnModelSetForm(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~COwnModelSetForm();
+            virtual ~COwnModelSetForm() override;
 
             //! Reload data
             void reloadData();

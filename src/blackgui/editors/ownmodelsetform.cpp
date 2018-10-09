@@ -18,6 +18,7 @@
 
 #include <QRadioButton>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
@@ -36,11 +37,16 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setLeftMargin(0);
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::onSimulatorChanged);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::onSimulatorChanged, Qt::QueuedConnection);
             connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
             connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
 
-            this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
+            QPointer<COwnModelSetForm> myself(this);
+            QTimer::singleShot(1250, [ = ]
+            {
+                if (!myself) { return; }
+                this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
+            });
         }
 
         COwnModelSetForm::~COwnModelSetForm()
@@ -95,6 +101,7 @@ namespace BlackGui
 
         void COwnModelSetForm::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
             this->setSimulator(simulator);
             this->reloadData();
             emit this->simulatorChanged(simulator);
