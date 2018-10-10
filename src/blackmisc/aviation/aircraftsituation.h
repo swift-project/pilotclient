@@ -550,8 +550,11 @@ namespace BlackMisc
             static bool extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange);
 
             //! Interpolate between the 2 situations for situation
-            //! \remark NULL if there are no two elevations
+            //! \remark NULL if there are no two elevations or threshold MaxDeltaElevationFt is exceeded
             static Geo::CElevationPlane interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
+
+            //! Threshold until we interpolate elevations
+            static constexpr double MaxDeltaElevationFt = 25.0;
 
             //! Register metadata
             static void registerMetadata();

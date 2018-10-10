@@ -262,7 +262,7 @@ namespace BlackMisc
                 BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
             }
 
-            // add offset (for testing only)
+            // add altitude offset (for testing only)
             CAircraftSituation situationCorrected(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
 
             // CG, model

@@ -127,6 +127,15 @@ namespace BlackMisc
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Check values @{
+            bool isNaNVector() const;
+            bool isNaNVectorDouble() const;
+            bool isInfVector() const;
+            bool isInfVectorDouble() const;
+            bool isValidVectorRange() const;
+            static bool isValidVector(const std::array<double, 3> &v);
+            //! @}
+
         protected:
             //! Can given index be handled?
             static bool canHandleIndex(const CPropertyIndex &index);

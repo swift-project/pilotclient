@@ -196,6 +196,10 @@ namespace BlackMisc
             // use derived interpolant function
             const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
             currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid interpolation situation");
+            }
             if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
 
             // as we now have the position and can interpolate elevation
@@ -446,11 +450,17 @@ namespace BlackMisc
         CAircraftSituation CInterpolator<Derived>::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
         {
             if (m_currentSituations.isEmpty()) { return CAircraftSituation::null(); }
+
             CAircraftSituation currentSituation = m_lastSituation.isNull() ? m_currentSituations.front() : m_lastSituation;
             if (currentSituation.getCallsign() != m_callsign)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
                 currentSituation.setCallsign(m_callsign);
+            }
+
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid range");
             }
 
             // preset elevation here, as we do not know where the situation will be after the interpolation step!

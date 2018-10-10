@@ -281,6 +281,13 @@ namespace BlackMisc
             const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
             const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
+                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
+                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
+            }
+
             CAircraftSituation newSituation(currentSituation);
             const std::array<double, 3> normalVector = {{ newX, newY, newZ }};
             const CCoordinateGeodetic currentPosition(normalVector);

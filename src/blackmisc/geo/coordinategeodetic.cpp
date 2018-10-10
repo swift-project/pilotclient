@@ -46,10 +46,12 @@ namespace BlackMisc
             if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
             // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CLength(0, CLengthUnit::defaultUnit()); }
             static const float earthRadiusMeters = 6371000.8f;
+
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
+            Q_ASSERT_X(std::isfinite(v1.x()) && std::isfinite(v1.y()) && std::isfinite(v1.z()), Q_FUNC_INFO, "Distance calculation: v1 non-finite argument");
+            Q_ASSERT_X(std::isfinite(v2.x()) && std::isfinite(v2.y()) && std::isfinite(v2.z()), Q_FUNC_INFO, "Distance calculation: v2 non-finite argument");
 
-            Q_ASSERT_X(!std::isnan(v1.x()) && !std::isnan(v1.y()) && !std::isnan(v1.z()) && !std::isnan(v2.x()) && !std::isnan(v2.y()) && !std::isnan(v2.z()), Q_FUNC_INFO, "Distance calculation: NaN in argument");
             const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
 
             BLACK_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
@@ -181,6 +183,44 @@ namespace BlackMisc
                          lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
                          lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
                          this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
+        }
+
+        bool ICoordinateGeodetic::isNaNVector() const
+        {
+            const QVector3D v = this->normalVector();
+            return std::isnan(v.x()) || std::isnan(v.y()) || std::isnan(v.z());
+        }
+
+        bool ICoordinateGeodetic::isNaNVectorDouble() const
+        {
+            const std::array<double, 3> v = this->normalVectorDouble();
+            return std::isnan(v[0]) || std::isnan(v[1]) || std::isnan(v[2]);
+        }
+
+        bool ICoordinateGeodetic::isInfVector() const
+        {
+            const QVector3D v = this->normalVector();
+            return std::isinf(v.x()) || std::isinf(v.y()) || std::isinf(v.z());
+        }
+
+        bool ICoordinateGeodetic::isInfVectorDouble() const
+        {
+            const std::array<double, 3> v = this->normalVectorDouble();
+            return std::isinf(v[0]) || std::isinf(v[1]) || std::isinf(v[2]);
+        }
+
+        bool ICoordinateGeodetic::isValidVectorRange() const
+        {
+            // inf is out of range, comparing nans is always false
+            const std::array<double, 3> v = this->normalVectorDouble();
+            return isValidVector(v);
+        }
+
+        bool ICoordinateGeodetic::isValidVector(const std::array<double, 3> &v)
+        {
+            constexpr double l = 1.00001; // because of interpolation
+            return v[0] <= l && v[1] <= l && v[2] <= l &&
+                   v[0] >= -l && v[1] >= -l && v[2] >= -l;
         }
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

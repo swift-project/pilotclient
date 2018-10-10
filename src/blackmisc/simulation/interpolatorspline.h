@@ -76,7 +76,7 @@ namespace BlackMisc
                 void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
             private:
-                PosArray m_pa; //! current positions array, latest values last
+                PosArray m_pa; //!< current positions array, latest values last
                 PhysicalQuantities::CLengthUnit m_altitudeUnit;
                 qint64 m_currentTimeMsSinceEpoc { -1 };
             };

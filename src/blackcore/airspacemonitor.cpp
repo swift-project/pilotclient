@@ -38,6 +38,7 @@
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/worker.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -49,6 +50,7 @@
 #include <QWriteLocker>
 #include <Qt>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
@@ -930,7 +932,16 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         const CCallsign callsign(situation.getCallsign());
+
+        // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
+
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            Q_ASSERT_X(!situation.isNaNVectorDouble(), Q_FUNC_INFO, "Detected NaN");
+            Q_ASSERT_X(!situation.isInfVectorDouble(), Q_FUNC_INFO, "Detected inf");
+            Q_ASSERT_X(situation.isValidVectorRange(), Q_FUNC_INFO, "out of range [-1,1]");
+        }
 
         // Interim packets do not have groundspeed, hence set the last known value.
         // If there is no full position available yet, throw this interim position away.
@@ -938,7 +949,6 @@ namespace BlackCore
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
         if (history.empty()) { return; } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
-        const bool samePosition = (lastSituation.getPosition() == interimSituation.getPosition());
 
         // changed position, continue and copy values
         interimSituation.setCurrentUtcTime();
@@ -949,6 +959,8 @@ namespace BlackCore
 
         // if we have no aircraft in range yet, we stop here
         if (!this->isAircraftInRange(callsign)) { return; }
+
+        const bool samePosition = lastSituation.equalNormalVectorDouble(interimSituation);
         if (samePosition) { return; } // nothing to update
 
         // update aircraft

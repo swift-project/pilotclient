@@ -90,7 +90,7 @@ namespace BlackGui
                     }
                     if (m_withMenuFastPosition)
                     {
-                        menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulationTransfer(), { this, &CSimulatedAircraftView::toggleFastPositionUpdates });
+                        menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates (send)",  CMenuAction::pathClientSimulationTransfer(), { this, &CSimulatedAircraftView::toggleFastPositionUpdates });
                     }
                     const bool any = m_withMenuEnableAircraft || m_withMenuFastPosition || m_withMenuHighlightAndFollow || m_withMenuEnableGndFlag;
                     if (any && (sApp && sApp->isDeveloperFlagSet()))

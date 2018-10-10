@@ -243,16 +243,24 @@ namespace BlackMisc
 
         CElevationPlane CAircraftSituation::interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CLength &distance)
         {
-            if (oldSituation.isNull() || newSituation.isNull()) { return CAircraftSituation::null(); }
+            if (oldSituation.isNull() || newSituation.isNull()) { return CElevationPlane::null(); }
+            if (!oldSituation.hasGroundElevation() || !newSituation.hasGroundElevation()) { return CElevationPlane::null(); }
             if (oldSituation.equalNormalVectorDouble(newSituation)) { return newSituation.getGroundElevationPlane(); }
 
             const double newElvFt = newSituation.getGroundElevation().value(CLengthUnit::ft());
             const double oldElvFt = oldSituation.getGroundElevation().value(CLengthUnit::ft());
             const double deltaElvFt = newElvFt - oldElvFt;
-            if (deltaElvFt > 25) { return CElevationPlane::null(); }
+            if (deltaElvFt > MaxDeltaElevationFt) { return CElevationPlane::null(); } // threshold, interpolation not possible
 
             if (!situation.isNull())
             {
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    Q_ASSERT_X(situation.isValidVectorRange(), Q_FUNC_INFO, "Invalid range");
+                    Q_ASSERT_X(oldSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid range");
+                    Q_ASSERT_X(newSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid range");
+                }
+
                 const double distanceSituationNewM = situation.calculateGreatCircleDistance(newSituation).value(CLengthUnit::m());
                 if (distanceSituationNewM < 5.0) { return newSituation.getGroundElevationPlane(); }
 
@@ -261,7 +269,7 @@ namespace BlackMisc
 
                 const double distRatio = distanceSituationNewM / distanceOldNewM;
 
-                // very close to the situations we return tehir elevation
+                // very close to the situations we return their elevation
                 if (distRatio < 0.05) { return newSituation.getGroundElevationPlane(); }
                 if (distRatio > 0.95) { return oldSituation.getGroundElevationPlane(); }
 
