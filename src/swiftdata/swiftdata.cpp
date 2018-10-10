@@ -30,8 +30,6 @@
 #include <QtGlobal>
 #include <QVersionNumber>
 
-class QWidget;
-
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
@@ -124,6 +122,7 @@ void CSwiftData::init()
 void CSwiftData::initLogDisplay()
 {
     m_statusBar.initStatusBar(ui->sb_SwiftData);
+    // m_statusBar.setSizeGripEnabled(false);
 
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable

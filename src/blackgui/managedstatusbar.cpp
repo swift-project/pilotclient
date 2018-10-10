@@ -123,7 +123,7 @@ namespace BlackGui
         if (m_elideMode != Qt::ElideNone)
         {
             const QFontMetrics metrics(m_statusBarLabel->font());
-            const QString elidedText = metrics.elidedText(statusMessage.getMessage(), m_elideMode, 0.90 * w);
+            const QString elidedText = metrics.elidedText(statusMessage.getMessage(), m_elideMode, qRound(0.90 * w));
             m_statusBarLabel->setText(elidedText);
         }
         else
@@ -135,10 +135,15 @@ namespace BlackGui
 
     void CManagedStatusBar::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
-        foreach (CStatusMessage m, statusMessages)
+        for (const CStatusMessage &m : statusMessages)
         {
             this->displayStatusMessage(m);
         }
+    }
+
+    void CManagedStatusBar::setSizeGripEnabled(bool enabled)
+    {
+        if (m_statusBar) { m_statusBar->setSizeGripEnabled(enabled); }
     }
 
     void CManagedStatusBar::clearStatusBar()

@@ -56,6 +56,9 @@ namespace BlackGui
         //! Display status messages
         void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
+        //! Enabled size grip
+        void setSizeGripEnabled(bool enabled);
+
     private:
         //! Clear status bar
         void clearStatusBar();
@@ -64,7 +67,7 @@ namespace BlackGui
         QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
         QLabel *m_statusBarLabel = nullptr; //!< status bar label
         QTimer  m_timerStatusBar { this };  //!< cleaning up status bar (own cleaning as I need to clean window / icon)
-        bool m_ownedStatusBar = false;      //!< own status bar or "injected"
+        bool m_ownedStatusBar = false;      //!< own status bar or "injected" (e.g.by UI builder)
         Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
         BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };
