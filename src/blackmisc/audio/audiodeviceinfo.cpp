@@ -9,6 +9,7 @@
 
 #include "blackmisc/audio/audiodeviceinfo.h"
 
+#include <QStringBuilder>
 #include <QHostInfo>
 #include <QtGlobal>
 
@@ -18,7 +19,7 @@ namespace BlackMisc
     {
         CAudioDeviceInfo::CAudioDeviceInfo() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
-            m_deviceName(""), m_hostName(QHostInfo::localHostName())
+            m_hostName(QHostInfo::localHostName())
         { }
 
         CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const int index, const QString &name) :
@@ -29,13 +30,8 @@ namespace BlackMisc
         QString CAudioDeviceInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (this->m_hostName.isEmpty()) return m_deviceName;
-            QString s(this->m_deviceName);
-            s.append(" [");
-            s.append(this->getHostName());
-            s.append("]");
-            return s;
+            if (m_hostName.isEmpty()) { return m_deviceName; }
+            return m_deviceName % QStringLiteral(" [") % this->getHostName() % QStringLiteral("]");
         }
-
     } // Voice
 } // BlackMisc

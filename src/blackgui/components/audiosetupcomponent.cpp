@@ -45,13 +45,14 @@ namespace BlackGui
             // audio is optional
             const bool audio = this->hasAudio();
             this->setEnabled(audio);
-            ui->le_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
 
             bool c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::onLoopbackToggled);
             Q_ASSERT(c);
 
             if (audio)
             {
+                ui->le_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
+
                 this->initAudioDeviceLists();
 
                 // default
@@ -146,7 +147,7 @@ namespace BlackGui
             ui->cb_SetupAudioOutputDevice->clear();
             ui->cb_SetupAudioInputDevice->clear();
 
-            for (auto &device : devices)
+            for (const CAudioDeviceInfo &device : devices)
             {
                 if (device.getType() == CAudioDeviceInfo::InputDevice)
                 {
