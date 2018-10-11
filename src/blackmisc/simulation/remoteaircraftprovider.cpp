@@ -260,6 +260,7 @@ namespace BlackMisc
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
+                BLACK_VERIFY_X(situation.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
             }
 
             // add altitude offset (for testing only)
@@ -303,7 +304,8 @@ namespace BlackMisc
                 // check sort order
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
+                    BLACK_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong adjusted sort order");
+                    BLACK_VERIFY_X(newSituationsList.isSortedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
                     BLACK_VERIFY_X(newSituationsList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
                 }
 

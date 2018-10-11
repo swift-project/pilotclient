@@ -108,8 +108,8 @@ namespace BlackMisc
                 if (!m_currentSituations.isEmpty())
                 {
                     m_s[0] = m_s[1] = m_s[2] = m_currentSituations.front();
-                    m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec * 2);
-                    m_s[1].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec);
+                    m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec * 2); // Ref T297 default offset time to fill data
+                    m_s[1].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec);     // Ref T297 default offset time to fill data
                     return true;
                 }
                 m_s[0] = m_s[1] = m_s[2] = CAircraftSituation::null();
@@ -118,8 +118,8 @@ namespace BlackMisc
             else
             {
                 m_s[0] = m_s[1] = m_s[2] = m_lastSituation; // current
-                m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); //  oldest
-                m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest
+                m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); // oldest, Ref T297 default offset time to fill data
+                m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest, Ref T297 default offset time to fill data
                 if (m_currentSituations.isEmpty()) { return true; }
             }
 
@@ -298,6 +298,11 @@ namespace BlackMisc
             newSituation.setPosition(currentPosition);
             newSituation.setAltitude(alt);
             newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(CAircraftSituation::isValidVector(normalVector), Q_FUNC_INFO, "invalid vector");
+                Q_ASSERT_X(newSituation.isValidVectorRange(), Q_FUNC_INFO, "invalid situation");
+            }
 
             if (interpolateGndFactor)
             {
