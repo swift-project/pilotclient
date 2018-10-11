@@ -937,10 +937,10 @@ namespace BlackCore
                 CSpeed(position->groundSpeed, CSpeedUnit::kts())
             );
 
-            //! we set a dynamically updating offset time here
+            // Ref T297, default offset time
             situation.setCurrentUtcTime();
-            const qint64 offsetMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
-            situation.setTimeOffsetMs(offsetMs);
+            const qint64 offsetTimeMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            situation.setTimeOffsetMs(offsetTimeMs);
 
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
             switch (position->transponderMode)
@@ -1012,10 +1012,12 @@ namespace BlackCore
                 CAngle(position->bank, CAngleUnit::deg()),
                 CSpeed::null() // There is no speed information in a interim packet
             );
+
+            // Ref T297, default offset time
             situation.setCurrentUtcTime();
-            situation.setTimeOffsetMs(CFsdSetup::c_interimPositionTimeOffsetMsec);
+            const qint64 offsetTimeMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            situation.setTimeOffsetMs(offsetTimeMs);
             situation.setInterimFlag(true);
-            self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
 
             emit self->aircraftInterimPositionUpdate(situation);
         }
@@ -1236,7 +1238,8 @@ namespace BlackCore
             const qint64 oldTs = m_lastPositionUpdate.value(callsign);
             m_lastPositionUpdate[callsign] = markerTs;
 
-            const qint64 diff = oldTs - markerTs;
+            // Ref T297,
+            const qint64 diff = qAbs(markerTs - oldTs);
             const qint64 offsetTime = (oldTs > 0 && diff > 0 && diff < CFsdSetup::c_interimPositionTimeOffsetMsec) ?
                                       CFsdSetup::c_interimPositionTimeOffsetMsec :
                                       CFsdSetup::c_positionTimeOffsetMsec;
