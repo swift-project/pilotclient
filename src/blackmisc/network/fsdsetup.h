@@ -56,9 +56,10 @@ namespace BlackMisc
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
             //! Offset times basically telling when to expect the next value from network plus some reserve
+            //! \remark copies of CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
             //! @{
-            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates
-            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates
+            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
+            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates Ref T297
             //! @}
 
             //! Default constructor.
@@ -105,7 +106,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CFsdSetup &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()

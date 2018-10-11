@@ -184,9 +184,10 @@ namespace BlackMisc
             const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - m_currentTimeMsSinceEpoch;
             const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
             const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
-            const qint64 interpolatedTime = oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs;
+            const qint64 interpolatedTime = oldSituation.getMSecsSinceEpoch() + qRound(deltaTimeFractionMs);
 
-            currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
+            // Ref T297 adjust offset time, but this already the interpolated situation
+            currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + qRound((newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction));
             currentSituation.setMSecsSinceEpoch(interpolatedTime);
             m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
 

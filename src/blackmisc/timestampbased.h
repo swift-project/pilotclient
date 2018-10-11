@@ -231,7 +231,7 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-        //! Compare for index
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampWithOffsetBased &compareValue) const;
 
         qint64 m_timeOffsetMs = 0; //!< offset time in ms
