@@ -358,19 +358,31 @@ namespace BlackCore
         virtual void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
 
         /*!
+         * Get the group of callsigns receiving regular interim position updates.
+         */
+        virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const = 0;
+
+        /*!
          * Add callsign receiving regular interim position updates.
          */
-        virtual void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver)
+        void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver)
         {
             BlackMisc::Aviation::CCallsignSet set = this->getInterimPositionReceivers();
+            if (set.contains(receiver)) { return; } // already in set
             set.push_back(receiver);
             this->setInterimPositionReceivers(set);
         }
 
         /*!
-         * Get the group of callsigns receiving regular interim position updates.
+         * Remove callsign receiving regular interim position updates.
          */
-        virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const = 0;
+        void removeInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver)
+        {
+            BlackMisc::Aviation::CCallsignSet set = this->getInterimPositionReceivers();
+            if (!set.contains(receiver)) { return; } // nothing to remove
+            set.remove(receiver);
+            this->setInterimPositionReceivers(set);
+        }
 
         //! @}
         ////////////////////////////////////////////////////////////////

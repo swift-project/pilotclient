@@ -125,7 +125,17 @@ namespace BlackCore
             QTimer::singleShot(0, m_network, [ = ]
             {
                 if (!myself) { return; }
-                if (m_network) { m_network->addInterimPositionReceiver(callsign); }
+                if (m_network)
+                {
+                    if (enableFastPositonUpdates)
+                    {
+                        m_network->addInterimPositionReceiver(callsign);
+                    }
+                    else
+                    {
+                        m_network->removeInterimPositionReceiver(callsign);
+                    }
+                }
             });
         }
         return r;
