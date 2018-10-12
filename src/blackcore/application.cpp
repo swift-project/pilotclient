@@ -166,7 +166,8 @@ namespace BlackCore
 
             // global setup
             m_setupReader.reset(new CSetupReader(this));
-            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::onSetupHandlingCompleted, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingCompleted, Qt::QueuedConnection); // hand thru
             connect(m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog, &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
@@ -408,6 +409,7 @@ namespace BlackCore
         if (!m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
         CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, timeoutMs, [this]
         {
+            // init, if this is true event queue is not started
             return m_setupReader->isSetupAvailable();
         });
 
@@ -1031,7 +1033,7 @@ namespace BlackCore
         m_fileLogger->close();
     }
 
-    void CApplication::setupHandlingIsCompleted(bool available)
+    void CApplication::onSetupHandlingCompleted(bool available)
     {
         if (available)
         {
@@ -1040,7 +1042,6 @@ namespace BlackCore
             m_started = msgs.isSuccess();
         }
 
-        emit this->setupHandlingCompleted(available);
         if (m_signalStartup) { emit this->startUpCompleted(m_started); }
     }
 
@@ -1543,7 +1544,8 @@ namespace BlackCore
 
     CStatusMessageList CApplication::synchronizeSetup(int timeoutMs)
     {
-        this->requestReloadOfSetupAndVersion();
+        const CStatusMessageList requestMsgs = this->requestReloadOfSetupAndVersion();
+        if (requestMsgs.isFailure()) { return requestMsgs; } // request already failed
         return this->waitForSetup(timeoutMs);
     }
 

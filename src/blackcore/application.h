@@ -509,7 +509,7 @@ namespace BlackCore
 
     protected:
         //! Setup read/synchronized
-        void setupHandlingIsCompleted(bool available);
+        void onSetupHandlingCompleted(bool available);
 
         //! Wait for setup data by calling the event loop and waiting until everything is ready
         //! \remark requires parsing upfront
