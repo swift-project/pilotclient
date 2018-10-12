@@ -422,24 +422,6 @@ namespace BlackCore
             // however, store as error because this will be a possible root cause if nothing else is
             nwReply->abort();
         }
-
-        /**
-        // try next one if any Removed with T367
-        if (m_bootstrapUrls.addFailedUrl(url))
-        {
-            CStatusMessage msg = CStatusMessage(this).warning("Reading setup failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
-                                 << replyMessage << urlString
-                                 << m_bootstrapUrls.numberOfStillValidUrls();
-            this->setLastSetupReadErrorMessages(msg);
-            CLogMessage::preformatted(msg);
-            QTimer::singleShot(500, this, &CSetupReader::readSetup);
-        }
-        else
-        {
-            const CStatusMessageList msgs = this->manageSetupAvailability(false);
-            CLogMessage::preformatted(msgs);
-        }
-        **/
     }
 
     void CSetupReader::parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
@@ -513,21 +495,6 @@ namespace BlackCore
             // network error, try next URL
             nwReply->abort();
         }
-
-        /** try next one if any Removed with T367
-        if (m_updateInfoUrls.addFailedUrl(url))
-        {
-            CLogMessage(this).warning("Reading update info failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
-                    << replyMessage << urlString
-                    << m_updateInfoUrls.numberOfStillValidUrls();
-            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
-        }
-        else
-        {
-            this->manageUpdateInfoAvailability(false);
-            CLogMessage(this).error("Reading update info failed %1 %2, failed URLs %3") << replyMessage << urlString << m_updateInfoUrls.getFailedUrlsSize();
-        }
-        **/
     }
 
     const CLogCategoryList &CSetupReader::getLogCategories()

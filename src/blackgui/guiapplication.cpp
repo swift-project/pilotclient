@@ -851,7 +851,7 @@ namespace BlackGui
 
     bool CGuiApplication::parseAndSynchronizeSetup(int timeoutMs)
     {
-        if (!this->parseAndStartupCheck()) return false;
+        if (!this->parseAndStartupCheck()) { return false; }
         return this->interactivelySynchronizeSetup(timeoutMs);
     }
 
