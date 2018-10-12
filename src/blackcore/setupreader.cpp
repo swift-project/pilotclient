@@ -23,6 +23,7 @@
 #include <QByteArray>
 #include <QFile>
 #include <QNetworkReply>
+#include <QPointer>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
@@ -221,7 +222,9 @@ namespace BlackCore
             return msgs;
         }
 
-        if (m_setup.lastUpdatedAge() < 5000)
+        // same web load within 5000ms
+        const CGlobalSetup setup = m_setup.get();
+        if (m_setup.lastUpdatedAge() < 5000 && setup.wasLoadedFromWeb())
         {
             const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Update info just updated, skip read");
             CStatusMessageList msgs(m);
@@ -230,25 +233,41 @@ namespace BlackCore
         }
 
         // trigger two reads, the file size is small
+        CStatusMessage m1, m2;
         const CUrlList randomUrls = m_bootstrapUrls.randomElements(2);
         CUrl url = randomUrls.front();
-        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, "Start reading bootstrap 1st URL: " + url.toQString());
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+        if (!url.isEmpty())
+        {
+            m1 = CStatusMessage(this, CStatusMessage::SeverityInfo, "Start reading bootstrap 1st URL: " + url.toQString());
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+        }
+        else
+        {
+            m1 = CStatusMessage(this, CStatusMessage::SeverityError, "First bootstrap URL is empty");
+        }
+
 
         url = randomUrls.back();
-        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, "Will also trigger deferred bootstrap reading 2nd URL: " + url.toQString());
-        QPointer<CSetupReader> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
+        if (!url.isEmpty())
         {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
-            if (!m_lastSuccessfulSetupUrl.isEmpty())
+            m2 = CStatusMessage(this, CStatusMessage::SeverityInfo, "Will also trigger deferred bootstrap reading 2nd URL: " + url.toQString());
+            QPointer<CSetupReader> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
             {
-                // already read
-                CLogMessage(this).info("Cancel second bootstrap read, as there was a 1st read: " + url.toQString());
-                return;
-            }
-            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
-        });
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                if (!m_lastSuccessfulSetupUrl.isEmpty())
+                {
+                    // already read
+                    CLogMessage(this).info("Cancel second bootstrap read, as there was a 1st read: " + url.toQString());
+                    return;
+                }
+                sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+            });
+        }
+        else
+        {
+            m2 = CStatusMessage(this, CStatusMessage::SeverityWarning, "2nd bootstrap URL is empty");
+        }
 
         CStatusMessageList msgs({m1, m2});
         this->setLastSetupReadErrorMessages(msgs);
@@ -309,12 +328,13 @@ namespace BlackCore
     CStatusMessageList CSetupReader::readLocalBootstrapFile(const QString &fileName)
     {
         if (fileName.isEmpty()) { return CStatusMessage(this).error("No file name for local bootstrap file"); }
+        if (!sApp || sApp->isShuttingDown()) { return CStatusMessage(this).error("No sApp, shutting down?"); }
         QString fn;
         const QFile file(fileName);
         if (!file.exists())
         {
             // relative name?
-            QString dir(sApp->getCmdSwiftPrivateSharedDir());
+            const QString dir(sApp->getCmdSwiftPrivateSharedDir());
             if (dir.isEmpty()) { return CStatusMessage(this).error("Empty shared directory '%1' for bootstrap file") << dir; }
 
             // no version for local files, as those come with the current code
@@ -401,7 +421,7 @@ namespace BlackCore
                         }
                     }
                     CLogMessage::preformatted(this->manageSetupAvailability(true));
-                    return;
+                    return; // success
                 }
                 catch (const CJsonException &ex)
                 {
@@ -623,15 +643,26 @@ namespace BlackCore
     {
         Q_ASSERT_X(!(webRead && localRead), Q_FUNC_INFO, "Local and web read together seems to be wrong");
         CStatusMessageList msgs;
+        QPointer<CSetupReader> myself(this);
+
         if (webRead)
         {
             msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of update information"));
-            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->readUpdateInfo();
+            });
         }
+
         if (localRead)
         {
             msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of update information"));
-            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->readUpdateInfo();
+            });
         }
 
         bool available = false;
