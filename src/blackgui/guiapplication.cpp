@@ -825,27 +825,35 @@ namespace BlackGui
             const CStatusMessageList msgs = this->synchronizeSetup(timeoutMs);
             if (msgs.hasErrorMessages())
             {
-                static const QString style = sGui->getStyleSheetUtility().styles(
-                {
-                    CStyleSheetUtility::fileNameFonts(),
-                    CStyleSheetUtility::fileNameStandardWidget()
-                });
                 CSetupLoadingDialog dialog(msgs, this->mainApplicationWidget());
-                dialog.setStyleSheet(style);
+                if (sGui)
+                {
+                    static const QString style = sGui->getStyleSheetUtility().styles(
+                    {
+                        CStyleSheetUtility::fileNameFonts(),
+                        CStyleSheetUtility::fileNameStandardWidget()
+                    });
+                    dialog.setStyleSheet(style);
+                }
+
                 const int r = dialog.exec();
                 if (r == QDialog::Rejected)
                 {
-                    ok = false;
-                    break;
+                    break; // exit with false state, as file was not loaded
+                }
+                else
+                {
+                    // run loop again and sync again
                 }
             }
             else
             {
+                // setup loaded
                 ok = true;
                 break;
             }
         }
-        while (true);
+        while (!ok);
         return ok;
     }
 

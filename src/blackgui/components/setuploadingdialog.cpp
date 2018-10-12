@@ -11,16 +11,20 @@
 #include "copymodelsfromotherswiftversionsdialog.h"
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/network/urllist.h"
 
 #include <QPushButton>
 #include <QDesktopServices>
+#include <QTimer>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackCore;
+using namespace BlackCore::Data;
 
 namespace BlackGui
 {
@@ -57,7 +61,7 @@ namespace BlackGui
 
             ui->comp_Messages->hideFilterBar(); // saves space, we only expect aview messages
         }
-        CSetupLoadingDialog::CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent) : CSetupLoadingDialog(parent)
+        CSetupLoadingDialog::CSetupLoadingDialog(const CStatusMessageList &msgs, QWidget *parent) : CSetupLoadingDialog(parent)
         {
             ui->comp_Messages->appendStatusMessagesToList(msgs);
         }
@@ -77,12 +81,25 @@ namespace BlackGui
 
         void CSetupLoadingDialog::displayBootstrapUrls()
         {
-            const CUrlList bootstrapUrls = sApp->getGlobalSetup().getSwiftBootstrapFileUrls();
-            for (const CUrl &url : bootstrapUrls)
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            const CGlobalSetup setup = sApp->getGlobalSetup();
+            if (setup.wasLoadedFromWeb())
             {
-                const CStatusMessage msg = CNetworkUtils::canConnect(url) ?
-                                           CStatusMessage(this).info("Can connect to '%1'") << url.getFullUrl() :
-                                           CStatusMessage(this).warning("Cannot connect to '%1'") << url.getFullUrl();
+                QPointer<CSetupLoadingDialog> myself(this);
+                QTimer::singleShot(250, this, [ = ]
+                {
+                    const CUrlList bootstrapUrls = setup.getSwiftBootstrapFileUrls();
+                    for (const CUrl &url : bootstrapUrls)
+                    {
+                        const CStatusMessage msg = CNetworkUtils::canConnect(url) ?
+                        CStatusMessage(this).info("Can connect to '%1'") << url.getFullUrl() : CStatusMessage(this).warning("Cannot connect to '%1'") << url.getFullUrl();
+                        ui->comp_Messages->appendStatusMessageToList(msg);
+                    }
+                });
+            }
+            else
+            {
+                const CStatusMessage msg = CStatusMessage(this).warning("No loaded bootstrap setup available");
                 ui->comp_Messages->appendStatusMessageToList(msg);
             }
         }
@@ -123,7 +140,13 @@ namespace BlackGui
             this->prefillSetupCache();
             QPushButton *retry = ui->bb_Dialog->button(QDialogButtonBox::Retry);
             if (!retry) { return; }
-            retry->click();
+
+            QPointer<CSetupLoadingDialog> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
+            {
+                if (!sApp || !myself) { return; }
+                retry->click();
+            });
         }
 
         void CSetupLoadingDialog::prefillSetupCache()
