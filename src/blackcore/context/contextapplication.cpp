@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextapplicationempty.h"
 #include "blackcore/context/contextapplicationimpl.h"
@@ -91,7 +92,8 @@ namespace BlackCore
                 CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
             });
 
-            bool s = connect(CInputManager::instance(), &CInputManager::hotkeyActionRegistered, [ = ](const QStringList & actions)
+            Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+            bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, [ = ](const QStringList & actions)
             {
                 if (!myself) { return; }
                 this->registerHotkeyActions(actions, {});
@@ -102,12 +104,12 @@ namespace BlackCore
             s = connect(this, &IContextApplication::hotkeyActionsRegistered, [ = ](const QStringList & actions, const CIdentifier & origin)
             {
                 if (origin.hasApplicationProcessId()) { return; }
-                CInputManager::instance()->registerRemoteActions(actions);
+                sApp->getInputManager()->registerRemoteActions(actions);
             });
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
             Q_UNUSED(s);
 
-            s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, this, [ = ](const QString & action, bool argument)
+            s = connect(sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this, [ = ](const QString & action, bool argument)
             {
                 if (!myself) { return; }
                 this->callHotkeyAction(action, argument, {});
@@ -121,14 +123,14 @@ namespace BlackCore
             {
                 if (!myself) { return; }
                 if (origin.isFromLocalMachine()) { return; }
-                CInputManager::instance()->callFunctionsBy(action, argument);
+                sApp->getInputManager()->callFunctionsBy(action, argument);
                 CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
             });
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote hotkey action failed");
             Q_UNUSED(s);
 
             // Enable event forwarding from GUI process to core
-            CInputManager::instance()->setForwarding(true);
+            sApp->getInputManager()->setForwarding(true);
         }
 
         CIdentifierList IContextApplication::subscribersOf(const CStatusMessage &message) const

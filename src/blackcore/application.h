@@ -17,6 +17,7 @@
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/application/applicationsettings.h"
+#include "blackcore/inputmanager.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/db/updateinfo.h"
 #include "blackmisc/network/urllist.h"
@@ -298,6 +299,12 @@ namespace BlackCore
         //! cmd line arguments as string
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
         //! @}
+
+        // ----------------------- Input ----------------------------------------
+
+        //! The input manager, if available
+        CInputManager *getInputManager() const { return m_inputManager; }
+
 
         // ----------------------- simulator ----------------------------------------
 
@@ -633,20 +640,21 @@ namespace BlackCore
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
-        QNetworkConfigurationManager   *m_networkConfigManager = nullptr;   //!< configuration
-        QNetworkAccessManager                 *m_accessManager = nullptr;   //!< single network access manager
-        Db::CNetworkWatchdog                  *m_networkWatchDog = nullptr; //!< checking DB/internet access
-        BlackMisc::CApplicationInfo            m_applicationInfo;           //!< Application if specified
-        QScopedPointer<CCoreFacade>            m_coreFacade;                //!< core facade if any
-        QScopedPointer<CSetupReader>           m_setupReader;               //!< setup reader
-        QScopedPointer<CWebDataServices>       m_webDataServices;           //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;                //!< file logger
-        QPointer<CCookieManager>               m_cookieManager;             //!< single cookie manager for our access manager
-        const QString                          m_applicationName;           //!< application name
-        QReadWriteLock                         m_accessManagerLock;         //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                      m_coreFacadeConfig;          //!< Core facade config if any
-        CWebReaderFlags::WebReader             m_webReadersUsed;            //!< Readers to be used
-        Db::CDatabaseReaderConfigList          m_dbReaderConfig;            //!< Load or used caching?
+        CInputManager                          *m_inputManager = nullptr; //!< Input devices and hotkeys
+        QNetworkConfigurationManager   *m_networkConfigManager = nullptr; //!< configuration
+        QNetworkAccessManager                 *m_accessManager = nullptr; //!< single network access manager
+        Db::CNetworkWatchdog                *m_networkWatchDog = nullptr; //!< checking DB/internet access
+        BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
+        QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
+        QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
+        QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
+        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
+        QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager
+        const QString                          m_applicationName;         //!< application name
+        QReadWriteLock                         m_accessManagerLock;       //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig                      m_coreFacadeConfig;        //!< Core facade config if any
+        CWebReaderFlags::WebReader             m_webReadersUsed;          //!< Readers to be used
+        Db::CDatabaseReaderConfigList          m_dbReaderConfig;          //!< Load or used caching?
         bool m_noNwAccessPoint = false;        //!< no network access point?
         bool m_useContexts   = false;          //!< use contexts
         bool m_useWebData    = false;          //!< use web data

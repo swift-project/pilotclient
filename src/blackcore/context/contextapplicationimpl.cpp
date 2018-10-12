@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/context/contextapplicationimpl.h"
 #include "blackcore/inputmanager.h"
 #include "blackmisc/dbusserver.h"
@@ -161,7 +162,7 @@ namespace BlackCore
             {
                 m_registeredApplications.push_back(identifier);
                 emit this->registrationChanged();
-                emit this->hotkeyActionsRegistered(CInputManager::instance()->allAvailableActions(), {});
+                emit this->hotkeyActionsRegistered(sApp->getInputManager()->allAvailableActions(), {});
             }
             else
             {

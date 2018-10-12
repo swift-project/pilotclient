@@ -107,7 +107,6 @@ namespace BlackGui
             QScopedPointer<Ui::CHotkeyDialog> ui;
             BlackMisc::Input::CActionHotkey m_actionHotkey;
             BlackGui::Models::CActionModel m_actionModel;
-            BlackCore::CInputManager *m_inputManager = nullptr;
         };
     } // ns
 } // ns

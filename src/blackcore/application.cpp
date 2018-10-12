@@ -163,7 +163,6 @@ namespace BlackCore
 
             this->initNetwork();
 
-
             // global setup
             m_setupReader.reset(new CSetupReader(this));
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::onSetupHandlingCompleted, Qt::QueuedConnection);
@@ -179,7 +178,8 @@ namespace BlackCore
 
             if (!this->getApplicationInfo().isUnitTest())
             {
-                CInputManager::instance()->createDevices();
+                m_inputManager = new CInputManager(this);
+                m_inputManager->createDevices();
             }
         }
     }
@@ -985,7 +985,7 @@ namespace BlackCore
 
         // Release all input devices to not cause any accidental hotkey triggers anymore.
         // This is also necessary to properly free platform specific instances at a defined point in time.
-        CInputManager::instance()->releaseDevices();
+        if (m_inputManager) { m_inputManager->releaseDevices(); }
 
         // mark as shutdown
         if (m_networkWatchDog) { m_networkWatchDog->gracefulShutdown(); }
@@ -1002,8 +1002,6 @@ namespace BlackCore
 
         // from here on we really rip apart the application object
         // and it should no longer be used
-        sApp = nullptr;
-        disconnect(this);
 
         if (this->supportsContexts())
         {
@@ -1031,6 +1029,11 @@ namespace BlackCore
         }
 
         m_fileLogger->close();
+
+        qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
+
+        sApp = nullptr;
+        disconnect(this);
     }
 
     void CApplication::onSetupHandlingCompleted(bool available)

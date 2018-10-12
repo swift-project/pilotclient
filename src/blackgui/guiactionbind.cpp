@@ -19,16 +19,17 @@ namespace BlackGui
     CGuiActionBindHandler::CGuiActionBindHandler(QAction *action) : QObject(action), m_action(action)
     {
         this->connectDestroy(action);
+        connect(sApp, &CApplication::aboutToShutdown, this, &CGuiActionBindHandler::unbind);
     }
 
     CGuiActionBindHandler::CGuiActionBindHandler(QAbstractButton *button) : QObject(button), m_button(button)
     {
         this->connectDestroy(button);
+        connect(sApp, &CApplication::aboutToShutdown, this, &CGuiActionBindHandler::unbind);
     }
 
     CGuiActionBindHandler::~CGuiActionBindHandler()
     {
-        this->unbind();
     }
 
     CActionBindings CGuiActionBindHandler::bindMenu(QMenu *menu, const QString &path)
@@ -87,10 +88,10 @@ namespace BlackGui
 
     void CGuiActionBindHandler::unbind()
     {
-        Q_ASSERT_X(CInputManager::instance(), Q_FUNC_INFO, "Missing input manager");
         if (this->hasTarget())
         {
-            CInputManager::instance()->unbind(m_index);
+            Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+            sApp->getInputManager()->unbind(m_index);
         }
         this->reset();
     }

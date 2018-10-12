@@ -38,6 +38,9 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Constructor
+        CInputManager(QObject *parent = nullptr);
+
         //! Register new action
         void registerAction(const QString &action, const QPixmap &icon = BlackMisc::CIcons::empty16());
 
@@ -93,9 +96,6 @@ namespace BlackCore
         //! Releases all devices
         void releaseDevices();
 
-        //! Creates a native keyboard handler object
-        static CInputManager *instance();
-
     signals:
         //! Event hotkeyfunction occured
         void remoteActionFromLocal(const QString &action, bool argument);
@@ -108,12 +108,6 @@ namespace BlackCore
 
         //! New hotkey action is registered
         void hotkeyActionRegistered(const QStringList &actions);
-
-    protected:
-        //! Constructor
-        CInputManager(QObject *parent = nullptr);
-
-
 
     private:
         //! Handle to a bound action

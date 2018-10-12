@@ -11,7 +11,8 @@
 
 namespace BlackCore
 {
-    CActionBind::CActionBind(const QString &action, const QPixmap &icon)
+    CActionBind::CActionBind(const QString &action, const QPixmap &icon, QObject *parent)
+        : QObject(parent)
     {
         CActionBind::registerAction(action, icon);
     }
@@ -19,27 +20,30 @@ namespace BlackCore
     QString CActionBind::registerAction(const QString &action, const QPixmap &icon)
     {
         const QString a = CActionBind::normalizeAction(action);
-        CInputManager *inputManger = CInputManager::instance();
-        Q_ASSERT_X(inputManger, Q_FUNC_INFO, "Missing input manager");
-        inputManger->registerAction(a, icon);
+        Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+        sApp->getInputManager()->registerAction(a, icon);
         return a;
     }
 
     CActionBind::~CActionBind()
+    {
+    }
+
+    void CActionBind::unbind()
+    {
+        if (m_index < 0) { return; }
+        Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+        sApp->getInputManager()->unbind(m_index);
+        m_index = -1;
+    }
+
+    void CActionBind::shutdown()
     {
         unbind();
         if (m_deleteCallback)
         {
             m_deleteCallback();
         }
-    }
-
-    void CActionBind::unbind()
-    {
-        if (m_index < 0) { return; }
-        auto inputManger = CInputManager::instance();
-        inputManger->unbind(m_index);
-        m_index = -1;
     }
 
     QString CActionBind::normalizeAction(const QString &action)

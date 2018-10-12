@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/inputmanager.h"
+#include "blackcore/application.h"
 #include "blackgui/models/actionitem.h"
 #include "blackgui/models/actionmodel.h"
 #include "blackmisc/icons.h"
@@ -57,7 +57,7 @@ namespace BlackGui
 
         Qt::ItemFlags CActionModel::flags(const QModelIndex &index) const
         {
-            if (!index.isValid()) { return 0; }
+            if (!index.isValid()) { return Qt::NoItemFlags; }
             const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
             const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
             const bool selectable = item && !item->hasChildren(); // only leafs are selectable
@@ -103,7 +103,8 @@ namespace BlackGui
         {
             m_rootItem.reset(new CActionItem(QString(), QString()));
 
-            const QMap<QString, QPixmap> availableActionsAndIcons = CInputManager::instance()->allAvailableActionsAndIcons();
+            Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+            const QMap<QString, QPixmap> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
             QStringList keys = availableActionsAndIcons.keys();
             keys.sort();
             for (const QString &actionPath : as_const(keys))

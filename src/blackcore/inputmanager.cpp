@@ -30,12 +30,6 @@ namespace BlackCore
         reloadHotkeySettings();
     }
 
-    CInputManager *CInputManager::instance()
-    {
-        static CInputManager instance;
-        return &instance;
-    }
-
     void CInputManager::registerAction(const QString &action, const QPixmap &icon)
     {
         if (!m_availableActions.contains(action))

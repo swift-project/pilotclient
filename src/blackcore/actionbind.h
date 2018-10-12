@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_ACTIONBIND_H
 #define BLACKCORE_ACTIONBIND_H
 
-#include "blackcore/inputmanager.h"
+#include "blackcore/application.h"
 #include "blackcoreexport.h"
 #include <QPixmap>
 
@@ -21,8 +21,10 @@ namespace BlackCore
     /*!
      * CActionBind binds a member function to an action
      */
-    class BLACKCORE_EXPORT CActionBind
+    class BLACKCORE_EXPORT CActionBind : public QObject
     {
+        Q_OBJECT
+
     public:
         //! Signature of receiving member function
         template <typename U>
@@ -32,15 +34,18 @@ namespace BlackCore
         template <typename Receiver>
         CActionBind(const QString &action, const QPixmap &icon, Receiver *receiver,
                     MembFunc<Receiver> slot = nullptr,
-                    const std::function<void()> &deleteCallback = {}) :
-            m_deleteCallback(deleteCallback)
+                    const std::function<void()> &deleteCallback = {},
+                    QObject *parent = nullptr) :
+            QObject(parent), m_deleteCallback(deleteCallback)
         {
             const QString a = CActionBind::registerAction(action, icon);
-            m_index = CInputManager::instance()->bind(a, receiver, slot);
+            Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+            m_index = sApp->getInputManager()->bind(a, receiver, slot);
+            QObject::connect(sApp, &CApplication::aboutToShutdown, this, &CActionBind::shutdown);
         }
 
         //! Signature just to set an icon for an action
-        CActionBind(const QString &action, const QPixmap &icon);
+        CActionBind(const QString &action, const QPixmap &icon, QObject *parent = nullptr);
 
         //! Not copyable
         //! @{
@@ -49,7 +54,7 @@ namespace BlackCore
         //! @}
 
         //! Destructor
-        ~CActionBind();
+        virtual ~CActionBind();
 
         //! Unbind from BlackCore::CInputManager
         void unbind();
@@ -61,6 +66,8 @@ namespace BlackCore
         int getIndex() const { return m_index; }
 
     private:
+        void shutdown();
+
         //! Normalize the action string
         static QString normalizeAction(const QString &action);
 

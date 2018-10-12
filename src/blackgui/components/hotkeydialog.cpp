@@ -70,7 +70,6 @@ namespace BlackGui
             m_actionModel(this)
         {
             setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-            m_inputManager = BlackCore::CInputManager::instance();
 
             ui->setupUi(this);
             ui->qf_Advanced->hide();
@@ -105,8 +104,8 @@ namespace BlackGui
             connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::selectHotkey);
             connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
-            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
-            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
+            connect(sApp->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
+            connect(sApp->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
             connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
             connect(ui->cb_Identifier, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
@@ -155,7 +154,7 @@ namespace BlackGui
         void CHotkeyDialog::selectHotkey()
         {
             ui->pb_SelectedHotkey->setText("Press any key/button...");
-            m_inputManager->startCapture();
+            sApp->getInputManager()->startCapture();
         }
 
         void CHotkeyDialog::combinationSelectionChanged(const CHotkeyCombination &combination)

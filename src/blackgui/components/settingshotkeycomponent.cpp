@@ -67,7 +67,8 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::registerDummyPttEntry()
         {
-            CInputManager::instance()->registerAction(IContextAudio::pttHotkeyAction(), IContextAudio::pttHotkeyIcon());
+            Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
+            sApp->getInputManager()->registerAction(IContextAudio::pttHotkeyAction(), IContextAudio::pttHotkeyIcon());
         }
 
         void CSettingsHotkeyComponent::addEntry()
