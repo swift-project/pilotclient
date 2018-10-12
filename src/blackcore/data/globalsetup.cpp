@@ -37,6 +37,11 @@ namespace BlackCore
             this->initDefaultValues();
         }
 
+        bool CGlobalSetup::wasLoaded() const
+        {
+            return this->wasLoadedFromWeb() || this->wasLoadedFromFile();
+        }
+
         void CGlobalSetup::initDefaultValues()
         {
             m_mappingMinimumVersion = CBuildConfig::getVersionString();
@@ -52,7 +57,6 @@ namespace BlackCore
                 "http://swift-project.org/datastore/shared/"
             });
 
-            // spare: "https://vatsim-germany.org:50443/datastore/shared"
             m_newsUrls = CUrlList({ "http://swift-project.org/" });
             m_onlineHelpUrls = CUrlList({ "https://datastore.swift-project.org/page/swifthelpdispatcher.html" });
             m_mapUrls = CUrlList({ "map.swift-project.org/" });
@@ -256,7 +260,7 @@ namespace BlackCore
 
         bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
         {
-            if (!this->wasLoaded()) { return false; }
+            if (!this->wasLoadedFromWeb()) { return false; }
             if (m_mappingMinimumVersion.isEmpty()) { return false; }
             const QVersionNumber min = QVersionNumber::fromString(this->getMappingMinimumVersionString());
             return CBuildConfig::getVersion() >= min;
@@ -274,7 +278,9 @@ namespace BlackCore
                 % this->getFormattedUtcTimestampYmdhms()
                 % separator
                 % QStringLiteral("Global setup loaded: ")
-                % boolToYesNo(this->wasLoaded())
+                % boolToYesNo(this->wasLoadedFromWeb())
+                % QStringLiteral("/")
+                % boolToYesNo(this->wasLoadedFromFile())
                 % separator
 
                 % QStringLiteral("For development: ")
@@ -366,7 +372,8 @@ namespace BlackCore
             case IndexSwiftMapUrls: return CVariant::fromValue(m_mapUrls);
             case IndexOnlineHelpUrls: return CVariant::fromValue(m_onlineHelpUrls);
             case IndexCrashReportServerUrl: return CVariant::fromValue(m_crashReportServerUrl);
-            case IndexWasLoaded: return CVariant::fromValue(m_wasLoaded);
+            case IndexWasLoadedFromWeb: return CVariant::fromValue(m_wasLoadedFromWeb);
+            case IndexWasLoadedFromFile: return CVariant::fromValue(m_wasLoadedFromFile);
             case IndexMappingMinimumVersion: return CVariant::fromValue(m_mappingMinimumVersion);
             default: return CValueObject::propertyByIndex(index);
             }
@@ -397,7 +404,8 @@ namespace BlackCore
             case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
             case IndexSwiftMapUrls: m_mapUrls = variant.value<CUrlList>(); break;
             case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
-            case IndexWasLoaded: m_wasLoaded = variant.toBool(); break;
+            case IndexWasLoadedFromWeb: m_wasLoadedFromWeb = variant.toBool(); break;
+            case IndexWasLoadedFromFile: m_wasLoadedFromFile = variant.toBool(); break;
             case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toQString(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }

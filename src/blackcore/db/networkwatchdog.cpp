@@ -294,7 +294,7 @@ namespace BlackCore
             if (!sApp || sApp->isShuttingDown()) { return; }
             if (!force && !this->isSwiftDbAccessible()) { return; }
             const CGlobalSetup gs = sApp->getGlobalSetup();
-            if (!gs.wasLoaded()) { return; }
+            if (!gs.wasLoadedFromWeb()) { return; }
             const CUrl pingUrl = gs.getDbClientPingServiceUrl(type);
             sApp->getFromNetwork(pingUrl, { this, &CNetworkWatchdog::replyPingClientService });
         }

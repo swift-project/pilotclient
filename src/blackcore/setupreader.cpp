@@ -332,9 +332,10 @@ namespace BlackCore
         {
             CGlobalSetup s;
             s.convertFromJson(content);
-            s.setDevelopment(true);
-            m_setup.set(s);
-            return CStatusMessage(this).info("Setup cache updated from local file '%1'") << fn;
+            s.markAsLoadedFromFile(true);
+            const CStatusMessage setMsg = m_setup.set(s);
+            const CStatusMessage setInfo = CStatusMessage(this).info("Setup cache updated from local file '%1'") << fn;
+            return setMsg.isSuccess() ? setInfo : setMsg;
         }
         catch (const CJsonException &ex)
         {
@@ -370,7 +371,7 @@ namespace BlackCore
                     const CGlobalSetup currentSetup = m_setup.get();
                     CGlobalSetup loadedSetup;
                     loadedSetup.convertFromJson(setupJson);
-                    loadedSetup.markAsLoaded(true);
+                    loadedSetup.markAsLoadedFromWeb(true);
                     const CUrl sharedUrl(loadedSetup.getCorrespondingSharedUrl(url));
                     if (!sharedUrl.isEmpty()) { emit this->successfullyReadSharedUrl(sharedUrl); }
 
@@ -640,7 +641,7 @@ namespace BlackCore
         }
         else
         {
-            const bool cacheAvailable = m_setup.get().wasLoaded();
+            const bool cacheAvailable = m_setup.get().wasLoadedFromWeb();
             available = cacheAvailable && m_bootstrapMode != Explicit;
         }
 
