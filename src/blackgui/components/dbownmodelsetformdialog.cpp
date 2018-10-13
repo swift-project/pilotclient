@@ -94,12 +94,16 @@ namespace BlackGui
 
         void CDbOwnModelSetFormDialog::simulatorChanged(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             this->setSimulator(simulator);
-            this->getMappingComponent()->setOwnModelsSimulator(simulator);
-            this->getMappingComponent()->setOwnModelSetSimulator(simulator);
-            this->checkData();
+
+            // if possible set in mappings component
+            if (this->getMappingComponent())
+            {
+                this->getMappingComponent()->setOwnModelsSimulator(simulator);
+                this->getMappingComponent()->setOwnModelSetSimulator(simulator);
+                this->checkData();
+            }
         }
 
         bool CDbOwnModelSetFormDialog::checkData()
@@ -109,7 +113,7 @@ namespace BlackGui
             const int c = this->getMappingComponent()->getOwnModelsCount();
             if (c < 1)
             {
-                const CStatusMessage m = CStatusMessage(this).error("No models for %1") << m_simulatorInfo.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).error("No models for '%1'") << m_simulatorInfo.toQString(true);
                 ui->form_OwnModelSet->showOverlayMessage(m);
                 return false;
             }
