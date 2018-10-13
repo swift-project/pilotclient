@@ -13,6 +13,7 @@
 #define BLACKMISC_APPLICATIONINFO_H
 
 #include "blackmisc/processinfo.h"
+#include <QString>
 #include <QMetaType>
 #include <QFlags>
 
@@ -51,7 +52,7 @@ namespace BlackMisc
             IndexPlatformInfo,
             IndexProcessInfo,
             IndexVersionString,
-            IndexWordSize,
+            IndexWordSize
         };
 
         //! Default constructor.

@@ -7,8 +7,6 @@
 * contained in the LICENSE file.
 */
 
-//! \file
-
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/comparefunctions.h"
@@ -94,7 +92,7 @@ namespace BlackMisc
 
     QString CApplicationInfo::convertToQString(bool i18n) const
     {
-        return QString("{ %1, %2, %3, %4 }").arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
+        return QStringLiteral("{ %1, %2, %3, %4 }").arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
     }
 
     CIcon CApplicationInfo::toIcon() const
@@ -147,8 +145,9 @@ namespace BlackMisc
         case IndexProcessInfo: m_process.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVersionString: this->setVersionString(variant.toQString()); break;
         case IndexWordSize: this->setWordSize(variant.toInt()); break;
-        default: CValueObject::setPropertyByIndex(index, variant); break;
+        default: break;
         }
+        CValueObject::setPropertyByIndex(index, variant);
     }
 
     int CApplicationInfo::comparePropertyByIndex(const CPropertyIndex &index, const CApplicationInfo &compareValue) const
@@ -167,8 +166,8 @@ namespace BlackMisc
         case IndexWordSize: return Compare::compare(this->getWordSize(), compareValue.getWordSize());
         case IndexApplication:
         case IndexApplicationAsString:
-        default:
-            return this->getApplicationAsString().compare(compareValue.getApplicationAsString());
+            return Compare::compare(m_app, compareValue.m_app);
+        default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
     }
 
