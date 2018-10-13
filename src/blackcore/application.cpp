@@ -1617,7 +1617,7 @@ namespace BlackCore
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
         auto settings = m_crashReportDatabase->GetSettings();
-        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
+        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled());
         m_crashpadClient = std::make_unique<CrashpadClient>();
         m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database), qstringToFilePath(metrics),
                                        serverUrl.getFullUrl().toStdString(), annotations, {}, false, true);
@@ -1627,13 +1627,18 @@ namespace BlackCore
 #endif
     }
 
-    void CApplication::crashDumpUploadEnabledChanged()
+    void CApplication::onCrashDumpUploadEnabledChanged()
     {
 #ifdef BLACK_USE_CRASHPAD
         if (!m_crashReportDatabase) { return; }
         auto settings = m_crashReportDatabase->GetSettings();
-        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
+        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled());
 #endif
+    }
+
+    void CApplication::setCrashInfo(const CCrashInfo &info)
+    {
+        m_crashInfo = info;
     }
 
     void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)

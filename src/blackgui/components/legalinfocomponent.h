@@ -48,7 +48,7 @@ namespace BlackGui
             void onAllowCrashDumps(bool checked);
 
             QScopedPointer<Ui::CLegalInfoComponent> ui;
-            BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
+            BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
         };
 
         /**

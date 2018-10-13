@@ -12,10 +12,12 @@
 #ifndef BLACKCORE_APPLICATION_APPLICATIONSETTINGS_H
 #define BLACKCORE_APPLICATION_APPLICATIONSETTINGS_H
 
-#include "blackconfig/buildconfig.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/crashsettings.h"
+#include "blackconfig/buildconfig.h"
+
 #include <QStringList>
 
 namespace BlackCore
@@ -76,16 +78,17 @@ namespace BlackCore
         };
 
         //! Uploading of crash dumps is enabled or disabled
-        struct TCrashDumpUploadEnabled : public BlackMisc::TSettingTrait<bool>
+        //! \deprecated remove after changing to
+        struct TCrashDumpSettings : public BlackMisc::TSettingTrait<BlackMisc::Settings::CCrashSettings>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "application/crashdumpuploadenabled"; }
+            static const char *key() { return "application/crashdump"; }
 
             //! \copydoc BlackCore::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Crash dumps"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static bool defaultValue() { return true; }
+            // static bool defaultValue() { return BlackMisc::Settings::CCrashSettings(); }
         };
     } // ns
 } // ns

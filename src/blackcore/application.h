@@ -25,6 +25,7 @@
 #include "blackmisc/slot.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/crashinfo.h"
 
 #include <QByteArray>
 #include <QCommandLineOption>
@@ -37,6 +38,7 @@
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
+#include <QByteArray>
 #include <atomic>
 #include <functional>
 
@@ -631,20 +633,20 @@ namespace BlackCore
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
-        QNetworkConfigurationManager   *m_networkConfigManager = nullptr; //!< configuration
-        QNetworkAccessManager                 *m_accessManager = nullptr; //!< single network access manager
-        Db::CNetworkWatchdog                *m_networkWatchDog = nullptr; //!< checking DB/internet access
-        BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
-        QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
-        QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
-        QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
-        QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager
-        const QString                          m_applicationName;         //!< application name
-        QReadWriteLock                         m_accessManagerLock;       //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                      m_coreFacadeConfig;        //!< Core facade config if any
-        CWebReaderFlags::WebReader             m_webReadersUsed;          //!< Readers to be used
-        Db::CDatabaseReaderConfigList          m_dbReaderConfig;          //!< Load or used caching?
+        QNetworkConfigurationManager   *m_networkConfigManager = nullptr;   //!< configuration
+        QNetworkAccessManager                 *m_accessManager = nullptr;   //!< single network access manager
+        Db::CNetworkWatchdog                  *m_networkWatchDog = nullptr; //!< checking DB/internet access
+        BlackMisc::CApplicationInfo            m_applicationInfo;           //!< Application if specified
+        QScopedPointer<CCoreFacade>            m_coreFacade;                //!< core facade if any
+        QScopedPointer<CSetupReader>           m_setupReader;               //!< setup reader
+        QScopedPointer<CWebDataServices>       m_webDataServices;           //!< web data services
+        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;                //!< file logger
+        QPointer<CCookieManager>               m_cookieManager;             //!< single cookie manager for our access manager
+        const QString                          m_applicationName;           //!< application name
+        QReadWriteLock                         m_accessManagerLock;         //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig                      m_coreFacadeConfig;          //!< Core facade config if any
+        CWebReaderFlags::WebReader             m_webReadersUsed;            //!< Readers to be used
+        Db::CDatabaseReaderConfigList          m_dbReaderConfig;            //!< Load or used caching?
         bool m_noNwAccessPoint = false;        //!< no network access point?
         bool m_useContexts   = false;          //!< use contexts
         bool m_useWebData    = false;          //!< use web data
@@ -654,14 +656,22 @@ namespace BlackCore
         bool m_localSettingsLoaded = false;    //!< local settings loaded?
 
         // -------------- crashpad -----------------
+        //! Init the crash handler
         BlackMisc::CStatusMessageList initCrashHandler();
-        void crashDumpUploadEnabledChanged();
+
+        //! Upload settings changed
+        void onCrashDumpUploadEnabledChanged();
+
+        //! Extra annotation for crash to easier identify annotation
+        void setCrashInfo(const BlackMisc::CCrashInfo &info);
 
 #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
-        BlackMisc::CSettingReadOnly<Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
+        BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
 #endif
+        BlackMisc::CCrashInfo m_crashInfo; //!< info representing details
+
     };
 } // namespace
 

@@ -7,10 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/components/settingsadvancedcomponent.h"
 #include "ui_settingsadvancedcomponent.h"
+#include "blackgui/components/settingsadvancedcomponent.h"
+#include "blackmisc/crashsettings.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Settings;
 
 namespace BlackGui
 {
@@ -21,7 +23,9 @@ namespace BlackGui
             ui(new Ui::CSettingsAdvancedComponent)
         {
             ui->setupUi(this);
-            ui->cb_crashDumpsUpload->setChecked(m_crashDumpUploadEnabled.getThreadLocal());
+
+            const CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
+            ui->cb_crashDumpsUpload->setChecked(settings.isEnabled());
             connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
         }
 
@@ -35,7 +39,10 @@ namespace BlackGui
             {
                 ui->cb_crashDumpsUpload->setText(ui->cb_crashDumpsUpload->text() + " (restart needed)");
             }
-            m_crashDumpUploadEnabled.set(state == Qt::Checked);
+
+            CCrashSettings settings = m_crashDumpSettings.getThreadLocal();
+            settings.setEnabled(state == Qt::Checked);
+            m_crashDumpSettings.set(settings);
         }
 
     } // ns

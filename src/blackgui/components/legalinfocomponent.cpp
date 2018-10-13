@@ -7,12 +7,14 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/crashsettings.h"
 #include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
 #include "legalinfocomponent.h"
 #include "ui_legalinfocomponent.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Settings;
 using namespace BlackConfig;
 
 namespace BlackGui
@@ -24,8 +26,9 @@ namespace BlackGui
             ui(new Ui::CLegalInfoComponent)
         {
             ui->setupUi(this);
-            const bool cd = m_crashDumpUploadEnabled.get();
-            ui->cb_CrashDumps->setChecked(cd);
+
+            const CCrashSettings settings = m_crashDumpSettings.get();
+            ui->cb_CrashDumps->setChecked(settings.isEnabled());
             ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
             connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
         }
@@ -48,7 +51,9 @@ namespace BlackGui
 
         void CLegalInfoComponent::onAllowCrashDumps(bool checked)
         {
-            m_crashDumpUploadEnabled.setAndSave(checked);
+            CCrashSettings settings = m_crashDumpSettings.get();
+            settings.setEnabled(checked);
+            m_crashDumpSettings.setAndSave(settings);
         }
 
         bool CLegalInfoWizardPage::validatePage()

@@ -20,8 +20,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSettingsAdvancedComponent; }
 namespace BlackGui
 {
@@ -43,7 +41,7 @@ namespace BlackGui
             void crashDumpUploadEnabledChanged(int state);
 
             QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
-            BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
+            BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
         };
     } // ns
 } // ns
