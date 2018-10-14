@@ -80,7 +80,7 @@ namespace BlackMiscTest
 }
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestCompress);
+BLACKTEST_MAIN(BlackMiscTest::CTestCompress);
 
 #include "testcompress.moc"
 

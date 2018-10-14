@@ -185,7 +185,7 @@ namespace BlackMiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestInterpolatorParts);
+BLACKTEST_MAIN(BlackMiscTest::CTestInterpolatorParts);
 
 #include "testinterpolatorparts.moc"
 

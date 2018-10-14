@@ -197,7 +197,7 @@ namespace BlackMiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestInterpolatorLinear);
+BLACKTEST_MAIN(BlackMiscTest::CTestInterpolatorLinear);
 
 #include "testinterpolatorlinear.moc"
 

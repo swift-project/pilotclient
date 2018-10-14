@@ -100,7 +100,7 @@ namespace BlackMiscTest
 }
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestXPlane);
+BLACKTEST_MAIN(BlackMiscTest::CTestXPlane);
 
 #include "testxplane.moc"
 

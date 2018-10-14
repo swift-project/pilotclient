@@ -54,7 +54,7 @@ namespace BlackMiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestInterpolatorMisc);
+BLACKTEST_MAIN(BlackMiscTest::CTestInterpolatorMisc);
 
 #include "testinterpolatormisc.moc"
 
