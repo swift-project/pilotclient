@@ -168,6 +168,7 @@ namespace BlackInput
         m_joystickDevices.clear();
         m_directInput.reset();
         CoUninitialize();
+        destroyHelperWindow();
     }
 
     void ReleaseDirectInput(IDirectInput8 *obj)
@@ -250,6 +251,19 @@ namespace BlackInput
         }
 
         return 0;
+    }
+
+    void CJoystickWindows::destroyHelperWindow()
+    {
+        HINSTANCE hInstance = GetModuleHandle(nullptr);
+
+        if (helperWindow == nullptr) { return; }
+
+        DestroyWindow(helperWindow);
+        helperWindow = nullptr;
+
+        UnregisterClass(helperWindowClassName, hInstance);
+        helperWindowClass = 0;
     }
 
     void CJoystickWindows::addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance)

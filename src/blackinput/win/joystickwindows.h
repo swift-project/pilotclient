@@ -123,6 +123,9 @@ namespace BlackInput
         //! Creates a hidden DI helper window
         int createHelperWindow();
 
+        //! Destroys a hidden DI helper window
+        void destroyHelperWindow();
+
         //! Add new joystick device
         void addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance);
 
