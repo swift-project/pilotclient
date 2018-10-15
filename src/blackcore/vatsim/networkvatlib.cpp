@@ -553,7 +553,13 @@ namespace BlackCore
                 // if this is really required, I need to group by message
                 // currently I send individual messages
                 freqsVec.clear();
-                freqsVec.push_back(message.getFrequency().valueInteger(CFrequencyUnit::kHz()));
+                int freqkHz = message.getFrequency().valueInteger(CFrequencyUnit::kHz());
+                if (m_server.getServerType() == CServer::FSDServerVatsim)
+                {
+                    // VATSIM always drops the last 5 kHz.
+                    freqkHz = freqkHz / 10 * 10;
+                }
+                freqsVec.push_back(freqkHz);
                 Vat_SendRadioMessage(m_net.data(), freqsVec.data(), static_cast<unsigned int>(freqsVec.size()), toFSDnoColon(message.getMessage()));
                 emit this->textMessageSent(message);
             }
@@ -894,14 +900,17 @@ namespace BlackCore
         void CNetworkVatlib::onRadioMessageReceived(VatFsdClient *, const char *from, unsigned int numFreq, int *freqList, const char *msg, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
-            const int com1 = self->getOwnAircraft().getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-            const int com2 = self->getOwnAircraft().getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            const CFrequency com1 = self->getOwnAircraft().getCom1System().getFrequencyActive();
+            const CFrequency com2 = self->getOwnAircraft().getCom2System().getFrequencyActive();
             QList<CFrequency> frequencies;
             for (unsigned int i = 0; i < numFreq; ++i)
             {
-                if (freqList[i] == com1 || freqList[i] == com2)
+                CFrequency f(freqList[i], CFrequencyUnit::kHz());
+                // VATSIM always drops the last 5 kHz. So round it to the correct channel spacing.
+                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing25KHz);
+                if (f == com1 || f == com2)
                 {
-                    frequencies.push_back(CFrequency(freqList[i], CFrequencyUnit::kHz()));
+                    frequencies.push_back(f);
                 }
             }
             if (frequencies.isEmpty()) { return; }
