@@ -47,7 +47,7 @@ namespace BlackSimPlugin
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget()));
 
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
-            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor);
+            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
             connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);
 
             // connect own signals for monitoring

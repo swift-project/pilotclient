@@ -70,7 +70,7 @@ namespace BlackGui
             connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
             connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
             connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
-            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
+            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
         }
 
         CInterpolationLogDisplay::~CInterpolationLogDisplay()
