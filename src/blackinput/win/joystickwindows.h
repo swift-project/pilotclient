@@ -140,6 +140,7 @@ namespace BlackInput
         const TCHAR *helperWindowClassName = TEXT("HelperWindow");
         const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
 
+        bool m_coInitializeSucceeded = false;
         DirectInput8Ptr m_directInput;                 //!< DirectInput object
         QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
 

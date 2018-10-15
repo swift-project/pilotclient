@@ -152,30 +152,54 @@ namespace BlackInput
 
     CJoystickWindows::CJoystickWindows(QObject *parent) : IJoystick(parent)
     {
-        // Initialize COM
-        CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        this->createHelperWindow();
+        // Initialize COM.
+        // https://docs.microsoft.com/en-us/windows/desktop/api/combaseapi/nf-combaseapi-coinitializeex
+        HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
 
-        if (helperWindow)
+        // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
+        if (hr == RPC_E_CHANGED_MODE)
         {
-            this->initDirectInput();
-            this->enumJoystickDevices();
+            CLogMessage(this).debug("CoInitializeEx was already called with a different mode. Trying again.");
+            hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
         }
+
+        // Continue here only if CoInitializeEx was successful
+        // S_OK: The COM library was initialized successfully on this thread.
+        // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
+        if (hr == S_OK || hr == S_FALSE)
+        {
+            m_coInitializeSucceeded = true;
+            this->createHelperWindow();
+
+            if (helperWindow)
+            {
+                this->initDirectInput();
+                this->enumJoystickDevices();
+            }
+        }
+        else
+        {
+            CLogMessage(this).warning("CoInitializeEx returned error code %1");
+        }
+
     }
 
     CJoystickWindows::~CJoystickWindows()
     {
+        // All DirectInput devices need to be cleaned up before the call to CoUninitialize()
+        for (CJoystickDevice *joystickDevice : m_joystickDevices)
+        {
+            delete joystickDevice;
+        }
         m_joystickDevices.clear();
         m_directInput.reset();
-        CoUninitialize();
+        if (m_coInitializeSucceeded) { CoUninitialize(); }
         destroyHelperWindow();
     }
 
     void ReleaseDirectInput(IDirectInput8 *obj)
     {
-        Q_UNUSED(obj);
-        //! \todo temp workaround for crash when shutting down T391
-        // if (obj) { obj->Release(); }
+        if (obj) { obj->Release(); }
     }
 
     HRESULT CJoystickWindows::initDirectInput()
@@ -277,7 +301,7 @@ namespace BlackInput
         }
         else
         {
-            device->deleteLater();
+            delete device;
         }
     }
 
