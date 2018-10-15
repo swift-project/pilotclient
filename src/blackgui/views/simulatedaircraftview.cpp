@@ -55,6 +55,8 @@ namespace BlackGui
 
         void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
+            // sub menus, only adding the path, the content will be added below
+            // => configureMenu
             menuActions.addMenuDisplayModels();
             menuActions.addMenuDataTransfer();
 
