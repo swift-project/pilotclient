@@ -175,7 +175,7 @@ namespace BlackGui
             void reverseLookupAircraftModel();
 
             //! Simulator model has been changed
-            void simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+            void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Launch mapping wizard
             void mappingWizard();

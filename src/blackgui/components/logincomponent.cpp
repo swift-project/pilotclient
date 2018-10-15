@@ -133,7 +133,7 @@ namespace BlackGui
 
             if (sGui && sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::simulatorModelChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged);
             }
 
             // server and UI elements when in disconnect state
@@ -587,18 +587,19 @@ namespace BlackGui
         {
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            this->simulatorModelChanged(model);
+            this->onSimulatorModelChanged(model);
         }
 
-        void CLoginComponent::simulatorModelChanged(const CAircraftModel &model)
+        void CLoginComponent::onSimulatorModelChanged(const CAircraftModel &model)
         {
-            Q_ASSERT_X(sGui && sGui->getIContextNetwork(), Q_FUNC_INFO, "Missing context");
+            if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown()) { return; }
             const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
             if (isNetworkConnected) { return; }
             const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (!model.hasModelString())
             {
                 CLogMessage(this).validationInfo("Invalid lookup for '%1' successful: %2") << modelStr << model.toQString();
+                CLogMessage(this).validationInfo("Hint: Are you using the emulated driver? Set a model if so!");
                 return;
             }
             this->setOwnModelAndIcaoValues();
