@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
@@ -37,6 +38,8 @@ namespace BlackCore
                     CLogHandler::instance()->logRemoteMessage(message);
                 }
             });
+
+            connect(this, &CContextApplicationProxy::remoteHotkeyAction, this, &CContextApplicationProxy::processRemoteHotkeyActionCall);
 
             m_pingTimer.setObjectName(serviceName + "::m_pingTimer");
             connect(&m_pingTimer, &QTimer::timeout, this, &CContextApplicationProxy::reRegisterApplications);
@@ -158,9 +161,9 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("registerHotkeyActions"), actions, origin);
         }
 
-        void CContextApplicationProxy::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
+        void CContextApplicationProxy::callHotkeyActionRemotely(const QString &action, bool argument, const CIdentifier &origin)
         {
-            m_dBusInterface->callDBus(QLatin1String("callHotkeyAction"), action, argument, origin);
+            m_dBusInterface->callDBus(QLatin1String("callHotkeyActionRemotely"), action, argument, origin);
         }
 
         CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
@@ -242,6 +245,13 @@ namespace BlackCore
             }
             CDBusServer::disconnectFromDBus(connection, dBusAddress);
             return ok;
+        }
+
+        void CContextApplicationProxy::processRemoteHotkeyActionCall(const QString &action, bool argument, const BlackMisc::CIdentifier &origin)
+        {
+            if (origin.isFromLocalMachine()) { return; }
+            sApp->getInputManager()->callFunctionsBy(action, argument);
+            CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
         }
     } // namespace
 } // namespace

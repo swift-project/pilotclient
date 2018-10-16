@@ -135,7 +135,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::callHotkeyAction
-            virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override
             {
                 Q_UNUSED(action);
                 Q_UNUSED(argument);

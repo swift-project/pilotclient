@@ -131,10 +131,22 @@ namespace BlackCore
             emit this->hotkeyActionsRegistered(actions, origin);
         }
 
-        void CContextApplication::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
+        void CContextApplication::callHotkeyActionRemotely(const QString &action, bool argument, const CIdentifier &origin)
         {
-            // Intentionally don't check for round trip here
-            emit this->remoteHotkeyAction(action, argument, origin);
+            if (origin.hasApplicationProcessId())
+            {
+                // If it originated from this process, then we are going to emit a signal
+                emit this->remoteHotkeyAction(action, argument, origin);
+            }
+            else
+            {
+                // action came from a different process but on the same machine. Ignore
+                if (origin.isFromLocalMachine()) { return; }
+
+                // Different process and different machine. Process it.
+                // However, it should not emit a remote action itself.
+                sApp->getInputManager()->callFunctionsBy(action, argument, false);
+            }
         }
 
         bool CContextApplication::writeToFile(const QString &fileName, const QString &content)

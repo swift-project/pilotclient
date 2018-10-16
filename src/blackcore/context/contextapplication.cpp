@@ -112,21 +112,11 @@ namespace BlackCore
             s = connect(sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this, [ = ](const QString & action, bool argument)
             {
                 if (!myself) { return; }
-                this->callHotkeyAction(action, argument, {});
+                this->callHotkeyActionRemotely(action, argument, {});
             },
             Qt::QueuedConnection);
 
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote action failed");
-            Q_UNUSED(s);
-
-            s = connect(this, &IContextApplication::remoteHotkeyAction, [ = ](const QString & action, bool argument, const CIdentifier & origin)
-            {
-                if (!myself) { return; }
-                if (origin.isFromLocalMachine()) { return; }
-                sApp->getInputManager()->callFunctionsBy(action, argument);
-                CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
-            });
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote hotkey action failed");
             Q_UNUSED(s);
 
             // Enable event forwarding from GUI process to core
@@ -158,7 +148,7 @@ namespace BlackCore
             qFatal("Not implemented"); // avoid losing a change during context interface construction
         }
 
-        void IContextApplication::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
+        void IContextApplication::callHotkeyActionRemotely(const QString &action, bool argument, const CIdentifier &origin)
         {
             Q_UNUSED(action);
             Q_UNUSED(argument);

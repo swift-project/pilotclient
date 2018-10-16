@@ -85,7 +85,7 @@ namespace BlackCore
         void setForwarding(bool enabled) { m_actionRelayingEnabled = enabled; }
 
         //! Call functions by hotkeyfunction
-        void callFunctionsBy(const QString &action, bool isKeyDown);
+        void callFunctionsBy(const QString &action, bool isKeyDown, bool shouldEmit = true);
 
         //! Triggers a key event manually and calls the registered functions.
         void triggerKey(const BlackMisc::Input::CHotkeyCombination &combination, bool isPressed);

@@ -65,7 +65,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
             virtual BlackMisc::CStatusMessage loadSettings() override;
             virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
-            virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
             virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
             virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
@@ -98,6 +98,8 @@ namespace BlackCore
 
             //! Ping/heartbeat identifiers
             void reRegisterApplications();
+
+            void processRemoteHotkeyActionCall(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
         };
     } // ns
 } // ns

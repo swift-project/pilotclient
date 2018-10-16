@@ -60,7 +60,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
             virtual BlackMisc::CStatusMessage loadSettings() override;
             virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
-            virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
             virtual bool writeToFile(const QString &fileName, const QString &content) override;
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
             virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;

@@ -182,7 +182,7 @@ namespace BlackCore
             //! Call a hotkey action on a remote process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays action calls via DBus
-            virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
 
             //! Register application, can also be used for ping
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) = 0;

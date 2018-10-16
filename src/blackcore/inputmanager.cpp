@@ -95,10 +95,10 @@ namespace BlackCore
         m_capturedCombination = {};
     }
 
-    void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown)
+    void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown, bool shouldEmit)
     {
         if (action.isEmpty()) { return; }
-        if (m_actionRelayingEnabled) emit remoteActionFromLocal(action, isKeyDown);
+        if (m_actionRelayingEnabled && shouldEmit) { emit remoteActionFromLocal(action, isKeyDown); }
 
         for (const auto &boundAction : as_const(m_boundActions))
         {
