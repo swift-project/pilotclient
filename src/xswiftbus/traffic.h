@@ -121,6 +121,9 @@ namespace XSwiftBus
         //! Perform generic processing
         int process();
 
+        //! Returns the own aircraft string to be used as callsign for setFollowedAircraft()
+        std::string ownAircraftString() const { return "ownAircraft"; }
+
     protected:
         virtual void dbusDisconnectedHandler() override;
 
@@ -134,14 +137,16 @@ namespace XSwiftBus
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
-        void enableFollowPlaneView(const std::string &callsign);
+        void switchToFollowPlaneView(const std::string &callsign);
         void followNextPlane();
         void followPreviousPlane();
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
+        static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
+        static int spaceKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
 
         struct Plane
         {
@@ -164,6 +169,7 @@ namespace XSwiftBus
                   const std::string &livery_, const std::string &modelName_);
         };
 
+
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
         std::vector<std::string> m_followPlaneViewSequence;
@@ -176,6 +182,13 @@ namespace XSwiftBus
         CCommand m_followPlaneViewPreviousCommand;
 
         DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
+        DataRef<xplane::data::sim::flightmodel::position::local_x> m_ownAircraftPositionX;
+        DataRef<xplane::data::sim::flightmodel::position::local_y> m_ownAircraftPositionY;
+        DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
+
+        XPLMCameraPosition_t m_lastCameraPosition;
+
+        bool m_isSpacePressed = false;
         bool m_emitSimFrame = true;
 
         int getPlaneData(void *id, int dataType, void *io_data);

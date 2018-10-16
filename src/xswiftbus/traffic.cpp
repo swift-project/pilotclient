@@ -49,6 +49,7 @@ namespace XSwiftBus
         m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
+        XPLMRegisterKeySniffer(spaceKeySniffer, 1, this);
     }
 
     CTraffic::~CTraffic()
@@ -133,7 +134,7 @@ namespace XSwiftBus
         sendDBusMessage(signalPlaneAddingFailed);
     }
 
-    void CTraffic::enableFollowPlaneView(const std::string &callsign)
+    void CTraffic::switchToFollowPlaneView(const std::string &callsign)
     {
         m_followPlaneViewCallsign = callsign;
 
@@ -268,7 +269,7 @@ namespace XSwiftBus
         m_planesById[id] = plane;
 
         // Create view menu item
-        CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { enableFollowPlaneView(callsign); });
+        CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { switchToFollowPlaneView(callsign); });
         m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
         m_followPlaneViewSequence.push_back(callsign);
     }
@@ -439,10 +440,12 @@ namespace XSwiftBus
 
     void CTraffic::setFollowedAircraft(const std::string &callsign)
     {
-        auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return; }
-
-        enableFollowPlaneView(callsign);
+        if (callsign != ownAircraftString())
+        {
+            auto planeIt = m_planesByCallsign.find(callsign);
+            if (planeIt == m_planesByCallsign.end()) { return; }
+        }
+        switchToFollowPlaneView(callsign);
     }
 
     void CTraffic::dbusDisconnectedHandler()
@@ -827,37 +830,59 @@ namespace XSwiftBus
 
         if (cameraPosition)
         {
-            int w, h, x, y;
-            // First get the screen size and mouse location. We will use this to decide
-            // what part of the orbit we are in. The mouse will move us up-down and around.
-            // fixme: In a future update, change the orbit only while right mouse button is pressed.
-            XPLMGetScreenSize(&w, &h);
-            XPLMGetMouseLocation(&x, &y);
-            double heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
-            double pitch = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+            // Ideally we would like to test against right mouse button, but X-Plane SDK does not
+            // allow that.
+            if (traffic->m_isSpacePressed)
+            {
+                int w, h, x, y;
+                // First get the screen size and mouse location. We will use this to decide
+                // what part of the orbit we are in. The mouse will move us up-down and around.
+                // fixme: In a future update, change the orbit only while right mouse button is pressed.
+                XPLMGetScreenSize(&w, &h);
+                XPLMGetMouseLocation(&x, &y);
+                double heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
+                double pitch = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
 
-            // Now calculate where the camera should be positioned to be 200
-            // meters from the plane and pointing at the plane at the pitch and
-            // heading we wanted above.
-            static const double PI = std::acos(-1);
-            double dx = -50.0 * sin(heading * PI / 180.0);
-            double dz = 50.0 * cos(heading * PI / 180.0);
-            double dy = -50.0 * tan(pitch * PI / 180.0);
+                // Now calculate where the camera should be positioned to be 200
+                // meters from the plane and pointing at the plane at the pitch and
+                // heading we wanted above.
+                static const double PI = std::acos(-1);
+                double dx = -50.0 * sin(heading * PI / 180.0);
+                double dz = 50.0 * cos(heading * PI / 180.0);
+                double dy = -50.0 * tan(pitch * PI / 180.0);
 
-            auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
-            if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
-            Plane *plane = planeIt->second;
+                double lx, ly, lz;
+                static const double kFtToMeters = 0.3048;
 
-            double lx, ly, lz;
-            static const double kFtToMeters = 0.3048;
-            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+                if (traffic->m_followPlaneViewCallsign == traffic->ownAircraftString())
+                {
+                    lx = traffic->m_ownAircraftPositionX.get();
+                    ly = traffic->m_ownAircraftPositionY.get();
+                    lz = traffic->m_ownAircraftPositionZ.get();
+                }
+                else
+                {
+                    auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
+                    if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
+                    Plane *plane = planeIt->second;
+
+                    XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+                }
+
+                // Fill out the camera position info.
+                traffic->m_lastCameraPosition.x = static_cast<float>(lx + dx);
+                traffic->m_lastCameraPosition.y = static_cast<float>(ly + dy);
+                traffic->m_lastCameraPosition.z = static_cast<float>(lz + dz);
+                traffic->m_lastCameraPosition.pitch = static_cast<float>(pitch);
+                traffic->m_lastCameraPosition.heading = static_cast<float>(heading);
+            }
 
             // Fill out the camera position info.
-            cameraPosition->x = static_cast<float>(lx + dx);
-            cameraPosition->y = static_cast<float>(ly + dy);
-            cameraPosition->z = static_cast<float>(lz + dz);
-            cameraPosition->pitch = static_cast<float>(pitch);
-            cameraPosition->heading = static_cast<float>(heading);
+            cameraPosition->x = traffic->m_lastCameraPosition.x;
+            cameraPosition->y = traffic->m_lastCameraPosition.y;
+            cameraPosition->z = traffic->m_lastCameraPosition.z;
+            cameraPosition->pitch = traffic->m_lastCameraPosition.pitch;
+            cameraPosition->heading = traffic->m_lastCameraPosition.heading;
             cameraPosition->roll = 0;
         }
 
@@ -877,6 +902,24 @@ namespace XSwiftBus
             traffic->emitSimFrame();
         }
 
+        return 1;
+    }
+
+    int CTraffic::spaceKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon)
+    {
+        (void) character;
+        (void) flags;
+        CTraffic *traffic = static_cast<CTraffic *>(refcon);
+
+        // We are only interested in Space key
+        if (virtualKey == XPLM_VK_SPACE)
+        {
+            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true; }
+            if (flags & xplm_UpFlag) { traffic->m_isSpacePressed = false; }
+        }
+
+        /* Return 1 to pass the keystroke to plugin windows and X-Plane.
+         * Returning 0 would consume the keystroke. */
         return 1;
     }
 }

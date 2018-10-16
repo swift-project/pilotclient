@@ -73,21 +73,15 @@ namespace XSwiftBus
         CMenu m_planeViewSubMenu;
         CMenuItem planeViewOwnAircraftMenuItem;
 
-        DataRef<xplane::data::sim::flightmodel::position::local_x> m_ownAircraftPositionX;
-        DataRef<xplane::data::sim::flightmodel::position::local_y> m_ownAircraftPositionY;
-        DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
-
         std::thread m_dbusThread;
         bool m_isRunning = false;
         bool m_shouldStop = false;
 
         void readConfig();
         void startServer();
-        void switchToOwnAircraftView();
 
         static float startServerDeferred(float, float, int, void *refcon);
         static float flightLoopCallback(float, float, int, void *refcon);
-        static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
     };
 }
 
