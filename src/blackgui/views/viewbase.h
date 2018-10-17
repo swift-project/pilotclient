@@ -276,7 +276,7 @@ namespace BlackGui
             BlackMisc::CStatusMessage showFileLoadDialog(const QString &directory = {});
 
             //! Show file save dialog
-            BlackMisc::CStatusMessage showFileSaveDialog(const QString &directory = {});
+            BlackMisc::CStatusMessage showFileSaveDialog(bool selectedOnly, const QString &directory = {});
 
             //! Save file name (optional)
             void setSaveFileName(const QString &saveName) { m_saveFileName = saveName; }
@@ -448,6 +448,9 @@ namespace BlackGui
             //! Save JSON for action/menu, void return signatur
             void saveJsonAction();
 
+            //! Save JSON for action/menu, void return signatur
+            void saveSelectedJsonAction();
+
             //! Load JSON for action/menu, void return signatur
             void loadJsonAction();
 
@@ -532,7 +535,7 @@ namespace BlackGui
             virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) = 0;
 
             //! Save JSON
-            virtual BlackMisc::CStatusMessage ps_saveJson(const QString &directory = {}) = 0;
+            virtual BlackMisc::CStatusMessage ps_saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
 
             //! Trigger reload from backend by signal requestUpdate();
             void ps_triggerReload();
@@ -683,10 +686,10 @@ namespace BlackGui
             int columnCount() const;
 
             //! Convert to JSON
-            QJsonObject toJson() const;
+            QJsonObject toJson(bool selectedOnly = false) const;
 
             //! Convert to JSON string
-            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const;
+            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const;
 
             //! Set own name and the model's name
             virtual void setObjectName(const QString &name);
@@ -764,7 +767,7 @@ namespace BlackGui
             virtual void ps_doubleClicked(const QModelIndex &index) override;
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) override;
-            virtual BlackMisc::CStatusMessage ps_saveJson(const QString &directory = {}) override;
+            virtual BlackMisc::CStatusMessage ps_saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };
     } // namespace

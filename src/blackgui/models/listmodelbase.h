@@ -54,7 +54,7 @@ namespace BlackGui
             static constexpr int asyncThreshold = 50;
 
             //! Destructor
-            virtual ~CListModelBaseNonTemplate() {}
+            virtual ~CListModelBaseNonTemplate() override {}
 
             //! \name Functions from QStandardItemModel
             //! @{
@@ -125,10 +125,10 @@ namespace BlackGui
             void emitDataChanged(int startRowIndex, int endRowIndex);
 
             //! Convert to JSON
-            virtual QJsonObject toJson() const = 0;
+            virtual QJsonObject toJson(bool selectedOnly = false) const = 0;
 
             //! Convert to JSON string
-            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const = 0;
+            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const = 0;
 
         signals:
             //! Asynchronous update finished
@@ -194,8 +194,8 @@ namespace BlackGui
 
             //! \name Functions from CListModelBaseNonTemplate
             //! @{
-            virtual QJsonObject toJson() const override;
-            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const override;
+            virtual QJsonObject toJson(bool selectedOnly = false) const override;
+            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const override;
             virtual bool isOrderable() const override;
             //! @}
 

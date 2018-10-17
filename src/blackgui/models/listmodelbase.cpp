@@ -740,16 +740,22 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QJsonObject CListModelBase<ObjectType, ContainerType, UseCompare>::toJson() const
+        QJsonObject CListModelBase<ObjectType, ContainerType, UseCompare>::toJson(bool selectedOnly) const
         {
-            const CVariant variant = CVariant::fromValue(container());
+            const CVariant variant = CVariant::fromValue(
+                                         selectedOnly && m_selectionModel ?
+                                         m_selectionModel->selectedObjects() :
+                                         container());
             return variant.toJson();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QString CListModelBase<ObjectType, ContainerType, UseCompare>::toJsonString(QJsonDocument::JsonFormat format) const
+        QString CListModelBase<ObjectType, ContainerType, UseCompare>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
         {
-            const CVariant variant = CVariant::fromValue(container());
+            const CVariant variant = CVariant::fromValue(
+                                         selectedOnly && m_selectionModel ?
+                                         m_selectionModel->selectedObjects() :
+                                         container());
             return variant.toJsonString(format);
         }
 

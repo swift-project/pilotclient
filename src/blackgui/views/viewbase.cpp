@@ -211,9 +211,9 @@ namespace BlackGui
             return this->ps_loadJson(directory);
         }
 
-        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog(const QString &directory)
+        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog(bool selectedOnly, const QString &directory)
         {
-            return this->ps_saveJson(directory);
+            return this->ps_saveJson(selectedOnly, directory);
         }
 
         IMenuDelegate *CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
@@ -277,7 +277,15 @@ namespace BlackGui
                 }
             case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
             case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction }); break; }
-            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews()); break; }
+            case MenuSave:
+                {
+                    ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews());
+                    if (this->hasSelection())
+                    {
+                        ma.addAction(CIcons::disk16(), "Save selected data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveSelectedJsonAction }); break;
+                    }
+                    break;
+                }
             case MenuCut:
                 {
                     if (!QApplication::clipboard()) break;
@@ -620,7 +628,18 @@ namespace BlackGui
         {
             if (this->isEmpty()) { return; }
             if (!m_menus.testFlag(MenuSave)) { return; }
-            const CStatusMessage m = this->ps_saveJson();
+            const CStatusMessage m = this->ps_saveJson(false);
+            if (!m.isEmpty())
+            {
+                CLogMessage::preformatted(m);
+            }
+        }
+
+        void CViewBaseNonTemplate::saveSelectedJsonAction()
+        {
+            if (this->isEmpty()) { return; }
+            if (!m_menus.testFlag(MenuSave)) { return; }
+            const CStatusMessage m = this->ps_saveJson(true);
             if (!m.isEmpty())
             {
                 CLogMessage::preformatted(m);
@@ -1315,17 +1334,17 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson() const
+        QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson(bool selectedOnly) const
         {
             Q_ASSERT(m_model);
-            return m_model->toJson();
+            return m_model->toJson(selectedOnly);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        QString CViewBase<ModelClass, ContainerType, ObjectType>::toJsonString(QJsonDocument::JsonFormat format) const
+        QString CViewBase<ModelClass, ContainerType, ObjectType>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
         {
             Q_ASSERT(m_model);
-            return m_model->toJsonString(format);
+            return m_model->toJsonString(format, selectedOnly);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1609,14 +1628,14 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson(const QString &directory)
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson(bool selectedOnly, const QString &directory)
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
                                      tr("Save data file"),
                                      directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
-            const QString json(this->toJsonString()); // save as CVariant JSON
+            const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
             // save file
             const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
