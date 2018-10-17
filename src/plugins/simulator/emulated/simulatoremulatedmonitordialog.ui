@@ -68,7 +68,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -482,7 +482,33 @@
          </property>
          <layout class="QVBoxLayout" name="vl_GroupBoxLogMessages">
           <item>
-           <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent"/>
+           <widget class="QScrollArea" name="sa_LogMessages">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="sa_LogMEssagesWidget">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>535</width>
+               <height>339</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
+              <item>
+               <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>325</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
           </item>
          </layout>
         </widget>
