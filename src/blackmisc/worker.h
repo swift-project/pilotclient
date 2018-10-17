@@ -98,7 +98,7 @@ namespace BlackMisc
         static const CLogCategoryList &getLogCategories();
 
         //! Connects to a functor or method which will be called when the task is finished.
-        //! \threadsafe
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename T, typename F>
         void then(T *context, F functor)
         {
@@ -109,7 +109,7 @@ namespace BlackMisc
         }
 
         //! Connects to a functor which will be called when the task is finished.
-        //! \threadsafe
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename F>
         void then(F functor)
         {
@@ -127,7 +127,7 @@ namespace BlackMisc
         }
 
         //! Executes some code (in the caller's thread) if the task has finished.
-        //! \threadsafe
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename F>
         void doIfFinished(F functor) const
         {
@@ -136,7 +136,7 @@ namespace BlackMisc
         }
 
         //! Executes some code (in the caller's thread) if the task has not finished.
-        //! \threadsafe But the functor will deadlock if it waits for the task to finish.
+        //! \threadsafe The functors may not call any methods that observe the worker's finished flag.
         template <typename F>
         void doIfNotFinished(F functor) const
         {
@@ -145,7 +145,7 @@ namespace BlackMisc
         }
 
         //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not finished.
-        //! \threadsafe But the elseFunctor will deadlock if it waits for the task to finish.
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename F1, typename F2>
         void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
@@ -188,6 +188,7 @@ namespace BlackMisc
         {
             QMutexLocker lock(&m_finishedMutex);
             m_finished = true;
+            lock.unlock();
             emit finished();
         }
 
@@ -228,29 +229,29 @@ namespace BlackMisc
 
         //! Connects to a functor to which will be passed the result when the task is finished.
         //! \tparam R The return type of the task.
-        //! \threadsafe
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename R, typename F>
         void thenWithResult(F functor)
         {
             Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
-            then([this, functor]() { functor(this->result<R>()); });
+            then([this, functor]() { functor(this->resultNoWait<R>()); });
         }
 
         //! Connects to a functor or method to which will be passed the result when the task is finished.
         //! \tparam R The return type of the task.
-        //! \threadsafe
+        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename R, typename T, typename F>
         void thenWithResult(T *context, F functor)
         {
             Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
-            then(context, [this, context, functor]() { Private::invokeSlot(functor, context, this->result<R>()); });
+            then(context, [this, context, functor]() { Private::invokeSlot(functor, context, this->resultNoWait<R>()); });
         }
 
         //! Returns the result of the task, waiting for it to finish if necessary.
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R>
-        R result() { waitForFinished(); Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
+        R result() { waitForFinished(); return this->resultNoWait<R>(); }
 
     private slots:
         //! Called when the worker has been moved into its new thread.
@@ -259,6 +260,9 @@ namespace BlackMisc
     private:
         CWorker(std::function<CVariant()> task) : m_task(task) {}
         static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task);
+
+        template <typename R>
+        R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
 
         std::function<CVariant()> m_task;
         CVariant m_result;
