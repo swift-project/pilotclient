@@ -75,6 +75,9 @@ namespace BlackMisc
                 //! Set the time values
                 void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
+                //! \private UNIT tests/ASSERT only
+                const PosArray &getPa() const { return m_pa; }
+
             private:
                 PosArray m_pa; //!< current positions array, latest values last
                 PhysicalQuantities::CLengthUnit m_altitudeUnit;

@@ -95,6 +95,13 @@ namespace BlackMisc
                 const double a =  k0 * (x1 - x0) - (y1 - y0);
                 const double b = -k1 * (x1 - x0) + (y1 - y0);
                 const double y = (1 - t) * y0 + t * y1 + t * (1 - t) * (a * (1 - t) + b * t);
+
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    BLACK_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
+                    BLACK_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
+
+                }
                 return y;
             }
         }
@@ -104,35 +111,44 @@ namespace BlackMisc
             // m_s[0] .. oldest -> m_[2] .. latest
             // general idea, we interpolate from current situation -> latest situation
 
+            // do we have the last interpolated situation?
             if (m_lastSituation.isNull())
             {
                 if (!m_currentSituations.isEmpty())
                 {
+                    // we start with the latest situation just to init the values
                     m_s[0] = m_s[1] = m_s[2] = m_currentSituations.front();
-                    m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec * 2); // Ref T297 default offset time to fill data
-                    m_s[1].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec);     // Ref T297 default offset time to fill data
-                    return true;
+                    const qint64 os = qMin(CFsdSetup::c_interimPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
+                    m_s[0].addMsecs(m_currentTimeMsSinceEpoch - os); // Ref T297 default offset time to fill data
+                    m_s[1].addMsecs(m_currentTimeMsSinceEpoch); // Ref T297 default offset time to fill data
+                    const bool valid = m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
+                    return valid;
                 }
                 m_s[0] = m_s[1] = m_s[2] = CAircraftSituation::null();
                 return false;
             }
             else
             {
-                m_s[0] = m_s[1] = m_s[2] = m_lastSituation; // current
-                m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); // oldest, Ref T297 default offset time to fill data
-                m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest, Ref T297 default offset time to fill data
-                if (m_currentSituations.isEmpty()) { return true; }
+                // in normal cases init some default values
+                m_s[0] = m_s[1] = m_s[2] = m_lastSituation; // current position
+                const qint64 os = qMin(CFsdSetup::c_interimPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
+                m_s[1].setMSecsSinceEpoch(m_currentTimeMsSinceEpoch);
+                m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
+                m_s[2].addMsecs(os);  // latest, Ref T297 default offset time to fill data
+                if (m_currentSituations.isEmpty()) { return false; }
             }
 
-            const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
             const CAircraftSituation latest = m_currentSituations.front();
             if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
+            const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
             const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
             if (!older.isNull()) { m_s[0] = older; }
+            const bool valid = m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                const bool verified = this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
+                BLACK_VERIFY_X(m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch, Q_FUNC_INFO, "No new situation");
+                const bool verified = valid && this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
                 if (!verified)
                 {
                     static const QString vm("m0-2 (oldest latest) %1 %2 %3");
@@ -140,7 +156,7 @@ namespace BlackMisc
                     Q_UNUSED(vmValues);
                 }
             }
-            return true;
+            return valid;
         }
 
         // pin vtables to this file
@@ -150,7 +166,9 @@ namespace BlackMisc
         CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
         {
             // recalculate derivatives only if they changed
-            const bool recalculate = m_situationsLastModified > m_situationsLastModifiedUsed;
+            const bool recalculate = (m_currentTimeMsSinceEpoch >= m_nextSampleAdjustedTime) || // new step
+                                     (m_situationsLastModified > m_situationsLastModifiedUsed); // modified
+
             if (recalculate)
             {
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
@@ -159,13 +177,15 @@ namespace BlackMisc
                 const bool fillStatus = this->fillSituationsArray();
                 if (!fillStatus)
                 {
+                    m_interpolant.setValid(false);
                     return  m_interpolant;
                 }
+
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
                 pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest -> latest
                 pa.y = {{ normals[0][1], normals[1][1], normals[2][1] }};
-                pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }};
+                pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }}; // latest
                 pa.t = {{ static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) }};
 
                 pa.dx = getDerivatives(pa.t, pa.x);
@@ -207,14 +227,20 @@ namespace BlackMisc
             // cur.time 6: dt1=6-5=1, dt2=7-5 => fraction 1/2
             // cur.time 9: dt1=9-7=2, dt2=10-7=3 => fraction 2/3
             // we use different offset times for fast pos. updates
+            // KB: is that correct with dt2, or would it be m_nextSampleTime - m_prevSampleTime
+            //     as long as the offset time is constant, it does not matter
             const double dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
-            const double dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
+            const double dt2 = static_cast<double>(m_nextSampleAdjustedTime  - m_prevSampleAdjustedTime);
             const double timeFraction = dt1 / dt2;
 
-            // is that correct with dt2, or would it be
-            // m_nextSampleTime - m_prevSampleTime
-            // as long as the offset time is constant, it does not matter
-            const qint64 interpolatedTime = m_prevSampleTime + timeFraction * dt2;
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
+                BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
+                BLACK_VERIFY_X(timeFraction < 1.01, Q_FUNC_INFO, "Expect fraction 0-1");
+            }
+
+            const qint64 interpolatedTime = m_prevSampleTime + qRound(timeFraction * dt2);
 
             // time fraction is expected between 0-1
             m_currentInterpolationStatus.setInterpolated(true);
@@ -226,7 +252,6 @@ namespace BlackMisc
                 log.interpolationSituations.push_back(m_s[0]);
                 log.interpolationSituations.push_back(m_s[1]);
                 log.interpolationSituations.push_back(m_s[2]); // latest at end
-                log.noNetworkSituations = m_currentSituations.size();
                 log.interpolator = 's';
                 log.deltaSampleTimesMs = dt2;
                 log.simTimeFraction = timeFraction;
@@ -277,21 +302,33 @@ namespace BlackMisc
         CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
         {
             const double t1 = m_pa.t[1];
-            const double t2 = m_pa.t[2];
+            const double t2 = m_pa.t[2]; // latest (adjusted)
+
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first");
+                Q_ASSERT_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
+                Q_ASSERT_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+            }
+
             const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
             const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
             const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
-                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
-                Q_ASSERT_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
             }
 
             CAircraftSituation newSituation(currentSituation);
             const std::array<double, 3> normalVector = {{ newX, newY, newZ }};
             const CCoordinateGeodetic currentPosition(normalVector);
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(normalVector), Q_FUNC_INFO, "invalid vector");
+            }
 
             const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
             const CAltitude alt(newA, m_altitudeUnit);
@@ -299,11 +336,6 @@ namespace BlackMisc
             newSituation.setPosition(currentPosition);
             newSituation.setAltitude(alt);
             newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                Q_ASSERT_X(CAircraftSituation::isValidVector(normalVector), Q_FUNC_INFO, "invalid vector");
-                Q_ASSERT_X(newSituation.isValidVectorRange(), Q_FUNC_INFO, "invalid situation");
-            }
 
             if (interpolateGndFactor)
             {

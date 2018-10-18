@@ -31,6 +31,12 @@ namespace BlackMisc
             //! Situations available
             int getSituationsAvailable() const { return m_situationsAvailable; }
 
+            //! Valid?
+            bool isValid() const { return m_valid; }
+
+            //! Valid?
+            void setValid(bool valid) { m_valid = valid; }
+
         protected:
             //! Default ctor
             IInterpolant() {}
@@ -44,6 +50,7 @@ namespace BlackMisc
             qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
             int m_situationsAvailable = 0;  //!< used situations
             CInterpolatorPbh m_pbh;         //!< the used PBH interpolator
+            bool m_valid = true;            //!< valid?
         };
     } // namespace
 } // namespace

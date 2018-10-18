@@ -220,6 +220,7 @@ namespace BlackMisc
 
             //! Clear all data
             //! \remark mainly needed in UNIT tests
+            //! \private
             void clear();
 
             //! Init, or re-init the corressponding model
@@ -228,6 +229,9 @@ namespace BlackMisc
 
             //! Mark as unit test
             void markAsUnitTest();
+
+            //! Get count of invalid situations
+            int getInvalidSituationsCount() const { return m_invalidSituations; }
 
         protected:
             //! Constructor
@@ -276,6 +280,7 @@ namespace BlackMisc
             CPartsStatus m_lastPartsStatus;                             //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
             int m_partsToSituationInterpolationRatio = 2;               //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
             int m_partsToSituationGuessingRatio = 5;                    //!< ratio between parts guessing and situation interpolation
+            int m_invalidSituations = 0;                                //!< mainly when there are no new situations
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
             Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
             PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any

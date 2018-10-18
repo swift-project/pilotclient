@@ -130,7 +130,7 @@ namespace BlackMisc
             bool details = false;
             if (situations.containsOnGroundDetails(CAircraftSituation::InFromParts))
             {
-                // if a client supports parts, all situations are supposed to be parts based
+                // if a client supports parts, all ground situations are supposed to be parts based
                 details = situations.areAllOnGroundDetailsSame(CAircraftSituation::InFromParts);
                 BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
             }
@@ -182,60 +182,77 @@ namespace BlackMisc
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
             SituationLog log;
             const auto interpolant = derived()->getInterpolant(log);
-            const CInterpolatorPbh pbh = interpolant.pbh();
+            const bool isValid = interpolant.isValid();
 
-            // init interpolated situation
-            CAircraftSituation currentSituation = this->initInterpolatedSituation(pbh.getOldSituation(), pbh.getNewSituation());
-
-            // Pitch bank heading first, so follow up steps could use those values
-            currentSituation.setHeading(pbh.getHeading());
-            currentSituation.setPitch(pbh.getPitch());
-            currentSituation.setBank(pbh.getBank());
-            currentSituation.setGroundSpeed(pbh.getGroundSpeed());
-
-            // use derived interpolant function
-            const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
-            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid interpolation situation");
-            }
-            if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
-
-            // as we now have the position and can interpolate elevation
-            currentSituation.interpolateElevation(pbh.getOldSituation(), pbh.getNewSituation());
-            if (!currentSituation.hasGroundElevation())
-            {
-                // we still have no elevation
-                const CLength radius = currentSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius());
-                if (!m_lastSituation.transferGroundElevationFromThis(currentSituation, radius))
-                {
-                    const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
-                    m_lastSituation.setGroundElevationChecked(groundElevation, CAircraftSituation::FromCache);
-                }
-            }
-
-            // correct altitude itself
+            CAircraftSituation currentSituation = m_lastSituation;
             CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
-            if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
-            {
-                // just in case
-                altCorrection = currentSituation.correctAltitude(true); // we have CG set
-            }
 
-            // correct pitch on ground
-            if (currentSituation.isOnGround())
+            if (isValid)
             {
-                const CAngle correctedPitchOnGround = m_currentSetup.getPitchOnGround();
-                if (!correctedPitchOnGround.isNull())
+                const CInterpolatorPbh pbh = interpolant.pbh();
+
+                // init interpolated situation
+                currentSituation = this->initInterpolatedSituation(pbh.getOldSituation(), pbh.getNewSituation());
+
+                // Pitch bank heading first, so follow up steps could use those values
+                currentSituation.setHeading(pbh.getHeading());
+                currentSituation.setPitch(pbh.getPitch());
+                currentSituation.setBank(pbh.getBank());
+                currentSituation.setGroundSpeed(pbh.getGroundSpeed());
+
+                // use derived interpolant function
+                const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
+                currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    currentSituation.setPitch(correctedPitchOnGround);
+                    Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid interpolation situation");
+                }
+                if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
+
+                // as we now have the position and can interpolate elevation
+                currentSituation.interpolateElevation(pbh.getOldSituation(), pbh.getNewSituation());
+                if (!currentSituation.hasGroundElevation())
+                {
+                    // we still have no elevation
+                    const CLength radius = currentSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius());
+                    if (!m_lastSituation.transferGroundElevationFromThis(currentSituation, radius))
+                    {
+                        const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
+                        m_lastSituation.setGroundElevationChecked(groundElevation, CAircraftSituation::FromCache);
+                    }
+                }
+
+                // correct altitude itself
+                if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
+                {
+                    // just in case
+                    altCorrection = currentSituation.correctAltitude(true); // we have CG set
+                }
+
+                // correct pitch on ground
+                if (currentSituation.isOnGround())
+                {
+                    const CAngle correctedPitchOnGround = m_currentSetup.getPitchOnGround();
+                    if (!correctedPitchOnGround.isNull())
+                    {
+                        currentSituation.setPitch(correctedPitchOnGround);
+                    }
                 }
             }
+            else
+            {
+                m_invalidSituations++;
+                // further handling could go here, mainly we continue with last situation
+
+                if (m_invalidSituations < 3 || (m_invalidSituations % 10) == 0)
+                {
+                    CLogMessage(this).warning("Invalid situation no %1 for interpolation reported for '%2'") << m_invalidSituations << m_callsign.asString();
+                }
+            }// valid?
 
             // status
             Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
-            m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
+            m_currentInterpolationStatus.setInterpolatedAndCheckSituation(isValid, currentSituation);
             m_lastSituation = currentSituation;
             Q_ASSERT_X(m_currentInterpolationStatus.hasValidInterpolatedSituation(), Q_FUNC_INFO, "Expect valid situation");
 
@@ -252,6 +269,8 @@ namespace BlackMisc
                 log.elevationInfo = this->getElevationsFoundMissedInfo();
                 log.cgAboveGround = currentSituation.getCG();
                 log.sceneryOffset = m_currentSceneryOffset;
+                log.noInvalidSituations = m_invalidSituations;
+                log.noNetworkSituations = m_currentSituations.sizeInt();
                 m_logger->logInterpolation(log);
             }
 
