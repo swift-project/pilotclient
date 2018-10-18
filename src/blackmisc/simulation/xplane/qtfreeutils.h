@@ -15,6 +15,8 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <cctype>
+#include <algorithm>
 
 // Strict header only X-Plane model parser utils shared between BlackMisc and XSwiftBus.
 // Header only is necessary to no require XSwiftBus to link against BlackMisc.
@@ -118,6 +120,15 @@ namespace BlackMisc
                     return getDirName(acfFile) + ' ' + getBaseName(acfFile);
                 }
 
+                std::string toLower(std::string s)
+                {
+                    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c)
+                    {
+                        return std::tolower(c);
+                    });
+                    return s;
+                }
+
                 //! Extract ACF properties from an aircraft file
                 AcfProperties extractAcfProperties(const std::string &filePath)
                 {
@@ -128,12 +139,15 @@ namespace BlackMisc
                     std::string version;
                     std::string acf;
                     std::getline(fs, i);
+                    i = toLower(i);
                     std::getline(fs, version);
+                    version = toLower(version);
                     std::getline(fs, acf);
+                    acf = toLower(acf);
 
                     AcfProperties acfProperties;
 
-                    if (i == "I" && version.find("version") != std::string::npos && acf == "ACF")
+                    if (i == "i" && version.find("version") != std::string::npos && acf == "acf")
                     {
                         std::string line;
                         while (std::getline(fs, line))
