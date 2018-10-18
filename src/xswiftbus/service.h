@@ -79,8 +79,8 @@ namespace XSwiftBus
         //! Get name of current aircraft model
         std::string getAircraftName() const;
 
-        //! Get path to current aircraft livery
-        std::string getAircraftLivery() const { return m_liveryPath.get(); }
+        //! Get current aircraft livery
+        std::string getAircraftLivery() const;
 
         //! Get the ICAO code of the current aircraft model
         std::string getAircraftIcaoCode() const { return m_icao.get(); }

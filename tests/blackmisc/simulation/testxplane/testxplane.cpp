@@ -43,6 +43,7 @@ namespace BlackMiscTest
         QCOMPARE(QString::fromStdString(getFileName("foo/test.txt")), QString("test.txt"));
         QCOMPARE(QString::fromStdString(getFileName("test.txt")), QString("test.txt"));
         QCOMPARE(QString::fromStdString(getFileName("foo/test.txt.txt")), QString("test.txt.txt"));
+        QCOMPARE(QString::fromStdString(getFileName("foo/bar")), QString("bar"));
     }
 
     void CTestXPlane::getDirNameTest()

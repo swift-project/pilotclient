@@ -104,6 +104,16 @@ namespace XSwiftBus
         return acfProperties.modelName;
     }
 
+    std::string CService::getAircraftLivery() const
+    {
+        std::string liveryPath = m_liveryPath.get();
+        if (liveryPath.empty()) { return {}; }
+
+        // liveryPath end with / and we need to get rid of it
+        liveryPath.pop_back();
+        return getFileName(liveryPath);
+    }
+
     int CService::getXPlaneVersionMajor() const
     {
         int version;
