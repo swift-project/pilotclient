@@ -232,13 +232,16 @@
    <layout class="QVBoxLayout" name="vl_SimulatorSpecific">
     <item>
      <widget class="QToolBox" name="tb_SimulatorSpecific">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <widget class="QWidget" name="pg_InstallFsxTerrainProbe">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>75</width>
-         <height>64</height>
+         <width>668</width>
+         <height>445</height>
         </rect>
        </property>
        <attribute name="label">
@@ -262,8 +265,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>89</width>
-         <height>64</height>
+         <width>668</width>
+         <height>445</height>
         </rect>
        </property>
        <attribute name="label">

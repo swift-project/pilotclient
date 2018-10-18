@@ -36,10 +36,10 @@ namespace BlackGui
             this->setButtonText(CustomButton1, "skip");
 
             // no other versions, skip copy pages
-            if (!CDirectoryUtils::hasOtherSwiftDataDirectories())
-            {
-                this->setStartId(ConfigSimulator);
-            }
+            // disabled afetr discussion with RP as it is confusing
+            // if (!CDirectoryUtils::hasOtherSwiftDataDirectories()) { this->setStartId(ConfigSimulator); }
+
+            ui->tb_SimulatorSpecific->setCurrentWidget(ui->comp_InstallXSwiftBus);
 
             const QList<int> ids = this->pageIds();
             const auto mm = std::minmax_element(ids.begin(), ids.end());
