@@ -224,12 +224,29 @@ namespace BlackSimPlugin
                 // updates
                 updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
                 updateOwnSituation(situation);
-                updateCockpit(
-                    CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
-                    CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }),
-                    CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
-                    identifier()
-                );
+
+                // defaults
+                CSimulatedAircraft myAircraft(getOwnAircraft());
+                CComSystem com1(myAircraft.getCom1System()); // set defaults
+                CComSystem com2(myAircraft.getCom2System());
+                CTransponder transponder(myAircraft.getTransponder());
+
+                // updates
+                com1.setFrequencyActive(CFrequency(m_xplaneData.com1Active, CFrequencyUnit::kHz()));
+                com1.setFrequencyStandby(CFrequency(m_xplaneData.com1Standby, CFrequencyUnit::kHz()));
+                const bool changedCom1 = myAircraft.getCom1System() != com1;
+
+                com2.setFrequencyActive(CFrequency(m_xplaneData.com2Active, CFrequencyUnit::kHz()));
+                com2.setFrequencyStandby(CFrequency(m_xplaneData.com2Standby, CFrequencyUnit::kHz()));
+                const bool changedCom2 = myAircraft.getCom2System() != com2;
+
+                transponder = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
+                const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
+
+                if (changedCom1 || changedCom2 || changedXpr)
+                {
+                    this->updateCockpit(com1, com2, transponder, identifier());
+                }
 
                 if (m_isWeatherActivated)
                 {
