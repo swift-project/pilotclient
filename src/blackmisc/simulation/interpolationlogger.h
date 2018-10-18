@@ -39,6 +39,7 @@ namespace BlackMisc
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
             bool useParts = false;          //!< supporting aircraft parts
             int noNetworkSituations = 0;    //!< available network situations
+            int noInvalidSituations = 0;    //!< invalid situations, missing situations for timestampd
             QString elevationInfo;          //!< info about elevation retrieval
             QString altCorrection;          //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
             Aviation::CCallsign callsign;   //!< current callsign

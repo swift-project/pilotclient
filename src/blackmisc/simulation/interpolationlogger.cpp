@@ -429,6 +429,7 @@ namespace BlackMisc
                    QStringLiteral(" ") % cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                    QStringLiteral(" | alt.cor.: ") % altCorrection %
                    QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
+                   QStringLiteral(" | #invalid: ") % QString::number(noInvalidSituations) %
                    (
                        withDeltaTimes ?
                        separator %
