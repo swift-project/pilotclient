@@ -191,6 +191,9 @@ namespace BlackMisc
         //! Timestamp with offset added for interpolation
         qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
 
+        //! Set timestamp with offset added for interpolation
+        void setAdjustedMSecsSinceEpoch(qint64 adjustedTimeMs) { this->setMSecsSinceEpoch(adjustedTimeMs - this->getTimeOffsetMs()); }
+
         //! Time difference in ms (this -> compare)
         qint64 getAdjustedTimeDifferenceMs(qint64 compareTime) const { return this->getAdjustedMSecsSinceEpoch() - compareTime; }
 
