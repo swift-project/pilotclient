@@ -32,9 +32,9 @@ namespace BlackMisc
             std::array<double, N> solveTridiagonal(std::array<std::array<double, N>, N> &matrix, std::array<double, N> &d)
             {
                 // *INDENT-OFF*
-                const auto a = [&matrix](auto i) -> double& { return matrix[i][i-1]; }; // subdiagonal
-                const auto b = [&matrix](auto i) -> double& { return matrix[i][i  ]; }; // main diagonal
-                const auto c = [&matrix](auto i) -> double& { return matrix[i][i+1]; }; // superdiagonal
+                const auto a = [&matrix](size_t i) -> double& { return matrix[i][i-1]; }; // subdiagonal
+                const auto b = [&matrix](size_t i) -> double& { return matrix[i][i  ]; }; // main diagonal
+                const auto c = [&matrix](size_t i) -> double& { return matrix[i][i+1]; }; // superdiagonal
 
                 // forward sweep
                 c(0) /= b(0);
@@ -49,7 +49,8 @@ namespace BlackMisc
                 // back substitution
                 for (int i = N - 2; i >= 0; --i)
                 {
-                    d[i] -= c(i) * d[i+1];
+                    const size_t it = static_cast<size_t>(i);
+                    d[it] -= c(it) * d[it+1];
                 }
                 return d;
                 // *INDENT-ON*
@@ -331,7 +332,7 @@ namespace BlackMisc
 
         void CInterpolatorSpline::PosArray::initToZero()
         {
-            for (int i = 0; i < 3; i++)
+            for (uint i = 0; i < 3; i++)
             {
                 x[i]  = 0; y[i] = 0; z[i] = 0;
                 a[i]  = 0; t[i] = 0;
