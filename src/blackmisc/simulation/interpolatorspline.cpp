@@ -114,49 +114,57 @@ namespace BlackMisc
             // do we have the last interpolated situation?
             if (m_lastSituation.isNull())
             {
-                if (!m_currentSituations.isEmpty())
+                if (m_currentSituations.isEmpty())
+                {
+                    // nothing we can do
+                    m_s[0] = m_s[1] = m_s[2] = CAircraftSituation::null();
+                    return false;
+                }
+                else
                 {
                     // we start with the latest situation just to init the values
                     m_s[0] = m_s[1] = m_s[2] = m_currentSituations.front();
-                    const qint64 os = qMin(CFsdSetup::c_interimPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
-                    m_s[0].addMsecs(m_currentTimeMsSinceEpoch - os); // Ref T297 default offset time to fill data
-                    m_s[1].addMsecs(m_currentTimeMsSinceEpoch); // Ref T297 default offset time to fill data
-                    const bool valid = m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
-                    return valid;
                 }
-                m_s[0] = m_s[1] = m_s[2] = CAircraftSituation::null();
-                return false;
+                m_s[1].setAdjustedMSecsSinceEpoch(m_currentTimeMsSinceEpoch); // adjusted time exacty "now"
             }
             else
             {
                 // in normal cases init some default values
                 m_s[0] = m_s[1] = m_s[2] = m_lastSituation; // current position
-                const qint64 os = qMin(CFsdSetup::c_interimPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
-                m_s[1].setMSecsSinceEpoch(m_currentTimeMsSinceEpoch);
-                m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
-                m_s[2].addMsecs(os);  // latest, Ref T297 default offset time to fill data
-                if (m_currentSituations.isEmpty()) { return false; }
             }
 
+            // set some default values
+            const qint64 defaultValueMs = CFsdSetup::c_interimPositionTimeOffsetMsec; // CLANG cannot use reference in qMax
+            const qint64 os = qMax(defaultValueMs, m_s[2].getTimeOffsetMs());
+            m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
+            m_s[2].addMsecs(os);  // latest, Ref T297 default offset time to fill data
+            if (m_currentSituations.isEmpty()) { return false; }
+
+            // and use the real values if available
             const CAircraftSituation latest = m_currentSituations.front();
             if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
             const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
             const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
             if (!older.isNull()) { m_s[0] = older; }
-            const bool valid = m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
+            const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
+            const qint64 olderAdjusted = m_s[0].getAdjustedMSecsSinceEpoch();
+
+            // not having a new situation itself is quite normal,
+            // only if it persits it is critical.
+            const bool hasNewer = latestAdjusted > m_currentTimeMsSinceEpoch;
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(m_s[2].getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch, Q_FUNC_INFO, "No new situation");
-                const bool verified = valid && this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
+                const bool verified = this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
                 if (!verified)
                 {
-                    static const QString vm("m0-2 (oldest latest) %1 %2 %3");
-                    const QString vmValues = vm.arg(m_s[0].getAdjustedMSecsSinceEpoch()).arg(m_s[1].getAdjustedMSecsSinceEpoch()).arg(m_s[2].getAdjustedMSecsSinceEpoch());
+                    static const QString vm("Unverified situations, m0-2 (oldest latest) %1 %2 %3");
+                    const QString vmValues = vm.arg(olderAdjusted).arg(currentAdjusted).arg(latestAdjusted);
+                    CLogMessage(this).warning(vmValues);
                     Q_UNUSED(vmValues);
                 }
             }
-            return valid;
+            return hasNewer;
         }
 
         // pin vtables to this file
