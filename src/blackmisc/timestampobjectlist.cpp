@@ -274,15 +274,22 @@ namespace BlackMisc
         {
             c[0] = value;
             if (maxElements > 0) { c.truncate(maxElements); }
-            return;
+        }
+        else
+        {
+            if (maxElements > 0) { c.truncate(maxElements - 1); }
+            const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
+            c.push_front(value);
+            if (needSort)
+            {
+                ITimestampObjectList::sortLatestFirst();
+            }
         }
 
-        if (maxElements > 0) { c.truncate(maxElements - 1); }
-        const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
-        c.push_front(value);
-        if (needSort)
+        // crosscheck
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            ITimestampObjectList::sortLatestFirst();
+            Q_ASSERT_X(this->isSortedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
         }
     }
 
@@ -404,7 +411,7 @@ namespace BlackMisc
             c++;
         }
 
-        if (c >0) { mmm.mean = mean / c; }
+        if (c > 0) { mmm.mean = mean / c; }
         return mmm;
     }
 
@@ -498,29 +505,45 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirstAdjustOffset(const OBJ &value, bool replaceSameTimestamp, int maxElements)
     {
-        ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestAdjustedFirst(value, replaceSameTimestamp, maxElements);
+        ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp, maxElements);
 
         // now sorted by timestamp
         // this reflects normally the incoming order
         // ts
-        //  8: os 2 adj 10
-        //  6: os 2 adj  8
-        //  5: os 5 adj 10 => max os 3
+        //  8: os 2 adj 12 => min os 4
+        //  6: os 2 adj 11 => min os 5
+        //  5: os 5 adj 10
         //  0: os 5 adj  5
         CONTAINER &c = this->container();
         if (c.size() < 2) { return; }
-        const ITimestampWithOffsetBased &front = c.front();
-        ITimestampWithOffsetBased &second = c[1];
-        if (front.isNewerThanAdjusted(second)) { return; }
-        const qint64 diffOs = front.getAdjustedMSecsSinceEpoch() - second.getMSecsSinceEpoch() - 1;
-        const qint64 avgOs = (diffOs + qMin(front.getTimeOffsetMs(), diffOs)) / 2;
-        second.setTimeOffsetMs(avgOs);
+        ITimestampWithOffsetBased &front = c.front();
+        const ITimestampWithOffsetBased &second = c[1];
+        if (!front.isNewerThanAdjusted(second))
+        {
+            // const qint64 minOs = qMin(front.getTimeOffsetMs(), second.getTimeOffsetMs());
+            const qint64 minReqOs = second.getAdjustedMSecsSinceEpoch() - front.getMSecsSinceEpoch(); // minimal required
+            const qint64 avgOs = (front.getTimeOffsetMs() + second.getTimeOffsetMs()) / 2;
+            const qint64 os = qMax(minReqOs + 1, avgOs); // at least +1, as value must be > (greater)
+            front.setTimeOffsetMs(os);
+        }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            Q_ASSERT_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
-            Q_ASSERT_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+            BLACK_VERIFY_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
+            BLACK_VERIFY_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
         }
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirstIgnoreOverlapping(const OBJ &value, bool replaceSameTimestamp, int maxElements)
+    {
+        CONTAINER &c = this->container();
+        if (c.size() > 1)
+        {
+            const ITimestampWithOffsetBased front = c.front();
+            if (value.getAdjustedMSecsSinceEpoch() <= front.getAdjustedMSecsSinceEpoch()) { return; }
+        }
+        ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp, maxElements);
     }
 
     template<class OBJ, class CONTAINER>
@@ -561,7 +584,6 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestFirst() const
     {
-        if (this->container().isEmpty()) { return false; }
         if (this->container().size() < 2) { return true; }
         qint64 min = std::numeric_limits <qint64>::max();
         for (const ITimestampWithOffsetBased &obj : this->container())

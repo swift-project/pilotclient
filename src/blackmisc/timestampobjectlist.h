@@ -206,6 +206,9 @@ namespace BlackMisc
         //! \remark adjust offset to average offset of two adjacent elements so adjusted values are sorted
         void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
 
+        //! Add value, but ignore overlapping (past) values
+        void push_frontKeepLatestFirstIgnoreOverlapping(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
+
         //! Prefill with elements
         void prefillLatestAdjustedFirst(const OBJ &value, int elements, qint64 deltaTimeMs = -1);
 
