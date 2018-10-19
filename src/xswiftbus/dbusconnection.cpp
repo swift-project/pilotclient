@@ -99,9 +99,16 @@ namespace XSwiftBus
         return m_connection && dbus_connection_get_is_connected(m_connection.get());
     }
 
-    void CDBusConnection::registerDisconnectedCallback(DisconnectedCallback func)
+    void CDBusConnection::registerDisconnectedCallback(CDBusObject *obj, DisconnectedCallback func)
     {
-        m_disconnectedCallbacks.push_back(func);
+        m_disconnectedCallbacks[obj] = func;
+    }
+
+    void CDBusConnection::unregisterDisconnectedCallback(CDBusObject *obj)
+    {
+        auto it = m_disconnectedCallbacks.find(obj);
+        if (it == m_disconnectedCallbacks.end()) { return; }
+        m_disconnectedCallbacks.erase(it);
     }
 
     void CDBusConnection::registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath, const DBusObjectPathVTable &dbusObjectPathVTable)
@@ -166,9 +173,9 @@ namespace XSwiftBus
 
         if (dbus_message_is_signal (message, DBUS_INTERFACE_LOCAL, "Disconnected"))
         {
-            for (const auto &cb : obj->m_disconnectedCallbacks)
+            for (auto it = obj->m_disconnectedCallbacks.begin(); it != obj->m_disconnectedCallbacks.end(); ++it)
             {
-                cb();
+                it->second();
             }
             return DBUS_HANDLER_RESULT_HANDLED;
         }

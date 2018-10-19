@@ -19,7 +19,6 @@
 #include <dbus/dbus.h>
 #include <string>
 #include <unordered_map>
-#include <vector>
 #include <memory>
 
 namespace XSwiftBus
@@ -64,7 +63,10 @@ namespace XSwiftBus
         bool isConnected() const;
 
         //! Register a disconnected callback
-        void registerDisconnectedCallback(DisconnectedCallback func);
+        void registerDisconnectedCallback(CDBusObject *obj, DisconnectedCallback func);
+
+        //! Register a disconnected callback
+        void unregisterDisconnectedCallback(CDBusObject *obj);
 
         //! Register DBus object with interfaceName and objectPath.
         //! \param object
@@ -98,7 +100,7 @@ namespace XSwiftBus
         CDBusDispatcher *m_dispatcher = nullptr;
         std::unique_ptr<DBusConnection, DBusConnectionDeleter> m_connection;
         CDBusError m_lastError;
-        std::vector<DisconnectedCallback> m_disconnectedCallbacks;
+        std::unordered_map<CDBusObject *, DisconnectedCallback> m_disconnectedCallbacks;
     };
 
 }
