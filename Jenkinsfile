@@ -12,10 +12,11 @@ builders['Build swift Linux'] = {
             }
 
             stage('Linux Build') {
+                def eolInMonth = 6
                 withEnv(['BITROCK_BUILDER=/opt/installbuilder/bin/builder', 'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
                     sh '''
                         cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
-                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2
+                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ''' + getEolInMonth() + '''
                     '''
                 }
 
@@ -62,7 +63,7 @@ builders['Build swift MacOS'] = {
                 withEnv(['PATH+LOCAL=/usr/local/bin', 'BITROCK_BUILDER=/Applications/BitRockInstallBuilderQt/bin/builder', 'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
                     sh '''
                         cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
-                        python -u scripts/jenkins.py -w 64 -t clang -d -j2
+                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ''' + getEolInMonth() + '''
                     '''
                 }
 
@@ -101,7 +102,7 @@ builders['Build swift Win32'] = {
             stage('Win32 Build') {
                 bat '''
                     copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
-                    python -u scripts/jenkins.py -w 32 -t msvc -d
+                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ''' + getEolInMonth() + '''
                 '''
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
@@ -140,7 +141,7 @@ builders['Build swift Win64'] = {
             stage('Win64 Build') {
                 bat '''
                     copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
-                    python -u scripts/jenkins.py -w 64 -t msvc -d
+                    python -u scripts/jenkins.py -w 64 -t msvc -d  -e ''' + getEolInMonth() + '''
                 '''
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
@@ -296,6 +297,21 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
 
     // Send notifications - disable during testing
     slackSend (color: colorCode, message: summary)
+}
+
+def getEolInMonth() {
+    def regexDevBranch = /develop\/\d.\d.\d/
+    def regexReleaseBranch = /^release\/\d.\d/
+    if (BRANCH_NAME ==~ regexDevBranch) {
+        // 6 month for dev builds
+        return 6
+    } else if(BRANCH_NAME ==~ regexReleaseBranch) {
+        // 12 month currently for release builds. That will be removed in future.
+        return 12
+    } else {
+        // 3 month for everything else
+        return 3
+    }
 }
 
 def killDBusDaemon() {

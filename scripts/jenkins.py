@@ -8,6 +8,7 @@
 # including this file, may be copied, modified, propagated, or distributed except according to the terms
 # contained in the LICENSE file.
 
+from datetime import date
 import getopt
 import multiprocessing
 import os
@@ -44,7 +45,7 @@ class Builder:
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
-    def build(self, jobs, dev_build):
+    def build(self, jobs, dev_build, eolInMonth):
         """
         Run the build itself. Pass dev_build=True to enable a dev build
         """
@@ -53,9 +54,20 @@ class Builder:
         if not os.path.isdir(build_path):
             os.makedirs(build_path)
         os.chdir(build_path)
+
         qmake_call = ['qmake']
         if dev_build:
             qmake_call += ['"BLACK_CONFIG+=SwiftDevBranch"']
+
+        if eolInMonth > 0:
+            eolYear = date.today().year
+            eolMonth = date.today().month + eolInMonth
+            eolYear = eolYear + ( eolMonth / 12 )
+            eolMonth = eolMonth % 12
+            eolDate = date(int(eolYear), int(eolMonth), 1)
+            print('Setting EOL date to ' + eolDate.strftime('%Y%m%d'))
+            qmake_call += ['BLACK_EOL=' + eolDate.strftime('%Y%m%d')]
+
         qmake_call += ['-r', os.pardir]
         subprocess.check_call(qmake_call, env=dict(os.environ))
 
@@ -372,7 +384,7 @@ def print_help():
                            'Windows': ['msvc', 'mingw']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('jenkins.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-d]')
+    print('jenkins.py -c <config file> -w <32|64> -t <' + compiler_help + '> [-d] [-e <end of life in month>]')
 
 
 # Entry point if called as a standalone program
@@ -383,9 +395,10 @@ def main(argv):
     dev_build = False
     jobs = None
     upload_symbols = False
+    eolInMonth = 0
 
     try:
-        opts, args = getopt.getopt(argv, 'hc:w:t:j:du', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload'])
+        opts, args = getopt.getopt(argv, 'hc:w:t:j:due:', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -413,6 +426,8 @@ def main(argv):
             dev_build = True
         elif opt in ('-u', '--upload'):
             upload_symbols = True
+        elif opt in ('-e', '--eol'):
+            eolInMonth = int(arg)
 
     if word_size not in ['32', '64']:
         print('Unsupported word size. Choose 32 or 64')
@@ -435,7 +450,7 @@ def main(argv):
     builder = builders[platform.system()][tool_chain](config_file, word_size)
 
     builder.prepare()
-    builder.build(jobs, dev_build)
+    builder.build(jobs, dev_build, eolInMonth)
     builder.checks()
     builder.install()
     builder.publish()
