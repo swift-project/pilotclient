@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
@@ -28,6 +29,7 @@ using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -120,11 +122,6 @@ namespace BlackMisc
             if (!oldest.isNull()) { situations.push_back(oldest); }
 
             const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                BLACK_VERIFY_X(sorted, Q_FUNC_INFO, "Wrong adjusted timestamp order");
-            }
-
             if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
 
             bool details = false;
@@ -242,11 +239,24 @@ namespace BlackMisc
             else
             {
                 m_invalidSituations++;
-                // further handling could go here, mainly we continue with last situation
 
-                if (m_invalidSituations < 3 || (m_invalidSituations % 10) == 0)
+                // further handling could go here, mainly we continue with last situation
+                const bool noSituation = currentSituation.isNull();
+                const qint64 diff = noSituation ? -1 : m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
+                const qint64 thresholdMs = noSituation ? qRound(CFsdSetup::c_interimPositionTimeOffsetMsec * 0.5) : qRound(currentSituation.getTimeOffsetMs() * 0.5);
+                const bool threshold = diff > thresholdMs;
+                if (noSituation || threshold)
                 {
-                    CLogMessage(this).warning("Invalid situation no %1 for interpolation reported for '%2'") << m_invalidSituations << m_callsign.asString();
+                    // Problem 1, we have no "last situation"
+                    // Problem 2, "it takes too long to recover"
+                    if (noSituation)
+                    {
+                        CLogMessage(this).warning("No situation no %1 for interpolation reported for '%2'") << m_invalidSituations << m_callsign.asString();
+                    }
+                    else
+                    {
+                        CLogMessage(this).warning("Invalid situation, diff %1ms no %2 for interpolation reported for '%3'") << diff << m_invalidSituations << m_callsign.asString();
+                    }
                 }
             }// valid?
 
@@ -254,7 +264,6 @@ namespace BlackMisc
             Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
             m_currentInterpolationStatus.setInterpolatedAndCheckSituation(isValid, currentSituation);
             m_lastSituation = currentSituation;
-            Q_ASSERT_X(m_currentInterpolationStatus.hasValidInterpolatedSituation(), Q_FUNC_INFO, "Expect valid situation");
 
             // logging
             if (this->doLogging())
