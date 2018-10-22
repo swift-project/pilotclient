@@ -66,7 +66,7 @@ namespace BlackMisc
             static const CVoiceSetup &vatsimStandard();
 
         private:
-            int m_vatismVoiceUdpPort = 3290;
+            int m_vatismVoiceUdpPort = 3292;
 
             BLACK_METACLASS(
                 CVoiceSetup,
