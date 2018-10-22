@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -42,6 +43,9 @@ namespace BlackSimPlugin
             //! Represented simulator
             BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
 
+            //! Update the values
+            void refresh();
+
         private:
             //! Trace checkbox changed
             void onSimConnectTraceChanged();
@@ -58,8 +62,14 @@ namespace BlackSimPlugin
             //! Copy the terrain probe
             void copyTerrainProbe();
 
+            //! Status has been changed
+            void onSimulatorStatusChanged(int status);
+
+            //! Plugin changed
+            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+
             //! Access the concrete implementation
-            CSimulatorFsxCommon *getFsxSimulator() const;
+            CSimulatorFsxCommon *getFsxOrP3DSimulator() const;
 
             BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
             BlackGui::COverlayMessagesFrame *m_mf = nullptr;

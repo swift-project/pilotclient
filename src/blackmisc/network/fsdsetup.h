@@ -56,10 +56,10 @@ namespace BlackMisc
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
             //! Offset times basically telling when to expect the next value from network plus some reserve
-            //! \remark copies of CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
+            //! \remark related to CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
             //! @{
-            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
-            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates Ref T297
+            static constexpr qint64 c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
+            static constexpr qint64 c_interimPositionTimeOffsetMsec = 1500; //!< offset time for received interim position updates Ref T297
             //! @}
 
             //! Default constructor.

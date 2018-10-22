@@ -27,6 +27,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QObject>
 #include <QtPlugin>
@@ -272,15 +273,20 @@ namespace BlackSimPlugin
             //! Register help
             static void registerHelp();
 
+            //! Word size @{
+            static bool is32bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 32); }
+            static bool is64bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 64); }
+            //! @}
+
             static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
             CSimConnectObjects m_simConnectObjects;                             //!< AI objects and their object and request ids
 
             // probes
-            bool m_useFsxTerrainProbe = true;    //!< Use FSX Terrain probe?
-            bool m_initFsxTerrainProbes = false; //!< initialized terrain probes
-            int  m_addedProbes = 0;              //!< added probes
+            bool m_useFsxTerrainProbe = is32bit(); //!< Use FSX Terrain probe?
+            bool m_initFsxTerrainProbes = false;   //!< initialized terrain probes
+            int  m_addedProbes = 0;                //!< added probes
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
         private:

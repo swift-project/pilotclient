@@ -164,9 +164,11 @@ namespace BlackSimPlugin
         };
 
         //! The whole SB data area
+        //! \remark vPilot SB area https://forums.vatsim.net/viewtopic.php?p=519580
+        //! \remark SB offsets http://www.squawkbox.ca/doc/sdk/fsuipc.php
         struct DataDefinitionClientAreaSb
         {
-            byte data[128] {}; //!< 128 bytes of data, offsets http://www.squawkbox.ca/doc/sdk/fsuipc.php
+            byte data[128] {}; //!< 128 bytes of data, offsets
 
             //! Standby = 1, else 0
             byte getTransponderMode() const { return data[17]; }

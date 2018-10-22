@@ -13,12 +13,17 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackconfig/buildconfig.h"
+
+#include <QPointer>
+#include <QTimer>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackConfig;
 
 namespace BlackSimPlugin
 {
@@ -36,15 +41,20 @@ namespace BlackSimPlugin
             connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
             connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
             connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
+            connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
 
-            const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            if (fsx)
+            if (sGui && sGui->getIContextSimulator())
             {
-                ui->cb_TraceSimConnectCalls->setChecked(fsx->isTracingSendId());
-                ui->cb_EnableTerrainProbe->setChecked(fsx->isUsingFsxTerrainProbe());
-                ui->cb_SBOffsets->setChecked(fsx->isUsingSbOffsetValues());
-                ui->cb_UseFsuipc->setChecked(fsx->isFsuipcConnected());
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CFsxSettingsComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CFsxSettingsComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
             }
+
+            QPointer<CFsxSettingsComponent> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
+            {
+                if (!sGui || !myself || sGui->isShuttingDown()) { return; }
+                this->refresh();
+            });
         }
 
         CFsxSettingsComponent::~CFsxSettingsComponent()
@@ -52,36 +62,52 @@ namespace BlackSimPlugin
 
         CSimulatorInfo CFsxSettingsComponent::getSimulator() const
         {
-            const CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            return fsx ? fsx->getSimulatorInfo() : m_simulator;
+            const CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            return fsxOrP3D ? fsxOrP3D->getSimulatorInfo() : m_simulator;
+        }
+
+        void CFsxSettingsComponent::refresh()
+        {
+            const CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (fsxOrP3D)
+            {
+                ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTracingSendId());
+                ui->cb_EnableTerrainProbe->setChecked(fsxOrP3D->isUsingFsxTerrainProbe());
+                ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
+                ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcConnected());
+            }
+
+            const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);
+            ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
+            ui->pb_CopyTerrainProbe->setVisible(terrainProbe);
         }
 
         void CFsxSettingsComponent::onSimConnectTraceChanged()
         {
-            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            if (!fsx) { return; }
-            fsx->setTractingSendId(ui->cb_TraceSimConnectCalls->isChecked());
+            CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (!fsxOrP3D) { return; }
+            fsxOrP3D->setTractingSendId(ui->cb_TraceSimConnectCalls->isChecked());
         }
 
         void CFsxSettingsComponent::onEnableTerrainProbeChanged()
         {
-            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            if (!fsx) { return; }
-            fsx->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
+            CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (!fsxOrP3D) { return; }
+            fsxOrP3D->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
         }
 
         void CFsxSettingsComponent::onFsuipcChanged()
         {
-            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            if (!fsx) { return; }
-            fsx->useFsuipc(ui->cb_UseFsuipc->isChecked());
+            CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (!fsxOrP3D) { return; }
+            fsxOrP3D->useFsuipc(ui->cb_UseFsuipc->isChecked());
         }
 
         void CFsxSettingsComponent::onSBOffsetsChanged()
         {
-            CSimulatorFsxCommon *fsx = this->getFsxSimulator();
-            if (!fsx) { return; }
-            fsx->setUsingSbOffsetValues(ui->cb_SBOffsets->isChecked());
+            CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (!fsxOrP3D) { return; }
+            fsxOrP3D->setUsingSbOffsetValues(ui->cb_SBOffsets->isChecked());
         }
 
         void CFsxSettingsComponent::copyTerrainProbe()
@@ -94,7 +120,19 @@ namespace BlackSimPlugin
             if (m_mf)  { m_mf->showOverlayMessages(msgs); }
         }
 
-        CSimulatorFsxCommon *CFsxSettingsComponent::getFsxSimulator() const
+        void CFsxSettingsComponent::onSimulatorStatusChanged(int status)
+        {
+            Q_UNUSED(status);
+            this->refresh();
+        }
+
+        void CFsxSettingsComponent::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)
+        {
+            Q_UNUSED(info);
+            this->refresh();
+        }
+
+        CSimulatorFsxCommon *CFsxSettingsComponent::getFsxOrP3DSimulator() const
         {
             if (!sGui || !sGui->getISimulator() || sGui->isShuttingDown()) { return nullptr; }
             ISimulator *simulator = sGui->getISimulator();

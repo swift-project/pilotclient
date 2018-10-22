@@ -1249,9 +1249,20 @@ namespace BlackCore
 
             // Ref T297,
             const qint64 diff = qAbs(markerTs - oldTs);
-            const qint64 offsetTime = (oldTs > 0 && diff > 0 && diff < CFsdSetup::c_interimPositionTimeOffsetMsec) ?
-                                      CFsdSetup::c_interimPositionTimeOffsetMsec :
-                                      CFsdSetup::c_positionTimeOffsetMsec;
+            qint64 offsetTime = CFsdSetup::c_positionTimeOffsetMsec;
+            static const qint64 thresholdMs = qRound(CFsdSetup::c_positionTimeOffsetMsec * 0.4);
+            if (oldTs > 0 && diff > 0)
+            {
+                if (diff < CFsdSetup::c_interimPositionTimeOffsetMsec)
+                {
+                    offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
+                }
+                else if (diff < thresholdMs)
+                {
+                    offsetTime = qRound(diff * 1.1);
+                }
+            }
+
             m_lastOffsetTime[callsign] = offsetTime;
             return offsetTime;
         }
