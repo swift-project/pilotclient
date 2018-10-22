@@ -80,7 +80,7 @@ namespace BlackCore
             msgs.push_back(cacheAvailable ?
                            CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
                            CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty"));
-            msgs.push_back(this->manageSetupAvailability(false, false));
+            msgs.push_back(this->manageSetupAvailability(false, false)); // treat cache as local read
             return msgs;
         }
 
@@ -382,7 +382,6 @@ namespace BlackCore
             if (setupJson.isEmpty())
             {
                 CLogMessage(this).info("No bootstrap setup file at '%1'") << urlString;
-                // try next URL
             }
             else
             {
@@ -431,9 +430,9 @@ namespace BlackCore
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 
-                    // in dev. I get notified, in productive code I try next URL
-                    // by falling thru
+                    // in dev. I get notified, in productive code I try next URL by falling thru
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
+                    m_bootstrapReadErrors++;
                 }
             } // json empty
         } // no error
@@ -442,6 +441,12 @@ namespace BlackCore
             // network error, log as warning as we will read again if possible
             // however, store as error because this will be a possible root cause if nothing else is
             nwReply->abort();
+            m_bootstrapReadErrors++;
+            if (m_bootstrapReadErrors > 1)
+            {
+                // getting here means at least 2 URLs failes
+                this->manageSetupAvailability(false); // this updates also the cache availability so we can contine with cache only
+            }
         }
     }
 
@@ -508,6 +513,7 @@ namespace BlackCore
 
                     // in dev. I get notified, in productive code I try next URL by falling thru
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
+                    m_updateInfoReadErrors++;
                 }
             } // json empty
         } // no error
@@ -515,6 +521,7 @@ namespace BlackCore
         {
             // network error, try next URL
             nwReply->abort();
+            m_updateInfoReadErrors++;
         }
     }
 

@@ -99,7 +99,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this).warning("No loaded bootstrap setup available");
+                const CStatusMessage msg = CStatusMessage(this).warning("No loaded bootstrap setup available, skipping URL test");
                 ui->comp_Messages->appendStatusMessageToList(msg);
             }
         }

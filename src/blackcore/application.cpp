@@ -415,6 +415,8 @@ namespace BlackCore
 
         // setup handling completed with success or failure, or we run into time out
         if (m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
+
+        // getting here can means no "real" read success, and NO available cache
         CStatusMessageList msgs(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
         if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
         {

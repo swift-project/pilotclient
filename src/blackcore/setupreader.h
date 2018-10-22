@@ -120,10 +120,10 @@ namespace BlackCore
         QString getBootstrapModeAsString() const;
 
     signals:
-        //! Setup fetched or failed (from web, cache, or local file)
+        //! Setup fetched or failed (from web, cache, or local file)?
         void setupHandlingCompleted(bool available);
 
-        //! Update infao available (from web, cache)
+        //! Update info available (from web, cache)?
         void updateInfoAvailable(bool available);
 
         //! A shared URL was successfully read
@@ -164,9 +164,11 @@ namespace BlackCore
 
         std::atomic<bool> m_shutdown { false };
         std::atomic<bool> m_setupAvailable { false };            //!< setup available
-        std::atomic<bool> m_updateInfoAvailable { false };       //!< update info available
+        std::atomic<bool> m_updateInfoAvailable   { false };     //!< update info available
         std::atomic<bool> m_ignoreCmdBootstrapUrl { false };     //!< ignore the explicitly set bootstrap URL
         std::atomic<bool> m_checkCmdBootstrapUrl { true };       //!< check connection on CMD bootstrap URL
+        std::atomic_int   m_bootstrapReadErrors  { 0 };          //!< failed bootstrap reads
+        std::atomic_int   m_updateInfoReadErrors { 0 };          //!< failed version info reads
         QString m_localSetupFileValue;                           //!< Local file for setup, passed by cmd line arguments
         QString m_bootstrapUrlFileValue;                         //!< Bootstrap URL if not local
         BootstrapMode m_bootstrapMode = Explicit;                //!< How to bootstrap
