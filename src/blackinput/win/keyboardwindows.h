@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKINPUT_KEYBOARD_WINDOWS_H
 #define BLACKINPUT_KEYBOARD_WINDOWS_H
@@ -23,7 +21,7 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <windows.h>
+#include <Windows.h>
 
 namespace BlackInput
 {

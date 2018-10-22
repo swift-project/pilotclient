@@ -55,8 +55,22 @@ namespace BlackMisc
 
             if (isModifier()) { return keyStrings.value(m_keyCode); }
 
-            QChar key = QChar::fromLatin1(static_cast<char>(m_keyCode));
-            return key;
+            switch (m_keyCode)
+            {
+            case Key_Multiply: return QStringLiteral("×");
+            case Key_Divide: return QStringLiteral("÷");
+            case Key_Numpad0: return QStringLiteral("Num0");
+            case Key_Numpad1: return QStringLiteral("Num1");
+            case Key_Numpad2: return QStringLiteral("Num2");
+            case Key_Numpad3: return QStringLiteral("Num3");
+            case Key_Numpad4: return QStringLiteral("Num4");
+            case Key_Numpad5: return QStringLiteral("Num5");
+            case Key_Numpad6: return QStringLiteral("Num6");
+            case Key_Numpad7: return QStringLiteral("Num7");
+            case Key_Numpad8: return QStringLiteral("Num8");
+            case Key_Numpad9: return QStringLiteral("Num9");
+            default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
+            }
         }
 
         const QList<KeyCode> &CKeyboardKey::allModifiers()

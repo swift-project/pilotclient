@@ -22,15 +22,18 @@ namespace BlackMisc
         enum KeyCode
         {
             Key_Unknown,
-            // Modifiers
             Key_ShiftLeft,
             Key_ShiftRight,
             Key_ControlLeft,
             Key_ControlRight,
             Key_AltLeft,
             Key_AltRight,
+            Key_Plus = 43,
+            Key_Comma,
+            Key_Minus,
+            Key_Period,
             // 0 - 9
-            Key_0 = 0x30,
+            Key_0 = 48,
             Key_1,
             Key_2,
             Key_3,
@@ -41,7 +44,7 @@ namespace BlackMisc
             Key_8,
             Key_9,
             // A - Z
-            Key_A = 0x41,
+            Key_A = 65,
             Key_B,
             Key_C,
             Key_D,
@@ -67,6 +70,19 @@ namespace BlackMisc
             Key_X,
             Key_Y,
             Key_Z,
+            // Numpad
+            Key_Multiply,
+            Key_Divide,
+            Key_Numpad0,
+            Key_Numpad1,
+            Key_Numpad2,
+            Key_Numpad3,
+            Key_Numpad4,
+            Key_Numpad5,
+            Key_Numpad6,
+            Key_Numpad7,
+            Key_Numpad8,
+            Key_Numpad9,
         };
 
     } //namespace

@@ -67,6 +67,14 @@ namespace BlackInput
         { XK_Control_R, Key_ControlRight },
         { XK_Alt_L, Key_AltLeft },
         { XK_Alt_R, Key_AltRight },
+        { XK_KP_Add, Key_Plus },
+        { XK_plus, Key_Plus },
+        { XK_KP_Subtract, Key_Minus },
+        { XK_minus, Key_Minus },
+        { XK_period, Key_Period },
+        { XK_KP_Divide, Key_Divide },
+        { XK_KP_Multiply, Key_Multiply },
+        { XK_comma, Key_Comma },
     };
 
     CKeyboardLinux::CKeyboardLinux(QObject *parent) :

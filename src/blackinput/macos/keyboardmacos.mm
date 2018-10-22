@@ -61,6 +61,23 @@ namespace BlackInput
         { kVK_ANSI_X, Key_X },
         { kVK_ANSI_Y, Key_Y },
         { kVK_ANSI_Z, Key_Z },
+        { kVK_ANSI_KeypadPlus, Key_Plus },
+        { kVK_ANSI_KeypadMinus, Key_Minus },
+        { kVK_ANSI_Minus, Key_Minus },
+        { kVK_ANSI_Period, Key_Period },
+        { kVK_ANSI_KeypadDivide, Key_Divide },
+        { kVK_ANSI_KeypadMultiply, Key_Multiply },
+        { kVK_ANSI_Comma, Key_Comma },
+        { kVK_ANSI_Keypad0, Key_Numpad0 },
+        { kVK_ANSI_Keypad1, Key_Numpad1 },
+        { kVK_ANSI_Keypad2, Key_Numpad2 },
+        { kVK_ANSI_Keypad3, Key_Numpad3 },
+        { kVK_ANSI_Keypad4, Key_Numpad4 },
+        { kVK_ANSI_Keypad5, Key_Numpad5 },
+        { kVK_ANSI_Keypad6, Key_Numpad6 },
+        { kVK_ANSI_Keypad7, Key_Numpad7 },
+        { kVK_ANSI_Keypad8, Key_Numpad8 },
+        { kVK_ANSI_Keypad9, Key_Numpad9 },
     };
 
     CKeyboardMacOS::CKeyboardMacOS(QObject *parent) :
