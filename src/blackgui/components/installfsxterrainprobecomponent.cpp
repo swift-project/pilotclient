@@ -44,8 +44,8 @@ namespace BlackGui
             connect(ui->pb_DirectoryBrowser, &QPushButton::released, this, &CInstallFsxTerrainProbeComponent::selectSimObjectsDir);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CInstallFsxTerrainProbeComponent::onSimulatorChanged);
 
-            QPointer<CInstallFsxTerrainProbeComponent> myself;
-            QTimer::singleShot(250, this, [ = ]
+            QPointer<CInstallFsxTerrainProbeComponent> myself(this);
+            QTimer::singleShot(500, this, [ = ]
             {
                 if (!myself) { return; }
                 this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
@@ -86,8 +86,12 @@ namespace BlackGui
         void CInstallFsxTerrainProbeComponent::selectSimObjectsDir()
         {
             const QString startDirectory = CFileUtils::fixWindowsUncPath(ui->le_Target->text());
-            const QString dir = QFileDialog::getExistingDirectory(this, "SimObjects directory", startDirectory,
-                                QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            const QString dir =
+                CFileUtils::fixWindowsUncPath(
+                    QFileDialog::getExistingDirectory(
+                        this, "SimObjects directory", startDirectory,
+                        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
+            ui->le_Target->setText(dir);
         }
     } // ns
 } // ns

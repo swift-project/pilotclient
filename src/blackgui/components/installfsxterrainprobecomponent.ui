@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>427</width>
-    <height>189</height>
+    <height>205</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,41 +62,6 @@
       <string>Copy swift probe</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Target">
-        <property name="text">
-         <string>Target:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Target">
-        <property name="placeholderText">
-         <string>specify the SimObjects directory</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_Simulator">
-        <property name="text">
-         <string>Simulator:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pb_DirectoryBrowser">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="pb_Copy">
-        <property name="text">
-         <string>copy</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QWidget" name="wi_Simulator" native="true">
         <layout class="QHBoxLayout" name="hl_Simulator">
@@ -112,7 +77,7 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item>
+         <item alignment="Qt::AlignLeft">
           <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
            <property name="minimumSize">
             <size>
@@ -122,17 +87,59 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QLineEdit" name="le_Source">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="placeholderText">
-            <string>source directory of probe</string>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Target">
+        <property name="text">
+         <string>Target:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Target">
+        <property name="placeholderText">
+         <string>specify the SimObjects directory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Simulator">
+        <property name="text">
+         <string>Simulator:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_DirectoryBrowser">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Source">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>source directory of probe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_Copy">
+        <property name="text">
+         <string>copy</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Source">
+        <property name="text">
+         <string>Source:</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -149,7 +156,9 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>le_Source</tabstop>
   <tabstop>le_Target</tabstop>
+  <tabstop>pb_Copy</tabstop>
   <tabstop>pb_DirectoryBrowser</tabstop>
  </tabstops>
  <resources/>
