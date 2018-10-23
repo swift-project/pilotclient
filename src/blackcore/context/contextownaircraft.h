@@ -102,6 +102,9 @@ namespace BlackCore
             //! Own pilot (aka the swift user) changed
             void changedPilot(const BlackMisc::Network::CUser &pilot);
 
+            //! Aircraft has been moved from one location to another (changed scenery)
+            void movedAircraft();
+
         public slots:
             //! Get own aircraft
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
