@@ -46,6 +46,9 @@ namespace BlackGui
             //! Show / hide selector
             void hideSelector(bool show);
 
+            //! Any values filled in
+            bool hasAnyValues() const;
+
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 

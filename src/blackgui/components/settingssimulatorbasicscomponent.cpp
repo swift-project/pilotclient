@@ -14,6 +14,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
+#include <QMessageBox>
 #include <QRegularExpression>
 
 using namespace BlackMisc;
@@ -62,6 +63,13 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::hideSelector(bool show)
         {
             ui->comp_SimulatorSelector->setVisible(show);
+        }
+
+        bool CSettingsSimulatorBasicsComponent::hasAnyValues() const
+        {
+            return !ui->le_SimulatorDirectory->text().isEmpty() ||
+                   !ui->pte_ModelDirectories->toPlainText().isEmpty() ||
+                   !ui->pte_ExcludeDirectories->toPlainText().isEmpty();
         }
 
         void CSettingsSimulatorBasicsComponent::setSimulator(const CSimulatorInfo &simulator)
@@ -137,6 +145,13 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::copyDefaults()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+            const bool anyValues = this->hasAnyValues();
+            if (anyValues)
+            {
+                QMessageBox::StandardButton reply = QMessageBox::question(this, "Override", "Override existing values?", QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) { return; }
+            }
+
             const QString sd(m_settings.defaultSimulatorDirectory(simulator));
             ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(sd));
             const QStringList md(m_settings.defaultModelDirectories(simulator));
