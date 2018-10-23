@@ -271,8 +271,8 @@ namespace BlackCore
 
             QTimer m_scheduledConfigUpdate;
             QTimer m_processingTimer;
-            QTimer m_positionUpdateTimer;
-            QTimer m_interimPositionUpdateTimer;
+            QTimer m_positionUpdateTimer;        //!< sending positions
+            QTimer m_interimPositionUpdateTimer; //!< sending interim positions
 
             //! Pending ATIS query since
             struct PendingAtisQuery
