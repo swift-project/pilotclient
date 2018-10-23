@@ -214,11 +214,13 @@ namespace BlackGui
 
         void CLoginComponent::toggleNetworkConnection()
         {
-            if (ui->tw_Network->currentWidget() == ui->pg_FsdDetails)
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (ui->tw_Network->currentWidget() != ui->pg_NetworkVatsim && ui->tw_Network->currentWidget() != ui->pg_OtherServers)
             {
                 this->showOverlayMessage(CStatusMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers"), OverlayMessageMs);
                 return;
             }
+
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = this->isVatsimNetworkTabSelected();
 
