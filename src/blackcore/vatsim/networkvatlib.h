@@ -179,7 +179,8 @@ namespace BlackCore
             QString fromFSD(const char *cstr) const;
             QString getNetworkHostApplicationString() const; //!< simulator version and details info string
             QStringList fromFSD(const char **cstrArray, int size) const;
-            bool isInterimPositionUpdateEnabledForServer() const;
+            bool isInterimPositionSendingEnabledForServer() const;
+            bool isInterimPositionReceivingEnabledForServer() const;
             const BlackMisc::Network::CFsdSetup &getSetupForServer() const;
             void startPositionTimers();
             void stopPositionTimers();

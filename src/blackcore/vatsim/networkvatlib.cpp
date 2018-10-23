@@ -362,10 +362,16 @@ namespace BlackCore
             return qstrList;
         }
 
-        bool CNetworkVatlib::isInterimPositionUpdateEnabledForServer() const
+        bool CNetworkVatlib::isInterimPositionSendingEnabledForServer() const
         {
             const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
-            return (d & CFsdSetup::SendInterimPositions) || (d & CFsdSetup::ReceiveInterimPositions);
+            return (d & CFsdSetup::SendInterimPositions);
+        }
+
+        bool CNetworkVatlib::isInterimPositionReceivingEnabledForServer() const
+        {
+            const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
+            return (d & CFsdSetup::ReceiveInterimPositions);
         }
 
         const CFsdSetup &CNetworkVatlib::getSetupForServer() const
@@ -376,7 +382,7 @@ namespace BlackCore
         void CNetworkVatlib::startPositionTimers()
         {
             m_positionUpdateTimer.start(c_updatePostionIntervalMsec);
-            if (isInterimPositionUpdateEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
+            if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPostionIntervalMsec); }
         }
 
         void CNetworkVatlib::stopPositionTimers()
@@ -490,13 +496,13 @@ namespace BlackCore
             {
                 // Observer mode
                 VatAtcConnection info;
-                name = toFSD(m_server.getUser().getRealName());
+                name = toFSDnoColon(m_server.getUser().getRealName());
                 info.name = name.data();
                 info.rating = vatAtcRatingObserver;
                 info.callsign = callsign.data();
                 Vat_SpecifyATCLogon(m_net.data(), toFSD(m_server.getAddress()), m_server.getPort(),
-                                    toFSD(m_server.getUser().getId()),
-                                    toFSD(m_server.getUser().getPassword()),
+                                    toFSDnoColon(m_server.getUser().getId()),
+                                    toFSDnoColon(m_server.getUser().getPassword()),
                                     &info);
             }
             else
@@ -504,13 +510,13 @@ namespace BlackCore
                 // normal scenario, also used in STEALTH
                 VatPilotConnection info;
                 info.callsign = callsign.data();
-                name = toFSD(m_server.getUser().getRealNameAndHomeBase());
+                name = toFSDnoColon(m_server.getUser().getRealNameAndHomeBase());
                 info.name = name.data();
                 info.rating = vatPilotRatingStudent; // as documented, expected to be vatPilotRatingStudent only
                 info.simType = convertToSimType(m_simulatorInfo);
                 Vat_SpecifyPilotLogon(m_net.data(), toFSD(m_server.getAddress()), m_server.getPort(),
-                                      toFSD(m_server.getUser().getId()),
-                                      toFSD(m_server.getUser().getPassword()),
+                                      toFSDnoColon(m_server.getUser().getId()),
+                                      toFSDnoColon(m_server.getUser().getPassword()),
                                       &info);
             }
 
@@ -1012,7 +1018,9 @@ namespace BlackCore
 
         void CNetworkVatlib::onInterimPilotPositionUpdate(VatFsdClient *, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
         {
-            auto *self = cbvar_cast(cbvar);
+            CNetworkVatlib *self = cbvar_cast(cbvar);
+            if (!self->isInterimPositionReceivingEnabledForServer()) { return; }
+
             CAircraftSituation situation(
                 CCallsign(self->fromFSD(sender), CCallsign::Aircraft),
                 CCoordinateGeodetic(position->latitude, position->longitude, position->altitudeTrue),
