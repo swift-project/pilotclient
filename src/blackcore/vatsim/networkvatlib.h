@@ -236,6 +236,15 @@ namespace BlackCore
             //! Clear state for callsign
             void clearState(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Insert as first value
+            void insertLatestOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 offsetMs);
+
+            //! Average offset time in ms
+            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = MaxOffseTimes) const;
+
+            //! Average offset time in ms
+            qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = MaxOffseTimes) const;
+
             //! Deletion policy for QScopedPointer
             struct VatFsdClientDeleter
             {
@@ -274,7 +283,9 @@ namespace BlackCore
 
             QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
-            QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastOffsetTime;
+            QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
+
+            static const int MaxOffseTimes = 6; //!< Max offset times kept
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;

@@ -1019,7 +1019,7 @@ namespace BlackCore
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
-                CSpeed::null() // There is no speed information in a interim packet
+                CSpeed::null() // there is no speed information in an interim packet
             );
 
             // Ref T297, default offset time
@@ -1247,23 +1247,20 @@ namespace BlackCore
             const qint64 oldTs = m_lastPositionUpdate.value(callsign);
             m_lastPositionUpdate[callsign] = markerTs;
 
-            // Ref T297,
+            // Ref T297, dynamic offsets
             const qint64 diff = qAbs(markerTs - oldTs);
+            this->insertLatestOffsetTime(callsign, diff);
+
+            int count = 0;
+            static const qint64 minOffsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec; // no longer needed with C++17
+            const qint64 avgTimeMs = this->averageOffsetTimeMs(callsign, count, 3); // latest average
             qint64 offsetTime = CFsdSetup::c_positionTimeOffsetMsec;
-            static const qint64 thresholdMs = qRound(CFsdSetup::c_positionTimeOffsetMsec * 0.4);
-            if (oldTs > 0 && diff > 0)
+
+            if (avgTimeMs < minOffsetTime && count >= 3)
             {
-                if (diff < CFsdSetup::c_interimPositionTimeOffsetMsec)
-                {
-                    offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
-                }
-                else if (diff < thresholdMs)
-                {
-                    offsetTime = qRound(diff * 1.1);
-                }
+                offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
             }
 
-            m_lastOffsetTime[callsign] = offsetTime;
             return offsetTime;
         }
 
@@ -1271,8 +1268,8 @@ namespace BlackCore
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
-            if (!m_lastOffsetTime.contains(callsign)) { return CFsdSetup::c_positionTimeOffsetMsec; }
-            return m_lastOffsetTime.value(callsign);
+            if (!m_lastOffsetTimes.contains(callsign) || m_lastOffsetTimes[callsign].isEmpty()) { return CFsdSetup::c_positionTimeOffsetMsec; }
+            return m_lastOffsetTimes[callsign].front();
         }
 
         void CNetworkVatlib::clearState()
@@ -1280,7 +1277,7 @@ namespace BlackCore
             m_textMessagesToConsolidate.clear();
             m_pendingAtisQueries.clear();
             m_lastPositionUpdate.clear();
-            m_lastOffsetTime.clear();
+            m_lastOffsetTimes.clear();
             m_sentAircraftConfig = CAircraftParts::null();
         }
 
@@ -1290,7 +1287,35 @@ namespace BlackCore
             m_pendingAtisQueries.remove(callsign);
             m_lastPositionUpdate.remove(callsign);
             m_interimPositionReceivers.remove(callsign);
-            m_lastOffsetTime.remove(callsign);
+            m_lastOffsetTimes.remove(callsign);
+        }
+
+        void CNetworkVatlib::insertLatestOffsetTime(const CCallsign &callsign, qint64 offsetMs)
+        {
+            QList<qint64> &offsets = m_lastOffsetTimes[callsign];
+            offsets.push_front(offsetMs);
+            if (offsets.size() > MaxOffseTimes) { offsets.removeLast(); }
+        }
+
+        qint64 CNetworkVatlib::averageOffsetTimeMs(const CCallsign &callsign, int &count, int maxLastValues) const
+        {
+            const QList<qint64> &offsets = m_lastOffsetTimes[callsign];
+            if (offsets.size() < 1) { return -1; }
+            qint64 sum = 0;
+            count = 0;
+            for (qint64 v : offsets)
+            {
+                count++;
+                sum += v;
+                if (count > maxLastValues) { break; }
+            }
+            return qRound(static_cast<double>(sum) / count);
+        }
+
+        qint64 CNetworkVatlib::averageOffsetTimeMs(const CCallsign &callsign, int maxLastValues) const
+        {
+            int count = 0;
+            return this->averageOffsetTimeMs(callsign, maxLastValues, count);
         }
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
