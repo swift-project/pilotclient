@@ -68,7 +68,7 @@ namespace BlackMisc
 
         const CFsdSetup &CFsdSetup::vatsimStandard()
         {
-            static const CFsdSetup s(AllWithoutGnd);
+            static const CFsdSetup s(AllParts);
             return s;
         }
 

@@ -49,6 +49,7 @@ namespace BlackMisc
                 AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
                 AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
                 All                     = AllReceive | AllSending, //!< all
+                AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
                 AllSendingWithoutGnd    = SendAircraftParts | SendInterimPositions,       //!< all out, but no gnd.flag
                 AllReceiveWithoutGnd    = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in, but no gnd.flag
                 AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd     //!< all, but no gnd.flag
