@@ -251,7 +251,7 @@ namespace BlackMisc
             return true;
         }
 
-        CAircraftSituation CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
+        CAircraftSituation CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestAltitudeOffset)
         {
             const CCallsign cs = situation.getCallsign();
             if (cs.isEmpty()) { return situation; }
@@ -264,7 +264,7 @@ namespace BlackMisc
             }
 
             // add altitude offset (for testing only)
-            CAircraftSituation situationCorrected(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
+            CAircraftSituation situationCorrected(allowTestAltitudeOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
 
             // CG, model
             const CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(cs);
