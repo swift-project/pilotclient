@@ -84,7 +84,7 @@ win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
 
 !win32: BLACK_CONFIG -= P3D
 equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9
-equals(WORD_SIZE,64):win32-g++: BLACK_CONFIG -= P3D
+# equals(WORD_SIZE,64):win32-g++: BLACK_CONFIG -= P3D
 
 ################################
 # For BlackMisc::getStackTrace
