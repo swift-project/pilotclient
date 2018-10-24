@@ -38,14 +38,6 @@ namespace BlackMisc
     template <typename>
     class LockFree;
 
-    namespace Private
-    {
-        //! \cond PRIVATE
-        //! \private
-        BLACKMISC_EXPORT QMutex *atomicSharedPtrMutex();
-        //! \endcond
-    }
-
     /*!
      * Return value of LockFree::read(). Allows any one thread to safely read from the lock-free object.
      */
