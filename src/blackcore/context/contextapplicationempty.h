@@ -134,7 +134,7 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
-            //! \copydoc IContextApplication::callHotkeyAction
+            //! \copydoc IContextApplication::callHotkeyActionRemotely
             virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override
             {
                 Q_UNUSED(action);
