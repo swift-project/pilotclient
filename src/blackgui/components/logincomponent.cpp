@@ -294,17 +294,25 @@ namespace BlackGui
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
+                    static const QString extraInfo("[%1]");
+                    sGui->setExtraWindowTitle(extraInfo.arg(ownAircraft.getCallsignAsString()));
                     m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
                     ui->le_HomeBase->setText(currentServer.getUser().getHomeBase().asString());
                     if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
+                }
+                else
+                {
+                    sGui->setExtraWindowTitle("");
                 }
             }
             else
             {
                 // disconnect from network
                 sGui->getIContextAudio()->leaveAllVoiceRooms();
+                sGui->setExtraWindowTitle("");
                 msg = sGui->getIContextNetwork()->disconnectFromNetwork();
+
             }
 
             // log message and trigger events
