@@ -221,9 +221,8 @@ namespace BlackGui
         if (m_uiSetupCompleted) { return; }
         m_uiSetupCompleted = true;
 
-        const QString name(this->getApplicationNameVersionDetailed());
+        const QString name = this->setExtraWindowTitle("", mainWidget);
         mainWidget->setObjectName(QCoreApplication::applicationName());
-        mainWidget->setWindowTitle(name);
         mainWidget->setWindowIcon(m_windowIcon);
         mainWidget->setWindowIconText(name);
         CStyleSheetUtility::setQSysInfoProperties(mainWidget, true);
@@ -242,11 +241,22 @@ namespace BlackGui
         }
         else
         {
+            QPointer<CGuiApplication> myself(this);
             connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [ = ]
             {
+                if (!myself) { return; }
                 this->addWindowFlags(flags);
             });
         }
+    }
+
+    QString CGuiApplication::setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget) const
+    {
+        QString name(this->getApplicationNameVersionDetailed());
+        if (!extraInfo.isEmpty()) { name = extraInfo % QStringLiteral(" ") % name; }
+        if (!mainWindowWidget) { return name; }
+        mainWindowWidget->setWindowTitle(name);
+        return name;
     }
 
     void CGuiApplication::setWindowIcon(const QPixmap &icon)
