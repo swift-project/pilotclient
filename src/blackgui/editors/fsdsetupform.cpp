@@ -28,7 +28,7 @@ namespace BlackGui
             this->resetToDefaultValues();
             ui->cb_Override->setChecked(true);
             ui->le_TextCodec->setCompleter(new QCompleter(textCodecNames(true, true), this));
-            connect(ui->cb_Override, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled);
+            connect(ui->cb_Override, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled, Qt::QueuedConnection);
             connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
         }
 
@@ -90,6 +90,11 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionSend, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagReceive, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagSend, readonly);
+
+            if (readonly && ui->cb_Override->isChecked())
+            {
+                ui->cb_Override->setChecked(false);
+            }
             this->forceStyleSheetUpdate();
         }
 

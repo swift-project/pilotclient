@@ -28,7 +28,7 @@ namespace BlackGui
             QIntValidator *v = new QIntValidator(0, 65535, ui->le_VatsimUdpPort);
             ui->le_VatsimUdpPort->setValidator(v);
             this->resetToDefaultValues();
-            connect(ui->cb_Override, &QCheckBox::toggled, this, &CVoiceSetupForm::enabledToggled);
+            connect(ui->cb_Override, &QCheckBox::toggled, this, &CVoiceSetupForm::enabledToggled, Qt::QueuedConnection);
             connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CVoiceSetupForm::resetToDefaultValues);
         }
 
@@ -72,6 +72,10 @@ namespace BlackGui
         {
             ui->pb_SetDefaults->setEnabled(!readonly);
             ui->le_VatsimUdpPort->setReadOnly(readonly);
+            if (readonly && ui->cb_Override->isChecked())
+            {
+                ui->cb_Override->setChecked(false);
+            }
             this->forceStyleSheetUpdate();
         }
 

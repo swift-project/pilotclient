@@ -147,7 +147,7 @@ namespace BlackGui
 
             // inital setup, if data already available
             this->validateAircraftValues();
-            ui->editor_Pilot->validate();
+            ui->form_Pilot->validate();
             this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
             const CServerList otherServers(m_networkSetup.getOtherServersPlusTestServers());
             ui->comp_OtherServers->setServers(otherServers);
@@ -215,16 +215,11 @@ namespace BlackGui
         void CLoginComponent::toggleNetworkConnection()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            if (ui->tw_Network->currentWidget() != ui->pg_NetworkVatsim && ui->tw_Network->currentWidget() != ui->pg_OtherServers)
-            {
-                this->showOverlayMessage(CStatusMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers"), OverlayMessageMs);
-                return;
-            }
 
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = this->isVatsimNetworkTabSelected();
 
-            ui->editor_Pilot->setVatsimValidation(vatsimLogin);
+            ui->form_Pilot->setVatsimValidation(vatsimLogin);
             this->setUiLoginState(isConnected);
 
             CServer currentServer; // used for login
@@ -238,7 +233,7 @@ namespace BlackGui
                     return;
                 }
 
-                const CStatusMessageList pilotMsgs = ui->editor_Pilot->validate();
+                const CStatusMessageList pilotMsgs = ui->form_Pilot->validate();
                 if (pilotMsgs.isFailure())
                 {
                     this->showOverlayMessage(CStatusMessage(this).validationWarning("Invalid pilot data, login not possible"), OverlayMessageMs);
@@ -353,11 +348,11 @@ namespace BlackGui
 
                 ui->tw_Network->setCurrentWidget(
                     lastServer.getServerType() == CServer::FSDServerVatsim ?
-                    ui->pg_NetworkVatsim : ui->pg_OtherServers);
+                    ui->tb_NetworkVatsim : ui->tb_OtherServers);
             }
 
             const CUser lastUser = lastServer.getUser();
-            ui->editor_Pilot->setUser(lastUser);
+            ui->form_Pilot->setUser(lastUser);
             if (lastUser.hasCallsign())
             {
                 ui->le_Callsign->setText(lastUser.getCallsign().asString());
@@ -382,7 +377,7 @@ namespace BlackGui
                 server = m_networkSetup.getLastVatsimServer();
             }
             else { return; }
-            ui->editor_Pilot->setUser(server.getUser(), true);
+            ui->form_Pilot->setUser(server.getUser(), true);
         }
 
         void CLoginComponent::onSelectedServerChanged(const CServer &server)
@@ -390,7 +385,7 @@ namespace BlackGui
             if (!m_updatePilotOnServerChanges) { return; }
             const bool vatsim = this->isVatsimNetworkTabSelected();
             const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
-            ui->editor_Pilot->setUser(user, true);
+            ui->form_Pilot->setUser(user, true);
         }
 
         void CLoginComponent::onServerTabWidgetChanged(int index)
@@ -399,15 +394,15 @@ namespace BlackGui
             if (!m_updatePilotOnServerChanges) { return; }
             const bool vatsim = this->isVatsimNetworkTabSelected();
             const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
-            ui->editor_Pilot->setUser(server.getUser(), true);
+            ui->form_Pilot->setUser(server.getUser(), true);
         }
 
         bool CLoginComponent::hasValidContexts()
         {
             if (!sGui || !sGui->supportsContexts()) { return false; }
-            if (sGui->isShuttingDown()) { return false; }
-            if (!sGui->getIContextSimulator()) { return false; }
-            if (!sGui->getIContextNetwork()) { return false; }
+            if (sGui->isShuttingDown())          { return false; }
+            if (!sGui->getIContextSimulator())   { return false; }
+            if (!sGui->getIContextNetwork())     { return false; }
             if (!sGui->getIContextOwnAircraft()) { return false; }
             return true;
         }
@@ -425,7 +420,7 @@ namespace BlackGui
 
         CUser CLoginComponent::getUserFromPilotGuiValues() const
         {
-            CUser user = ui->editor_Pilot->getUser();
+            CUser user = ui->form_Pilot->getUser();
             user.setCallsign(this->getCallsignFromGui());
             return user;
         }
@@ -629,6 +624,7 @@ namespace BlackGui
 
         void CLoginComponent::mappingWizard()
         {
+            if (!sGui || !sGui->getIContextOwnAircraft() || sGui->isShuttingDown()) { return; }
             if (!m_mappingWizard)
             {
                 m_mappingWizard.reset(new CDbQuickMappingWizard(this));
@@ -665,13 +661,8 @@ namespace BlackGui
 
         void CLoginComponent::setUiLoginState(bool connected)
         {
-            ui->editor_Pilot->setReadOnly(connected);
-            ui->editor_Pilot->setVisible(!connected);
-            ui->gb_PilotsDetails->setVisible(!connected);
-            ui->frp_LoginMode->setReadOnly(connected);
-            ui->gb_OwnAircraft->setVisible(!connected);
-            ui->tw_Network->setVisible(!connected);
-            ui->fr_LogoffConfirmation->setVisible(connected);
+            ui->fr_LoginDisconnected->setVisible(!connected);
+            ui->fr_LogoffConfirmationConnected->setVisible(connected);
 
             const QString s = connected ? QStringLiteral("disconnect") : QStringLiteral("connect");
             ui->pb_Ok->setText(s);
@@ -700,7 +691,7 @@ namespace BlackGui
 
         bool CLoginComponent::isVatsimNetworkTabSelected() const
         {
-            return (ui->tw_Network->currentWidget() == ui->pg_NetworkVatsim);
+            return (ui->tw_Network->currentWidget() == ui->tb_NetworkVatsim);
         }
 
         CAircraftModel CLoginComponent::getPrefillModel() const
@@ -724,7 +715,7 @@ namespace BlackGui
                 changedCallsign = true;
             }
             CUser pilot = ownAircraft.getPilot();
-            const CUser uiUser = ui->editor_Pilot->getUser();
+            const CUser uiUser = ui->form_Pilot->getUser();
             pilot.setRealName(uiUser.getRealName());
             pilot.setHomeBase(uiUser.getHomeBase());
             pilot.setId(uiUser.getId());

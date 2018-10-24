@@ -85,6 +85,9 @@ namespace BlackGui
 
         void CServerForm::setReadOnly(bool readOnly)
         {
+            ui->form_ServerFsd->setReadOnly(readOnly);
+            ui->form_Voice->setReadOnly(readOnly);
+
             ui->le_NetworkId->setReadOnly(readOnly);
             ui->le_RealName->setReadOnly(readOnly);
             ui->le_Name->setReadOnly(readOnly);
@@ -92,7 +95,6 @@ namespace BlackGui
             ui->le_Address->setReadOnly(readOnly);
             ui->le_Port->setReadOnly(readOnly);
             ui->le_Password->setReadOnly(readOnly);
-            ui->form_ServerFsd->setReadOnly(readOnly);
             ui->cb_ServerType->setEnabled(!readOnly);
             ui->cbp_Ecosystem->setEnabled(!readOnly);
             this->forceStyleSheetUpdate();
