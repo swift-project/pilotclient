@@ -151,7 +151,8 @@ namespace BlackMisc
             // parameter pack swallow idiom
             static_cast<void>(std::initializer_list<int>
             {
-                (static_cast<void>(std::forward<F>(visitor)(std::get<Is>(std::forward<T>(tuple)))), 0)...
+                //! \fixme C-style cast is needed due to a clang bug: https://bugs.llvm.org/show_bug.cgi?id=39375
+                ((void)(std::forward<F>(visitor)(std::get<Is>(std::forward<T>(tuple)))), 0)...
             });
         }
         //! \private
@@ -161,7 +162,8 @@ namespace BlackMisc
             // parameter pack swallow idiom
             static_cast<void>(std::initializer_list<int>
             {
-                (static_cast<void>(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), 0)...
+                //! \fixme C-style cast is needed due to a clang bug: https://bugs.llvm.org/show_bug.cgi?id=39375
+                ((void)(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), 0)...
             });
         }
     }
