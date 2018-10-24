@@ -86,7 +86,7 @@ namespace BlackGui
         CGuiApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, const QPixmap &icon = BlackMisc::CIcons::swift64());
 
         //! Destructor
-        virtual ~CGuiApplication();
+        virtual ~CGuiApplication() override;
 
         //! CMD line arguments
         void addWindowStateOption();

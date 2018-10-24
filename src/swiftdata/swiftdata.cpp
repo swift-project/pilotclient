@@ -111,7 +111,7 @@ void CSwiftData::init()
     const CGlobalSetup s(sApp->getGlobalSetup());
     if (!s.getDbHomePageUrl().isEmpty())
     {
-        this->setWindowTitle(QString("%1 %2").arg(this->windowTitle(), s.getDbHomePageUrl().toQString(true)));
+        this->setWindowTitle(QStringLiteral("%1 %2").arg(this->windowTitle(), s.getDbHomePageUrl().toQString(true)));
     }
 
     sGui->triggerNewVersionCheck(15 * 1000);

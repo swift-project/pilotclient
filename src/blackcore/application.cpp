@@ -255,13 +255,13 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
-        static const QString s(m_applicationName + " " + CBuildConfig::getVersionString());
+        static const QString s(m_applicationName % QStringLiteral(" ") % CBuildConfig::getVersionString());
         return s;
     }
 
     const QString &CApplication::getApplicationNameVersionDetailed() const
     {
-        static const QString s(m_applicationName + " " + this->versionStringDetailed());
+        static const QString s(m_applicationName % QStringLiteral(" ") % this->versionStringDetailed());
         return s;
     }
 

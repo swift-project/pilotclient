@@ -42,7 +42,7 @@ namespace BlackGui
     void CPluginDetailsWindow::setPluginName(const QString &name)
     {
         ui->lbl_PluginName->setText(name);
-        setWindowTitle(name);
+        this->setWindowTitle(name);
     }
 
     void CPluginDetailsWindow::setPluginIdentifier(const QString &id)

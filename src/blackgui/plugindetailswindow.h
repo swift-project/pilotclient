@@ -22,7 +22,6 @@
 class QShowEvent;
 
 namespace Ui { class CPluginDetailsWindow; }
-
 namespace BlackGui
 {
     /*!
@@ -37,7 +36,7 @@ namespace BlackGui
         explicit CPluginDetailsWindow(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CPluginDetailsWindow();
+        virtual ~CPluginDetailsWindow() override;
 
         //! Sets the plugin name
         void setPluginName(const QString &name);
