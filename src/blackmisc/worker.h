@@ -170,6 +170,7 @@ namespace BlackMisc
         void aboutToStart();
 
         //! Emitted when the task is finished.
+        //! \note Slots connected to this signal may not call any methods that observe the worker's finished flag.
         void finished();
 
     protected:
@@ -188,7 +189,6 @@ namespace BlackMisc
         {
             QMutexLocker lock(&m_finishedMutex);
             m_finished = true;
-            lock.unlock();
             emit finished();
         }
 
