@@ -224,7 +224,7 @@ namespace BlackMisc
         static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
             int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
-            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() { return CVariant::fromResultOf(std::move(task)); });
+            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable { return CVariant::fromResultOf(std::move(task)); });
         }
 
         //! Connects to a functor to which will be passed the result when the task is finished.
