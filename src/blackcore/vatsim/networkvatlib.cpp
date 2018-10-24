@@ -1494,7 +1494,9 @@ namespace BlackCore
             case vatServerErrorRegistered:
             case vatServerErrorInvalidCtrl:     CLogMessage(self).info("Server: ") << self->fromFSD(msg); break;
 
-            default:                            qFatal("vatlib: %s (error %d)", msg, error); emit self->terminate();
+            // default:                         qFatal("vatlib: %s (error %d)", msg, error); emit self->terminate();
+            // KB: Why the hard termination?
+            default:                            CLogMessage(self).error("vatlib: %1 (error %2)") << msg << error; emit self->terminate(); break;
             }
         }
 
