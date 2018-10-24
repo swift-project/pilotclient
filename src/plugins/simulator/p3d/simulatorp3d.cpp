@@ -8,6 +8,7 @@
  */
 
 #include "simulatorp3d.h"
+#include "../fsxcommon/simconnectsymbols.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
@@ -30,6 +31,10 @@ namespace BlackSimPlugin
 {
     namespace P3D
     {
+    #ifdef Q_OS_WIN64
+        static P3DSimConnectVersion gP3DSimConnectVersion = P3DSimConnectv42;
+    #endif
+
         CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
                                      IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
@@ -47,6 +52,17 @@ namespace BlackSimPlugin
             }
             this->setDefaultModel(CAircraftModel("LOCKHEED L049_2", CAircraftModel::TypeModelMatchingDefaultModel,
                                                  "Constellation in TWA livery", CAircraftIcaoCode("CONI", "L4P")));
+        }
+
+        bool CSimulatorP3D::connectTo()
+        {
+        #ifdef Q_OS_WIN64
+            if (!loadAndResolveP3DSimConnect(gP3DSimConnectVersion)) { return false; }
+            return CSimulatorFsxCommon::connectTo();
+        #else
+            if (!loadAndResolveFsxSimConnect(true)) { return false; }
+            return CSimulatorFsxCommon::connectTo();
+        #endif
         }
 
 #ifdef Q_OS_WIN64
@@ -277,5 +293,17 @@ namespace BlackSimPlugin
             CSimulatorFsxCommon::SimConnectProc(pData, cbData, pContext);
         }
 #endif
+
+    void CSimulatorP3DListener::startImpl()
+    {
+    #ifdef Q_OS_WIN64
+        if (!loadAndResolveP3DSimConnect(gP3DSimConnectVersion)) { return; }
+        return CSimulatorFsxCommonListener::startImpl();
+    #else
+        if (!loadAndResolveFsxSimConnect(true)) { return; }
+        return CSimulatorFsxCommonListener::startImpl();
+    #endif
+    }
+
     } // namespace
 } // namespace

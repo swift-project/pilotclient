@@ -29,24 +29,14 @@ fsuipc {
 simconnect {
     DEFINES += SIMCONNECT_H_NOMANIFEST
     equals(WORD_SIZE,64) {
-        P3D_X64_VERSION = "4.2"
-        INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v$${P3D_X64_VERSION}
-        LIBS *= -L$$EXTERNALS_LIB_DIR/P3D-v$${P3D_X64_VERSION}
-        LIBS *= -lAdvapi32
-        LIBS += -ldxguid -lole32
-        # ole32 only needed for P3D on WIN64 systems, LNK2019: unresolved external symbol __imp_CoTaskMemFree referenced in function
-        # ldxguid are DirectX guid numbers
-        CONFIG(debug, debug|release): LIBS *= -lSimConnectDebug
-        else:                         LIBS *= -lSimConnect
+        INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v4
+        DEFINES += P3D_SDK_VERSION=400
     }
     equals(WORD_SIZE,32) {
         INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
-        # LIBS *= -L$$EXTERNALS_LIB_DIR/FSX-XPack
     }
 
     RC_FILE = $$SourceRoot/src/plugins/simulator/fsxcommon/simconnect.rc
-
-    msvc: QMAKE_LFLAGS *= /ignore:4099
 }
 
 blackgui {

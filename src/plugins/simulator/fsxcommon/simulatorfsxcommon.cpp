@@ -95,8 +95,6 @@ namespace BlackSimPlugin
             if (this->isConnected()) { return true; }
             this->reset();
 
-            if (!loadAndResolveSimConnect(true)) { return false; }
-
             const HRESULT hr = SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
             if (isFailure(hr))
             {
@@ -2461,8 +2459,6 @@ namespace BlackSimPlugin
             m_simConnectVersion.clear();
             m_simulatorName.clear();
             m_simulatorDetails.clear();
-
-            if (!loadAndResolveSimConnect(true)) { return; }
 
             m_timer.start();
         }

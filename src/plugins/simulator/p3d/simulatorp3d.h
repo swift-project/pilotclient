@@ -42,6 +42,11 @@ namespace BlackSimPlugin
                           BlackMisc::Network::IClientProvider *clientProvider,
                           QObject *parent = nullptr);
 
+            //! \name ISimulator implementations
+            //! @{
+            virtual bool connectTo() override;
+            //! @}
+
 #ifdef Q_OS_WIN64
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -78,6 +83,9 @@ namespace BlackSimPlugin
         public:
             //! Constructor
             using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+
+        protected:
+            virtual void startImpl() override;
         };
     } // ns
 } // ns

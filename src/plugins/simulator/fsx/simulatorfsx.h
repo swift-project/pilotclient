@@ -31,6 +31,11 @@ namespace BlackSimPlugin
                           BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                           BlackMisc::Network::IClientProvider *clientProvider,
                           QObject *parent = nullptr);
+
+            //! \name ISimulator implementations
+            //! @{
+            virtual bool connectTo() override;
+            //! @}
         };
 
         //! Listener for FSX
@@ -41,6 +46,9 @@ namespace BlackSimPlugin
         public:
             //! Constructor
             using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+
+        protected:
+            virtual void startImpl() override;
         };
     } // ns
 } // ns

@@ -8,6 +8,7 @@
  */
 
 #include "simulatorfsx.h"
+#include "../fsxcommon/simconnectsymbols.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -39,5 +40,18 @@ namespace BlackSimPlugin
                 CAircraftIcaoCode("B738", "L2J")
             });
         }
+
+        bool CSimulatorFsx::connectTo()
+        {
+            if (!loadAndResolveFsxSimConnect(true)) { return false; }
+            return CSimulatorFsxCommon::connectTo();
+        }
+
+        void CSimulatorFsxListener::startImpl()
+        {
+            if (!loadAndResolveFsxSimConnect(true)) { return; }
+            return CSimulatorFsxCommonListener::startImpl();
+        }
+
     } // ns
 } // ns

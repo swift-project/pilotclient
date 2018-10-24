@@ -12,9 +12,30 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 
-//! Load and resolve SimConnect.
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN64
+
+enum P3DSimConnectVersion
+{
+    P3DSimConnectv40,
+    P3DSimConnectv41,
+    P3DSimConnectv42,
+    P3DSimConnectv43
+};
+
+//! Load and resolve versioned P3D SimConnect.
+//! If a another version was already loaded previously, it won't unload it.
+//! You have to call /sa unloadSimConnect() before.
+bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
+
+#else
+
+//! Load and resolve FSX SimConnect.
 //! \param manifestProbing  Set to true if you want to try loading from the assembly cache with manifests.
 //!                         Otherwise the library in the bin folder will be loaded.
-bool loadAndResolveSimConnect(bool manifestProbing);
+bool loadAndResolveFsxSimConnect(bool manifestProbing);
+
+#endif
 
 #endif // guard
