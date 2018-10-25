@@ -151,7 +151,7 @@ namespace BlackMisc
         for (int i = 0; i < bytes.size(); i++)
         {
             const int b = static_cast<int>(bytes.at(i));
-            h.append(intToHex(b, 2));
+            h += intToHex(b, 2);
         }
         return h;
     }
@@ -397,6 +397,24 @@ namespace BlackMisc
     {
         if (set.isEmpty()) { return QStringLiteral(""); }
         return set.toList().join(separator);
+    }
+
+    QMap<QString, QString> parseIniValues(const QString &data)
+    {
+        QMap<QString, QString> map;
+        QList<QStringRef> lines = splitLinesRefs(data);
+        for (const QStringRef &l : lines)
+        {
+            if (l.isEmpty()) { continue; }
+            const int i = l.indexOf("=");
+            if (i < 0 || i >= l.length() + 1) { continue; }
+
+            const QString key = l.left(i).trimmed().toString();
+            const QString value = l.mid(i + 1).toString();
+            if (value.isEmpty()) { continue; }
+            map.insert(key, value);
+        }
+        return map;
     }
 } // ns
 

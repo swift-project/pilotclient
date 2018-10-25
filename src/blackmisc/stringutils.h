@@ -26,6 +26,7 @@
 #include <QTextStream>
 #include <QtGlobal>
 #include <QSet>
+#include <QMap>
 #include <iosfwd>
 #include <string>
 #include <algorithm>
@@ -114,6 +115,9 @@ namespace BlackMisc
         }
         return s.trimmed();
     }
+
+    //! Obtain ini file like values, e.g. foo=bar
+    BLACKMISC_EXPORT QMap<QString, QString> parseIniValues(const QString &data);
 
     //! Is 0-9 char, isDigit allows a bunch of more characters
     inline bool is09(const QChar &c) { return c >= u'0' && c <= u'9'; }
