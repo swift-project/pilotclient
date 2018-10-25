@@ -10,12 +10,20 @@
 #include "flightplan.h"
 #include "airlineicaocode.h"
 #include "flightplan.h"
+#include "altitude.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/speed.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/stringutils.h"
+
+#include <QFile>
+#include <QDateTime>
 #include <QStringBuilder>
 #include <QRegularExpression>
 
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -113,7 +121,6 @@ namespace BlackMisc
             }
         }
 
-
         QString CFlightPlanRemarks::cut(const QString &remarks, const QString &marker)
         {
             const int maxIndex = remarks.size() - 1;
@@ -135,6 +142,12 @@ namespace BlackMisc
             const int to = qMin(to1, to2);
             const QString cut = remarks.mid(f, to - f).simplified();
             return cut;
+        }
+
+        const CLogCategoryList &CFlightPlan::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::flightPlan() };
+            return cats;
         }
 
         CFlightPlan::CFlightPlan() { }
@@ -254,6 +267,116 @@ namespace BlackMisc
                               % QLatin1Char(' ') % m_route
                               % QLatin1Char(' ') % this->getRemarks();
             return s;
+        }
+
+        CFlightPlan CFlightPlan::fromVPilotFormat(const QString &vPilotData)
+        {
+            if (vPilotData.isEmpty()) { return CFlightPlan(); }
+            return CFlightPlan();
+        }
+
+        CFlightPlan CFlightPlan::fromSB4Format(const QString &sbData)
+        {
+            if (sbData.isEmpty()) { return CFlightPlan(); }
+            CFlightPlan fp;
+            const QMap<QString, QString> values = parseIniValues(sbData);
+            const QString altStr = values.value("Altitude");
+            const CAltitude alt(altStr.length() < 4 ? "FL" + altStr : altStr);
+
+            const QString type = values.value("Type"); // IFR/VFR
+            fp.setFlightRule(type == "0" ? IFR : VFR);
+
+            const int fuelMins = values.value("FuelMinutes").toInt() + 60 * values.value("FuelHours").toInt();
+            const CTime fuelTime(fuelMins, CTimeUnit::min());
+
+            const int enrouteMins = values.value("FlightMinutes").toInt() + 60 * values.value("FlightHours").toInt();
+            const CTime enrouteTime(enrouteMins, CTimeUnit::min());
+
+            fp.setOriginAirportIcao(values.value("Departure"));
+            fp.setDestinationAirportIcao(values.value("Arrival"));
+            fp.setAlternateAirportIcao(values.value("Alternate"));
+            fp.setRemarks(values.value("Remarks"));
+            fp.setRoute(values.value("Route"));
+
+            fp.setCruiseAltitude(alt);
+            fp.setFuelTime(fuelTime);
+            fp.setEnrouteTime(enrouteTime);
+
+            fp.setTakeoffTimePlanned(QDateTime::currentDateTimeUtc());
+
+            int airspeedKts = values.value("Airspeed").toInt();
+            const CSpeed airspeed(airspeedKts, CSpeedUnit::kts());
+            fp.setCruiseTrueAirspeed(airspeed);
+
+            const bool heavy = stringToBool(values.value("Heavy"));
+            if (heavy) { fp.setPrefix("H"); }
+
+            return fp;
+        }
+
+        CFlightPlan CFlightPlan::fromMultipleFormats(const QString &data)
+        {
+            if (data.isEmpty()) { return CFlightPlan(); }
+            if (data.contains("[SBFlightPlan]", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
+            if (data.contains("<FlightPlan", Qt::CaseInsensitive) && data.contains("<?xml", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
+            return CFlightPlan::fromJson(data);
+        }
+
+        CFlightPlan CFlightPlan::fromMultipleFormatsNoThrow(const QString &data)
+        {
+            CFlightPlan fp;
+            try
+            {
+                fp = CFlightPlan::fromMultipleFormats(data);
+            }
+            catch (const CJsonException &ex)
+            {
+                const CStatusMessage m = ex.toStatusMessage(getLogCategories(), QString("Parsing flight plan from failed."));
+                Q_UNUSED(m);
+            }
+            return fp;
+        }
+
+        CFlightPlan CFlightPlan::loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs)
+        {
+            try
+            {
+                if (fileName.isEmpty())
+                {
+                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("No file name")); }
+                    return CFlightPlan();
+                }
+                else
+                {
+                    QFile f(fileName);
+                    if (!f.exists())
+                    {
+                        if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("File '%1' does not exist") << fileName); }
+                        return CFlightPlan();
+                    }
+                }
+
+                const QString data = CFileUtils::readFileToString(fileName);
+                if (data.isEmpty())
+                {
+                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("File '%1' does not contain data") << fileName); }
+                    return CFlightPlan();
+                }
+
+                if (fileName.endsWith(".sfp", Qt::CaseInsensitive))  { return CFlightPlan::fromSB4Format(data); }
+                if (fileName.endsWith(".vfp", Qt::CaseInsensitive))  { return CFlightPlan::fromVPilotFormat(data); }
+                if (fileName.endsWith(".json", Qt::CaseInsensitive)) { return CFlightPlan::fromJson(data); }
+
+                return CFlightPlan::fromMultipleFormats(data);
+            }
+            catch (const CJsonException &ex)
+            {
+                if (msgs)
+                {
+                    msgs->push_back(ex.toStatusMessage(getLogCategories(), QString("Parsing flight plan from '%1' failed.").arg(fileName)));
+                }
+            }
+            return CFlightPlan();
         }
 
         const QString CFlightPlan::flightRuleToString(CFlightPlan::FlightRules rule)

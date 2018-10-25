@@ -22,6 +22,8 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/metaclass.h"
@@ -139,6 +141,9 @@ namespace BlackMisc
             public ITimestampBased
         {
         public:
+            //! The log. catgeories
+            static const CLogCategoryList &getLogCategories();
+
             //! Flight rules (VFR or IFR)
             enum FlightRules
             {
@@ -162,7 +167,7 @@ namespace BlackMisc
             //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part of the underlying network layers
             //  https://forums.vatsim.net/viewtopic.php?f=6&t=63416
             static constexpr int MaxRemarksLength = 256; //!< Max.remarks length
-            static constexpr int MaxRouteLength = 256; //!< Max.route length
+            static constexpr int MaxRouteLength   = 256; //!< Max.route length
 
             //! Default constructor
             CFlightPlan();
@@ -344,6 +349,21 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
+
+            //! From vPilot data
+            static CFlightPlan fromVPilotFormat(const QString &vPilotData);
+
+            //! From SB4 data
+            static CFlightPlan fromSB4Format(const QString &sbData);
+
+            //! From multiple formats
+            static CFlightPlan fromMultipleFormats(const QString &data);
+
+            //! From multiple formats
+            static CFlightPlan fromMultipleFormatsNoThrow(const QString &data);
+
+            //! Load from multiple formats
+            static CFlightPlan loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs = nullptr);
 
             //! Rules to string
             static const QString flightRuleToString(FlightRules rule);
