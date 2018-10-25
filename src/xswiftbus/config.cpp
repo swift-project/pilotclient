@@ -16,7 +16,6 @@
 
 namespace XSwiftBus
 {
-
     //! Case insensitive string compare
     bool stringCompare(const std::string & str1, const std::string &str2)
     {
@@ -102,7 +101,6 @@ namespace XSwiftBus
 
     bool CConfig::parseDBusAddress(const std::string &value)
     {
-
         m_dbusAddress = value;
         return true;
     }
@@ -134,5 +132,4 @@ namespace XSwiftBus
 
         return {};
     }
-
 } // ns

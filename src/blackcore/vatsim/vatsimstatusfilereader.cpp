@@ -54,12 +54,12 @@ namespace BlackCore
 
         CUrlList CVatsimStatusFileReader::getMetarFileUrls() const
         {
-            return this->m_lastGoodSetup.get().getMetarFileUrls();
+            return m_lastGoodSetup.get().getMetarFileUrls();
         }
 
         CUrlList CVatsimStatusFileReader::getDataFileUrls() const
         {
-            return this->m_lastGoodSetup.get().getDataFileUrls();
+            return m_lastGoodSetup.get().getDataFileUrls();
         }
 
         void CVatsimStatusFileReader::ps_read()
@@ -118,7 +118,7 @@ namespace BlackCore
                     currentLine = clRef.toString().trimmed();
                     if (currentLine.isEmpty()) { continue; }
                     if (currentLine.startsWith(";")) { continue; }
-                    if (!currentLine.contains("=")) { continue; }
+                    if (!currentLine.contains("="))  { continue; }
 
                     const QStringList parts(currentLine.split('='));
                     if (parts.length() != 2) { continue; }
@@ -144,12 +144,12 @@ namespace BlackCore
                 } // for each line
 
                 // cache itself is thread safe, avoid writing with unchanged data
-                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                CVatsimSetup vs(m_lastGoodSetup.get());
                 const bool changed = vs.setUrls(dataFileUrls, serverFileUrls, metarFileUrls);
                 if (changed)
                 {
                     vs.setUtcTimestamp(QDateTime::currentDateTime());
-                    const CStatusMessage cacheMsg = this->m_lastGoodSetup.set(vs);
+                    const CStatusMessage cacheMsg = m_lastGoodSetup.set(vs);
                     if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
                 }
 
