@@ -476,56 +476,27 @@ namespace BlackGui
 
         void CFlightPlanComponent::loadFromDisk()
         {
-            CStatusMessage m;
-            const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                     tr("Load flight plan"), getDefaultFilename(true),
-                                     tr("swift (*.json *.txt)"));
-            do
+            CStatusMessageList msgs;
+            const QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Load flight plan"), this->getDefaultFilename(true), "Flight plans (*.json *.sfp *.vfp);;swift (*.json *.txt);;vPilot (*.vfp);;SB4 (*.sfp)");
+            if (fileName.isEmpty()) { return; }
+            CFlightPlan fp = CFlightPlan::loadFromMultipleFormats(fileName, &msgs);
+            if (!fp.hasCallsign()) { fp.setCallsign(ui->le_Callsign->text()); } // set callsign if it wasn't set
+
+            if (msgs.isSuccess())
             {
-                if (fileName.isEmpty())
-                {
-                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true);
-                    break;
-                }
-
-                const QString json(CFileUtils::readFileToString(fileName));
-                if (!Json::looksLikeSwiftJson(json))
-                {
-                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading '%1' yields no data", true) << fileName;
-                    break;
-                }
-
-                try
-                {
-                    CVariant variant;
-                    variant.convertFromJson(Json::jsonObjectFromString(json));
-                    if (variant.canConvert<CFlightPlan>())
-                    {
-                        const CFlightPlan fp = variant.value<CFlightPlan>();
-                        this->fillWithFlightPlanData(fp);
-                        this->updateDirectorySettings(fileName);
-                    }
-                    else
-                    {
-                        m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Wrong format for flight plan in '%1'") << fileName;
-                    }
-                }
-                catch (const CJsonException &ex)
-                {
-                    m = ex.toStatusMessage(this, "Parse error in " + fileName);
-                    break;
-                }
+                this->fillWithFlightPlanData(fp);
+                this->updateDirectorySettings(fileName);
             }
-            while (false);
-            if (m.isFailure()) { CLogMessage::preformatted(m); }
+            else
+            {
+                this->showOverlayMessages(msgs, OverlayMessageMs);
+            }
         }
 
         void CFlightPlanComponent::saveToDisk()
         {
             CStatusMessage m;
-            const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                     tr("Save flight plan"), getDefaultFilename(false),
-                                     tr("swift (*.json *.txt)"));
+            const QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save flight plan"), this->getDefaultFilename(false), tr("swift (*.json;*.txt)"));
             do
             {
                 if (fileName.isEmpty())
@@ -832,7 +803,7 @@ namespace BlackGui
         {
             // some logic to find a useful default name
             const QString dir = m_directories.get().getFlightPlanDirectoryOrDefault();
-            if (load) { return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix()); }
+            if (load) { return dir; }
 
             // Save file path
             QString name("Flight plan");
