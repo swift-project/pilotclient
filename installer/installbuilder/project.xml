@@ -349,6 +349,7 @@ it and relaunch the uninstaller.</text>
         <platformOptions>
             <height>430</height>
             <platform>osx</platform>
+            <requireInstallationByRootUser>1</requireInstallationByRootUser>
         </platformOptions>
         <platformOptions>
             <height>430</height>
