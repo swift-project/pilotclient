@@ -14,6 +14,8 @@
 #include "loghandler.h"
 #include "logmessage.h"
 #include "comparefunctions.h"
+#include "stringutils.h"
+
 #include <QMetaEnum>
 #include <QStringBuilder>
 
@@ -221,6 +223,13 @@ namespace BlackMisc
     bool CStatusMessage::isFailure() const
     {
         return this->getSeverity() == SeverityError;
+    }
+
+    QString CStatusMessage::getMessageNoLineBreaks() const
+    {
+        const QString m = this->getMessage();
+        if (!containsLineBreakOrTab(m)) { return m; } // by far most messages will NOT contain tabs/CR
+        return removeLineBreakAndTab(m);
     }
 
     void CStatusMessage::prependMessage(const QString &msg)

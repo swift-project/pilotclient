@@ -182,6 +182,7 @@ namespace BlackMisc
             IndexSeverity,
             IndexSeverityAsString,
             IndexMessage,
+            IndexMessageNoLineBreaks,
             IndexMessageAsHtml
         };
 
@@ -271,6 +272,9 @@ namespace BlackMisc
         //! Message
         QString getMessage() const { return this->message(); }
 
+        //! Message without line breaks
+        QString getMessageNoLineBreaks() const;
+
         //! Prepend message
         void prependMessage(const QString &msg);
 
@@ -336,14 +340,14 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-        //! Compare for index
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const CStatusMessage &compareValue) const;
-
-        //! To HTML
-        QString toHtml() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
+
+        //! To HTML
+        QString toHtml() const;
 
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);

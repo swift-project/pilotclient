@@ -44,6 +44,12 @@ namespace BlackMisc
         return result;
     }
 
+    //! Remove line breaks and tabs
+    inline QString removeLineBreakAndTab(const QString &s)
+    {
+        return removeChars(s, [](QChar c) { return c == '\n' || c == '\t'; });
+    }
+
     //! Remove the typical separators such as "-", " "
     BLACKMISC_EXPORT QString removeDateTimeSeparators(const QString &s);
 
@@ -51,6 +57,12 @@ namespace BlackMisc
     template <class F> bool containsChar(const QString &s, F predicate)
     {
         return std::any_of(s.begin(), s.end(), predicate);
+    }
+
+    //! Contains a line break or tab
+    inline bool containsLineBreakOrTab(const QString &s)
+    {
+        return containsChar(s, [](QChar c) { return c == '\n' || c == '\t'; });
     }
 
     //! Index of first character in the string matching the given predicate, or -1 if not found.
