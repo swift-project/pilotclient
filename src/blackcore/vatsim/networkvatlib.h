@@ -192,10 +192,18 @@ namespace BlackCore
             static void networkLogHandler(VatSeverityLevel severity, const char *context, const char *message);
             void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
+            //! Default model string
             static const QString &defaultModelString()
             {
                 static const QString dm("Cessna Skyhawk 172SP");
                 return dm;
+            }
+
+            //! Send if no model string is available
+            static const QString &noModelString()
+            {
+                static const QString noms("swift empty string");
+                return noms;
             }
 
             struct JsonPackets
@@ -245,6 +253,9 @@ namespace BlackCore
 
             //! Average offset time in ms
             qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = MaxOffseTimes) const;
+
+            //! Remove colon
+            static QString removeColon(const QString &candidate);
 
             //! Deletion policy for QScopedPointer
             struct VatFsdClientDeleter

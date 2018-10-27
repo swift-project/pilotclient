@@ -469,9 +469,9 @@ namespace BlackCore
         void CNetworkVatlib::presetIcaoCodes(const CSimulatedAircraft &ownAircraft)
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
-            m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
-            m_ownAirlineIcaoCode = ownAircraft.getAirlineIcaoCode();
-            m_ownLiveryDescription = ownAircraft.getLivery().getDescription();
+            m_ownAircraftIcaoCode  = ownAircraft.getAircraftIcaoCode();
+            m_ownAirlineIcaoCode   = ownAircraft.getAirlineIcaoCode();
+            m_ownLiveryDescription = removeColon(ownAircraft.getModel().getSwiftLiveryString());
             updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
         }
 
@@ -740,9 +740,9 @@ namespace BlackCore
 
         void CNetworkVatlib::sendAircraftInfo(const CCallsign &callsign) // private
         {
-            const QByteArray acTypeICAObytes = toFSD(m_ownAircraftIcaoCode.getDesignator());
-            const QByteArray airlineICAObytes = toFSD(m_ownAirlineIcaoCode.getDesignator());
-            const QByteArray liverybytes = toFSD(m_ownLiveryDescription);
+            const QByteArray acTypeICAObytes  = toFSDnoColon(m_ownAircraftIcaoCode.getDesignator());
+            const QByteArray airlineICAObytes = toFSDnoColon(m_ownAirlineIcaoCode.getDesignator());
+            const QByteArray liverybytes      = toFSDnoColon(m_ownLiveryDescription);
 
             VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
             Vat_SendAircraftInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
@@ -822,15 +822,13 @@ namespace BlackCore
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
             const CSimulatedAircraft myAircraft(getOwnAircraft());
-            QString modelString = myAircraft.getModel().getModelString();
-            if (modelString.isEmpty()) { modelString = defaultModelString(); }
-
+            const QString modelString = myAircraft.hasModelString() ? myAircraft.getModelString() : noModelString();
             const QStringList data { { "0" },
                 myAircraft.getAirlineIcaoCodeDesignator(),
                 myAircraft.getAircraftIcaoCodeDesignator(),
                 { "" }, { "" }, { "" }, { "" },
                 myAircraft.getAircraftIcaoCombinedType(),
-                modelString
+                removeColon(modelString)
             };
             sendCustomPacket(callsign, "FSIPIR", data);
         }
@@ -846,7 +844,7 @@ namespace BlackCore
             data[1] = myAircraft.getAirlineIcaoCodeDesignator();
             data[2] = myAircraft.getAircraftIcaoCodeDesignator();
             data[7] = myAircraft.getAircraftIcaoCombinedType();
-            data[8] = myAircraft.hasModelString() ? myAircraft.getModel().getModelString() : defaultModelString();
+            data[8] = removeColon(myAircraft.hasModelString() ? myAircraft.getModelString() : noModelString());
             this->sendCustomPacket(callsign, "FSIPI", data);
         }
 
@@ -1324,6 +1322,12 @@ namespace BlackCore
         {
             int count = 0;
             return this->averageOffsetTimeMs(callsign, maxLastValues, count);
+        }
+
+        QString CNetworkVatlib::removeColon(const QString &candidate)
+        {
+            QString r = candidate;
+            return r.remove(':');
         }
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
