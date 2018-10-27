@@ -13,6 +13,8 @@
 #include <QtGlobal>
 #include <cmath>
 
+using BlackMisc::Math::CMathUtils;
+
 namespace BlackMisc
 {
     namespace PhysicalQuantities
@@ -79,7 +81,26 @@ namespace BlackMisc
                 }
             }
             else
+            {
                 CPhysicalQuantity::parseFromString(time);
+            }
+        }
+
+        bool CTime::parseFromString_hhmm(const QString &hhmm)
+        {
+            if (hhmm.length() != 4) { return false; }
+            const QString hStr = hhmm.left(2);
+            const QString mStr = hhmm.right(2);
+
+            bool ok;
+            const int h = hStr.toInt(&ok);
+            if (!ok || h < 0 || h > 23) { return false; }
+
+            const int m = mStr.toInt(&ok);
+            if (!ok || m < 0 || m > 59) { return false; }
+
+            *this = CTime(h, m, 0);
+            return true;
         }
 
         void CTime::parseFromString(const QString &time, CPqString::SeparatorMode mode)
@@ -90,31 +111,28 @@ namespace BlackMisc
 
         QList<int> CTime::getHrsMinSecParts() const
         {
-            using BlackMisc::Math::CMathUtils;
             CTime copy(*this);
-
             copy.switchUnit(CTimeUnit::s());
 
-            using BlackMisc::Math::CMathUtils;
-            double currentValue = copy.value();
-            double hr = CMathUtils::trunc(currentValue / 3600);
-            double remaining = std::fmod(currentValue, 3600);
-            double mi = CMathUtils::trunc(remaining / 60);
-            double se = CMathUtils::trunc(std::fmod(remaining, 60));
+            const double currentValue = copy.value();
+            const double hr = CMathUtils::trunc(currentValue / 3600);
+            const double remaining = std::fmod(currentValue, 3600);
+            const double mi = CMathUtils::trunc(remaining / 60);
+            const double se = CMathUtils::trunc(std::fmod(remaining, 60));
 
             QList<int> parts;
-            parts << hr << mi << se;
+            parts << qRound(hr) << qRound(mi) << qRound(se);
             return parts;
         }
 
         QString CTime::formattedHrsMinSec() const
         {
-            QList<int> parts = getHrsMinSecParts();
-            QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
-            QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
-            QString s = QString("00%1").arg(QString::number(parts.at(2))).right(2);
+            const QList<int> parts = getHrsMinSecParts();
+            const QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
+            const QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
+            const QString s = QString("00%1").arg(QString::number(parts.at(2))).right(2);
 
-            QString fs = QString("%1:%2:%3").arg(h, m, s);
+            const QString fs = QStringLiteral("%1:%2:%3").arg(h, m, s);
             if (this->isNegativeWithEpsilonConsidered())
             {
                 return QString("-").append(fs);
@@ -127,22 +145,22 @@ namespace BlackMisc
 
         int CTime::toMs() const
         {
-            double ms = this->valueRounded(CTimeUnit::ms(), 0);
+            const double ms = this->valueRounded(CTimeUnit::ms(), 0);
             return static_cast<int>(ms);
         }
 
         int CTime::toSeconds() const
         {
-            double ms = this->valueRounded(CTimeUnit::s(), 0);
+            const double ms = this->valueRounded(CTimeUnit::s(), 0);
             return static_cast<int>(ms);
         }
 
         QString CTime::formattedHrsMin() const
         {
-            QList<int> parts = getHrsMinSecParts();
-            QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
-            QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
-            QString fs = QString("%1:%2").arg(h, m);
+            const QList<int> parts = getHrsMinSecParts();
+            const QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
+            const QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
+            const QString fs = QString("%1:%2").arg(h, m);
             if (this->isNegativeWithEpsilonConsidered())
             {
                 return QString("-").append(fs);
@@ -151,6 +169,20 @@ namespace BlackMisc
             {
                 return fs;
             }
+        }
+
+        QDateTime CTime::toQDateTime() const
+        {
+            QDateTime dt = QDateTime::currentDateTimeUtc();
+            dt.setTime(this->toQTime());
+            return dt;
+        }
+
+        QTime CTime::toQTime() const
+        {
+            const QList<int> parts = this->getHrsMinSecParts();
+            const QTime t(parts[0], parts[1], parts[2]);
+            return t;
         }
     } // ns
 } // ns

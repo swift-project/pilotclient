@@ -20,14 +20,13 @@
 #include <QList>
 #include <QMetaType>
 #include <QString>
-
-class QTime;
+#include <QTime>
+#include <QDateTime>
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Time class, e.g. "ms", "hour", "s", "day"
          */
@@ -60,6 +59,9 @@ namespace BlackMisc
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             void parseFromString(const QString &time);
 
+            //! From string like 2211 (hhmm)
+            bool parseFromString_hhmm(const QString &hhmm);
+
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             void parseFromString(const QString &time, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
 
@@ -78,6 +80,12 @@ namespace BlackMisc
 
             //! Formatted as hh:mm
             QString formattedHrsMin() const;
+
+            //! To Qt date time
+            QDateTime toQDateTime() const;
+
+            //! To Qt time
+            QTime toQTime() const;
         };
     } // ns
 } // ns
