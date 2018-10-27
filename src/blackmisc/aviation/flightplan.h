@@ -378,7 +378,7 @@ namespace BlackMisc
             static CFlightPlan loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs = nullptr);
 
             //! Rules to string
-            static const QString flightRuleToString(FlightRules rule);
+            static const QString &flightRuleToString(FlightRules rule);
 
             //! String to flight rules
             static FlightRules stringToFlightRules(const QString &flightRules);

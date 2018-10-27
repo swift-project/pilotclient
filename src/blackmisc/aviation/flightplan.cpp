@@ -463,17 +463,24 @@ namespace BlackMisc
             return CFlightPlan();
         }
 
-        const QString CFlightPlan::flightRuleToString(CFlightPlan::FlightRules rule)
+        const QString &CFlightPlan::flightRuleToString(CFlightPlan::FlightRules rule)
         {
+            static const QString v("VFR");
+            static const QString i("IFR");
+            static const QString s("SVFR");
+            static const QString d("DVFR");
+            static const QString unknown("???");
+
             switch (rule)
             {
-            case VFR:  return QLatin1String("VFR");
-            case IFR:  return QLatin1String("IFR");
-            case SVFR: return QLatin1String("SVFR");
-            case DVFR: return QLatin1String("DVFR");
+            case VFR:  return v;
+            case IFR:  return i;
+            case SVFR: return s;
+            case DVFR: return d;
             case UNKNOWN:
-            default:   return QLatin1String("???");
+            default: break;
             }
+            return unknown;
         }
 
         QString CFlightPlan::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
