@@ -7,9 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/network.h"
 #include "blackgui/components/aircraftcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -18,6 +15,11 @@
 #include "blackgui/views/airportview.h"
 #include "blackgui/views/simulatedaircraftview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/network.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "ui_aircraftcomponent.h"
 
 #include <QString>
@@ -31,6 +33,7 @@ using namespace BlackGui::Models;
 using namespace BlackGui::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -161,7 +164,12 @@ namespace BlackGui
             }
             else if (INetwork::isConnectedStatus(to))
             {
-                // void
+                if (sGui && sGui->getIContextNetwork())
+                {
+                    const CServer server = sGui->getIContextNetwork()->getConnectedServer();
+                    const bool sendFast = server.getFsdSetup().sendInterimPositions();
+                    ui->tvp_AircraftInRange->configureMenuFastPositionUpdates(sendFast);
+                }
             }
         }
 

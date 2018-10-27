@@ -53,6 +53,11 @@ namespace BlackGui
             m_withMenuEnableGndFlag = menuGndFlag;
         }
 
+        void CSimulatedAircraftView::configureMenuFastPositionUpdates(bool menuFastPositionUpdates)
+        {
+            m_withMenuFastPosition = menuFastPositionUpdates;
+        }
+
         void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
             // sub menus, only adding the path, the content will be added below

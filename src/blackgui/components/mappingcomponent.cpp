@@ -7,9 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/network.h"
 #include "blackgui/components/mappingcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -19,13 +16,17 @@
 #include "blackgui/views/checkboxdelegate.h"
 #include "blackgui/views/simulatedaircraftview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/network.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "mappingcomponent.h"
 #include "ui_mappingcomponent.h"
@@ -425,6 +426,15 @@ namespace BlackGui
             {
                 this->tokenBucketUpdate();
                 ui->tvp_RenderedAircraft->clear();
+            }
+            else if (INetwork::isConnectedStatus(to))
+            {
+                if (sGui && sGui->getIContextNetwork())
+                {
+                    const CServer server = sGui->getIContextNetwork()->getConnectedServer();
+                    const bool sendFast = server.getFsdSetup().sendInterimPositions();
+                    ui->tvp_RenderedAircraft->configureMenuFastPositionUpdates(sendFast);
+                }
             }
         }
 

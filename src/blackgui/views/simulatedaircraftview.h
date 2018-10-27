@@ -50,8 +50,11 @@ namespace BlackGui
             //! Mode
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
 
-            //! configure the menu
+            //! Configure the menu
             void configureMenu(bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag);
+
+            //! Configure fast position updates menu
+            void configureMenuFastPositionUpdates(bool menuFastPositionUpdates);
 
         signals:
             //! Request a text message
