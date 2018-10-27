@@ -133,10 +133,10 @@ namespace BlackMisc
             ReferenceDatum getReferenceDatum() const { return m_datum; }
 
             //! MSL to flightlevel
-            void toFlightLevel();
+            bool toFlightLevel();
 
             //! Flightlevel to MSL
-            void toMeanSeaLevel();
+            bool toMeanSeaLevel();
 
             //! Current altitude type
             AltitudeType getAltitudeType() const { return m_altitudeType; }

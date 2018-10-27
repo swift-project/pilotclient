@@ -88,16 +88,18 @@ namespace BlackMisc
             }
         }
 
-        void CAltitude::toFlightLevel()
+        bool CAltitude::toFlightLevel()
         {
-            Q_ASSERT(m_datum == MeanSeaLevel || m_datum == FlightLevel);
+            if (m_datum != MeanSeaLevel && m_datum != FlightLevel) { return false; }
             m_datum = FlightLevel;
+            return true;
         }
 
-        void CAltitude::toMeanSeaLevel()
+        bool CAltitude::toMeanSeaLevel()
         {
-            Q_ASSERT(m_datum == MeanSeaLevel || m_datum == FlightLevel);
+            if (m_datum != MeanSeaLevel && m_datum != FlightLevel) { return false; }
             m_datum = MeanSeaLevel;
+            return true;
         }
 
         void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
@@ -173,7 +175,7 @@ namespace BlackMisc
         {
             QString v(value.trimmed());
             this->setNull();
-            if (v.isEmpty() || v.length() < 3)
+            if (v.length() < 3)
             {
                 if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude empty or too short")); }
                 return false;
