@@ -128,7 +128,13 @@ namespace BlackMisc
             const QString &getServer() const { return m_server; }
 
             //! Server
-            void setServer(const QString &server) { m_server = server;}
+            void setServer(const QString &server) { m_server = server; }
+
+            //! Another swift client?
+            bool isSwiftClient() const { return m_swift; }
+
+            //! Mark as other swift client
+            void setSwiftClient(bool isSwift) { m_swift = isSwift; }
 
             //! Model
             const QString &getQueriedModelString() const { return m_modelString; }
@@ -140,7 +146,7 @@ namespace BlackMisc
             void setQueriedModelString(const QString &modelString);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return m_user.toIcon(); }
+            CIcon toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -153,7 +159,8 @@ namespace BlackMisc
 
         private:
             CUser m_user;
-            int m_capabilities = static_cast<int>(None);
+            int  m_capabilities = static_cast<int>(None);
+            bool m_swift = false; // another swift client
             QString m_modelString;
             QString m_server;
             CVoiceCapabilities m_voiceCapabilities;
@@ -161,6 +168,7 @@ namespace BlackMisc
             BLACK_METACLASS(
                 CClient,
                 BLACK_METAMEMBER(user),
+                BLACK_METAMEMBER(swift),
                 BLACK_METAMEMBER(modelString),
                 BLACK_METAMEMBER(capabilities),
                 BLACK_METAMEMBER(server),

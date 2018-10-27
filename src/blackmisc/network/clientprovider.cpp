@@ -132,6 +132,13 @@ namespace BlackMisc
             return true;
         }
 
+        void CClientProvider::markAsSwiftClient(const CCallsign &callsign)
+        {
+            QWriteLocker l(&m_lockClient);
+            if (!m_clients.contains(callsign)) { return; }
+            return m_clients[callsign].setSwiftClient(true);
+        }
+
         // Pin the vtable to this file
         void CClientAware::anchor()
         { }
@@ -182,6 +189,12 @@ namespace BlackMisc
         {
             if (this->provider()) { return this->provider()->addClientGndCapability(callsign); }
             return false;
+        }
+
+        void CClientAware::markAsSwiftClient(const CCallsign &callsign)
+        {
+            if (!this->provider()) { return; }
+            this->provider()->markAsSwiftClient(callsign);
         }
 
         CClientProviderDummy *CClientProviderDummy::instance()

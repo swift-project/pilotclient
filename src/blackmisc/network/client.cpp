@@ -97,6 +97,14 @@ namespace BlackMisc
             if (!modelString.isEmpty()) { this->addCapability(CClient::FsdModelString); }
         }
 
+        CIcon CClient::toIcon() const
+        {
+            if (!m_swift) { return m_user.toIcon(); }
+
+            static const CIcon swift = CIconList::allIcons().findByIndex(CIcons::Swift16);
+            return swift;
+        }
+
         CVariant CClient::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

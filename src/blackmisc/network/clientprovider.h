@@ -78,6 +78,10 @@ namespace BlackMisc
             //! Set gnd.flag capability
             //! \threadsafe
             virtual bool setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag) = 0;
+
+            //! Mark as other swift client
+            //! \threadsafe
+            virtual void markAsSwiftClient(const Aviation::CCallsign &callsign) = 0;
         };
 
         //! Direct in memory access to client (network client) data
@@ -99,6 +103,7 @@ namespace BlackMisc
             virtual bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual void markAsSwiftClient(const Aviation::CCallsign &callsign) override;
             //! @}
 
         private:
@@ -144,6 +149,9 @@ namespace BlackMisc
 
             //! \copydoc CClientProvider::addClientGndCapability
             bool addClientGndCapability(const Aviation::CCallsign &callsign);
+
+            //! \copydoc CClientProvider::markAsSwiftClient
+            void markAsSwiftClient(const Aviation::CCallsign &callsign);
 
             //! Provider
             void setClientProvider(CClientProvider *provider) { this->setProvider(provider); }

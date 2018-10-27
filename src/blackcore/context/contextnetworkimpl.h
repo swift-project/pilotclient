@@ -131,6 +131,7 @@ namespace BlackCore
             virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual void markAsSwiftClient(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
             //! \copydoc IContextNetwork::connectRawFsdMessageSignal

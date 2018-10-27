@@ -495,6 +495,11 @@ namespace BlackCore
             return m_airspace->setClientGndCapability(callsign, supportGndFlag);
         }
 
+        void CContextNetwork::markAsSwiftClient(const CCallsign &callsign)
+        {
+            m_airspace->markAsSwiftClient(callsign);
+        }
+
         CServerList CContextNetwork::getVatsimFsdServers() const
         {
             Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
