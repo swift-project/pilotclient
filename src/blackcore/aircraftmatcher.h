@@ -95,6 +95,18 @@ namespace BlackCore
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
 
+        //! Try to find model by model string
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelString(
+            const QString &modelString, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Try to find model by id
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelId(
+            int id, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
         //! \ingroup reverselookup
@@ -102,6 +114,11 @@ namespace BlackCore
             const BlackMisc::Aviation::CAircraftIcaoCode &icaoDesignator,
             const BlackMisc::Aviation::CCallsign &logCallsign = BlackMisc::Aviation::CCallsign(),
             BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup of ICAO by id
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcaoId(int id, const BlackMisc::Aviation::CCallsign &logCallsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
@@ -116,6 +133,16 @@ namespace BlackCore
         static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(
             const BlackMisc::Aviation::CAirlineIcaoCode &airline,
             const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup of livery by id
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static BlackMisc::Aviation::CLivery reverseLookupLiveryId(int id, const BlackMisc::Aviation::CCallsign &logCallsign, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup by ids
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static int reverseLookupByIds(const BlackMisc::Simulation::DBTripleIds &ids, BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao, BlackMisc::Aviation::CLivery &livery, const BlackMisc::Aviation::CCallsign &logCallsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of airline name
         //! \threadsafe
