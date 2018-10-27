@@ -37,6 +37,7 @@
 #include <memory>
 #include <type_traits>
 #include <atomic>
+#include <future>
 
 namespace BlackMisc
 {
@@ -244,7 +245,14 @@ namespace BlackMisc
         void thenWithResult(T *context, F functor)
         {
             Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
-            then(context, [this, context, functor]() { Private::invokeSlot(functor, context, this->resultNoWait<R>()); });
+
+            // MS 2018-10 It is possible that a queued finished() signal will be delivered after the worker was
+            //            destroyed, so we can't refer to the this pointer inside the contextual then() lambda.
+            //            Therefore we use a promise to extract the result from a non-contextual then(). See T414.
+            auto promise = std::make_shared<std::promise<R>>();
+            auto future = promise->get_future().share();
+            then([this, promise]() { promise->set_value(this->resultNoWait<R>()); });
+            then(context, [context, functor, future]() { Private::invokeSlot(functor, context, future.get()); });
         }
 
         //! Returns the result of the task, waiting for it to finish if necessary.
