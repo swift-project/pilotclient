@@ -7,18 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
-#include "blackgui/components/aircraftcombinedtypeselector.h"
-#include "blackgui/components/dbaircrafticaoselectorcomponent.h"
-#include "blackgui/components/dbairlineicaoselectorcomponent.h"
-#include "blackgui/components/dbliveryselectorcomponent.h"
-#include "blackgui/components/modelmatchercomponent.h"
-#include "blackgui/components/simulatorselector.h"
+#include "aircraftcombinedtypeselector.h"
+#include "dbaircrafticaoselectorcomponent.h"
+#include "dbairlineicaoselectorcomponent.h"
+#include "dbliveryselectorcomponent.h"
+#include "modelmatchercomponent.h"
+#include "settingsmatchingdialog.h"
+#include "simulatorselector.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -71,9 +72,11 @@ namespace BlackGui
             ui->le_Callsign->setValidator(validator);
 
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
+
             connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
+            connect(ui->pb_Settings, &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
 
             this->redisplay();
         }
@@ -143,6 +146,17 @@ namespace BlackGui
             {
                 const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings(true));
                 ui->le_ModelString->setCompleter(new QCompleter(modelStrings, this));
+            }
+        }
+
+        void CModelMatcherComponent::displaySettingsDialog()
+        {
+            if (!m_settingsDialog) { m_settingsDialog = new CSettingsMatchingDialog(this); }
+            m_settingsDialog->setMatchingSetup(m_matcher.getSetup());
+            const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
+            if (r == QDialog::Accepted)
+            {
+                m_settingsDialog->setMatchingSetup(m_settingsDialog->getMatchingSetup());
             }
         }
 

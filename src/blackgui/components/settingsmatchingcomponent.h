@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSMATCHINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSMATCHINGCOMPONENT_H
 
+#include "blackmisc/simulation/aircraftmatchersetup.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -32,6 +33,15 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CSettingsMatchingComponent() override;
+
+            //! Get setup
+            BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
+
+            //! Set setup
+            void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+
+            //! Show buttons
+            void showButtons(bool show);
 
         private:
             QScopedPointer<Ui::CSettingsMatchingComponent> ui;

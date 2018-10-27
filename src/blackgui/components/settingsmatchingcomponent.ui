@@ -54,7 +54,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackGui::Editors::CMatchingForm" name="editor_MatchingForm">
+        <widget class="BlackGui::Editors::CMatchingForm" name="form_Matching">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -68,7 +68,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="fr_Butoons">
+    <widget class="QFrame" name="fr_Buttons">
      <layout class="QHBoxLayout" name="hl_Buttons">
       <item>
        <spacer name="hs_Buttons">

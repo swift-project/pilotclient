@@ -28,6 +28,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CSettingsMatchingDialog;
+
         /*!
          * Model matcher testing and configuration
          */
@@ -55,6 +57,9 @@ namespace BlackGui
             //! Web data have been read
             void onWebDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+            //! Display settings dialog
+            void displaySettingsDialog();
+
             //! Run the matcher
             void testModelMatching();
 
@@ -77,6 +82,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
+            CSettingsMatchingDialog *m_settingsDialog = nullptr;
             BlackCore::CAircraftMatcher m_matcher { this }; //!< used matcher
         };
     } // ns
