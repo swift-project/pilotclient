@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QStringBuilder>
 #include <QRegularExpression>
+#include <QDomDocument>
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
@@ -41,6 +42,11 @@ namespace BlackMisc
             m_remarks(cleanRemarks(remarks)), m_voiceCapabilities(voiceCapabilities)
         {
             if (parse) { this->parseFlightPlanRemarks(); }
+        }
+
+        void CFlightPlanRemarks::setVoiceCapabilities(const CVoiceCapabilities &capabilities)
+        {
+            m_voiceCapabilities = capabilities;
         }
 
         bool CFlightPlanRemarks::hasAnyParsedRemarks() const
@@ -67,24 +73,22 @@ namespace BlackMisc
             return s.simplified().trimmed();
         }
 
-        QString CFlightPlanRemarks::textToVoiceCapabilities(const QString &text)
+        QString CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(const QString &text)
         {
-            if (text.contains("TEXT", Qt::CaseInsensitive)) { return QStringLiteral("/T/"); }
-            if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return QStringLiteral("/R/"); }
-            if (text.contains("VOICE", Qt::CaseInsensitive)) { return QStringLiteral("/V/"); }
-            return QStringLiteral("");
+            const CVoiceCapabilities vc = CVoiceCapabilities::fromText(text);
+            return vc.toFlightPlanRemarks();
         }
 
-        QString CFlightPlanRemarks::replaceVoiceCapabilities(const QString &newCaps, const QString &oldRemarks)
+        QString CFlightPlanRemarks::replaceVoiceCapabilities(const QString &newCapRemarks, const QString &oldRemarks)
         {
-            if (newCaps.isEmpty()) { return oldRemarks; }
-            if (oldRemarks.isEmpty()) { return newCaps; }
+            if (newCapRemarks.isEmpty()) { return oldRemarks; }
+            if (oldRemarks.isEmpty()) { return newCapRemarks; }
 
             QString r(oldRemarks);
-            if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCaps, Qt::CaseInsensitive); return r; }
-            if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCaps, Qt::CaseInsensitive); return r; }
-            if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCaps, Qt::CaseInsensitive); return r; }
-            return newCaps % QStringLiteral(" ") % r;
+            if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCapRemarks, Qt::CaseInsensitive); return r; }
+            if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCapRemarks, Qt::CaseInsensitive); return r; }
+            if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCapRemarks, Qt::CaseInsensitive); return r; }
+            return newCapRemarks % QStringLiteral(" ") % r;
         }
 
         QString CFlightPlanRemarks::cleanRemarks(const QString &remarksIn)
@@ -194,6 +198,12 @@ namespace BlackMisc
             m_remarks = CFlightPlanRemarks(remarks, true);
         }
 
+        void CFlightPlan::setVoiceCapabilities(const QString &capabilities)
+        {
+            const CVoiceCapabilities vc = CVoiceCapabilities::fromText(capabilities);
+            m_remarks.setVoiceCapabilities(vc);
+        }
+
         CFlightPlan::FlightRules CFlightPlan::getFlightRulesAsVFRorIFR() const
         {
             switch (this->getFlightRules())
@@ -206,6 +216,23 @@ namespace BlackMisc
             default: break;
             }
             return UNKNOWN;
+        }
+
+        void CFlightPlan::setPrefix(const QString &prefix)
+        {
+            m_prefix = prefix;
+            m_prefix.remove('/');
+        }
+
+        void CFlightPlan::setHeavy()
+        {
+            this->setPrefix("H");
+        }
+
+        void CFlightPlan::setEquipmentSuffix(const QString &suffix)
+        {
+            m_equipmentSuffix = suffix;
+            m_equipmentSuffix.remove('/');
         }
 
         QString CFlightPlan::getCombinedPrefixIcaoSuffix() const
@@ -272,7 +299,64 @@ namespace BlackMisc
         CFlightPlan CFlightPlan::fromVPilotFormat(const QString &vPilotData)
         {
             if (vPilotData.isEmpty()) { return CFlightPlan(); }
-            return CFlightPlan();
+            QDomDocument doc;
+            doc.setContent(vPilotData);
+            const QDomElement fpDom = doc.firstChildElement();
+            const QString type = fpDom.attribute("FlightType");
+
+            CFlightPlan fp;
+            fp.setFlightRule(CFlightPlan::stringToFlightRules(type));
+
+            const int airspeedKts = fpDom.attribute("CruiseSpeed").toInt();
+            const CSpeed airspeed(airspeedKts, CSpeedUnit::kts());
+            fp.setCruiseTrueAirspeed(airspeed);
+
+            fp.setOriginAirportIcao(fpDom.attribute("DepartureAirport"));
+            fp.setDestinationAirportIcao(fpDom.attribute("DestinationAirport"));
+            fp.setAlternateAirportIcao(fpDom.attribute("AlternateAirport"));
+            fp.setRemarks(fpDom.attribute("Remarks"));
+            fp.setRoute(fpDom.attribute("Route"));
+
+            const QString voice = fpDom.attribute("VoiceType");
+            fp.setVoiceCapabilities(voice);
+
+            const QString prefix = fpDom.attribute("EquipmentPrefix");
+            if (prefix.isEmpty())
+            {
+                const bool heavy = stringToBool(fpDom.attribute("IsHeavy"));
+                if (heavy) { fp.setHeavy(); }
+            }
+            else
+            {
+                fp.setPrefix(prefix);
+            }
+            fp.setEquipmentSuffix(fpDom.attribute("EquipmentSuffix"));
+
+            const int fuelMins = fpDom.attribute("FuelMinutes").toInt() + 60 * fpDom.attribute("FuelHours").toInt();
+            const CTime fuelTime(fuelMins, CTimeUnit::min());
+
+            const int enrouteMins = fpDom.attribute("EnrouteMinutes").toInt() + 60 * fpDom.attribute("EnrouteHours").toInt();
+            const CTime enrouteTime(enrouteMins, CTimeUnit::min());
+
+            const QString altStr = fpDom.attribute("CruiseAltitude");
+            CAltitude alt(altStr.length() < 4 ? "FL" + altStr : altStr + "ft");
+            alt.toFlightLevel();
+
+            fp.setCruiseAltitude(alt);
+            fp.setFuelTime(fuelTime);
+            fp.setEnrouteTime(enrouteTime);
+
+            const QString departureTime = fpDom.attribute("DepartureTime");
+            if (departureTime.length() == 4)
+            {
+                CTime depTime;
+                if (depTime.parseFromString_hhmm(departureTime))
+                {
+                    fp.setTakeoffTimePlanned(depTime.toQDateTime());
+                }
+            }
+
+            return fp;
         }
 
         CFlightPlan CFlightPlan::fromSB4Format(const QString &sbData)
@@ -281,7 +365,7 @@ namespace BlackMisc
             CFlightPlan fp;
             const QMap<QString, QString> values = parseIniValues(sbData);
             const QString altStr = values.value("Altitude");
-            const CAltitude alt(altStr.length() < 4 ? "FL" + altStr : altStr);
+            const CAltitude alt(altStr.length() < 4 ? "FL" + altStr : altStr + "ft");
 
             const QString type = values.value("Type"); // IFR/VFR
             fp.setFlightRule(type == "0" ? IFR : VFR);
@@ -309,7 +393,7 @@ namespace BlackMisc
             fp.setCruiseTrueAirspeed(airspeed);
 
             const bool heavy = stringToBool(values.value("Heavy"));
-            if (heavy) { fp.setPrefix("H"); }
+            if (heavy) { fp.setHeavy(); }
 
             return fp;
         }

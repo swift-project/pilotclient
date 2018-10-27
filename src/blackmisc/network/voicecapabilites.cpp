@@ -27,6 +27,25 @@ namespace BlackMisc
             this->setFromFlightPlanRemarks(flightPlanRemarks);
         }
 
+        const QString &CVoiceCapabilities::toFlightPlanRemarks() const
+        {
+            static const QString v("/R/");
+            static const QString t("/T/");
+            static const QString r("/R/");
+            static const QString u("");
+
+            switch (m_voiceCapabilities)
+            {
+            case Voice: return v;
+            case TextOnly: return t;
+            case VoiceReceivingOnly: return r;
+            case Unknown: return u;
+            default: break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
+            return u;
+        }
+
         QString CVoiceCapabilities::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -98,6 +117,16 @@ namespace BlackMisc
         CVoiceCapabilities CVoiceCapabilities::fromFlightPlanRemarks(const QString &remarks)
         {
             return CVoiceCapabilities(remarks);
+        }
+
+        CVoiceCapabilities CVoiceCapabilities::fromText(const QString &text)
+        {
+            if (text.startsWith("/")) { return CVoiceCapabilities::fromText(text); }
+            if (text.contains("TEXT", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
+            if (text.contains("ONLY", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
+            if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return CVoiceCapabilities(VoiceReceivingOnly); }
+            if (text.contains("VOICE", Qt::CaseInsensitive)) { return CVoiceCapabilities(Voice); }
+            return CVoiceCapabilities(Unknown);
         }
 
         const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()

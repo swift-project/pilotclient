@@ -50,11 +50,17 @@ namespace BlackMisc
             //! Is capability known
             bool isUnknown() const { return m_voiceCapabilities == Unknown; }
 
+            //! To flight plan remarks
+            const QString &toFlightPlanRemarks() const;
+
             //! From enum
             static const CVoiceCapabilities &fromVoiceCapabilities(VoiceCapabilities capabilities);
 
             //! From flight plan remarks
             static CVoiceCapabilities fromFlightPlanRemarks(const QString &remarks);
+
+            //! From text like "text only"
+            static CVoiceCapabilities fromText(const QString &text);
 
             //! All capabilities as list
             static const QList<CVoiceCapabilities> &allCapabilities();

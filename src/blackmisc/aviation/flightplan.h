@@ -78,6 +78,12 @@ namespace BlackMisc
             //! Voice capabilities
             const Network::CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities; }
 
+            //! Set voice capabilities
+            void setVoiceCapabilitiesByText(const QString &text);
+
+            //! Set voice capabilities
+            void setVoiceCapabilities(const Network::CVoiceCapabilities &capabilities);
+
             //! Any remarks available?
             bool hasAnyParsedRemarks() const;
 
@@ -101,10 +107,10 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! Turn text into voice capabilities for remarks
-            static QString textToVoiceCapabilities(const QString &text);
+            static QString textToVoiceCapabilitiesRemarks(const QString &text);
 
             //! Replace the voice capabilities remarks part
-            static QString replaceVoiceCapabilities(const QString &newCaps, const QString &oldRemarks);
+            static QString replaceVoiceCapabilities(const QString &newCapRemarks, const QString &oldRemarks);
 
             //! Clean up remarks string
             static QString cleanRemarks(const QString &remarksIn);
@@ -239,6 +245,9 @@ namespace BlackMisc
             //! Set remarks string (max 100 characters)
             void setRemarks(const QString &remarks);
 
+            //! Set voice capabilities
+            void setVoiceCapabilities(const QString &capabilities);
+
             //! When last sent
             void setWhenLastSentOrLoaded(const QDateTime &dateTime) { this->setUtcTimestamp(dateTime); }
 
@@ -318,13 +327,16 @@ namespace BlackMisc
             const QString &getPrefix() const { return m_prefix; }
 
             //! Set ICAO aircraft equipment prefix H/B737/F "H"
-            void setPrefix(const QString &prefix) { m_prefix = prefix; }
+            void setPrefix(const QString &prefix);
+
+            //! Mark as heavy
+            void setHeavy();
 
             //! Get ICAO aircraft equipment suffix H/B737/F "F"
             const QString &getEquipmentSuffix() const { return m_equipmentSuffix; }
 
             //! Set ICAO aircraft equipment suffix H/B737/F "F"
-            void setEquipmentSuffix(const QString &suffix) { m_equipmentSuffix = suffix; }
+            void setEquipmentSuffix(const QString &suffix);
 
             //! Get aircraft ICAO H/B737/F "B737"
             const CAircraftIcaoCode &getAircraftIcao() const { return m_aircraftIcao; }
