@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SimBase.Document Type="AceXML" version="1,0">
+    <Descr>AceXML Document</Descr>
+    <!-- LNMDATA
+         _lnm=Erstellt mit Little Navmap Version 2.0.3 (Revision 48a89ea) am 2018 10 24T23:25:38|
+         cycle=|
+         navdata=P3DV4|
+         simdata=P3DV4|
+         speed=280.0000
+-->
+    <FlightPlan.FlightPlan>
+        <Title>LGTS to LTBS</Title>
+        <FPType>IFR</FPType>
+        <CruisingAlt>15000</CruisingAlt>
+        <DepartureID>LGTS</DepartureID>
+        <DepartureLLA>N40° 31' 26.60",E22° 58' 35.23",+000000.00</DepartureLLA>
+        <DestinationID>LTBS</DestinationID>
+        <DestinationLLA>N36° 42' 45.01",E28° 47' 29.00",+000020.00</DestinationLLA>
+        <Descr>LGTS, LTBS</Descr>
+        <DeparturePosition>GATE 6</DeparturePosition>
+        <DepartureName>Makedonia</DepartureName>
+        <DestinationName>Dalaman Intl</DestinationName>
+        <AppVersion>
+            <AppVersionMajor>10</AppVersionMajor>
+            <AppVersionBuild>61472</AppVersionBuild>
+        </AppVersion>
+        <ATCWaypoint id="LGTS">
+            <ATCWaypointType>Airport</ATCWaypointType>
+            <WorldPosition>N40° 31' 11.00",E22° 58' 15.30",+000022.00</WorldPosition>
+            <ICAO>
+                <ICAOIdent>LGTS</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="LEKPO">
+            <ATCWaypointType>Intersection</ATCWaypointType>
+            <WorldPosition>N40° 6' 46.00",E23° 9' 43.00",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LG</ICAORegion>
+                <ICAOIdent>LEKPO</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="SKS">
+            <ATCWaypointType>VOR</ATCWaypointType>
+            <WorldPosition>N38° 58' 38.56",E24° 29' 24.43",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LG</ICAORegion>
+                <ICAOIdent>SKS</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="MES">
+            <ATCWaypointType>VOR</ATCWaypointType>
+            <WorldPosition>N38° 15' 6.25",E25° 54' 20.68",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LG</ICAORegion>
+                <ICAOIdent>MES</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="IMR">
+            <ATCWaypointType>VOR</ATCWaypointType>
+            <WorldPosition>N38° 19' 2.80",E27° 0' 26.00",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LT</ICAORegion>
+                <ICAOIdent>IMR</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="SEL">
+            <ATCWaypointType>VOR</ATCWaypointType>
+            <WorldPosition>N37° 56' 55.90",E27° 20' 1.00",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LT</ICAORegion>
+                <ICAOIdent>SEL</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="CLD">
+            <ATCWaypointType>NDB</ATCWaypointType>
+            <WorldPosition>N37° 49' 0.39",E27° 53' 8.80",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LT</ICAORegion>
+                <ICAOIdent>CLD</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="KEKIK">
+            <ATCWaypointType>Intersection</ATCWaypointType>
+            <WorldPosition>N37° 4' 42.99",E28° 22' 4.00",+000000.00</WorldPosition>
+            <ICAO>
+                <ICAORegion>LT</ICAORegion>
+                <ICAOIdent>KEKIK</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+        <ATCWaypoint id="LTBS">
+            <ATCWaypointType>Airport</ATCWaypointType>
+            <WorldPosition>N36° 42' 45.01",E28° 47' 29.00",+000020.00</WorldPosition>
+            <ICAO>
+                <ICAOIdent>LTBS</ICAOIdent>
+            </ICAO>
+        </ATCWaypoint>
+    </FlightPlan.FlightPlan>
+</SimBase.Document>
