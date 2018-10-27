@@ -40,10 +40,13 @@ namespace BlackGui
             explicit CStatusMessageListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CStatusMessageListModel() {}
+            virtual ~CStatusMessageListModel() override {}
 
             //! Set mode
             void setMode(Mode mode);
+
+            //! \copydoc QAbstractItemModel::data
+            virtual QVariant data(const QModelIndex &index, int role) const override;
         };
     } // ns
 } // ns

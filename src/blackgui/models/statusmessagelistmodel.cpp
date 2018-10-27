@@ -67,5 +67,16 @@ namespace BlackGui
                 break;
             }
         }
+
+        QVariant CStatusMessageListModel::data(const QModelIndex &index, int role) const
+        {
+            if (role == Qt::ToolTipRole)
+            {
+                // the underlying model object as summary
+                const CStatusMessage msg(this->at(index));
+                return msg.toHtml();
+            }
+            return CListModelTimestampObjects::data(index, role);
+        }
     } // namespace
 } // namespace
