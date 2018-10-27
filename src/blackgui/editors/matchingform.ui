@@ -206,7 +206,7 @@
    <item>
     <widget class="QGroupBox" name="gb_Exclusion">
      <property name="title">
-      <string>Exclusiion</string>
+      <string>Exclusion</string>
      </property>
      <layout class="QHBoxLayout" name="hl_Exclude">
       <item>
@@ -225,7 +225,7 @@
          <string>models without DB data are ignored</string>
         </property>
         <property name="text">
-         <string>Exclude no DB data</string>
+         <string>Exclude if no DB data</string>
         </property>
        </widget>
       </item>
@@ -274,6 +274,7 @@
   <tabstop>cb_ByVtol</tabstop>
   <tabstop>cb_ByForceMilitary</tabstop>
   <tabstop>cb_ByForceCivilian</tabstop>
+  <tabstop>cb_ModelSetRemoveFailed</tabstop>
   <tabstop>cb_ExclNoExcludedModels</tabstop>
   <tabstop>cb_ExclNoDbData</tabstop>
   <tabstop>cb_ScorePreferColorLiveries</tabstop>
