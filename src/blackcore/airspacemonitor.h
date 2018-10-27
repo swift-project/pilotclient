@@ -267,7 +267,7 @@ namespace BlackCore
         //! \ingroup reverselookup
         BlackMisc::Simulation::CAircraftModel reverseLookupModelWithFlightplanData(
             const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao,
-            const QString &airlineIcao, const QString &livery, const QString &modelString,
+            const QString &airlineIcao, const QString &liveryString, const QString &modelString,
             BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log);
 
         //! Create aircraft in range, this is the only place where a new aircraft should be added

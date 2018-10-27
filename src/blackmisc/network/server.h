@@ -205,7 +205,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CServer &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
