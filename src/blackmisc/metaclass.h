@@ -279,7 +279,8 @@ namespace BlackMisc
         template <size_t I>
         using index = std::integral_constant<size_t, I>;
 
-        constexpr static auto members() { return MetaClass::getMemberList(); }
+        // Trailing return type needed to work around MSVC "function returning auto can not be used before it has been defined" with /permissive-
+        constexpr static auto members() -> decltype(MetaClass::getMemberList()) { return MetaClass::getMemberList(); }
     };
 
     namespace Private

@@ -165,7 +165,7 @@ namespace XSwiftBus
 
         //! Set the value of part of the string (if it is writable)
         void setSubstr(size_t offset, std::string const &s)
-        { assert((s.size() + 1) <= (DataRefTraits::size - offset)); XPLMSetDatab(m_ref, s.c_str(), offset, s.size() + 1); }
+        { assert((s.size() + 1) <= (DataRefTraits::size - offset)); XPLMSetDatab(m_ref, (void *)s.c_str(), (int)offset, (int)s.size() + 1); }
 
         //! Get the value of part of the string
         std::string getSubstr(size_t offset, size_t size) const

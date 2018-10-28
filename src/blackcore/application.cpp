@@ -70,6 +70,9 @@
 #include <cstdlib>
 
 #ifdef BLACK_USE_CRASHPAD
+#if defined(Q_OS_WIN) && !defined(NOMINMAX)
+#define NOMINMAX
+#endif
 #include "crashpad/client/crashpad_client.h"
 #include "crashpad/client/crash_report_database.h"
 #include "crashpad/client/settings.h"

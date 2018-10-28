@@ -15,6 +15,9 @@
 #if defined(Q_OS_MACOS)
 #include <libproc.h>
 #elif defined(Q_OS_WIN)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 #include <psapi.h>
 #endif

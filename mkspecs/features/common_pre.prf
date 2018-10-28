@@ -176,6 +176,12 @@ defineTest(addLibraryDependency) {
 }
 
 ################################
+# Workarounds needed when using MSVC /permissive- flag
+################################
+
+msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FIpermissiveworkarounds.h
+
+################################
 # Experimental support for Clang on Windows
 ################################
 
