@@ -19,7 +19,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifier.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
@@ -36,7 +36,9 @@ namespace BlackCore
     namespace Context
     {
         //! Application context
-        class BLACKCORE_EXPORT CContextApplication : public IContextApplication
+        class BLACKCORE_EXPORT CContextApplication :
+            public IContextApplication,
+            public BlackMisc::CIdentifiable
         {
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
             Q_OBJECT

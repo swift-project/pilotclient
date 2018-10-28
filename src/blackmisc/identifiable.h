@@ -51,6 +51,12 @@ namespace BlackMisc
         //! Destructor
         ~CIdentifiable();
 
+        //! Copy constructor
+        CIdentifiable(const CIdentifiable &) = default;
+
+        //! Copy assignment operator
+        CIdentifiable &operator =(const CIdentifiable &) = default;
+
     private:
         CIdentifier m_identifier;
         QMetaObject::Connection m_connection;

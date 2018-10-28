@@ -30,7 +30,7 @@ namespace BlackCore
     namespace Context
     {
         CContextApplication::CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-            IContextApplication(mode, runtime)
+            IContextApplication(mode, runtime), CIdentifiable(this)
         { }
 
         CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
@@ -209,8 +209,7 @@ namespace BlackCore
         CIdentifier CContextApplication::getApplicationIdentifier() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            static const CIdentifier identifier("swift application");
-            return identifier;
+            return this->identifier();
         }
 
         QString CContextApplication::readFromFile(const QString &fileName) const
