@@ -193,6 +193,9 @@ namespace BlackCore
             //! All registered applications
             virtual BlackMisc::CIdentifierList getRegisteredApplications() const = 0;
 
+            //! Identifier of application, remote side if distributed
+            virtual BlackMisc::CIdentifier getApplicationIdentifier() const = 0;
+
             //! Remote enabled version of writing a text file
             virtual bool writeToFile(const QString &fileName, const QString &content) = 0;
 

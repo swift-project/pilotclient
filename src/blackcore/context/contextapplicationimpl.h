@@ -65,6 +65,7 @@ namespace BlackCore
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
             virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
             virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
+            virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
             virtual QString readFromFile(const QString &fileName) const override;
             virtual bool removeFile(const QString &fileName) override;
             virtual bool existsFile(const QString &fileName) const override;

@@ -184,6 +184,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::CIdentifierList>(QLatin1String("getRegisteredApplications"));
         }
 
+        CIdentifier CContextApplicationProxy::getApplicationIdentifier() const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("getApplicationIdentifier"));
+        }
+
         bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)
         {
             if (fileName.isEmpty()) { return false; }

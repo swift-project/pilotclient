@@ -174,6 +174,13 @@ namespace BlackCore
                 return BlackMisc::CIdentifierList();
             }
 
+            //! \copydoc IContextApplication::getApplicationIdentifier
+            virtual BlackMisc::CIdentifier getApplicationIdentifier() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::CIdentifier();
+            }
+
             //! \copydoc IContextApplication::readFromFile
             virtual QString readFromFile(const QString &fileName) const override
             {

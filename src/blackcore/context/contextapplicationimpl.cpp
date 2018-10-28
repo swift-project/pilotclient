@@ -206,6 +206,13 @@ namespace BlackCore
             return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
         }
 
+        CIdentifier CContextApplication::getApplicationIdentifier() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            static const CIdentifier identifier("swift application");
+            return identifier;
+        }
+
         QString CContextApplication::readFromFile(const QString &fileName) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
