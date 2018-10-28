@@ -134,11 +134,16 @@ namespace BlackSimPlugin
 
         CSimulatorFsxCommon *CFsxSettingsComponent::getFsxOrP3DSimulator() const
         {
-            if (!sGui || !sGui->getISimulator() || sGui->isShuttingDown()) { return nullptr; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator() || !sGui->getISimulator()) { return nullptr; }
+            const CSimulatorPluginInfo plugin = sGui->getIContextSimulator()->getSimulatorPluginInfo();
+            if (plugin.isEmulatedPlugin()) { return nullptr; } // cast would fail
+
             ISimulator *simulator = sGui->getISimulator();
             if (!simulator->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
-            if (simulator->getSimulatorInfo() != m_simulator) { return nullptr; }
-            CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(simulator); // wonder why qobject_cast does not work here
+            if (simulator->getSimulatorInfo() != m_simulator)    { return nullptr; }
+
+            //! \todo KB 11/18 wonder why qobject_cast does not work here
+            CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(simulator);
             return fsx;
         }
     } // ns

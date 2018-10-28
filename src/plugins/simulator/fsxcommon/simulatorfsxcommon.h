@@ -119,6 +119,8 @@ namespace BlackSimPlugin
         {
             Q_OBJECT
             Q_INTERFACES(BlackCore::ISimulator)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create

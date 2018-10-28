@@ -27,6 +27,11 @@ namespace BlackSimPlugin
         //! Common base class for MS flight simulators
         class CSimulatorFsCommon : public Common::CSimulatorPluginCommon
         {
+            Q_OBJECT
+            Q_INTERFACES(BlackCore::ISimulator)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+
         public:
             //! Destructor
             virtual ~CSimulatorFsCommon() override;
