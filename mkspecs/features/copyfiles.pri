@@ -33,3 +33,9 @@ QMAKE_EXTRA_TARGETS += copy_files_cookie
 !isEmpty($${copy_files.input}) {
     PRE_TARGETDEPS += $${copy_files_cookie.target}
 }
+
+# Disable the extra compiler when the .pro file is being parsed by the MSVC
+# project generator to compute dependencies. This works around a bug where
+# relative paths were being treated as absolute, leading to qmake creating
+# empty directories in the root of the current drive.
+contains(TEMPLATE, "vc.*"):!build_pass:QMAKE_EXTRA_COMPILERS -= copy_files
