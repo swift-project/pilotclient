@@ -44,51 +44,62 @@ namespace BlackMisc
         const QString f = win ? CFileUtils::toWindowsLocalPath(file) : file;
 
         // 7za.exe x -o"P:\Temp\XPlane" c:\Users\Foo\Downloads\xswiftbus-allos-0.8.4.802111947.7z
-        const QString cmd = win ? QStringLiteral("7za.exe") : QStringLiteral("7za");
+
         QStringList args;
         args << "x";
         args << "-aoa";
         if (!d.isEmpty()) { args << "-o" + d; }
         args << f;
 
+        QProcess *zipProcess = new QProcess();
+        zipProcess->setWorkingDirectory(CDirectoryUtils::binDirectory());
+        zipProcess->setProgram(QStringLiteral("7za"));
+        zipProcess->setArguments(args);
+
         if (wait)
         {
-            QProcess zipProcess;
-            zipProcess.start(cmd, args);
-            const bool finished = zipProcess.waitForFinished();
-            if (zipProcess.exitStatus() != QProcess::NormalExit) { return false; }
+
+            zipProcess->start();
+            const bool finished = zipProcess->waitForFinished();
+            if (zipProcess->exitStatus() != QProcess::NormalExit) { return false; }
             if (!finished) { return false; }
-            const int r = zipProcess.exitCode();
+            const int r = zipProcess->exitCode();
             if (stdOutAndError)
             {
-                const QString pStdout = zipProcess.readAllStandardOutput();
-                const QString pStderr = zipProcess.readAllStandardError();
+                const QString pStdout = zipProcess->readAllStandardOutput();
+                const QString pStderr = zipProcess->readAllStandardError();
                 stdOutAndError->clear();
                 stdOutAndError->push_back(pStdout);
                 stdOutAndError->push_back(pStderr);
             }
+            zipProcess->deleteLater();
             return r == 0;
         }
         else
         {
-            QProcess *p = new QProcess();
-            p->start(cmd, args);
+            // FIXME: zipProcess is leaked here.
+            zipProcess->start();
             return true;
         }
+
     }
 
     bool CCompressUtils::hasZip7(QStringList *stdOutAndError)
     {
         // just display info
-        const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
-        if (!win) { return CCompressUtils::whichZip7(stdOutAndError); }
+        const bool isLinux = CBuildConfig::isRunningOnLinuxPlatform();
+        if (isLinux) { return CCompressUtils::whichZip7(stdOutAndError); }
 
         // windows check
         QStringList args;
         args << "i";
         QProcess zipProcess;
-        zipProcess.start("7za.exe", args);
+        zipProcess.setWorkingDirectory(CDirectoryUtils::binDirectory());
+        zipProcess.setProgram(QStringLiteral("7za"));
+        zipProcess.setArguments(args);
+        zipProcess.start();
         const bool finished = zipProcess.waitForFinished();
+
         if (stdOutAndError)
         {
             stdOutAndError->clear();
