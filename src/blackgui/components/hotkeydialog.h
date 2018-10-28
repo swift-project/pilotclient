@@ -53,7 +53,7 @@ namespace BlackGui
         private:
             void updateSelectedIndex(int index);
 
-            int m_oldIndex;
+            int m_oldIndex; //!< last selected index
         };
 
         /*!

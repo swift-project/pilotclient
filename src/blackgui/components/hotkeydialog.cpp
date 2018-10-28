@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/inputmanager.h"
 #include "blackgui/components/hotkeydialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/inputmanager.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/input/hotkeycombination.h"
@@ -80,11 +81,23 @@ namespace BlackGui
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
 
+            // get all remote identifiers in case there is no key for a remote machine yet
+            CIdentifierList registeredApplications;
+            if (sGui && sGui->getIContextApplication())
+            {
+                registeredApplications = sGui->getIContextApplication()->getRegisteredApplications();
+                const CIdentifier appIdentifier = sGui->getIContextApplication()->getApplicationIdentifier();
+                registeredApplications.push_back(appIdentifier);
+            }
+
             CIdentifierList machineIdentifiers(identifiers);
+            machineIdentifiers.push_back(registeredApplications); // add the registered applications
+
             if (actionHotkey.isValid()) { machineIdentifiers.push_back(actionHotkey.getApplicableMachine()); }
-            int index = -1;
             const CIdentifierList machineIdentifiersUnique = machineIdentifiers.getMachinesUnique();
-            for (const auto &app : machineIdentifiersUnique)
+
+            int index = -1;
+            for (const CIdentifier &app : machineIdentifiersUnique)
             {
                 ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
                 if (m_actionHotkey.getApplicableMachine().hasSameMachineName(app)) { index = ui->cb_Identifier->count() - 1; }
@@ -104,10 +117,14 @@ namespace BlackGui
             connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::selectHotkey);
             connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
-            connect(sApp->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
-            connect(sApp->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
             connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
             connect(ui->cb_Identifier, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
+
+            if (sGui)
+            {
+                connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
+                connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
+            }
 
             initStyleSheet();
         }
@@ -117,6 +134,7 @@ namespace BlackGui
 
         void CHotkeyDialog::initStyleSheet()
         {
+            if (!sGui) { return; }
             const QString s = sGui->getStyleSheetUtility().styles(
             {
                 CStyleSheetUtility::fileNameFonts(),
@@ -257,7 +275,7 @@ namespace BlackGui
             QLayout *layout = ui->qf_Advanced->layout();
             QLayoutItem *child;
 
-            while ((child = layout->takeAt(0)) != 0)
+            while ((child = layout->takeAt(0)) != nullptr)
             {
                 if (child->widget()) child->widget()->deleteLater();
                 delete child;
@@ -271,7 +289,7 @@ namespace BlackGui
             CKeyboardKey oldKey = ksb->itemData(oldIndex).value<CKeyboardKey>();
             CKeyboardKey newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
 
-            auto combination = m_actionHotkey.getCombination();
+            CHotkeyCombination combination = m_actionHotkey.getCombination();
             combination.replaceKey(oldKey, newKey);
             m_actionHotkey.setCombination(combination);
             synchronize();
