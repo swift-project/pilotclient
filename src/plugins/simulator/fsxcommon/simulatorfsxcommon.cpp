@@ -559,6 +559,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
         {
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+
             CSimulatedAircraft myAircraft(getOwnAircraft());
             CCoordinateGeodetic position;
             position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
@@ -569,6 +571,7 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
             }
             CAircraftSituation aircraftSituation;
+            aircraftSituation.setMSecsSinceEpoch(ts);
             aircraftSituation.setPosition(position);
             // MSFS has inverted pitch and bank angles
             aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitch, CAngleUnit::deg()));
@@ -602,7 +605,8 @@ namespace BlackSimPlugin
                                        qRound(simulatorOwnAircraft.flapsHandlePosition * 100),
                                        dtb(simulatorOwnAircraft.spoilersHandlePosition),
                                        engines,
-                                       dtb(simulatorOwnAircraft.simOnGround));
+                                       dtb(simulatorOwnAircraft.simOnGround),
+                                       ts);
 
             // set values
             this->updateOwnSituation(aircraftSituation);
