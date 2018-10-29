@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>CConfigurationWizard</class>
  <widget class="QWizard" name="CConfigurationWizard">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -137,8 +140,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>672</width>
-         <height>497</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_CopySettingsAndCacheWidget">
@@ -240,8 +243,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>668</width>
-         <height>445</height>
+         <width>98</width>
+         <height>64</height>
         </rect>
        </property>
        <attribute name="label">
@@ -265,8 +268,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>668</width>
-         <height>445</height>
+         <width>98</width>
+         <height>64</height>
         </rect>
        </property>
        <attribute name="label">
