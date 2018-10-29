@@ -240,6 +240,9 @@ namespace BlackCore
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
                             this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedSimulatorModel);
                 Q_ASSERT(c);
+                c = connect(this->getCContextSimulator(), &CContextSimulator::simulatorStatusChanged,
+                            this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedSimulatorStatus);
+                Q_ASSERT(c);
             }
 
             // times
