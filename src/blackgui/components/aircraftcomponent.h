@@ -32,6 +32,7 @@ namespace Ui { class CAircraftComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! Aircraft widget
@@ -76,6 +77,9 @@ namespace BlackGui
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:
+            //! Update the views
+            void updateViews();
+
             //! Info area tab bar has changed
             void onInfoAreaTabBarChanged(int index);
 
@@ -87,6 +91,9 @@ namespace BlackGui
 
             //! Settings have been changed
             void onSettingsChanged();
+
+            //! Own aircraft has been moved
+            void onOwnAircraftMoved();
 
             QScopedPointer<Ui::CAircraftComponent> ui;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed

@@ -17,6 +17,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackcore/network.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/fsdsetup.h"
@@ -46,18 +47,23 @@ namespace BlackGui
             ui(new Ui::CAircraftComponent)
         {
             ui->setupUi(this);
+
+            Q_ASSERT(sGui->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextSimulator());
+            Q_ASSERT(sGui->getIContextOwnAircraft());
+
             this->setCurrentIndex(0);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
             ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
-
             ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
             ui->tvp_AircraftInRange->configureMenu(true, false, true, true);
 
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
             connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this, &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
             this->onSettingsChanged();
@@ -92,10 +98,6 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
 
-            Q_ASSERT(ui->tvp_AircraftInRange);
-            Q_ASSERT(sGui->getIContextNetwork());
-            Q_ASSERT(sGui->getIContextSimulator());
-
             // count < 1 checks if view already has been updated
             if (sGui->getIContextNetwork()->isConnected())
             {
@@ -122,6 +124,13 @@ namespace BlackGui
         {
             const int tabIndex = static_cast<int>(tab);
             this->setCurrentIndex(tabIndex);
+        }
+
+        void CAircraftComponent::updateViews()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
+            ui->tvp_AircraftInRange->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAircraftInRange());
+            ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange(true));
         }
 
         void CAircraftComponent::onInfoAreaTabBarChanged(int index)
@@ -178,6 +187,11 @@ namespace BlackGui
             const CViewUpdateSettings settings = m_settings.get();
             const int ms = settings.getAircraftUpdateTime().toMs();
             m_updateTimer.setInterval(ms);
+        }
+
+        void CAircraftComponent::onOwnAircraftMoved()
+        {
+            this->updateViews();
         }
     } // namespace
 } // namespace
