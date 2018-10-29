@@ -30,7 +30,7 @@ namespace BlackSimPlugin
             CFsuipc(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CFsuipc();
+            virtual ~CFsuipc() override;
 
             //! Open conenction with FSUIPC
             bool connect();
@@ -98,7 +98,7 @@ namespace BlackSimPlugin
 
         protected:
             //! \copydoc QObject::timerEvent
-            void timerEvent(QTimerEvent *event);
+            void timerEvent(QTimerEvent *event) override;
 
         private:
             struct FsuipcWeatherMessage;
