@@ -72,6 +72,9 @@ namespace BlackMisc
             //! Any object in range?
             bool containsObjectInRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
 
+            //! Any object in range?
+            bool containsObjectOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
             //! Any NULL position?
             bool containsNullPosition() const;
 

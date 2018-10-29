@@ -79,6 +79,16 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        bool IGeoObjectList<OBJ, CONTAINER>::containsObjectOutsideRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        {
+            return this->container().containsBy([&](const OBJ & geoObj)
+            {
+                const CLength d = coordinate.calculateGreatCircleDistance(geoObj);
+                return d > range;
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
         bool IGeoObjectList<OBJ, CONTAINER>::containsNullPosition() const
         {
             return this->container().containsBy([&](const ICoordinateGeodetic & geoObj)

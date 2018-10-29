@@ -123,14 +123,20 @@ namespace BlackMisc
             //! Constantly decelarating?
             bool isConstDecelarating(bool alreadySortedLatestFirst = false) const;
 
-            //! Is the ground flag changing for the recent situations
-            bool isGndFlagChanging(bool alreadySortedLatestFirst = false) const;
+            //! Is the ground flag changing for the situations
+            QPair<bool, CAircraftSituation::IsOnGround> isGndFlagStableChanging(bool alreadySortedLatestFirst = false) const;
 
             //! Is just taking off?
             bool isJustTakingOff(bool alreadySortedLatestFirst = false) const;
 
-            //! Is just touch down?
+            //! Is just touching down?
             bool isJustTouchingDown(bool alreadySortedLatestFirst = false) const;
+
+            //! Is taking off?
+            bool isTakingOff(bool alreadySortedLatestFirst = false) const;
+
+            //! Is touching down?
+            bool isTouchingDown(bool alreadySortedLatestFirst = false) const;
 
             //! Is rotating up?
             bool isRotatingUp(bool alreadySortedLatestFirst = false) const;

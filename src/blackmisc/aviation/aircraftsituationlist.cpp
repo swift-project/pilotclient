@@ -278,35 +278,60 @@ namespace BlackMisc
             return true;
         }
 
-        bool CAircraftSituationList::isGndFlagChanging(bool alreadySortedLatestFirst) const
+        QPair<bool, CAircraftSituation::IsOnGround> CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
         {
-            if (this->size() < 2) { return false; }
+            if (this->size() < 2) { return  QPair<bool, CAircraftSituation::IsOnGround>(false, CAircraftSituation::OnGroundSituationUnknown); }
 
-            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
-            const CAircraftSituation s1 = sorted.front();
-            const CAircraftSituation s2 = sorted.back();
-            return (s1.getOnGround() == CAircraftSituation::OnGround && s2.getOnGround() == CAircraftSituation::NotOnGround) ||
-                   (s2.getOnGround() == CAircraftSituation::OnGround && s1.getOnGround() == CAircraftSituation::NotOnGround);
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            const CAircraftSituation::IsOnGround f = sorted.front().getOnGround();
+            const CAircraftSituation::IsOnGround t = sorted.back().getOnGround();
+            QPair<bool, CAircraftSituation::IsOnGround> ret(false, f); // changing to front (latest)
+            if (f == t) { return ret; }
+
+            bool changed = false;
+
+            for (const CAircraftSituation &s : sorted)
+            {
+                if (!changed && s.getOnGround() == f) { continue; } // find 1st changing
+                if (!changed) { changed = true; continue; } // just changed
+                if (s.getOnGround() != t) { return ret; } // jitter, something like gnd, no gnd, gnd
+            }
+            ret.first = changed;
+            return ret;
         }
 
         bool CAircraftSituationList::isJustTakingOff(bool alreadySortedLatestFirst) const
         {
             if (this->size() < 2) { return false; }
 
-            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
             const CAircraftSituation latest = sorted.front();
-            const CAircraftSituation oldest = sorted.back();
-            return (latest.getOnGround() == CAircraftSituation::NotOnGround && oldest.getOnGround() == CAircraftSituation::OnGround);
+            if (latest.getOnGround() != CAircraftSituation::NotOnGround) { return false; }
+            const int c = this->countOnGround(CAircraftSituation::OnGround);
+            return this->size() - 1 == c; // all others on ground
         }
 
         bool CAircraftSituationList::isJustTouchingDown(bool alreadySortedLatestFirst) const
         {
             if (this->size() < 2) { return false; }
 
-            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
             const CAircraftSituation latest = sorted.front();
-            const CAircraftSituation oldest = sorted.back();
-            return (latest.getOnGround() == CAircraftSituation::OnGround && oldest.getOnGround() == CAircraftSituation::NotOnGround);
+            if (latest.getOnGround() != CAircraftSituation::OnGround) { return false; }
+            const int c = this->countOnGround(CAircraftSituation::NotOnGround);
+            return this->size() - 1 == c; // all others not on ground
+        }
+
+        bool CAircraftSituationList::isTakingOff(bool alreadySortedLatestFirst) const
+        {
+            const QPair<bool, CAircraftSituation::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
+            return r.first && r.second == CAircraftSituation::NotOnGround;
+        }
+
+        bool CAircraftSituationList::isTouchingDown(bool alreadySortedLatestFirst) const
+        {
+            const QPair<bool, CAircraftSituation::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
+            return r.first && r.second == CAircraftSituation::OnGround;
         }
 
         bool CAircraftSituationList::isRotatingUp(bool alreadySortedLatestFirst) const

@@ -35,6 +35,13 @@ namespace BlackMisc
               m_spoilersOut(spoilersOut), m_isOnGround(onGround)
         {}
 
+        CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround, qint64 timestamp)
+            : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
+              m_spoilersOut(spoilersOut), m_isOnGround(onGround)
+        {
+            this->setMSecsSinceEpoch(timestamp);
+        }
+
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
