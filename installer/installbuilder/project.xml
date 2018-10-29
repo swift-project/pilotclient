@@ -256,6 +256,38 @@ it and relaunch the uninstaller.</text>
                 </platformTest>
             </ruleList>
         </kill>
+        <deleteFile>
+            <path>/usr/local/var/lib/dbus</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </deleteFile>
+        <deleteFile>
+            <path>/usr/local/var/lib</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+                <fileTest>
+                    <condition>is_empty</condition>
+                    <path>/usr/local/var/lib</path>
+                </fileTest>
+            </ruleList>
+        </deleteFile>
+        <deleteFile>
+            <path>/usr/local/var</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+                <fileTest>
+                    <condition>is_empty</condition>
+                    <path>/usr/local/var</path>
+                </fileTest>
+            </ruleList>
+        </deleteFile>
     </preUninstallationActionList>
     <allowComponentSelection>1</allowComponentSelection>
     <compressionAlgorithm>lzma</compressionAlgorithm>
