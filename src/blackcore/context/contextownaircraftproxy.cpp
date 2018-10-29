@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/context/contextownaircraftproxy.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
@@ -38,24 +39,29 @@ namespace BlackCore
             bool s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                         "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
-
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "changedSelcal", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
-
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "changedCallsign", this, SIGNAL(changedCallsign(BlackMisc::Aviation::CCallsign)));
             Q_ASSERT(s);
-
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "changedAircraftIcaoCodes", this, SIGNAL(changedAircraftIcaoCodes(BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAirlineIcaoCode)));
             Q_ASSERT(s);
-
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "changedPilot", this, SIGNAL(changedPilot(BlackMisc::Network::CUser)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                                   "changedModel", this, SIGNAL(changedModel(BlackMisc::Simulation::CAircraftModel)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "movedAircraft", this, SIGNAL(movedAircraft()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                                   "airborne", this, SIGNAL(airborne()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                                   "touchdown", this, SIGNAL(touchdown()));
             Q_ASSERT(s);
 
             this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());

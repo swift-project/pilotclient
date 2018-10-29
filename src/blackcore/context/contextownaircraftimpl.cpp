@@ -7,31 +7,36 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/db/databaseutils.h"
+#include "blackcore/context/contextownaircraftimpl.h"
+
+// ----- cross context -----
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraftimpl.h"
+#include "blackcore/context/contextsimulator.h"
+// ----- cross context -----
+
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/dbusserver.h"
+#include "blackcore/db/databaseutils.h"
+#include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simplecommandparser.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QReadLocker>
@@ -57,7 +62,13 @@ namespace BlackCore
             CIdentifiable(this)
         {
             Q_ASSERT(this->getRuntime());
+
+            connect(&m_historyTimer, &QTimer::timeout, this, &CContextOwnAircraft::evaluateUpdateHistory);
             this->setObjectName("CContextOwnAircraft");
+            m_historyTimer.setObjectName(this->objectName() + "::historyTimer");
+            m_historyTimer.start(2500);
+            m_situationHistory.setSortHint(CAircraftSituationList::TimestampLatestFirst);
+
             CContextOwnAircraft::registerHelp();
 
             if (sApp && sApp->getWebDataServices())
@@ -175,6 +186,35 @@ namespace BlackCore
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
         }
 
+        void CContextOwnAircraft::evaluateUpdateHistory()
+        {
+            if (!m_history) { return; }
+            if (!this->getIContextSimulator()) { return; }
+
+            if (this->getIContextSimulator()->isSimulatorSimulating())
+            {
+                if (!m_situationHistory.isEmpty())
+                {
+                    QReadLocker rl(&m_lockAircraft);
+                    const CAircraftSituationList situations = m_situationHistory;
+                    rl.unlock();
+
+                    // using copy to minimize lock time
+                    // 500km/h => 1sec: 0.1388 km
+                    static const CLength maxDistance(25, CLengthUnit::km());
+                    const bool jumpDetected = situations.containsObjectOutsideRange(situations.front(), maxDistance);
+
+                    if (jumpDetected)
+                    {
+                        emit this->movedAircraft();
+                        QWriteLocker wl(&m_lockAircraft);
+                        m_situationHistory.clear();
+                    }
+
+                }
+            } // only if simulating
+        }
+
         CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)
         {
             bool modified = false;
@@ -185,10 +225,15 @@ namespace BlackCore
         bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model)
         {
             CAircraftModel updateModel(this->reverseLookupModel(model));
-            QWriteLocker l(&m_lockAircraft);
-            const bool changed = (m_ownAircraft.getModel() != updateModel);
-            if (!changed) { return false; }
-            m_ownAircraft.setModel(updateModel);
+            {
+                QWriteLocker l(&m_lockAircraft);
+                const bool changed = (m_ownAircraft.getModel() != updateModel);
+                if (!changed) { return false; }
+                m_ownAircraft.setModel(updateModel);
+            }
+
+            // changed model
+            emit this->changedModel(model);
             return true;
         }
 
@@ -197,6 +242,12 @@ namespace BlackCore
             QWriteLocker l(&m_lockAircraft);
             // there is intentionally no equal check
             m_ownAircraft.setSituation(situation);
+
+            if (m_situationHistory.isEmpty() || qAbs(situation.getTimeDifferenceMs(m_situationHistory.front())) > MinHistoryDeltaMs)
+            {
+                m_situationHistory.push_frontKeepLatestAdjustedFirst(situation, true);
+                if (m_situationHistory.size() > MaxHistoryElements) { m_situationHistory.pop_back(); }
+            }
             return true;
         }
 
@@ -335,6 +386,21 @@ namespace BlackCore
         void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model)
         {
             this->updateOwnModel(model);
+        }
+
+        void CContextOwnAircraft::xCtxChangedSimulatorStatus(int status)
+        {
+            const ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
+            if (ISimulator::isAnyConnectedStatus(s))
+            {
+                // connected
+            }
+            else
+            {
+                // disconnected
+                QWriteLocker l(&m_lockAircraft);
+                m_situationHistory.clear();
+            }
         }
 
         void CContextOwnAircraft::allSwiftWebDataRead()

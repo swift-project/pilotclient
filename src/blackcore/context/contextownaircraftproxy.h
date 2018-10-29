@@ -15,9 +15,10 @@
 #include <QObject>
 #include <QString>
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
@@ -25,7 +26,6 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 
 class QDBusConnection;
 

@@ -21,6 +21,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -37,6 +38,8 @@
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
+#include <QTimer>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -180,10 +183,16 @@ namespace BlackCore
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
-            bool m_automaticVoiceRoomResolution = true;              //!< automatic voice room resolution, or disable for override
-            QString m_voiceRoom1UrlOverride;                         //!< overridden voice room url
-            QString m_voiceRoom2UrlOverride;                         //!< overridden voice room url
-            mutable QReadWriteLock m_lockAircraft;                   //!< lock aircraft
+            bool m_automaticVoiceRoomResolution = true;  //!< automatic voice room resolution, or disable for override
+            QString m_voiceRoom1UrlOverride;             //!< overridden voice room url
+            QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
+            mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
+
+            static constexpr qint64 MinHistoryDeltaMs = 1000;
+            static constexpr int MaxHistoryElements   = 20;
+            QTimer  m_historyTimer;                      //!< history timer
+            std::atomic_bool m_history { true };         //!< enable history
+            BlackMisc::Aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 
             BlackMisc::CSetting<BlackMisc::Network::Settings::TCurrentTrafficServer> m_currentNetworkServer { this };
 
@@ -195,6 +204,10 @@ namespace BlackCore
             //! \ingroup crosscontextfunction
             void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
 
+            //! Simulator status changed
+            //! \ingroup crosscontextfunction
+            void xCtxChangedSimulatorStatus(int status);
+
             //! Web data loaded
             void allSwiftWebDataRead();
 
@@ -203,6 +216,9 @@ namespace BlackCore
 
             //! Resolve voice rooms
             void resolveVoiceRooms();
+
+            //! Update position history
+            void evaluateUpdateHistory();
 
             //! Reverse lookup of the model against DB data
             static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
