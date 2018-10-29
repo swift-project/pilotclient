@@ -129,8 +129,8 @@ namespace BlackCore
         CCallsignTimestampSet m_atcCallsignTimestamps;      //!< for watchdog (ATC)
         BlackMisc::PhysicalQuantities::CTime m_timeoutAircraft = { 15, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
         BlackMisc::PhysicalQuantities::CTime m_timeoutAtc = { 50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
-        qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
-        qint64 m_doNotRunAgainBefore = -1;     //!< do not run again before, also used to detect debugging
+        qint64 m_lastWatchdogCallMsSinceEpoch;       //!< when last called
+        qint64 m_doNotRunAgainBefore = -1;           //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled
 
         // snapshot
