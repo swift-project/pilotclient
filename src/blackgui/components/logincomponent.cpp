@@ -77,8 +77,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             m_logoffCountdownTimer.setObjectName("CLoginComponent:m_logoffCountdownTimer");
-            ui->pb_LogoffTimeout->setMaximum(LogoffIntervalSeconds);
-            ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
+            this->setLogoffCountdown();
             connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
 
             ui->tw_Network->setCurrentIndex(0);
@@ -203,6 +202,15 @@ namespace BlackGui
                     if (isConnected) { this->startLogoffTimerCountdown(); }
                 }
             }
+        }
+
+        void CLoginComponent::setLogoffCountdown(int timeout)
+        {
+            if (timeout < 0) { timeout = LogoffIntervalSeconds; }
+
+            ui->pb_LogoffTimeout->setMaximum(timeout);
+            ui->pb_LogoffTimeout->setValue(timeout);
+            m_logoffIntervalSeconds = timeout;
         }
 
         void CLoginComponent::loginCancelled()
@@ -450,8 +458,8 @@ namespace BlackGui
 
         void CLoginComponent::startLogoffTimerCountdown()
         {
-            ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
-            m_logoffCountdownTimer.setInterval(1000);
+            ui->pb_LogoffTimeout->setValue(m_logoffIntervalSeconds);
+            m_logoffCountdownTimer.setInterval(m_logoffIntervalSeconds * 1000 / 10);
             m_logoffCountdownTimer.start();
         }
 

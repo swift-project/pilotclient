@@ -81,6 +81,9 @@ namespace BlackGui
             //! Main info area changed
             void mainInfoAreaChanged(const QWidget *currentWidget);
 
+            //! Set a logoof time
+            void setLogoffCountdown(int timeout = -1);
+
         signals:
             //! Login
             void loginOrLogoffSuccessful();
@@ -216,7 +219,9 @@ namespace BlackGui
             //! Has contexts?
             bool hasValidContexts();
 
-            static const int OverlayMessageMs = 5000;
+            static constexpr int OverlayMessageMs = 5000;
+            static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
+
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
@@ -225,8 +230,9 @@ namespace BlackGui
             bool m_updatePilotOnServerChanges = true;
             const QIcon m_iconPlay  {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
-            const int LogoffIntervalSeconds = 20; //!< time before logoff
+            int m_logoffIntervalSeconds = LogoffIntervalSeconds;
             QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
+
             BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         };
