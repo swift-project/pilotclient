@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Interpolation component</string>
   </property>
   <layout class="QVBoxLayout" name="vl_InterpolationComponent">
    <property name="leftMargin">
@@ -71,7 +71,50 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackGui::Components::CAircraftPartsHistory" name="PartsHistory"/>
+        <widget class="BlackGui::Components::CAircraftPartsHistory" name="comp_PartsHistory"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_InterpolationLog">
+      <attribute name="title">
+       <string>Interpolation log.</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_InterpolationLog">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item>
+        <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="BlackGui::Views::CStatusMessageView" name="tvp_InterpolationMessages">
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="pb_ReloadInterpolationMessages">
+         <property name="text">
+          <string>reload</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -91,6 +134,17 @@
    <extends>QFrame</extends>
    <header>blackgui/components/interpolationsetupcomponent.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CStatusMessageView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/statusmessageview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

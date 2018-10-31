@@ -20,16 +20,13 @@
 
 #include <QObject>
 
-class QWidget;
-
 namespace BlackGui
 {
     namespace Filters { class CStatusMessageFilterDialog; }
     namespace Views
     {
         //! Status message view
-        class BLACKGUI_EXPORT CStatusMessageView :
-            public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
+        class BLACKGUI_EXPORT CStatusMessageView : public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
         {
             Q_OBJECT
 

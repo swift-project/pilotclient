@@ -10,6 +10,14 @@
 #include "interpolationcomponent.h"
 #include "ui_interpolationcomponent.h"
 
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackcore/context/contextsimulator.h"
+
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackGui::Views;
+
 namespace BlackGui
 {
     namespace Components
@@ -22,9 +30,21 @@ namespace BlackGui
             ui->tw_InterpolationSetup->setCurrentIndex(0);
 
             connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this, &CInterpolationComponent::requestRenderingRestrictionsWidget);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationComponent::displayInterpolationMessages);
+            connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this, &CInterpolationComponent::displayInterpolationMessages);
         }
 
         CInterpolationComponent::~CInterpolationComponent()
         { }
+
+        void CInterpolationComponent::displayInterpolationMessages()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+            const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
+            if (!cs.isValid()) { return; }
+
+            const CStatusMessageList messages = sGui->getIContextSimulator()->getInterpolationMessages(cs);
+            ui->tvp_InterpolationMessages->updateContainerMaybeAsync(messages);
+        }
     } // ns
 } // ns

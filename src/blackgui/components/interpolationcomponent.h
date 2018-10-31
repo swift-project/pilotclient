@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_INTERPOLATIONCOMPONENT_H
 #define BLACKGUI_COMPONENTS_INTERPOLATIONCOMPONENT_H
 
+#include "blackmisc/aviation/callsign.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include "blackgui/blackguiexport.h"
@@ -39,6 +40,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInterpolationComponent> ui;
+
+            //! Display log messages
+            void displayInterpolationMessages();
         };
     } // ns
 } // ns
