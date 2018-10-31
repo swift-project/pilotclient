@@ -214,6 +214,14 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::getInterpolationMessages
+            virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::CStatusMessageList();
+            }
+
             //! \copydoc IContextSimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override
             {

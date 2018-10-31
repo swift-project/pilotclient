@@ -212,6 +212,9 @@ namespace BlackCore
             //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
             virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) = 0;
 
+            //! Interpolation messages
+            virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 

@@ -324,6 +324,14 @@ namespace BlackCore
             m_simulatorPlugin.second->setInterpolationSetupGlobal(setup);
         }
 
+        CStatusMessageList CContextSimulator::getInterpolationMessages(const CCallsign &callsign) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (callsign.isEmpty()) { return CStatusMessageList(); }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CStatusMessageList(); }
+            return m_simulatorPlugin.second->getInterpolationMessages(callsign);
+        }
+
         CTime CContextSimulator::getTimeSynchronizationOffset() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
