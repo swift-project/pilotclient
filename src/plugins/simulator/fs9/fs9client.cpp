@@ -168,6 +168,12 @@ namespace BlackSimPlugin
             }
         }
 
+        CStatusMessageList CFs9Client::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+        {
+            if (!this->getInterpolator()) { return CStatusMessageList(); }
+            return this->getInterpolator()->getInterpolationMessages(mode);
+        }
+
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);

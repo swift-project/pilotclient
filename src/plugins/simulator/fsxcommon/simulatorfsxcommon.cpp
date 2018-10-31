@@ -355,6 +355,13 @@ namespace BlackSimPlugin
             ISimulator::setFlightNetworkConnected(connected);
         }
 
+        CStatusMessageList CSimulatorFsxCommon::getInterpolationMessages(const CCallsign &callsign) const
+        {
+            if (!m_simConnectObjects.contains(callsign)) { return CStatusMessageList(); }
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            return (m_simConnectObjects[callsign]).getInterpolationMessages(setup.getInterpolatorMode());
+        }
+
         CSimConnectDefinitions::SimObjectRequest CSimulatorFsxCommon::requestToSimObjectRequest(DWORD requestId)
         {
             DWORD v = static_cast<DWORD>(CSimConnectDefinitions::SimObjectEndMarker);

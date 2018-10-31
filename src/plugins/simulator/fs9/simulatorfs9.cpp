@@ -14,7 +14,6 @@
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
 #include "registermetadata.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
@@ -279,6 +278,15 @@ namespace BlackSimPlugin
         void CSimulatorFs9::displayTextMessage(const CTextMessage &message) const
         {
             this->displayStatusMessage(message.asStatusMessage(true, true));
+        }
+
+        CStatusMessageList CSimulatorFs9::getInterpolationMessages(const CCallsign &callsign) const
+        {
+            if (!m_hashFs9Clients.contains(callsign)) { return CStatusMessageList(); }
+            const CFs9Client *client = m_hashFs9Clients[callsign].data();
+            if (!client) { return CStatusMessageList(); }
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+            return client->getInterpolationMessages(setup.getInterpolatorMode());
         }
 
         bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const

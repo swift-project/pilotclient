@@ -224,6 +224,13 @@ namespace BlackSimPlugin
             return m_interpolator->getLastInterpolatedSituation(mode);
         }
 
+        const CStatusMessageList &CSimConnectObject::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+        {
+            static const CStatusMessageList empty;
+            if (!m_interpolator) { return empty; }
+            return m_interpolator->getInterpolationMessages(mode);
+        }
+
         QString CSimConnectObject::toQString() const
         {
             static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7 aEx: %8 aRem: %9");

@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/interpolatormulti.h"
 
 using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
@@ -47,6 +48,11 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+        }
+
+        CStatusMessageList CXPlaneMPAircraft::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+        {
+            return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
         }
 
         CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const

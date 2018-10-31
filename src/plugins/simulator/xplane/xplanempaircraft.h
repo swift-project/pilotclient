@@ -55,6 +55,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
             BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const;
 
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
+            BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 

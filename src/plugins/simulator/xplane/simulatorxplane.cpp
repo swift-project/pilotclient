@@ -145,6 +145,13 @@ namespace BlackSimPlugin
             m_statsAddCurrentTimeMs = -1;
         }
 
+        CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
+        {
+            if (!m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
+        }
+
         void CSimulatorXPlane::clearAllRemoteAircraftData()
         {
             m_aircraftAddedFailed.clear();

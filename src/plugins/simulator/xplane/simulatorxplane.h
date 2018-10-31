@@ -138,6 +138,7 @@ namespace BlackSimPlugin
             virtual void unload() override;
             virtual QString getStatisticsSimulatorSpecific() const override;
             virtual void resetAircraftStatistics() override;
+            virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation

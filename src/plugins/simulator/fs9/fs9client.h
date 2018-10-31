@@ -47,13 +47,18 @@ namespace BlackSimPlugin
                        BlackCore::ISimulator *simulator);
 
             //! Destructor
-            virtual ~CFs9Client();
+            virtual ~CFs9Client() override;
 
             //! Set DirectPlay host address
             void setHostAddress(const QString &hostAddress);
 
-            //! Get interpolator
+            //! Get interpolator @{
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
+            const BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
+            //! @}
+
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
+            BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         public slots:
             //! Send new text message

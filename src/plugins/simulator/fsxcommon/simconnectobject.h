@@ -254,6 +254,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::CInterpolator::getLastInterpolatedSituation
             const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
+            const BlackMisc::CStatusMessageList &getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
