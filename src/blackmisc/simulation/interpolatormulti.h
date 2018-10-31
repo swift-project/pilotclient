@@ -14,6 +14,7 @@
 
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc
 {
@@ -33,6 +34,9 @@ namespace BlackMisc
 
             //! \copydoc CInterpolator::getLastInterpolatedSituation
             const Aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+
+            //! \copydoc CInterpolator::getInterpolationMessages
+            const CStatusMessageList &getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! \copydoc CInterpolator::attachLogger
             void attachLogger(CInterpolationLogger *logger);

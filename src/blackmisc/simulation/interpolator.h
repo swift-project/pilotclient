@@ -22,6 +22,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logcategorylist.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QObject>
 #include <QString>
@@ -233,6 +234,12 @@ namespace BlackMisc
             //! Get count of invalid situations
             int getInvalidSituationsCount() const { return m_invalidSituations; }
 
+            //! Interpolation messages
+            const CStatusMessageList &getInterpolationMessages() const { return m_interpolationMessages; }
+
+            //! Do we have interpolation messages
+            bool hasInterpolationMessages() const { return !m_interpolationMessages.isEmpty(); }
+
         protected:
             //! Constructor
             CInterpolator(const Aviation::CCallsign &callsign,
@@ -281,6 +288,9 @@ namespace BlackMisc
             int m_partsToSituationInterpolationRatio = 2;               //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
             int m_partsToSituationGuessingRatio = 5;                    //!< ratio between parts guessing and situation interpolation
             int m_invalidSituations = 0;                                //!< mainly when there are no new situations
+            qint64 m_lastInvalidLogTs = -1;                             //!< last invalid situation timestamp
+            CStatusMessageList m_interpolationMessages;                 //!< interpolation messages
+
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
             Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
             PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any
@@ -312,8 +322,13 @@ namespace BlackMisc
             //! Deferred init
             void deferredInit();
 
+            //! Return NULL parts and log
+            const BlackMisc::Aviation::CAircraftParts &logAndReturnNullParts(const QString &info, bool log);
+
+            //! Derived class @{
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
+            //! @}
         };
 
         //! \cond PRIVATE

@@ -1737,8 +1737,9 @@ namespace BlackSimPlugin
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         const HRESULT hr = this->logAndTraceSendId(
-                                               SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                                                       static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0, sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
+                                               SimConnect_SetDataOnSimObject(
+                                                   m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
+                                                   static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0, sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
                                                traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
                         if (isOk(hr))
                         {
@@ -1749,10 +1750,15 @@ namespace BlackSimPlugin
                 }
                 else
                 {
+                    // already logged in interpolator
+                    continue;
+
+                    /**
                     static const QString so("SimObject id: %1");
                     const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(objectId));
                     const CStatusMessage sm(this, CStatusMessage::SeverityWarning, msg);
                     this->clampedLog(callsign, sm);
+                    **/
                 }
 
                 // Interpolated parts
@@ -1769,6 +1775,7 @@ namespace BlackSimPlugin
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
 
             const CAircraftParts parts = result;
+            if (parts.isNull()) { return false; }
             if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
             if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, simObject.getCallsign())) { return true; }
 

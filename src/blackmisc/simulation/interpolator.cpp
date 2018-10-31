@@ -179,13 +179,15 @@ namespace BlackMisc
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
             SituationLog log;
             const auto interpolant = derived()->getInterpolant(log);
-            const bool isValid = interpolant.isValid();
+            const bool isValidInterpolant = interpolant.isValid();
 
             CAircraftSituation currentSituation = m_lastSituation;
             CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
 
-            if (isValid)
+            bool isValidInterpolation = false;
+            do
             {
+                if (!isValidInterpolant) { break; }
                 const CInterpolatorPbh pbh = interpolant.pbh();
 
                 // init interpolated situation
@@ -200,6 +202,8 @@ namespace BlackMisc
                 // use derived interpolant function
                 const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
                 currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
+                if (currentSituation.isNull()) { break; }
+
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
                     Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid interpolation situation");
@@ -235,35 +239,62 @@ namespace BlackMisc
                         currentSituation.setPitch(correctedPitchOnGround);
                     }
                 }
+
+                isValidInterpolation = true;
             }
-            else
+            while (false);
+
+            const bool valid = isValidInterpolant && isValidInterpolation;
+            if (!valid)
             {
+                // further handling could go here, mainly we continue with last situation
                 m_invalidSituations++;
 
-                // further handling could go here, mainly we continue with last situation
-                const bool noSituation = currentSituation.isNull();
-                const qint64 diff = noSituation ? -1 : m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
-                const qint64 thresholdMs = noSituation ? qRound(CFsdSetup::c_interimPositionTimeOffsetMsec * 0.5) : qRound(currentSituation.getTimeOffsetMs() * 0.5);
-                const bool threshold = diff > thresholdMs;
-                if (noSituation || threshold)
+                // avoid flooding of log.
+                if (m_currentTimeMsSinceEpoch - m_lastInvalidLogTs > m_lastSituation.getTimeOffsetMs())
                 {
+                    m_lastInvalidLogTs = m_currentTimeMsSinceEpoch;
+                    const bool noSituation = m_lastSituation.isNull();
+
                     // Problem 1, we have no "last situation"
                     // Problem 2, "it takes too long to recover"
+                    CStatusMessage m;
                     if (noSituation)
                     {
-                        CLogMessage(this).warning("No situation no %1 for interpolation reported for '%2'") << m_invalidSituations << m_callsign.asString();
+                        m = CStatusMessage(this).warning("No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") <<
+                            m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                     }
                     else
                     {
-                        CLogMessage(this).warning("Invalid situation, diff %1ms no %2 for interpolation reported for '%3'") << diff << m_invalidSituations << m_callsign.asString();
+                        const qint64 diff = noSituation ? -1 : m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
+                        m = CStatusMessage(this).warning("Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") <<
+                            diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
+                    }
+                    if (!m.isEmpty())
+                    {
+                        if (m_interpolationMessages.isEmpty())
+                        {
+                            // display first message as a hint in the general log
+                            CLogMessage::preformatted(m);
+                        }
+                        m_interpolationMessages.push_back(m);
                     }
                 }
             }// valid?
 
-            // status
-            Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
-            m_currentInterpolationStatus.setInterpolatedAndCheckSituation(isValid, currentSituation);
-            m_lastSituation = currentSituation;
+            // situation and status
+            if (valid)
+            {
+                Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
+                m_lastSituation = currentSituation;
+                m_currentInterpolationStatus.setInterpolatedAndCheckSituation(valid, currentSituation);
+            }
+            else
+            {
+                currentSituation = m_lastSituation;
+                m_currentInterpolationStatus.setSameSituation(true);
+                m_currentInterpolationStatus.setInterpolatedAndCheckSituation(valid, currentSituation);
+            }
 
             // logging
             if (this->doLogging())
@@ -332,38 +363,62 @@ namespace BlackMisc
 
             if (!doGuess && !doInterpolation)
             {
-                m_currentPartsStatus = m_lastPartsStatus;
-                m_currentPartsStatus.setReusedParts(true);
-                return m_lastParts;
+                // reuse
+                return this->logAndReturnNullParts("neither guess nor interpolation", true);
             }
 
-            CAircraftParts parts;
+            CAircraftParts parts = CAircraftParts::null();
             if (m_currentSetup.isAircraftPartsEnabled())
             {
-                // this already logs
+                // this already logs and sets status
                 parts = this->getInterpolatedParts();
             }
 
-            // if we have supported parts, we skip this step, but it can happen
-            // the parts are still empty
+            // if we have supported parts, we skip this step, but it can happen the parts are still empty
             if (!m_currentPartsStatus.isSupportingParts())
             {
                 if (!doGuess)
                 {
-                    m_currentPartsStatus = m_lastPartsStatus;
-                    m_currentPartsStatus.setReusedParts(true);
-                    return m_lastParts;
+                    return this->logAndReturnNullParts("not supporting parts, and marked for guessing", true);
                 }
 
                 // check if model has been thru model matching
-                Q_ASSERT_X(!m_lastSituation.isNull(), Q_FUNC_INFO, "null situations");
-                parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
-                this->logParts(parts, 0, false);
+                if (!m_lastSituation.isNull())
+                {
+                    parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
+                    this->logParts(parts, 0, false);
+                }
+                else
+                {
+                    // quite normal initial situation, just return NULL
+                    return this->logAndReturnNullParts("guessing, but no situation yet", false);
+                }
             }
 
             m_lastParts = parts;
             m_lastPartsStatus = m_currentPartsStatus;
             return parts;
+        }
+
+        template<typename Derived>
+        const CAircraftParts &CInterpolator<Derived>::logAndReturnNullParts(const QString &info, bool log)
+        {
+            if (!m_lastParts.isNull())
+            {
+                m_currentPartsStatus = m_lastPartsStatus;
+                m_currentPartsStatus.setReusedParts(true);
+                return m_lastParts;
+            }
+
+
+            if (log)
+            {
+                const CStatusMessage m = CStatusMessage(this).warning("NULL parts reported for '%1', '%2')") << m_callsign.asString() << info;
+                if (m_interpolationMessages.isEmpty()) { CLogMessage::preformatted(m); }
+                m_interpolationMessages.push_back(m);
+            }
+            m_currentPartsStatus.reset();
+            return CAircraftParts::null();
         }
 
         template<typename Derived>
@@ -418,6 +473,9 @@ namespace BlackMisc
             m_currentInterpolationStatus.reset();
             m_currentPartsStatus.reset();
             m_interpolatedSituationsCounter = 0;
+            m_invalidSituations = 0;
+            m_lastInvalidLogTs = -1;
+            m_interpolationMessages.clear();
         }
 
         template<typename Derived>
@@ -564,6 +622,7 @@ namespace BlackMisc
         void CInterpolationStatus::checkIfValidSituation(const CAircraftSituation &situation)
         {
             m_isValidSituation = !situation.isPositionOrAltitudeNull();
+            if (!m_isValidSituation) { m_isValidSituation = false; }
         }
 
         bool CInterpolationStatus::hasValidInterpolatedSituation() const

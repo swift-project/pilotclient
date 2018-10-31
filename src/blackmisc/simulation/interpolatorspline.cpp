@@ -312,31 +312,38 @@ namespace BlackMisc
             const double t1 = m_pa.t[1];
             const double t2 = m_pa.t[2]; // latest (adjusted)
 
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            bool valid = (t1 < t2) && (m_currentTimeMsSinceEpoc >= t1) && (m_currentTimeMsSinceEpoc < t2);
+            if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first");
-                Q_ASSERT_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
-                Q_ASSERT_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+                Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first"); // that means a bug in our code init the values
+                BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
+                BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
             }
+            if (!valid) { return CAircraftSituation::null(); }
 
             const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
             const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
             const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            valid = CAircraftSituation::isValidVector(m_pa.x) && CAircraftSituation::isValidVector(m_pa.y) && CAircraftSituation::isValidVector(m_pa.z);
+            if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
                 BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
                 BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
             }
+            if (!valid) { return CAircraftSituation::null(); }
 
             CAircraftSituation newSituation(currentSituation);
             const std::array<double, 3> normalVector = {{ newX, newY, newZ }};
             const CCoordinateGeodetic currentPosition(normalVector);
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
+
+            valid = CAircraftSituation::isValidVector(normalVector);
+            if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(CAircraftSituation::isValidVector(normalVector), Q_FUNC_INFO, "invalid vector");
+                BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
             }
+            if (!valid) { return CAircraftSituation::null(); }
 
             const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
             const CAltitude alt(newA, m_altitudeUnit);

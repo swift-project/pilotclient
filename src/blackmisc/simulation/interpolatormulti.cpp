@@ -57,6 +57,18 @@ namespace BlackMisc
             m_spline.initCorrespondingModel(model);
         }
 
+        const CStatusMessageList &CInterpolatorMulti::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+        {
+            switch (mode)
+            {
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolationMessages();
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolationMessages();
+            default: break;
+            }
+            static const CStatusMessageList empty;
+            return empty;
+        }
+
         QString CInterpolatorMulti::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             switch (mode)
