@@ -9,7 +9,7 @@
 
 #include "simulatorfsxcommon.h"
 #include "simconnectsymbols.h"
-#include "simconnectfunctions.h"
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackcore/application.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
@@ -48,6 +48,7 @@ using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin
 {

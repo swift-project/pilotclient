@@ -9,7 +9,7 @@
 
 #include "simconnectdatadefinition.h"
 #include "simconnectsymbols.h"
-#include "simconnectfunctions.h"
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/logmessage.h"
@@ -17,6 +17,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin
 {

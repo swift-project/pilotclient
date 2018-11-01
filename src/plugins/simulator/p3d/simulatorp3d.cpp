@@ -8,7 +8,7 @@
  */
 
 #include "simulatorp3d.h"
-#include "../fsxcommon/simconnectfunctions.h"
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
@@ -24,7 +24,7 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::FsxCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
-using namespace BlackSimPlugin::FsxCommon;
+using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin
 {
