@@ -182,10 +182,18 @@ namespace BlackSimPlugin
             //! Standby
             bool isStandby() const { return getTransponderMode() != 0; }
 
+            //! SB is running
+            void setRunning(bool running) { data[0] = running ? 1 : 0; }
+
+            //! Mark as connected with network
+            void setConnected(bool connected) { data[1] = connected ? 1 : 0; }
+
             //! Set default values
             void setDefaultValues()
             {
                 std::fill(data, data + 128, static_cast<byte>(0));
+                data[0]  = 1; // SB running, indicates the client is running as external app, 0..not running, 1..external app, 2..FS module
+                data[1]  = 0; // SB connected to FSD, 0..not connected, 1..connected
                 data[17] = 1; // standby
                 data[19] = 0; // no ident
             }
@@ -212,9 +220,10 @@ namespace BlackSimPlugin
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
                 DataSimEnvironment,
-                DataClientAreaSb,       //!< whole SB area
-                DataClientAreaSbIdent,  //!< ident single value
-                DataClientAreaSbStandby //!< standby
+                DataClientAreaSb,         //!< whole SB area
+                DataClientAreaSbIdent,    //!< SB ident single value
+                DataClientAreaSbStandby,  //!< SB standby
+                DataClientAreaSbConnected //!< SB connected with network
             };
 
             //! SimConnect request IDs
