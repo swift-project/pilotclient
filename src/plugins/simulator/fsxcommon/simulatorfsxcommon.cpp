@@ -2016,15 +2016,23 @@ namespace BlackSimPlugin
             return lla;
         }
 
-        void CSimulatorFsxCommon::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
+        void CSimulatorFsxCommon::synchronizeTime(const DataDefinitionSimEnvironment *simEnv)
         {
             if (!m_simTimeSynced) { return; }
             if (!this->isConnected())   { return; }
-            if (m_syncDeferredCounter > 0)
+            if (m_syncTimeDeferredCounter > 0)
             {
-                --m_syncDeferredCounter;
+                --m_syncTimeDeferredCounter;
+                return; // wait some time before we snyc again
             }
-            Q_UNUSED(localTimeSim);
+
+            const int zh = simEnv->zuluTimeSeconds / 3600;
+            const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
+            const CTime zuluTimeSim(zh, zm);
+            // const int lh = simEnv->localTimeSeconds / 3600;
+            // const int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
+            // const CTime localTimeSim(lh, lm);
+            // Q_UNUSED(localTimeSim);
 
             QDateTime myDateTime = QDateTime::currentDateTimeUtc();
             if (!m_syncTimeOffset.isZeroEpsilonConsidered())
@@ -2038,7 +2046,12 @@ namespace BlackSimPlugin
             const int targetMins = myTime.hour() * 60 + myTime.minute();
             const int simMins = zuluTimeSim.valueInteger(CTimeUnit::min());
             const int diffMins = qAbs(targetMins - simMins);
-            if (diffMins < 2) { return; }
+            if (diffMins < 2)
+            {
+                // checked and no relevant difference
+                m_syncTimeDeferredCounter = 10; // wait some time to check again
+                return;
+            }
             const HRESULT hr1 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             const HRESULT hr2 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
@@ -2048,7 +2061,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_syncDeferredCounter = 5; // allow some time to sync
+                m_syncTimeDeferredCounter = 5; // allow some time to sync
                 CLogMessage(this).info("Synchronized time to UTC: '%1'") << myTime.toString();
             }
         }

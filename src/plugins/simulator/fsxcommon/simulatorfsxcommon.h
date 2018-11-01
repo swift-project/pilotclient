@@ -475,7 +475,7 @@ namespace BlackSimPlugin
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
 
             //! Sync time with user's computer
-            void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
+            void synchronizeTime(const DataDefinitionSimEnvironment *simEnv);
 
             //! Request data for a CSimConnectObject (aka remote aircraft)
             bool requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);

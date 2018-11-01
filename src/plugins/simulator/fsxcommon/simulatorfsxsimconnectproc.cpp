@@ -253,16 +253,7 @@ namespace BlackSimPlugin
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
                             const DataDefinitionSimEnvironment *simEnv = reinterpret_cast<const DataDefinitionSimEnvironment *>(&pObjData->dwData);
-                            if (simulatorFsxP3D->isTimeSynchronized())
-                            {
-                                const int zh = simEnv->zuluTimeSeconds / 3600;
-                                const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
-                                const CTime zulu(zh, zm);
-                                const int lh = simEnv->localTimeSeconds / 3600;
-                                const int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
-                                const CTime local(lh, lm);
-                                simulatorFsxP3D->synchronizeTime(zulu, local);
-                            }
+                            simulatorFsxP3D->synchronizeTime(simEnv);
                             break;
                         }
                     default:
