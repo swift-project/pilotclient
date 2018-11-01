@@ -138,6 +138,7 @@ namespace BlackGui
 
         void CDbLoginComponent::setUserInfo(const CAuthenticatedUser &user)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             if (user.isAuthenticated())
             {
                 CLogMessage(this).info("User authenticated: %1") << user.toQString();
@@ -152,6 +153,10 @@ namespace BlackGui
                 {
                     ui->le_Info->setText("You can create model change requests");
                 }
+
+                // crashpad info
+                sGui->setCrashInfoUserName(user.getRealNameAndId());
+                sGui->appendCrashInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
             }
             else
             {

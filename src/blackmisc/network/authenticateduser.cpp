@@ -17,6 +17,7 @@
 
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QStringBuilder>
 #include <QtGlobal>
 
 namespace BlackMisc
@@ -38,7 +39,7 @@ namespace BlackMisc
         {
             if (hasValidRealName())
             {
-                return m_realname + " " + getDbKeyAsStringInParentheses();
+                return m_realname % QStringLiteral(" ") % getDbKeyAsStringInParentheses();
             }
             else
             {
@@ -49,13 +50,8 @@ namespace BlackMisc
         QString CAuthenticatedUser::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (m_realname.isEmpty()) return "<no realname>";
-            QString s = m_realname;
-            if (this->hasValidDbKey())
-            {
-                s.append(this->getDbKeyAsStringInParentheses(" "));
-            }
-            return s;
+            if (m_realname.isEmpty()) { return QStringLiteral("<no realname>"); }
+            return m_realname % (this->hasValidDbKey() ? this->getDbKeyAsStringInParentheses(" ") : QStringLiteral(""));
         }
 
         CAuthenticatedUser CAuthenticatedUser::fromDatabaseJson(const QJsonObject &json)
