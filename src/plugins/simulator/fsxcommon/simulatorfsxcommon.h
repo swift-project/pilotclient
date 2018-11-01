@@ -261,6 +261,12 @@ namespace BlackSimPlugin
             //! Remove the CSimConnectObject linked in the trace
             bool removeSimObjectForTrace(const TraceFsxSendId &trace);
 
+            //! Remove camera if any
+            virtual void removeCamera(CSimConnectObject &simObject);
+
+            //! Remove observer if any
+            virtual void removeObserver(CSimConnectObject &simObject);
+
             //! Trace if required, log errors
             HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
 
@@ -280,6 +286,20 @@ namespace BlackSimPlugin
             static bool is32bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 32); }
             static bool is64bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 64); }
             //! @}
+
+            //! Format conversion
+            //! \note must be valid situation
+            static SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
+
+            //! Format conversion
+            //! \note must be valid situation
+            static SIMCONNECT_DATA_PBH aircraftSituationToFsxPBH(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! Format conversion
+            static SIMCONNECT_DATA_INITPOSITION coordinateToFsxPosition(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+
+            //! Format conversion
+            static SIMCONNECT_DATA_LATLONALT coordinateToFsxLatLonAlt(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
             static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
@@ -453,13 +473,6 @@ namespace BlackSimPlugin
 
             //! The SimConnect object for idxs
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
-
-            //! Format conversion
-            //! \note must be valid situation
-            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
-
-            //! Format conversion
-            SIMCONNECT_DATA_INITPOSITION coordinateToFsxPosition(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);

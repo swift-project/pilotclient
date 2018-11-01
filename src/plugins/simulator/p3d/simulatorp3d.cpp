@@ -102,7 +102,7 @@ namespace BlackSimPlugin
             const double latDeg = reference.latitude().value(CAngleUnit::deg());
             const double lngDeg = reference.longitude().value(CAngleUnit::deg());
             const double maxAltFt = hasHeight ? reference.geodeticHeight().value(CLengthUnit::ft()) : 50000;
-            const DWORD dwGridWidth = 1.0;
+            const DWORD dwGridWidth  = 1.0;
             const DWORD dwGridHeight = 1.0;
 
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // P3D we use new request id each time (no simobject)
@@ -136,60 +136,115 @@ namespace BlackSimPlugin
         bool CSimulatorP3D::followAircraft(const CCallsign &callsign)
         {
             if (this->isShuttingDownOrDisconnected()) { return false; }
-            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return false; }
 
-            // Experimental code, suffering from bugs and also requiring
-            // P3D v4.2 (bugs in V4.1
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
-
-            const CAircraftModel model = simObject.getAircraft().getModel();
-            const QString viewName = "Commercial Jet-" + callsign.asString();
-            const char *view = viewName.toLatin1().constData();
-            CLogMessage(this).warning("Modelview %1") << viewName;
-            Q_UNUSED(model);
-
-            HRESULT hr = SimConnect_ChangeView(m_hSimConnect, view);
-            return isOk(hr);
-
-            /**
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.getCallsignByteArray().isEmpty()) { return false; }
-            const char *cs = simObject.getCallsignByteArray().constData();
+            HRESULT hr = s_false();
 
-            HRESULT hr = S_FALSE;
+            //
+            // Experimental code
+            //
+
+            /** version a
+            const char *cameraName = simObject.getCallsignByteArray().constData();
             if (!simObject.hasCamera())
             {
+                SIMCONNECT_DATA_XYZ position; position.x = 25; position.y = 25; position.z = 0;
+                SIMCONNECT_DATA_PBH rotation; rotation.Pitch = 0; rotation.Bank = 0; rotation.Heading = -90;
+                simObject.setCameraPositionAndRotation(position, rotation);
+
                 GUID guid;
                 CoCreateGuid(&guid);
-                const SIMCONNECT_CAMERA_TYPE cameraType = SIMCONNECT_CAMERA_TYPE_OBJECT_CENTER;
-                hr = SimConnect_CreateCameraDefinition(m_hSimConnect, guid, cameraType, cs, simObject.cameraPosition(), simObject.cameraRotation());
-                if (hr == S_OK)
+                // SIMCONNECT_CAMERA_TYPE_OBJECT_AI_VIRTUAL needs a P3D configuration
+                // SIMCONNECT_CAMERA_TYPE_LATLONALT_ORTHOGONAL is a top down view
+                // SIMCONNECT_CAMERA_TYPE_FIXED position at one place
+                const SIMCONNECT_CAMERA_TYPE cameraType = SIMCONNECT_CAMERA_TYPE_OBJECT_AI_CENTER;
+                hr = SimConnect_CreateCameraDefinition(m_hSimConnect, guid, cameraType, cameraName, simObject.cameraPosition(), simObject.cameraRotation());
+                if (isOk(hr))
                 {
                     const SIMCONNECT_OBJECT_ID objectId = static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId());
-                    const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
-                    hr = SimConnect_CreateCameraInstance(m_hSimConnect, guid, cs, objectId, requestId);
-                    if (hr == S_OK)
+                    const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjAircraft();
+                    hr = SimConnect_CreateCameraInstance(m_hSimConnect, guid, cameraName, objectId, requestId);
+                    if (isOk(hr))
                     {
                         simObject.setCameraGUID(guid);
                     }
                 }
+
+            }
+            version a **/
+
+            /** version b
+            const CAircraftModel m = simObject.getAircraftModel();
+            const QString viewName = "Regional Jet-" + callsign.asString();
+            const QByteArray viewNameBA = viewName.toLatin1();
+            hr = SimConnect_ChangeView(m_hSimConnect, viewNameBA.constData());
+            **/
+
+            // Observer is P3D only, not FSX
+            const CAircraftSituation situation = m_lastSentSituations[callsign];
+            if (situation.isNull()) { return false; }
+            SIMCONNECT_DATA_OBSERVER obs;
+            SIMCONNECT_DATA_PBH pbh; pbh.Pitch = pbh.Bank = pbh.Heading = 0;
+            obs.Rotation = pbh;
+            obs.Position = coordinateToFsxLatLonAlt(situation);
+            obs.Regime = SIMCONNECT_OBSERVER_REGIME_GHOST;
+            obs.RotateOnTarget = TRUE;
+            obs.FocusFixed = TRUE;
+            obs.FieldOfViewH = 30; // deg.
+            obs.FieldOfViewV = 30; // deg.
+            obs.LinearStep   = 20; // meters
+            obs.AngularStep  = 10; // deg.
+
+            const char *observerName = simObject.getCallsignByteArray().constData();
+            hr = SimConnect_CreateObserver(m_hSimConnect, observerName, obs);
+            if (isOk(hr))
+            {
+                SIMCONNECT_DATA_XYZ offset;
+                offset.x = offset.y = 30;
+                offset.z = 0;
+                hr = SimConnect_ObserverAttachToEntityOn(m_hSimConnect, observerName, simObject.getObjectId(), offset);
+                if (isOk(hr))
+                {
+                    SimConnect_SetObserverLookAt(m_hSimConnect, observerName, obs.Position);
+
+                    // const QByteArray viewName = QStringLiteral("Observer %1").arg(callsign.asString()).toLatin1();
+                    hr = SimConnect_OpenView(m_hSimConnect, observerName);
+
+                    simObject.setObserverName(callsign.asString());
+                }
             }
 
-            if (!simObject.hasCamera()) { return false; }
-            hr = SimConnect_OpenView(m_hSimConnect, cs);
-            return hr == S_OK;
-            **/
+            return isOk(hr);
         }
 
         HRESULT CSimulatorP3D::initEventsP3D()
         {
-            HRESULT hr = S_OK;
-            if (hr != S_OK)
+            HRESULT hr = s_ok();
+            if (isFailure(hr))
             {
                 CLogMessage(this).error("P3D plugin error: %1") << "initEventsP3D failed";
                 return hr;
             }
             return hr;
+        }
+
+        void CSimulatorP3D::removeCamera(FsxCommon::CSimConnectObject &simObject)
+        {
+            if (!simObject.hasCamera()) { return; }
+            simObject.removeCamera();
+            // const char *cameraName = simObject.getCallsignByteArray().constData();
+            // SimConnect_DeleteCameraInstance(m_hSimConnect, simObject.getCameraGUID(), 0);
+            // SimConnect_CloseView(m_hSimConnect, cameraName);
+        }
+
+        void CSimulatorP3D::removeObserver(CSimConnectObject &simObject)
+        {
+            if (simObject.getObserverName().isEmpty()) { return; }
+
+            QByteArray viewName = simObject.getObserverName().toLatin1();
+            SimConnect_CloseView(m_hSimConnect, viewName.constData());
         }
 
         bool CSimulatorP3D::releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId)

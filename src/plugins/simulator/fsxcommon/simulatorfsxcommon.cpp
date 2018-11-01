@@ -539,6 +539,18 @@ namespace BlackSimPlugin
             return m_simConnectObjects.removeByOtherSimObject(trace.simObject);
         }
 
+        void CSimulatorFsxCommon::removeCamera(CSimConnectObject &simObject)
+        {
+            // not in FSX
+            Q_UNUSED(simObject);
+        }
+
+        void CSimulatorFsxCommon::removeObserver(CSimConnectObject &simObject)
+        {
+            // not in FSX
+            Q_UNUSED(simObject);
+        }
+
         bool CSimulatorFsxCommon::triggerAutoTraceSendId(qint64 traceTimeMs)
         {
             if (m_traceSendId) { return false; } // no need
@@ -1554,6 +1566,8 @@ namespace BlackSimPlugin
 
             // call in SIM
             const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
+            this->removeCamera(simObject);
+            this->removeObserver(simObject);
             const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
             if (isOk(result))
             {
@@ -1968,6 +1982,16 @@ namespace BlackSimPlugin
             return position;
         }
 
+        SIMCONNECT_DATA_PBH CSimulatorFsxCommon::aircraftSituationToFsxPBH(const CAircraftSituation &situation)
+        {
+            // MSFS has inverted pitch and bank angles
+            SIMCONNECT_DATA_PBH pbh;
+            pbh.Pitch = -situation.getPitch().value(CAngleUnit::deg());
+            pbh.Bank  = -situation.getBank().value(CAngleUnit::deg());
+            pbh.Heading = situation.getHeading().value(CAngleUnit::deg());
+            return pbh;
+        }
+
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::coordinateToFsxPosition(const ICoordinateGeodetic &coordinate)
         {
             SIMCONNECT_DATA_INITPOSITION position;
@@ -1980,6 +2004,15 @@ namespace BlackSimPlugin
             position.Bank  = 0;
             position.OnGround = 0;
             return position;
+        }
+
+        SIMCONNECT_DATA_LATLONALT CSimulatorFsxCommon::coordinateToFsxLatLonAlt(const ICoordinateGeodetic &coordinate)
+        {
+            SIMCONNECT_DATA_LATLONALT lla;
+            lla.Latitude = coordinate.latitude().value(CAngleUnit::deg());
+            lla.Longitude = coordinate.longitude().value(CAngleUnit::deg());
+            lla.Altitude = coordinate.geodeticHeight().value(CLengthUnit::ft()); // already corrected in interpolator if there is an underflow
+            return lla;
         }
 
         void CSimulatorFsxCommon::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)

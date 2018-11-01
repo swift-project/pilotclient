@@ -182,11 +182,27 @@ namespace BlackSimPlugin
             //! Camera rotation;
             const SIMCONNECT_DATA_PBH &cameraRotation() const { return m_cameraRotation; }
 
+            //! Camera position/rotation
+            void setCameraPositionAndRotation(const SIMCONNECT_DATA_XYZ &position, const SIMCONNECT_DATA_PBH &rotation)
+            {
+                m_cameraPosition = position;
+                m_cameraRotation = rotation;
+            }
+
             //! Camera GUID
             GUID getCameraGUID() const { return m_cameraGuid; }
 
             //! Set camera GUID
             void setCameraGUID(GUID guid) { m_cameraGuid = guid; m_camera = true; }
+
+            //! No camera anymore
+            void removeCamera() { m_camera = false; }
+
+            //! Set observer
+            void setObserverName(const QString &observer) { m_observerName = observer; }
+
+            //! Observer name
+            const QString &getObserverName() const { return m_observerName; }
 
             //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
             void resetState();
@@ -288,6 +304,7 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_XYZ m_cameraPosition;
             SIMCONNECT_DATA_PBH m_cameraRotation;
             QByteArray m_callsignByteArray;
+            QString m_observerName;
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };          //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation

@@ -55,6 +55,12 @@ namespace BlackSimPlugin
             virtual HRESULT initEventsP3D() override;
 
 #ifdef Q_OS_WIN64
+            //! \copydoc FsxCommon::CSimulatorFsxCommon::removeCamera
+            virtual void removeCamera(FsxCommon::CSimConnectObject &simObject) override;
+
+            //! \copydoc FsxCommon::CSimulatorFsxCommon::removeObserver
+            virtual void removeObserver(FsxCommon::CSimConnectObject &simObject) override;
+
             //! \copydoc FsxCommon::CSimulatorFsxCommon::releaseAIControl
             //! \remark P3D API release of control
             virtual bool releaseAIControl(const FsxCommon::CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId) override;
