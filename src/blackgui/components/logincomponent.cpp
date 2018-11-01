@@ -298,7 +298,10 @@ namespace BlackGui
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
                     static const QString extraInfo("[%1]");
+                    sGui->setCrashInfoUserName(currentServer.getUser().getRealNameAndId());
                     sGui->setExtraWindowTitle(extraInfo.arg(ownAircraft.getCallsignAsString()));
+                    sGui->appendCrashInfo(currentServer.getServerSessionId());
+
                     m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
                     ui->le_HomeBase->setText(currentServer.getUser().getHomeBase().asString());
