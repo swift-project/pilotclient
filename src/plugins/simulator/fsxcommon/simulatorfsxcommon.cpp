@@ -347,10 +347,19 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::setFlightNetworkConnected(bool connected)
         {
+            // toggled?
             if (connected == !this->isFlightNetworkConnected())
             {
                 // toggling, we trace for a while to better monitor those "critical" phases
                 this->triggerAutoTraceSendId();
+            }
+
+            // update SB area network connected
+            byte sbNetworkConnected = connected ? 1u : 0u;
+            HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
+            if (isFailure(hr))
+            {
+                CLogMessage(this).warning("Setting network connected failed (SB offsets)");
             }
 
             ISimulator::setFlightNetworkConnected(connected);
@@ -418,7 +427,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimRunningDeferred(qint64 referenceTs)
         {
-            if (m_simSimulating) { return; }
+            if (m_simSimulating) { return; } // already simulatig
             if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
             m_simSimulating = true; // only place where this should be set to true
             m_simConnected = true;
@@ -439,8 +448,8 @@ namespace BlackSimPlugin
                                       SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
                               "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-
             // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
+            // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
             HRESULT hr4 = this->logAndTraceSendId(
                               SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
                                       CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
@@ -2194,7 +2203,8 @@ namespace BlackSimPlugin
             m_simulatingChangedTs = -1;
             m_simConnected = false;
             m_simSimulating = false;
-            m_syncDeferredCounter =  0;
+            m_sbDataReceived = 0;
+            m_syncTimeDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_ownAircraftUpdate = 0;
             m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);

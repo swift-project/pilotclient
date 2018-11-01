@@ -372,6 +372,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_CLIENT_DATA:
                 {
                     if (!simulatorFsxP3D->m_useSbOffsets) { break; }
+                    simulatorFsxP3D->m_sbDataReceived++;
                     const SIMCONNECT_RECV_CLIENT_DATA *clientData = static_cast<SIMCONNECT_RECV_CLIENT_DATA *>(pData);
                     if (clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
