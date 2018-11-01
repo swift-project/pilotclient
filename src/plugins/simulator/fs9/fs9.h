@@ -139,40 +139,40 @@ namespace BlackSimPlugin
         //! Reduced multiplayer position packet
         struct REDUCED_LLAPBH_DATA
         {
-            quint32 pbh = 0; //!< Struct pitch/bank/heading
-            qint32 lat_i = 0; //!< Latitude value - integer part
-            qint32 lon_hi = 0; //!< Longitude value - integer part
-            qint32 alt_i = 0; //!< Altitude value - integer part
-            quint16 lat_f = 0; //!< Latitude value - decimal part
+            quint32 pbh = 0;    //!< Struct pitch/bank/heading
+            qint32 lat_i = 0;   //!< Latitude value - integer part
+            qint32 lon_hi = 0;  //!< Longitude value - integer part
+            qint32 alt_i = 0;   //!< Altitude value - integer part
+            quint16 lat_f = 0;  //!< Latitude value - decimal part
             quint16 lon_lo = 0; //!< Longitude value - decimal part
-            quint16 alt_f = 0; //!< Altitude value - decimal part
+            quint16 alt_f = 0;  //!< Altitude value - decimal part
         };
 
         //! Multiplayer position packet in slew mode
         struct MULTIPLAYER_PACKET_POSITION_SLEWMODE
         {
             quint32 application_time = 0; //!< Application time - ignored
-            quint32 packet_index = 0; //!< Packet index
+            quint32 packet_index = 0;     //!< Packet index
             std::array<quint8, 4> reserved = std::array<quint8, 4> {{0, 0, 0, 0}}; //!< Reserved
-            quint32 pbh = 0; //!< Pitch/Bank/Heading
-            qint32 lat_i = 0; //!< Latitude - integer
-            qint32 lon_hi = 0; //!< Longitude - integer
-            qint32 alt_i = 0; //!< Altitude - integer
-            quint16 lat_f = 0; //!< Latitude - fraction
+            quint32 pbh = 0;    //!< Pitch/Bank/Heading
+            qint32 lat_i = 0;   //!< Latitude - integer
+            qint32 lon_hi = 0;  //!< Longitude - integer
+            qint32 alt_i = 0;   //!< Altitude - integer
+            quint16 lat_f = 0;  //!< Latitude - fraction
             quint16 lon_lo = 0; //!< Longitude - fraction
-            quint16 alt_f = 0; //!< Altitude - fraction
+            quint16 alt_f = 0;  //!< Altitude - fraction
             std::array<quint8, 2> unknown = std::array<quint8, 2> {{0, 0}}; //!< Unknown packet
         };
 
         //! Full multiplayer position and velocity packet
         struct MULTIPLAYER_PACKET_POSITION_VELOCITY
         {
-            quint32 packet_index = 0; //!< Packet index
+            quint32 packet_index = 0;     //!< Packet index
             quint32 application_time = 0; //!< Application time - ignored
-            qint32 lat_velocity = 0; //!< Latitude velocity
-            qint32 lon_velocity = 0; //!< Longitude velocity
-            qint32 alt_velocity = 0; //!< Altitude velocity
-            quint32 ground_velocity = 0; //!< Ground velocity
+            qint32 lat_velocity = 0;      //!< Latitude velocity
+            qint32 lon_velocity = 0;      //!< Longitude velocity
+            qint32 alt_velocity = 0;      //!< Altitude velocity
+            quint32 ground_velocity = 0;  //!< Ground velocity
             std::array<quint8, 4> reserved = std::array<quint8, 4> {{0, 0, 0, 0}}; //!< Reserved
             quint32 pbh    = 0; //!< Pitch/Bank/Heading
             qint32 lat_i   = 0; //!< Latitude - integer

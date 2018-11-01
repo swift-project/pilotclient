@@ -14,6 +14,7 @@
 #include "multiplayerpacketparser.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -26,6 +27,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackCore;
+using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin
 {
@@ -45,35 +47,37 @@ namespace BlackSimPlugin
 
         MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
         {
+            Q_UNUSED(oldSituation);
+            Q_UNUSED(updateInterval);
             MPPositionVelocity positionVelocity;
 
             // Latitude - integer and decimal places
             const double latitude = newSituation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
             positionVelocity.lat_i = static_cast<qint32>(latitude);
-            positionVelocity.lat_f = qAbs((latitude - positionVelocity.lat_i) * 65536);
+            positionVelocity.lat_f = static_cast<quint16>(qRound(qAbs((latitude - positionVelocity.lat_i) * 65536)));
 
             // Longitude - integer and decimal places
             const double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionVelocity.lon_hi = static_cast<qint32>(longitude);
-            positionVelocity.lon_lo = qAbs((longitude - positionVelocity.lon_hi) * 65536);
+            positionVelocity.lon_lo = static_cast<quint16>(qRound(qAbs((longitude - positionVelocity.lon_hi) * 65536)));
 
             // Altitude - integer and decimal places
             const double altitude = newSituation.getAltitude().value(CLengthUnit::m());
             positionVelocity.alt_i = static_cast<qint32>(altitude);
-            positionVelocity.alt_f = (altitude - positionVelocity.alt_i) * 65536;
+            positionVelocity.alt_f = static_cast<quint16>(qRound((altitude - positionVelocity.alt_i) * 65536));
 
             // Pitch, Bank and Heading
             FS_PBH pbhstrct;
-            pbhstrct.hdg = newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
-            pbhstrct.pitch = std::floor(newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier());
-            pbhstrct.bank = std::floor(newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier());
+            pbhstrct.hdg   = static_cast<unsigned int>(qRound(newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
+            pbhstrct.pitch = qRound(std::floor(newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier()));
+            pbhstrct.bank  = qRound(std::floor(newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
-            pbhstrct.bank = ~pbhstrct.bank;
+            pbhstrct.bank  = ~pbhstrct.bank;
             positionVelocity.pbh = pbhstrct.pbh;
 
             // Ground velocity
-            positionVelocity.ground_velocity = newSituation.getGroundSpeed().value(CSpeedUnit::m_s());
+            positionVelocity.ground_velocity = static_cast<quint16>(newSituation.getGroundSpeed().valueInteger(CSpeedUnit::m_s()));
 
             // Altitude velocity
             CCoordinateGeodetic oldPosition = oldSituation.getPosition();
@@ -91,9 +95,9 @@ namespace BlackSimPlugin
             const CLength distanceLongitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
 
             // Latitude and Longitude velocity
-            positionVelocity.lat_velocity = distanceLatitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;
+            positionVelocity.lat_velocity = qRound(distanceLatitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval);
             if (oldPosition.latitude().value() > newSituation.latitude().value()) positionVelocity.lat_velocity *= -1;
-            positionVelocity.lon_velocity = distanceLongitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;
+            positionVelocity.lon_velocity = qRound(distanceLongitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval);
             if (oldPosition.longitude().value() > newSituation.longitude().value()) positionVelocity.lon_velocity *= -1;
 
             return positionVelocity;
@@ -106,23 +110,23 @@ namespace BlackSimPlugin
             // Latitude - integer and decimal places
             const double latitude = situation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
             positionSlewMode.lat_i = static_cast<qint32>(latitude);
-            positionSlewMode.lat_f = qAbs((latitude - positionSlewMode.lat_i) * 65536);
+            positionSlewMode.lat_f = static_cast<quint16>(qAbs((latitude - positionSlewMode.lat_i) * 65536));
 
             // Longitude - integer and decimal places
             const double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionSlewMode.lon_hi = static_cast<qint32>(longitude);
-            positionSlewMode.lon_lo = qAbs((longitude - positionSlewMode.lon_hi) * 65536);
+            positionSlewMode.lon_lo = static_cast<quint16>(qAbs((longitude - positionSlewMode.lon_hi) * 65536));
 
             // Altitude - integer and decimal places
             double altitude = situation.getAltitude().value(CLengthUnit::m());
             positionSlewMode.alt_i = static_cast<qint32>(altitude);
-            positionSlewMode.alt_f = (altitude - positionSlewMode.alt_i) * 65536;
+            positionSlewMode.alt_f = static_cast<quint16>((altitude - positionSlewMode.alt_i) * 65536);
 
             // Pitch, Bank and Heading
             FS_PBH pbhstrct;
-            pbhstrct.hdg = situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
-            pbhstrct.pitch = std::floor(situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier());
-            pbhstrct.bank = std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier());
+            pbhstrct.hdg   = static_cast<unsigned int>(qRound(situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
+            pbhstrct.pitch = qRound(std::floor(situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier()));
+            pbhstrct.bank  = qRound(std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
             pbhstrct.bank = ~pbhstrct.bank;
@@ -149,19 +153,19 @@ namespace BlackSimPlugin
 
         void CFs9Client::setHostAddress(const QString &hostAddress)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
 
             // Create our IDirectPlay8Address Host Address
-            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                             CLSCTX_INPROC_SERVER,
-                                             IID_IDirectPlay8Address,
-                                             reinterpret_cast<void **>(&m_hostAddress))))
+            if (isFailure(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                                CLSCTX_INPROC_SERVER,
+                                                IID_IDirectPlay8Address,
+                                                reinterpret_cast<void **>(&m_hostAddress))))
             {
                 logDirectPlayError(hr);
                 return;
             }
 
-            if (FAILED(hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
+            if (isFailure(hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
             {
                 logDirectPlayError(hr);
                 return;
@@ -203,11 +207,11 @@ namespace BlackSimPlugin
 
         HRESULT CFs9Client::enumDirectPlayHosts()
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
 
-            if (FAILED(hr = createHostAddress()))
+            if (isFailure(hr = createHostAddress()))
             {
-                qWarning() << "Failed to create host address!";
+                qWarning() << "isFailure to create host address!";
                 return hr;
             }
 
@@ -218,16 +222,16 @@ namespace BlackSimPlugin
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
             // We now have the host address so lets enum
-            if (FAILED(hr = m_directPlayPeer->EnumHosts(&dpAppDesc,             // pApplicationDesc
-                            m_hostAddress,                  // pdpaddrHost
-                            m_deviceAddress,                // pdpaddrDeviceInfo
-                            nullptr, 0,                     // pvUserEnumData, size
-                            0,                              // dwEnumCount
-                            0,                              // dwRetryInterval
-                            0,                              // dwTimeOut
-                            nullptr,                        // pvUserContext
-                            nullptr,                        // pAsyncHandle
-                            DPNENUMHOSTS_SYNC)))            // dwFlags
+            if (isFailure(hr = m_directPlayPeer->EnumHosts(&dpAppDesc,             // pApplicationDesc
+                               m_hostAddress,                  // pdpaddrHost
+                               m_deviceAddress,                // pdpaddrDeviceInfo
+                               nullptr, 0,                     // pvUserEnumData, size
+                               0,                              // dwEnumCount
+                               0,                              // dwRetryInterval
+                               0,                              // dwTimeOut
+                               nullptr,                        // pvUserContext
+                               nullptr,                        // pAsyncHandle
+                               DPNENUMHOSTS_SYNC)))            // dwFlags
             {
                 return logDirectPlayError(hr);
             }
@@ -236,19 +240,19 @@ namespace BlackSimPlugin
 
         HRESULT CFs9Client::createHostAddress()
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
 
             // Create our IDirectPlay8Address Host Address
-            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                             CLSCTX_INPROC_SERVER,
-                                             IID_IDirectPlay8Address,
-                                             reinterpret_cast<void **>(&m_hostAddress))))
+            if (isFailure(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                                CLSCTX_INPROC_SERVER,
+                                                IID_IDirectPlay8Address,
+                                                reinterpret_cast<void **>(&m_hostAddress))))
             {
                 return logDirectPlayError(hr);
             }
 
             // Set the SP for our Host Address
-            if (FAILED(hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP)))
+            if (isFailure(hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
                 return logDirectPlayError(hr);
             }
@@ -257,9 +261,9 @@ namespace BlackSimPlugin
             const wchar_t hostname[] = L"localhost";
 
             // Set the hostname into the address
-            if (FAILED(hr = m_hostAddress->AddComponent(DPNA_KEY_HOSTNAME, hostname,
-                            2 * (wcslen(hostname) + 1), /*bytes*/
-                            DPNA_DATATYPE_STRING)))
+            if (isFailure(hr = m_hostAddress->AddComponent(DPNA_KEY_HOSTNAME, hostname,
+                               2 * (wcslen(hostname) + 1), /*bytes*/
+                               DPNA_DATATYPE_STRING)))
             {
                 return logDirectPlayError(hr);
             }
@@ -269,12 +273,12 @@ namespace BlackSimPlugin
 
         HRESULT CFs9Client::connectToSession(const CCallsign &callsign)
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
             if (m_clientStatus == Connected) { return hr; }
 
             QMutexLocker locker(&m_mutexHostList);
 
-            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.toQString().size() + 1]);
+            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[static_cast<uint>(callsign.toQString().size() + 1)]);
             callsign.toQString().toWCharArray(wszPlayername.data());
             wszPlayername[callsign.toQString().size()] = 0;
 
@@ -290,7 +294,7 @@ namespace BlackSimPlugin
             m_player.dwDataSize = sizeof(PLAYER_INFO_STRUCT);
             m_player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
             m_player.pwszName = wszPlayername.data();
-            if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
+            if (isFailure(hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
             {
                 return logDirectPlayError(hr);
             }
@@ -302,16 +306,16 @@ namespace BlackSimPlugin
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
             // We are now ready to host the app
-            if (FAILED(hr = m_directPlayPeer->Connect(&dpAppDesc,      // AppDesc
-                            m_hostAddress,
-                            m_deviceAddress,
-                            nullptr,
-                            nullptr,
-                            nullptr, 0,
-                            nullptr,
-                            nullptr,
-                            nullptr,
-                            DPNCONNECT_SYNC)))
+            if (isFailure(hr = m_directPlayPeer->Connect(&dpAppDesc,      // AppDesc
+                               m_hostAddress,
+                               m_deviceAddress,
+                               nullptr,
+                               nullptr,
+                               nullptr, 0,
+                               nullptr,
+                               nullptr,
+                               nullptr,
+                               DPNCONNECT_SYNC)))
             {
                 return logDirectPlayError(hr);
             }
@@ -320,7 +324,7 @@ namespace BlackSimPlugin
             CLogMessage(this).debug() << m_callsign << " connected to session.";
             sendMultiplayerChangePlayerPlane();
 
-            m_timerId = startTimer(m_updateInterval.value(CTimeUnit::ms()));
+            m_timerId = startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
 
             m_clientStatus = Connected;
             emit statusChanged(m_callsign, m_clientStatus);
@@ -330,11 +334,11 @@ namespace BlackSimPlugin
 
         HRESULT CFs9Client::closeConnection()
         {
-            HRESULT hr = S_OK;
+            HRESULT hr = s_ok();
 
             if (m_clientStatus == Disconnected) { return hr; }
             CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
-            if (FAILED(hr = m_directPlayPeer->Close(0)))
+            if (isFailure(hr = m_directPlayPeer->Close(0)))
             {
                 return logDirectPlayError(hr);
             }
