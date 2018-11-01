@@ -300,6 +300,20 @@ namespace BlackCore
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
         //! @}
 
+        // ----------------------- CrashPad info ---------------------------------
+
+        //! Extra annotation for crash to easier identify annotation
+        void setCrashInfo(const BlackMisc::CCrashInfo &info);
+
+        //! User name for crash info
+        void setCrashInfoUserName(const QString &name);
+
+        //! Append crash info
+        void appendCrashInfo(const QString &info);
+
+        //! Get the crash info
+        const BlackMisc::CCrashInfo &getCrashInfo() const { return m_crashInfo; }
+
         // ----------------------- Input ----------------------------------------
 
         //! The input manager, if available
@@ -669,9 +683,6 @@ namespace BlackCore
 
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();
-
-        //! Extra annotation for crash to easier identify annotation
-        void setCrashInfo(const BlackMisc::CCrashInfo &info);
 
 #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;

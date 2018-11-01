@@ -1646,6 +1646,16 @@ namespace BlackCore
         m_crashInfo = info;
     }
 
+    void CApplication::setCrashInfoUserName(const QString &name)
+    {
+        m_crashInfo.setUserName(name);
+    }
+
+    void CApplication::appendCrashInfo(const QString &info)
+    {
+        m_crashInfo.appendInfo(info);
+    }
+
     void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
     {
         // run in QAM thread

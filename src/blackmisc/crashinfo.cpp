@@ -20,6 +20,13 @@ namespace BlackMisc
         return QStringLiteral("{ %1, %2 }").arg(this->getInfo(), this->getUserName());
     }
 
+    void CCrashInfo::appendInfo(const QString &extraInfo)
+    {
+        if (extraInfo.isEmpty()) { return; }
+        if (m_info.isEmpty()) { this->setInfo(extraInfo); return; }
+        m_info += QStringLiteral(" ") % extraInfo;
+    }
+
     CVariant CCrashInfo::propertyByIndex(const CPropertyIndex &index) const
     {
         if (index.isMyself()) { return CVariant::from(*this); }

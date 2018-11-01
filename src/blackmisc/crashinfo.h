@@ -45,6 +45,9 @@ namespace BlackMisc
         //! Set info
         void setInfo(const QString &info) { m_info = info; }
 
+        //! Append some info
+        void appendInfo(const QString &extraInfo);
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
