@@ -107,6 +107,9 @@ namespace BlackMisc
             //! Real name + homebase
             QString getRealNameAndHomeBase(const QString &separator = QString(" ")) const;
 
+            //! Real name and id
+            QString getRealNameAndId() const;
+
             //! Validate, provide details about issues
             CStatusMessageList validate() const;
 

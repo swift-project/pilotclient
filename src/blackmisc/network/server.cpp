@@ -177,8 +177,8 @@ namespace BlackMisc
         QString CServer::getServerSessionId() const
         {
             if (!this->isConnected()) { return ""; }
-            static const QString session("%1 %2:%3 %4 %5");
-            return session.arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
+            static const QString session("%1 %2:%3 [%4] %5 %6");
+            return session.arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getEcosystem().getSystemString(), this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
         }
 
         CVariant CServer::propertyByIndex(const CPropertyIndex &index) const

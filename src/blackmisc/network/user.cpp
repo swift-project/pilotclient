@@ -55,6 +55,16 @@ namespace BlackMisc
             return this->getRealName() % separator % this->getHomeBase().asString();
         }
 
+        QString CUser::getRealNameAndId() const
+        {
+            if (this->hasRealName())
+            {
+                if (this->hasId()) { return this->getRealName() % QStringLiteral(" (") % this->getId()  % QStringLiteral(")"); }
+                return this->getRealName();
+            }
+            return this->getId();
+        }
+
         void CUser::setCallsign(const CCallsign &callsign)
         {
             m_callsign = callsign;
