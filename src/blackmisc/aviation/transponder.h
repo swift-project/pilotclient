@@ -37,7 +37,7 @@ namespace BlackMisc
             enum TransponderMode
             {
                 StateStandby = 0, //!< not a real mode, more a state
-                ModeMil1 = 1, ModeMil2 = 2, ModeMil3 = 3, ModeMil4 = 4, ModeMil5 = 5,
+                ModeMil1 = 1, ModeMil2 = 2, ModeMil3 = 3, ModeMil4 = 4, ModeMil5 = 5, //!< military modes
                 StateIdent = 10,  //!< not a real mode, more a state
                 ModeA = 11,
                 ModeC = 12,
@@ -47,7 +47,7 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex
             {
-                IndexMode = BlackMisc::CPropertyIndex::GlobalIndexCTransponder,
+                IndexMode = CPropertyIndex::GlobalIndexCTransponder,
                 IndexModeAsString,
                 IndexTransponderCode,
                 IndexTransponderCodeFormatted,
@@ -93,6 +93,9 @@ namespace BlackMisc
             //! Transponder mode
             TransponderMode getTransponderMode() const { return static_cast<TransponderMode>(m_transponderMode); }
 
+            //! Transponder mode toggled
+            void toggleTransponderMode();
+
             //! Transponder mode as string
             static const QString &modeAsString(TransponderMode mode);
 
@@ -111,7 +114,7 @@ namespace BlackMisc
             //! Set transponder code
             void setTransponderCode(const QString &transponderCode);
 
-            //! Mode from string
+             //! Mode from string
             static TransponderMode modeFromString(const QString &modeString);
 
             //! Set transponder mode
@@ -127,10 +130,10 @@ namespace BlackMisc
             void setIFR() { m_transponderCode = 2000; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

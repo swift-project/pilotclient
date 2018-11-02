@@ -141,6 +141,12 @@ namespace BlackCore
             //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
             virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
+            //! \copydoc IContextOwnAircraft::toggleTransponderMode
+            virtual void toggleTransponderMode() override;
+
+            //! \copydoc IContextOwnAircraft::setTransponderMode
+            virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
+
             //! \copydoc IContextOwnAircraft::setAudioOutputVolume
             virtual void setAudioOutputVolume(int outputVolume) override;
 

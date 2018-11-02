@@ -113,6 +113,21 @@ namespace BlackCore
             virtual void setAudioOutputVolume(int outputVolume) override
             {
                 Q_UNUSED(outputVolume);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc IContextOwnAircraft::toggleTransponderMode
+            virtual void toggleTransponderMode() override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc IContextOwnAircraft::setTransponderMode
+            virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override
+            {
+                Q_UNUSED(mode);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
 
             //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls

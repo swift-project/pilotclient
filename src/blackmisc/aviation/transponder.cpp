@@ -59,7 +59,7 @@ namespace BlackMisc
 
         bool CTransponder::isInNormalSendingMode() const
         {
-            switch (m_transponderMode)
+            switch (this->getTransponderMode())
             {
             case ModeA:
             case ModeC:
@@ -73,6 +73,18 @@ namespace BlackMisc
             case StateStandby:
             default:
                 return false;
+            }
+        }
+
+        void CTransponder::toggleTransponderMode()
+        {
+            if (this->getTransponderMode() == StateIdent || this->isInNormalSendingMode())
+            {
+                this->setTransponderMode(StateStandby);
+            }
+            else
+            {
+                this->setTransponderMode(ModeC);
             }
         }
 

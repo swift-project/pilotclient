@@ -206,9 +206,11 @@ namespace BlackCore
 
                     if (jumpDetected)
                     {
+                        {
+                            QWriteLocker wl(&m_lockAircraft);
+                            m_situationHistory.clear();
+                        }
                         emit this->movedAircraft();
-                        QWriteLocker wl(&m_lockAircraft);
-                        m_situationHistory.clear();
                     }
 
                 }
@@ -218,7 +220,7 @@ namespace BlackCore
         CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)
         {
             bool modified = false;
-            CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+            const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
             return reverseModel;
         }
 
@@ -298,7 +300,7 @@ namespace BlackCore
             return changed;
         }
 
-        bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit, const CIdentifier &originator)
+        bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit unit, const CIdentifier &originator)
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
@@ -318,7 +320,7 @@ namespace BlackCore
             {
                 com2.setFrequencyActive(frequency);
             }
-            return updateCockpit(com1, com2, xpdr, originator);
+            return this->updateCockpit(com1, com2, xpdr, originator);
         }
 
         bool CContextOwnAircraft::updateOwnAircraftPilot(const CUser &pilot)
@@ -330,6 +332,36 @@ namespace BlackCore
             }
             emit this->changedPilot(pilot);
             return true;
+        }
+
+        void CContextOwnAircraft::toggleTransponderMode()
+        {
+            CTransponder xpdr;
+            CComSystem com1;
+            CComSystem com2;
+            {
+                QReadLocker l(&m_lockAircraft);
+                com1 = m_ownAircraft.getCom1System();
+                com2 = m_ownAircraft.getCom2System();
+                xpdr = m_ownAircraft.getTransponder();
+            }
+            xpdr.toggleTransponderMode();
+            this->updateCockpit(com1, com2, xpdr, this->identifier());
+        }
+
+        bool CContextOwnAircraft::setTransponderMode(CTransponder::TransponderMode mode)
+        {
+            CTransponder xpdr;
+            CComSystem com1;
+            CComSystem com2;
+            {
+                QReadLocker l(&m_lockAircraft);
+                com1 = m_ownAircraft.getCom1System();
+                com2 = m_ownAircraft.getCom2System();
+                xpdr = m_ownAircraft.getTransponder();
+            }
+            xpdr.setTransponderMode(mode);
+            return this->updateCockpit(com1, com2, xpdr, this->identifier());
         }
 
         bool CContextOwnAircraft::updateOwnCallsign(const CCallsign &callsign)

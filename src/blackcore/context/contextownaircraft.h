@@ -128,6 +128,12 @@ namespace BlackCore
             //! Update own cockpit
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) = 0;
 
+            //! Toggle XPDR mode
+            virtual void toggleTransponderMode() = 0;
+
+            //! Set XPDR mode
+            virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) = 0;
+
             //! Tune in a COM frequency
             virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) = 0;
 
