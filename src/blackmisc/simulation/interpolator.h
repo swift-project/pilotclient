@@ -279,6 +279,7 @@ namespace BlackMisc
 
             // values for current interpolation step
             qint64 m_currentTimeMsSinceEpoch = -1;                      //!< current time
+            qint64 m_lastInvalidLogTs = -1;                             //!< last invalid situation timestamp
             Aviation::CAircraftSituationList m_currentSituations;       //!< current situations obtained by remoteAircraftSituationsAndChange
             Aviation::CAircraftSituationChange m_pastSituationsChange;  //!< situations change of provider (i.e. network) situations
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;  //!< used setup
@@ -288,7 +289,6 @@ namespace BlackMisc
             int m_partsToSituationInterpolationRatio = 2;               //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
             int m_partsToSituationGuessingRatio = 5;                    //!< ratio between parts guessing and situation interpolation
             int m_invalidSituations = 0;                                //!< mainly when there are no new situations
-            qint64 m_lastInvalidLogTs = -1;                             //!< last invalid situation timestamp
             CStatusMessageList m_interpolationMessages;                 //!< interpolation messages
 
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation

@@ -1426,8 +1426,7 @@ namespace BlackSimPlugin
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
                     BLACK_VERIFY_X(invalidSituation, Q_FUNC_INFO, "Expect valid situation");
-                    const CStatusMessage sm = CStatusMessage(this).warning("Invalid situation for '%1'") << callsign;
-                    this->clampedLog(callsign, sm);
+                    CLogMessage(this).warning("Invalid situation for '%1'") << callsign;
                 }
             }
 
@@ -1775,7 +1774,6 @@ namespace BlackSimPlugin
                         if (isOk(hr))
                         {
                             this->rememberLastSent(result); // remember
-                            this->removedClampedLog(callsign);
                         }
                     }
                 }
@@ -1784,7 +1782,7 @@ namespace BlackSimPlugin
                     // already logged in interpolator
                     continue;
 
-                    /**
+                    /** KB removed 2018-11 as already logged in interpolator
                     static const QString so("SimObject id: %1");
                     const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(objectId));
                     const CStatusMessage sm(this, CStatusMessage::SeverityWarning, msg);

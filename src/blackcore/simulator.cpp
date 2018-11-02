@@ -972,6 +972,7 @@ namespace BlackCore
         return m + addDetails.arg(details);
     }
 
+    /** deprecated 2018-11
     bool ISimulator::clampedLog(const CCallsign &callsign, const CStatusMessage &message)
     {
         if (message.isEmpty()) { return false; }
@@ -988,6 +989,7 @@ namespace BlackCore
     {
         m_clampedLogMsg.remove(callsign);
     }
+    depreatced **/
 
     void ISimulator::setStatsRemoteAircraftUpdate(qint64 startTime, bool limited)
     {
