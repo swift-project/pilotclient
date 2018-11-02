@@ -292,11 +292,12 @@ namespace BlackCore
         }
     }
 
-    CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign) const
+    CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign, bool forceFullUpdate) const
     {
         CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
         setup.consolidateWithClient(client);
+        if (forceFullUpdate) { setup.setForceFullInterpolation(forceFullUpdate); }
         return setup;
     }
 
@@ -709,14 +710,14 @@ namespace BlackCore
     CAirportList ISimulator::getWebServiceAirports() const
     {
         if (this->isShuttingDown()) { return CAirportList(); }
-        if (!sApp->hasWebDataServices()) { return CAirportList(); }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirportList(); }
         return sApp->getWebDataServices()->getAirports();
     }
 
     CAirport ISimulator::getWebServiceAirport(const CAirportIcaoCode &icao) const
     {
         if (this->isShuttingDown()) { return CAirport(); }
-        if (!sApp->hasWebDataServices()) { return CAirport(); }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirport(); }
         return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
     }
 
@@ -771,8 +772,15 @@ namespace BlackCore
             QPointer<ISimulator> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
-                if (!myself) { return; }
-                emit myself->simulatorStatusChanged(newStatus);
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+
+                // now simulating
+                if (newStatus.testFlag(Simulating))
+                {
+                    m_updateAllRemoteAircraftCycles = 10; // force an update of every remote aircraft
+                }
+
+                emit this->simulatorStatusChanged(newStatus); // only place where we should emit the signal, use emitSimulatorCombinedStatus to emit
             });
         }
     }
@@ -833,7 +841,7 @@ namespace BlackCore
     bool ISimulator::isUpdateAircraftLimitedWithStats(qint64 startTime)
     {
         const bool limited = this->isUpdateAircraftLimited(startTime);
-        this->setStatsRemoteAircraftUpdate(startTime, limited);
+        this->finishUpdateRemoteAircraftAndSetStatistics(startTime, limited);
         return limited;
     }
 
@@ -991,7 +999,7 @@ namespace BlackCore
     }
     depreatced **/
 
-    void ISimulator::setStatsRemoteAircraftUpdate(qint64 startTime, bool limited)
+    void ISimulator::finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
         const qint64 dt = now - startTime;
@@ -1002,6 +1010,7 @@ namespace BlackCore
         m_updateRemoteAircraftInProgress = false;
         m_statsLastUpdateAircraftRequestedMs = startTime;
 
+        if (m_updateAllRemoteAircraftCycles > 0) { m_updateAllRemoteAircraftCycles--; }
         if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
         if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
         if (limited) { m_statsUpdateAircraftLimited++; }
@@ -1098,6 +1107,7 @@ namespace BlackCore
         Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
 
         if (!model.hasModelString()) { return; }
+        if (this->isShuttingDown())  { return; }
         if (this->getOwnAircraftModel() != model)
         {
             if (CDatabaseUtils::hasDbAircraftData())

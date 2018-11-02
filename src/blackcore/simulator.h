@@ -266,7 +266,7 @@ namespace BlackCore
 
         //! Consolidate setup with other data like from BlackMisc::Simulation::IRemoteAircraftProvider
         //! \threadsafe
-        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign) const;
+        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign, bool forceFullUpdate) const;
 
         //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
         virtual bool setInterpolationSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
@@ -328,7 +328,7 @@ namespace BlackCore
 
     signals:
         //! Simulator combined status
-        void simulatorStatusChanged(SimulatorStatus status);
+        void simulatorStatusChanged(SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
 
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
@@ -518,13 +518,14 @@ namespace BlackCore
         // void removedClampedLog(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Update stats and flags
-        void setStatsRemoteAircraftUpdate(qint64 startTime, bool limited = false);
+        void finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited = false);
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-        bool   m_pausedSimFreezesInterpolation = false;   //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool   m_pausedSimFreezesInterpolation  = false;  //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
+        int    m_updateAllRemoteAircraftCycles  = 0;      //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
         int    m_timerId = -1;                            //!< dispatch timer id
         int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count
         int    m_statsUpdateAircraftLimited = 0;          //!< skipped because of max.update limitations
@@ -573,7 +574,7 @@ namespace BlackCore
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
-        int m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
+        int m_statsPhysicallyAddedAircraft   = 0; //!< statistics, how many aircraft added
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
 
         // highlighting
@@ -585,8 +586,8 @@ namespace BlackCore
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
         QTimer m_oneSecondTimer;                  //!< multi purpose timer with 1 sec. interval
 
-        // misc. as callsigns
-        bool   m_networkConnected = false;        //!< flight network connected
+        // misc.
+        bool                              m_networkConnected = false;          //!< flight network connected
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;             //!< callsigns which will be rendered
         BlackMisc::CConnectionGuard       m_remoteAircraftProviderConnections; //!< connected signal/slots
     };

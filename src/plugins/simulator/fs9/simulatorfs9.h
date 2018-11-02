@@ -84,6 +84,9 @@ namespace BlackSimPlugin
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
+            // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
+            // updateRemoteAircraft()
+
         private:
             //! Dispatch FSUIPC reading
             //! \remark very frequently called

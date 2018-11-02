@@ -148,7 +148,7 @@ namespace BlackSimPlugin
         CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
         {
             if (!m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, false);
             return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
         }
 
@@ -795,6 +795,7 @@ namespace BlackSimPlugin
             PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
+            const bool updateAllAircraft = m_updateAllRemoteAircraftCycles > 0;
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
@@ -807,7 +808,7 @@ namespace BlackSimPlugin
                 planesTransponders.modeCs.push_back(transponderMode == CTransponder::ModeC);
 
                 // setup
-                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
 
                 // interpolated situation/parts
                 const CInterpolationResult result = xplaneAircraft.getInterpolation(currentTimestamp, setup, aircraftNumber++);
@@ -816,7 +817,7 @@ namespace BlackSimPlugin
                     const CAircraftSituation interpolatedSituation(result);
 
                     // update situation
-                    if (!this->isEqualLastSent(interpolatedSituation))
+                    if (updateAllAircraft || !this->isEqualLastSent(interpolatedSituation))
                     {
                         this->rememberLastSent(interpolatedSituation);
                         planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
@@ -837,7 +838,7 @@ namespace BlackSimPlugin
                 const CAircraftParts parts(result);
                 if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
                 {
-                    if (!this->isEqualLastSent(parts, callsign))
+                    if (updateAllAircraft || !this->isEqualLastSent(parts, callsign))
                     {
                         this->rememberLastSent(parts, callsign);
                         planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
@@ -881,7 +882,7 @@ namespace BlackSimPlugin
             }
 
             // stats
-            this->setStatsRemoteAircraftUpdate(currentTimestamp);
+            this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp);
         }
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()

@@ -14,11 +14,12 @@
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
 #include "registermetadata.h"
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <QTimer>
 #include <algorithm>
 
@@ -111,10 +112,10 @@ namespace BlackSimPlugin
             m_fs9Host(fs9Host),
             m_lobbyClient(lobbyClient)
         {
-            //! \fixme KB 7/2017 change or remove when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
+            //! \fixme KB 7/2017 change or remove comment when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [ = ]
             {
-                emit this->simulatorStatusChanged(ISimulator::Disconnected);
+                this->emitSimulatorCombinedStatus();
             });
 
             this->setDefaultModel(
@@ -164,7 +165,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            CCallsign callsign = newRemoteAircraft.getCallsign();
+            const CCallsign callsign = newRemoteAircraft.getCallsign();
             if (m_hashFs9Clients.contains(callsign))
             {
                 // already exists, remove first
@@ -447,7 +448,7 @@ namespace BlackSimPlugin
             if (m_fs9Host->getHostAddress().isEmpty()) { return false; } // host not yet set up
             if (canLobbyConnect)
             {
-                if (m_isConnecting || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK)
+                if (m_isConnecting || isOk(m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress())))
                 {
                     m_isConnecting = true;
                     CLogMessage(this).info("swift is joining FS9 to the multiplayer session...");

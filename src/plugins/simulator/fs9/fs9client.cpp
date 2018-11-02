@@ -182,8 +182,10 @@ namespace BlackSimPlugin
         {
             Q_UNUSED(event);
 
+            // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
             if (m_clientStatus == Disconnected) { return; }
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign);
+            const bool forceFullUpdate = false;
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign, forceFullUpdate);
             const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup, 0);
 
             // Test only for successful position. FS9 requires constant positions

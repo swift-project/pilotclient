@@ -368,7 +368,7 @@ namespace BlackSimPlugin
         CStatusMessageList CSimulatorFsxCommon::getInterpolationMessages(const CCallsign &callsign) const
         {
             if (!m_simConnectObjects.contains(callsign)) { return CStatusMessageList(); }
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, false);
             return (m_simConnectObjects[callsign]).getInterpolationMessages(setup.getInterpolatorMode());
         }
 
@@ -1450,7 +1450,7 @@ namespace BlackSimPlugin
             }
 
             // setup
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, true);
             const bool sendGround = setup.isSendingGndFlagToSimulator();
 
             // FSX/P3D adding
@@ -1743,6 +1743,7 @@ namespace BlackSimPlugin
 
             int simObjectNumber = 0;
             const bool traceSendId = this->isTracingSendId();
+            const bool updateAllAircraft = m_updateAllRemoteAircraftCycles > 0;
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
@@ -1755,7 +1756,7 @@ namespace BlackSimPlugin
                 const DWORD objectId = simObject.getObjectId();
 
                 // setup
-                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
                 const bool sendGround = setup.isSendingGndFlagToSimulator();
 
                 // Interpolated situation
@@ -1763,7 +1764,7 @@ namespace BlackSimPlugin
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    if (setup.isForcingFullInterpolation() || !this->isEqualLastSent(result.getInterpolatedSituation()))
+                    if (updateAllAircraft || setup.isForcingFullInterpolation() || !this->isEqualLastSent(result.getInterpolatedSituation()))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         const HRESULT hr = this->logAndTraceSendId(
@@ -1796,7 +1797,7 @@ namespace BlackSimPlugin
             } // all callsigns
 
             // stats
-            this->setStatsRemoteAircraftUpdate(currentTimestamp);
+            this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp);
         }
 
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result)
@@ -2231,7 +2232,7 @@ namespace BlackSimPlugin
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     // Shutdown or unloaded
-                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                    if (this->isShuttingDown() || !myself) { return; }
                     m_initFsxTerrainProbes = false; // probes will re-init
                 });
             }
@@ -2440,7 +2441,7 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
-                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || this->isShuttingDown()) { return; }
                 CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
             });
         }
