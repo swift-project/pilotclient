@@ -231,7 +231,10 @@ namespace BlackMisc
             void setFuelTime(const QString &fuelTime) { m_fuelTime = PhysicalQuantities::CTime(fuelTime); }
 
             //! Set planned cruise altitude
-            void setCruiseAltitude(const CAltitude &cruiseAltitude) { m_cruiseAltitude = cruiseAltitude; }
+            void setCruiseAltitude(const CAltitude &cruiseAltitude) { m_cruiseAltitude = cruiseAltitude; m_cruiseAltitudeString.clear(); }
+
+            //! Cruising altitude already as string
+            void setCruiseAltitudeString(const QString &altitudeString) { m_cruiseAltitudeString = altitudeString; }
 
             //! Set planned cruise TAS
             void setCruiseTrueAirspeed(const PhysicalQuantities::CSpeed &cruiseTrueAirspeed) { m_cruiseTrueAirspeed = cruiseTrueAirspeed; }
@@ -292,6 +295,9 @@ namespace BlackMisc
 
             //! Cruising altitudes
             const CAltitude &getCruiseAltitude() const { return m_cruiseAltitude; }
+
+            //! Cruising altitude already as string
+            const QString &getCruiseAltitudeString() const { return m_cruiseAltitudeString; }
 
             //! Get planned cruise TAS
             const PhysicalQuantities::CSpeed &getCruiseTrueAirspeed() const { return m_cruiseTrueAirspeed; }
@@ -427,6 +433,7 @@ namespace BlackMisc
             PhysicalQuantities::CTime m_enrouteTime;
             PhysicalQuantities::CTime m_fuelTime;
             CAltitude m_cruiseAltitude;
+            QString m_cruiseAltitudeString;
             PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
             FlightRules m_flightRules;
             QString m_route;
@@ -446,7 +453,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(enrouteTime),
                 BLACK_METAMEMBER(fuelTime),
                 BLACK_METAMEMBER(cruiseAltitude),
-                BLACK_METAMEMBER(cruiseTrueAirspeed),
+                BLACK_METAMEMBER(cruiseAltitude),
+                BLACK_METAMEMBER(cruiseAltitudeString),
                 BLACK_METAMEMBER(flightRules),
                 BLACK_METAMEMBER(route),
                 BLACK_METAMEMBER(remarks),
