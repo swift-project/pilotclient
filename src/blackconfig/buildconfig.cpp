@@ -24,16 +24,6 @@
 
 namespace BlackConfig
 {
-    bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
-    {
-        return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithP3DSupport();
-    }
-
-    bool CBuildConfig::isCompiledWithFlightSimulatorSupport()
-    {
-        return CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithXPlaneSupport();
-    }
-
     const QString &CBuildConfig::swiftGuiExecutableName()
     {
         static const QString s("swiftguistd");
@@ -59,16 +49,6 @@ namespace BlackConfig
                executable == CBuildConfig::swiftGuiExecutableName();
     }
 
-    bool CBuildConfig::isRunningOnWindowsNtPlatform()
-    {
-#ifdef Q_OS_WIN
-        // QSysInfo::WindowsVersion only available on Win platforms
-        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based);
-#else
-        return false;
-#endif
-    }
-
     bool CBuildConfig::isRunningOnWindows10()
     {
 #ifdef Q_OS_WIN
@@ -78,29 +58,6 @@ namespace BlackConfig
 #else
         return false;
 #endif
-    }
-
-    bool CBuildConfig::isRunningOnMacOSPlatform()
-    {
-#ifdef Q_OS_MACOS
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isRunningOnLinuxPlatform()
-    {
-#ifdef Q_OS_LINUX
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isRunningOnUnixPlatform()
-    {
-        return CBuildConfig::isRunningOnMacOSPlatform() || CBuildConfig::isRunningOnLinuxPlatform();
     }
 
     const QString &CBuildConfig::getPlatformString()
@@ -117,24 +74,6 @@ namespace BlackConfig
             return QString("unknown");
         }());
         return p;
-    }
-
-    bool CBuildConfig::isDebugBuild()
-    {
-#ifdef QT_DEBUG
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isReleaseBuild()
-    {
-#ifdef QT_NO_DEBUG
-        return true;
-#else
-        return false;
-#endif
     }
 
     namespace Private

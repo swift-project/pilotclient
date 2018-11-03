@@ -1,0 +1,120 @@
+/* Copyright (C) 2018
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef IN_BUILDCONFIG_H
+#error This file is only to be included by buildconfig.inc
+#endif
+
+$$DEFINE_WITH_BLACKCORE#define WITH_BLACKCORE
+$$DEFINE_WITH_BLACKSOUND#define WITH_BLACKSOUND
+$$DEFINE_WITH_BLACKINPUT#define WITH_BLACKINPUT
+$$DEFINE_WITH_BLACKGUI#define WITH_BLACKGUI
+$$DEFINE_WITH_SWIFTDATA#define WITH_SWIFTDATA
+$$DEFINE_WITH_SWIFTGUI#define WITH_SWIFTGUI
+$$DEFINE_WITH_SWIFTCORE#define WITH_SWIFTCORE
+$$DEFINE_WITH_FSX#define WITH_FSX
+$$DEFINE_WITH_P3D#define WITH_P3D
+$$DEFINE_WITH_FS9#define WITH_FS9
+$$DEFINE_WITH_FSUIPC#define WITH_FSUIPC
+$$DEFINE_WITH_XPLANE#define WITH_XPLANE
+$$DEFINE_SWIFT_VATSIM_SUPPORT#define SWIFT_VATSIM_SUPPORT
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
+{
+#ifdef WITH_BLACKCORE
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackSound()
+{
+#ifdef WITH_BLACKSOUND
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackInput()
+{
+#ifdef WITH_BLACKINPUT
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithFs9Support()
+{
+#ifdef WITH_FS9
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithP3DSupport()
+{
+#ifdef WITH_P3D
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsxSupport()
+{
+#ifdef WITH_FSX
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport()
+{
+#ifdef WITH_FSUIPC
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithXPlaneSupport()
+{
+#ifdef WITH_XPLANE
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithGui()
+{
+#ifdef WITH_BLACKGUI
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr bool BlackConfig::CBuildConfig::isVatsimVersion()
+{
+#ifdef SWIFT_VATSIM_SUPPORT
+    return true;
+#else
+    return false;
+#endif
+}
+
+constexpr int BlackConfig::CBuildConfig::versionMajor() { return $$BLACK_VER_MAJ; }
+constexpr int BlackConfig::CBuildConfig::versionMinor() { return $$BLACK_VER_MIN; }
+constexpr int BlackConfig::CBuildConfig::versionMicro() { return $$BLACK_VER_MIC; }

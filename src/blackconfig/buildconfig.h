@@ -24,64 +24,64 @@ namespace BlackConfig
     {
     public:
         //! with BlackCore?
-        static bool isCompiledWithBlackCore(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithBlackCore(); // defined in buildconfig_gen.inc.in
 
         //! with BlackSound?
-        static bool isCompiledWithBlackSound(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithBlackSound(); // defined in buildconfig_gen.inc.in
 
         //! with BlackInput?
-        static bool isCompiledWithBlackInput(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithBlackInput(); // defined in buildconfig_gen.inc.in
 
         //! with FS9 support?
-        static bool isCompiledWithFs9Support(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithFs9Support(); // defined in buildconfig_gen.inc.in
 
         //! with FSX support?
-        static bool isCompiledWithFsxSupport(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithFsxSupport(); // defined in buildconfig_gen.inc.in
 
         //! with P3D support?
-        static bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.inc.in
 
         //! with Fsuipc support?
-        static bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
 
         //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
-        static bool isCompiledWithMsFlightSimulatorSupport();
+        static constexpr bool isCompiledWithMsFlightSimulatorSupport();
 
         //! with XPlane support?
-        static bool isCompiledWithXPlaneSupport(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithXPlaneSupport(); // defined in buildconfig_gen.inc.in
 
         //! with any simulator libraries
-        static bool isCompiledWithFlightSimulatorSupport();
+        static constexpr bool isCompiledWithFlightSimulatorSupport();
 
         //! with GUI?
-        static bool isCompiledWithGui(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isCompiledWithGui(); // defined in buildconfig_gen.inc.in
 
         //! Debug build?
-        static bool isDebugBuild();
+        static constexpr bool isDebugBuild();
 
         //! Release build?
-        static bool isReleaseBuild();
+        static constexpr bool isReleaseBuild();
 
         //! Local build for developers
         static bool isLocalDeveloperDebugBuild();
 
         //! Vatsim enabled version?
-        static bool isVatsimVersion(); // defined in buildconfig_gen.cpp.in
+        static constexpr bool isVatsimVersion(); // defined in buildconfig_gen.inc.in
 
         //! Running on Windows NT platform?
-        static bool isRunningOnWindowsNtPlatform();
+        static constexpr bool isRunningOnWindowsNtPlatform();
 
         //! Windows 10
         static bool isRunningOnWindows10();
 
         //! Running on MacOS platform?
-        static bool isRunningOnMacOSPlatform();
+        static constexpr bool isRunningOnMacOSPlatform();
 
         //! Running on Linux platform?
-        static bool isRunningOnLinuxPlatform();
+        static constexpr bool isRunningOnLinuxPlatform();
 
         //! Running on Unix (Linux or Mac OS X) platform
-        static bool isRunningOnUnixPlatform();
+        static constexpr bool isRunningOnUnixPlatform();
 
         //! Info such as Win32, Win64, MacOs, Linux
         static const QString &getPlatformString();
@@ -149,14 +149,19 @@ namespace BlackConfig
 
     private:
         //! Major version
-        static int versionMajor(); // defined in buildconfig_gen.cpp.in
+        static constexpr int versionMajor(); // defined in buildconfig_gen.inc.in
 
         //! Minor version
-        static int versionMinor(); // defined in buildconfig_gen.cpp.in
+        static constexpr int versionMinor(); // defined in buildconfig_gen.inc.in
 
         //! Patch version
-        static int versionMicro(); // defined in buildconfig_gen.cpp.in
+        static constexpr int versionMicro(); // defined in buildconfig_gen.inc.in
     };
 } // ns
+
+// inline definitions of constexpr methods
+#define IN_BUILDCONFIG_H
+#include "buildconfig.inc"
+#undef IN_BUILDCONFIG_H
 
 #endif // guard

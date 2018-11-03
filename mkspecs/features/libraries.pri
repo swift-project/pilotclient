@@ -79,3 +79,6 @@ blackconfig {
     addStaticLibraryDependency(blackconfig)
     LIBS *= -lblackconfig
 }
+
+# to include buildconfig_gen.inc
+INCLUDEPATH *= $$BuildRoot/generated

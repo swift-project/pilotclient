@@ -4,10 +4,15 @@ TARGET = blackconfig
 TEMPLATE = lib
 CONFIG += staticlib
 
-buildconfig_gen.input = buildconfig_gen.cpp.in
-buildconfig_gen.output = $$BuildRoot/buildconfig_gen.cpp
-GENERATED_SOURCES += $$BuildRoot/buildconfig_gen.cpp
-QMAKE_SUBSTITUTES += buildconfig_gen
+buildconfig_gen.cpp.input = buildconfig_gen.cpp.in
+buildconfig_gen.cpp.output = $$BuildRoot/generated/buildconfig_gen.cpp
+
+buildconfig_gen.inc.input = buildconfig_gen.inc.in
+buildconfig_gen.inc.output = $$BuildRoot/generated/buildconfig_gen.inc
+
+GENERATED_SOURCES += $$BuildRoot/generated/buildconfig_gen.cpp
+GENERATED_FILES += $$BuildRoot/generated/buildconfig_gen.inc
+QMAKE_SUBSTITUTES += buildconfig_gen.cpp buildconfig_gen.inc
 
 INCLUDEPATH += ..
 
@@ -15,7 +20,7 @@ DEFINES += LOG_IN_FILE
 HEADERS +=  *.h
 SOURCES +=  *.cpp
 DESTDIR = $$DestRoot/lib
-OTHER_FILES += buildconfig_gen.cpp.in
+OTHER_FILES += buildconfig_gen.cpp.in buildconfig_gen.inc.in
 
 win32: GIT_BIN = $$system($$(SYSTEMROOT)\system32\where git 2> nul)
 else: GIT_BIN = $$system(which git 2> /dev/null)
