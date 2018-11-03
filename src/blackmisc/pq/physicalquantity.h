@@ -47,11 +47,11 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity :
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::Index<PQ>,
-            public Mixin::MetaType<PQ>,
-            public Mixin::String<PQ>,
-            public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
+                    public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
+                    public Mixin::Index<PQ>,
+                    public Mixin::MetaType<PQ>,
+                    public Mixin::String<PQ>,
+                    public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
         {
             //! \copydoc CValueObject::compare
             friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
@@ -122,11 +122,11 @@ namespace BlackMisc
 
             //! Value to QString with the given unit, e.g. "5.00m"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
-            QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
+            QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
 
             //! Value to QString with the current unit, e.g. "5.00m"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
-            QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const;
+            QString valueRoundedWithUnit(int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
 
             //! Round current value in current unit to epsilon
             //! \sa CMeasurementUnit::roundToEpsilon

@@ -314,11 +314,11 @@ namespace BlackMisc
 
             //! Rounded string utility method, virtual so units can have specialized formatting
             //! \note default digits is CMeasurementUnit::getDisplayDigits
-            virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
+            virtual QString makeRoundedQString(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
 
             //! Value rounded with unit, e.g. "5.00m", "30kHz"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
-            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
 
             //! Threshold for comparions
             double getEpsilon() const

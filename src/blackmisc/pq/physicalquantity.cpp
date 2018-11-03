@@ -42,7 +42,7 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         template <class MU, class PQ>
-        const MU & CPhysicalQuantity<MU, PQ>::getUnit() const
+        const MU &CPhysicalQuantity<MU, PQ>::getUnit() const
         {
             return m_unit;
         }
@@ -314,18 +314,18 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
+        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool withGroupSeparator, bool i18n) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             if (this->isNull()) { return this->convertToQString(i18n); }
-            return unit.makeRoundedQStringWithUnit(this->value(unit), digits, i18n);
+            return unit.makeRoundedQStringWithUnit(this->value(unit), digits, withGroupSeparator, i18n);
         }
 
         template <class MU, class PQ>
-        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool i18n) const
+        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool withGroupSeparator, bool i18n) const
         {
             if (this->isNull()) { return this->convertToQString(i18n); }
-            return this->valueRoundedWithUnit(m_unit, digits, i18n);
+            return this->valueRoundedWithUnit(m_unit, digits, withGroupSeparator, i18n);
         }
 
         template<class MU, class PQ>

@@ -41,9 +41,9 @@ namespace BlackMisc
         void CAccelerationUnit::anchor()
         { }
 
-        QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
+        QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
         {
-            if (digits < 0) digits = this->getDisplayDigits();
+            if (digits < 0) { digits = this->getDisplayDigits(); }
             QString s;
             if ((*this) == CAngleUnit::sexagesimalDeg())
             {
@@ -68,14 +68,14 @@ namespace BlackMisc
             }
             else
             {
-                s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
+                s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
             }
             return s;
         }
 
-        QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
+        QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
         {
-            if (digits < 0) digits = this->getDisplayDigits();
+            if (digits < 0) { digits = this->getDisplayDigits(); }
             QString s;
             if ((*this) == CTimeUnit::hms())
             {
@@ -110,7 +110,7 @@ namespace BlackMisc
             }
             else
             {
-                s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
+                s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
             }
             return s;
         }

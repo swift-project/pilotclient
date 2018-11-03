@@ -200,7 +200,7 @@ namespace BlackMisc
             }
 
             //! \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
-            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const override;
 
             //! Radians
             static const CAngleUnit &rad()
@@ -820,7 +820,7 @@ namespace BlackMisc
             }
 
             //! \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
-            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const override;
 
             //! Second s
             static const CTimeUnit &s()

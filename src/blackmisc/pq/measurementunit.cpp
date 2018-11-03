@@ -35,9 +35,9 @@ namespace BlackMisc
             return m_data->m_fromDefault(unit.m_data->m_toDefault(value));
         }
 
-        QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
+        QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
         {
-            return this->makeRoundedQString(value, digits).append(this->getSymbol(i18n));
+            return this->makeRoundedQString(value, digits, withGroupSeparator).append(this->getSymbol(i18n));
         }
 
         double CMeasurementUnit::roundValue(double value, int digits) const
@@ -52,12 +52,21 @@ namespace BlackMisc
             return CMathUtils::roundEpsilon(value, this->getEpsilon());
         }
 
-        QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool i18n) const
+        QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool withGroupSeparator, bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (digits < 0) digits = m_data->m_displayDigits;
+            if (digits < 0) { digits = m_data->m_displayDigits; }
             const double v = CMathUtils::round(value, digits);
-            const QString s = QLocale::system().toString(v, 'f', digits);
+
+            // create locale without separator
+            static const QLocale localeWithoutSeparator = []
+            {
+                QLocale q = QLocale::system();
+                q.setNumberOptions(QLocale::OmitGroupSeparator);
+                return q;
+            }();
+
+            const QString s = (withGroupSeparator ? QLocale::system() : localeWithoutSeparator).toString(v, 'f', digits);
             return s;
         }
     } // namespace
