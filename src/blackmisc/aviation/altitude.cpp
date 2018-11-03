@@ -15,6 +15,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
+#include "altitude.h"
 
 #include <Qt>
 #include <QtGlobal>
@@ -173,7 +174,14 @@ namespace BlackMisc
 
         bool CAltitude::parseFromFpAltitudeString(const QString &value, CStatusMessageList *msgs)
         {
-            QString v(value.trimmed());
+            QString v(value.trimmed()); // do not convert case because of units
+            if (v.startsWith("VFR", Qt::CaseInsensitive))
+            {
+                // we set a more or less meaningful value
+                *this = CAltitude(5000, MeanSeaLevel, CLengthUnit::ft());
+                return true;
+            }
+
             this->setNull();
             if (v.length() < 3)
             {
@@ -210,25 +218,25 @@ namespace BlackMisc
             }
 
             bool ok;
-            if (v.startsWith("F"))
+            if (v.startsWith("F", Qt::CaseInsensitive))
             {
                 this->setUnit(CLengthUnit::ft());
                 this->setValueSameUnit(numericPart.toInt(&ok) * 100);
                 m_datum = FlightLevel;
             }
-            else if (v.startsWith("S"))
+            else if (v.startsWith("S", Qt::CaseInsensitive))
             {
                 this->setUnit(CLengthUnit::m());
                 this->setValueSameUnit(numericPart.toInt(&ok) * 10);
                 m_datum = FlightLevel;
             }
-            else if (v.startsWith("A"))
+            else if (v.startsWith("A", Qt::CaseInsensitive))
             {
                 this->setUnit(CLengthUnit::ft());
                 this->setValueSameUnit(numericPart.toInt(&ok) * 100);
                 m_datum = MeanSeaLevel;
             }
-            else if (v.startsWith("M"))
+            else if (v.startsWith("M", Qt::CaseInsensitive))
             {
                 this->setUnit(CLengthUnit::m());
                 this->setValueSameUnit(numericPart.toInt(&ok) * 10);
@@ -306,7 +314,7 @@ namespace BlackMisc
             return true;
         }
 
-        QString CAltitude::asFpAltitudeString() const
+        QString CAltitude::asFpICAOAltitudeString() const
         {
             if (this->isNull()) { return QStringLiteral(""); }
             if (this->isFlightLevel())
@@ -314,27 +322,29 @@ namespace BlackMisc
                 if (this->getUnit() == CLengthUnit::m())
                 {
                     int m = this->valueInteger() / 10;
-                    return QString("S%1").arg(m, 4, 10, QChar('0'));
+                    return QStringLiteral("S%1").arg(m, 4, 10, QChar('0'));
                 }
                 int ft = this->valueInteger(CLengthUnit::ft()) / 100;
-                return QString("FL%1").arg(ft, 3, 10, QChar('0'));
+                return QStringLiteral("FL%1").arg(ft, 3, 10, QChar('0'));
             }
 
             if (this->getUnit() == CLengthUnit::m())
             {
                 int m = this->valueInteger() / 10;
-                return QString("M%1").arg(m, 4, 10, QChar('0'));
+                return QStringLiteral("M%1").arg(m, 4, 10, QChar('0'));
             }
             int ft = this->valueInteger(CLengthUnit::ft()) / 100;
-            return QString("A%1").arg(ft, 3, 10, QChar('0'));
+            return QStringLiteral("A%1").arg(ft, 3, 10, QChar('0'));
         }
 
-        QString CAltitude::asFpAltitudeSimpleVatsimString() const
+        QString CAltitude::asFpVatsimAltitudeString() const
         {
-            CAltitude copy(*this);
-            copy.switchUnit(CLengthUnit::ft());
-            if (copy.isFlightLevel()) { return copy.asFpAltitudeString(); }
-            return QString::number(copy.valueInteger()); // ft altitude without unit
+            if (this->isFlightLevel()) { return this->asFpICAOAltitudeString(); }
+            // the M/A formats are not supported by VATSIM, means by other clients
+
+            // as feed, as none of the other clients
+            const CAltitude a = this->roundedToNearest100ft();
+            return a.valueRoundedWithUnit(CLengthUnit::ft(), 0);
         }
 
         const QRegularExpression &CAltitude::fpAltitudeRegExp()
@@ -345,7 +355,8 @@ namespace BlackMisc
 
         QString CAltitude::fpAltitudeInfo(const QString &separator)
         {
-            static const QString e("FL085, F85 flight level%1S0150 metric level in tens of metres%1A055 altitude in hundreds of feet%12000ft altitude in ft%1M0610 altitude in tens of metres%16100m altitude in meters");
+            // remark use arg %01 to avoid clash with numbers, see https://stackoverflow.com/questions/35517025/qstringarg-with-number-after-placeholder
+            static const QString e("FL085, F85 flight level in hecto feets%1S0150 metric level in tens of meters%1A055 altitude in hundreds of feet%012000ft altitude in ft%1M0610 altitude in tens of meters%016100m altitude in meters");
             return e.arg(separator);
         }
 
@@ -367,6 +378,16 @@ namespace BlackMisc
                 return Compare::compare(static_cast<int>(this->getReferenceDatum()), static_cast<int>(otherAltitude.getReferenceDatum()));
             }
             return CLength::compare(*this, otherAltitude);
+        }
+
+        CAltitude CAltitude::roundedToNearest100ft() const
+        {
+            // 23453 => 234.53
+            CAltitude a = this->switchedUnit(CLengthUnit::ft());
+            const double ft = a.value(CLengthUnit::ft()) / 100.0;
+            const int ftR = qRound(ft) * 100;
+            a.setValueSameUnit(ftR);
+            return a;
         }
 
         const CAltitude &CAltitude::null()

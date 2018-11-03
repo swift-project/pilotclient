@@ -93,15 +93,15 @@ namespace BlackMiscTest
 
         // as string
         a = CAltitude(12500, CAltitude::FlightLevel, CLengthUnit::ft());
-        QVERIFY2(a.asFpAltitudeString() == "FL125", "Expect FL125");
-        QVERIFY2(a.asFpAltitudeSimpleVatsimString() == "FL125", "Expect FL125");
+        QVERIFY2(a.asFpICAOAltitudeString() == "FL125", "Expect FL125");
+        QVERIFY2(a.asFpVatsimAltitudeString() == "FL125", "Expect FL125");
         a = CAltitude(15000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-        QVERIFY2(a.asFpAltitudeString() == "A150", "Expect A150");
-        QVERIFY2(a.asFpAltitudeSimpleVatsimString() == "15000", "Expect 15000");
+        QVERIFY2(a.asFpICAOAltitudeString() == "A150", "Expect A150");
+        QVERIFY2(a.asFpVatsimAltitudeString() == "15000", "Expect 15000");
         a = CAltitude(1500, CAltitude::FlightLevel, CLengthUnit::m());
-        QVERIFY2(a.asFpAltitudeString() == "S0150", "Expect S0150");
+        QVERIFY2(a.asFpICAOAltitudeString() == "S0150", "Expect S0150");
         a = CAltitude(1600, CAltitude::MeanSeaLevel, CLengthUnit::m());
-        QVERIFY2(a.asFpAltitudeString() == "M0160", "Expect M0160");
+        QVERIFY2(a.asFpICAOAltitudeString() == "M0160", "Expect M0160");
     }
 } // ns
 

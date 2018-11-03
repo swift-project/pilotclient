@@ -33,7 +33,7 @@ namespace BlackGui
 
     void CAltitudeEdit::setAltitude(const CAltitude &altitude)
     {
-        this->setText(altitude.asFpAltitudeString());
+        this->setText(altitude.asFpICAOAltitudeString());
     }
 
     bool CAltitudeEdit::isValid(CStatusMessageList *msgs) const

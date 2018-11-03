@@ -166,10 +166,10 @@ namespace BlackMisc
             //! * standard metric level in tens of meters, expressed as "S" followed by 4 figures, example: S0150 (which means 1500 metres)
             //! * altitude in hundreds of feet, expressed as "A" followed by 3 figures, example: A055 (which means 5500 feet altitude)
             //! * altitude in tens of meters expressed as "M" followed by 4 figures, example: M0610 (which means 6100 metres altitude)
-            QString asFpAltitudeString() const;
+            QString asFpICAOAltitudeString() const;
 
             //! As simple VATSIM string, only FLxxx or altitude as ft
-            QString asFpAltitudeSimpleVatsimString() const;
+            QString asFpVatsimAltitudeString() const;
 
             //! Checking FP altitude strings like "A20", "FL100"
             //! \sa CFlightPlan::asFpAltitudeString
@@ -187,6 +187,10 @@ namespace BlackMisc
 
             //! \copydoc PhysicalQuantities::CPhysicalQuantity::compare
             int compare(const CAltitude &otherAltitude) const;
+
+            //! Round to the nearest 100ft, like needed for China and Russia
+            //! \remark https://en.wikipedia.org/wiki/Flight_level
+            CAltitude roundedToNearest100ft() const;
 
             //! Null altitude (MSL)
             static const CAltitude &null();
