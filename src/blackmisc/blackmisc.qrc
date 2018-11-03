@@ -560,6 +560,8 @@
         <file>icons/misc/toolWizard128.png</file>
         <file>icons/misc/mcx.jpg</file>
         <file>icons/misc/mcx.png</file>
+        <file>icons/misc/cn.png</file>
+        <file>icons/misc/ru.png</file>
     </qresource>
     <qresource prefix="/simulators">
         <file>icons/simulators/FS9.png</file>
