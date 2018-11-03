@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/components/altitudedialog.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -64,6 +65,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CFlightPlanComponent> ui;
+            CAltitudeDialog *m_altitudeDialog = nullptr;
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
@@ -177,6 +179,9 @@ namespace BlackGui
 
             //! Update the diretcory settings
             void updateDirectorySettings(const QString &fileOrDirectory);
+
+            //! Altitude dialog
+            void altitudeDialog();
         };
     } // ns
 } // ns

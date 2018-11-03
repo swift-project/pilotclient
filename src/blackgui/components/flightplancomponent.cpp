@@ -126,7 +126,9 @@ namespace BlackGui
             connect(ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed);
             connect(ui->pb_GetFromGenerator, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed);
             connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator);
+
             connect(ui->tb_HelpEquipment, &QToolButton::clicked, this, &CFlightPlanComponent::showEquipmentCodesTab);
+            connect(ui->tb_AltitudeDialog, &QToolButton::clicked, this, &CFlightPlanComponent::altitudeDialog);
 
             connect(ui->le_AircraftType, &QLineEdit::editingFinished, this, &CFlightPlanComponent::aircraftTypeChanged);
             connect(ui->le_EquipmentSuffix, &QLineEdit::editingFinished, this, &CFlightPlanComponent::buildPrefixIcaoSuffix);
@@ -532,7 +534,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::loadFlightPlanFromNetwork()
         {
-            if (!sGui->getIContextNetwork() || !sGui->getIContextNetwork()->isConnected())
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextNetwork()->isConnected())
             {
                 CLogMessage(this).warning("Cannot load flight plan, network not connected");
                 return;
@@ -784,6 +786,22 @@ namespace BlackGui
             swiftDirs.setFlightPlanDirectory(CDirectories::fileNameToDirectory(fileOrDirectory));
             CStatusMessage saveMsg = m_directories.setAndSave(swiftDirs);
             CLogMessage::preformatted(saveMsg);
+        }
+
+        void CFlightPlanComponent::altitudeDialog()
+        {
+            if (!m_altitudeDialog)
+            {
+                m_altitudeDialog = new CAltitudeDialog(this);
+            }
+
+            const QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_altitudeDialog->exec());
+            if (ret != QDialog::Accepted) { return; }
+
+            if (!m_altitudeDialog->getAltitudeString().isEmpty())
+            {
+                ui->lep_CrusingAltitude->setText(m_altitudeDialog->getAltitudeString());
+            }
         }
 
         void CFlightPlanComponent::initCompleters()
