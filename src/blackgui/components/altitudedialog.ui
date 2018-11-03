@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAltitudeDialog</class>
+ <widget class="QDialog" name="CAltitudeDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>342</width>
+    <height>494</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Altitude dialog</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gb_ICAOFormats">
+     <property name="title">
+      <string>ICAO formats</string>
+     </property>
+     <layout class="QGridLayout" name="gl_ICAFormats" columnstretch="4,1">
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_AltitudeMm">
+        <property name="placeholderText">
+         <string>meters/10</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_AltitudeAFt">
+        <property name="placeholderText">
+         <string>feet/100</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QRadioButton" name="rb_AltitudeMm">
+        <property name="text">
+         <string>M0610 altitude in tens of meters</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Sm">
+        <property name="placeholderText">
+         <string>level</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="rb_AltitudeAFt">
+        <property name="text">
+         <string>A055 altitude in hundreds of feet</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="le_VFR">
+        <property name="text">
+         <string>VFR</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_Sm">
+        <property name="text">
+         <string>S0150 metric level in tens of meters</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rb_FLft">
+        <property name="text">
+         <string>FL085 flight level in hecto feets</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_FLft">
+        <property name="placeholderText">
+         <string>FL</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QRadioButton" name="rb_VFR">
+        <property name="text">
+         <string>VFR</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_FeetOrMeter">
+     <property name="title">
+      <string>Directly as feet or meters</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Directly" columnstretch="4,1">
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_AltitudeM">
+        <property name="text">
+         <string>Altitude in meters</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rb_AltitudeFt">
+        <property name="text">
+         <string>Altitude in feet</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_AltitudeFt">
+        <property name="placeholderText">
+         <string>feet</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_AltitudeM">
+        <property name="placeholderText">
+         <string>meters</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_MetersConverted">
+     <property name="title">
+      <string>Meters converted to feet</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Converted" columnstretch="3,0,1">
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="le_AltitudeConvertedFt">
+        <property name="placeholderText">
+         <string>meters</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_AltitudeConvertedFt">
+        <property name="text">
+         <string>Alt. in meters, will be converted to feet</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="lbl_CountryIcons">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;qrc:/misc/icons/misc/cn.png&quot;/&gt;&lt;img src=&quot;qrc:/misc/icons/misc/ru.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Format">
+     <property name="title">
+      <string>Format</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_Format">
+      <item>
+       <widget class="QCheckBox" name="cb_SimplifiedVATSIMFormat">
+        <property name="toolTip">
+         <string>not supporting &quot;S&quot;, &quot;A&quot;, &quot;VFR&quot;, altitude in meters</string>
+        </property>
+        <property name="text">
+         <string>Simplified VATSIM format, some formats are unavailable</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="vs_AltitudeDialog">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Result">
+     <property name="title">
+      <string>Result used in flight plan</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="le_String">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>value goes here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="rb_StringOnly">
+        <property name="text">
+         <string>Override</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_RadioButtons</string>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_AltitudeDialog">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>rb_FLft</tabstop>
+  <tabstop>le_FLft</tabstop>
+  <tabstop>rb_Sm</tabstop>
+  <tabstop>le_Sm</tabstop>
+  <tabstop>rb_AltitudeAFt</tabstop>
+  <tabstop>le_AltitudeAFt</tabstop>
+  <tabstop>rb_AltitudeMm</tabstop>
+  <tabstop>le_AltitudeMm</tabstop>
+  <tabstop>rb_VFR</tabstop>
+  <tabstop>le_VFR</tabstop>
+  <tabstop>rb_AltitudeFt</tabstop>
+  <tabstop>le_AltitudeFt</tabstop>
+  <tabstop>rb_AltitudeM</tabstop>
+  <tabstop>le_AltitudeM</tabstop>
+  <tabstop>rb_AltitudeConvertedFt</tabstop>
+  <tabstop>le_AltitudeConvertedFt</tabstop>
+  <tabstop>cb_SimplifiedVATSIMFormat</tabstop>
+  <tabstop>rb_StringOnly</tabstop>
+  <tabstop>le_String</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>bb_AltitudeDialog</sender>
+   <signal>accepted()</signal>
+   <receiver>CAltitudeDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_AltitudeDialog</sender>
+   <signal>rejected()</signal>
+   <receiver>CAltitudeDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="bg_RadioButtons"/>
+ </buttongroups>
+</ui>
