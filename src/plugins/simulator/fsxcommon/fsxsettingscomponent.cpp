@@ -138,7 +138,8 @@ namespace BlackSimPlugin
             const CSimulatorPluginInfo plugin = sGui->getIContextSimulator()->getSimulatorPluginInfo();
             if (plugin.isEmulatedPlugin()) { return nullptr; } // cast would fail
 
-            ISimulator *simulator = sGui->getISimulator();
+            ISimulator *simulator = sGui->getISimulator().data();
+            if (!simulator || simulator->isEmulatedDriver())     { return nullptr; }
             if (!simulator->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
             if (simulator->getSimulatorInfo() != m_simulator)    { return nullptr; }
 

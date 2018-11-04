@@ -854,9 +854,9 @@ namespace BlackCore
             return false;
         }
 
-        ISimulator *CContextSimulator::simulator() const
+        QPointer<ISimulator> CContextSimulator::simulator() const
         {
-            if (!this->isSimulatorAvailable()) { return nullptr; }
+            if (!this->isSimulatorAvailable() || !m_simulatorPlugin.second) { return nullptr; }
             return m_simulatorPlugin.second;
         }
 

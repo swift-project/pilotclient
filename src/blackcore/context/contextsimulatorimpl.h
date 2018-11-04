@@ -138,7 +138,7 @@ namespace BlackCore
             void gracefulShutdown();
 
             //! Access to simulator (i.e. the plugin)
-            ISimulator *simulator() const;
+            QPointer<ISimulator> simulator() const;
 
             //! Simulator available?
             bool hasSimulator() const { return this->simulator(); }

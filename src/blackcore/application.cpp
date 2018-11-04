@@ -1392,7 +1392,7 @@ namespace BlackCore
         return args.join(' ');
     }
 
-    ISimulator *CApplication::getISimulator() const
+    QPointer<ISimulator> CApplication::getISimulator() const
     {
         if (!this->getCoreFacade()) { return nullptr; }
         if (!this->getCoreFacade()->getCContextSimulator()) { return nullptr; }

@@ -333,6 +333,12 @@ namespace BlackCore
         ISimulationEnvironmentProvider::resetSimulationEnvironmentStatistics();
     }
 
+    bool ISimulator::isEmulatedDriver() const
+    {
+        const QString className = this->metaObject()->className();
+        return className.contains("emulated", Qt::CaseInsensitive);
+    }
+
     bool ISimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         if (this->isMyIdentifier(originator)) { return false; }

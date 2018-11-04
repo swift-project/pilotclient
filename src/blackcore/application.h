@@ -323,7 +323,7 @@ namespace BlackCore
         // ----------------------- simulator ----------------------------------------
 
         //! The simulator plugin, if available
-        ISimulator *getISimulator() const;
+        QPointer<ISimulator> getISimulator() const;
 
         // ----------------------- contexts ----------------------------------------
 

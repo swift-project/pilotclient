@@ -243,6 +243,9 @@ namespace BlackCore
         //! \copydoc BlackMisc::IProvider::asQObject
         virtual QObject *asQObject() override { return this; }
 
+        //! Is this the emulated driver just pretending to be P3D, FSX, or XPlane
+        bool isEmulatedDriver() const;
+
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
