@@ -57,6 +57,12 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
             virtual CSimulatedAircraft getOwnAircraft() const override;
 
+            //! \copydoc IOwnAircraftProvider::getOwnComSystem
+            virtual Aviation::CComSystem getOwnComSystem(Aviation::CComSystem::ComUnit unit) const override;
+
+            //! \copydoc IOwnAircraftProvider::getOwnTransponder
+            virtual Aviation::CTransponder getOwnTransponder() const override;
+
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
 

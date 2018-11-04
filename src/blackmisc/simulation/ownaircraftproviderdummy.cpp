@@ -20,7 +20,19 @@ namespace BlackMisc
         CSimulatedAircraft COwnAircraftProviderDummy::getOwnAircraft() const
         {
             QReadLocker l(&m_lock);
-            return this->m_ownAircraft;
+            return m_ownAircraft;
+        }
+
+        CComSystem COwnAircraftProviderDummy::getOwnComSystem(CComSystem::ComUnit unit) const
+        {
+            QReadLocker l(&m_lock);
+            return m_ownAircraft.getComSystem(unit);
+        }
+
+        CTransponder COwnAircraftProviderDummy::getOwnTransponder() const
+        {
+            QReadLocker l(&m_lock);
+            return m_ownAircraft.getTransponder();
         }
 
         Geo::CCoordinateGeodetic COwnAircraftProviderDummy::getOwnAircraftPosition() const

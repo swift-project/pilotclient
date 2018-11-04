@@ -118,6 +118,12 @@ namespace BlackCore
             //! Get own aircraft
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
+            //! Get own COM system
+            virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const = 0;
+
+            //! Get own transponder
+            virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const = 0;
+
             //! Get own aircraft
             virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const = 0;
 
@@ -127,6 +133,9 @@ namespace BlackCore
 
             //! Update own cockpit
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) = 0;
+
+            //! Update own transponder mode
+            virtual bool updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode &transponderMode, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Toggle XPDR mode
             virtual void toggleTransponderMode() = 0;

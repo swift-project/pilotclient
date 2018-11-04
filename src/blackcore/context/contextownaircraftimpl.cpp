@@ -96,6 +96,20 @@ namespace BlackCore
             return m_ownAircraft;
         }
 
+        CComSystem CContextOwnAircraft::getOwnComSystem(CComSystem::ComUnit unit) const
+        {
+            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            QReadLocker l(&m_lockAircraft);
+            return m_ownAircraft.getComSystem(unit);
+        }
+
+        CTransponder CContextOwnAircraft::getOwnTransponder() const
+        {
+            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            QReadLocker l(&m_lockAircraft);
+            return m_ownAircraft.getTransponder();
+        }
+
         CCoordinateGeodetic CContextOwnAircraft::getOwnAircraftPosition() const
         {
             QReadLocker l(&m_lockAircraft);
@@ -300,6 +314,21 @@ namespace BlackCore
             return changed;
         }
 
+        bool CContextOwnAircraft::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
+            bool changed;
+            {
+                QWriteLocker l(&m_lockAircraft);
+                changed = m_ownAircraft.setTransponderMode(transponderMode);
+            }
+            if (changed)
+            {
+                emit this->changedAircraftCockpit(m_ownAircraft, originator);
+            }
+            return changed;
+        }
+
         bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit unit, const CIdentifier &originator)
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
@@ -351,17 +380,7 @@ namespace BlackCore
 
         bool CContextOwnAircraft::setTransponderMode(CTransponder::TransponderMode mode)
         {
-            CTransponder xpdr;
-            CComSystem com1;
-            CComSystem com2;
-            {
-                QReadLocker l(&m_lockAircraft);
-                com1 = m_ownAircraft.getCom1System();
-                com2 = m_ownAircraft.getCom2System();
-                xpdr = m_ownAircraft.getTransponder();
-            }
-            xpdr.setTransponderMode(mode);
-            return this->updateCockpit(com1, com2, xpdr, this->identifier());
+            return this->updateTransponderMode(mode, this->identifier());
         }
 
         bool CContextOwnAircraft::updateOwnCallsign(const CCallsign &callsign)
@@ -433,6 +452,19 @@ namespace BlackCore
                 QWriteLocker l(&m_lockAircraft);
                 m_situationHistory.clear();
             }
+        }
+
+        void CContextOwnAircraft::actionToggleTransponder(bool keydown)
+        {
+            if (!keydown) { return; }
+            this->toggleTransponderMode();
+        }
+
+        void CContextOwnAircraft::actionIdent(bool keydown)
+        {
+            if (this->getOwnTransponder().isInStandby()) { return; }
+            const CTransponder::TransponderMode m = keydown ? CTransponder::StateIdent : CTransponder::ModeC;
+            this->updateTransponderMode(m, this->identifier());
         }
 
         void CContextOwnAircraft::allSwiftWebDataRead()

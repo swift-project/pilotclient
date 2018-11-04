@@ -37,6 +37,21 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatedAircraft();
             }
 
+            //! \copydoc IContextOwnAircraft::getOwnComSystem
+            virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const override
+            {
+                Q_UNUSED((unit);)
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Aviation::CComSystem();
+            }
+
+            //! \copydoc IContextOwnAircraft::getOwnTransponder()
+            virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Aviation::CTransponder();
+            }
+
             //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
             virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override
             {
@@ -60,6 +75,15 @@ namespace BlackCore
                 Q_UNUSED(com1);
                 Q_UNUSED(com2);
                 Q_UNUSED(transponder);
+                Q_UNUSED(originator);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
+            //! \copydoc IContextOwnAircraft::updateTransponderMode
+            virtual bool updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode &transponderMode, const BlackMisc::CIdentifier &originator) override
+            {
+                Q_UNUSED(transponderMode);
                 Q_UNUSED(originator);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;

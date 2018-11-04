@@ -16,6 +16,7 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/vatsim/vatsimsettings.h"
+#include "blackcore/actionbind.h"
 #include "blackmisc/network/settings/serversettings.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -30,6 +31,7 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
@@ -114,6 +116,14 @@ namespace BlackCore
             //! \ingroup ownaircraftprovider
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
+            //! \copydoc IContextOwnAircraft::getOwnComSystem
+            //! \ingroup ownaircraftprovider
+            virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const override;
+
+            //! \copydoc IContextOwnAircraft::getOwnTransponder()
+            //! \ingroup ownaircraftprovider
+            virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const override;
+
             //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
             //! \ingroup ownaircraftprovider
             virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
@@ -131,6 +141,9 @@ namespace BlackCore
 
             //! \copydoc IContextOwnAircraft::updateCockpit
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
+
+            //! \copydoc IContextOwnAircraft::updateTransponderMode
+            virtual bool updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode &transponderMode, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateSelcal
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
@@ -194,6 +207,9 @@ namespace BlackCore
             QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
             mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
+            CActionBind m_actionToggleXpdr { "/Own aircraft/Toggle XPDR state", BlackMisc::CIcons::radio16(), this, &CContextOwnAircraft::actionToggleTransponder };
+            CActionBind m_actionIdent { "/Own aircraft/XPDR ident", BlackMisc::CIcons::radio16(), this, &CContextOwnAircraft::actionIdent };
+
             static constexpr qint64 MinHistoryDeltaMs = 1000;
             static constexpr int MaxHistoryElements   = 20;
             QTimer  m_historyTimer;                      //!< history timer
@@ -213,6 +229,11 @@ namespace BlackCore
             //! Simulator status changed
             //! \ingroup crosscontextfunction
             void xCtxChangedSimulatorStatus(int status);
+
+            //! Actions @{
+            void actionToggleTransponder(bool keydown);
+            void actionIdent(bool keydown);
+            //! @}
 
             //! Web data loaded
             void allSwiftWebDataRead();
