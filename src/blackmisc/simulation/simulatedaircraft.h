@@ -298,7 +298,7 @@ namespace BlackMisc
             void setTransponder(const Aviation::CTransponder &transponder) { m_transponder = transponder; }
 
             //! Set transponder mode
-            void setTransponderMode(Aviation::CTransponder::TransponderMode mode) { m_transponder.setTransponderMode(mode); }
+            bool setTransponderMode(Aviation::CTransponder::TransponderMode mode);
 
             //! Set transponder code
             void setTransponderCode(int code) { m_transponder.setTransponderCode(code); }

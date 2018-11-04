@@ -108,6 +108,14 @@ namespace BlackMisc
             return StateStandby;
         }
 
+        bool CTransponder::setTransponderMode(CTransponder::TransponderMode mode)
+        {
+            const int m = static_cast<int>(mode);
+            if (m == m_transponderMode) { return false; }
+            m_transponderMode = m;
+            return true;
+        }
+
         QString CTransponder::getTransponderCodeFormatted() const
         {
             QString f("0000");

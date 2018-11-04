@@ -567,6 +567,11 @@ namespace BlackMisc
                    m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
         }
 
+        bool CSimulatedAircraft::setTransponderMode(CTransponder::TransponderMode mode)
+        {
+            return (m_transponder.setTransponderMode(mode));
+        }
+
         QString CSimulatedAircraft::convertToQString(bool i18n) const
         {
             const QString s = m_callsign.toQString(i18n) %

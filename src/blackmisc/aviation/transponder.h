@@ -114,11 +114,11 @@ namespace BlackMisc
             //! Set transponder code
             void setTransponderCode(const QString &transponderCode);
 
-             //! Mode from string
+            //! Mode from string
             static TransponderMode modeFromString(const QString &modeString);
 
             //! Set transponder mode
-            void setTransponderMode(TransponderMode mode) { m_transponderMode = static_cast<int>(mode); }
+            bool setTransponderMode(TransponderMode mode);
 
             //! Set emergency
             void setEmergency() { m_transponderCode = 7700; }
