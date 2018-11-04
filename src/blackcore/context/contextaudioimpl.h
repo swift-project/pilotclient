@@ -115,24 +115,23 @@ namespace BlackCore
             //! Register myself in DBus
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
-        private slots:
+        private:
+            //! Init notification sounds
+            void initNotificationSounds();
+
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms
-            void ps_connectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
-
-            //! Init notification sounds
-            void ps_initNotificationSounds();
+            void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
             //! Enable/disable voice transmission
-            void ps_setVoiceTransmission(bool enable);
+            void setVoiceTransmission(bool enable);
 
             //! User joined the room
-            void ps_userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
+            void onUserJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! User left the room
-            void ps_userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
+            void onUserLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
-        private:
             //! Connection in transition
             bool inTransitionState() const;
 
@@ -141,7 +140,7 @@ namespace BlackCore
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-            CActionBind m_actionPtt { pttHotkeyAction(), pttHotkeyIcon(), this, &CContextAudio::ps_setVoiceTransmission };
+            CActionBind m_actionPtt { pttHotkeyAction(), pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmission };
 
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;

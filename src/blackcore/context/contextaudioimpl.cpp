@@ -51,16 +51,17 @@ namespace BlackCore
             IContextAudio(mode, runtime),
             m_voice(new CVoiceVatlib())
         {
+            //! \todo KB 2018-11 those are supposed to be Qt::QueuedConnection, but not yet changed (risk to break something)
             m_channel1 = m_voice->createVoiceChannel();
-            connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
-            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
-            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
+            connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
+            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::onUserLeftRoom);
             m_channel2 = m_voice->createVoiceChannel();
-            connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
-            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
-            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
+            connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
+            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::onUserLeftRoom);
 
-            m_voiceInputDevice = m_voice->createInputDevice();
+            m_voiceInputDevice  = m_voice->createInputDevice();
             m_voiceOutputDevice = m_voice->createOutputDevice();
 
             m_audioMixer = m_voice->createAudioMixer();
@@ -77,7 +78,7 @@ namespace BlackCore
             this->setVoiceOutputVolume(90);
 
             // Load sounds (init), not possible in own thread
-            QTimer::singleShot(10 * 1000, this, &CContextAudio::ps_initNotificationSounds);
+            QTimer::singleShot(10 * 1000, this, &CContextAudio::initNotificationSounds);
 
             m_unusedVoiceChannels.push_back(m_channel1);
             m_unusedVoiceChannels.push_back(m_channel2);
@@ -441,7 +442,7 @@ namespace BlackCore
             }
         }
 
-        void CContextAudio::ps_initNotificationSounds()
+        void CContextAudio::initNotificationSounds()
         {
             // not possible in own thread
             CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
@@ -515,7 +516,7 @@ namespace BlackCore
             return false;
         }
 
-        void CContextAudio::ps_setVoiceTransmission(bool enable)
+        void CContextAudio::setVoiceTransmission(bool enable)
         {
             // FIXME: Use the 'active' channel instead of hardcoded COM1
             if (!m_voiceChannelMapping.contains(BlackMisc::Aviation::CComSystem::Com1)) { return; }
@@ -533,7 +534,7 @@ namespace BlackCore
             }
         }
 
-        void CContextAudio::ps_connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
+        void CContextAudio::onConnectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
                 BlackCore::IVoiceChannel::ConnectionStatus newStatus)
         {
             Q_UNUSED(oldStatus);
@@ -559,12 +560,12 @@ namespace BlackCore
             }
         }
 
-        void CContextAudio::ps_userJoinedRoom(const CCallsign & /**callsign**/)
+        void CContextAudio::onUserJoinedRoom(const CCallsign & /**callsign**/)
         {
             emit this->changedVoiceRoomMembers();
         }
 
-        void CContextAudio::ps_userLeftRoom(const CCallsign & /**callsign**/)
+        void CContextAudio::onUserLeftRoom(const CCallsign & /**callsign**/)
         {
             emit this->changedVoiceRoomMembers();
         }
