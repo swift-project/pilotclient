@@ -15,7 +15,7 @@ DESTDIR = $$DestRoot/bin/plugins/simulator
 SOURCES += *.cpp
 HEADERS += *.h
 
-REQUIRES += contains(BLACK_CONFIG,FSX)
+REQUIRES += swiftConfig(sims.fsx)
 TARGET = simulatorfsxconfig
 DISTFILES += simulatorfsx.json
 

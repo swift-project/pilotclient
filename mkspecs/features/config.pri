@@ -1,63 +1,120 @@
-## Public Area ##
+# Make sure _QMAKE_CACHE_ is initialized (otherwise config.log goes to the root directory)
+cache()
 
-BLACK_CONFIG    *= BlackCore
-BLACK_CONFIG    *= BlackGui
-BLACK_CONFIG    *= BlackSound
-BLACK_CONFIG    *= BlackInput
-BLACK_CONFIG    *= Samples
-BLACK_CONFIG    *= Unittests
-BLACK_CONFIG    *= SwiftData
-BLACK_CONFIG    *= SwiftCore
-BLACK_CONFIG    *= SwiftGui
-BLACK_CONFIG    *= SwiftLauncher
-BLACK_CONFIG    *= FS9
-BLACK_CONFIG    *= FSX
-BLACK_CONFIG    *= P3D
-BLACK_CONFIG    *= XPlane
-BLACK_CONFIG    *= ProfileRelease
-BLACK_CONFIG    *= AssertsInRelease
-#BLACK_CONFIG    *= AllowNoisyWarnings
-BLACK_CONFIG    *= PackageInstaller
-#BLACK_CONFIG    *= Static
-BLACK_CONFIG    *= Doxygen
-#BLACK_CONFIG    *= SwiftDevBranch
-#BLACK_CONFIG    *= SwiftStableBranch
-BLACK_CONFIG    *= FSUIPC
+################################
+# Parse json config files
+################################
 
-isEmpty(BLACK_EOL): BLACK_EOL = "20190601"
+# Copy json keys/values from one variable prefix to another, optionally caching the result
+defineTest(copyJsonFromTo) {
+    from = $$1
+    to = $$2
+    options = $$3
 
-## Private Area ##
+    unset($${to}._KEYS_)
+    for(key, $${from}._KEYS_) {
+        $${to}._KEYS_ += $$key
+        export($${to}._KEYS_)
+        copyJsonFromTo($${from}.$$key, $${to}.$$key, $$options)
+    }
+    contains(options, cache):defined($${to}._KEYS_, var): cache($${to}._KEYS_)
 
-## Dependency Checks ##
+    defined($$from, var) {
+        contains(options, overwrite)|!defined($$to, var) {
+            eval(newValue = \$\${$$from})
+            $$to = $$newValue
+            export($$to)
+        }
+        contains(options, cache):defined($$to, var): cache($$to)
+    }
+}
+
+# Options that control how the config works
+!swiftNoDefaultJson: SWIFT_CONFIG_JSON = default.json $$SWIFT_CONFIG_JSON
+equals(_PRO_FILE_PWD_, $$SourceRoot): CONFIG *= swiftNoCacheConfig
+
+# Parse the json files (or get the values from the cache)
+for(jsonFile, SWIFT_CONFIG_JSON) {
+    contains(jsonFile, [^A-Za-z0-9_\\.]): error(Illegal character in filename \"$$jsonFile\")
+    jsonPath = $$SourceRoot/$$jsonFile
+    !exists($$jsonPath): error($$jsonPath not found)
+    SWIFT_CONFIG_JSON_PATHS += $$jsonPath
+    export(SWIFT_CONFIG_JSON_PATHS)
+    swiftNoCacheConfig {
+        message(Parsing $${jsonFile}...)
+        jsonBlob = $$cat($$jsonPath, blob)
+        parseJson(jsonBlob, SWIFT_CONFIG_PARSED.$$jsonFile)
+        copyJsonFromTo(SWIFT_CONFIG_PARSED.$$jsonFile, SWIFT_CONFIG_PARSED_ALL, overwrite)
+    }
+}
+swiftNoCacheConfig {
+    copyJsonFromTo(SWIFT_CONFIG_PARSED_ALL, SWIFT_CONFIG)
+    copyJsonFromTo(SWIFT_CONFIG, SWIFT_CONFIG_CACHE, cache overwrite)
+}
+else {
+    copyJsonFromTo(SWIFT_CONFIG_CACHE, SWIFT_CONFIG)
+}
+
+# Automatically run qmake again when a json file changed
+QMAKE_INTERNAL_INCLUDED_FILES *= $$SWIFT_CONFIG_JSON_PATHS
+
+# The line above doesn't work with Qt Creator's MSVC kit, so we report an error as a fallback
+load(touch)
+system($$TOUCH $$system_path($$BuildRoot/swift_config.cookie)) {
+    swift_config_changed.target = $$shell_path($$BuildRoot/swift_config.cookie)
+    swift_config_changed.depends = $$shell_path($$SWIFT_CONFIG_JSON_PATHS)
+    swift_config_changed.commands = @echo ERROR: swift config changed, please run qmake again >&2 && exit 1
+    QMAKE_EXTRA_TARGETS += swift_config_changed
+    PRE_TARGETDEPS += $${swift_config_changed.target}
+}
+else:msvc {
+    warning(Failed to create swift_config.cookie, you will need to manually run qmake again after any changes in $$join(SWIFT_CONFIG_JSON, ", ").)
+}
+
+################################
+# Functions to read json config
+################################
+
+defineTest(swiftConfig) {
+    equals(SWIFT_CONFIG.$$1, true): return(true)
+    return(false)
+}
+defineReplace(swiftConfig) {
+    eval(value = \$\${SWIFT_CONFIG.$$1})
+    return($$value)
+}
+
+################################
+# Functions to modify json config
+################################
+
+defineTest(setSwiftConfig) {
+    SWIFT_CONFIG.$$1 = $$2
+    export(SWIFT_CONFIG.$$1)
+}
+defineTest(enableSwiftConfig) {
+    for(arg, ARGS): setSwiftConfig($$arg, true)
+}
+defineTest(disableSwiftConfig) {
+    for(arg, ARGS): setSwiftConfig($$arg, false)
+}
+
+################################
+# Functions for checking dependencies
+################################
+
 load(configure)
 
 defineTest(CheckMandatoryDependency) {
     !qtCompileTest($${1}): error(Cannot find $${1} development package. Make sure it is installed. Inspect config.log for more information.)
 }
-
 defineTest(CheckOptionalDependency) {
     qtCompileTest($${1})
 }
 
-# include vatsim client id and key
-include(vatsim.pri)
+################################
+# Global compiler macros
+################################
 
-# Header based compiler macros
-# DEFINES correspond with buildconfig_gen.cpp.in
-!contains(BLACK_CONFIG, BlackSound) { DEFINE_WITH_BLACKSOUND = "//" }
-!contains(BLACK_CONFIG, BlackInput) { DEFINE_WITH_BLACKINPUT = "//" }
-!contains(BLACK_CONFIG, BlackCore) { DEFINE_WITH_BLACKCORE = "//" }
-!contains(BLACK_CONFIG, BlackGui) { DEFINE_WITH_BLACKGUI = "//" }
-!contains(BLACK_CONFIG, SwiftData) { DEFINE_WITH_SWIFTDATA = "//" }
-!contains(BLACK_CONFIG, SwiftGui) { DEFINE_WITH_SWIFTGUI = "//" }
-!contains(BLACK_CONFIG, SwiftCore) { DEFINE_WITH_SWIFTCORE = "//" }
-!contains(BLACK_CONFIG, P3D) { DEFINE_WITH_P3D = "//" }
-!contains(BLACK_CONFIG, FSX) { DEFINE_WITH_FSX = "//" }
-!contains(BLACK_CONFIG, FS9) { DEFINE_WITH_FS9 = "//" }
-!contains(BLACK_CONFIG, FSUIPC) { DEFINE_WITH_FSUIPC = "//" }
-!contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
-!contains(BLACK_CONFIG, SwiftVatsimSupport) { DEFINE_SWIFT_VATSIM_SUPPORT = "//" }
-
-# Global compiler Macros
-contains(BLACK_CONFIG, Static) { DEFINES *= WITH_STATIC }
-contains(BLACK_CONFIG, AssertsInRelease) { DEFINES *= QT_FORCE_ASSERTS }
+swiftConfig(static) { DEFINES *= WITH_STATIC }
+swiftConfig(assertsInRelease) { DEFINES *= QT_FORCE_ASSERTS }

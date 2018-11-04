@@ -15,8 +15,8 @@ builders['Build swift Linux'] = {
                 def eolInMonth = 6
                 withEnv(['BITROCK_BUILDER=/opt/installbuilder/bin/builder', 'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
                     sh '''
-                        cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
-                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ''' + getEolInMonth() + '''
+                        cp ~/vatsim.json .
+                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
                     '''
                 }
 
@@ -62,8 +62,8 @@ builders['Build swift MacOS'] = {
             stage('MacOS Build') {
                 withEnv(['PATH+LOCAL=/usr/local/bin', 'BITROCK_BUILDER=/Applications/BitRockInstallBuilderQt/bin/builder', 'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
                     sh '''
-                        cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
-                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ''' + getEolInMonth() + '''
+                        cp ~/vatsim.json .
+                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
                     '''
                 }
 
@@ -101,8 +101,8 @@ builders['Build swift Win32'] = {
 
             stage('Win32 Build') {
                 bat '''
-                    copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
-                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ''' + getEolInMonth() + '''
+                    copy c:\\var\\vatsim.json .
+                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
                 '''
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
@@ -140,8 +140,8 @@ builders['Build swift Win64'] = {
 
             stage('Win64 Build') {
                 bat '''
-                    copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
-                    python -u scripts/jenkins.py -w 64 -t msvc -d  -e ''' + getEolInMonth() + '''
+                    copy c:\\var\\vatsim.json .
+                    python -u scripts/jenkins.py -w 64 -t msvc -d  -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
                 '''
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'

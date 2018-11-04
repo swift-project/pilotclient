@@ -6,7 +6,7 @@ TARGET = blacksound
 TEMPLATE = lib
 CONFIG += blackconfig blackmisc
 
-contains(BLACK_CONFIG, Static) {
+swiftConfig(static) {
     CONFIG += staticlib
 }
 

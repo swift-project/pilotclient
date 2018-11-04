@@ -1,4 +1,4 @@
-contains(BLACK_CONFIG, Templight) {
+swiftConfig(templight) {
     QMAKE_CXXFLAGS += -Xtemplight -profiler -Xtemplight -ignore-system
     QMAKE_CXXFLAGS += -Xtemplight -blacklist -Xtemplight $$PWD/templight_blacklist
     clang_cl {

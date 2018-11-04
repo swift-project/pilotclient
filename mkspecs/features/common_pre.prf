@@ -57,7 +57,7 @@ contains(TEMPLATE, "vc.*"): QMAKE_CXXFLAGS *= /MP
 # Profile build
 ################################
 
-contains(BLACK_CONFIG, ProfileRelease) {
+swiftConfig(profileRelease) {
     msvc {
         QMAKE_CXXFLAGS_RELEASE *= /Zi
         QMAKE_LFLAGS_RELEASE *= /DEBUG /PROFILE /INCREMENTAL:NO /OPT:REF /OPT:ICF
@@ -90,9 +90,9 @@ win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
 # FSX or FS9 on 32bit Windows only
 ################################
 
-!win32: BLACK_CONFIG -= P3D
-equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9
-# equals(WORD_SIZE,64):win32-g++: BLACK_CONFIG -= P3D
+!win32: disableSwiftConfig(sims.p3d)
+equals(WORD_SIZE,64)|!win32: disableSwiftConfig(sims.fsx, sims.fs9)
+# equals(WORD_SIZE,64):win32-g++: disableSwiftConfig(sims.p3d)
 
 ################################
 # For BlackMisc::getStackTrace
@@ -163,7 +163,7 @@ defineTest(addStaticLibraryDependency) {
     export(PRE_TARGETDEPS)
 }
 defineTest(addLibraryDependency) {
-    contains(BLACK_CONFIG, Static) {
+    swiftConfig(static) {
         addStaticLibraryDependency($$1)
     }
     else {

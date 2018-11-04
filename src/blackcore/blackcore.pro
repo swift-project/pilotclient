@@ -8,7 +8,7 @@ TARGET = blackcore
 TEMPLATE = lib
 CONFIG += blackconfig blackmisc blackinput blacksound precompile_header
 
-contains(BLACK_CONFIG, Static) {
+swiftConfig(static) {
     CONFIG += staticlib
 }
 

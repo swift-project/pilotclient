@@ -7,26 +7,26 @@ SUBDIRS += plugincommon
 SUBDIRS += emulated
 SUBDIRS += emulatedconfig
 
-contains(BLACK_CONFIG,FSX|FS9|P3D) {
+swiftConfig(sims.fsx)|swiftConfig(sims.fs9)|swiftConfig(sims.p3d) {
     SUBDIRS += fsuipc32
     SUBDIRS += fsuipc64
     SUBDIRS += fscommon
 }
-contains(BLACK_CONFIG,FSX|P3D) {
+swiftConfig(sims.fsx)|swiftConfig(sims.p3d) {
     SUBDIRS += fsxcommon
 }
-contains(BLACK_CONFIG,P3D) {
+swiftConfig(sims.p3d) {
     SUBDIRS += p3d
     SUBDIRS += p3dconfig
 }
-contains(BLACK_CONFIG,FSX) {
+swiftConfig(sims.fsx) {
     SUBDIRS += fsx
     SUBDIRS += fsxconfig
 }
-contains(BLACK_CONFIG,FS9):contains(BLACK_CONFIG,FSUIPC) {
+swiftConfig(sims.fs9):swiftConfig(sims.fsuipc) {
     SUBDIRS += fs9
 }
-contains(BLACK_CONFIG,XPlane) {
+swiftConfig(sims.xplane) {
     SUBDIRS += xplane
     SUBDIRS += xplaneconfig
 }

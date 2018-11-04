@@ -6,7 +6,7 @@ TARGET = blackmisc
 TEMPLATE = lib
 CONFIG += blackconfig precompile_header
 
-contains(BLACK_CONFIG, Static) {
+swiftConfig(static) {
     CONFIG += staticlib
 }
 

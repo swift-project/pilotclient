@@ -7,7 +7,7 @@ TARGET = blackinput
 TEMPLATE = lib
 CONFIG   += blackmisc
 
-contains(BLACK_CONFIG, Static) {
+swiftConfig(static) {
     CONFIG += staticlib
 }
 

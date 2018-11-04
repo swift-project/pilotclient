@@ -7,7 +7,7 @@ gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
 gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPILE
 
 # elevated warnings
-contains(BLACK_CONFIG, AllowNoisyWarnings) {
+swiftConfig(allowNoisyWarnings) {
     clang {
         QMAKE_CXXFLAGS_WARN_ON *= -Weverything --system-header-prefix=$$[QT_INSTALL_HEADERS]
         QMAKE_CXXFLAGS_WARN_ON += -Wno-system-headers -Wno-c++98-compat-pedantic -Wno-class-varargs -Wno-covered-switch-default
@@ -32,7 +32,7 @@ gcc {
     greaterThan(GCC_MAJOR, 5) {
         QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
     }
-    greaterThan(GCC_MAJOR, 4):contains(BLACK_CONFIG, AllowNoisyWarnings) {
+    greaterThan(GCC_MAJOR, 4):swiftConfig(allowNoisyWarnings) {
         QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
     }
 }

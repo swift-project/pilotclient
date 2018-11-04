@@ -13,15 +13,15 @@ CheckMandatoryDependency(glu)
 CheckMandatoryDependency(libpng)
 CheckMandatoryDependency(zlib)
 
-contains(BLACK_CONFIG,Doxygen) {
+swiftConfig(doxygen) {
     SUBDIRS += docs
 }
 SUBDIRS += resources
 SUBDIRS += src
-contains(BLACK_CONFIG,Samples) {
+swiftConfig(samples) {
     SUBDIRS += samples
 }
-contains(BLACK_CONFIG,Unittests) {
+swiftConfig(unitTests) {
     SUBDIRS += tests
 }
 

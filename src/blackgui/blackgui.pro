@@ -6,7 +6,7 @@ TARGET = blackgui
 TEMPLATE = lib
 CONFIG += blackconfig blackmisc blackcore precompile_header
 
-contains(BLACK_CONFIG, Static) {
+swiftConfig(static) {
     CONFIG += staticlib
 }
 

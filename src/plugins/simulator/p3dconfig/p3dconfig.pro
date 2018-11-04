@@ -15,7 +15,7 @@ DESTDIR = $$DestRoot/bin/plugins/simulator
 SOURCES += *.cpp
 HEADERS += *.h
 
-REQUIRES += contains(BLACK_CONFIG,P3D)
+REQUIRES += swiftConfig(sims.p3d)
 TARGET = simulatorp3dconfig
 DISTFILES += simulatorp3d.json
 

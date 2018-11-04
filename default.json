@@ -1,0 +1,37 @@
+{
+    "libs": {
+        "blackcore": true,
+        "blackgui": true,
+        "blacksound": true,
+        "blackinput": true
+    },
+    "samples": true,
+    "unitTests": true,
+    "apps": {
+        "swiftdata": true,
+        "swiftcore": true,
+        "swiftgui": true,
+        "swiftlauncher": true
+    },
+    "sims": {
+        "fs9": true,
+        "fsx": true,
+        "p3d": true,
+        "fsuipc": true,
+        "xplane": true
+    },
+    "profileRelease": true,
+    "assertsInRelease": true,
+    "allowNoisyWarnings": false,
+    "packageInstaller": true,
+    "static": false,
+    "doxygen": true,
+    "devBranch": false,
+    "stableBranch": false,
+    "endOfLife": "20190601",
+    "vatsimSupport": true,
+    "vatsim": {
+        "id": "0xb9ba",
+        "key": "727d1efd5cb9f8d2c28372469d922bb4"
+    }
+}

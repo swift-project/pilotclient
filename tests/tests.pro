@@ -11,7 +11,7 @@ SUBDIRS += blackgui
 # testblackcore.file = blackcore/testblackcore.pro
 # testblackgui.file  = blackgui/testblackgui.pro
 
-contains(BLACK_CONFIG,FSX|P3D) {
+swiftConfig(sims.fsx)|swiftConfig(sims.p3d) {
     SUBDIRS += testsimpluginfsxp3d
     testsimpluginfsxp3d.file = blacksimpluginfsxp3d/testblacksimpluginfsxp3d.pro
 }

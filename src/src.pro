@@ -5,31 +5,31 @@ CONFIG += ordered
 
 SUBDIRS += blackconfig
 SUBDIRS += blackmisc
-contains(BLACK_CONFIG,BlackSound) {
+swiftConfig(libs.blacksound) {
     SUBDIRS += blacksound
 }
-contains(BLACK_CONFIG,BlackInput) {
+swiftConfig(libs.blackinput) {
     SUBDIRS += blackinput
 }
-contains(BLACK_CONFIG,BlackCore) {
+swiftConfig(libs.blackcore) {
     SUBDIRS += blackcore
 }
-contains(BLACK_CONFIG,BlackGui) {
+swiftConfig(libs.blackgui) {
     SUBDIRS += blackgui
 }
-contains(BLACK_CONFIG,SwiftGui) {
+swiftConfig(apps.swiftgui) {
     SUBDIRS += swiftguistandard
 }
-contains(BLACK_CONFIG,SwiftCore) {
+swiftConfig(apps.swiftcore) {
     SUBDIRS += swiftcore
 }
-contains(BLACK_CONFIG,SwiftData) {
+swiftConfig(apps.swiftdata) {
     SUBDIRS += swiftdata
 }
-contains(BLACK_CONFIG,SwiftLauncher) {
+swiftConfig(apps.swiftlauncher) {
     SUBDIRS += swiftlauncher
 }
-contains(BLACK_CONFIG,XPlane) {
+swiftConfig(sims.xplane) {
     SUBDIRS += xswiftbus
 }
 SUBDIRS += plugins

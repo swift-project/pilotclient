@@ -17,7 +17,7 @@ HEADERS += *.h
 LIBS *= -lsimulatorplugincommon
 addStaticLibraryDependency(simulatorplugincommon)
 
-contains(BLACK_CONFIG, FSUIPC) {
+swiftConfig(sims.fsuipc) {
     equals(WORD_SIZE,32) {
         DEFINES += SWIFT_USING_FSUIPC32
     }

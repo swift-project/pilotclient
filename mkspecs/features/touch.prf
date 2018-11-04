@@ -1,5 +1,5 @@
 win32:isEmpty(MINGW_IN_SHELL) {
-    TOUCH = copy /y nul
+    TOUCH = copy /y nul >nul
 }
 else {
     TOUCH = touch
