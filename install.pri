@@ -203,7 +203,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     WINDOWS64BITMODE = 0
     win32 {
         INSTALLER_PLATFORM = windows
-        INSTALLER_BASENAME = swiftinstaller-windows-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-windows-$${WORD_SIZE}-$$swiftConfig(version.full)
         INSTALLER_EXT = exe
         ARCHITECTURE = 32
         equals(WORD_SIZE,64) {
@@ -213,20 +213,20 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     }
     else:macx {
         INSTALLER_PLATFORM = osx
-        INSTALLER_BASENAME = swiftinstaller-macos-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-macos-$${WORD_SIZE}-$$swiftConfig(version.full)
         INSTALLER_EXT = app
         ARCHITECTURE = 64
     }
     else:unix {
         INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
-        INSTALLER_BASENAME = swiftinstaller-linux-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-linux-$${WORD_SIZE}-$$swiftConfig(version.full)
         INSTALLER_EXT = run
         ARCHITECTURE = 64
     }
     create_installer.commands = $${bitrock_builder_bin} quickbuild $${bitrock_project} $${INSTALLER_PLATFORM} \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
-                                              project.version=$${BLACK_VERSION} \
+                                              project.version=$$swiftConfig(version.full) \
                                               project.windows64bitMode=$${WINDOWS64BITMODE} \
                                               architecture=$${ARCHITECTURE}
     QMAKE_EXTRA_TARGETS += create_installer

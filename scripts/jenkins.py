@@ -10,6 +10,7 @@
 
 from datetime import date
 import getopt
+import json
 import multiprocessing
 import os
 import os.path as path
@@ -222,35 +223,19 @@ class Builder:
         self.version = self.__get_swift_version()
 
     def __get_swift_version(self):
-        version_major = '0'
-        version_minor = '0'
-        version_micro = '0'
-        version_file = path.abspath(
-            path.join(self._get_swift_source_path(), 'mkspecs', 'features', 'version')) + '.pri'
-        f = open(version_file)
-        line = f.readline()
-        while line:
-            # Remove all spaces
-            line = line.strip().replace(' ', '')
-            tokens = line.split('=')
-            if not len(tokens) == 2:
-                raise ValueError('version.pri has wrong format!')
-            if tokens[0] == 'BLACK_VER_MAJ':
-                version_major = tokens[1]
-            elif tokens[0] == 'BLACK_VER_MIN':
-                version_minor = tokens[1]
-            elif tokens[0] == 'BLACK_VER_MIC':
-                version_micro = tokens[1]
-            else:
-                pass
-            line = f.readline()
+        config_file = path.abspath(path.join(self._get_swift_source_path(), 'default')) + '.json'
+        f = open(config_file)
+        config_json = json.load(f)
         f.close()
+        version_major = config_json['version']['major']
+        version_minor = config_json['version']['minor']
+        version_micro = config_json['version']['micro']
 
         # Converted from swift's CBuildConfig::lastCommitTimestampAsVersionSegment
         last_commit_timestamp = int(self.__get_last_commit_timestamp())
         year_offset = 201000000000
         last_commit_timestamp = last_commit_timestamp - year_offset
-        version = '.'.join([version_major, version_minor, version_micro, str(last_commit_timestamp)])
+        version = '.'.join([str(version_major), str(version_minor), str(version_micro), str(last_commit_timestamp)])
         return version
 
     def __get_last_commit_timestamp(self):

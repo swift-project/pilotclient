@@ -1,4 +1,9 @@
 {
+    "version": {
+        "major": 0,
+        "minor": 8,
+        "micro": 7
+    },
     "libs": {
         "blackcore": true,
         "blackgui": true,

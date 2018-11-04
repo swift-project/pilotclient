@@ -72,7 +72,7 @@ DEFINES += XPLM210=1
 DEFINES += XPMP_CLIENT_NAME=\\\"xswiftbus\\\"
 DEFINES += XPMP_CLIENT_LONGNAME=\\\"xswiftbus\\\"
 
-DEFINES += XSWIFTBUS_VERSION=\\\"$${BLACK_VERSION}\\\"
+DEFINES += XSWIFTBUS_VERSION=\\\"$$swiftConfig(version.full)\\\"
 
 # X-Plane plugins must follow a prescribed filename and directory structure.
 TARGET_EXT = .xpl
