@@ -497,6 +497,12 @@ QRadioButton::indicator:checked {
   );
 }
 
+QRadioButton::disabled {
+  background: rgba(4, 105, 105, 105);
+  color: darkgray;
+  border: 0px;
+}
+
 QScrollArea {
   border: 1px solid green;
   border-radius: 5px;
