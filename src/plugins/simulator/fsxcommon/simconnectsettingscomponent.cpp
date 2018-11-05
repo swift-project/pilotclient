@@ -8,11 +8,11 @@
  */
 
 #include "SimConnectsettingscomponent.h"
-#include "ui_SimConnectsettingscomponent.h"
+#include "ui_simconnectsettingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/fsx/SimConnectutilities.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
@@ -28,13 +28,14 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Network;
+using namespace BlackGui;
 
 namespace BlackSimPlugin
 {
     namespace FsxCommon
     {
         CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CSimConnectSettingsComponent)
         {
             ui->setupUi(this);
@@ -46,8 +47,12 @@ namespace BlackSimPlugin
             connect(ui->pb_OpenUserCfgFile, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
             connect(ui->pb_TestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
             connect(ui->pb_SaveAsSimConnectIni, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
-
             this->setSimConnectInfo();
+
+            if (m_p3d64bit)
+            {
+                connect(ui->cb_P3DVersion, &QComboBox::currentTextChanged, this, &CSimConnectSettingsComponent::onP3DVersionChanged);
+            }
         }
 
         CSimConnectSettingsComponent::~CSimConnectSettingsComponent()
@@ -214,17 +219,49 @@ namespace BlackSimPlugin
             {
                 ui->pte_SimConnectInfo->setPlainText("Static linking P3Dv4 x64");
                 m_simulator = CSimulatorInfo(CSimulatorInfo::P3D);
+                m_p3d64bit = true;
+
+                const QString v = m_p3dVersion.get();
+                this->setComboBox(v);
             }
             else
             {
                 const CWinDllUtils::DLLInfo SimConnectInfo = CSimConnectUtilities::simConnectDllInfo();
                 ui->pte_SimConnectInfo->setPlainText(SimConnectInfo.summary());
                 m_simulator = CSimulatorInfo(CSimulatorInfo::FSX);
+                m_p3d64bit = false;
             }
+
+            ui->lbl_P3DVersion->setVisible(m_p3d64bit);
+            ui->cb_P3DVersion->setVisible(m_p3d64bit);
+
             ui->le_UserCfgFile->setText(CSimConnectUtilities::hasUserSimConnectCfgFile() ? CSimConnectUtilities::getUserSimConnectCfgFilename() : "");
             const QString iniFiles = CSimConnectUtilities::getSimConnectIniFiles().join("\n");
             ui->pte_SimConnectIniFiles->setPlainText(iniFiles);
             this->checkSwiftSimConnectCfgFile();
+        }
+
+        void CSimConnectSettingsComponent::setComboBox(const QString &value)
+        {
+            QString v;
+            bool found = false;
+            for (int index = 0; index < ui->cb_P3DVersion->count(); index++)
+            {
+                v = ui->cb_P3DVersion->itemText(index);
+                if (v.contains(value, Qt::CaseInsensitive)) { found = true; break; }
+            }
+            ui->cb_P3DVersion->setCurrentText(found ? v : "");
+        }
+
+        void BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent::onP3DVersionChanged(const QString &version)
+        {
+            if (m_p3dVersion.get() == version) { return; }
+            const CStatusMessage saveMsg = m_p3dVersion.setAndSave(version);
+            if (saveMsg.isSuccess())
+            {
+                const CStatusMessage m = CStatusMessage(this).info("Changed P3D version to '%1'. Requires a new start of swift to become effective!") << version;
+                this->showOverlayMessage(m);
+            }
         }
     } // ns
 } // ns

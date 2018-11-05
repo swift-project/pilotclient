@@ -12,8 +12,11 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 
+#include "blackgui/overlaymessagesframe.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include <QFrame>
+
 #include <QScopedPointer>
 
 namespace Ui { class CSimConnectSettingsComponent; }
@@ -24,7 +27,7 @@ namespace BlackSimPlugin
         /*!
          * A component that gathers all SimConnect related settings.
          */
-        class CSimConnectSettingsComponent : public QFrame
+        class CSimConnectSettingsComponent : public BlackGui::COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -60,8 +63,16 @@ namespace BlackSimPlugin
             //! Set the simconnect info
             void setSimConnectInfo();
 
+            //! The the value in the combobox
+            void setComboBox(const QString &value);
+
+            //! The P3D version has been changed
+            void onP3DVersionChanged(const QString &version);
+
             BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::FSX };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
             QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
+            bool m_p3d64bit = false;
         };
     } // ns
 } // ns

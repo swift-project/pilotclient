@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>FSX/P3D settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_Settings" columnstretch="0,1">
-   <item row="4" column="1">
+  <layout class="QGridLayout" name="gl_Settings" columnstretch="0,0">
+   <item row="5" column="1">
     <widget class="QWidget" name="wi_Buttons" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item alignment="Qt::AlignRight">
@@ -47,21 +47,7 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QCheckBox" name="cb_UseFsuipc">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
+   <item row="1" column="1">
     <widget class="QLabel" name="lbl_TraceSimConnectCalls">
      <property name="text">
       <string>Trace simConnect calls (this will trace sendId calls and provide further information)</string>
@@ -71,7 +57,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QLabel" name="lbl_SBOffsets">
      <property name="text">
       <string>Enable SB SimConnect offsets. Those are needed to detect &quot;Ident&quot; and &quot;Standby&quot; from your transponder (supported by some vendors as PMDG).</string>
@@ -81,29 +67,43 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="cb_UseFsuipc">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
     <widget class="QLabel" name="lbl_TraceTerrainProbe">
      <property name="text">
       <string>Use the terrain probe (32bit only)</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QCheckBox" name="cb_EnableTerrainProbe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
+   <item row="2" column="1">
     <widget class="QLabel" name="lbl_UseFsuipc">
      <property name="text">
       <string>Enable FSUIPC support</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QCheckBox" name="cb_SBOffsets">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="cb_EnableTerrainProbe">
      <property name="text">
       <string/>
      </property>
@@ -116,6 +116,8 @@
   <tabstop>cb_UseFsuipc</tabstop>
   <tabstop>cb_SBOffsets</tabstop>
   <tabstop>cb_EnableTerrainProbe</tabstop>
+  <tabstop>pb_CopyTerrainProbe</tabstop>
+  <tabstop>pb_Refresh</tabstop>
  </tabstops>
  <resources/>
  <connections/>
