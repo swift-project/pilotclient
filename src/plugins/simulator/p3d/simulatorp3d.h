@@ -14,6 +14,8 @@
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 #include "../fsxcommon/simconnectobject.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "blackmisc/settingscache.h"
 
 namespace BlackSimPlugin
 {
@@ -70,9 +72,11 @@ namespace BlackSimPlugin
             //! \remark P3D API release of control
             virtual bool releaseAIControl(const FsxCommon::CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId) override;
 #endif
-
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
+
+        private:
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
         };
 
         //! Listener for P3D
@@ -86,6 +90,9 @@ namespace BlackSimPlugin
 
         protected:
             virtual void startImpl() override;
+
+        private:
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
         };
     } // ns
 } // ns

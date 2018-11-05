@@ -31,10 +31,6 @@ namespace BlackSimPlugin
 {
     namespace P3D
     {
-    #ifdef Q_OS_WIN64
-        static P3DSimConnectVersion gP3DSimConnectVersion = P3DSimConnectv42;
-    #endif
-
         CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
                                      IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
@@ -57,7 +53,7 @@ namespace BlackSimPlugin
         bool CSimulatorP3D::connectTo()
         {
         #ifdef Q_OS_WIN64
-            if (!loadAndResolveP3DSimConnect(gP3DSimConnectVersion)) { return false; }
+            if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return false; }
             return CSimulatorFsxCommon::connectTo();
         #else
             if (!loadAndResolveFsxSimConnect(true)) { return false; }
@@ -297,7 +293,7 @@ namespace BlackSimPlugin
     void CSimulatorP3DListener::startImpl()
     {
     #ifdef Q_OS_WIN64
-        if (!loadAndResolveP3DSimConnect(gP3DSimConnectVersion)) { return; }
+        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return; }
         return CSimulatorFsxCommonListener::startImpl();
     #else
         if (!loadAndResolveFsxSimConnect(true)) { return; }

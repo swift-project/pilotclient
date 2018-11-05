@@ -188,7 +188,7 @@ namespace BlackMisc
                 CSimulatorInfo m_simulator; //!< represented simulator
             };
 
-            //! Allows to have specific utility functions for each simulator
+            //! XPlane specific settings
             class BLACKMISC_EXPORT CXPlaneSimulatorSettings : public CSpecializedSimulatorSettings
             {
             public:
@@ -232,6 +232,23 @@ namespace BlackMisc
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("P3D settings"); return name; }
+            };
+
+            //! Selected P3D version (64bit)
+            struct TP3DVersion : public TSettingTrait<QString>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "simulator/p3dversion"; }
+
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("P3D version"); return name; }
+
+                //! \copydoc BlackMisc::TSettingTrait::defaultValue
+                static const QString &defaultValue()
+                {
+                    static const QString version("4.2");
+                    return version;
+                }
             };
 
             //! Trait for simulator settings
