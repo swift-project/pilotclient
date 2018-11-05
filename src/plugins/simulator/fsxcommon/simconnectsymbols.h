@@ -16,6 +16,7 @@
 
 #ifdef Q_OS_WIN64
 
+//! P3D versions
 enum P3DSimConnectVersion
 {
     P3DSimConnectv40,
@@ -24,10 +25,16 @@ enum P3DSimConnectVersion
     P3DSimConnectv43
 };
 
+//! String to the enum
+P3DSimConnectVersion stringToP3DVersion(const QString &p3d);
+
 //! Load and resolve versioned P3D SimConnect.
 //! If a another version was already loaded previously, it won't unload it.
 //! You have to call /sa unloadSimConnect() before.
 bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
+
+//! Same but string version
+inline bool loadAndResolveP3DSimConnectByString(const QString &version) { return loadAndResolveP3DSimConnect(stringToP3DVersion(version)); }
 
 #else
 

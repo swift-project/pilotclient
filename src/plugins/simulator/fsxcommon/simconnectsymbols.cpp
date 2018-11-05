@@ -8,6 +8,7 @@
  */
 
 #include "simconnectsymbols.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/logmessage.h"
 #include <QLibrary>
 #include <Windows.h>
@@ -21,6 +22,8 @@ bool loadAndResolveSimConnect(bool manifestProbing)
     Q_UNUSED(manifestProbing);
     return true;
 }
+
+// old FSX API: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526983(v=msdn.10)
 
 typedef HRESULT(__stdcall *PfnSimConnect_Open)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);
 typedef HRESULT(__stdcall *PfnSimConnect_Close)(HANDLE);
@@ -51,6 +54,15 @@ typedef HRESULT(__stdcall *PfnSimConnect_AddToClientDataDefinition)(HANDLE, SIMC
 typedef HRESULT(__stdcall *PfnSimConnect_RequestGroundInfo)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, double, double, double, double, double, double, DWORD, DWORD, SIMCONNECT_GROUND_INFO_LATLON_FORMAT, SIMCONNECT_GROUND_INFO_ALT_FORMAT, SIMCONNECT_GROUND_INFO_SOURCE_FLAG);
 typedef HRESULT(__stdcall *PfnSimConnect_ChangeView)(HANDLE, const char *);
 typedef HRESULT(__stdcall *PfnSimConnect_AIReleaseControlEx)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID, BOOL);
+typedef HRESULT(__stdcall *PfnSimConnect_CloseView)(HANDLE, const char *);
+typedef HRESULT(__stdcall *PfnSimConnect_OpenView)(HANDLE, const char *, const char *);
+typedef HRESULT(__stdcall *PfnSimConnect_ChangeView)(HANDLE, const char *);
+typedef HRESULT(__stdcall *PfnSimConnect_CreateCameraInstance)(HANDLE, const GUID, const char *, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
+typedef HRESULT(__stdcall *PfnSimConnect_DeleteCameraInstance)(HANDLE, const GUID, UINT32);
+typedef HRESULT(__stdcall *PfnSimConnect_CreateCameraDefinition)(HANDLE, const GUID, SIMCONNECT_CAMERA_TYPE, const char *, SIMCONNECT_DATA_XYZ, SIMCONNECT_DATA_PBH);
+typedef HRESULT(__stdcall *PfnSimConnect_ObserverAttachToEntityOn)(HANDLE, const char *, DWORD, SIMCONNECT_DATA_XYZ);
+typedef HRESULT(__stdcall *PfnSimConnect_CreateObserver)(HANDLE, const char *, SIMCONNECT_DATA_OBSERVER);
+typedef HRESULT(__stdcall *PfnSimConnect_SetObserverLookAt)(HANDLE, const char *, SIMCONNECT_DATA_LATLONALT);
 #endif
 
 //! The SimConnect Symbols
@@ -82,9 +94,17 @@ struct SimConnectSymbols
     PfnSimConnect_CreateClientData SimConnect_CreateClientData = nullptr;
     PfnSimConnect_AddToClientDataDefinition SimConnect_AddToClientDataDefinition = nullptr;
 #ifdef Q_OS_WIN64
-    PfnSimConnect_RequestGroundInfo  SimConnect_RequestGroundInfo = nullptr;
+    PfnSimConnect_RequestGroundInfo SimConnect_RequestGroundInfo = nullptr;
     PfnSimConnect_ChangeView SimConnect_ChangeView = nullptr;
     PfnSimConnect_AIReleaseControlEx SimConnect_AIReleaseControlEx = nullptr;
+    PfnSimConnect_CreateCameraDefinition SimConnect_CreateCameraDefinition = nullptr;
+    PfnSimConnect_ObserverAttachToEntityOn SimConnect_ObserverAttachToEntityOn = nullptr;
+    PfnSimConnect_CreateObserver SimConnect_CreateObserver = nullptr;
+    PfnSimConnect_CreateCameraInstance SimConnect_CreateCameraInstance = nullptr;
+    PfnSimConnect_DeleteCameraInstance SimConnect_DeleteCameraInstance = nullptr;
+    PfnSimConnect_SetObserverLookAt SimConnect_SetObserverLookAt = nullptr;
+    PfnSimConnect_OpenView SimConnect_OpenView = nullptr;
+    PfnSimConnect_CloseView SimConnect_CloseView = nullptr;
 #endif
 };
 //! @ }
@@ -97,7 +117,7 @@ bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *fu
     funcPtr = reinterpret_cast<FuncPtr>(library.resolve(funcName));
     if (! funcPtr)
     {
-        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to resolve %1: %2") << funcName << library.errorString();
+        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to resolve %1: %2") << funcName << library.errorString();
         return false;
     }
     return true;
@@ -140,7 +160,29 @@ bool resolveP3DSimConnectSymbols(QLibrary &simConnectDll)
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_RequestGroundInfo, "SimConnect_RequestGroundInfo");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_ChangeView, "SimConnect_ChangeView");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AIReleaseControlEx, "SimConnect_AIReleaseControlEx");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CreateCameraDefinition, "SimConnect_CreateCameraDefinition");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_ObserverAttachToEntityOn, "SimConnect_ObserverAttachToEntityOn");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CreateObserver, "SimConnect_CreateObserver");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CreateCameraInstance, "SimConnect_CreateCameraInstance");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_DeleteCameraInstance, "SimConnect_DeleteCameraInstance");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SetObserverLookAt, "SimConnect_SetObserverLookAt");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_OpenView, "SimConnect_OpenView");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CloseView, "SimConnect_CloseView");
     return resolveSuccess;
+}
+
+
+P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
+{
+    if (p3d.length() >= 2)
+    {
+        const QString p = digitOnlyString(p3d);
+        if (p.contains("40")) { return P3DSimConnectv40; }
+        if (p.contains("41")) { return P3DSimConnectv41; }
+        if (p.contains("42")) { return P3DSimConnectv42; }
+        if (p.contains("43")) { return P3DSimConnectv43; }
+    }
+    return P3DSimConnectv42; // default
 }
 
 bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
@@ -166,7 +208,7 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
     }
     else
     {
-        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
+        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
         return false;
     }
 }
@@ -230,7 +272,7 @@ bool loadAndResolveFsxSimConnect(bool manifestProbing)
     }
     else
     {
-        CLogMessage(static_cast<SimConnectSymbols*>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
+        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
         return false;
     }
 }
@@ -363,7 +405,7 @@ SIMCONNECTAPI SimConnect_RequestGroundInfo(HANDLE hSimConnect, SIMCONNECT_DATA_R
     return gSymbols.SimConnect_RequestGroundInfo(hSimConnect, RequestID, minLat, minLon, minAlt, maxLat, maxLon, maxAlt, dwGridWidth, dwGridHeight, eLatLonFormat, eAltFormat, eSourceFlags);
 }
 
-SIMCONNECTAPI SimConnect_ChangeView(HANDLE hSimConnect, const char * szName)
+SIMCONNECTAPI SimConnect_ChangeView(HANDLE hSimConnect, const char *szName)
 {
     return gSymbols.SimConnect_ChangeView(hSimConnect, szName);
 }
@@ -372,7 +414,30 @@ SIMCONNECTAPI SimConnect_AIReleaseControlEx(HANDLE hSimConnect, SIMCONNECT_OBJEC
 {
     return gSymbols.SimConnect_AIReleaseControlEx(hSimConnect, ObjectID, RequestID, destroyAI);
 }
+
+SIMCONNECTAPI SimConnect_ObserverAttachToEntityOn(HANDLE hSimConnect, const char *szName, DWORD dwObjectID, SIMCONNECT_DATA_XYZ Offset)
+{
+    return gSymbols.SimConnect_ObserverAttachToEntityOn(hSimConnect, szName, dwObjectID, Offset);
+}
+
+SIMCONNECTAPI SimConnect_CreateObserver(HANDLE hSimConnect, const char *szName, SIMCONNECT_DATA_OBSERVER ObserverData)
+{
+    return gSymbols.SimConnect_CreateObserver(hSimConnect, szName, ObserverData);
+}
+
+SIMCONNECTAPI SimConnect_OpenView(HANDLE hSimConnect, const char *szName, const char *szTitle)
+{
+    return gSymbols.SimConnect_OpenView(hSimConnect, szName, szTitle);
+}
+
+SIMCONNECTAPI SimConnect_CloseView(HANDLE hSimConnect, const char *szName)
+{
+    return gSymbols.SimConnect_CloseView(hSimConnect, szName);
+}
+
+SIMCONNECTAPI SimConnect_SetObserverLookAt(HANDLE hSimConnect, const char *szName, SIMCONNECT_DATA_LATLONALT TargetPosition)
+{
+    return gSymbols.SimConnect_SetObserverLookAt(hSimConnect, szName, TargetPosition);
+}
+
 #endif
-
-
-
