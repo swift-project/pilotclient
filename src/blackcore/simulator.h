@@ -174,6 +174,9 @@ namespace BlackCore
         //! Follow aircraft
         virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Recalculate all aircraft
+        virtual void recalculateAllAircraft();
+
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated);
 
@@ -457,6 +460,15 @@ namespace BlackCore
         //! \sa ISimulator::clearAllRemoteAircraftData
         virtual void reset();
 
+        //! Do update all remote aircraft?
+        bool isUpdateAllRemoteAircraft(qint64 currentTimestamp = -1) const;
+
+        //! Update all aircraft for ms
+        void setUpdateAllRemoteAircraft(qint64 currentTimestamp = -1, qint64 forMs = -1);
+
+        //! Reset
+        void resetUpdateAllRemoteAircraft();
+
         //! Reset highlighting
         void resetHighlighting();
 
@@ -528,11 +540,11 @@ namespace BlackCore
 
         bool   m_pausedSimFreezesInterpolation  = false;  //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
-        int    m_updateAllRemoteAircraftCycles  = 0;      //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
         int    m_timerId = -1;                            //!< dispatch timer id
         int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count
         int    m_statsUpdateAircraftLimited = 0;          //!< skipped because of max.update limitations
         double m_statsUpdateAircraftTimeAvgMs = 0;        //!< statistics average update time
+        qint64 m_updateAllRemoteAircraftUntil = 0;        //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
         qint64 m_statsMaxUpdateTimeMs = 0;                //!< statistics max.update time

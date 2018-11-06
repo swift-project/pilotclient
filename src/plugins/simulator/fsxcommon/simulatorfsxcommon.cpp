@@ -1741,7 +1741,7 @@ namespace BlackSimPlugin
 
             int simObjectNumber = 0;
             const bool traceSendId = this->isTracingSendId();
-            const bool updateAllAircraft = m_updateAllRemoteAircraftCycles > 0;
+            const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted

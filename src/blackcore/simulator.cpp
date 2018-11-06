@@ -110,6 +110,11 @@ namespace BlackCore
         return false;
     }
 
+    void ISimulator::recalculateAllAircraft()
+    {
+        this->setUpdateAllRemoteAircraft();
+    }
+
     void ISimulator::setWeatherActivated(bool activated)
     {
         m_isWeatherActivated = activated;
@@ -232,6 +237,26 @@ namespace BlackCore
     void ISimulator::reset()
     {
         this->clearAllRemoteAircraftData();
+    }
+
+    bool ISimulator::isUpdateAllRemoteAircraft(qint64 currentTimestamp) const
+    {
+        if (m_updateAllRemoteAircraftUntil < 1) { return false; }
+        if (currentTimestamp < 0) { currentTimestamp = QDateTime::currentMSecsSinceEpoch(); }
+        return (m_updateAllRemoteAircraftUntil > currentTimestamp);
+    }
+
+    void ISimulator::setUpdateAllRemoteAircraft(qint64 currentTimestamp, qint64 forMs)
+    {
+        if (currentTimestamp < 0) { currentTimestamp = QDateTime::currentMSecsSinceEpoch(); }
+        if (forMs < 0) { forMs = 10 * 1000; }
+        m_updateAllRemoteAircraftUntil = currentTimestamp + forMs;
+        this->resetLastSentValues();
+    }
+
+    void ISimulator::resetUpdateAllRemoteAircraft()
+    {
+        m_updateAllRemoteAircraftUntil = -1;
     }
 
     void ISimulator::resetHighlighting()
@@ -783,7 +808,7 @@ namespace BlackCore
                 // now simulating
                 if (newStatus.testFlag(Simulating))
                 {
-                    m_updateAllRemoteAircraftCycles = 10; // force an update of every remote aircraft
+                    this->setUpdateAllRemoteAircraft(); // force an update of every remote aircraft
                 }
 
                 emit this->simulatorStatusChanged(newStatus); // only place where we should emit the signal, use emitSimulatorCombinedStatus to emit
@@ -1016,7 +1041,8 @@ namespace BlackCore
         m_updateRemoteAircraftInProgress = false;
         m_statsLastUpdateAircraftRequestedMs = startTime;
 
-        if (m_updateAllRemoteAircraftCycles > 0) { m_updateAllRemoteAircraftCycles--; }
+        if (!this->isUpdateAllRemoteAircraft(startTime)) { this->resetUpdateAllRemoteAircraft(); }
+
         if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
         if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
         if (limited) { m_statsUpdateAircraftLimited++; }

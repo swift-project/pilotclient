@@ -795,7 +795,7 @@ namespace BlackSimPlugin
             PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
-            const bool updateAllAircraft = m_updateAllRemoteAircraftCycles > 0;
+            const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
