@@ -347,6 +347,12 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::setSortHint(HintTimestampSort hint)
+    {
+        m_tsSortHint = hint;
+    }
+
+    template<class OBJ, class CONTAINER>
     MillisecondsMinMaxMean ITimestampObjectList<OBJ, CONTAINER>::getTimestampDifferenceMinMaxMean() const
     {
         MillisecondsMinMaxMean mmm;

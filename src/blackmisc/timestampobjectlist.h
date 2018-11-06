@@ -147,7 +147,7 @@ namespace BlackMisc
         void addMsecs(qint64 msToAdd);
 
         //! Set the hint
-        void setSortHint(HintTimestampSort hint) { m_tsSortHint = hint; }
+        void setSortHint(HintTimestampSort hint);
 
         //! Difference of timestamp values
         //! \cond timestamp list has to be sorted to get meaningful values
