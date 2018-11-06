@@ -152,7 +152,7 @@ namespace BlackSimPlugin
 
             //! Fetch data from interpolator
             //! \remarks basically does the same as a real driver, obtains data from the interpolator
-            void fetchFromInterpolator();
+            void updateRemoteAircraft();
 
             bool m_log = false; //!< from settings
             bool m_paused = false;

@@ -48,7 +48,7 @@ namespace BlackSimPlugin
 
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
-            connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);
+            connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::updateRemoteAircraft);
 
             // connect own signals for monitoring
             this->connectOwnSignals();
@@ -431,16 +431,18 @@ namespace BlackSimPlugin
             Qt::QueuedConnection));
         }
 
-        void CSimulatorEmulated::fetchFromInterpolator()
+        void CSimulatorEmulated::updateRemoteAircraft()
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(now);
             int aircraftNumber = 0;
+
             for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
             {
-                const CCallsign cs = aircraft.getCallsign();
-                if (!m_interpolators.contains(cs)) { continue; }
-                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs); // threadsafe copy
-                CInterpolatorMulti *im = m_interpolators[cs];
+                const CCallsign callsign = aircraft.getCallsign();
+                if (!m_interpolators.contains(callsign)) { continue; }
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
+                CInterpolatorMulti *im = m_interpolators[callsign];
                 Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
                 const CInterpolationResult result = im->getInterpolation(now, setup, aircraftNumber++);
                 const CAircraftSituation s = result;
