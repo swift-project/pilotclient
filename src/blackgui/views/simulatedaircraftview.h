@@ -104,6 +104,9 @@ namespace BlackGui
             //! Highlight in simulator
             void highlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Fully recalculate all aircraft
+            void recalculateAllAircraft();
+
             //! Enable fast position updates
             void enableFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

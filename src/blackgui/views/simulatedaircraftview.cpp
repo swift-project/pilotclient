@@ -65,6 +65,8 @@ namespace BlackGui
             menuActions.addMenuDisplayModels();
             menuActions.addMenuDataTransfer();
 
+            menuActions.addAction(CIcons::appInterpolation16(), "Recalculate all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::recalculateAllAircraft });
+
             if (m_withMenuEnableAircraft && !this->isEmpty())
             {
                 menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
@@ -217,6 +219,13 @@ namespace BlackGui
             IContextSimulator *simContext = simulatorContext();
             if (!simContext) { return; }
             simContext->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
+        }
+
+        void CSimulatedAircraftView::recalculateAllAircraft()
+        {
+            IContextSimulator *simContext = simulatorContext();
+            if (!simContext) { return; }
+            simContext->recalculateAllAircraft();
         }
 
         void CSimulatedAircraftView::enableFastPositionUpdates(const CSimulatedAircraft &aircraft)
