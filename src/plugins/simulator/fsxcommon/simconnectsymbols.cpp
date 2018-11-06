@@ -24,7 +24,7 @@ bool loadAndResolveSimConnect(bool manifestProbing)
 }
 
 // old FSX API: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526983(v=msdn.10)
-
+//! \todo MS 2018-11 as of slack chat, change to "using PfnSimConnect_Open = HRESULT(__stdcall *)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);"
 typedef HRESULT(__stdcall *PfnSimConnect_Open)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);
 typedef HRESULT(__stdcall *PfnSimConnect_Close)(HANDLE);
 typedef HRESULT(__stdcall *PfnSimConnect_AddToDataDefinition)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, const char *, const char *, SIMCONNECT_DATATYPE, float, DWORD);
@@ -204,11 +204,25 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
     simConnectDll.setLoadHints(QLibrary::PreventUnloadHint);
     if (simConnectDll.load())
     {
-        return resolveCommonSimConnectSymbols(simConnectDll) && resolveP3DSimConnectSymbols(simConnectDll);
+        const bool resolvedCommon = resolveCommonSimConnectSymbols(simConnectDll);
+        const bool resolvedP3DSimConnectSymbols = resolveP3DSimConnectSymbols(simConnectDll);
+        if (!resolvedCommon)
+        {
+            CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to resolve common symbols from SimConnect.dll: '%1'") << simConnectFileName;
+            return false;
+        }
+        if (!resolvedP3DSimConnectSymbols)
+        {
+            CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to resolve P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
+            return false;
+        }
+
+        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).info("Loaded and resolved P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
+        return  resolvedCommon && resolvedP3DSimConnectSymbols;
     }
     else
     {
-        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
+        CLogMessage(static_cast<SimConnectSymbols *>(nullptr)).error("Failed to load SimConnect.dll: '%1' '%2'") << simConnectFileName << simConnectDll.errorString();
         return false;
     }
 }
