@@ -241,6 +241,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("followAircraft"), callsign);
         }
 
+        void CContextSimulatorProxy::recalculateAllAircraft()
+        {
+            m_dBusInterface->callDBus(QLatin1String("recalculateAllAircraft"));
+        }
+
         bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("resetToModelMatchingAircraft"), callsign, callsign);

@@ -242,6 +242,9 @@ namespace BlackCore
             //! Follow aircraft im simulator view
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+            //! Recalculate all aircraft
+            virtual void recalculateAllAircraft() = 0;
+
             //! Reset model by matching it again
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 

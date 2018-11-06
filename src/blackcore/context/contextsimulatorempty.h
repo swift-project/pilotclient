@@ -254,6 +254,12 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::recalculateAllAircraft
+            virtual void recalculateAllAircraft() override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextSimulator::resetToModelMatchingAircraft
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
             {
