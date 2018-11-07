@@ -35,6 +35,12 @@ namespace BlackMisc
                 CKeyboardKey(Key_AltRight),
                 CKeyboardKey(Key_ShiftLeft),
                 CKeyboardKey(Key_ShiftRight),
+                CKeyboardKey(Key_Period),
+                CKeyboardKey(Key_Plus),
+                CKeyboardKey(Key_Minus),
+                CKeyboardKey(Key_Comma),
+                CKeyboardKey(Key_Multiply),
+                CKeyboardKey(Key_Divide),
                 CKeyboardKey(Key_A),
                 CKeyboardKey(Key_B),
                 CKeyboardKey(Key_C),
@@ -71,6 +77,16 @@ namespace BlackMisc
                 CKeyboardKey(Key_7),
                 CKeyboardKey(Key_8),
                 CKeyboardKey(Key_9),
+                CKeyboardKey(Key_Numpad0),
+                CKeyboardKey(Key_Numpad1),
+                CKeyboardKey(Key_Numpad2),
+                CKeyboardKey(Key_Numpad3),
+                CKeyboardKey(Key_Numpad4),
+                CKeyboardKey(Key_Numpad5),
+                CKeyboardKey(Key_Numpad6),
+                CKeyboardKey(Key_Numpad7),
+                CKeyboardKey(Key_Numpad8),
+                CKeyboardKey(Key_Numpad9)
             };
 
             return allKeys;
