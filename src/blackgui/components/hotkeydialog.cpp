@@ -46,8 +46,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        CKeySelectionBox::CKeySelectionBox(QWidget *parent) :
-            QComboBox(parent)
+        CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
         {
             connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
         }
@@ -243,17 +242,17 @@ namespace BlackGui
 
         void CHotkeyDialog::setupAdvancedFrame()
         {
-            clearAdvancedFrame();
-            auto allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
+            this->clearAdvancedFrame();
+            const CKeyboardKeyList allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
 
             const QStringList splitKeys = m_actionHotkey.getCombination().toQString().split('+', QString::SkipEmptyParts);
-            for (const auto &splitKey : splitKeys)
+            for (const QString &splitKey : splitKeys)
             {
                 if (splitKey == "+") continue;
 
                 int currentIndex = -1;
                 CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
-                for (const auto &supportedKey : allSupportedKeys)
+                for (const CKeyboardKey &supportedKey : allSupportedKeys)
                 {
                     QString supportedKeyAsString = supportedKey.toQString();
                     ksb->addItem(supportedKeyAsString, QVariant::fromValue(supportedKey));
@@ -267,6 +266,9 @@ namespace BlackGui
                 const int position = ui->qf_Advanced->layout()->count() - 1;
                 ksb->setProperty("position", position);
                 connect(ksb, &CKeySelectionBox::keySelectionChanged, this, &CHotkeyDialog::advancedKeyChanged);
+
+                const int width = qRound(1.5 * this->width());
+                ksb->setPopupWidth(qMin(width, 600));
             }
         }
 

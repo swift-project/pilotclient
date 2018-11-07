@@ -12,18 +12,17 @@
 #ifndef BLACKGUI_COMPONENTS_HOTKEYDIALOG_H
 #define BLACKGUI_COMPONENTS_HOTKEYDIALOG_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionmodel.h"
+#include "blackgui/horizontalcombobox.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/input/actionhotkey.h"
 
-#include <QComboBox>
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
 
 class QItemSelection;
-class QWidget;
 
 namespace BlackCore { class CInputManager; }
 namespace BlackMisc { namespace Input { class CHotkeyCombination; } }
@@ -35,7 +34,7 @@ namespace BlackGui
         /*!
          * ComboBox for selecting keyboard keys
          */
-        class BLACKGUI_EXPORT CKeySelectionBox : public QComboBox
+        class BLACKGUI_EXPORT CKeySelectionBox : public CHorizontalComboBox
         {
             Q_OBJECT
 

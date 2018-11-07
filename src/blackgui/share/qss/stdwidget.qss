@@ -413,6 +413,12 @@ QComboBox QAbstractItemView {
   qproperty-textElideMode: ElideMiddle;
 }
 
+/**
+QComboBox::drop-down { background-color: yellow; }
+QComboBox QListView { }
+**/
+
+
 QDoubleSpinBox {
   border: 1px solid green;
   border-radius: 5px;
