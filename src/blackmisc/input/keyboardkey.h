@@ -46,19 +46,19 @@ namespace BlackMisc
             CKeyboardKey(BlackMisc::Input::KeyCode keyCode);
 
             //! Get key code
-            KeyCode getKey() const { return this->m_keyCode; }
+            KeyCode getKey() const { return m_keyCode; }
 
             //! Get key code
             QString getKeyAsString() const;
 
             //! Set key code
-            void setKey(KeyCode key) { this->m_keyCode = key; }
+            void setKey(KeyCode key) { m_keyCode = key; }
 
             //! Set key code
-            void setKey(int key) { this->m_keyCode = static_cast<KeyCode>(key); }
+            void setKey(int key) { m_keyCode = static_cast<KeyCode>(key); }
 
             //! Set key code
-            void setKey(char key) { this->m_keyCode = static_cast<KeyCode>(key); }
+            void setKey(char key) { m_keyCode = static_cast<KeyCode>(key); }
 
             //! Is unknown?
             bool isUnknown() const { return !this->hasKey(); }
@@ -72,7 +72,7 @@ namespace BlackMisc
             //! with key?
             bool hasKey() const
             {
-                return !(this->m_keyCode == KeyCode::Key_Unknown);
+                return !(m_keyCode == KeyCode::Key_Unknown);
             }
 
             //! Set key object
@@ -97,8 +97,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(keyCode)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CKeyboardKey)
 

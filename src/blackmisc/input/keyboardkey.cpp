@@ -31,12 +31,12 @@ namespace BlackMisc
 
         QString CKeyboardKey::convertToQString(bool /* i18n */) const
         {
-            return getKeyAsString();
+            return this->getKeyAsString();
         }
 
         void CKeyboardKey::setKeyObject(CKeyboardKey key)
         {
-            this->m_keyCode = key.m_keyCode;
+            m_keyCode = key.m_keyCode;
         }
 
         QString CKeyboardKey::getKeyAsString() const
@@ -90,15 +90,12 @@ namespace BlackMisc
         CVariant CKeyboardKey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexKey:
-                return CVariant::from(this->m_keyCode);
-            case IndexKeyAsString:
-                return CVariant::from(getKeyAsString());
-            default:
-                break;
+            case IndexKey: return CVariant::from(m_keyCode);
+            case IndexKeyAsString: return CVariant::from(getKeyAsString());
+            default: break;
             }
 
             Q_ASSERT_X(false, "CKeyboardKey", "index unknown");
@@ -124,5 +121,5 @@ namespace BlackMisc
                 break;
             }
         }
-    } // namespace Hardware
-} // BlackMisc
+    } // ns
+} // ns
