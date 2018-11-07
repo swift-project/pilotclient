@@ -57,8 +57,8 @@ namespace BlackMisc
 
             switch (m_keyCode)
             {
-            case Key_Multiply: return QStringLiteral("×");
-            case Key_Divide: return QStringLiteral("÷");
+            case Key_Multiply: return QStringLiteral("NumMultiply"); // return QStringLiteral(u"×");
+            case Key_Divide:   return QStringLiteral("NumDivide");   // return QStringLiteral(u"÷");
             case Key_Numpad0: return QStringLiteral("Num0");
             case Key_Numpad1: return QStringLiteral("Num1");
             case Key_Numpad2: return QStringLiteral("Num2");

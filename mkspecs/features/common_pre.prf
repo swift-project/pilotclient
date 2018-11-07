@@ -71,6 +71,14 @@ contains(BLACK_CONFIG, ProfileRelease) {
 msvc:!llvm: QMAKE_CXXFLAGS *= /bigobj
 
 ################################
+# Force UTF-8 source code in MSVC
+################################
+
+msvc: QMAKE_CXXFLAGS *= /utf-8
+# msvc: QMAKE_CXXFLAGS *= /source-charset:utf-8
+# /utf-8 sets both the source charset and execution charset to UTF-8
+
+################################
 # No gigantic MinGW obj files
 ################################
 
