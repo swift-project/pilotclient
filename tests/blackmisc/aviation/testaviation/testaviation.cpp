@@ -157,6 +157,15 @@ namespace BlackMiscTest
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
+        CCallsign pilot("DLH123");
+        CCallsign copilot1("DLH123A");
+        CCallsign copilot2("DLH1233");
+        CCallsign copilot3("DLH12");
+        QVERIFY(copilot1.isMaybeCopilotCallsign(pilot));
+        QVERIFY(!pilot.isMaybeCopilotCallsign(pilot));
+        QVERIFY(!copilot2.isMaybeCopilotCallsign(pilot));
+        QVERIFY(!copilot3.isMaybeCopilotCallsign(pilot));
+
         CCallsignSet set;
         set.push_back(cs1);
         QVERIFY2(set.size() == 1, "List shall be 1");

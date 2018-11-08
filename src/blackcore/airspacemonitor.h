@@ -270,6 +270,8 @@ namespace BlackCore
             const QString &airlineIcao, const QString &liveryString, const QString &modelString,
             BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log);
 
+        bool isCopilotAircraft(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Create aircraft in range, this is the only place where a new aircraft should be added
         void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 

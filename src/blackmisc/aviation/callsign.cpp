@@ -87,9 +87,11 @@ namespace BlackMisc
             return m_callsign.endsWith("SUP");
         }
 
-        bool CCallsign::isCopilotCallsign() const
+        bool CCallsign::isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const
         {
-            return (this->getTypeHint() == Aircraft) && this->isObserverCallsign();
+            return  m_callsign.startsWith(pilotCallsign.asString()) &&
+                    m_callsign.size() == pilotCallsign.asString().size() + 1 &&
+                    m_callsign.at(m_callsign.size() - 1) >= 'A' && m_callsign.at(m_callsign.size() - 1) <= 'Z';
         }
 
         QString CCallsign::getIcaoCode() const

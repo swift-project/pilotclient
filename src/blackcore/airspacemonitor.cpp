@@ -15,6 +15,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -696,12 +697,6 @@ namespace BlackCore
 
         if (isAircraft)
         {
-            if (callsign.isCopilotCallsign())
-            {
-                this->copilotDetected();
-                return;
-            }
-
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
             CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
@@ -717,12 +712,6 @@ namespace BlackCore
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
-        if (callsign.isCopilotCallsign())
-        {
-            // We already know that plane by its normall callsign
-            this->copilotDetected();
-            return;
-        }
 
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
@@ -947,6 +936,8 @@ namespace BlackCore
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
+        if (isCopilotAircraft(callsign)) { return; }
+
         // update client info
         this->autoAdjustCientGndCapability(situation);
 
@@ -992,6 +983,8 @@ namespace BlackCore
 
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
+
+        if (isCopilotAircraft(callsign)) { return; }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -1231,6 +1224,17 @@ namespace BlackCore
         CAngle angle = this->getOwnAircraft().calculateBearing(situation);
         angle.switchUnit(CAngleUnit::deg());
         return angle;
+    }
+
+    bool CAirspaceMonitor::isCopilotAircraft(const CCallsign &callsign) const
+    {
+        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
+
+        // It is only relevant if we are logged in as observer
+        if (sApp->getIContextNetwork()->getLoginMode() != INetwork::LoginAsObserver) { return false; }
+
+        const CCallsign ownCallsign = getOwnAircraft().getCallsign();
+        return ownCallsign.isMaybeCopilotCallsign(callsign);
     }
 
     CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) :

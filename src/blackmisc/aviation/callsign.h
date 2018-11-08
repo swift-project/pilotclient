@@ -84,8 +84,10 @@ namespace BlackMisc
             //! Supervisor?
             bool isSupervisorCallsign() const;
 
-            //! Pilot OBS callsign, normally a co-pilot
-            bool isCopilotCallsign() const;
+            //! Returns true if this is a co-pilot callsign of pilot. The logic is that the callsign is the same as the pilot one
+            //! but with a single character as suffix.
+            //! e.g Pilot logged in as DLH123, observer logged in as DLH123A
+            bool isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const;
 
             //! Get callsign (normalized)
             const QString &asString() const { return m_callsign; }
