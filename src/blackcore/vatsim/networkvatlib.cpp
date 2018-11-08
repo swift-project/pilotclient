@@ -488,9 +488,7 @@ namespace BlackCore
             if (!m_net) { initializeSession(); }
             this->clearState();
             m_filterPasswordFromLogin = true;
-            QByteArray callsign = toFSDnoColon(m_loginMode == LoginAsObserver ?
-                                               m_ownCallsign.getAsObserverCallsignString() :
-                                               m_ownCallsign.asString());
+            QByteArray callsign = toFSDnoColon(m_ownCallsign.asString());
             QByteArray name;
             if (m_loginMode == LoginAsObserver)
             {
