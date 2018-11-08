@@ -55,8 +55,17 @@ namespace BlackMisc
                 IndexNormalVector
             };
 
+            //! Ctor
+            ICoordinateGeodetic() = default;
+
             //! Destructor
             virtual ~ICoordinateGeodetic();
+
+            //! Copy constructor
+            ICoordinateGeodetic(const ICoordinateGeodetic &) = default;
+
+            //! Copy assignment operator
+            ICoordinateGeodetic &operator =(const ICoordinateGeodetic &) = default;
 
             //! Latitude
             virtual CLatitude latitude() const = 0;

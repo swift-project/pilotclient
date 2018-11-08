@@ -541,20 +541,20 @@ namespace BlackCore
         bool   m_pausedSimFreezesInterpolation  = false;  //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
         int    m_timerId = -1;                            //!< dispatch timer id
-        int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count
-        int    m_statsUpdateAircraftLimited = 0;          //!< skipped because of max.update limitations
-        double m_statsUpdateAircraftTimeAvgMs = 0;        //!< statistics average update time
-        qint64 m_updateAllRemoteAircraftUntil = 0;        //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
+        int    m_statsUpdateAircraftRuns        = 0;      //!< statistics update count
+        int    m_statsUpdateAircraftLimited     = 0;      //!< skipped because of max.update limitations
+        double m_statsUpdateAircraftTimeAvgMs   = 0;      //!< statistics average update time
+        qint64 m_updateAllRemoteAircraftUntil   = 0;      //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
-        qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
-        qint64 m_statsMaxUpdateTimeMs = 0;                //!< statistics max.update time
+        qint64 m_statsCurrentUpdateTimeMs       = 0;      //!< statistics current update time
+        qint64 m_statsMaxUpdateTimeMs           = 0;      //!< statistics max.update time
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
         BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
         BlackMisc::Aviation::CTimestampPerCallsign  m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
-        BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situation sent to simulator
+        BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
         BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
 
         // some optional functionality which can be used by the simulators as needed
