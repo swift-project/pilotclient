@@ -1963,8 +1963,15 @@ namespace BlackSimPlugin
             Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height (altitude)");
             Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO,  "Missing position");
 
+            // lat/Lng, NO PBH
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
-            position.Heading = situation.getHeading().value(CAngleUnit::deg());
+
+            // MSFS has inverted pitch and bank angles
+            position.Pitch    = -situation.getPitch().value(CAngleUnit::deg());
+            position.Bank     = -situation.getBank().value(CAngleUnit::deg());
+            position.Heading  = situation.getHeading().value(CAngleUnit::deg());
+            position.OnGround = 0U; // not on ground
+
             const double gsKts = situation.getGroundSpeed().value(CSpeedUnit::kts());
             position.Airspeed = static_cast<DWORD>(qRound(gsKts));
 
@@ -1972,14 +1979,13 @@ namespace BlackSimPlugin
             if (gsKts < 0.0)
             {
                 // we get negative GS for pushback and helicopters
-                // do do we handle them her with DWORD
+                // here we handle them her with DWORD (unsigned)
                 position.Airspeed = 0U;
             }
-
-            // MSFS has inverted pitch and bank angles
-            position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
-            position.Bank  = -situation.getBank().value(CAngleUnit::deg());
-            position.OnGround = 0U; // not on ground
+            else
+            {
+                position.Airspeed = static_cast<DWORD>(qRound(gsKts));
+            }
 
             if (sendGnd && situation.isOnGroundInfoAvailable())
             {
