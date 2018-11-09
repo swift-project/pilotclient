@@ -40,7 +40,7 @@ namespace BlackGui
             BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
 
             //! Set the coordinate
-            void setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+            bool setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
             //! \name Form class implementations
             //! @{

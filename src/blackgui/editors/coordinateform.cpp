@@ -73,9 +73,11 @@ namespace BlackGui
         CCoordinateForm::~CCoordinateForm()
         { }
 
-        void CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
+        bool CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
         {
+            if (coordinate == m_coordinate) { return false; }
             m_coordinate = coordinate;
+
 
             const CLatitude lat = coordinate.latitude();
             const QString latWgs = lat.toWgs84();
@@ -117,7 +119,11 @@ namespace BlackGui
             ui->le_LngSec->setText(lngParts.secAsString());
             ui->le_LngSecFrag->setText(lngParts.fractionalSecAsString());
 
-            ui->le_Elevation->setText(coordinate.geodeticHeightAsString());
+            const QString elvString = coordinate.geodeticHeightAsString();
+            ui->le_Elevation->setText(elvString);
+            ui->lblp_ElvCheck->setTicked(!elvString.isEmpty());
+
+            return true;
         }
 
         void CCoordinateForm::setReadOnly(bool readonly)
@@ -143,6 +149,7 @@ namespace BlackGui
 
         CStatusMessageList CCoordinateForm::validate(bool nested) const
         {
+            // not implemented
             Q_UNUSED(nested);
             CStatusMessageList ml;
             return ml;

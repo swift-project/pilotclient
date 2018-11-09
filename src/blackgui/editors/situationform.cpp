@@ -9,6 +9,8 @@
 
 #include "situationform.h"
 #include "ui_situationform.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackmisc/pq/pressure.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/stringutils.h"
@@ -36,16 +38,21 @@ namespace BlackGui
 
             connect(ui->hs_Bank, &QSlider::valueChanged, this, &CSituationForm::bankSliderChanged);
             connect(ui->hs_Pitch, &QSlider::valueChanged, this, &CSituationForm::pitchSliderChanged);
+            connect(ui->hs_Heading, &QSlider::valueChanged, this, &CSituationForm::headingSliderChanged);
             connect(ui->hs_Pressure, &QSlider::valueChanged, this, &CSituationForm::pressureSliderChanged);
             connect(ui->le_Bank, &QLineEdit::editingFinished, this, &CSituationForm::bankEntered);
             connect(ui->le_Pitch, &QLineEdit::editingFinished, this, &CSituationForm::pitchEntered);
             connect(ui->le_Pressure, &QLineEdit::editingFinished, this, &CSituationForm::pressureEntered);
+            connect(ui->le_Heading, &QLineEdit::editingFinished, this, &CSituationForm::headingEntered);
+
             connect(ui->tb_ResetBank, &QToolButton::clicked, this, &CSituationForm::resetBank);
             connect(ui->tb_ResetPitch, &QToolButton::clicked, this, &CSituationForm::resetPitch);
+            connect(ui->tb_ResetHeading, &QToolButton::clicked, this, &CSituationForm::resetHeading);
             connect(ui->tb_ResetPressure, &QToolButton::clicked, this, &CSituationForm::resetPressure);
-            connect(ui->pb_Set, &QPushButton::clicked, this, &CSituationForm::changeAircraftSituation);
-            connect(ui->pb_SetEnvironment, &QPushButton::clicked, this, &CSituationForm::changeAircraftSituation);
-            connect(ui->comp_Coordinate, &CCoordinateForm::changedCoordinate, this, &CSituationForm::changeAircraftSituation);
+            connect(ui->pb_SetOwnAircraft, &QPushButton::released, this, &CSituationForm::changeAircraftSituation);
+            connect(ui->pb_SetEnvironment, &QPushButton::released, this, &CSituationForm::changeAircraftSituation);
+            connect(ui->pb_PresetOwnAircraft, &QPushButton::released, this, &CSituationForm::presetOwnAircraftSituation);
+            connect(ui->comp_Coordinate, &CCoordinateForm::changedCoordinate, this, &CSituationForm::onCoordinateChanged);
         }
 
         CSituationForm::~CSituationForm()
@@ -54,6 +61,9 @@ namespace BlackGui
         void CSituationForm::setSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
             ui->comp_Coordinate->setCoordinate(situation);
+            this->bankSliderChanged(situation.getBank().valueInteger(CAngleUnit::deg()));
+            this->pitchSliderChanged(situation.getPitch().valueInteger(CAngleUnit::deg()));
+            this->headingSliderChanged(situation.getHeading().valueInteger(CAngleUnit::deg()));
         }
 
         CAircraftSituation CSituationForm::getSituation() const
@@ -64,6 +74,7 @@ namespace BlackGui
             CAircraftSituation s(position);
             s.setBank(this->getBankAngle());
             s.setPitch(this->getPitchAngle());
+            s.setHeading(CHeading(this->getHeadingAngle(), CHeading::True));
             s.setGroundSpeed(this->getGroundSpeed());
 
             if (!pressureAltitude.isNull() && pressureAltitude.getAltitudeType() == CAltitude::PressureAltitude)
@@ -101,6 +112,20 @@ namespace BlackGui
             return CAngle::normalizeDegrees180(vd, RoundDigits);
         }
 
+        CAngle CSituationForm::getHeadingAngle() const
+        {
+            return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg());
+        }
+
+        double CSituationForm::getHeadingAngleDegrees() const
+        {
+            const QString v(ui->le_Heading->text().replace(',', '.'));
+            bool ok;
+            double vd = v.toDouble(&ok);
+            if (!ok) { vd = 0.0; }
+            return CAngle::normalizeDegrees180(vd, RoundDigits);
+        }
+
         double CSituationForm::getBarometricPressureMslMillibar() const
         {
             const QString v(ui->le_Pressure->text().replace(',', '.'));
@@ -123,6 +148,17 @@ namespace BlackGui
         void CSituationForm::setReadOnly(bool readonly)
         {
             ui->comp_Coordinate->setReadOnly(readonly);
+
+            ui->le_Bank->setReadOnly(readonly);
+            ui->le_Heading->setReadOnly(readonly);
+            ui->le_Pitch->setReadOnly(readonly);
+            ui->le_Pressure->setReadOnly(readonly);
+
+            ui->hs_Bank->setEnabled(!readonly);
+            ui->hs_Heading->setEnabled(!readonly);
+            ui->hs_Pitch->setEnabled(!readonly);
+            ui->hs_Pressure->setEnabled(!readonly);
+
             this->forceStyleSheetUpdate();
         }
 
@@ -143,7 +179,7 @@ namespace BlackGui
 
         void CSituationForm::showSetButton(bool visible)
         {
-            ui->pb_Set->setVisible(visible);
+            ui->pb_SetOwnAircraft->setVisible(visible);
         }
 
         int clampAngle(int in)
@@ -163,6 +199,13 @@ namespace BlackGui
             const int angle = clampAngle(qRound(this->getPitchAngleDegrees()));
             if (value == angle) { return; } // avoid roundtrips
             ui->le_Pitch->setText(QString::number(value));
+        }
+
+        void CSituationForm::headingSliderChanged(int value)
+        {
+            const int angle = clampAngle(qRound(this->getHeadingAngleDegrees()));
+            if (value == angle) { return; } // avoid roundtrips
+            ui->le_Heading->setText(QString::number(value));
         }
 
         void CSituationForm::pressureSliderChanged(int value)
@@ -206,6 +249,23 @@ namespace BlackGui
             ui->hs_Pitch->setValue(0);
         }
 
+        void CSituationForm::headingEntered()
+        {
+            const double ad = this->getHeadingAngleDegrees();
+            QString n = QString::number(ad, 'g', 3 + RoundDigits);
+            if (ui->le_Heading->validator()) { dotToLocaleDecimalPoint(n); }
+            ui->le_Heading->setText(n);
+            const int angle = clampAngle(qRound(ad));
+            if (angle == ui->hs_Heading->value()) { return; } // avoid roundtrips
+            ui->hs_Heading->setValue(angle);
+        }
+
+        void CSituationForm::resetHeading()
+        {
+            ui->le_Heading->setText("0");
+            ui->hs_Heading->setValue(0);
+        }
+
         void CSituationForm::pressureEntered()
         {
             const double pd = this->getBarometricPressureMslMillibar();
@@ -223,6 +283,18 @@ namespace BlackGui
             static const QString vs(dotToLocaleDecimalPoint(QString::number(CAltitude::standardISASeaLevelPressure().valueRounded(CPressureUnit::mbar(), 2))));
             ui->le_Pressure->setText(vs);
             ui->hs_Pressure->setValue(v);
+        }
+
+        void CSituationForm::presetOwnAircraftSituation()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+            const CAircraftSituation s = sGui->getIContextOwnAircraft()->getOwnAircraftSituation();
+            this->setSituation(s);
+        }
+
+        void CSituationForm::onCoordinateChanged()
+        {
+            emit this->changeAircraftSituation();
         }
     } // ns
 } // ns

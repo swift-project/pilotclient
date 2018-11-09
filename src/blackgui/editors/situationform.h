@@ -18,8 +18,6 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSituationForm; }
 namespace BlackGui
 {
@@ -74,6 +72,12 @@ namespace BlackGui
             //! Get pitch angle
             double getPitchAngleDegrees() const;
 
+            //! Get heading angle
+            BlackMisc::PhysicalQuantities::CAngle getHeadingAngle() const;
+
+            //! Get heading angle
+            double getHeadingAngleDegrees() const;
+
             //! Get barometric pressure at MSL (mean sea level)
             BlackMisc::PhysicalQuantities::CPressure getBarometricPressureMsl() const;
 
@@ -83,15 +87,24 @@ namespace BlackGui
             //! Get pressure at mean sea level
             double getBarometricPressureMslMillibar() const;
 
+            //! Values changed from UI @{
             void bankSliderChanged(int value);
             void pitchSliderChanged(int value);
+            void headingSliderChanged(int value);
             void pressureSliderChanged(int value);
             void bankEntered();
             void resetBank();
             void pitchEntered();
             void resetPitch();
+            void headingEntered();
+            void resetHeading();
             void pressureEntered();
             void resetPressure();
+            void presetOwnAircraftSituation();
+            //! @}
+
+            //! Coordinate has been changed
+            void onCoordinateChanged();
 
             QScopedPointer<Ui::CSituationForm> ui;
         };

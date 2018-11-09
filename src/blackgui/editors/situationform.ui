@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
-    <height>439</height>
+    <width>362</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,19 +29,102 @@
    <item>
     <widget class="QGroupBox" name="gb_Situation">
      <property name="title">
-      <string>Situation</string>
+      <string>Situation (PBH)</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="vl_Situation">
       <item>
-       <widget class="QFrame" name="comp_Situation">
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gl_Situation" columnstretch="1,0,0,0">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_Bank">
+       <widget class="QFrame" name="fr_Situation">
+        <layout class="QGridLayout" name="gl_Situation" columnstretch="0,0,0,1">
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="le_Heading">
            <property name="text">
-            <string>Bank (-179° to 180°):</string>
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QSlider" name="hs_Heading">
+           <property name="minimum">
+            <number>-179</number>
+           </property>
+           <property name="maximum">
+            <number>180</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3" alignment="Qt::AlignRight">
+          <widget class="QPushButton" name="pb_SetOwnAircraft">
+           <property name="text">
+            <string>set</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QToolButton" name="tb_ResetPitch">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="lbl_GsKts">
+           <property name="text">
+            <string>Ground speed (kts):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="sb_GsKts">
+           <property name="suffix">
+            <string>kts</string>
+           </property>
+           <property name="maximum">
+            <number>300</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lbl_Heading">
+           <property name="text">
+            <string>Heading (-179° to 180°):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QToolButton" name="tb_ResetHeading">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_Pitch">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="placeholderText">
+            <string>deg.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_Bank">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="placeholderText">
+            <string>deg.</string>
            </property>
           </widget>
          </item>
@@ -64,23 +147,21 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="le_Pitch">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_Bank">
            <property name="text">
-            <string>0</string>
-           </property>
-           <property name="placeholderText">
-            <string>deg.</string>
+            <string>Bank (-179° to 180°):</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="le_Bank">
+         <item row="0" column="2">
+          <widget class="QToolButton" name="tb_ResetBank">
            <property name="text">
-            <string>0</string>
+            <string>...</string>
            </property>
-           <property name="placeholderText">
-            <string>deg.</string>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
            </property>
           </widget>
          </item>
@@ -110,65 +191,6 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <spacer name="vs_Situation">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="2">
-          <widget class="QToolButton" name="tb_ResetBank">
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
-             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QToolButton" name="tb_ResetPitch">
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
-             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3" alignment="Qt::AlignRight">
-          <widget class="QPushButton" name="pb_Set">
-           <property name="text">
-            <string>set</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lbl_GsKts">
-           <property name="text">
-            <string>Ground speed (kts):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QSpinBox" name="sb_GsKts">
-           <property name="suffix">
-            <string>kts</string>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
@@ -180,7 +202,7 @@
      <property name="title">
       <string>Coordinate</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="vl_Coordinate">
       <item>
        <widget class="BlackGui::Editors::CCoordinateForm" name="comp_Coordinate">
         <property name="minimumSize">
@@ -205,16 +227,10 @@
      <property name="title">
       <string>Environment</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="v_Environment">
       <item>
-       <widget class="QFrame" name="comp_Environment">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gl_Environment" columnstretch="1,0,0,0">
+       <widget class="QFrame" name="fr_Environment">
+        <layout class="QGridLayout" name="gl_Environment" columnstretch="0,0,0,1">
          <item row="0" column="0">
           <widget class="QLabel" name="lbl_Pressure">
            <property name="text">
@@ -287,23 +303,17 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignRight">
+    <widget class="QPushButton" name="pb_PresetOwnAircraft">
+     <property name="text">
+      <string>reset to own aircraft values</string>
+     </property>
     </widget>
    </item>
   </layout>
@@ -316,6 +326,24 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_Bank</tabstop>
+  <tabstop>tb_ResetBank</tabstop>
+  <tabstop>hs_Bank</tabstop>
+  <tabstop>le_Pitch</tabstop>
+  <tabstop>tb_ResetPitch</tabstop>
+  <tabstop>hs_Pitch</tabstop>
+  <tabstop>le_Heading</tabstop>
+  <tabstop>tb_ResetHeading</tabstop>
+  <tabstop>hs_Heading</tabstop>
+  <tabstop>sb_GsKts</tabstop>
+  <tabstop>pb_SetOwnAircraft</tabstop>
+  <tabstop>le_Pressure</tabstop>
+  <tabstop>tb_ResetPressure</tabstop>
+  <tabstop>hs_Pressure</tabstop>
+  <tabstop>pb_SetEnvironment</tabstop>
+  <tabstop>pb_PresetOwnAircraft</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>
