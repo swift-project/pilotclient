@@ -204,10 +204,14 @@ namespace BlackMisc
                 currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
                 if (currentSituation.isNull()) { break; }
 
-                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                // if we get here and the vector is invalid it means we haven't handled it correctly in one of the interpolators
+                if (!currentSituation.isValidVectorRange())
                 {
-                    Q_ASSERT_X(currentSituation.isValidVectorRange(), Q_FUNC_INFO, "Invalid interpolation situation");
+                    if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(false, Q_FUNC_INFO, "Invalid interpolation situation"); }
+                    return CAircraftSituation::null();
                 }
+
+                // GND flag.
                 if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
 
                 // as we now have the position and can interpolate elevation

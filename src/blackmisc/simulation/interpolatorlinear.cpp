@@ -8,6 +8,7 @@
  */
 
 #include "interpolatorlinear.h"
+#include "interpolatorfunctions.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -62,11 +63,23 @@ namespace BlackMisc
             const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
 
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(oldVec), Q_FUNC_INFO, "Invalid old vector");
+                BLACK_VERIFY_X(CAircraftSituation::isValidVector(newVec), Q_FUNC_INFO, "Invalid new vector");
+                BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Invalid fraction");
+            }
+
             // Interpolate position: pos = (posB - posA) * t + posA
             CCoordinateGeodetic newPosition;
             newPosition.setNormalVector((newVec[0] - oldVec[0]) * m_simulationTimeFraction + oldVec[0],
                                         (newVec[1] - oldVec[1]) * m_simulationTimeFraction + oldVec[1],
                                         (newVec[2] - oldVec[2]) * m_simulationTimeFraction + oldVec[2]);
+
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(newPosition.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
+            }
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
             // avoid underflow below ground elevation by using getCorrectedAltitude

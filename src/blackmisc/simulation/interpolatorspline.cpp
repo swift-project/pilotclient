@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/interpolatorspline.h"
+#include "interpolatorspline.h"
+#include "interpolatorfunctions.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
@@ -221,7 +222,7 @@ namespace BlackMisc
                 m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
                 m_prevSampleTime = m_s[1].getMSecsSinceEpoch();
                 m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-                m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2]));
+                m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2])); // older, newer
                 Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
             }
 
@@ -245,7 +246,7 @@ namespace BlackMisc
             {
                 BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
                 BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
-                BLACK_VERIFY_X(timeFraction < 1.01, Q_FUNC_INFO, "Expect fraction 0-1");
+                BLACK_VERIFY_X(isValidTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
             }
 
             const qint64 interpolatedTime = m_prevSampleTime + qRound(timeFraction * dt2);
