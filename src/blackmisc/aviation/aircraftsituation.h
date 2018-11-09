@@ -362,7 +362,7 @@ namespace BlackMisc
             const CHeading &getHeading() const { return m_heading; }
 
             //! Set heading
-            void setHeading(const CHeading &heading) { m_heading = heading; }
+            void setHeading(const CHeading &heading);
 
             //! Get altitude
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
@@ -405,13 +405,13 @@ namespace BlackMisc
             const PhysicalQuantities::CAngle &getPitch() const { return m_pitch; }
 
             //! Set pitch
-            void setPitch(const PhysicalQuantities::CAngle &pitch) { m_pitch = pitch; }
+            void setPitch(const PhysicalQuantities::CAngle &pitch);
 
             //! Get bank (angle)
             const PhysicalQuantities::CAngle &getBank() const { return m_bank; }
 
             //! Set bank (angle)
-            void setBank(const PhysicalQuantities::CAngle &bank) { m_bank = bank; }
+            void setBank(const PhysicalQuantities::CAngle &bank);
 
             //! Set PBH values to 0 (zero)
             void setZeroPBH();

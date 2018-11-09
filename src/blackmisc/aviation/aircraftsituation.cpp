@@ -49,7 +49,7 @@ namespace BlackMisc
 
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CElevationPlane &groundElevation)
             : m_position(position), m_groundElevationPlane(groundElevation),
-              m_heading(heading), m_pitch(pitch), m_bank(bank),
+              m_heading(heading.normalizedToPlusMinus180Degrees()), m_pitch(pitch.normalizedToPlusMinus180Degrees()), m_bank(bank.normalizedToPlusMinus180Degrees()),
               m_groundSpeed(gs)
         {
             m_pressureAltitude = position.geodeticHeight().toPressureAltitude(CPressure(1013.25, CPressureUnit::mbar()));
@@ -58,7 +58,7 @@ namespace BlackMisc
         CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CElevationPlane &groundElevation)
             : m_correspondingCallsign(correspondingCallsign),
               m_position(position), m_groundElevationPlane(groundElevation),
-              m_heading(heading), m_pitch(pitch), m_bank(bank),
+              m_heading(heading.normalizedToPlusMinus180Degrees()), m_pitch(pitch.normalizedToPlusMinus180Degrees()), m_bank(bank.normalizedToPlusMinus180Degrees()),
               m_groundSpeed(gs)
         {
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
@@ -889,6 +889,11 @@ namespace BlackMisc
             return ag;
         }
 
+        void CAircraftSituation::setHeading(const CHeading &heading)
+        {
+            m_heading = heading.normalizedToPlusMinus180Degrees();
+        }
+
         const CLengthUnit &CAircraftSituation::getAltitudeOrDefaultUnit() const
         {
             if (this->getAltitude().isNull()) { return CAltitude::defaultUnit(); }
@@ -987,6 +992,16 @@ namespace BlackMisc
         {
             Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
             m_pressureAltitude = altitude;
+        }
+
+        void CAircraftSituation::setPitch(const CAngle &pitch)
+        {
+            m_pitch = pitch.normalizedToPlusMinus180Degrees();
+        }
+
+        void CAircraftSituation::setBank(const CAngle &bank)
+        {
+            m_bank = bank.normalizedToPlusMinus180Degrees();
         }
 
         void CAircraftSituation::setZeroPBH()

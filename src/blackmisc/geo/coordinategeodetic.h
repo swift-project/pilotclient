@@ -299,6 +299,9 @@ namespace BlackMisc
             //! Set normal vector
             void setNormalVector(const std::array<double, 3> &normalVector);
 
+            //! Clamp vector values if out [-1, 1]
+            int clampVector();
+
             //! Set to null
             void setNull()
             {

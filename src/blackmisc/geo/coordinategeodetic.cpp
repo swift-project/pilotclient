@@ -223,17 +223,23 @@ namespace BlackMisc
                    v[0] >= -l && v[1] >= -l && v[2] >= -l;
         }
 
+        int CCoordinateGeodetic::clampVector()
+        {
+            int c = 0;
+            // *INDENT-OFF*
+            if (m_x < -1.0) { m_x = -1.0; c++; } else if (m_x > 1.0) { m_x = 1.0; c++; }
+            if (m_y < -1.0) { m_y = -1.0; c++; } else if (m_y > 1.0) { m_y = 1.0; c++; }
+            if (m_z < -1.0) { m_z = -1.0; c++; } else if (m_z > 1.0) { m_z = 1.0; c++; }
+            // *INDENT-ON*
+            return c;
+        }
+
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (ICoordinateGeodetic::canHandleIndex(index))
-            {
-                return ICoordinateGeodetic::propertyByIndex(index);
-            }
-            else
-            {
-                return CValueObject::propertyByIndex(index);
-            }
+            return (ICoordinateGeodetic::canHandleIndex(index)) ?
+                   ICoordinateGeodetic::propertyByIndex(index) :
+                   CValueObject::propertyByIndex(index);
         }
 
         void CCoordinateGeodetic::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
@@ -255,14 +261,9 @@ namespace BlackMisc
 
         int CCoordinateGeodetic::comparePropertyByIndex(const CPropertyIndex &index, const CCoordinateGeodetic &compareValue) const
         {
-            if (ICoordinateGeodetic::canHandleIndex(index))
-            {
-                return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
-            }
-            else
-            {
-                return CValueObject::comparePropertyByIndex(index, compareValue);
-            }
+            return ICoordinateGeodetic::canHandleIndex(index) ?
+                   ICoordinateGeodetic::comparePropertyByIndex(index, compareValue) :
+                   CValueObject::comparePropertyByIndex(index, compareValue);
         }
 
         CCoordinateGeodetic::CCoordinateGeodetic(const std::array<double, 3> &normalVector)

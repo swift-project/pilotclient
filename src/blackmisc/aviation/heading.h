@@ -87,6 +87,12 @@ namespace BlackMisc
             //! Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
+            //! Normalize to +- 180deg, [-179.99, 180.0]
+            void normalizeToPlusMinus180Degrees();
+
+            //! As [-179.99, 180.0] normalized heading
+            CHeading normalizedToPlusMinus180Degrees() const;
+
             //! Register metadata
             static void registerMetadata();
 

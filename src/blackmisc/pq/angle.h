@@ -97,6 +97,12 @@ namespace BlackMisc
             //! Tangent of angle
             double tan() const;
 
+            //! Normalize to +- 180deg, [-179.99, 180.0]
+            void normalizeToPlusMinus180Degrees();
+
+            //! As [-179.99, 180.0] normalized heading
+            CAngle normalizedToPlusMinus180Degrees() const;
+
             //! Normalize: -180< degrees ≤180
             static double normalizeDegrees180(double degrees, int roundDigits = -1);
 

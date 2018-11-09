@@ -109,6 +109,21 @@ namespace BlackMisc
             return std::tan(this->value(CAngleUnit::rad()));
         }
 
+        void CAngle::normalizeToPlusMinus180Degrees()
+        {
+            const double v = normalizeDegrees180(this->value(CAngleUnit::deg()));
+            const CAngleUnit u = this->getUnit();
+            *this = CAngle(v, CAngleUnit::deg());
+            this->switchUnit(u);
+        }
+
+        CAngle CAngle::normalizedToPlusMinus180Degrees() const
+        {
+            CAngle copy(*this);
+            copy.normalizeToPlusMinus180Degrees();
+            return copy;
+        }
+
         double CAngle::normalizeDegrees180(double degrees, int roundDigits)
         {
             double d = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;

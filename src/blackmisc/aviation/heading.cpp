@@ -21,18 +21,28 @@ namespace BlackMisc
         QString CHeading::convertToQString(bool i18n) const
         {
             static const QString s("%1 %2");
-            if (i18n)
-            {
-                return s.arg(CAngle::convertToQString(i18n),
-                             this->isMagneticHeading() ?
-                             QCoreApplication::translate("Aviation", "magnetic") :
-                             QCoreApplication::translate("Aviation", "true"));
-            }
-            else
-            {
-                return s.arg(CAngle::convertToQString(i18n),
-                             this->isMagneticHeading() ? "magnetic" : "true");
-            }
+            return i18n ?
+                   s.arg(CAngle::convertToQString(i18n),
+                         this->isMagneticHeading() ?
+                         QCoreApplication::translate("Aviation", "magnetic") :
+                         QCoreApplication::translate("Aviation", "true")) :
+                   s.arg(CAngle::convertToQString(i18n),
+                         this->isMagneticHeading() ? "magnetic" : "true");
+        }
+
+        void CHeading::normalizeToPlusMinus180Degrees()
+        {
+            const double v = normalizeDegrees180(this->value(CAngleUnit::deg()));
+            const CAngleUnit u = this->getUnit();
+            *this = CHeading(v, this->getReferenceNorth(), CAngleUnit::deg());
+            this->switchUnit(u);
+        }
+
+        CHeading CHeading::normalizedToPlusMinus180Degrees() const
+        {
+            CHeading copy(*this);
+            copy.normalizeToPlusMinus180Degrees();
+            return copy;
         }
 
         void CHeading::registerMetadata()
