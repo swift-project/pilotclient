@@ -1,0 +1,51 @@
+List of Default Aircraft:
+FS2004
+
+Aerospataile-BAC Concorde (FS2000)
+Airbus A321
+AirCreation 582-SL Trike Ultralight
+AgustaWestland EH-101 (Acceleration/Deluxe)
+Beechcraft Baron 58
+Beechcraft Baron 58 G1000 (Deluxe & Acceleration/Deluxe)
+Beechcraft King Air 350
+Bell 206B JetRanger III
+Boeing 727 (unknown variant, AI aircraft in FS1998, unknown if flyable with .AIR file modification)
+Boeing 737-400 (FS1998, FS2004)
+Boeing 737-800
+Boeing 747-400
+Boeing 777-300 (FS2004)
+Boeing F/A-18 Hornet (Acceleration/Deluxe)
+Bombardier CRJ-700
+Bombardier Learjet 35 (FS1995)
+Bombardier Learjet 45
+Cessna C208B Caravan Amphibian (FS2004)
+Cessna 208-B Grand Caravan
+Cessna 172S Skyhawk SP
+Cessna 172S Skyhawk SP G1000
+Cessna 182 Skylane (FS1998, FS2004)
+Cessna 182 Skylane RG (FS1998)
+Curtiss JN-4 "Jenny"
+De Havilland Dash 8-100 (AI only, but is flyable with modifications to the .AIR file)
+De Havilland DH-88 Comet (FS2004)
+De Havilland DHC-2 Beaver Floatplane
+DG-808-S Competitive Sailplane
+Douglas DC-3
+Extra EA-300-S
+Ford Trimotor (FS2004)
+Grumman G-21-A Goose (Deluxe & Acceleration/Deluxe)
+Maule Orion M-7-260-C Super Rocket on skis (Deluxe & Acceleration/Deluxe)
+Maule Orion M-7-260-C Super Rocket (Deluxe & Acceleration/Deluxe)
+Lockheed Vega 5B (FS2004)
+Lockheed Vega 5C (FS2004)
+McDonnell-Douglas/Boeing MD-83 (AI only, but is flyable with modifications to the .AIR file)
+Mooney M-20-M Bravo
+Mooney M-20-M Bravo G1000 (Deluxe & Acceleration/Deluxe)
+North American P-51D Racer (Acceleration/Deluxe)
+Piper J-3C-65 Cub
+Piper PA-28 Cherokee (AI only, but is flyable with modifications to the .AIR file)
+Robinson R22 Beta II
+Ryan NYP (FS2004)
+Schweizer 2-32S Sailplane (FS1998, FS004)
+Sopwith Camel (FS1998)
+Vickers Vimy (FS2004)
+Wright Flyer I (FS2004)
