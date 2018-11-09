@@ -16,13 +16,14 @@
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {
     namespace Simulation
     {
         //! Simple interpolator for pitch, bank, heading, groundspeed
-        class CInterpolatorPbh
+        class BLACKMISC_EXPORT CInterpolatorPbh
         {
         public:
             //! Constructor
@@ -42,10 +43,17 @@ namespace BlackMisc
             const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
             //! @}
 
+            //! Set situations
+            //! \remark mostly needed for UNIT tests
+            void setSituations(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer);
+
             //! Change time fraction
-            void setTimeFraction(double tf) { m_simulationTimeFraction = tf; }
+            void setTimeFraction(double tf);
 
         private:
+            //! Interpolate angle
+            static PhysicalQuantities::CAngle interpolateAngle(const PhysicalQuantities::CAngle &begin, const PhysicalQuantities::CAngle &end, double timeFraction0to1);
+
             double m_simulationTimeFraction = 0.0;
             Aviation::CAircraftSituation m_oldSituation;
             Aviation::CAircraftSituation m_newSituation;
