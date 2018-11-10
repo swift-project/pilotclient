@@ -88,6 +88,12 @@ namespace BlackMisc
             return s;
         }
 
+        const QString &CSimulatorPluginInfo::fgPluginIdentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.flightgear");
+            return s;
+        }
+
         const QString &CSimulatorPluginInfo::emulatedPluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.emulated");

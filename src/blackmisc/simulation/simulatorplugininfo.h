@@ -83,6 +83,9 @@ namespace BlackMisc
             //! Plugin identifier (XPlane)
             static const QString &xplanePluginIdentifier();
 
+            //! Plugin identifier (FlightGear)
+            static const QString &fgPluginIdentifier();
+
             //! Plugin identifier (emulated simulator plugin)
             static const QString &emulatedPluginIdentifier();
 

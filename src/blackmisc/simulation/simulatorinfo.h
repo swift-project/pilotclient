@@ -24,7 +24,7 @@
 #include <QSet>
 #include <QMetaType>
 #include <QMultiMap>
-#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -53,14 +53,15 @@ namespace BlackMisc
                 FS9         = 1 << 1,
                 XPLANE      = 1 << 2,
                 P3D         = 1 << 3,
+                FG          = 1 << 4,
                 FSX_P3D     = FSX | P3D,
                 AllFsFamily = FSX | FS9 | P3D,
-                All         = FSX | FS9 | XPLANE | P3D
+                All         = FSX | FS9 | XPLANE | P3D | FG
             };
             Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
             //! Number of known individual simulators
-            static constexpr int NumberOfSimulators = 4;
+            static constexpr int NumberOfSimulators = 5;
 
             //! Default constructor
             CSimulatorInfo();
@@ -78,7 +79,7 @@ namespace BlackMisc
             CSimulatorInfo(int flagsAsInt);
 
             //! Constructor
-            CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D);
+            CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
 
             //! Unspecified simulator
             bool isUnspecified() const;
@@ -94,6 +95,9 @@ namespace BlackMisc
 
             //! P3D?
             bool isP3D() const;
+
+            //! FG?
+            bool isFG() const;
 
             //! Any simulator?
             bool isAnySimulator() const;
@@ -143,7 +147,7 @@ namespace BlackMisc
             //! All simulators
             void setAllSimulators() { setSimulator(All); }
 
-            //! Compare for index
+            //! \copydoc Mixin::String::toQString
             int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const;
 
             //! \copydoc Mixin::String::toQString
@@ -165,13 +169,16 @@ namespace BlackMisc
             const QString &toPluginIdentifier() const;
 
             //! Bool flags to enum
-            static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D);
+            static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
 
             //! Identifer, as provided by plugin
             static Simulator identifierToSimulator(const QString &identifier);
 
             //! All simulators
             static const CSimulatorInfo &allSimulators();
+
+            //! All simulator strings
+            static const QStringList &allSimulatorStrings();
 
             //! All simulators as set
             static const QSet<CSimulatorInfo> &allSimulatorsSet();
@@ -189,6 +196,7 @@ namespace BlackMisc
             static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix);
 
             //! Const simulator info objects @{
+            static const CSimulatorInfo &fg() { static const CSimulatorInfo s(FG); return s; }
             static const CSimulatorInfo &fsx() { static const CSimulatorInfo s(FSX); return s; }
             static const CSimulatorInfo &p3d() { static const CSimulatorInfo s(P3D); return s; }
             static const CSimulatorInfo &fs9() { static const CSimulatorInfo s(FS9); return s; }
