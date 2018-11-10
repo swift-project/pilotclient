@@ -93,6 +93,8 @@ namespace BlackMisc
             OSLinux,
             OSMacOs,
             OSWindows,
+            SimulatorFG,
+            SimulatorFG16,
             SimulatorFS9,
             SimulatorFS916,
             SimulatorFSX,
@@ -498,6 +500,11 @@ namespace BlackMisc
         //! Simulator FS9 @{
         static const QPixmap &simulatorFS9();
         static const QPixmap &simulatorFS916();
+        //! @}
+
+        //! Simulator FG @{
+        static const QPixmap &simulatorFG();
+        static const QPixmap &simulatorFG16();
         //! @}
 
         //! Simulator XPlane @{

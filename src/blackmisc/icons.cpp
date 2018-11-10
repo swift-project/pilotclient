@@ -549,6 +549,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::simulatorFG()
+    {
+        static const QPixmap pm(":/simulators/icons/simulators/FG.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::simulatorFG16()
+    {
+        static const QPixmap pm(simulatorFG().scaled(32, 16, Qt::KeepAspectRatio));
+        return pm;
+    }
+
     const QPixmap &CIcons::simulatorXPlane()
     {
         static const QPixmap pm(":/simulators/icons/simulators/FS9.png");
@@ -1151,6 +1163,8 @@ namespace BlackMisc
         case OSLinux: return osLinux();
         case OSMacOs: return osMac();
         case OSWindows: return osWindows();
+        case SimulatorFG: return simulatorFG();
+        case SimulatorFG16: return simulatorFG16();
         case SimulatorFS9: return simulatorFS9();
         case SimulatorFS916: return simulatorFS916();
         case SimulatorFSX: return simulatorFSX();

@@ -98,6 +98,8 @@ namespace BlackMisc
             CIcon(CIcons::OSLinux, "Linux"),
             CIcon(CIcons::OSMacOs, "Mac OS"),
             CIcon(CIcons::OSWindows, "Windows"),
+            CIcon(CIcons::SimulatorFG, "FG"),
+            CIcon(CIcons::SimulatorFG16, "FG"),
             CIcon(CIcons::SimulatorFS9, "FS9"),
             CIcon(CIcons::SimulatorFS916, "FS9"),
             CIcon(CIcons::SimulatorFSX, "FSX"),

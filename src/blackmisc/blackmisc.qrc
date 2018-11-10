@@ -568,6 +568,7 @@
         <file>icons/simulators/FSX.png</file>
         <file>icons/simulators/Prepar3D.png</file>
         <file>icons/simulators/XPlane.png</file>
+        <file>icons/simulators/FG.png</file>
     </qresource>
     <qresource prefix="/famfamfam">
         <file>icons/famfamfam/icons/silk/control_eject.png</file>
