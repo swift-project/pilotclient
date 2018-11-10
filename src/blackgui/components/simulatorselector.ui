@@ -2,13 +2,18 @@
 <ui version="4.0">
  <class>CSimulatorSelector</class>
  <widget class="QFrame" name="CSimulatorSelector">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>188</width>
+    <height>66</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Simulator selector</string>
   </property>
   <layout class="QVBoxLayout" name="vl_SimulatorSelector">
-   <property name="spacing">
-    <number>0</number>
-   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -70,6 +75,19 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="cb_FG">
+        <property name="toolTip">
+         <string>FlightGear</string>
+        </property>
+        <property name="whatsThis">
+         <string>FlightGear</string>
+        </property>
+        <property name="text">
+         <string>FG</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -128,11 +146,61 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QRadioButton" name="rb_FG">
+        <property name="toolTip">
+         <string>FlightGear</string>
+        </property>
+        <property name="whatsThis">
+         <string>FlightGear</string>
+        </property>
+        <property name="text">
+         <string>FG</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="wi_ComboBox" native="true">
+     <layout class="QVBoxLayout" name="vl_ComboBox">
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="cb_Simulators"/>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cb_P3D</tabstop>
+  <tabstop>cb_FSX</tabstop>
+  <tabstop>cb_FS9</tabstop>
+  <tabstop>cb_XPlane</tabstop>
+  <tabstop>cb_FG</tabstop>
+  <tabstop>rb_P3D</tabstop>
+  <tabstop>rb_FSX</tabstop>
+  <tabstop>rb_FS9</tabstop>
+  <tabstop>rb_XPlane</tabstop>
+  <tabstop>rb_FG</tabstop>
+  <tabstop>cb_Simulators</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

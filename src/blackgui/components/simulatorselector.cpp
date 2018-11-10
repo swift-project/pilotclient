@@ -10,8 +10,9 @@
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/compare.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackmisc/compare.h"
+#include "blackconfig/buildconfig.h"
 #include "ui_simulatorselector.h"
 
 #include <QCheckBox>
@@ -20,6 +21,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 
@@ -32,17 +34,24 @@ namespace BlackGui
             ui(new Ui::CSimulatorSelector)
         {
             ui->setupUi(this);
+            this->enableFG(false && CBuildConfig::isLocalDeveloperDebugBuild());
             this->setMode(CheckBoxes);
 
             connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
             connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
             connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
+            connect(ui->rb_FG,  &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
             connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
 
             connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
             connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
             connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+            connect(ui->cb_FG,  &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
             connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+
+            connect(ui->cb_Simulators, &QComboBox::currentTextChanged, this, &CSimulatorSelector::comboBoxChanged);
+
+            this->addComboxBoxValues();
         }
 
         CSimulatorSelector::~CSimulatorSelector()
@@ -51,16 +60,22 @@ namespace BlackGui
         void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode)
         {
             m_mode = mode;
+
+            ui->wi_CheckBoxes->setVisible(false);
+            ui->wi_RadioButtons->setVisible(false);
+            ui->wi_ComboBox->setVisible(false);
+
             switch (mode)
             {
             default:
             case CheckBoxes:
                 ui->wi_CheckBoxes->setVisible(true);
-                ui->wi_RadioButtons->setVisible(false);
                 break;
             case RadioButtons:
-                ui->wi_CheckBoxes->setVisible(false);
                 ui->wi_RadioButtons->setVisible(true);
+                break;
+            case ComboBox:
+                ui->wi_ComboBox->setVisible(true);
                 break;
             }
             this->setToLastSelection();
@@ -68,20 +83,14 @@ namespace BlackGui
 
         CSimulatorInfo CSimulatorSelector::getValue() const
         {
-            if (m_noSelectionMeansAll && this->isUnselected())
-            {
-                return CSimulatorInfo::allSimulators();
-            }
+            if (m_noSelectionMeansAll && this->isUnselected()) { return CSimulatorInfo::allSimulators(); }
 
             switch (m_mode)
             {
             default:
-            case CheckBoxes:
-                return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(),
-                                      ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked());
-            case RadioButtons:
-                return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(),
-                                      ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked());
+            case CheckBoxes: return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), m_withFG && ui->cb_FG->isChecked());
+            case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), m_withFG && ui->rb_FG->isChecked());
+            case ComboBox: return CSimulatorInfo(ui->cb_Simulators->currentText());
             }
         }
 
@@ -95,12 +104,16 @@ namespace BlackGui
             ui->cb_FS9->setChecked(simulator.isFS9());
             ui->cb_XPlane->setChecked(simulator.isXPlane());
             ui->cb_P3D->setChecked(simulator.isP3D());
+            ui->cb_FG->setChecked(simulator.isFG());
 
             // radio buttons
             if (simulator.isFSX())    { ui->rb_FSX->setChecked(simulator.isFSX()); return; }
             if (simulator.isFS9())    { ui->rb_FS9->setChecked(simulator.isFS9()); return; }
             if (simulator.isXPlane()) { ui->rb_XPlane->setChecked(simulator.isXPlane()); return; }
             if (simulator.isP3D())    { ui->rb_P3D->setChecked(simulator.isP3D()); return; }
+            if (simulator.isFG())     { ui->rb_FG->setChecked(simulator.isFG()); return; }
+
+            ui->cb_Simulators->setCurrentText(simulator.toQString(true));
         }
 
         void CSimulatorSelector::setToLastSelection()
@@ -146,6 +159,7 @@ namespace BlackGui
                 return;
             }
 
+            if (!sGui || sGui->isShuttingDown()) { return; }
             QPointer<CSimulatorSelector> myself(this);
             QTimer::singleShot(deferredMs, this, [ = ]
             {
@@ -158,8 +172,19 @@ namespace BlackGui
         {
             ui->cb_FS9->setVisible(false);
             ui->cb_XPlane->setVisible(false);
+            ui->cb_FG->setVisible(false);
             ui->rb_FS9->setVisible(false);
             ui->rb_XPlane->setVisible(false);
+            ui->rb_FG->setVisible(false);
+        }
+
+        void CSimulatorSelector::enableFG(bool enabled)
+        {
+            m_withFG = enabled;
+            ui->cb_FG->setVisible(enabled);
+            ui->rb_FG->setVisible(enabled);
+            ui->cb_FG->setChecked(false);
+            ui->rb_FG->setChecked(false);
         }
 
         void CSimulatorSelector::checkAll()
@@ -169,9 +194,10 @@ namespace BlackGui
             ui->cb_FS9->setChecked(true);
             ui->cb_XPlane->setChecked(true);
             ui->cb_P3D->setChecked(true);
+            ui->cb_FG->setChecked(true);
 
             // radio
-            ui->rb_FSX->setChecked(true);
+            ui->rb_P3D->setChecked(true);
         }
 
         void CSimulatorSelector::uncheckAll()
@@ -181,6 +207,7 @@ namespace BlackGui
             ui->cb_FS9->setChecked(false);
             ui->cb_XPlane->setChecked(false);
             ui->cb_P3D->setChecked(false);
+            ui->cb_FG->setChecked(false);
         }
 
         bool CSimulatorSelector::isUnselected() const
@@ -190,12 +217,14 @@ namespace BlackGui
             {
             default:
             case CheckBoxes:
-                c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() ||
-                    ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked();
+                c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked() || (m_withFG && ui->rb_FG->isChecked());
                 break;
             case RadioButtons:
-                c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() ||
-                    ui->rb_XPlane->isChecked() || ui->cb_P3D->isChecked();
+                c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() || ui->cb_P3D->isChecked() || (m_withFG && ui->cb_FG->isChecked());
+                break;
+            case ComboBox:
+                const int i = ui->cb_Simulators->currentIndex();
+                c = i < 0;
                 break;
             }
             return !c;
@@ -208,10 +237,13 @@ namespace BlackGui
             {
             default:
             case CheckBoxes:
-                c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() &&
-                    ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked();
+                c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked() && (!m_withFG || ui->cb_FG->isChecked());
                 break;
             case RadioButtons:
+                // actually this should never be true
+                c = false;
+                break;
+            case ComboBox:
                 // actually this should never be true
                 c = false;
                 break;
@@ -244,6 +276,11 @@ namespace BlackGui
             }
         }
 
+        bool CSimulatorSelector::isSingleSelection() const
+        {
+            return m_mode == RadioButtons || m_mode == ComboBox;
+        }
+
         void CSimulatorSelector::setReadOnly(bool readOnly)
         {
             CGuiUtility::checkBoxesReadOnly(this, readOnly);
@@ -251,6 +288,10 @@ namespace BlackGui
             ui->rb_FS9->setEnabled(!readOnly);
             ui->rb_XPlane->setEnabled(!readOnly);
             ui->rb_P3D->setEnabled(!readOnly);
+            ui->rb_FG->setEnabled(!readOnly);
+
+            ui->cb_Simulators->setEnabled(!readOnly);
+
             this->setEnabled(!readOnly);
         }
 
@@ -268,15 +309,24 @@ namespace BlackGui
             m_digestButtonsChanged.inputSignal();
         }
 
+        void CSimulatorSelector::comboBoxChanged(const QString &value)
+        {
+            if (m_mode != ComboBox) { return; }
+            Q_UNUSED(value);
+            m_digestButtonsChanged.inputSignal();
+        }
+
         void CSimulatorSelector::rememberSelection()
         {
             if (!m_rememberSelection) { return; }
-            if (m_mode == RadioButtons)
+            if (this->isSingleSelection())
             {
+                // single
                 m_currentSimulator.set(this->getValue());
             }
             else
             {
+                // multiple
                 m_currentSimulators.set(this->getValue());
             }
         }
@@ -316,6 +366,11 @@ namespace BlackGui
             const CSimulatorInfo simulator(this->getValue());
             this->rememberSelection();
             emit this->changed(simulator);
+        }
+
+        void CSimulatorSelector::addComboxBoxValues()
+        {
+            ui->cb_Simulators->addItems(CSimulatorInfo::allSimulatorStrings());
         }
     } // ns
 } // ns

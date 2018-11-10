@@ -39,8 +39,9 @@ namespace BlackGui
             //! How to display
             enum Mode
             {
-                CheckBoxes,
-                RadioButtons
+                CheckBoxes,    //!< multiple selections
+                RadioButtons,  //!< single
+                ComboBox       //!< single
             };
 
             //! Constructor
@@ -73,6 +74,9 @@ namespace BlackGui
             //! Only show FSX/P3D
             void setFsxP3DOnly();
 
+            //! Enable FG
+            void enableFG(bool enabled);
+
             //! Set all, only making sense with checkboxes
             void checkAll();
 
@@ -100,6 +104,9 @@ namespace BlackGui
             //! Clear values
             void clear();
 
+            //! Single selection mode (radio buttons)
+            bool isSingleSelection() const;
+
             //! Set read only
             void setReadOnly(bool readOnly);
 
@@ -113,6 +120,9 @@ namespace BlackGui
 
             //! Checkbox changed
             void checkBoxChanged(bool checked);
+
+            //! ComboBox has been changed
+            void comboBoxChanged(const QString &value);
 
             //! Remember last selection
             void rememberSelection();
@@ -132,10 +142,14 @@ namespace BlackGui
             //! Emit the CSimulatorSelector::changed signal
             void emitChangedSignal();
 
+            //! Add all combobox values
+            void addComboxBoxValues();
+
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
+            bool m_withFG = false; //! with FG
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
-            bool m_rememberSelection = false;   //!< remember last selection
+            bool m_rememberSelection   = false; //!< remember last selection
             BlackMisc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };
             BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_currentSimulator  { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
             BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
