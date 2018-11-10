@@ -304,17 +304,17 @@
               <number>3</number>
              </property>
              <item>
-              <widget class="QScrollArea" name="scrollArea">
+              <widget class="QScrollArea" name="sa_FsdDetails">
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="sa_FsdDetails">
+               <widget class="QWidget" name="qw_FsdDetails">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
                   <width>253</width>
-                  <height>55</height>
+                  <height>45</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="vl_ScrollAreaFsdDetails">
@@ -755,36 +755,53 @@
          <item>
           <widget class="QFrame" name="fr_CurrentLoginAddInfo">
            <layout class="QGridLayout" name="gl_AddInfo" columnstretch="1,2,1">
-            <item row="0" column="2">
-             <widget class="QLineEdit" name="le_HomeBase">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="lbl_LoginSince">
               <property name="text">
                <string>Login since:</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="le_LoginAsAircaft">
+            <item row="1" column="0">
+             <widget class="QLabel" name="lbl_LoginAsAircraft">
+              <property name="text">
+               <string>Aircraft:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QLineEdit" name="le_LoginSince">
               <property name="readOnly">
                <bool>true</bool>
               </property>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QLabel" name="lbl_LoginAsAircraft">
+             <widget class="QLabel" name="lbl_LoginCallsign">
+              <property name="toolTip">
+               <string>Callsign/home</string>
+              </property>
               <property name="text">
-               <string>Aircraft/home:</string>
+               <string>CS/home:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="le_LoginCallsign">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="le_LoginHomeBase">
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="1" colspan="2">
-             <widget class="QLineEdit" name="le_LoginSince">
+             <widget class="QLineEdit" name="le_LoginAsAircaft">
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -961,7 +978,7 @@
   <tabstop>pb_OtherServersGotoSettings</tabstop>
   <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
   <tabstop>tw_Details</tabstop>
-  <tabstop>scrollArea</tabstop>
+  <tabstop>sa_FsdDetails</tabstop>
   <tabstop>le_SimulatorModel</tabstop>
   <tabstop>tb_SimulatorIcaoReverseLookup</tabstop>
   <tabstop>tb_MappingWizard</tabstop>
@@ -969,8 +986,8 @@
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
   <tabstop>selector_AirlineIcao</tabstop>
+  <tabstop>le_LoginCallsign</tabstop>
   <tabstop>le_LoginAsAircaft</tabstop>
-  <tabstop>le_HomeBase</tabstop>
   <tabstop>le_LoginSince</tabstop>
   <tabstop>tb_Timeout</tabstop>
   <tabstop>pb_Ok</tabstop>

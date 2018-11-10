@@ -68,10 +68,10 @@
         </property>
        </widget>
       </item>
-      <item alignment="Qt::AlignLeft">
+      <item alignment="Qt::AlignRight">
        <widget class="QPushButton" name="pb_SetDefaults">
         <property name="text">
-         <string> set defaults </string>
+         <string>set defaults</string>
         </property>
        </widget>
       </item>

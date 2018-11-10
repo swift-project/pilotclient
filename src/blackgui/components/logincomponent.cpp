@@ -129,6 +129,7 @@ namespace BlackGui
             connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao, Qt::QueuedConnection);
             connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao, Qt::QueuedConnection);
             connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::reverseLookupAircraftModel);
+            connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
             if (sGui && sGui->getIContextSimulator())
             {
@@ -142,7 +143,10 @@ namespace BlackGui
             connect(ui->tb_Timeout, &QToolButton::clicked, this, &CLoginComponent::toggleTimeout);
 
             // web service data
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
+            if (sGui && sGui->getWebDataServices())
+            {
+                connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
+            }
 
             // inital setup, if data already available
             this->validateAircraftValues();
@@ -223,6 +227,7 @@ namespace BlackGui
         void CLoginComponent::toggleNetworkConnection()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
 
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = this->isVatsimNetworkTabSelected();
@@ -262,9 +267,7 @@ namespace BlackGui
                 }
 
                 // Server
-                currentServer = vatsimLogin ?
-                                this->getCurrentVatsimServer() :
-                                this->getCurrentOtherServer();
+                currentServer = vatsimLogin ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
                 const CUser user = this->getUserFromPilotGuiValues();
                 currentServer.setUser(user);
 
@@ -304,7 +307,8 @@ namespace BlackGui
 
                     m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
-                    ui->le_HomeBase->setText(currentServer.getUser().getHomeBase().asString());
+                    ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
+                    ui->le_LoginHomeBase->setText(currentServer.getUser().getHomeBase().asString());
                     if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
                 }
                 else
@@ -376,8 +380,8 @@ namespace BlackGui
 
         void CLoginComponent::overrideCredentialsToPilot()
         {
-            const QObject *s = QObject::sender();
             CServer server;
+            const QObject *s = QObject::sender();
             if (s == ui->pb_OverrideCredentialsOtherServers)
             {
                 server = this->getCurrentOtherServer();
@@ -408,7 +412,7 @@ namespace BlackGui
             ui->form_Pilot->setUser(server.getUser(), true);
         }
 
-        bool CLoginComponent::hasValidContexts()
+        bool CLoginComponent::hasValidContexts() const
         {
             if (!sGui || !sGui->supportsContexts()) { return false; }
             if (sGui->isShuttingDown())          { return false; }
@@ -416,6 +420,21 @@ namespace BlackGui
             if (!sGui->getIContextNetwork())     { return false; }
             if (!sGui->getIContextOwnAircraft()) { return false; }
             return true;
+        }
+
+        void CLoginComponent::setServerButtonsVisible(bool visible)
+        {
+            ui->wi_OtherServersButtons->setVisible(visible);
+            ui->wi_VatsimButtons->setVisible(visible);
+        }
+
+        void CLoginComponent::onDetailsTabChanged(int index)
+        {
+            Q_UNUSED(index);
+            const bool showNetwork = (ui->tw_Details->currentWidget() != ui->tb_FsdDetails);
+            ui->tw_Network->setVisible(showNetwork);
+            // this->setServerButtonsVisible(showNetwork);
+            ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);
         }
 
         CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const
@@ -538,11 +557,15 @@ namespace BlackGui
 
         void CLoginComponent::setGuiLoginAsValues(const CSimulatedAircraft &ownAircraft)
         {
-            QString ac(ownAircraft.getCallsignAsString() % QLatin1Char(' ') % ownAircraft.getAircraftIcaoCodeDesignator());
-            if (ownAircraft.hasAirlineDesignator()) { ac += QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator(); }
-            if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += QLatin1Char(' ') % ownAircraft.getAircraftIcaoCode().getCombinedType(); }
+            const QString ac(
+                ownAircraft.getAircraftIcaoCodeDesignator() %
+                (ownAircraft.hasAirlineDesignator() ? (QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator()) : QStringLiteral("")) %
+                (ownAircraft.hasModelString() ? (QLatin1Char(' ') % ownAircraft.getModelString()) : QStringLiteral(""))
+            );
             ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
             ui->le_LoginAsAircaft->setText(ac);
+            ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
+            ui->le_LoginAsAircaft->home(false);
         }
 
         bool CLoginComponent::validateAircraftValues()
@@ -771,14 +794,15 @@ namespace BlackGui
 
         void CLoginComponent::updateGui()
         {
-            if (!this->hasValidContexts()) { return; }
+            if (!this->hasValidContexts())   { return; }
+            if (!sGui->getIContextNetwork()) { return; }
             IContextNetwork *nwc = sGui->getIContextNetwork();
             const bool connected = nwc->isConnected();
             if (!connected) { return; }
             this->setUiLoginState(connected);
             this->setOwnModelAndIcaoValues();
             const CServer server = nwc->getConnectedServer();
-            ui->le_HomeBase->setText(server.getUser().getHomeBase().asString());
+            ui->le_LoginHomeBase->setText(server.getUser().getHomeBase().asString());
             ui->frp_CurrentServer->setServer(server);
             ui->frp_LoginMode->setLoginMode(nwc->getLoginMode());
             const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
