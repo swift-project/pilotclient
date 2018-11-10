@@ -172,6 +172,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
             if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
+            if (simulator.isFG())
+            {
+                //! \todo FG add real loader
+                IAircraftModelLoader *dummy = new CDummyModelLoader(simulator, parent);
+                return dummy;
+            }
             return CAircraftCfgParser::createModelLoader(simulator, parent);
         }
 
@@ -248,6 +254,11 @@ namespace BlackMisc
                     if (!m_loaderFS9) { m_loaderFS9 = this->initLoader(CSimulatorInfo::fs9()); }
                     return m_loaderFS9;
                 }
+            case CSimulatorInfo::FG:
+                {
+                    if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
+                    return m_loaderFG;
+                }
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                 break;
@@ -269,5 +280,26 @@ namespace BlackMisc
             connect(loader, &IAircraftModelLoader::cacheChanged, this, &CMultiAircraftModelLoaderProvider::cacheChanged);
             return loader;
         }
+
+        CDummyModelLoader::CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent) : IAircraftModelLoader(simulator, parent)
+        {
+            // void
+        }
+
+        bool CDummyModelLoader::isLoadingFinished() const
+        {
+            // fake loading
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            return m_loadingStartedTs > 0 && now > (m_loadingStartedTs + 5000);
+        }
+
+        void CDummyModelLoader::startLoadingFromDisk(LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+        {
+            Q_UNUSED(mode);
+            Q_UNUSED(modelConsolidation);
+            Q_UNUSED(modelDirectories);
+            m_loadingStartedTs = QDateTime::currentMSecsSinceEpoch();
+        }
+
     } // ns
 } // ns

@@ -69,6 +69,13 @@ namespace BlackMisc
                 static const char *key() { return "modelcachep3d"; }
             };
 
+            //! FG
+            struct TModelCacheFG : public TModelCache
+            {
+                //! Key in data cache
+                static const char *key() { return "modelcachefg"; }
+            };
+
             //! Last selection
             struct TModelCacheLastSelection : public TDataTrait<CSimulatorInfo>
             {
@@ -112,6 +119,13 @@ namespace BlackMisc
             {
                 //! Key in data cache
                 static const char *key() { return "modelsetp3d"; }
+            };
+
+            //! FG
+            struct TModelSetCacheFG : public TModelCache
+            {
+                //! Key in data cache
+                static const char *key() { return "modelsetfg"; }
             };
 
             //! Last selection
@@ -271,6 +285,7 @@ namespace BlackMisc
                 void changedFs9() { this->emitCacheChanged(CSimulatorInfo::fs9()); }
                 void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
                 void changedXP()  { this->emitCacheChanged(CSimulatorInfo::xplane()); }
+                void changedFG()  { this->emitCacheChanged(CSimulatorInfo::fg()); }
                 //! @}
 
                 //! Is the cache already synchronized?
@@ -284,6 +299,7 @@ namespace BlackMisc
                 std::atomic_bool m_syncFsx { false };
                 std::atomic_bool m_syncP3D { false };
                 std::atomic_bool m_syncFS9 { false };
+                std::atomic_bool m_syncFG  { false };
                 std::atomic_bool m_syncXPlane { false };
                 //! @}
             };
@@ -319,6 +335,7 @@ namespace BlackMisc
                 CData<Data::TModelCacheFs9> m_modelCacheFs9 { this, &CModelCaches::changedFs9 }; //!< FS9 cache
                 CData<Data::TModelCacheP3D> m_modelCacheP3D { this, &CModelCaches::changedP3D }; //!< P3D cache
                 CData<Data::TModelCacheXP>  m_modelCacheXP  { this, &CModelCaches::changedXP };  //!< XP cache
+                CData<Data::TModelCacheFG>  m_modelCacheFG  { this, &CModelCaches::changedFG };  //!< XP cache
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const CSimulatorInfo &simulator);
@@ -359,6 +376,7 @@ namespace BlackMisc
                 CData<Data::TModelSetCacheFs9> m_modelCacheFs9 { this, &CModelSetCaches::changedFs9};   //!< FS9 cache
                 CData<Data::TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D };  //!< P3D cache
                 CData<Data::TModelSetCacheXP>  m_modelCacheXP  { this, &CModelSetCaches::changedXP };   //!< XP cache
+                CData<Data::TModelSetCacheFG>  m_modelCacheFG  { this, &CModelSetCaches::changedFG };   //!< FG cache
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const CSimulatorInfo &simulator);

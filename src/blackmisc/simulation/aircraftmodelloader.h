@@ -174,6 +174,26 @@ namespace BlackMisc
         };
 
         /*!
+         * Dummy loader for testing
+         */
+        class BLACKMISC_EXPORT CDummyModelLoader : public IAircraftModelLoader
+        {
+        public:
+            //! Dummy loader
+            CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent);
+
+            //! IAircraftModelLoader::isLoadingFinished
+            virtual bool isLoadingFinished() const override;
+
+        protected:
+            //! IAircraftModelLoader::startLoadingFromDisk
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
+
+        private:
+            qint64 m_loadingStartedTs = -1;
+        };
+
+        /*!
          * Single instances of all model loaders (lazy init)
          */
         class BLACKMISC_EXPORT CMultiAircraftModelLoaderProvider : public QObject
@@ -192,6 +212,7 @@ namespace BlackMisc
             IAircraftModelLoader *modelLoaderP3D() const { return m_loaderP3D; }
             IAircraftModelLoader *modelLoaderXP()  const { return m_loaderXP; }
             IAircraftModelLoader *modelLoaderFS9() const { return m_loaderFS9; }
+            IAircraftModelLoader *modelLoaderFG()  const { return m_loaderFG; }
             //! @}
 
         signals:
@@ -209,6 +230,7 @@ namespace BlackMisc
             IAircraftModelLoader *m_loaderP3D = nullptr;
             IAircraftModelLoader *m_loaderXP  = nullptr;
             IAircraftModelLoader *m_loaderFS9 = nullptr;
+            IAircraftModelLoader *m_loaderFG  = nullptr;
 
             //! Init the loader
             IAircraftModelLoader *initLoader(const CSimulatorInfo &simulator);
