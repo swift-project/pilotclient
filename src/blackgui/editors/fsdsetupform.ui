@@ -31,8 +31,11 @@
    </property>
    <item row="4" column="1">
     <widget class="QLabel" name="lbl_AircraftParts">
+     <property name="toolTip">
+      <string>aircraft parts</string>
+     </property>
      <property name="text">
-      <string>Aircraft parts</string>
+      <string>Parts</string>
      </property>
     </widget>
    </item>
@@ -74,7 +77,7 @@
    <item row="4" column="3">
     <widget class="QLabel" name="lbl_FastPositions">
      <property name="text">
-      <string>Fast positions</string>
+      <string>Fast pos.</string>
      </property>
     </widget>
    </item>
