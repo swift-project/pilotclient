@@ -44,6 +44,7 @@ namespace BlackGui
                 ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
                 ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked()
             );
+            s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
             return s;
         }
 
@@ -62,6 +63,7 @@ namespace BlackGui
             ui->cb_AircraftPartsSend->setChecked(d & CFsdSetup::SendAircraftParts);
             ui->cb_FastPositionReceive->setChecked(d & CFsdSetup::ReceiveInterimPositions);
             ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendInterimPositions);
+            ui->cb_3LetterAirlineICAO->setChecked(setup.force3LetterAirlineCodes());
         }
 
         bool CFsdSetupForm::isFsdSetupEnabled() const
@@ -84,12 +86,8 @@ namespace BlackGui
         {
             ui->le_TextCodec->setReadOnly(readonly);
             ui->pb_SetDefaults->setEnabled(!readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsReceive, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsSend, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionReceive, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionSend, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagReceive, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagSend, readonly);
+            CGuiUtility::checkBoxesReadOnly(this, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_Override, false); // always editable
 
             if (readonly && ui->cb_Override->isChecked())
             {

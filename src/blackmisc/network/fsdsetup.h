@@ -46,13 +46,15 @@ namespace BlackMisc
                 ReceiveAircraftParts    = 1 << 3, //!< aircraft parts in
                 ReceiveInterimPositions = 1 << 4, //!< fast position updates in
                 ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
+                Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
                 AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
                 AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
                 All                     = AllReceive | AllSending, //!< all
                 AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
                 AllSendingWithoutGnd    = SendAircraftParts | SendInterimPositions,       //!< all out, but no gnd.flag
                 AllReceiveWithoutGnd    = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in, but no gnd.flag
-                AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd     //!< all, but no gnd.flag
+                AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
+                VATSIMDefault           = AllParts | Force3LetterAirlineICAO
             };
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
@@ -96,6 +98,11 @@ namespace BlackMisc
             bool receiveAircraftParts() const { return this->getSendReceiveDetails().testFlag(ReceiveAircraftParts); }
             bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }
             bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
+            //! @}
+
+            //! Airline codes @{
+            bool force3LetterAirlineCodes() const { return this->getSendReceiveDetails().testFlag(Force3LetterAirlineICAO); }
+            void setForce3LetterAirlineCodes(bool force);
             //! @}
 
             //! Validate, provide details about issues

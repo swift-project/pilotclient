@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>255</width>
+    <width>248</width>
     <height>82</height>
    </rect>
   </property>
@@ -130,6 +130,16 @@
      </property>
     </widget>
    </item>
+   <item row="6" column="4">
+    <widget class="QCheckBox" name="cb_3LetterAirlineICAO">
+     <property name="toolTip">
+      <string>force 3 letter airline ICAO code</string>
+     </property>
+     <property name="text">
+      <string>3 letter airline</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
@@ -142,6 +152,7 @@
   <tabstop>cb_FastPositionSend</tabstop>
   <tabstop>cb_FastPositionReceive</tabstop>
   <tabstop>le_TextCodec</tabstop>
+  <tabstop>cb_3LetterAirlineICAO</tabstop>
  </tabstops>
  <resources/>
  <connections/>

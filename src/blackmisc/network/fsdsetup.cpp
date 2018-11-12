@@ -45,13 +45,15 @@ namespace BlackMisc
 
         QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
         {
-            static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6");
+            static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7");
             return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
                           boolToYesNo(details.testFlag(SendGndFlag)),
                           boolToYesNo(details.testFlag(SendInterimPositions)),
                           boolToYesNo(details.testFlag(ReceiveAircraftParts)),
                           boolToYesNo(details.testFlag(ReceiveGndFlag)),
-                          boolToYesNo(details.testFlag(ReceiveInterimPositions)));
+                          boolToYesNo(details.testFlag(ReceiveInterimPositions)),
+                          boolToYesNo(details.testFlag(Force3LetterAirlineICAO))
+                         );
         }
 
         void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive)
@@ -66,9 +68,16 @@ namespace BlackMisc
             this->setSendReceiveDetails(s);
         }
 
+        void CFsdSetup::setForce3LetterAirlineCodes(bool force)
+        {
+            SendReceiveDetails d = this->getSendReceiveDetails();
+            d.setFlag(Force3LetterAirlineICAO, force);
+            this->setSendReceiveDetails(d);
+        }
+
         const CFsdSetup &CFsdSetup::vatsimStandard()
         {
-            static const CFsdSetup s(AllParts);
+            static const CFsdSetup s(VATSIMDefault);
             return s;
         }
 
