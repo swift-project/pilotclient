@@ -18,6 +18,7 @@
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "plugins/simulator/fsxcommon/simconnectsymbols.h"
 #include "plugins/simulator/fsxcommon/simulatorfsxcommon.h"
+
 #include <QTest>
 
 using namespace BlackSimPlugin::FsxCommon;
@@ -26,7 +27,11 @@ namespace BlackSimPluginFsxP3D
 {
     void CSimPluginFsxP3d::resolveSymbols()
     {
-        QVERIFY2(loadAndResolveSimConnect(false), "Could not load and resolve SimConnect library!");
+#ifdef Q_OS_WIN64
+        QVERIFY2(loadAndResolveP3DSimConnect(P3DSimConnectv42), "Could not load and resolve SimConnect library!");
+#else
+        QVERIFY2(loadAndResolveFsxSimConnect(false), "Could not load and resolve SimConnect library!");
+#endif
         HANDLE hSimConnect;
         SimConnect_Open(&hSimConnect, "Test", nullptr, 0, nullptr, 0);
         SimConnect_Close(hSimConnect);

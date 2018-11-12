@@ -1,3 +1,5 @@
+load(common_pre)
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
@@ -13,3 +15,5 @@ contains(BLACK_CONFIG,FSX|P3D) {
     SUBDIRS += testsimpluginfsxp3d
     testsimpluginfsxp3d.file = blacksimpluginfsxp3d/testblacksimpluginfsxp3d.pro
 }
+
+load(common_post)
