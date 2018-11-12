@@ -738,9 +738,10 @@ namespace BlackCore
 
         void CNetworkVatlib::sendAircraftInfo(const CCallsign &callsign) // private
         {
+            const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ? m_ownAirlineIcaoCode.getDesignator() : m_ownAirlineIcaoCode.getVDesignator();
             const QByteArray acTypeICAObytes  = toFSDnoColon(m_ownAircraftIcaoCode.getDesignator());
-            const QByteArray airlineICAObytes = toFSDnoColon(m_ownAirlineIcaoCode.getDesignator());
             const QByteArray liverybytes      = toFSDnoColon(m_ownLiveryDescription);
+            const QByteArray airlineICAObytes = toFSDnoColon(airlineIcao);
 
             VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
             Vat_SendAircraftInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
