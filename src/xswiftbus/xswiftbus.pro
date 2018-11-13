@@ -128,7 +128,7 @@ win32 {
     legacy_data_target.files *= LegacyData
 } else:macx: {
     dep_target.files *= $$DestRoot/lib/libdbus-1.3.dylib
-    dep_target.CONFIG += no_check_exist
+    dep_target.files *= $$DestRoot/lib/libevent_core.2.1.8.dylib
 
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
