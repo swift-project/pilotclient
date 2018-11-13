@@ -16,6 +16,7 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/json.h"
 
 #include <QFile>
 #include <QDateTime>
@@ -449,7 +450,52 @@ namespace BlackMisc
 
                 if (fileName.endsWith(".sfp", Qt::CaseInsensitive))  { return CFlightPlan::fromSB4Format(data); }
                 if (fileName.endsWith(".vfp", Qt::CaseInsensitive))  { return CFlightPlan::fromVPilotFormat(data); }
-                if (fileName.endsWith(".json", Qt::CaseInsensitive)) { return CFlightPlan::fromJson(data); }
+                if (fileName.endsWith(".json", Qt::CaseInsensitive))
+                {
+                    do
+                    {
+                        CStatusMessage m;
+                        if (!Json::looksLikeSwiftJson(data))
+                        {
+                            m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, "Reading '%1' yields no data", true) << fileName;
+                            if (msgs) { msgs->push_back(m); }
+                            break;
+                        }
+
+                        try
+                        {
+                            const QJsonObject jsonObject = Json::jsonObjectFromString(data);
+                            if (Json::looksLikeSwiftTypeValuePairJson(jsonObject))
+                            {
+                                // CVariant format
+                                CVariant variant;
+                                variant.convertFromJson(jsonObject);
+                                if (variant.canConvert<CFlightPlan>())
+                                {
+                                    const CFlightPlan fp = variant.value<CFlightPlan>();
+                                    return fp;
+                                }
+                                else
+                                {
+                                    m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, "Wrong format for flight plan in '%1'") << fileName;
+                                    if (msgs) { msgs->push_back(m); }
+                                }
+                            }
+                            else
+                            {
+                                const CFlightPlan fp = CFlightPlan::fromJson(jsonObject);
+                                return fp;
+                            }
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            m = ex.toStatusMessage(CFlightPlan::getLogCategories(), "Parse error in " + fileName);
+                            if (msgs) { msgs->push_back(m); }
+                            break;
+                        }
+                    }
+                    while (false);
+                }
 
                 return CFlightPlan::fromMultipleFormats(data);
             }

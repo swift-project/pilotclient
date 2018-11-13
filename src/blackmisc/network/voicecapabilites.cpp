@@ -29,17 +29,17 @@ namespace BlackMisc
 
         const QString &CVoiceCapabilities::toFlightPlanRemarks() const
         {
-            static const QString v("/R/");
+            static const QString v("/V/");
             static const QString t("/T/");
             static const QString r("/R/");
             static const QString u("");
 
             switch (m_voiceCapabilities)
             {
-            case Voice: return v;
+            case Voice:    return v;
             case TextOnly: return t;
+            case Unknown:  return u;
             case VoiceReceivingOnly: return r;
-            case Unknown: return u;
             default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
@@ -77,7 +77,7 @@ namespace BlackMisc
             if (r.contains("/T/")) { this->setCapabilities(TextOnly); return; }
             if (r.contains("/R/")) { this->setCapabilities(VoiceReceivingOnly); return; }
             if (r.contains("/VOICE/")) { this->setCapabilities(Voice); return; }
-            if (r.contains("/TEXT/")) { this->setCapabilities(TextOnly); return; }
+            if (r.contains("/TEXT/"))  { this->setCapabilities(TextOnly); return; }
             this->setCapabilities(Unknown);
         }
 
@@ -121,11 +121,15 @@ namespace BlackMisc
 
         CVoiceCapabilities CVoiceCapabilities::fromText(const QString &text)
         {
-            if (text.startsWith("/")) { return CVoiceCapabilities::fromText(text); }
-            if (text.contains("TEXT", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
-            if (text.contains("ONLY", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
+            if (text.startsWith("/"))
+            {
+                const CVoiceCapabilities vc(text);
+                return vc;
+            }
+            if (text.contains("TEXT", Qt::CaseInsensitive))    { return CVoiceCapabilities(TextOnly); }
+            if (text.contains("ONLY", Qt::CaseInsensitive))    { return CVoiceCapabilities(TextOnly); }
             if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return CVoiceCapabilities(VoiceReceivingOnly); }
-            if (text.contains("VOICE", Qt::CaseInsensitive)) { return CVoiceCapabilities(Voice); }
+            if (text.contains("VOICE", Qt::CaseInsensitive))   { return CVoiceCapabilities(Voice); }
             return CVoiceCapabilities(Unknown);
         }
 
