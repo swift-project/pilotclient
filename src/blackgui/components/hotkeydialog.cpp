@@ -46,23 +46,6 @@ namespace BlackGui
 {
     namespace Components
     {
-        CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
-        {
-            connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
-        }
-
-        void CKeySelectionBox::setSelectedIndex(int index)
-        {
-            m_oldIndex = index;
-            setCurrentIndex(m_oldIndex);
-        }
-
-        void CKeySelectionBox::updateSelectedIndex(int index)
-        {
-            emit keySelectionChanged(m_oldIndex, index);
-            m_oldIndex = index;
-        }
-
         CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent) :
             QDialog(parent),
             ui(new Ui::CHotkeyDialog),
@@ -74,8 +57,8 @@ namespace BlackGui
             ui->setupUi(this);
             ui->qf_Advanced->hide();
 
-            ui->tv_Actions->setModel(&m_actionModel);
             ui->pb_AdvancedMode->setIcon(CIcons::arrowMediumSouth16());
+            ui->tv_Actions->setModel(&m_actionModel);
             selectAction();
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
@@ -130,6 +113,23 @@ namespace BlackGui
 
         CHotkeyDialog::~CHotkeyDialog()
         { }
+
+        CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
+        {
+            connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
+        }
+
+        void CKeySelectionBox::setSelectedIndex(int index)
+        {
+            m_oldIndex = index;
+            setCurrentIndex(m_oldIndex);
+        }
+
+        void CKeySelectionBox::updateSelectedIndex(int index)
+        {
+            emit keySelectionChanged(m_oldIndex, index);
+            m_oldIndex = index;
+        }
 
         void CHotkeyDialog::initStyleSheet()
         {
@@ -196,7 +196,7 @@ namespace BlackGui
         void CHotkeyDialog::changeApplicableMachine(int index)
         {
             Q_UNUSED(index);
-            QVariant userData = ui->cb_Identifier->currentData();
+            const QVariant userData = ui->cb_Identifier->currentData();
             Q_ASSERT(userData.canConvert<CIdentifier>());
             m_actionHotkey.setApplicableMachine(userData.value<CIdentifier>());
         }
@@ -299,16 +299,15 @@ namespace BlackGui
 
         void CHotkeyDialog::selectAction()
         {
-            if (m_actionHotkey.getAction().isEmpty()) return;
-
-            const auto tokens = m_actionHotkey.getAction().split("/", QString::SkipEmptyParts);
+            if (m_actionHotkey.getAction().isEmpty()) { return; }
+            const QStringList tokens = m_actionHotkey.getAction().split("/", QString::SkipEmptyParts);
             QModelIndex parentIndex = QModelIndex();
 
-            for (const auto &token : tokens)
+            for (const QString &token : tokens)
             {
                 const QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
-                const auto indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
-                if (indexList.isEmpty()) return;
+                const QModelIndexList indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
+                if (indexList.isEmpty()) { return; }
                 parentIndex = indexList.first();
                 ui->tv_Actions->expand(parentIndex);
             }

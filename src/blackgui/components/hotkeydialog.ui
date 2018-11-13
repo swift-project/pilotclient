@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>269</width>
-    <height>384</height>
+    <width>290</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -136,6 +136,13 @@
      </layout>
     </widget>
    </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="pb_Accept">
+     <property name="text">
+      <string>Ok</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="0">
     <spacer name="hs_Dialog">
      <property name="orientation">
@@ -148,13 +155,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="pb_Accept">
-     <property name="text">
-      <string>Ok</string>
-     </property>
-    </widget>
    </item>
    <item row="3" column="2">
     <widget class="QPushButton" name="pb_Cancel">
