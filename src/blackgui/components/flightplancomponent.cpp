@@ -103,6 +103,7 @@ namespace BlackGui
             connect(ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork);
             connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);
             connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan);
+            connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator);
             connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues);
 
             connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
@@ -143,18 +144,23 @@ namespace BlackGui
             this->buildRemarksString();
 
             // prefill some data derived from what was used last
-            if (sGui->getIContextSimulator()->isSimulatorSimulating())
+            const QPointer<CFlightPlanComponent> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
             {
-                this->prefillWithOwnAircraftData();
-            }
-            else
-            {
-                const CAircraftModel model = m_lastAircraftModel.get();
-                const CServer server = m_lastServer.get();
-                CSimulatedAircraft aircraft(model);
-                aircraft.setPilot(server.getUser());
-                this->prefillWithAircraftData(aircraft);
-            }
+                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+                if (sGui->getIContextSimulator()->isSimulatorAvailable())
+                {
+                    this->prefillWithOwnAircraftData();
+                }
+                else
+                {
+                    const CAircraftModel model = m_lastAircraftModel.get();
+                    const CServer server = m_lastServer.get();
+                    CSimulatedAircraft aircraft(model);
+                    aircraft.setPilot(server.getUser());
+                    this->prefillWithAircraftData(aircraft);
+                }
+            });
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
@@ -175,9 +181,9 @@ namespace BlackGui
             this->prefillWithAircraftData(ownAircraft);
         }
 
-        void CFlightPlanComponent::prefillWithAircraftData(const CSimulatedAircraft &aircraft)
+        void CFlightPlanComponent::prefillWithAircraftData(const CSimulatedAircraft &aircraft, bool force)
         {
-            if (m_sentFlightPlan.wasSentOrLoaded()) { return; }
+            if (!force && m_sentFlightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
             if (CCallsign::isValidAircraftCallsign(aircraft.getCallsignAsString()))
@@ -256,7 +262,7 @@ namespace BlackGui
             v = ui->le_Callsign->text().trimmed().toUpper();
             if (v.isEmpty())
             {
-                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_Callsign->text());
+                // messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_Callsign->text());
             }
             else if (!CCallsign::isValidAircraftCallsign(v))
             {
@@ -508,6 +514,8 @@ namespace BlackGui
                 }
                 CFlightPlan fp;
                 this->validateAndInitializeFlightPlan(fp); // get data
+
+                // save as CVariant format
                 const CVariant variantFp = CVariant::fromValue(fp);
                 const QString json(variantFp.toJsonString());
                 const bool ok = CFileUtils::writeStringToFile(json, fileName);
@@ -635,10 +643,10 @@ namespace BlackGui
             {
                 if (ui->cb_Heavy->isChecked())
                 {
-                    const QPointer<CFlightPlanComponent> guard(this);
+                    const QPointer<CFlightPlanComponent> myself(this);
                     QTimer::singleShot(10, this, [ = ]
                     {
-                        if (guard.isNull()) { return; }
+                        if (!myself) { return; }
                         ui->cb_Tcas->setChecked(false);
                         this->buildPrefixIcaoSuffix();
                     });
@@ -666,13 +674,25 @@ namespace BlackGui
         {
             const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
             if (!icao.isLoadedFromDb()) { return; }
+            QPointer<CFlightPlanComponent> myself(this);
             QTimer::singleShot(25, this, [ = ]
             {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 const bool heavy = icao.getWtc().startsWith("H");
                 ui->cb_Heavy->setChecked(heavy);
                 if (heavy) { ui->cb_Tcas->setChecked(false); }
                 this->buildPrefixIcaoSuffix();
             });
+        }
+
+        void CFlightPlanComponent::syncWithSimulator()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Override aircraft data"), QStringLiteral("Override aircraft ICAO data from simulator"), QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) { return; }
+
+            const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            this->prefillWithAircraftData(aircraft, true);
         }
 
         QString CFlightPlanComponent::getPrefix() const

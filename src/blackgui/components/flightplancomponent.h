@@ -67,11 +67,11 @@ namespace BlackGui
             QScopedPointer<Ui::CFlightPlanComponent> ui;
             CAltitudeDialog *m_altitudeDialog = nullptr;
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
-            BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
+            BlackMisc::Simulation::CAircraftModel m_model;     //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-            BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+            BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer>   m_lastServer { this };        //!< recently used server (VATSIM, other)
 
             static constexpr int OverlayMessageMs = 5000;
 
@@ -91,7 +91,7 @@ namespace BlackGui
             void prefillWithOwnAircraftData();
 
             //! Prefill with aircraft data
-            void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool force = false);
 
             //! Prefill with user data
             void prefillWithUserData(const BlackMisc::Network::CUser &user);
@@ -152,6 +152,9 @@ namespace BlackGui
 
             //! Aircraft type changed
             void aircraftTypeChanged();
+
+            //! Sync.with simulator
+            void syncWithSimulator();
 
             //! Get prefix
             QString getPrefix() const;
