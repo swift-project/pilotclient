@@ -38,15 +38,7 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*7za.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*7za.exe</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*7zxa.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -58,6 +50,9 @@
             <distributionFileList>
                 <distributionFile>
                     <origin>../../dist/bin/swift_crashpad_handler</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/7za</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
