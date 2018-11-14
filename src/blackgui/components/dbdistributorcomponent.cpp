@@ -17,7 +17,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QFrame>
-#include <QScopedPointer>
+#include <QPointer>
 #include <QtGlobal>
 
 using namespace BlackCore;
@@ -40,7 +40,14 @@ namespace BlackGui
             ui->tvp_Distributors->setFilterWidget(ui->filter_Distributor);
 
             connect(ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
+            connect(ui->pb_SelectAllFsFamily, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+            connect(ui->pb_SelectXPlane, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+
+            if (sGui && sGui->getWebDataServices())
+            {
+                connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
+            }
+
             this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
         }
 
@@ -75,6 +82,30 @@ namespace BlackGui
             {
                 ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
             }
+        }
+
+        void CDbDistributorComponent::selectStandardModels()
+        {
+            const QObject *s = QObject::sender();
+            QSet<QString> keys;
+            if (s == ui->pb_SelectAllFsFamily)
+            {
+                this->filterBySimulator(CSimulatorInfo::AllFsFamily);
+                keys = CDistributor::standardAllFsFamily();
+            }
+            else if (s == ui->pb_SelectXPlane)
+            {
+                this->filterBySimulator(CSimulatorInfo::XPLANE);
+                keys = QSet<QString>({ CDistributor::standardXPlane() });
+            }
+
+            // deferred because filter must first work and update
+            const QPointer<CDbDistributorComponent> myself(this);
+            QTimer::singleShot(2000, this, [ = ]
+            {
+                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                ui->tvp_Distributors->selectDbKeys(keys);
+            });
         }
 
         void CDbDistributorComponent::reload()

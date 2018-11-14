@@ -63,6 +63,9 @@ namespace BlackGui
             //! Distributors have been read
             void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
+            //! Select all FSX standard models
+            void selectStandardModels();
+
             //! Reload models
             void reload();
         };
