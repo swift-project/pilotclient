@@ -53,6 +53,9 @@ namespace BlackMisc
             //! \remark model strings may have a pattern which makes it impossible to find the distributor
             CDistributor findByModelData(const CAircraftModel &model) const;
 
+            //! Find the FS family standard distributors
+            CDistributorList findFsFamilyStandard() const;
+
             //! Best match by given pattern
             CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
 
@@ -67,6 +70,9 @@ namespace BlackMisc
 
             //! Find for given simulator
             CDistributorList matchesSimulator(const CSimulatorInfo &simulator) const;
+
+            //! Find all for all FS simulators
+            CDistributorList matchesAnyFsFamily() const;
 
             //! All data from DB?
             bool isCompletelyFromDb() const;

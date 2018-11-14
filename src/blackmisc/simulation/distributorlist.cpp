@@ -46,6 +46,11 @@ namespace BlackMisc
             return CDistributor();
         }
 
+        CDistributorList CDistributorList::findFsFamilyStandard() const
+        {
+            return this->findByKeys(CDistributor::standardAllFsFamily());
+        }
+
         CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributor) const
         {
             // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
@@ -100,7 +105,7 @@ namespace BlackMisc
             return sl;
         }
 
-        CDistributorList CDistributorList::matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const
+        CDistributorList CDistributorList::matchesSimulator(const CSimulatorInfo &simulator) const
         {
             if (this->isEmpty()) { return CDistributorList(); }
             CDistributorList distributors;
@@ -112,6 +117,11 @@ namespace BlackMisc
                 }
             }
             return distributors;
+        }
+
+        CDistributorList CDistributorList::matchesAnyFsFamily() const
+        {
+            return matchesSimulator(CSimulatorInfo::AllFsFamily);
         }
 
         bool CDistributorList::isCompletelyFromDb() const

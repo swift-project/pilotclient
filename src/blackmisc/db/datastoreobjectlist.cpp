@@ -48,6 +48,19 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
+        CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findByKeys(const QSet<KEYTYPE> &keys) const
+        {
+            CONTAINER objects;
+            if (keys.isEmpty()) { return objects; }
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!keys.contains(obj.getDbKey())) { continue; }
+                objects.push_back(obj);
+            }
+            return objects;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
         CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findObjectsWithDbKey() const
         {
             CONTAINER objects;

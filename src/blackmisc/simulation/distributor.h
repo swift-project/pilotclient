@@ -25,6 +25,7 @@
 #include <QJsonObject>
 #include <QMetaType>
 #include <QMap>
+#include <QSet>
 #include <QString>
 
 namespace BlackMisc
@@ -124,6 +125,15 @@ namespace BlackMisc
 
             //! Object from JSON
             static CDistributor fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+            //! Hardcoded keys for standard models @{
+            static const QString &standardFSX();
+            static const QString &standardP3D();
+            static const QString &standardFS9();
+            static const QString &standardXPlane();
+            static const QString &standardFlightGear();
+            static const QSet<QString> &standardAllFsFamily();
+            //! @}
 
         private:
             QString m_description;                             //!< description

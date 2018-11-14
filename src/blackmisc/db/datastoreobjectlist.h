@@ -30,6 +30,9 @@ namespace BlackMisc
             //! Object with key, notFound otherwise
             OBJ findByKey(KEYTYPE key, const OBJ &notFound = OBJ()) const;
 
+            //! Object with key, notFound otherwise
+            CONTAINER findByKeys(const QSet<KEYTYPE> &keys) const;
+
             //! Objects with DB key
             CONTAINER findObjectsWithDbKey() const;
 

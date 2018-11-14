@@ -183,5 +183,41 @@ namespace BlackMisc
             distributor.setLoadedFromDb(true);
             return distributor;
         }
+
+        const QString &CDistributor::standardFSX()
+        {
+            static const QString k("FSX");
+            return k;
+        }
+
+        const QString &CDistributor::standardP3D()
+        {
+            static const QString k("P3D");
+            return k;
+        }
+
+        const QString &CDistributor::standardFS9()
+        {
+            static const QString k("FS9");
+            return k;
+        }
+
+        const QString &CDistributor::standardXPlane()
+        {
+            static const QString k("XP");
+            return k;
+        }
+
+        const QString &CDistributor::standardFlightGear()
+        {
+            static const QString k("FG");
+            return k;
+        }
+
+        const QSet<QString> &CDistributor::standardAllFsFamily()
+        {
+            static const QSet<QString> fsFamily({standardFS9(), standardFSX(), standardP3D()});
+            return fsFamily;
+        }
     } // namespace
 } // namespace
