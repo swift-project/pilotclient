@@ -199,7 +199,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
             const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
-            const CSimulatorInfo simulatorInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
+            const CSimulatorInfo simulatorInfo  = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
             m_simulator = simulatorInfo;
 
             const QStringList names(internals.getSortedNames());

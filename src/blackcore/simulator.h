@@ -523,6 +523,9 @@ namespace BlackCore
         //! Update stats and flags
         void finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited = false);
 
+        //! Own model has been changed
+        virtual void onOwnModelChanged(const BlackMisc::Simulation::CAircraftModel &newModel);
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 

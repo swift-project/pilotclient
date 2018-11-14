@@ -22,6 +22,11 @@ namespace BlackMisc
             m_data.addOrReplaceValue(name, value);
         }
 
+        void CSimulatorInternals::setValue(const QString &name, int value)
+        {
+            this->setValue(name, QString::number(value));
+        }
+
         CVariant CSimulatorInternals::getVariantValue(const QString &name) const
         {
             return m_data.getVariantValue(name);

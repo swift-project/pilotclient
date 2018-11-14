@@ -652,6 +652,9 @@ namespace BlackCore
         m_simulatorInternals.setSimulatorName(this->getSimulatorName());
         m_simulatorInternals.setSwiftPluginName(this->getSimulatorPluginInfo().toQString());
 
+        // model changed
+        connect(this, &ISimulator::ownAircraftModelChanged, this, &ISimulator::onOwnModelChanged, Qt::QueuedConnection);
+
         // info
         CLogMessage(this).info("Initialized simulator driver: '%1'") <<
                 (this->getSimulatorInfo().isUnspecified() ?
@@ -1024,6 +1027,12 @@ namespace BlackCore
         if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
         if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
         if (limited) { m_statsUpdateAircraftLimited++; }
+    }
+
+    void ISimulator::onOwnModelChanged(const CAircraftModel &newModel)
+    {
+        Q_UNUSED(newModel);
+        // can be overridden
     }
 
     QString ISimulator::latestLoggedDataFormatted(const CCallsign &cs) const

@@ -53,6 +53,9 @@ namespace BlackMisc
             //! Set value
             void setValue(const QString &name, const QString &value);
 
+            //! Set value
+            void setValue(const QString &name, int value);
+
             //! Get value
             CVariant getVariantValue(const QString &name) const;
 

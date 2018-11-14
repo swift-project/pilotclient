@@ -178,6 +178,10 @@ namespace BlackSimPlugin
             //! Use SB offset values
             void setUsingSbOffsetValues(bool use) { m_useSbOffsets = use; }
 
+            //! Number of received SB4 packets
+            //! \remark if this is increasing, SB4 is supported
+            int receivedSB4Packets() const { return m_sbDataReceived; }
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
 
@@ -217,6 +221,7 @@ namespace BlackSimPlugin
             virtual void initSimulatorInternals() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual void clearAllRemoteAircraftData() override;
+            virtual void onOwnModelChanged(const BlackMisc::Simulation::CAircraftModel &newModel) override;
             //! @}
 
             //! Timer event (our SimConnect event loop), runs dispatch

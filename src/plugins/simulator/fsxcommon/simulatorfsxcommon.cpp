@@ -696,6 +696,10 @@ namespace BlackSimPlugin
                 {
                     this->physicallyInitAITerrainProbes(position, 2);
                 }
+
+                // SB4 offsets
+                m_simulatorInternals.setValue(QStringLiteral("fsx/sb4"), boolToEnabledDisabled(m_useSbOffsets));
+                m_simulatorInternals.setValue(QStringLiteral("fsx/sb4packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
             }
 
             m_ownAircraftUpdate++; // with 50updates/sec long enough even for 32bit
@@ -2240,6 +2244,12 @@ namespace BlackSimPlugin
                     m_initFsxTerrainProbes = false; // probes will re-init
                 });
             }
+        }
+
+        void CSimulatorFsxCommon::onOwnModelChanged(const CAircraftModel &newModel)
+        {
+            m_sbDataReceived = 0;
+            CSimulatorFsCommon::onOwnModelChanged(newModel);
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
