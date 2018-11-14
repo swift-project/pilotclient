@@ -150,7 +150,6 @@ namespace BlackCore
         // rendering related stuff
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
-        m_clampedLogMsg.clear();
         m_lastSentParts.clear();
         m_lastSentSituations.clear();
         m_updateRemoteAircraftInProgress = false;
@@ -204,10 +203,8 @@ namespace BlackCore
     {
         m_highlightedAircraft.removeByCallsign(callsign);
         m_statsPhysicallyRemovedAircraft++;
-        m_clampedLogMsg.clear();
         m_lastSentParts.remove(callsign);
         m_lastSentSituations.remove(callsign);
-        m_clampedLogMsg.remove(callsign);
         m_loopbackSituations.clear();
         this->removeInterpolationSetupPerCallsign(callsign);
     }
@@ -1010,25 +1007,6 @@ namespace BlackCore
         static const QString addDetails(" details: '%1'");
         return m + addDetails.arg(details);
     }
-
-    /** deprecated 2018-11
-    bool ISimulator::clampedLog(const CCallsign &callsign, const CStatusMessage &message)
-    {
-        if (message.isEmpty()) { return false; }
-        constexpr qint64 Timeout = 2000;
-        const qint64 clampTs = m_clampedLogMsg.value(callsign, -1);
-        const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-        if (clampTs > 0 && ((clampTs + Timeout) > ts)) { return false; }
-        CLogMessage::preformatted(message);
-        m_clampedLogMsg[callsign] = ts;
-        return true;
-    }
-
-    void ISimulator::removedClampedLog(const CCallsign &callsign)
-    {
-        m_clampedLogMsg.remove(callsign);
-    }
-    depreatced **/
 
     void ISimulator::finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited)
     {

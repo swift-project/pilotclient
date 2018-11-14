@@ -520,18 +520,6 @@ namespace BlackCore
         //! Info about invalid situation
         QString getInvalidSituationLogMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CInterpolationStatus &status, const QString &details = {}) const;
 
-        //! Can a (new) log message be generated without generating a "message" overflow
-        //! \remark works per callsign
-        //! \remark use this function when there is a risk that a lot of log. messages will be generated in a short time
-        //! \deprecated KB 2018-11
-        // bool clampedLog(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessage &message);
-
-        //! Mark as justed logged
-        //! \remark touch, but also return if it can be logged
-        //! \remark use this function when there is a risk that a lot of log. messages will be generated in a short time
-        //! \deprecated KB 2018-11
-        // void removedClampedLog(const BlackMisc::Aviation::CCallsign &callsign);
-
         //! Update stats and flags
         void finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited = false);
 
@@ -553,7 +541,6 @@ namespace BlackCore
 
         BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
-        BlackMisc::Aviation::CTimestampPerCallsign  m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
         BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
         BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
 
