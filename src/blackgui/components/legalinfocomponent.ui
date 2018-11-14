@@ -7,13 +7,36 @@
     <x>0</x>
     <y>0</y>
     <width>542</width>
-    <height>252</height>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>swift legal information</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="fr_Tip">
+     <layout class="QHBoxLayout" name="hl_Tp" stretch="0,1">
+      <item>
+       <widget class="QLabel" name="lbl_Icon">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/32/exclamation.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Tip">
+        <property name="text">
+         <string>HINT: Read the checklist before the first flight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML">
      <property name="minimumSize">
@@ -26,13 +49,7 @@
    </item>
    <item>
     <widget class="QFrame" name="fr_Agree">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="hl_Agree">
       <item>
        <widget class="QCheckBox" name="cb_Agree">
         <property name="text">
@@ -60,6 +77,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

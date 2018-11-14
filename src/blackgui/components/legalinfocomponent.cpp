@@ -7,14 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/crashsettings.h"
-#include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
 #include "legalinfocomponent.h"
 #include "ui_legalinfocomponent.h"
 
+#include "blackgui/guiapplication.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/crashsettings.h"
+#include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
+
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Settings;
+using namespace BlackCore::Data;
 using namespace BlackConfig;
 
 namespace BlackGui
@@ -26,8 +32,10 @@ namespace BlackGui
             ui(new Ui::CLegalInfoComponent)
         {
             ui->setupUi(this);
+            this->setChecklistInfo();
 
             const CCrashSettings settings = m_crashDumpSettings.get();
+
             ui->cb_CrashDumps->setChecked(settings.isEnabled());
             ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
             connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
@@ -54,6 +62,17 @@ namespace BlackGui
             CCrashSettings settings = m_crashDumpSettings.get();
             settings.setEnabled(checked);
             m_crashDumpSettings.setAndSave(settings);
+        }
+
+        void CLegalInfoComponent::setChecklistInfo()
+        {
+            if (!sGui) { return; }
+            const CGlobalSetup gs = sGui->getGlobalSetup();
+            const CUrl url = gs.getHelpPageUrl("checklist");
+            ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>").arg(url.getFullUrl()));
+            ui->lbl_Tip->setTextFormat(Qt::RichText);
+            ui->lbl_Tip->setTextInteractionFlags(Qt::TextBrowserInteraction);
+            ui->lbl_Tip->setOpenExternalLinks(true);
         }
 
         bool CLegalInfoWizardPage::validatePage()
