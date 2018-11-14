@@ -12,12 +12,10 @@
 #ifndef BLACKGUI_AIRCRAFTICAOLISTMODEL_H
 #define BLACKGUI_AIRCRAFTICAOLISTMODEL_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
-
-class QObject;
+#include "blackgui/blackguiexport.h"
 
 namespace BlackGui
 {

@@ -71,7 +71,7 @@ public:
     SwiftGuiStd(WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~SwiftGuiStd();
+    virtual ~SwiftGuiStd() override;
 
 signals:
     //! Main info area has changed
