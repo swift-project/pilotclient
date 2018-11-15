@@ -292,7 +292,7 @@ namespace BlackGui
             {
                 // private message
                 const CCallsign cs = textMessage.getSenderCallsign();
-                if (cs.isEmpty()) return false;
+                if (cs.isEmpty()) { return false; }
                 const QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
                 if (!tab) { return false; }
                 return ui->tw_TextMessages->currentWidget() == tab;
@@ -322,13 +322,36 @@ namespace BlackGui
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
         {
             const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+
+            const CFrequency freq1 = ownAircraft.getCom1System().getFrequencyActive();
+            const CFrequency freq2 = ownAircraft.getCom2System().getFrequencyActive();
+
+            CAtcStationList f1Stations;
+            CAtcStationList f2Stations;
+            if (sGui && sGui->getIContextNetwork())
+            {
+                const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
+                f1Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq1, spacing);
+                f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2, spacing);
+            }
+
             QString f1n, f2n;
-            f1n.sprintf("%03.3f", ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
-            f2n.sprintf("%03.3f", ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
-            const QString f1 = QString("COM1: %1").arg(f1n);
-            const QString f2 = QString("COM2: %1").arg(f2n);
+            f1n.sprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
+            f2n.sprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
+            QString f1 = QStringLiteral("COM1: %1").arg(f1n);
+            QString f2 = QStringLiteral("COM2: %1").arg(f2n);
+            if (f1Stations.size() == 1)
+            {
+                f1 += QStringLiteral(" ") % f1Stations.front().getCallsignAndControllerRealName();
+            }
+            if (f2Stations.size() == 1)
+            {
+                f1 += QStringLiteral(" ") % f2Stations.front().getCallsignAndControllerRealName();
+            }
+
             ui->tb_TextMessagesCOM1->setToolTip(f1);
             ui->tb_TextMessagesCOM1->setToolTip(f2);
+
             ui->tw_TextMessages->setTabText(ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM1), f1);
             ui->tw_TextMessages->setTabText(ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM2), f2);
         }
