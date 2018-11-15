@@ -75,6 +75,15 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatedAircraft();
             }
 
+            //! \copydoc IContextNetwork::getOnlineStationsForFrequency
+            virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const override
+            {
+                Q_UNUSED(frequency);
+                Q_UNUSED(channelSpacing);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Aviation::CAtcStationList();
+            }
+
             //! \copydoc IContextNetwork::getAircraftInRangeCallsigns()
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override
             {

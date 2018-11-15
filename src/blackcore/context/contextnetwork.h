@@ -20,23 +20,24 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/network.h"
-#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/metar.h"
 
@@ -202,6 +203,9 @@ namespace BlackCore
 
             //! Online station for callsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+            //! Online stations for frequency
+            virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const = 0;
 
             //! Online station for callsign?
             virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const = 0;

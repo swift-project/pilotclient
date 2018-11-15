@@ -22,6 +22,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Weather;
 using namespace BlackMisc::Simulation;
@@ -146,6 +147,11 @@ namespace BlackCore
         CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);
+        }
+
+        CAtcStationList CContextNetworkProxy::getOnlineStationsForFrequency(const CFrequency &frequency, CComSystem::ChannelSpacing channelSpacing) const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getOnlineStationsForFrequency"), frequency, channelSpacing);
         }
 
         CAtcStation CContextNetworkProxy::getOnlineStationForCallsign(const CCallsign &callsign) const

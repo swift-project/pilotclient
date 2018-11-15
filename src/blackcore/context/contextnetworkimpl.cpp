@@ -769,6 +769,12 @@ namespace BlackCore
             return m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
         }
 
+        CAtcStationList CContextNetwork::getOnlineStationsForFrequency(const CFrequency &frequency, CComSystem::ChannelSpacing channelSpacing) const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_airspace->getAtcStationsOnline().findIfFrequencyIsWithinSpacing(frequency, channelSpacing);
+        }
+
         bool CContextNetwork::isOnlineStation(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
