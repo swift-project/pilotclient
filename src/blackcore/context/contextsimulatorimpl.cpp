@@ -412,6 +412,7 @@ namespace BlackCore
 
             // Once the simulator signaled it is ready to simulate, add all known aircraft
             m_initallyAddAircraft = true;
+            m_wasSimulating = false;
             m_matchingMessages.clear();
 
             // try to connect to simulator
@@ -525,6 +526,9 @@ namespace BlackCore
                     simulator->deleteLater();
                     emit this->simulatorPluginChanged(CSimulatorPluginInfo());
                 }
+
+                if (m_wasSimulating) { emit this->vitalityLost(); }
+                m_wasSimulating = false;
             }
         }
 
@@ -580,6 +584,7 @@ namespace BlackCore
 
         void CContextSimulator::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
         {
+            m_wasSimulating = m_wasSimulating || status.testFlag(ISimulator::Simulating);
             if (m_initallyAddAircraft && status.testFlag(ISimulator::Simulating))
             {
                 // use network to initally add aircraft
@@ -596,12 +601,16 @@ namespace BlackCore
                 }
                 m_initallyAddAircraft = false;
             }
+
             if (!status.testFlag(ISimulator::Connected))
             {
                 // we got disconnected, plugin no longer needed
                 this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered
                 this->unloadSimulatorPlugin();
                 this->restoreSimulatorPlugins();
+
+                if (m_wasSimulating) { emit this->vitalityLost(); }
+                m_wasSimulating = false;
             }
 
             emit this->simulatorStatusChanged(status);

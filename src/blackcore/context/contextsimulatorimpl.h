@@ -246,9 +246,10 @@ namespace BlackCore
             CAircraftMatcher m_aircraftMatcher { this };   //!< model matcher
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList>  m_matchingMessages; //!< all matching log messages per callsign
 
-            bool m_initallyAddAircraft = false;
+            bool m_wasSimulating          = false;
+            bool m_initallyAddAircraft    = false;
             bool m_enableMatchingMessages = true;
-            bool m_isWeatherActivated = false;
+            bool m_isWeatherActivated     = false;
 
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)
 

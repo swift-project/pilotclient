@@ -92,6 +92,9 @@ namespace BlackCore
             //! Simulator plugin loaded / unloaded (default info)
             void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+            //! A formerly vital driver is no loner vital
+            void vitalityLost();
+
             //! Render restrictions have been changed
             void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
@@ -223,6 +226,9 @@ namespace BlackCore
 
             //! Is available simulator simulating? Returns false if no simulator is available
             bool isSimulatorSimulating() const;
+
+            //! Used to decide if simulator is still alive, used for crash detection
+            bool isSimulatorVital() const;
 
             //! Icon representing the model
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
