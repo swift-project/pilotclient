@@ -17,6 +17,8 @@
 #include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
 
+#include <QPointer>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Settings;
@@ -39,6 +41,13 @@ namespace BlackGui
             ui->cb_CrashDumps->setChecked(settings.isEnabled());
             ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
             connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
+
+            QPointer<CLegalInfoComponent> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                myself->showCrashDumpHint();
+            });
         }
 
         CLegalInfoComponent::~CLegalInfoComponent()
@@ -62,6 +71,13 @@ namespace BlackGui
             CCrashSettings settings = m_crashDumpSettings.get();
             settings.setEnabled(checked);
             m_crashDumpSettings.setAndSave(settings);
+        }
+
+        void CLegalInfoComponent::showCrashDumpHint()
+        {
+            if (ui->cb_CrashDumps->isChecked()) { return; }
+            const CStatusMessage m = CStatusMessage(this).info("We recommend to enable crash dump uploads");
+            this->showOverlayHTMLMessage(m, 7500);
         }
 
         void CLegalInfoComponent::setChecklistInfo()

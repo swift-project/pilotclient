@@ -47,6 +47,9 @@ namespace BlackGui
             //! Allow crash dumps
             void onAllowCrashDumps(bool checked);
 
+            //! Crashdum hint
+            void showCrashDumpHint();
+
             //! Set the checklist info
             void setChecklistInfo();
 
