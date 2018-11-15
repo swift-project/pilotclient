@@ -62,6 +62,9 @@ namespace BlackGui
         //! Single Message mode
         void setModeToMessageSmall(bool withKillButton = false);
 
+        //! HTML message mode
+        void setModeToHTMLMessage(bool withKillButton = false);
+
         //! Single Text message mode
         void setModeToTextMessage();
 
@@ -109,6 +112,9 @@ namespace BlackGui
 
         //! Display one of the supported types
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+
+        //! HTML message
+        void showHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
         //! Allows to globally enable/disable kill button
         void showKillButton(bool killButton);

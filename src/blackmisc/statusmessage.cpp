@@ -137,8 +137,8 @@ namespace BlackMisc
         switch (type)
         {
         default:
-        case QtDebugMsg: m_severity = SeverityDebug; break;
-        case QtInfoMsg:  m_severity = SeverityInfo; break;
+        case QtDebugMsg:   m_severity = SeverityDebug; break;
+        case QtInfoMsg:    m_severity = SeverityInfo; break;
         case QtWarningMsg: m_severity = SeverityWarning; break;
         case QtCriticalMsg:
         case QtFatalMsg:
@@ -155,10 +155,10 @@ namespace BlackMisc
         switch (m_severity)
         {
         default:
-        case SeverityDebug: *o_type = QtDebugMsg; break;
-        case SeverityInfo: *o_type = QtInfoMsg; break;
+        case SeverityDebug:   *o_type = QtDebugMsg; break;
+        case SeverityInfo:    *o_type = QtInfoMsg; break;
         case SeverityWarning: *o_type = QtWarningMsg; break;
-        case SeverityError: *o_type = QtCriticalMsg; break;
+        case SeverityError:   *o_type = QtCriticalMsg; break;
         }
     }
 
@@ -182,8 +182,8 @@ namespace BlackMisc
 
     QString CStatusMessage::getHumanReadablePattern() const
     {
-        QStringList patternNames(getHumanReadablePatterns());
-        return patternNames.isEmpty() ? "" : patternNames.join(", ");
+        const QStringList patternNames(getHumanReadablePatterns());
+        return patternNames.isEmpty() ? QStringLiteral("") : patternNames.join(", ");
     }
 
     QStringList CStatusMessage::getHumanReadablePatterns() const
@@ -199,7 +199,7 @@ namespace BlackMisc
     QString CStatusMessage::getHumanOrTechnicalCategoriesAsString() const
     {
         if (m_categories.isEmpty()) { return ""; }
-        QString c(getHumanReadablePattern());
+        const QString c(getHumanReadablePattern());
         return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
 
@@ -280,11 +280,28 @@ namespace BlackMisc
     {
         switch (severity)
         {
-        case SeverityDebug: return CIcon::iconByIndex(CIcons::StandardIconUnknown16); // TODO
-        case SeverityInfo: return CIcon::iconByIndex(CIcons::StandardIconInfo16);
+        case SeverityDebug:   return CIcon::iconByIndex(CIcons::StandardIconUnknown16); // TODO
+        case SeverityInfo:    return CIcon::iconByIndex(CIcons::StandardIconInfo16);
         case SeverityWarning: return CIcon::iconByIndex(CIcons::StandardIconWarning16);
-        case SeverityError: return CIcon::iconByIndex(CIcons::StandardIconError16);
+        case SeverityError:   return CIcon::iconByIndex(CIcons::StandardIconError16);
         default: return CIcon::iconByIndex(CIcons::StandardIconInfo16);
+        }
+    }
+
+    const QString &CStatusMessage::convertToIconResource(CStatusMessage::StatusSeverity severity)
+    {
+        static const QString d;
+        static const QString i(":/pastel/icons/pastel/16/infomation.png");
+        static const QString w(":/pastel/icons/pastel/16/bullet-error.png");
+        static const QString e(":/pastel/icons/pastel/16/close-red.png");
+
+        switch (severity)
+        {
+        case SeverityDebug:   return d;
+        case SeverityInfo:    return i;
+        case SeverityWarning: return w;
+        case SeverityError:   return e;
+        default: return d;
         }
     }
 
@@ -333,10 +350,10 @@ namespace BlackMisc
     {
         switch (severity)
         {
-        case SeverityDebug:   { static const QString d("debug"); return d; }
-        case SeverityInfo:    { static const QString i("info"); return i; }
+        case SeverityDebug:   { static const QString d("debug");   return d; }
+        case SeverityInfo:    { static const QString i("info");    return i; }
         case SeverityWarning: { static const QString w("warning"); return w; }
-        case SeverityError:   { static const QString e("error"); return e; }
+        case SeverityError:   { static const QString e("error");   return e; }
         default:
             {
                 static const QString x("unknown severity");
@@ -385,7 +402,7 @@ namespace BlackMisc
         case IndexCategoriesAsString: return CVariant::from(m_categories.toQString());
         case IndexCategoriesHumanReadableAsString: return CVariant::from(this->getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString: return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
-        case IndexMessageAsHtml: return CVariant::from(this->toHtml());
+        case IndexMessageAsHtml: return CVariant::from(this->toHtml(false));
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -428,16 +445,22 @@ namespace BlackMisc
         return 0;
     }
 
-    QString CStatusMessage::toHtml() const
+    QString CStatusMessage::toHtml(bool withIcon) const
     {
-        static const QString ef("</font>");
+        QString img;
+        if (withIcon)
+        {
+            const QString r = convertToIconResource(this->getSeverity());
+            if (!r.isEmpty()) { img = QStringLiteral("<img src=\"%1\"> ").arg(r); }
+        }
+
         switch (this->getSeverity())
         {
-        case SeverityWarning: return QStringLiteral("<font color=\"yellow\">") % this->getMessage() % ef;
-        case SeverityError: return QStringLiteral("<font color=\"red\">") % this->getMessage() % ef;
+        case SeverityWarning: return img % QStringLiteral("<font color=\"yellow\">") % this->getMessage() % QStringLiteral("</font>");
+        case SeverityError:   return img % QStringLiteral("<font color=\"red\">") % this->getMessage() % QStringLiteral("</font>");
         case SeverityDebug: break;
         default: break;
         }
-        return this->getMessage();
+        return img % this->getMessage();
     }
 } // ns

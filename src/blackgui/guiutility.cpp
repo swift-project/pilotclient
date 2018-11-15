@@ -499,6 +499,7 @@ namespace BlackGui
 
     QSizeF CGuiUtility::fontMetrics80Chars(bool withRatio)
     {
+        // scale is 3.0 on my hires display
         static const QString s("01234567890123456789012345678901234567890123456789012345678901234567890123456789");
         const QFontMetricsF fm = CGuiUtility::currentFontMetricsF();
         const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
@@ -522,11 +523,12 @@ namespace BlackGui
     {
         // 1920/1080: 560/16 256/16 => 530/960
         // 3840/2160: 400/10 178/10 => 375/600
+        // with ratio we get the physical solution, otherwise logical solution
         const QSizeF s1 = CGuiUtility::fontMetrics80Chars(withRatio);
         const QSizeF s2 = CGuiUtility::fontMetricsLazyDog43Chars(withRatio);
         const QSizeF s = s1 + s2;
-        const qreal w = s.width()  * xCharacters / 123;
-        const qreal h = s.height() * yCharacters / 2;
+        const qreal w = s.width()  * xCharacters / 123; // 123 chars
+        const qreal h = s.height() * yCharacters / 2;   // 2 lines
         return QSizeF(w, h);
     }
 

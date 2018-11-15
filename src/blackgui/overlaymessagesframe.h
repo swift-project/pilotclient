@@ -163,6 +163,14 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
+        //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
+        void showOverlayHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
+        {
+            this->initMinimalFrame();
+            m_overlayMessages->showHTMLMessage(message, timeOutMs);
+            WIDGET::repaint();
+        }
+
         //! \copydoc BlackGui::COverlayMessages::showOverlayImage
         void showOverlayInlineTextMessage(Components::TextMessageTab tab)
         {
@@ -201,6 +209,25 @@ namespace BlackGui
             const QPoint middle = WIDGET::geometry().center();
             const int w = inner.width();
             const int h = inner.height();
+            const int x = middle.x() - w / 2;
+            const int y = qRound(middle.y() - h / m_middleFactor);
+            m_overlayMessages->setGeometry(x, y, w, h);
+        }
+
+        //! Init a minimal frame (smaller as the normal one)
+        void initMinimalFrame()
+        {
+            this->initInnerFrame();
+
+            // get logical resolution
+            constexpr int MinHeight = 100;
+            QSizeF s = CGuiUtility::fontMetricsEstimateSize(100, 5); // 2 lines for header
+            if (s.height() < MinHeight) { s.setHeight(MinHeight); }
+
+            const QSize inner(innerFrameSize());
+            const QPoint middle = WIDGET::geometry().center();
+            const int w = qMin(inner.width(), qRound(s.width()));
+            const int h = qMin(inner.height(), qRound(s.height()));
             const int x = middle.x() - w / 2;
             const int y = qRound(middle.y() - h / m_middleFactor);
             m_overlayMessages->setGeometry(x, y, w, h);

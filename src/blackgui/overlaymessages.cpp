@@ -54,7 +54,7 @@ namespace BlackGui
     {
         this->init(w, h);
         this->showKillButton(false);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged, Qt::QueuedConnection);
+        if (sGui) { connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged, Qt::QueuedConnection); }
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
         connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);
@@ -126,7 +126,7 @@ namespace BlackGui
         msgBox.setInformativeText("Do you want to terminate " + sGui->getApplicationNameAndVersion() + "?");
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Save);
-        if (QMessageBox::Ok == msgBox.exec())
+        if (QMessageBox::Ok == msgBox.exec() && sGui)
         {
             sGui->gracefulShutdown();
             sGui->exit();
@@ -328,6 +328,28 @@ namespace BlackGui
         }
     }
 
+    void COverlayMessages::showHTMLMessage(const CStatusMessage &message, int timeOutMs)
+    {
+        if (message.isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            QPointer<COverlayMessages> myself(this);
+            m_pendingMessageCalls.push_back([ = ]()
+            {
+                if (!myself) { return; }
+                myself->showHTMLMessage(message, timeOutMs);
+            });
+            return;
+        }
+
+        this->setModeToHTMLMessage();
+        ui->te_HTMLMessage->setText(message.toHtml(true));
+        this->display(timeOutMs);
+    }
+
     void COverlayMessages::showKillButton(bool killButton)
     {
         m_hasKillButton = killButton;
@@ -351,6 +373,13 @@ namespace BlackGui
     void COverlayMessages::setModeToMessageSmall(bool withKillButton)
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessageSmall);
+        this->showKill(withKillButton);
+        this->setHeader("Message");
+    }
+
+    void COverlayMessages::setModeToHTMLMessage(bool withKillButton)
+    {
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_HTMLMessage);
         this->showKill(withKillButton);
         this->setHeader("Message");
     }

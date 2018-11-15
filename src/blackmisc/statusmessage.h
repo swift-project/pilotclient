@@ -347,13 +347,16 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
         //! To HTML
-        QString toHtml() const;
+        QString toHtml(bool withIcon) const;
 
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
         //! Representing icon
         static const CIcon &convertToIcon(CStatusMessage::StatusSeverity severity);
+
+        //! Representing icon
+        static const QString &convertToIconResource(CStatusMessage::StatusSeverity severity);
 
         //! Object from JSON
         static CStatusMessage fromDatabaseJson(const QJsonObject &json);
