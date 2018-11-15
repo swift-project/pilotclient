@@ -134,6 +134,7 @@ namespace BlackGui
             if (sGui && sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginComponent::autoLogoffDetection);
             }
 
             // server and UI elements when in disconnect state
@@ -208,19 +209,20 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::setLogoffCountdown(int timeout)
+        void CLoginComponent::setLogoffCountdown(int timeoutSeconds)
         {
-            if (timeout < 0) { timeout = LogoffIntervalSeconds; }
+            if (timeoutSeconds < 0) { timeoutSeconds = LogoffIntervalSeconds; }
 
-            ui->pb_LogoffTimeout->setMaximum(timeout);
-            ui->pb_LogoffTimeout->setValue(timeout);
-            m_logoffIntervalSeconds = timeout;
+            ui->pb_LogoffTimeout->setMaximum(timeoutSeconds);
+            ui->pb_LogoffTimeout->setValue(timeoutSeconds);
+            m_logoffIntervalSeconds = timeoutSeconds;
         }
 
         void CLoginComponent::loginCancelled()
         {
             m_logoffCountdownTimer.stop();
-            ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
+            this->setLogoffCountdown(); // reset time
+            this->closeOverlay();
             emit this->loginOrLogoffCancelled();
         }
 
@@ -234,6 +236,9 @@ namespace BlackGui
 
             ui->form_Pilot->setVatsimValidation(vatsimLogin);
             this->setUiLoginState(isConnected);
+
+            // reset time
+            this->setLogoffCountdown();
 
             CServer currentServer; // used for login
             CSimulatedAircraft ownAircraft; // used own aircraft
@@ -322,7 +327,6 @@ namespace BlackGui
                 sGui->getIContextAudio()->leaveAllVoiceRooms();
                 sGui->setExtraWindowTitle("");
                 msg = sGui->getIContextNetwork()->disconnectFromNetwork();
-
             }
 
             // log message and trigger events
@@ -481,7 +485,7 @@ namespace BlackGui
         void CLoginComponent::startLogoffTimerCountdown()
         {
             ui->pb_LogoffTimeout->setValue(m_logoffIntervalSeconds);
-            m_logoffCountdownTimer.setInterval(m_logoffIntervalSeconds * 1000 / 10);
+            m_logoffCountdownTimer.setInterval(1000);
             m_logoffCountdownTimer.start();
         }
 
@@ -620,6 +624,20 @@ namespace BlackGui
                 m_logoffCountdownTimer.stop();
                 this->toggleNetworkConnection();
             }
+        }
+
+        void CLoginComponent::autoLogoffDetection()
+        {
+            if (!ui->cb_AutoLogoff->isChecked()) { return; }
+            if (!this->hasValidContexts()) { return; }
+            if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
+
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Auto logoff in progress");
+            const int delaySecs = 45;
+            this->showOverlayMessage(m, qRound(1000 * delaySecs * 0.8));
+            this->setLogoffCountdown(delaySecs);
+
+            emit this->requestLoginPage();
         }
 
         void CLoginComponent::reverseLookupAircraftModel()

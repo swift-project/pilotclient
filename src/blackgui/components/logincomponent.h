@@ -81,8 +81,8 @@ namespace BlackGui
             //! Main info area changed
             void mainInfoAreaChanged(const QWidget *currentWidget);
 
-            //! Set a logoof time
-            void setLogoffCountdown(int timeout = -1);
+            //! Set a logoff time
+            void setLogoffCountdown(int timeoutSeconds = -1);
 
         signals:
             //! Login
@@ -93,6 +93,9 @@ namespace BlackGui
 
             //! Request network settings
             void requestNetworkSettings();
+
+            //! Request to be shown
+            void requestLoginPage();
 
             //! Relevant login data changed (digest version)
             void loginDataChangedDigest();
@@ -174,6 +177,9 @@ namespace BlackGui
             //! Logoff countdown
             void logoffCountdown();
 
+            //! Auto-logoff detection
+            void autoLogoffDetection();
+
             //! Reverse lookup model
             void reverseLookupAircraftModel();
 
@@ -232,7 +238,7 @@ namespace BlackGui
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
-            bool m_visible = false; //!< is this component selected?
+            bool m_visible         = false; //!< is this component selected?
             bool m_updatePilotOnServerChanges = true;
             const QIcon m_iconPlay  {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
