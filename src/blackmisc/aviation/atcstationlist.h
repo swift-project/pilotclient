@@ -13,11 +13,13 @@
 #define BLACKMISC_AVIATION_ATCSTATIONLIST_H
 
 #include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/collection.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -27,8 +29,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        class CComSystem;
-
         //! Value object for a list of ATC stations.
         class BLACKMISC_EXPORT CAtcStationList :
             public CSequence<CAtcStation>,
@@ -47,6 +47,9 @@ namespace BlackMisc
 
             //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const;
+
+            //! Find 0..n stations within channel spacing
+            CAtcStationList findIfFrequencyIsWithinSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing);
 
             //! Update if message changed
             bool updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer);

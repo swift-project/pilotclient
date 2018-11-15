@@ -94,6 +94,12 @@ namespace BlackMisc
             //! Is active frequency within 25kHz channel?
             bool isActiveFrequencyWithin25kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
 
+            //! Is active frequency within 25kHz channel?
+            bool isActiveFrequencyWithin50kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
+
+            //! Is active frequency within 25kHz channel?
+            bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency, CComSystem::ChannelSpacing channelSpacing) const;
+
             //! Set UNICOM frequency as active
             void setActiveUnicom();
 

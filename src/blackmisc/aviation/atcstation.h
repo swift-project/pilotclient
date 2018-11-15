@@ -71,9 +71,9 @@ namespace BlackMisc
             CAtcStation(const QString &callsign);
 
             //! ATC station constructor
-            CAtcStation(const CCallsign &callsign, const BlackMisc::Network::CUser &controller,
-                        const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-                        const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range,
+            CAtcStation(const CCallsign &callsign, const Network::CUser &controller,
+                        const PhysicalQuantities::CFrequency &frequency,
+                        const Geo::CCoordinateGeodetic &pos, const PhysicalQuantities::CLength &range,
                         bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
@@ -103,6 +103,9 @@ namespace BlackMisc
 
             //! Get controller name.
             QString getControllerRealName() const { return m_controller.getRealName(); }
+
+            //! Callsign and controller's name if available
+            QString getCallsignAndControllerRealName() const;
 
             //! Get controller name.
             QString getControllerId() const { return m_controller.getId(); }
@@ -194,7 +197,10 @@ namespace BlackMisc
             bool isBookedNow() const;
 
             //! Tuned in within 25KHz channel spacing
-            bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
+            bool isComUnitTunedIn25KHz(const Aviation::CComSystem &comUnit) const;
+
+            //! Is frequency within channel spacing
+            bool isFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing) const;
 
             //! When booked, 0 means now,
             //! negative values mean booking in past,

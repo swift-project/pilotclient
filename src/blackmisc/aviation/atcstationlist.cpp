@@ -40,6 +40,15 @@ namespace BlackMisc
             });
         }
 
+        CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
+        {
+            if (frequency.isNull()) { return CAtcStationList(); }
+            return this->findBy([&](const CAtcStation & atcStation)
+            {
+                return atcStation.isFrequencyWithinChannelSpacing(frequency, spacing);
+            });
+        }
+
         bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
         {
             const CInformationMessage::InformationType t = im.getType();
