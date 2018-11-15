@@ -10,12 +10,14 @@
 #include "simulatorxplaneconfigwindow.h"
 #include "blackcore/application.h"
 #include "ui_simulatorxplaneconfigwindow.h"
+#include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
 
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackSimPlugin
 {
@@ -39,9 +41,13 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
         {
             const QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
+            const QString updatedAddress = ui->comp_SettingsXSwiftBus->getDBusAddress();
             if (currentAddress != ui->comp_SettingsXSwiftBus->getDBusAddress())
             {
-                m_xswiftbusServerSetting.set(ui->comp_SettingsXSwiftBus->getDBusAddress());
+                m_xswiftbusServerSetting.set(updatedAddress);
+                CXSwiftBusConfigWriter xswiftbusConfigWriter;
+                xswiftbusConfigWriter.setDBusAddress(updatedAddress);
+                xswiftbusConfigWriter.updateInAllXPlaneVersions();
             }
             close();
         }

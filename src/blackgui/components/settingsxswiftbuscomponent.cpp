@@ -11,11 +11,13 @@
 #include "ui_settingsxswiftbuscomponent.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Settings;
+using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackGui
 {
@@ -57,6 +59,9 @@ namespace BlackGui
             if (dBusAddress != m_xSwiftBusServerSetting.getThreadLocal())
             {
                 const CStatusMessage msg = m_xSwiftBusServerSetting.setAndSave(dBusAddress);
+                CXSwiftBusConfigWriter xswiftbusConfigWriter;
+                xswiftbusConfigWriter.setDBusAddress(dBusAddress);
+                xswiftbusConfigWriter.updateInAllXPlaneVersions();
                 CLogMessage::preformatted(msg);
             }
         }
