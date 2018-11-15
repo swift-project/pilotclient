@@ -226,7 +226,7 @@
          <item alignment="Qt::AlignTop">
           <widget class="QTabWidget" name="tw_Details">
            <property name="currentIndex">
-            <number>3</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="tb_LoginMode">
             <attribute name="title">
@@ -277,7 +277,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>236</width>
+                  <width>259</width>
                   <height>55</height>
                  </rect>
                 </property>

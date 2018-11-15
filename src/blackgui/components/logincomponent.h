@@ -150,6 +150,9 @@ namespace BlackGui
             //! Selected server (others)
             BlackMisc::Network::CServer getCurrentOtherServer() const;
 
+            //! Current server based on selected tab
+            BlackMisc::Network::CServer getCurrentServer() const;
+
             //! Get a prefill model
             BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
 

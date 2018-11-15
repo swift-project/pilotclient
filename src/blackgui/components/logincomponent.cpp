@@ -76,9 +76,8 @@ namespace BlackGui
             ui(new Ui::CLoginComponent)
         {
             ui->setupUi(this);
+            ui->tw_Details->setCurrentWidget(ui->tb_LoginMode);
             m_logoffCountdownTimer.setObjectName("CLoginComponent:m_logoffCountdownTimer");
-            this->setLogoffCountdown();
-            connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
 
             ui->tw_Network->setCurrentIndex(0);
             ui->selector_AircraftIcao->displayWithIcaoDescription(false);
@@ -86,6 +85,8 @@ namespace BlackGui
             ui->selector_AircraftIcao->displayMode(CDbAircraftIcaoSelectorComponent::DisplayIcaoAndId);
             ui->selector_AirlineIcao->displayMode(CDbAirlineIcaoSelectorComponent::DisplayVDesignatorAndId);
 
+            this->setLogoffCountdown();
+            connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
             connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
@@ -272,7 +273,7 @@ namespace BlackGui
                 }
 
                 // Server
-                currentServer = vatsimLogin ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
+                currentServer = this->getCurrentServer();
                 const CUser user = this->getUserFromPilotGuiValues();
                 currentServer.setUser(user);
 
@@ -436,8 +437,14 @@ namespace BlackGui
         {
             Q_UNUSED(index);
             const bool showNetwork = (ui->tw_Details->currentWidget() != ui->tb_FsdDetails);
+
+            const CServer server = this->getCurrentServer();
+
+            // only override if not yet enabled
+            if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
+            if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
+
             ui->tw_Network->setVisible(showNetwork);
-            // this->setServerButtonsVisible(showNetwork);
             ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);
         }
 
@@ -480,6 +487,11 @@ namespace BlackGui
         CServer CLoginComponent::getCurrentOtherServer() const
         {
             return ui->comp_OtherServers->currentServer();
+        }
+
+        CServer CLoginComponent::getCurrentServer() const
+        {
+            return this->isVatsimNetworkTabSelected() ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
         }
 
         void CLoginComponent::startLogoffTimerCountdown()
