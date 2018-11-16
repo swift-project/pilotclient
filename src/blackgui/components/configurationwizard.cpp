@@ -62,6 +62,8 @@ namespace BlackGui
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 sGui->showHelp(this);
             });
+
+            this->setScreenGeometry();
         }
 
         CConfigurationWizard::~CConfigurationWizard()
@@ -125,6 +127,24 @@ namespace BlackGui
             if (!parent) { return; }
             if (CMathUtils::epsilonEqual(parent->windowOpacity(), opacity)) { return; }
             parent->setWindowOpacity(opacity);
+        }
+
+        void CConfigurationWizard::setScreenGeometry()
+        {
+            if (!sGui) { return; }
+            const QRect g = CGuiApplication::currentScreenGeometry();
+
+            // 1280/720 on 4k hires
+            // 1920/1280 on non hires 1920 displays
+            const int gw = g.width();
+            const int gh = g.height();
+            const int calcW = qRound(gw * 0.8);
+            const int calcH = qRound(gh * 0.9); // normally critical as buttons are hidden
+
+            // do not get too huge
+            const int w = qMin(900, calcW);
+            const int h = qMin(750, calcH);
+            this->resize(w, h);
         }
     } // ns
 } // ns

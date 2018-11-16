@@ -71,6 +71,9 @@ namespace BlackGui
             //! Set the parent's window opacity
             void setParentOpacity(qreal opacity);
 
+            //! Set screen geometry based on screen resolution
+            void setScreenGeometry();
+
             QScopedPointer<Ui::CConfigurationWizard> ui;
             int m_previousId = -1;
             int m_minId = -1;
