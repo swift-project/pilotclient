@@ -34,6 +34,7 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QCommandLineParser>
 #include <QDesktopServices>
 #include <QDir>
@@ -288,6 +289,20 @@ namespace BlackGui
     bool CGuiApplication::isUsingHighDpiScreenSupport()
     {
         return CGuiUtility::isUsingHighDpiScreenSupport();
+    }
+
+    QScreen *CGuiApplication::currentScreen()
+    {
+        QWidget *w = CGuiApplication::mainApplicationWidget();
+        const int s = QApplication::desktop()->screenNumber(w);
+        if (s < QGuiApplication::screens().size()) { return QGuiApplication::screens()[s]; }
+        return QGuiApplication::primaryScreen();
+    }
+
+    QRect CGuiApplication::currentScreenGeometry()
+    {
+        const QScreen *s = currentScreen();
+        return s->geometry();
     }
 
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const

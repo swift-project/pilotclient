@@ -27,6 +27,7 @@
 #include <QDialog>
 #include <QObject>
 #include <QEvent>
+#include <QScreen>
 #include <QPixmap>
 #include <QScopedPointer>
 #include <QString>
@@ -243,6 +244,13 @@ namespace BlackGui
 
         //! Uses the high DPI support?
         static bool isUsingHighDpiScreenSupport();
+
+        //! Current screen
+        static QScreen *currentScreen();
+
+        //! Current screen resolution
+        //! \remark logical resolution, not physical resolution
+        static QRect currentScreenGeometry();
 
         //! Parse scale factor if any
         static double parseScaleFactor(int argc, char *argv[]);
