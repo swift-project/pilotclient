@@ -251,14 +251,14 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="2" colspan="9">
+   <item row="10" column="2" colspan="9" alignment="Qt::AlignTop">
     <widget class="QLabel" name="lbl_DatabaseUrl">
      <property name="text">
       <string>Checking DB URL</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="2" colspan="9">
+   <item row="11" column="2" colspan="9" alignment="Qt::AlignTop">
     <widget class="QLabel" name="lbl_SharedUrls">
      <property name="text">
       <string>Shared URL will go here</string>

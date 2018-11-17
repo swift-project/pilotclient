@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Copy models from other swift versions</string>
   </property>
-  <layout class="QVBoxLayout" name="vl_CopyModelsFromOtherSwiftVersions" stretch="2,1,5">
+  <layout class="QVBoxLayout" name="vl_CopyModelsFromOtherSwiftVersions">
    <item>
     <widget class="QGroupBox" name="gb_OtherSwiftVersions">
      <property name="title">
