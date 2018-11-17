@@ -6,7 +6,7 @@
     "dbHttpPort": 80,
     "dbHttpsPort": 443,
     "dbRootDirectoryUrl": {
-        "url": "https://datastore.swift-project.org"
+        "url": "https://datastore.swift-project.net"
     },
     "development": false,
     "mappingMinimumVersion" : "0.8.6",
@@ -15,13 +15,13 @@
     },
     "newsUrls": {
         "containerbase": [
-			{ "url": "http://swift-project.net/" },
-			{ "url": "http://swift-project.org/" }]
+            { "url": "https://blog.swift-project.net/?__print__=1" },
+            { "url": "https://dev.swift-project.org/phame/blog/view/1/?__print__=1" }]
     },
     "onlineHelpUrls": {
         "containerbase": [
-			{ "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html" },
-			{ "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html" }]
+            { "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html" },
+            { "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html" }]
     },
     "mapUrls": {
         "containerbase": [{
@@ -30,10 +30,12 @@
     },
     "sharedUrls": {
         "containerbase": [
-			{ "url": "https://datastore.swift-project.net/shared" },
-			{ "url": "https://datastore.swift-project.org/shared" },
-			{ "url": "http://www.siliconmind.de/datastore/shared" },
-			{ "url": "http://swift-project.org/datastore/shared"  }]
+            { "url": "https://datastore.swift-project.net/shared" },
+            { "url": "https://datastore.swift-project.org/shared" },
+            { "url": "http://www.siliconmind.de/datastore/shared" },
+            { "url": "https://swift.fir-berlin.de/shared" },
+            { "url": "https://swift.jarvum.de/shared" },
+            { "url": "http://swift-project.org/datastore/shared"  }]
     },
     "timestampMSecsSinceEpoch": 1476907647000,
     "vatsimBookingsUrl": {
