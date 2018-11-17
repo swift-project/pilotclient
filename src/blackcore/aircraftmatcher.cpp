@@ -229,7 +229,7 @@ namespace BlackCore
                         break;
                     }
                     BLACK_FALLTHROUGH;
-                case CAircraftMatcherSetup::PickFirst:
+                case CAircraftMatcherSetup::PickFirst: // fallthru intentionally
                 default:
                     usedStrategy = CAircraftMatcherSetup::PickFirst; // re-assigned if fall-through
                     matchedModel = candidates.front();

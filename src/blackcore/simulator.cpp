@@ -233,7 +233,7 @@ namespace BlackCore
 
     void ISimulator::reset()
     {
-        this->clearAllRemoteAircraftData();
+        this->clearAllRemoteAircraftData(); // reset
     }
 
     bool ISimulator::isUpdateAllRemoteAircraft(qint64 currentTimestamp) const
@@ -489,7 +489,7 @@ namespace BlackCore
                 {
                     this->physicallyRemoveAllRemoteAircraft();
                     const CStatusMessageList msgs = this->debugVerifyStateAfterAllAircraftRemoved();
-                    this->clearAllRemoteAircraftData();
+                    this->clearAllRemoteAircraftData(); // "dot command"
                     if (!msgs.isEmpty()) { emit this->driverMessages(msgs); }
                     const CSimulatedAircraftList aircraft = this->getAircraftInRange();
                     for (const CSimulatedAircraft &a : aircraft)
@@ -734,7 +734,7 @@ namespace BlackCore
         const int r = this->physicallyRemoveMultipleRemoteAircraft(callsigns);
 
         // leave no trash
-        this->clearAllRemoteAircraftData();
+        this->clearAllRemoteAircraftData(); // remove all aircraft
         return r;
     }
 

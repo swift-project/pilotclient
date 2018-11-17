@@ -217,7 +217,7 @@ namespace BlackMisc
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsingOfSingleFile(const QString &fileName, bool &ok, CStatusMessageList &msgs)
             {
-                // due to the filter we expect only "aircraft.cfg" here
+                // due to the filter we expect only "aircraft.cfg" files here
                 // remark: in a 1st version I have used QSettings to parse to file as ini file
                 // unfortunately some files are malformed which could end up in wrong data
 

@@ -674,7 +674,7 @@ namespace BlackSimPlugin
             }
 
             // slower updates
-            if (m_ownAircraftUpdate % 10 == 0)
+            if (m_ownAircraftUpdateCycles % 10 == 0)
             {
                 if (m_isWeatherActivated)
                 {
@@ -694,7 +694,7 @@ namespace BlackSimPlugin
                 // init terrain probes here has the advantage we can also switch it on/off at runtime
                 if (m_useFsxTerrainProbe && !m_initFsxTerrainProbes)
                 {
-                    this->physicallyInitAITerrainProbes(position, 2);
+                    this->physicallyInitAITerrainProbes(position, 2); // init probe
                 }
 
                 // SB4 offsets
@@ -702,7 +702,7 @@ namespace BlackSimPlugin
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb4packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
             }
 
-            m_ownAircraftUpdate++; // with 50updates/sec long enough even for 32bit
+            m_ownAircraftUpdateCycles++; // with 50updates/sec long enough even for 32bit
         }
 
         void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData)
@@ -827,9 +827,9 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
-                // also triggers new add if required
-                if (!myself) { return; }
-                if (this->isShuttingDownOrDisconnected()) { return; }
+                // verify aircraft and also triggers new add if required
+                // do not do this in the event loop, so we do this deferred
+                if (!myself || this->isShuttingDownOrDisconnected()) { return; }
                 this->verifyAddedRemoteAircraft(verifyAircraft);
             });
             return true;
@@ -922,7 +922,7 @@ namespace BlackSimPlugin
                 emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), false, msg);
             }
 
-            // trigger new adding from pending if any
+            // trigger adding pending aircraft if there are any
             if (!m_addPendingAircraft.isEmpty())
             {
                 this->addPendingAircraftAfterAdded();
@@ -1020,7 +1020,7 @@ namespace BlackSimPlugin
             // no simObject reference outside that block, because it will be deleted
             {
                 CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
-                simObject.setConfirmedAdded(true);
+                simObject.setConfirmedAdded(true); // terrain probe
                 simObject.resetTimestampToNow();
                 cs = simObject.getCallsign();
                 CLogMessage(this).info("Probe: '%1' '%2' confirmed, %3") << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
@@ -1052,7 +1052,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
         {
-            this->addPendingAircraft(AddAfterAdded);
+            this->addPendingAircraft(AddAfterAdded); // addPendingAircraft is already "non blocking"
         }
 
         void CSimulatorFsxCommon::addPendingAircraft(AircraftAddMode mode)
@@ -2003,8 +2003,8 @@ namespace BlackSimPlugin
         {
             // MSFS has inverted pitch and bank angles
             SIMCONNECT_DATA_PBH pbh;
-            pbh.Pitch = -situation.getPitch().value(CAngleUnit::deg());
-            pbh.Bank  = -situation.getBank().value(CAngleUnit::deg());
+            pbh.Pitch   = -situation.getPitch().value(CAngleUnit::deg());
+            pbh.Bank    = -situation.getBank().value(CAngleUnit::deg());
             pbh.Heading = situation.getHeading().value(CAngleUnit::deg());
             return pbh;
         }
@@ -2213,7 +2213,7 @@ namespace BlackSimPlugin
             m_sbDataReceived = 0;
             m_syncTimeDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
-            m_ownAircraftUpdate = 0;
+            m_ownAircraftUpdateCycles = 0;
             m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;

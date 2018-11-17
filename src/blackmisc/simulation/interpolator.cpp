@@ -118,7 +118,7 @@ namespace BlackMisc
 
             // oldest last, null ignored
             if (!latest.isNull()) { situations.push_back(latest); }
-            if (!newer.isNull())  { situations.push_back(newer); }
+            if (!newer.isNull())  { situations.push_back(newer);  }
             if (!oldest.isNull()) { situations.push_back(oldest); }
 
             const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();

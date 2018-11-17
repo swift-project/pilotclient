@@ -142,13 +142,14 @@ namespace BlackMisc
             if (m_currentSituations.isEmpty()) { return false; }
 
             // and use the real values if available
+            // m_s[0] .. oldest -> m_[2] .. latest
             const CAircraftSituation latest = m_currentSituations.front();
             if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
             const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
             const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
             if (!older.isNull()) { m_s[0] = older; }
             const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
-            const qint64 olderAdjusted = m_s[0].getAdjustedMSecsSinceEpoch();
+            const qint64 olderAdjusted  = m_s[0].getAdjustedMSecsSinceEpoch();
 
             // not having a new situation itself is quite normal,
             // only if it persits it is critical.

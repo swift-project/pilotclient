@@ -927,28 +927,19 @@ namespace BlackMisc
 
             if (!aircraftIcao.isLoadedFromDb())
             {
-                if (idAircraftIcao >= 0)
-                {
-                    aircraftIcao.setDbKey(idAircraftIcao);
-                }
+                if (idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
             }
 
             if (!livery.isLoadedFromDb())
             {
                 const int idLivery = json.value(prefix % QStringLiteral("idlivery")).toInt(-1);
-                if (idLivery >= 0)
-                {
-                    livery.setDbKey(idLivery);
-                }
+                if (idLivery >= 0) { livery.setDbKey(idLivery); }
             }
 
             if (!distributor.isLoadedFromDb())
             {
                 const QString idDistributor = json.value(prefix % QStringLiteral("iddistributor")).toString();
-                if (!idDistributor.isEmpty())
-                {
-                    distributor.setDbKey(idDistributor);
-                }
+                if (!idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
             }
 
             if (!cachedAircraftIcao && aircraftIcao.isLoadedFromDb()) { aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao; }

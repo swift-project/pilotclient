@@ -564,7 +564,7 @@ namespace BlackSimPlugin
             int m_sbDataReceived = 0;            //!< SB4 area data received
             int m_syncTimeDeferredCounter =  0;  //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
-            int m_ownAircraftUpdate = 0;         //!< own aircraft update
+            int m_ownAircraftUpdateCycles = 0;   //!< own aircraft update
 
             // tracing dispatch performance
             int m_dispatchErrors         = 0;    //!< number of dispatched failed, \sa dispatch

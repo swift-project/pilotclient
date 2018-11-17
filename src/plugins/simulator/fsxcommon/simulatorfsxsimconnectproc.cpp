@@ -48,10 +48,10 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_OPEN:
                 {
                     SIMCONNECT_RECV_OPEN *event = static_cast<SIMCONNECT_RECV_OPEN *>(pData);
-                    const QString simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    const QString version = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
-                    const QString name = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
-                    const QString details = QString("Name: '%1' Version: %2 SimConnect: %3").arg(name, version, simConnectVersion);
+                    const QString simConnectVersion = QStringLiteral("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    const QString version = QStringLiteral("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    const QString name    = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
+                    const QString details = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3").arg(name, version, simConnectVersion);
                     simulatorFsxP3D->setSimulatorDetails(name, details, version);
                     simulatorFsxP3D->m_simConnectVersion = simConnectVersion;
                     CLogMessage(simulatorFsxP3D).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
@@ -179,7 +179,10 @@ namespace BlackSimPlugin
                         case SystemEventObjectRemoved:
                             simulatorFsxP3D->simulatorReportedObjectRemoved(objectId);
                             break;
-                        case SystemEventObjectAdded:  // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
+                        case SystemEventObjectAdded:
+                            // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
+                            // this event here is normally received before SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
+                            break;
                         default:
                             break;
                         }
