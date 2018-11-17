@@ -117,7 +117,7 @@ namespace BlackGui
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;
-            ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml(false));
+            ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml(false, true));
         }
 
         void CLogComponent::appendPlainTextToConsole(const QString &text)

@@ -346,7 +346,7 @@ namespace BlackGui
         }
 
         this->setModeToHTMLMessage();
-        ui->te_HTMLMessage->setText(message.toHtml(true));
+        ui->te_HTMLMessage->setText(message.toHtml(true, true));
         this->display(timeOutMs);
     }
 

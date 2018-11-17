@@ -402,7 +402,7 @@ namespace BlackMisc
         case IndexCategoriesAsString: return CVariant::from(m_categories.toQString());
         case IndexCategoriesHumanReadableAsString: return CVariant::from(this->getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString: return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
-        case IndexMessageAsHtml: return CVariant::from(this->toHtml(false));
+        case IndexMessageAsHtml: return CVariant::from(this->toHtml(false, true));
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -445,7 +445,7 @@ namespace BlackMisc
         return 0;
     }
 
-    QString CStatusMessage::toHtml(bool withIcon) const
+    QString CStatusMessage::toHtml(bool withIcon, bool withColors) const
     {
         QString img;
         if (withIcon)
@@ -454,12 +454,15 @@ namespace BlackMisc
             if (!r.isEmpty()) { img = QStringLiteral("<img src=\"%1\"> ").arg(r); }
         }
 
-        switch (this->getSeverity())
+        if (withColors)
         {
-        case SeverityWarning: return img % QStringLiteral("<font color=\"yellow\">") % this->getMessage() % QStringLiteral("</font>");
-        case SeverityError:   return img % QStringLiteral("<font color=\"red\">") % this->getMessage() % QStringLiteral("</font>");
-        case SeverityDebug: break;
-        default: break;
+            switch (this->getSeverity())
+            {
+            case SeverityWarning: return img % QStringLiteral("<font color=\"yellow\">") % this->getMessage() % QStringLiteral("</font>");
+            case SeverityError:   return img % QStringLiteral("<font color=\"red\">") % this->getMessage() % QStringLiteral("</font>");
+            case SeverityDebug: break;
+            default: break;
+            }
         }
         return img % this->getMessage();
     }

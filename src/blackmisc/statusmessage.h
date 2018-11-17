@@ -347,7 +347,7 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
         //! To HTML
-        QString toHtml(bool withIcon) const;
+        QString toHtml(bool withIcon, bool withColors) const;
 
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);

@@ -74,7 +74,7 @@ namespace BlackGui
             {
                 // the underlying model object as summary
                 const CStatusMessage msg(this->at(index));
-                return msg.toHtml(false);
+                return msg.toHtml(false, false);
             }
             return CListModelTimestampObjects::data(index, role);
         }
