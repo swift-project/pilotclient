@@ -64,6 +64,7 @@ namespace BlackGui
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
         private:
+            static constexpr int OverlayTimeoutMs = 5000;
             QScopedPointer<Ui::CFlightPlanComponent> ui;
             CAltitudeDialog *m_altitudeDialog = nullptr;
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan

@@ -544,7 +544,8 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextNetwork()->isConnected())
             {
-                CLogMessage(this).warning("Cannot load flight plan, network not connected");
+                const CStatusMessage m = CLogMessage(this).validationWarning("Cannot load network flight plan, network not connected");
+                this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
                 return;
             }
 
@@ -552,14 +553,15 @@ namespace BlackGui
             const CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
-                const int r = QMessageBox::warning(this, "Loaded FP", "Override current flight plan data?", QMessageBox::Yes | QMessageBox::No);
+                const QMessageBox::StandardButton r = QMessageBox::warning(this, "Loaded FP", "Override current flight plan data?", QMessageBox::Yes | QMessageBox::No);
                 if (r != QMessageBox::Yes) { return; }
                 this->fillWithFlightPlanData(loadedPlan);
                 CLogMessage(this).info("Updated with loaded flight plan");
             }
             else
             {
-                CLogMessage(this).warning("No flight plan data");
+                const CStatusMessage m = CLogMessage(this).warning("No flight plan data in loaded plan");
+                this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
             }
         }
 
