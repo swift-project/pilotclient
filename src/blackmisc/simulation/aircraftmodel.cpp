@@ -792,18 +792,20 @@ namespace BlackMisc
             static const QString set("manually set");
             static const QString fsinn("FSInn");
             static const QString probe("probe");
+            static const QString reverse("reverse lookup");
             static const QString unknown("unknown");
 
             switch (type)
             {
             case TypeQueriedFromNetwork: return queried;
-            case TypeModelMatching: return matching;
-            case TypeDatabaseEntry: return db;
+            case TypeModelMatching:      return matching;
+            case TypeDatabaseEntry:      return db;
+            case TypeManuallySet:        return set;
+            case TypeFSInnData:          return fsinn;
+            case TypeTerrainProbe:       return probe;
+            case TypeReverseLookup:      return reverse;
+            case TypeOwnSimulatorModel:  return ownSim;
             case TypeModelMatchingDefaultModel: return def;
-            case TypeOwnSimulatorModel: return ownSim;
-            case TypeManuallySet: return set;
-            case TypeFSInnData: return fsinn;
-            case TypeTerrainProbe: return probe;
             case TypeUnknown:
             default: return unknown;
             }

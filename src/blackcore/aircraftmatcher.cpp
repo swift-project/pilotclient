@@ -252,10 +252,10 @@ namespace BlackCore
 
         // copy over callsign validate
         matchedModel.setCallsign(remoteAircraft.getCallsign());
+        matchedModel.setModelType(CAircraftModel::TypeModelMatching);
 
         Q_ASSERT_X(!matchedModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
         Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
-        Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
         const QDateTime endTime = QDateTime::currentDateTimeUtc();
         const qint64 matchingTime = startTime.msecsTo(endTime);
@@ -271,6 +271,7 @@ namespace BlackCore
         CAircraftModel model(networkModelString, type, "", networkAircraftIcao, livery);
         model.setCallsign(callsign);
         model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, log);
+        model.setModelType(CAircraftModel::TypeReverseLookup);
         return model;
     }
 
@@ -434,6 +435,7 @@ namespace BlackCore
             }
         }
         model.setCallsign(callsign);
+        model.setModelType(CAircraftModel::TypeReverseLookup);
         return model;
     }
 
@@ -453,6 +455,7 @@ namespace BlackCore
             }
         }
         model.setCallsign(callsign);
+        model.setModelType(CAircraftModel::TypeReverseLookup);
         return model;
     }
 
