@@ -258,7 +258,7 @@ namespace BlackCore
                 if (!m_lastSuccessfulSetupUrl.isEmpty())
                 {
                     // already read
-                    CLogMessage(this).info("Cancel second bootstrap read, as there was a 1st read: " + url.toQString());
+                    CLogMessage(this).info("Cancel second bootstrap read ('%1'), as there was a 1st read: '%2'") << url.toQString() << m_lastSuccessfulSetupUrl;
                     return;
                 }
                 sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
@@ -304,7 +304,7 @@ namespace BlackCore
             if (!m_lastSuccessfulUpdateInfoUrl.isEmpty())
             {
                 // already read
-                CLogMessage(this).info("Cancel second update info read, as there was a 1st read: " + url.toQString());
+                CLogMessage(this).info("Cancel second update info read ('%1'), as there was a 1st read '%2'") << url.toQString() << m_lastSuccessfulUpdateInfoUrl;
                 return;
             }
             sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
