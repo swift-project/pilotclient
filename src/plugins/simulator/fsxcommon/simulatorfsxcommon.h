@@ -570,10 +570,10 @@ namespace BlackSimPlugin
             int m_dispatchErrors         = 0;    //!< number of dispatched failed, \sa dispatch
             int m_dispatchProcCount      = 0;    //!< number of dispatchProc counts
             int m_dispatchProcEmptyCount = 0;    //!< number dispatchProc doing nothing
-            qint64 m_dispatchTimeMs        = -1;
-            qint64 m_dispatchMaxTimeMs     = -1;
-            qint64 m_dispatchProcTimeMs    = -1;
-            qint64 m_dispatchProcMaxTimeMs = -1;
+            qint64 m_dispatchTimeMs        = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
+            qint64 m_dispatchMaxTimeMs     = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
+            qint64 m_dispatchProcTimeMs    = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
+            qint64 m_dispatchProcMaxTimeMs = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
 
             SIMCONNECT_RECV_ID m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL;     //!< last receive id from dispatching
             SIMCONNECT_RECV_ID m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL;     //!< receive id corresponding to max.time
