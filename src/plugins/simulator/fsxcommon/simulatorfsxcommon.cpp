@@ -697,9 +697,9 @@ namespace BlackSimPlugin
                     this->physicallyInitAITerrainProbes(position, 2); // init probe
                 }
 
-                // SB4 offsets
-                m_simulatorInternals.setValue(QStringLiteral("fsx/sb4"), boolToEnabledDisabled(m_useSbOffsets));
-                m_simulatorInternals.setValue(QStringLiteral("fsx/sb4packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
+                // SB3 offsets
+                m_simulatorInternals.setValue(QStringLiteral("fsx/sb3"), boolToEnabledDisabled(m_useSbOffsets));
+                m_simulatorInternals.setValue(QStringLiteral("fsx/sb3packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
             }
 
             m_ownAircraftUpdateCycles++; // with 50updates/sec long enough even for 32bit

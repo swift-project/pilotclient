@@ -180,7 +180,7 @@ namespace BlackSimPlugin
 
             //! Number of received SB4 packets
             //! \remark if this is increasing, SB4 is supported
-            int receivedSB4Packets() const { return m_sbDataReceived; }
+            int receivedSBPackets() const { return m_sbDataReceived; }
 
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
@@ -561,7 +561,7 @@ namespace BlackSimPlugin
             bool m_traceSendId   = false;        //!< trace the send ids, meant for debugging
             qint64 m_traceAutoUntilTs = -1;      //!< allows to automatically trace for some time
             qint64 m_simulatingChangedTs = -1;   //!< timestamp, when simulating changed (used to avoid jitter)
-            int m_sbDataReceived = 0;            //!< SB4 area data received
+            int m_sbDataReceived = 0;            //!< SB3 area data received
             int m_syncTimeDeferredCounter =  0;  //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
             int m_ownAircraftUpdateCycles = 0;   //!< own aircraft update
