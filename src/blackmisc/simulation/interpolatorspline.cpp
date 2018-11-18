@@ -124,9 +124,10 @@ namespace BlackMisc
                 else
                 {
                     // we start with the latest situation just to init the values
-                    m_s[0] = m_s[1] = m_s[2] = m_currentSituations.front();
+                    CAircraftSituation f = m_currentSituations.front();
+                    f.setAdjustedMSecsSinceEpoch(m_currentTimeMsSinceEpoch); // adjusted time exactly "now"
+                    m_s[0] = m_s[1] = m_s[2] = f;
                 }
-                m_s[1].setAdjustedMSecsSinceEpoch(m_currentTimeMsSinceEpoch); // adjusted time exacty "now"
             }
             else
             {
