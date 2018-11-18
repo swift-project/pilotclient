@@ -815,6 +815,17 @@ namespace BlackSimPlugin
             this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
         }
 
+        void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
+        {
+            const CSimulatedAircraft myAircraft(this->getOwnAircraft());
+            const bool changed = (myAircraft.getTransponderMode() != xpdr.getTransponderMode());
+            if (!changed) { return; }
+            CTransponder myXpdr = myAircraft.getTransponder();
+            myXpdr.setTransponderMode(xpdr.getTransponderMode());
+            this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
+
+        }
+
         bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
         {
             if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
@@ -882,9 +893,6 @@ namespace BlackSimPlugin
                     break;
                 }
 
-                Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "Already confirmed, this should be the only place");
-                simObject.setConfirmedAdded(true);
-
                 // P3D also has SimConnect_AIReleaseControlEx which also allows to destroy the aircraft
                 const SIMCONNECT_DATA_REQUEST_ID requestReleaseId = this->obtainRequestIdForSimObjAircraft();
                 const bool released = this->releaseAIControl(simObject, requestReleaseId);
@@ -894,6 +902,10 @@ namespace BlackSimPlugin
                     msg = CStatusMessage(this).error("Cannot confirm model '%1' %2") << remoteAircraft.getModelString() << simObject.toQString();
                     break;
                 }
+
+                // confirm as added, this is also required to request light, etc
+                Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "Already confirmed, this should be the only place");
+                simObject.setConfirmedAdded(true); // aircraft
 
                 // request data on object
                 this->requestPositionDataForSimObject(simObject);
@@ -916,7 +928,7 @@ namespace BlackSimPlugin
             while (false);
 
             // log errors and emit signal
-            if (!msg.isEmpty())
+            if (!msg.isEmpty() && msg.isWarningOrAbove())
             {
                 CLogMessage::preformatted(msg);
                 emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), false, msg);
@@ -941,7 +953,7 @@ namespace BlackSimPlugin
             CLogMessage(this).warning("Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
             CStatusMessage verifyMsg;
             const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
-            if (verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
+            if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
             if (!canBeUsed || simObject.getAddingExceptions() >= ThresholdAddException)
             {
@@ -973,27 +985,37 @@ namespace BlackSimPlugin
 
             const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
             const QStringList modelDirectories = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
-            const bool exists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
+            const bool fileExists = CFsCommonUtil::adjustFileDirectory(model, settings.getModelDirectoriesOrDefault());
             bool canBeUsed = true;
 
             CStatusMessageList messages;
-            if (exists)
+            if (fileExists)
             {
                 // we can access the aircraft.cfg file
                 bool parsed = false;
                 const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(model.getFileName(), parsed, messages);
-                if (parsed && !entries.containsTitle(model.getModelString()))
+                if (parsed)
                 {
-                    messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in re-parsed file '%2'. Models are: %3") << model.getModelString() << model.getFileName() << entries.getTitlesAsString(true));
-                    canBeUsed = false; // absolute no chance to use that one
+                    if (entries.containsTitle(model.getModelString()))
+                    {
+                        messages.push_back(CStatusMessage(this).info("Model '%1' exists in re-parsed file '%2'.") << model.getModelString() << model.getFileName());
+                        canBeUsed = true; // all OK
+                    }
+                    else
+                    {
+                        messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in re-parsed file '%2'. Models are: %3.") << model.getModelString() << model.getFileName() << entries.getTitlesAsString(true));
+                        canBeUsed = false; // absolute no chance to use that one
+                    }
                 }
                 else
                 {
-                    messages.push_back(CStatusMessage(this).warning("Cannot parse file: '%1'") << model.getFileName());
+                    messages.push_back(CStatusMessage(this).warning("CS: '%1' Cannot parse file: '%2' (existing: %3)") << model.getCallsign().asString() << model.getFileName() << boolToYesNo(model.hasExistingCorrespondingFile()));
                 }
             }
             else
             {
+                // the file cannot be accessed right now, but the pilot client necessarily has access to them
+                // so we just carry on
                 messages = model.verifyModelData();
             }
 
@@ -1326,12 +1348,18 @@ namespace BlackSimPlugin
             if (m_useFsuipc && m_fsuipc)
             {
                 CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
-                //! \fixme split in high / low frequency reads
-                bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
-                if (ok)
+                if (m_dispatchProcCount % 10 == 0)
                 {
-                    // do whatever is required
-                    Q_UNUSED(fsuipcAircraft);
+                    // slow
+                    const bool ok = m_fsuipc->read(fsuipcAircraft, true, false, false);
+                    if (ok)
+                    {
+                        this->updateOwnAircraftFromSimulatorFsuipc(fsuipcAircraft.getTransponder());
+                    }
+                }
+                else
+                {
+                    // fast
                 }
             }
         }
@@ -1996,6 +2024,13 @@ namespace BlackSimPlugin
                 const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;
             }
+
+            // crosscheck
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(isValidFsxPosition(position), Q_FUNC_INFO, "Invalid FSX pos.");
+            }
+
             return position;
         }
 
@@ -2030,6 +2065,21 @@ namespace BlackSimPlugin
             lla.Longitude = coordinate.longitude().value(CAngleUnit::deg());
             lla.Altitude = coordinate.geodeticHeight().value(CLengthUnit::ft()); // already corrected in interpolator if there is an underflow
             return lla;
+        }
+
+        bool CSimulatorFsxCommon::isValidFsxPosition(const SIMCONNECT_DATA_INITPOSITION &fsxPos)
+        {
+            // double  Latitude;   // degrees | double  Longitude;  // degrees | double  Altitude;   // feet
+            // double  Pitch;      // degrees | double  Bank;       // degrees | double  Heading;    // degrees
+            // DWORD   OnGround;   // 1=force to be on the ground | DWORD   Airspeed;   // knots
+            // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/simobject_functions.html
+            // examples show heaading 180 => we assume values +-180deg
+            if (!isValid180Deg(fsxPos.Pitch))     { return false; }
+            if (!isValid180Deg(fsxPos.Bank))      { return false; }
+            if (!isValid180Deg(fsxPos.Heading))   { return false; }
+            if (!isValid180Deg(fsxPos.Latitude))  { return false; }
+            if (!isValid180Deg(fsxPos.Longitude)) { return false; }
+            return true;
         }
 
         void CSimulatorFsxCommon::synchronizeTime(const DataDefinitionSimEnvironment *simEnv)
@@ -2224,7 +2274,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::clearAllRemoteAircraftData()
         {
-            const bool reinitProbe = m_useFsxTerrainProbe;
+            const bool reinitProbe = m_useFsxTerrainProbe && m_initFsxTerrainProbes; // re-init if enabled and was initialized
             this->removeAllProbes();
 
             // m_addAgainAircraftWhenRemoved cleared below
