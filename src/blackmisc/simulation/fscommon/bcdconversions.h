@@ -28,6 +28,9 @@ namespace BlackMisc
             {
             public:
                 //! BCD -> decimal
+                static quint32 bcd2Dec(qint32 bcdNum) { return bcd2Dec(static_cast<quint32>(bcdNum)); }
+
+                //! BCD -> decimal
                 static quint32 bcd2Dec(quint32 bcdNum) { return hornerScheme(bcdNum, 0x10, 10); }
 
                 //! Decimal -> BCD

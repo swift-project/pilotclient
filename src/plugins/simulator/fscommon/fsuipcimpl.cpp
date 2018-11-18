@@ -14,17 +14,17 @@
 #endif
 
 #include "fsuipc.h"
-#include <windows.h>
+#include <Windows.h>
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 
 #ifdef SWIFT_USING_FSUIPC32
-    #include "../fsuipc32/FSUIPC_User.h"
-    #include "../fsuipc32/NewWeather.h"
+#include "../fsuipc32/FSUIPC_User.h"
+#include "../fsuipc32/NewWeather.h"
 #endif
 
 #ifdef SWIFT_USING_FSUIPC64
-    #include "../fsuipc64/FSUIPC_User64.h"
-    #include "../fsuipc64/NewWeather.h"
+#include "../fsuipc64/FSUIPC_User64.h"
+#include "../fsuipc64/NewWeather.h"
 #endif
 
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
@@ -85,7 +85,7 @@ namespace BlackSimPlugin
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                      .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + (FSUIPC_Version & 0xff) - 1)) : "");
+                      .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
                 this->m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver).arg(sim);
                 CLogMessage(this).info("FSUIPC connected: %1") << this->m_fsuipcVersion;
             }
@@ -152,18 +152,18 @@ namespace BlackSimPlugin
             visibilityLayers.sortBy(&CVisibilityLayer::getBase);
             auto surfaceVisibility = visibilityLayers.frontOrDefault();
             NewVis vis;
-            vis.LowerAlt = surfaceVisibility.getBase().value(CLengthUnit::m());
-            vis.UpperAlt = surfaceVisibility.getTop().value(CLengthUnit::m());
+            vis.LowerAlt = static_cast<short>(surfaceVisibility.getBase().valueInteger(CLengthUnit::m()));
+            vis.UpperAlt = static_cast<ushort>(surfaceVisibility.getTop().valueInteger(CLengthUnit::m()));
             // Range is measured in: 1/100ths sm
-            vis.Range = surfaceVisibility.getVisibility().value(CLengthUnit::SM()) * 100;
+            vis.Range = static_cast<ushort>(surfaceVisibility.getVisibility().value(CLengthUnit::SM()) * 100);
             vis.Spare = 0;
             nw.Vis = vis;
 
             for (const auto &visibilityLayer : visibilityLayers)
             {
-                vis.LowerAlt = visibilityLayer.getBase().value(CLengthUnit::m());
-                vis.UpperAlt = visibilityLayer.getTop().value(CLengthUnit::m());
-                vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100;
+                vis.LowerAlt = static_cast<short>(visibilityLayer.getBase().valueInteger(CLengthUnit::m()));
+                vis.UpperAlt = static_cast<ushort>(visibilityLayer.getTop().valueInteger(CLengthUnit::m()));
+                vis.Range    = static_cast<ushort>(visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100);
                 vis.Spare = 0;
                 nw.UpperVis[nw.nUpperVisCtr++] = vis;
             }
@@ -173,10 +173,10 @@ namespace BlackSimPlugin
             for (const auto &temperatureLayer : temperatureLayers)
             {
                 NewTemp temp;
-                temp.Alt = temperatureLayer.getLevel().value(CLengthUnit::m());
-                temp.Day = temperatureLayer.getTemperature().value(CTemperatureUnit::C());
+                temp.Alt = static_cast<ushort>(temperatureLayer.getLevel().valueInteger(CLengthUnit::m()));
+                temp.Day = static_cast<short>(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
                 temp.DayNightVar = 3;
-                temp.DewPoint = temperatureLayer.getDewPoint().value(CTemperatureUnit::C());
+                temp.DewPoint = static_cast<short>(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
                 nw.Temp[nw.nTempCtr++] = temp;
             }
 
@@ -197,7 +197,7 @@ namespace BlackSimPlugin
 
                 cloud.Deviation = 0;
                 cloud.Icing = 0;
-                cloud.LowerAlt = cloudLayer.getBase().value(CLengthUnit::m());
+                cloud.LowerAlt = static_cast<ushort>(cloudLayer.getBase().valueInteger(CLengthUnit::m()));
                 cloud.PrecipBase = 0;
 
                 // Light rain - when the precipitation rate is < 2.5 mm (0.098 in) per hour
@@ -220,7 +220,7 @@ namespace BlackSimPlugin
                 default: cloud.Type = 0;
                 }
 
-                cloud.UpperAlt = cloudLayer.getTop().value(CLengthUnit::m());
+                cloud.UpperAlt = static_cast<ushort>(cloudLayer.getTop().valueInteger(CLengthUnit::m()));
                 nw.Cloud[nw.nCloudsCtr++] = cloud;
             }
 
@@ -229,14 +229,14 @@ namespace BlackSimPlugin
             for (const auto &windLayer : as_const(windLayers))
             {
                 NewWind wind;
-                wind.Direction = windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0;
+                wind.Direction = static_cast<ushort>(windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0);
                 wind.GapAbove = 0;
-                wind.Gust = windLayer.getGustSpeed().value(CSpeedUnit::kts());
+                wind.Gust = static_cast<ushort>(windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts()));
                 wind.Shear = 0;
-                wind.Speed = windLayer.getSpeed().value(CSpeedUnit::kts());
+                wind.Speed = static_cast<ushort>(windLayer.getSpeed().valueInteger(CSpeedUnit::kts()));
                 wind.SpeedFract = 0;
                 wind.Turbulence = 0;
-                wind.UpperAlt = windLayer.getLevel().value(CLengthUnit::m());
+                wind.UpperAlt = static_cast<ushort>(windLayer.getLevel().valueInteger(CLengthUnit::m()));
                 wind.Variance = 0;
                 nw.Wind[nw.nWindsCtr++] = wind;
             }
@@ -244,7 +244,7 @@ namespace BlackSimPlugin
             NewPress press;
             press.Drift = 0;
             // Pressure is measured in: 16 x mb
-            press.Pressure = gridPoint.getSurfacePressure().value(CPressureUnit::mbar()) * 16;
+            press.Pressure = static_cast<ushort>(gridPoint.getSurfacePressure().value(CPressureUnit::mbar()) * 16);
             nw.Press = press;
 
             QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
@@ -348,10 +348,10 @@ namespace BlackSimPlugin
                     CTransponder xpdr = aircraft.getTransponder();
 
                     // 2710 => 12710 => / 100.0 => 127.1
-                    com1ActiveRaw = (10000 + CBcdConversions::bcd2Dec(com1ActiveRaw));
-                    com2ActiveRaw = (10000 + CBcdConversions::bcd2Dec(com2ActiveRaw));
-                    com1StandbyRaw = (10000 + CBcdConversions::bcd2Dec(com1StandbyRaw));
-                    com2StandbyRaw = (10000 + CBcdConversions::bcd2Dec(com2StandbyRaw));
+                    com1ActiveRaw  = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com1ActiveRaw));
+                    com2ActiveRaw  = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com2ActiveRaw));
+                    com1StandbyRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com1StandbyRaw));
+                    com2StandbyRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com2StandbyRaw));
                     com1.setFrequencyActiveMHz(com1ActiveRaw / 100.0);
                     com2.setFrequencyActiveMHz(com2ActiveRaw / 100.0);
                     com1.setFrequencyStandbyMHz(com1StandbyRaw / 100.0);
@@ -390,8 +390,8 @@ namespace BlackSimPlugin
                     situation.setPosition(position);
 
                     const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
-                    pitchRaw = std::floor(pitchRaw * angleCorrectionFactor);
-                    bankRaw = std::floor(bankRaw * angleCorrectionFactor);
+                    pitchRaw = qRound(std::floor(pitchRaw * angleCorrectionFactor));
+                    bankRaw  = qRound(std::floor(bankRaw * angleCorrectionFactor));
 
                     // MSFS has inverted pitch and bank angles
                     pitchRaw = ~pitchRaw;
@@ -450,7 +450,7 @@ namespace BlackSimPlugin
         }
 
         CFsuipc::FsuipcWeatherMessage::FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials) :
-            m_offset(offset), m_messageData(data), m_leftTrials(leftTrials)
+            m_offset(static_cast<int>(offset)), m_messageData(data), m_leftTrials(leftTrials)
         { }
 
 
@@ -486,7 +486,7 @@ namespace BlackSimPlugin
 
             DWORD dwResult;
             weatherMessage.m_leftTrials--;
-            FSUIPC_Write(weatherMessage.m_offset, weatherMessage.m_messageData.size(), reinterpret_cast<void *>(weatherMessage.m_messageData.data()), &dwResult);
+            FSUIPC_Write(static_cast<DWORD>(weatherMessage.m_offset), static_cast<DWORD>(weatherMessage.m_messageData.size()), reinterpret_cast<void *>(weatherMessage.m_messageData.data()), &dwResult);
 
             unsigned int timeStamp = 0;
             FSUIPC_Read(0xC824, sizeof(timeStamp), &timeStamp, &dwResult);
