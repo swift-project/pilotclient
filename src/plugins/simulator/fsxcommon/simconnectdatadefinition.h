@@ -220,10 +220,11 @@ namespace BlackSimPlugin
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
                 DataSimEnvironment,
-                DataClientAreaSb,         //!< whole SB area
-                DataClientAreaSbIdent,    //!< SB ident single value
-                DataClientAreaSbStandby,  //!< SB standby
-                DataClientAreaSbConnected //!< SB connected with network
+                DataClientAreaSb,          //!< whole SB area
+                DataClientAreaSbIdent,     //!< SB ident single value
+                DataClientAreaSbStandby,   //!< SB standby
+                DataClientAreaSbConnected, //!< SB connected with network
+                DataClientAreaSbRunning    //!< SB running
             };
 
             //! SimConnect request IDs
