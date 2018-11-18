@@ -94,6 +94,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsCommon::useFsuipc(bool on)
         {
             if (!m_fsuipc) { return false; } // no FSUIPC available
+            if (m_useFsuipc == on) { return m_useFsuipc; } // nothing changed
             m_useFsuipc = on;
             if (on)
             {
@@ -103,6 +104,8 @@ namespace BlackSimPlugin
             {
                 m_fsuipc->disconnect();
             }
+
+            this->initSimulatorInternals(); // update internals
             return m_useFsuipc;
         }
 
