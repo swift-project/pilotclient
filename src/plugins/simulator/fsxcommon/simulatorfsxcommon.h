@@ -306,6 +306,12 @@ namespace BlackSimPlugin
             //! Format conversion
             static SIMCONNECT_DATA_LATLONALT coordinateToFsxLatLonAlt(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
+            //! Valid FSX/P3D position
+            static bool isValidFsxPosition(const SIMCONNECT_DATA_INITPOSITION &fsxPos);
+
+            //! Valid 180degrees value
+            static bool isValid180Deg(double deg) { return deg > -180.0 && deg <= 180.0; }
+
             static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function

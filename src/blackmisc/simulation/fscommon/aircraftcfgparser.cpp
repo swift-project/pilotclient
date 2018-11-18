@@ -222,10 +222,11 @@ namespace BlackMisc
                 // unfortunately some files are malformed which could end up in wrong data
 
                 ok = false;
-                QFile file(fileName); // includes path
+                const QString fnFixed = CFileUtils::fixWindowsUncPath(fileName);
+                QFile file(fnFixed); // includes path
                 if (!file.open(QFile::ReadOnly | QFile::Text))
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning("Unable to read file '%1'") << fileName;
+                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning("Unable to read file '%1'") << fnFixed;
                     msgs.push_back(m);
                     return CAircraftCfgEntriesList();
                 }
@@ -352,7 +353,7 @@ namespace BlackMisc
                 file.close();
 
                 // store all entries
-                const QFileInfo fileInfo(fileName);
+                const QFileInfo fileInfo(fnFixed);
                 QDateTime fileTimestamp(fileInfo.lastModified());
                 if (!fileTimestamp.isValid() || fileInfo.created() > fileTimestamp)
                 {

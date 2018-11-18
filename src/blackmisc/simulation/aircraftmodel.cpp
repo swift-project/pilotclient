@@ -140,11 +140,16 @@ namespace BlackMisc
         {
             CStatusMessageList msgs;
             const ModelType t = this->getModelType();
-            if (t == TypeOwnSimulatorModel || t == TypeManuallySet || t == TypeDatabaseEntry)
+            if (t == TypeOwnSimulatorModel || t == TypeManuallySet || t == TypeDatabaseEntry || t == TypeModelMatching || t == TypeModelMatchingDefaultModel)
             {
                 if (!this->hasExistingCorrespondingFile())
                 {
                     const CStatusMessage m = CStatusMessage(this).validationError("File '%1' not readable") << this->getFileName();
+                    msgs.push_back(m);
+                }
+                else
+                {
+                    const CStatusMessage m = CStatusMessage(this).validationInfo("File '%1' existing") << this->getFileName();
                     msgs.push_back(m);
                 }
             }
@@ -682,7 +687,7 @@ namespace BlackMisc
         bool CAircraftModel::hasExistingCorrespondingFile() const
         {
             if (!this->hasFileName()) { return false; }
-            const QFileInfo fi(this->getFileName());
+            const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
             return (fi.exists() && fi.isReadable());
         }
 
