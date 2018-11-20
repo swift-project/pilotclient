@@ -16,19 +16,23 @@
 #include <QByteArray>
 #include <QStringList>
 
+class QProcess;
+
 namespace BlackMisc
 {
     //! Compress utilities
     class BLACKMISC_EXPORT CCompressUtils
     {
     public:
+        CCompressUtils() = delete;
+
         //! Length header
         //! \remark 4 bytes -> 32bit
         static QByteArray lengthHeader(qint32 size);
 
         //! Unzip my using 7zip
         //! \remark relies on external 7zip command line
-        static bool zip7Uncompress(const QString &file, const QString &directory, bool wait, QStringList *stdOutAndError = nullptr);
+        static bool zip7Uncompress(const QString &file, const QString &directory, QStringList *stdOutAndError = nullptr);
 
         //! External program existing?
         //! \remark relies on external 7zip command line
@@ -39,9 +43,10 @@ namespace BlackMisc
         static bool whichZip7(QStringList *stdOutAndError = nullptr);
 
     private:
-        //! Ctor
-        CCompressUtils() {}
+        static bool runZip7Process(QProcess *zipProcess, QStringList *stdOutAndError);
+
     };
 } // ns
 
 #endif // guard
+

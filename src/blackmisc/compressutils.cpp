@@ -31,7 +31,20 @@ namespace BlackMisc
         return lengthHeader;
     }
 
-    bool CCompressUtils::zip7Uncompress(const QString &file, const QString &directory, bool wait, QStringList *stdOutAndError)
+    //! Returns the platform specific 7za command
+    QString getZip7Executable()
+    {
+        QString executable;
+        if (CBuildConfig::isRunningOnMacOSPlatform())
+        {
+            executable += CDirectoryUtils::binDirectory();
+            executable += '/';
+        }
+        executable +=  QStringLiteral("7za");
+        return executable;
+    }
+
+    bool CCompressUtils::zip7Uncompress(const QString &file, const QString &directory, QStringList *stdOutAndError)
     {
         const QFileInfo fi(file);
         if (!fi.exists()) { return false; }
@@ -51,76 +64,26 @@ namespace BlackMisc
         if (!d.isEmpty()) { args << "-o" + d; }
         args << f;
 
-        QProcess *zipProcess = new QProcess();
-        zipProcess->setWorkingDirectory(CDirectoryUtils::binDirectory());
-        zipProcess->setProgram(QStringLiteral("7za"));
-        zipProcess->setArguments(args);
-
-        if (wait)
-        {
-
-            zipProcess->start();
-            const bool finished = zipProcess->waitForFinished();
-            if (zipProcess->exitStatus() != QProcess::NormalExit) { return false; }
-            if (!finished) { return false; }
-            const int r = zipProcess->exitCode();
-            if (stdOutAndError)
-            {
-                const QString pStdout = zipProcess->readAllStandardOutput();
-                const QString pStderr = zipProcess->readAllStandardError();
-                stdOutAndError->clear();
-                stdOutAndError->push_back(pStdout);
-                stdOutAndError->push_back(pStderr);
-            }
-            zipProcess->deleteLater();
-            return r == 0;
-        }
-        else
-        {
-            // FIXME: zipProcess is leaked here.
-            zipProcess->start();
-            return true;
-        }
-
+        QProcess zipProcess;
+        zipProcess.setProgram(getZip7Executable());
+        zipProcess.setArguments(args);
+        return runZip7Process(&zipProcess, stdOutAndError);
     }
 
     bool CCompressUtils::hasZip7(QStringList *stdOutAndError)
     {
         // just display info
-        const bool isLinux = CBuildConfig::isRunningOnLinuxPlatform();
-        if (isLinux) { return CCompressUtils::whichZip7(stdOutAndError); }
+        if (CBuildConfig::isRunningOnLinuxPlatform())
+        {
+            return CCompressUtils::whichZip7(stdOutAndError);
+        }
 
-        // windows check
         QStringList args;
         args << "i";
         QProcess zipProcess;
-        zipProcess.setWorkingDirectory(CDirectoryUtils::binDirectory());
-        zipProcess.setProgram(QStringLiteral("7za"));
+        zipProcess.setProgram(getZip7Executable());
         zipProcess.setArguments(args);
-        zipProcess.start();
-        const bool finished = zipProcess.waitForFinished();
-
-        if (stdOutAndError)
-        {
-            stdOutAndError->clear();
-            const QString pStdout = zipProcess.readAllStandardOutput();
-            const QString pStderr = zipProcess.readAllStandardError();
-            if (pStdout.isEmpty() && pStderr.isEmpty())
-            {
-                stdOutAndError->push_back("Checking 7za");
-                stdOutAndError->push_back("No 7za or failing");
-            }
-            else
-            {
-                stdOutAndError->push_back(pStdout);
-                stdOutAndError->push_back(pStderr);
-            }
-        }
-
-        if (zipProcess.exitStatus() != QProcess::NormalExit) { return false; }
-        if (!finished) { return false; }
-        const int r = zipProcess.exitCode();
-        return r == 0;
+        return runZip7Process(&zipProcess, stdOutAndError);
     }
 
     bool CCompressUtils::whichZip7(QStringList *stdOutAndError)
@@ -128,8 +91,8 @@ namespace BlackMisc
         const QString cmd("which 7za");
         QProcess zipProcess;
         zipProcess.start(cmd);
-        const bool finished = zipProcess.waitForFinished();
-        if (!finished) { return false; }
+        if (!zipProcess.waitForStarted()) { return false; }
+        if (!zipProcess.waitForFinished()) { return false; }
 
         const QString pStdout = zipProcess.readAllStandardOutput();
         const QString pStderr = zipProcess.readAllStandardError();
@@ -142,4 +105,43 @@ namespace BlackMisc
         const int r = zipProcess.exitCode();
         return r == 0 && pStdout.contains("7za", Qt::CaseInsensitive);
     }
+
+    bool CCompressUtils::runZip7Process(QProcess *zipProcess, QStringList *stdOutAndError)
+    {
+        zipProcess->start();
+
+        // If process does not even start, e.g. because no 7za exe found.
+        if (!zipProcess->waitForStarted())
+        {
+            if (stdOutAndError)
+            {
+                stdOutAndError->push_back("7za");
+                stdOutAndError->push_back("Command not found");
+            }
+            return false;
+        }
+
+        // If process does not finish. Very unlikely.
+        if (!zipProcess->waitForFinished())
+        {
+            if (stdOutAndError)
+            {
+                stdOutAndError->push_back("7za");
+                stdOutAndError->push_back("Process did not finish.");
+            }
+            return false;
+        }
+
+        if (stdOutAndError)
+        {
+            stdOutAndError->clear();
+            const QString pStdout = zipProcess->readAllStandardOutput();
+            const QString pStderr = zipProcess->readAllStandardError();
+            stdOutAndError->push_back(pStdout);
+            stdOutAndError->push_back(pStderr);
+        }
+
+        return zipProcess->exitStatus() == QProcess::NormalExit;
+    }
 } // ns
+

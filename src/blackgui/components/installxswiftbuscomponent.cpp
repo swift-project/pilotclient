@@ -159,7 +159,7 @@ namespace BlackGui
 
             // if possible we will unzip
             QStringList stdOutAndError;
-            if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, true, &stdOutAndError))
+            if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
             {
                 // capture values by copy!
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info("Uncompressed xSwiftBus in '%1'") << xSwiftBusDirectory;

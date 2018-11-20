@@ -66,7 +66,7 @@ namespace BlackMiscTest
         const QString td = tempDir.path();
         const QString compressedFile(CFileUtils::appendFilePaths(CDirectoryUtils::shareTestDirectory(), "countries.json.gz"));
         const QString unCompressedFile(CFileUtils::appendFilePaths(td, "countries.json"));
-        const bool c = CCompressUtils::zip7Uncompress(compressedFile, td, true);
+        const bool c = CCompressUtils::zip7Uncompress(compressedFile, td);
 
         QVERIFY2(c, "Uncompressing failed");
 
