@@ -117,7 +117,7 @@ namespace BlackGui
             if (sets > 0 || caches > 0)
             {
                 const CStatusMessage m = CStatusMessage(this).validationInfo("Copied %1 sets and %2 caches for '%3'") << sets << caches << selectedSimulators.toQString(true);
-                this->showOverlayMessage(m);
+                this->showOverlayHTMLMessage(m, 7500);
             }
         }
 

@@ -48,6 +48,9 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::COtherSwiftVersionsComponent> ui;
 
+            //! Reload versions
+            void reloadVersions();
+
             //! Data directory
             void openDataDirectory();
 
