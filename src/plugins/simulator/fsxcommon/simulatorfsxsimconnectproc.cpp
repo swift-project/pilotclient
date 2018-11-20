@@ -380,8 +380,9 @@ namespace BlackSimPlugin
                     if (clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
                         //! \fixme FSUIPC vs SimConnect why is offset 19 ident 2/0? In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here. Whoever knows, add comment or fix if wrong
-                        const DataDefinitionClientAreaSb *sbData = reinterpret_cast<const DataDefinitionClientAreaSb *>(&clientData->dwData);
-                        simulatorFsxP3D->updateOwnAircraftFromSimulator(*sbData);
+                        DataDefinitionClientAreaSb sbData;
+                        std::memcpy(&sbData.data, &clientData->dwData, 128);
+                        simulatorFsxP3D->updateOwnAircraftFromSimulator(sbData);
                     }
                     break; // SIMCONNECT_RECV_ID_CLIENT_DATA
                 }
