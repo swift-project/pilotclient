@@ -255,10 +255,12 @@ namespace BlackSimPlugin
             bool changed = false;
             if (selcal != m_selcal)
             {
+                //! KB 2018-11 that would need to go to updateOwnAircraftFromSimulator if the simulator ever supports SELCAL
+                //! KB 2018-11 als we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
+                m_selcal = selcal;
                 changed = true;
             }
 
-            //! \todo KB 8/2017 set FS9 SELCAL value
             return changed;
         }
 

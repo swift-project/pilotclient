@@ -204,12 +204,13 @@ namespace BlackSimPlugin
                         this->triggerAutoTraceSendId();
                         CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
                     }
+                    changed = true;
                 }
                 else if (m_useFsuipc && m_fsuipc)
                 {
                     m_fsuipc->write(newTransponder);
+                    changed = true;
                 }
-                changed = true;
             }
 
             // avoid changes of cockpit back to old values due to an outdated read back value
@@ -224,8 +225,9 @@ namespace BlackSimPlugin
             if (originator == this->identifier()) { return false; }
             if (!this->isSimulating()) { return false; }
 
-            //! \fixme KB 2017/8 use SELCAL
-            Q_UNUSED(selcal);
+            //! KB 2018-11 that would need to go to updateOwnAircraftFromSimulator if the simulator ever supports SELCAL
+            //! KB 2018-11 als we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
+            m_selcal = selcal;
             return false;
         }
 
@@ -666,6 +668,11 @@ namespace BlackSimPlugin
 
                 CTransponder transponder(myAircraft.getTransponder());
                 transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));
+                m_simTransponder = transponder;
+
+                // if the simulator ever sends SELCAL, add it here.
+                // m_selcal SELCAL sync.would go here
+
                 const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
 
                 if (changedCom1 || changedCom2 || changedXpr)
