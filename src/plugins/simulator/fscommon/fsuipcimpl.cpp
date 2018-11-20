@@ -67,42 +67,55 @@ namespace BlackSimPlugin
             this->disconnect();
         }
 
-        bool CFsuipc::connect()
+        bool CFsuipc::connect(bool force)
         {
             DWORD result;
-            this->m_lastErrorMessage = "";
-            if (this->m_connected) return this->m_connected; // already connected
+            m_lastErrorMessage = "";
+            m_lastErrorIndex = 0;
+            if (!force && m_connected) { return m_connected; } // already connected
             if (FSUIPC_Open(SIM_ANY, &result))
             {
-                this->m_connected = true;
-                int simIndex = static_cast<int>(FSUIPC_FS_Version);
-                QString sim(
-                    (simIndex >= 0 && simIndex < CFsuipc::simulators().size()) ?
-                    CFsuipc::simulators().at(simIndex) :
-                    "Unknown FS");
-                QString ver("%1.%2.%3.%4%5");
-                ver = ver.arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
-                      .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
-                      .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
-                      .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                      .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
-                this->m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver).arg(sim);
-                CLogMessage(this).info("FSUIPC connected: %1") << this->m_fsuipcVersion;
+                m_connected = true; // temp status
+                if (this->isOpen())
+                {
+                    const int simIndex = static_cast<int>(FSUIPC_FS_Version);
+                    const QString sim = CFsuipc::simulator(simIndex);
+                    QString ver = QStringLiteral("%1.%2.%3.%4%5").arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
+                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
+                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
+                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
+                                  .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
+                    m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver, sim);
+                    CLogMessage(this).info("FSUIPC connected: %1") << m_fsuipcVersion;
+                }
+                else
+                {
+                    CLogMessage(this).warning("FSUIPC opened, but verification failed");
+                    m_connected = false;
+                    FSUIPC_Close(); // under any circumstances close
+                }
             }
             else
             {
-                this->m_connected = false;
-                int index = static_cast<int>(result);
-                this->m_lastErrorMessage = CFsuipc::errorMessages().at(index);
-                CLogMessage(this).info("FSUIPC not connected: %1") << this->m_lastErrorMessage;
+                const int index = static_cast<int>(result);
+                m_lastErrorIndex = index;
+                m_lastErrorMessage = CFsuipc::errorMessages().at(index);
+                CLogMessage(this).warning("FSUIPC not connected: %1") << m_lastErrorMessage;
+                m_connected = false;
+                FSUIPC_Close(); // under any circumstances close
             }
-            return this->m_connected;
+
+            return m_connected;
         }
 
         void CFsuipc::disconnect()
         {
+            if (m_connected)
+            {
+                CLogMessage(this).info("Closing FSUIPC: %1") << m_fsuipcVersion;
+            }
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
-            this->m_connected = false;
+            m_connected = false;
         }
 
         bool CFsuipc::isConnected() const
@@ -110,17 +123,36 @@ namespace BlackSimPlugin
             return m_connected;
         }
 
-        bool CFsuipc::write(const CSimulatedAircraft &aircraft)
+        bool CFsuipc::isOpen() const
         {
             if (!this->isConnected()) { return false; }
 
-            Q_UNUSED(aircraft);
-
-            //! \fixme FSUIPC write values not yet implemented
+            // test read
+            DWORD dwResult;
+            char localFsTimeRaw[3];
+            if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult))
+            {
+                return dwResult == 0;
+            }
             return false;
         }
 
-        bool CFsuipc::write(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+        bool CFsuipc::write(const CTransponder &xpdr)
+        {
+            if (!this->isConnected()) { return false; }
+
+            // should be the same as writing via SimConnect data area
+            DWORD dwResult;
+            byte xpdrModeSb3Raw  = xpdr.isInStandby()   ? 1U : 0U;
+            byte xpdrIdentSb3Raw = xpdr.isIdentifying() ? 1U : 0U;
+            const bool ok =
+                FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw,  &dwResult) &&
+                FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult);
+            if (ok) { FSUIPC_Process(&dwResult); }
+            return ok && dwResult == 0;
+        }
+
+        bool CFsuipc::write(const CWeatherGrid &weatherGrid)
         {
             if (!this->isConnected()) { return false; }
 
@@ -247,6 +279,7 @@ namespace BlackSimPlugin
             press.Pressure = static_cast<ushort>(gridPoint.getSurfacePressure().value(CPressureUnit::mbar()) * 16);
             nw.Press = press;
 
+            // writing will take place in
             QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
             m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, weatherData, 5));
             return true;
@@ -259,12 +292,12 @@ namespace BlackSimPlugin
 
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
         {
-            DWORD dwResult;
+            DWORD dwResult = 0;
             char localFsTimeRaw[3];
             char modelNameRaw[256];
             qint16 com1ActiveRaw = 0, com2ActiveRaw = 0, com1StandbyRaw = 0, com2StandbyRaw = 0;
             qint16 transponderCodeRaw = 0;
-            qint8 xpdrModeSb3Raw = 0, xpdrIdentSb3Raw = 0;
+            byte xpdrModeSb3Raw = 1, xpdrIdentSb3Raw = 1;
             qint32 groundspeedRaw = 0, pitchRaw = 0, bankRaw = 0, headingRaw = 0;
             qint64 altitudeRaw = 0;
             double pressureAltitudeRaw = 0; // 34B0
@@ -288,51 +321,59 @@ namespace BlackSimPlugin
             bool situationN = !situation;
             bool aircraftPartsN = ! aircraftParts;
 
-            if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
+            //! \todo KB 2018-11 BUG fix for broken connection, needs to go as soon as issue is fixed
+            if (!FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult))
+            {
+                FSUIPC_Close();
+                FSUIPC_Open(SIM_ANY, &dwResult);
+            }
 
-                    // COM settings
-                    (cockpitN || FSUIPC_Read(0x034e, 2, &com1ActiveRaw, &dwResult)) &&
-                    (cockpitN || FSUIPC_Read(0x3118, 2, &com2ActiveRaw, &dwResult)) &&
-                    (cockpitN || FSUIPC_Read(0x311a, 2, &com1StandbyRaw, &dwResult)) &&
-                    (cockpitN || FSUIPC_Read(0x311c, 2, &com2StandbyRaw, &dwResult)) &&
-                    (cockpitN || FSUIPC_Read(0x0354, 2, &transponderCodeRaw, &dwResult)) &&
+            if (
+                FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
 
-                    // COM Settings, transponder, SB3
-                    (cockpitN || FSUIPC_Read(0x7b91, 1, &xpdrModeSb3Raw, &dwResult)) &&
-                    (cockpitN || FSUIPC_Read(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult)) &&
+                // COM settings
+                (cockpitN || FSUIPC_Read(0x034e, 2, &com1ActiveRaw,  &dwResult)) &&
+                (cockpitN || FSUIPC_Read(0x3118, 2, &com2ActiveRaw,  &dwResult)) &&
+                (cockpitN || FSUIPC_Read(0x311a, 2, &com1StandbyRaw, &dwResult)) &&
+                (cockpitN || FSUIPC_Read(0x311c, 2, &com2StandbyRaw, &dwResult)) &&
+                (cockpitN || FSUIPC_Read(0x0354, 2, &transponderCodeRaw, &dwResult)) &&
 
-                    // Speeds, situation
-                    (situationN || FSUIPC_Read(0x02b4, 4, &groundspeedRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x0578, 4, &pitchRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x057c, 4, &bankRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x0580, 4, &headingRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x0570, 8, &altitudeRaw, &dwResult)) &&
+                // COM Settings, transponder, SB3
+                (cockpitN || FSUIPC_Read(0x7b91, 1, &xpdrModeSb3Raw,  &dwResult)) &&
+                (cockpitN || FSUIPC_Read(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult)) &&
 
-                    // Position
-                    (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x0568, 8, &longitudeRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw, &dwResult)) &&
-                    (situationN || FSUIPC_Read(0x34B0, 8, &pressureAltitudeRaw, &dwResult)) &&
+                // Speeds, situation
+                (situationN || FSUIPC_Read(0x02b4, 4, &groundspeedRaw, &dwResult)) &&
+                (situationN || FSUIPC_Read(0x0578, 4, &pitchRaw, &dwResult)) &&
+                (situationN || FSUIPC_Read(0x057c, 4, &bankRaw,  &dwResult)) &&
+                (situationN || FSUIPC_Read(0x0580, 4, &headingRaw,  &dwResult)) &&
+                (situationN || FSUIPC_Read(0x0570, 8, &altitudeRaw, &dwResult)) &&
 
-                    // model name
-                    FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
+                // Position
+                (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw,  &dwResult)) &&
+                (situationN || FSUIPC_Read(0x0568, 8, &longitudeRaw, &dwResult)) &&
+                (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw,   &dwResult)) &&
+                (situationN || FSUIPC_Read(0x34B0, 8, &pressureAltitudeRaw, &dwResult)) &&
 
-                    // aircraft parts
-                    (aircraftPartsN || FSUIPC_Read(0x0D0C, 2, &lightsRaw, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0366, 2, &onGroundRaw, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0BDC, 4, &flapsControlRaw, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0BE8, 4, &gearControlRaw, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0BD0, 4, &spoilersControlRaw, &dwResult)) &&
+                // model name
+                FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
 
-                    // engines
-                    (aircraftPartsN || FSUIPC_Read(0x0AEC, 2, &numberOfEngines, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0894, 2, &engine1CombustionFlag, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x092C, 2, &engine2CombustionFlag, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x09C4, 2, &engine3CombustionFlag, &dwResult)) &&
-                    (aircraftPartsN || FSUIPC_Read(0x0A5C, 2, &engine4CombustionFlag, &dwResult)) &&
+                // aircraft parts
+                (aircraftPartsN || FSUIPC_Read(0x0D0C, 2, &lightsRaw,   &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0366, 2, &onGroundRaw, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0BDC, 4, &flapsControlRaw, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0BE8, 4, &gearControlRaw,  &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0BD0, 4, &spoilersControlRaw, &dwResult)) &&
 
-                    // If we wanted other reads/writes at the same time, we could put them here
-                    FSUIPC_Process(&dwResult))
+                // engines
+                (aircraftPartsN || FSUIPC_Read(0x0AEC, 2, &numberOfEngines, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0894, 2, &engine1CombustionFlag, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x092C, 2, &engine2CombustionFlag, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x09C4, 2, &engine3CombustionFlag, &dwResult)) &&
+                (aircraftPartsN || FSUIPC_Read(0x0A5C, 2, &engine4CombustionFlag, &dwResult)) &&
+
+                // If we wanted other reads/writes at the same time, we could put them here
+                FSUIPC_Process(&dwResult))
             {
                 read = true;
 
@@ -359,17 +400,13 @@ namespace BlackSimPlugin
 
                     transponderCodeRaw = static_cast<qint16>(CBcdConversions::bcd2Dec(transponderCodeRaw));
                     xpdr.setTransponderCode(transponderCodeRaw);
+
                     // Mode by SB3
+                    xpdr.setTransponderMode(xpdrModeSb3Raw == 0 ? CTransponder::ModeC : CTransponder::StateStandby);
                     if (xpdrIdentSb3Raw != 0)
                     {
-                        //! \fixme Reset value for FSUIPC
+                        // will be reset in CFsuipc::write
                         xpdr.setTransponderMode(CTransponder::StateIdent);
-                    }
-                    else
-                    {
-                        xpdr.setTransponderMode(
-                            xpdrModeSb3Raw == 0 ? CTransponder::ModeC : CTransponder::StateStandby
-                        );
                     }
                     aircraft.setCockpit(com1, com2, xpdr);
                 } // cockpit
@@ -421,12 +458,12 @@ namespace BlackSimPlugin
 
                 if (aircraftParts)
                 {
-                    CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
-                                           lightsRaw & (1 << 0), lightsRaw & (1 << 8));
+                    const CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
+                                                 lightsRaw & (1 << 0), lightsRaw & (1 << 8));
 
-                    QList<bool> helperList { engine1CombustionFlag != 0, engine2CombustionFlag != 0,
-                                             engine3CombustionFlag != 0, engine4CombustionFlag != 0
-                                           };
+                    const QList<bool> helperList { engine1CombustionFlag != 0, engine2CombustionFlag != 0,
+                                                   engine3CombustionFlag != 0, engine4CombustionFlag != 0
+                                                 };
 
                     CAircraftEngineList engines;
                     for (int index = 0; index < numberOfEngines; ++index)
@@ -440,6 +477,14 @@ namespace BlackSimPlugin
                     aircraft.setParts(parts);
                 } // parts
             } // read
+
+            const int result = static_cast<int>(dwResult);
+            if (m_lastErrorIndex != result && result > 0)
+            {
+                m_lastErrorIndex = result;
+                m_lastErrorMessage = CFsuipc::errorMessages().at(result);
+                CLogMessage(this).warning("FSUIPC read error '%1'") << m_lastErrorMessage;
+            }
             return read;
         }
 

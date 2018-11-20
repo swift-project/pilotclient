@@ -33,7 +33,7 @@ namespace BlackSimPlugin
             virtual ~CFsuipc() override;
 
             //! Open conenction with FSUIPC
-            bool connect();
+            bool connect(bool force = false);
 
             //! Disconnect
             void disconnect();
@@ -41,8 +41,11 @@ namespace BlackSimPlugin
             //! Is connected?
             bool isConnected() const;
 
+            //! Really open, means connected and data can be sent
+            bool isOpen() const;
+
             //! Write variables
-            bool write(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            bool write(const BlackMisc::Aviation::CTransponder &xpdr);
 
             //! Write weather grid to simulator
             bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
@@ -56,7 +59,6 @@ namespace BlackSimPlugin
             //! \param situation      update situation data
             //! \param aircraftParts  update parts
             //! \return read
-            //!
             bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
 
             //! Error messages
@@ -85,6 +87,14 @@ namespace BlackSimPlugin
                 return errors;
             }
 
+            //! Message for index
+            static const QString &errorMessage(int index)
+            {
+                if (index >= 0 && index < errorMessages().size()) { return errorMessages().at(index); }
+                static const QString unknown("Unknown error message index");
+                return unknown;
+            }
+
             //! Simulators
             static const QStringList &simulators()
             {
@@ -94,6 +104,14 @@ namespace BlackSimPlugin
                 }
                 );
                 return sims;
+            }
+
+            //! Simulator for index
+            static const QString &simulator(int index)
+            {
+                if (index >= 0 && index < simulators().size()) { return simulators().at(index); }
+                static const QString unknown("Unknown simulator index");
+                return unknown;
             }
 
         protected:
@@ -107,6 +125,7 @@ namespace BlackSimPlugin
             void processWeatherMessages();
 
             bool m_connected = false;
+            int m_lastErrorIndex = 0;
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
 

@@ -12,6 +12,8 @@
 #include "fsuipc.h"
 
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Weather;
 
 namespace BlackSimPlugin
 {
@@ -28,8 +30,9 @@ namespace BlackSimPlugin
         CFsuipc::~CFsuipc()
         { }
 
-        bool CFsuipc::connect()
+        bool CFsuipc::connect(bool force)
         {
+            Q_UNUSED(force);
             return false;
         }
 
@@ -41,13 +44,18 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CFsuipc::write(const CSimulatedAircraft &aircraft)
+        bool CFsuipc::isOpen() const
         {
-            Q_UNUSED(aircraft);
             return false;
         }
 
-        bool CFsuipc::write(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+        bool CFsuipc::write(const CTransponder &xpdr)
+        {
+            Q_UNUSED(xpdr);
+            return false;
+        }
+
+        bool CFsuipc::write(const CWeatherGrid &weatherGrid)
         {
             Q_UNUSED(weatherGrid);
             return false;
@@ -55,7 +63,7 @@ namespace BlackSimPlugin
 
         QString CFsuipc::getVersion() const
         {
-            return "N/A";
+            return QStringLiteral("N/A");
         }
 
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
