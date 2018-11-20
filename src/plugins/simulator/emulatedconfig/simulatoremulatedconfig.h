@@ -32,7 +32,7 @@ namespace BlackSimPlugin
             CSimulatorEmulatedConfig(QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorEmulatedConfig() {}
+            virtual ~CSimulatorEmulatedConfig() override {}
 
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

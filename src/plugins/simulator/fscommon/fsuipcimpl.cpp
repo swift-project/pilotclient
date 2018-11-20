@@ -18,11 +18,11 @@
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 
 #ifdef SWIFT_USING_FSUIPC32
+#include "../fsuipc32/IPCuser.h"
 #include "../fsuipc32/FSUIPC_User.h"
 #include "../fsuipc32/NewWeather.h"
-#endif
-
-#ifdef SWIFT_USING_FSUIPC64
+#elif SWIFT_USING_FSUIPC64
+#include "../fsuipc64/IPCuser64.h"
 #include "../fsuipc64/FSUIPC_User64.h"
 #include "../fsuipc64/NewWeather.h"
 #endif
@@ -56,8 +56,7 @@ namespace BlackSimPlugin
             int m_leftTrials = 0;
         };
 
-        CFsuipc::CFsuipc(QObject *parent)
-            : QObject(parent)
+        CFsuipc::CFsuipc(QObject *parent) : QObject(parent)
         {
             startTimer(100);
         }
