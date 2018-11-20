@@ -14,7 +14,7 @@ With acknowledgements to Adam Szofran (author of original FS6IPC).
 #include "IPCuser64.h"
 #include "FSUIPC_User64.h"
 
-#define FS6IPC_MSGNAME1      L"FsasmLib:IPC"
+#define FS6IPC_MSGNAME1      "FsasmLib:IPC" 
 
 /******************************************************************************
 			IPC client stuff
@@ -63,8 +63,9 @@ void FSUIPC_Close(void)
 // Start the client
 // return: TRUE if successful, FALSE otherwise
 BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
-{  wchar_t szName[MAX_PATH];
+{  char szName[MAX_PATH];
 	static int nTry = 0;
+	BOOL fWideFS = FALSE;
 	int i = 0;
 	
 	// abort if already started
@@ -76,9 +77,18 @@ BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
 	// Clear version information, so know when connected
 	FSUIPC_Version = FSUIPC_FS_Version = 0;
 	
-	// Connect via FSUIPC, which is known to be FSUIPC's own
-	// and isn't subject to user modificiation
-	m_hWnd = FindWindowEx(NULL, NULL, L"UIPCMAIN", NULL);
+	m_hWnd = FindWindowEx(NULL, NULL, "UIPCMAIN", NULL);
+	if (!m_hWnd)
+	{	// If there's no UIPCMAIN, we may be using WideClient
+		// which only simulates FS98
+		m_hWnd = FindWindowEx(NULL, NULL, "FS98MAIN", NULL);
+		fWideFS = TRUE;
+		if (!m_hWnd)
+		{	*pdwResult = FSUIPC_ERR_NOFS;
+			return FALSE;
+		}
+	}
+	
 	if (!m_hWnd)
 	{	*pdwResult = FSUIPC_ERR_NOFS;
 		return FALSE;
@@ -163,7 +173,7 @@ BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
 	// Only allow running on FSUIPC 1.998e or later
 	// with correct check pattern 0xFADE
 	if ((FSUIPC_Version < 0x19980005) || ((FSUIPC_FS_Version & 0xFFFF0000L) != 0xFADE0000))
-	{	*pdwResult = FSUIPC_ERR_VERSION;
+	{	*pdwResult = fWideFS ? FSUIPC_ERR_RUNNING : FSUIPC_ERR_VERSION;
 		FSUIPC_Close();
 		return FALSE;
 	}
