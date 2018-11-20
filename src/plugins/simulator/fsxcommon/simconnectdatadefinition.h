@@ -194,7 +194,7 @@ namespace BlackSimPlugin
                 std::fill(data, data + 128, static_cast<byte>(0));
                 data[0]  = 1; // SB running, indicates the client is running as external app, 0..not running, 1..external app, 2..FS module
                 data[1]  = 0; // SB connected to FSD, 0..not connected, 1..connected
-                data[17] = 1; // standby
+                data[17] = 1; // 1..standby, 0..mode C
                 data[19] = 0; // no ident
             }
         };
@@ -220,11 +220,11 @@ namespace BlackSimPlugin
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
                 DataSimEnvironment,
-                DataClientAreaSb,          //!< whole SB area
-                DataClientAreaSbIdent,     //!< SB ident single value
-                DataClientAreaSbStandby,   //!< SB standby
-                DataClientAreaSbConnected, //!< SB connected with network
-                DataClientAreaSbRunning    //!< SB running
+                DataClientAreaSb,          //!< whole SB area, see http://squawkbox.ca/doc/sdk/fsuipc.php
+                DataClientAreaSbIdent,     //!< SB ident single value 0x7b93/19
+                DataClientAreaSbStandby,   //!< SB standby 0x7b91/17
+                DataClientAreaSbConnected, //!< SB connected with network 0x7b81/1
+                DataClientAreaSbRunning    //!< SB running 0x7b80/0
             };
 
             //! SimConnect request IDs

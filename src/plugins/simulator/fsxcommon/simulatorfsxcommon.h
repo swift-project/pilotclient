@@ -437,9 +437,6 @@ namespace BlackSimPlugin
             //! \param force send lights even if they appear to be the same
             void sendToggledLightsToSimulator(const CSimConnectObject &simObject, const BlackMisc::Aviation::CAircraftLights &lightsWanted, bool force = false);
 
-            //! Called when data about our own aircraft are received
-            void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
-
             //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
             //! \remark do not to send SimConnect data in event loop
             void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData);
@@ -456,6 +453,9 @@ namespace BlackSimPlugin
 
             //! Probe data sent from simulator
             void updateProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData);
+
+            //! Called when data about our own aircraft are received
+            void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
             //! Update from SB client area
             //! \threadsafe

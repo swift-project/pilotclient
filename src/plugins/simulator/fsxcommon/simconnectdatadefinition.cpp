@@ -240,7 +240,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbStandby, 17, 1);  // standby
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbIdent, 19, 1);    // ident
             hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbConnected, 1, 1); // network connected
-            hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbRunning, 0, 1);   // SB4 running
+            hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbRunning, 0, 1);   // SB running
 
             if (isFailure(hr))
             {
@@ -252,8 +252,8 @@ namespace BlackSimPlugin
             DataDefinitionClientAreaSb sbArea;
             byte sbRunning = 1;
             sbArea.setDefaultValues();
-            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, sbSize, &sbArea);
-            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbRunning, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &sbRunning);
+            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, sbSize, &sbArea);
+            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbRunning, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbRunning);
             if (isFailure(hr))
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_SetClientData %1") << hr;

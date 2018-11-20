@@ -190,19 +190,24 @@ namespace BlackSimPlugin
 
             if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
             {
+                // use one way to transfer XPDR ident/mode not both
                 if (m_useSbOffsets)
                 {
                     byte ident = newTransponder.isIdentifying() ? 1U : 0U; // 1 is ident
                     byte standby = newTransponder.isInStandby() ? 1U : 0U; // 1 is standby
                     HRESULT hr = s_ok();
 
-                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &ident);
-                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &standby);
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &ident);
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &standby);
                     if (isFailure(hr))
                     {
                         this->triggerAutoTraceSendId();
                         CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
                     }
+                }
+                else if (m_useFsuipc && m_fsuipc)
+                {
+                    m_fsuipc->write(newTransponder);
                 }
                 changed = true;
             }
@@ -354,7 +359,7 @@ namespace BlackSimPlugin
 
             // update SB area network connected
             byte sbNetworkConnected = connected ? 1u : 0u;
-            HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
+            HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
             if (isFailure(hr))
             {
                 CLogMessage(this).warning("Setting network connected failed (SB offsets)");
@@ -647,7 +652,6 @@ namespace BlackSimPlugin
                 // defaults
                 CComSystem com1(myAircraft.getCom1System()); // set defaults
                 CComSystem com2(myAircraft.getCom2System());
-                CTransponder transponder(myAircraft.getTransponder());
 
                 // updates
                 com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
@@ -660,11 +664,13 @@ namespace BlackSimPlugin
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
                 m_simCom2 = com2;
 
+                CTransponder transponder(myAircraft.getTransponder());
                 transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));
                 const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
 
                 if (changedCom1 || changedCom2 || changedXpr)
                 {
+                    // set in own aircraft provider
                     this->updateCockpit(com1, com2, transponder, identifier());
                 }
             }
@@ -697,7 +703,7 @@ namespace BlackSimPlugin
                     this->physicallyInitAITerrainProbes(position, 2); // init probe
                 }
 
-                // SB3 offsets
+                // SB3 offsets updating
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3"), boolToEnabledDisabled(m_useSbOffsets));
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
             }
@@ -817,6 +823,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
         {
+            if (!m_useFsuipc) { return; }
             const CSimulatedAircraft myAircraft(this->getOwnAircraft());
             const bool changed = (myAircraft.getTransponderMode() != xpdr.getTransponderMode());
             if (!changed) { return; }
@@ -1347,14 +1354,17 @@ namespace BlackSimPlugin
             m_dispatchErrors = 0;
             if (m_useFsuipc && m_fsuipc)
             {
-                CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
                 if (m_dispatchProcCount % 10 == 0)
                 {
-                    // slow
-                    const bool ok = m_fsuipc->read(fsuipcAircraft, true, false, false);
-                    if (ok)
+                    // slow updates, here only when SB/SimConnect is disabled as those do the same thing
+                    if (!m_useSbOffsets)
                     {
-                        this->updateOwnAircraftFromSimulatorFsuipc(fsuipcAircraft.getTransponder());
+                        CSimulatedAircraft fsuipcAircraft(this->getOwnAircraft());
+                        const bool ok = m_fsuipc->read(fsuipcAircraft, true, false, false);
+                        if (ok)
+                        {
+                            this->updateOwnAircraftFromSimulatorFsuipc(fsuipcAircraft.getTransponder());
+                        }
                     }
                 }
                 else
