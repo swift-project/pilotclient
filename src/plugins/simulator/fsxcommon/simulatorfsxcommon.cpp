@@ -102,7 +102,12 @@ namespace BlackSimPlugin
                 this->reset();
                 return false;
             }
-            if (m_useFsuipc) { m_fsuipc->connect(); } // FSUIPC too
+
+            // FSUIPC too
+            if (m_useFsuipc)
+            {
+                m_fsuipc->connect();
+            }
 
             // set structures and move on
             this->triggerAutoTraceSendId(); // we trace the init phase, so in case something goes wrong there
@@ -815,6 +820,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
         {
+            if (m_skipCockpitUpdateCycles > 0) { return; }
             CTransponder::TransponderMode newMode = CTransponder::StateIdent;
             if (!sbDataArea.isIdent())
             {
@@ -831,13 +837,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
         {
             if (!m_useFsuipc) { return; }
+            if (m_skipCockpitUpdateCycles > 0) { return; }
             const CSimulatedAircraft myAircraft(this->getOwnAircraft());
             const bool changed = (myAircraft.getTransponderMode() != xpdr.getTransponderMode());
             if (!changed) { return; }
             CTransponder myXpdr = myAircraft.getTransponder();
             myXpdr.setTransponderMode(xpdr.getTransponderMode());
             this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
-
         }
 
         bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
