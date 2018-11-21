@@ -28,13 +28,13 @@ namespace XSwiftBus
         layer.coverage.setAsInt(coverage);
     }
 
-    void CWeather::setCloudLayer(int layer, int base, int tops, int type, int coverage)
+    void CWeather::setCloudLayer(int layer, int baseM, int topsM, int type, int coverage)
     {
         switch (layer)
         {
-        case 0: setCloudLayerImpl(m_cloudLayer0, base, tops, type, coverage); break;
-        case 1: setCloudLayerImpl(m_cloudLayer1, base, tops, type, coverage); break;
-        case 2: setCloudLayerImpl(m_cloudLayer2, base, tops, type, coverage); break;
+        case 0: setCloudLayerImpl(m_cloudLayer0, baseM, topsM, type, coverage); break;
+        case 1: setCloudLayerImpl(m_cloudLayer1, baseM, topsM, type, coverage); break;
+        case 2: setCloudLayerImpl(m_cloudLayer2, baseM, topsM, type, coverage); break;
         default: DEBUG_LOG("Invalid cloud layer"); break;
         }
     }
@@ -51,13 +51,13 @@ namespace XSwiftBus
         layer.turbulence.setAsInt(turbulence);
     }
 
-    void CWeather::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+    void CWeather::setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence)
     {
         switch (layer)
         {
-        case 0: setWindLayerImpl(m_windLayer0, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
-        case 1: setWindLayerImpl(m_windLayer1, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
-        case 2: setWindLayerImpl(m_windLayer2, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
+        case 0: setWindLayerImpl(m_windLayer0, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence); break;
+        case 1: setWindLayerImpl(m_windLayer1, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence); break;
+        case 2: setWindLayerImpl(m_windLayer2, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence); break;
         default: DEBUG_LOG("Invalid wind layer"); break;
         }
     }
@@ -213,23 +213,23 @@ namespace XSwiftBus
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
                 int layer = 0;
-                int altitude = 0;
-                double direction = 0;
-                int speed = 0;
-                int shearDirection = 0;
-                int shearSpeed = 0;
+                int altitudeM = 0;
+                double directionDeg = 0;
+                int speedKt = 0;
+                int shearDirectionDeg = 0;
+                int shearSpeedKt = 0;
                 int turbulence = 0;
                 message.beginArgumentRead();
                 message.getArgument(layer);
-                message.getArgument(altitude);
-                message.getArgument(direction);
-                message.getArgument(speed);
-                message.getArgument(shearDirection);
-                message.getArgument(shearSpeed);
+                message.getArgument(altitudeM);
+                message.getArgument(directionDeg);
+                message.getArgument(speedKt);
+                message.getArgument(shearDirectionDeg);
+                message.getArgument(shearSpeedKt);
                 message.getArgument(turbulence);
                 queueDBusCall([=]()
                 {
-                    setWindLayer(layer, altitude, direction, speed, shearDirection, shearSpeed, turbulence);
+                    setWindLayer(layer, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence);
                 });
             }
             else

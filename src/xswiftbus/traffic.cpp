@@ -318,8 +318,8 @@ namespace XSwiftBus
         m_followPlaneViewSequence.clear();
     }
 
-    void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
-                                      std::vector<double> pitches, std::vector<double> rolles, std::vector<double> headings, const std::vector<bool> &onGrounds)
+    void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudesDeg, std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
+                                      std::vector<double> pitchesDeg, std::vector<double> rollsDeg, std::vector<double> headingsDeg, const std::vector<bool> &onGrounds)
     {
         (void)onGrounds;
 
@@ -330,12 +330,12 @@ namespace XSwiftBus
 
             Plane *plane = planeIt->second;
             if (!plane) { return; }
-            plane->position.lat = latitudes.at(i);
-            plane->position.lon = longitudes.at(i);
-            plane->position.elevation = altitudes.at(i);
-            plane->position.pitch = static_cast<float>(pitches.at(i));
-            plane->position.roll = static_cast<float>(rolles.at(i));
-            plane->position.heading = static_cast<float>(headings.at(i));
+            plane->position.lat = latitudesDeg.at(i);
+            plane->position.lon = longitudesDeg.at(i);
+            plane->position.elevation = altitudesFt.at(i);
+            plane->position.pitch = static_cast<float>(pitchesDeg.at(i));
+            plane->position.roll = static_cast<float>(rollsDeg.at(i));
+            plane->position.heading = static_cast<float>(headingsDeg.at(i));
         }
     }
 

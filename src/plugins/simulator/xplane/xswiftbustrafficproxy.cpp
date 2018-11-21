@@ -99,9 +99,9 @@ namespace BlackSimPlugin
         void CXSwiftBusTrafficProxy::setPlanesPositions(const PlanesPositions &planesPositions)
         {
             m_dbusInterface->callDBus(QLatin1String("setPlanesPositions"),
-                                      planesPositions.callsigns, planesPositions.latitudes, planesPositions.longitudes,
-                                      planesPositions.altitudes, planesPositions.pitches, planesPositions.rolls,
-                                      planesPositions.headings, planesPositions.onGrounds);
+                                      planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
+                                      planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
+                                      planesPositions.headingsDeg, planesPositions.onGrounds);
         }
 
         void CXSwiftBusTrafficProxy::setPlanesSurfaces(const PlanesSurfaces &planesSurfaces)

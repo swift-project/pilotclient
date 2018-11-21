@@ -183,64 +183,64 @@ namespace BlackSimPlugin
             void isUsingRealTimeAsync(bool *o_isRealTime);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLatitude
+            //! \copydoc XSwiftBus::CService::getLatitudeDeg
             //! @{
-            double getLatitude() const;
-            void getLatitudeAsync(double *o_latitude);
+            double getLatitudeDeg() const;
+            void getLatitudeDegAsync(double *o_latitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLongitude
+            //! \copydoc XSwiftBus::CService::getLongitudeDeg
             //! @{
-            double getLongitude() const;
-            void getLongitudeAsync(double *o_longitude);
+            double getLongitudeDeg() const;
+            void getLongitudeDegAsync(double *o_longitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAltitudeMSL
+            //! \copydoc XSwiftBus::CService::getAltitudeMslM
             //! @{
-            double getAltitudeMSL() const;
-            void getAltitudeMSLAsync(double *o_altitude);
+            double getAltitudeMslM() const;
+            void getAltitudeMslMAsync(double *o_altitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getHeightAGL
+            //! \copydoc XSwiftBus::CService::getHeightAglM
             //! @{
-            double getHeightAGL() const;
-            void getHeightAGLAsync(double *o_height);
+            double getHeightAglM() const;
+            void getHeightAglMAsync(double *o_height);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getGroundSpeed
+            //! \copydoc XSwiftBus::CService::getGroundSpeedMps
             //! @{
-            double getGroundSpeed() const;
-            void getGroundSpeedAsync(double *o_groundspeed);
+            double getGroundSpeedMps() const;
+            void getGroundSpeedMpsAsync(double *o_groundspeed);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getIndicatedAirspeed
+            //! \copydoc XSwiftBus::CService::getIndicatedAirspeedKias
             //! @{
-            double getIndicatedAirspeed() const;
-            void getIndicatedAirspeedAsync(double *o_ias);
+            double getIndicatedAirspeedKias() const;
+            void getIndicatedAirspeedKiasAsync(double *o_ias);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTrueAirspeed
+            //! \copydoc XSwiftBus::CService::getTrueAirspeedKias
             //! @{
-            double getTrueAirspeed() const;
-            void getTrueAirspeedAsync(double *o_tas);
+            double getTrueAirspeedKias() const;
+            void getTrueAirspeedKiasAsync(double *o_tas);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getPitch
+            //! \copydoc XSwiftBus::CService::getPitchDeg
             //! @{
-            double getPitch() const;
-            void getPitchAsync(double *o_pitch);
+            double getPitchDeg() const;
+            void getPitchDegAsync(double *o_pitch);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getRoll
+            //! \copydoc XSwiftBus::CService::getRollDeg
             //! @{
-            double getRoll() const;
-            void getRollAsync(double *o_roll);
+            double getRollDeg() const;
+            void getRollDegAsync(double *o_roll);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTrueHeading
+            //! \copydoc XSwiftBus::CService::getTrueHeadingDeg
             //! @{
-            double getTrueHeading() const;
-            void getTrueHeadingAsync(double *o_heading);
+            double getTrueHeadingDeg() const;
+            void getTrueHeadingDegAsync(double *o_heading);
             //! @}
 
             //! Get whether any wheel is on the ground
@@ -255,28 +255,28 @@ namespace BlackSimPlugin
             void getAllWheelsOnGroundAsync(bool *o_allWheels);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom1Active
+            //! \copydoc XSwiftBus::CService::getCom1ActiveKhz
             //! @{
-            int getCom1Active() const;
-            void getCom1ActiveAsync(int *o_com1Active);
+            int getCom1ActiveKhz() const;
+            void getCom1ActiveKhzAsync(int *o_com1Active);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom1Standby
+            //! \copydoc XSwiftBus::CService::getCom1StandbyKhz
             //! @{
-            int getCom1Standby() const;
-            void getCom1StandbyAsync(int *o_com1Standby);
+            int getCom1StandbyKhz() const;
+            void getCom1StandbyKhzAsync(int *o_com1Standby);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom2Active
+            //! \copydoc XSwiftBus::CService::getCom2ActiveKhz
             //! @{
-            int getCom2Active() const;
-            void getCom2ActiveAsync(int *o_com2Active);
+            int getCom2ActiveKhz() const;
+            void getCom2ActiveKhzAsync(int *o_com2Active);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom2Standby
+            //! \copydoc XSwiftBus::CService::getCom2StandbyKhz
             //! @{
-            int getCom2Standby() const;
-            void getCom2StandbyAsync(int *o_com2Standby);
+            int getCom2StandbyKhz() const;
+            void getCom2StandbyKhzAsync(int *o_com2Standby);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getTransponderCode
@@ -327,23 +327,23 @@ namespace BlackSimPlugin
             void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getQNH
+            //! \copydoc XSwiftBus::CService::getQNHInHg
             //! @{
-            double getQNH() const;
-            void getQNHAsync(double *o_qnh);
+            double getQNHInHg() const;
+            void getQNHInHgAsync(double *o_qnh);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::setCom1Active
-            void setCom1Active(int freq);
+            //! \copydoc XSwiftBus::CService::setCom1ActiveKhz
+            void setCom1ActiveKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom1Standby
-            void setCom1Standby(int freq);
+            //! \copydoc XSwiftBus::CService::setCom1StandbyKhz
+            void setCom1StandbyKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom2Active
-            void setCom2Active(int freq);
+            //! \copydoc XSwiftBus::CService::setCom2ActiveKhz
+            void setCom2ActiveKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom2Standby
-            void setCom2Standby(int freq);
+            //! \copydoc XSwiftBus::CService::setCom2StandbyKhz
+            void setCom2StandbyKhz(int freq);
 
             //! \copydoc XSwiftBus::CService::setTransponderCode
             void setTransponderCode(int code);

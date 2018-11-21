@@ -48,14 +48,14 @@ namespace BlackSimPlugin
                 QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
                 if (!reply.isError())
                 {
-                    o_xplaneData->latitude = reply.argumentAt<0>();
-                    o_xplaneData->longitude = reply.argumentAt<1>();
-                    o_xplaneData->altitude = reply.argumentAt<2>();
-                    o_xplaneData->groundspeed = reply.argumentAt<3>();
-                    o_xplaneData->pitch = reply.argumentAt<4>();
-                    o_xplaneData->roll = reply.argumentAt<5>();
-                    o_xplaneData->trueHeading = reply.argumentAt<6>();
-                    o_xplaneData->seaLeveLPressure = reply.argumentAt<7>();
+                    o_xplaneData->latitudeDeg = reply.argumentAt<0>();
+                    o_xplaneData->longitudeDeg = reply.argumentAt<1>();
+                    o_xplaneData->altitudeM = reply.argumentAt<2>();
+                    o_xplaneData->groundspeedMs = reply.argumentAt<3>();
+                    o_xplaneData->pitchDeg = reply.argumentAt<4>();
+                    o_xplaneData->rollDeg = reply.argumentAt<5>();
+                    o_xplaneData->trueHeadingDeg = reply.argumentAt<6>();
+                    o_xplaneData->seaLevelPressureInHg = reply.argumentAt<7>();
                 }
                 watcher->deleteLater();
             };
@@ -189,94 +189,94 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
         }
 
-        double CXSwiftBusServiceProxy::getLatitude() const
+        double CXSwiftBusServiceProxy::getLatitudeDeg() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitude"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));
         }
-        void CXSwiftBusServiceProxy::getLatitudeAsync(double *o_latitude)
+        void CXSwiftBusServiceProxy::getLatitudeDegAsync(double *o_latitude)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getLatitude"), setterCallback(o_latitude));
-        }
-
-        double CXSwiftBusServiceProxy::getLongitude() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getLongitude"));
-        }
-        void CXSwiftBusServiceProxy::getLongitudeAsync(double *o_longitude)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getLongitude"), setterCallback(o_longitude));
+            m_dbusInterface->callDBusAsync(QLatin1String("getLatitudeDeg"), setterCallback(o_latitude));
         }
 
-        double CXSwiftBusServiceProxy::getAltitudeMSL() const
+        double CXSwiftBusServiceProxy::getLongitudeDeg() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAltitudeMSL"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getLongitudeDeg"));
         }
-        void CXSwiftBusServiceProxy::getAltitudeMSLAsync(double *o_altitude)
+        void CXSwiftBusServiceProxy::getLongitudeDegAsync(double *o_longitude)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getAltitudeMSL"), setterCallback(o_altitude));
-        }
-
-        double CXSwiftBusServiceProxy::getHeightAGL() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeightAGL"));
-        }
-        void CXSwiftBusServiceProxy::getHeightAGLAsync(double *o_height)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getHeightAGL"), setterCallback(o_height));
+            m_dbusInterface->callDBusAsync(QLatin1String("getLongitudeDeg"), setterCallback(o_longitude));
         }
 
-        double CXSwiftBusServiceProxy::getGroundSpeed() const
+        double CXSwiftBusServiceProxy::getAltitudeMslM() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundSpeed"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAltitudeMslM"));
         }
-        void CXSwiftBusServiceProxy::getGroundSpeedAsync(double *o_groundspeed)
+        void CXSwiftBusServiceProxy::getAltitudeMslMAsync(double *o_altitude)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getGroundSpeed"), setterCallback(o_groundspeed));
-        }
-
-        double CXSwiftBusServiceProxy::getIndicatedAirspeed() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getIndicatedAirspeed"));
-        }
-        void CXSwiftBusServiceProxy::getIndicatedAirspeedAsync(double *o_ias)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getIndicatedAirspeed"), setterCallback(o_ias));
+            m_dbusInterface->callDBusAsync(QLatin1String("getAltitudeMslM"), setterCallback(o_altitude));
         }
 
-        double CXSwiftBusServiceProxy::getTrueAirspeed() const
+        double CXSwiftBusServiceProxy::getHeightAglM() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueAirspeed"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeightAglM"));
         }
-        void CXSwiftBusServiceProxy::getTrueAirspeedAsync(double *o_tas)
+        void CXSwiftBusServiceProxy::getHeightAglMAsync(double *o_height)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getTrueAirspeed"), setterCallback(o_tas));
-        }
-
-        double CXSwiftBusServiceProxy::getPitch() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getPitch"));
-        }
-        void CXSwiftBusServiceProxy::getPitchAsync(double *o_pitch)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getPitch"), setterCallback(o_pitch));
+            m_dbusInterface->callDBusAsync(QLatin1String("getHeightAglM"), setterCallback(o_height));
         }
 
-        double CXSwiftBusServiceProxy::getRoll() const
+        double CXSwiftBusServiceProxy::getGroundSpeedMps() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getRoll"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundSpeedMps"));
         }
-        void CXSwiftBusServiceProxy::getRollAsync(double *o_roll)
+        void CXSwiftBusServiceProxy::getGroundSpeedMpsAsync(double *o_groundspeed)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getRoll"), setterCallback(o_roll));
+            m_dbusInterface->callDBusAsync(QLatin1String("getGroundSpeedMps"), setterCallback(o_groundspeed));
         }
 
-        double CXSwiftBusServiceProxy::getTrueHeading() const
+        double CXSwiftBusServiceProxy::getIndicatedAirspeedKias() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueHeading"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getIndicatedAirspeedKias"));
         }
-        void CXSwiftBusServiceProxy::getTrueHeadingAsync(double *o_heading)
+        void CXSwiftBusServiceProxy::getIndicatedAirspeedKiasAsync(double *o_ias)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getTrueHeading"), setterCallback(o_heading));
+            m_dbusInterface->callDBusAsync(QLatin1String("getIndicatedAirspeedKias"), setterCallback(o_ias));
+        }
+
+        double CXSwiftBusServiceProxy::getTrueAirspeedKias() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueAirspeedKias"));
+        }
+        void CXSwiftBusServiceProxy::getTrueAirspeedKiasAsync(double *o_tas)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getTrueAirspeedKias"), setterCallback(o_tas));
+        }
+
+        double CXSwiftBusServiceProxy::getPitchDeg() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getPitchDeg"));
+        }
+        void CXSwiftBusServiceProxy::getPitchDegAsync(double *o_pitch)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getPitchDeg"), setterCallback(o_pitch));
+        }
+
+        double CXSwiftBusServiceProxy::getRollDeg() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getRollDeg"));
+        }
+        void CXSwiftBusServiceProxy::getRollDegAsync(double *o_roll)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getRollDeg"), setterCallback(o_roll));
+        }
+
+        double CXSwiftBusServiceProxy::getTrueHeadingDeg() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueHeadingDeg"));
+        }
+        void CXSwiftBusServiceProxy::getTrueHeadingDegAsync(double *o_heading)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getTrueHeadingDeg"), setterCallback(o_heading));
         }
 
         bool CXSwiftBusServiceProxy::getAnyWheelOnGround() const
@@ -297,40 +297,40 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getAllWheelsOnGround"), setterCallback(o_allWheels));
         }
 
-        int CXSwiftBusServiceProxy::getCom1Active() const
+        int CXSwiftBusServiceProxy::getCom1ActiveKhz() const
         {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1Active"));
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1ActiveKhz"));
         }
-        void CXSwiftBusServiceProxy::getCom1ActiveAsync(int *o_com1Active)
+        void CXSwiftBusServiceProxy::getCom1ActiveKhzAsync(int *o_com1Active)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getCom1Active"), setterCallback(o_com1Active));
-        }
-
-        int CXSwiftBusServiceProxy::getCom1Standby() const
-        {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1Standby"));
-        }
-        void CXSwiftBusServiceProxy::getCom1StandbyAsync(int *o_com1Standby)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getCom1Standby"), setterCallback(o_com1Standby));
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom1ActiveKhz"), setterCallback(o_com1Active));
         }
 
-        int CXSwiftBusServiceProxy::getCom2Active() const
+        int CXSwiftBusServiceProxy::getCom1StandbyKhz() const
         {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2Active"));
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1StandbyKhz"));
         }
-        void CXSwiftBusServiceProxy::getCom2ActiveAsync(int *o_com2Active)
+        void CXSwiftBusServiceProxy::getCom1StandbyKhzAsync(int *o_com1Standby)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getCom2Active"), setterCallback(o_com2Active));
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom1StandbyKhz"), setterCallback(o_com1Standby));
         }
 
-        int CXSwiftBusServiceProxy::getCom2Standby() const
+        int CXSwiftBusServiceProxy::getCom2ActiveKhz() const
         {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2Standby"));
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2ActiveKhz"));
         }
-        void CXSwiftBusServiceProxy::getCom2StandbyAsync(int *o_com2Standby)
+        void CXSwiftBusServiceProxy::getCom2ActiveKhzAsync(int *o_com2Active)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getCom2Standby"), setterCallback(o_com2Standby));
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom2ActiveKhz"), setterCallback(o_com2Active));
+        }
+
+        int CXSwiftBusServiceProxy::getCom2StandbyKhz() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2StandbyKhz"));
+        }
+        void CXSwiftBusServiceProxy::getCom2StandbyKhzAsync(int *o_com2Standby)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom2StandbyKhz"), setterCallback(o_com2Standby));
         }
 
         int CXSwiftBusServiceProxy::getTransponderCode() const
@@ -412,35 +412,35 @@ namespace BlackSimPlugin
         }
 
 
-        double CXSwiftBusServiceProxy::getQNH() const
+        double CXSwiftBusServiceProxy::getQNHInHg() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getQNH"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getQNHInHg"));
         }
 
-        void CXSwiftBusServiceProxy::getQNHAsync(double *o_qnh)
+        void CXSwiftBusServiceProxy::getQNHInHgAsync(double *o_qnh)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getQNH"), setterCallback(o_qnh));
+            m_dbusInterface->callDBusAsync(QLatin1String("getQNHInHg"), setterCallback(o_qnh));
         }
 
 
-        void CXSwiftBusServiceProxy::setCom1Active(int freq)
+        void CXSwiftBusServiceProxy::setCom1ActiveKhz(int freq)
         {
-            m_dbusInterface->callDBus(QLatin1String("setCom1Active"), freq);
+            m_dbusInterface->callDBus(QLatin1String("setCom1ActiveKhz"), freq);
         }
 
-        void CXSwiftBusServiceProxy::setCom1Standby(int freq)
+        void CXSwiftBusServiceProxy::setCom1StandbyKhz(int freq)
         {
-            m_dbusInterface->callDBus(QLatin1String("setCom1Standby"), freq);
+            m_dbusInterface->callDBus(QLatin1String("setCom1StandbyKhz"), freq);
         }
 
-        void CXSwiftBusServiceProxy::setCom2Active(int freq)
+        void CXSwiftBusServiceProxy::setCom2ActiveKhz(int freq)
         {
-            m_dbusInterface->callDBus(QLatin1String("setCom2Active"), freq);
+            m_dbusInterface->callDBus(QLatin1String("setCom2ActiveKhz"), freq);
         }
 
-        void CXSwiftBusServiceProxy::setCom2Standby(int freq)
+        void CXSwiftBusServiceProxy::setCom2StandbyKhz(int freq)
         {
-            m_dbusInterface->callDBus(QLatin1String("setCom2Standby"), freq);
+            m_dbusInterface->callDBus(QLatin1String("setCom2StandbyKhz"), freq);
         }
 
         void CXSwiftBusServiceProxy::setTransponderCode(int code)

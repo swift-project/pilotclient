@@ -107,34 +107,34 @@ namespace XSwiftBus
         bool isUsingRealTime() const { return m_useSystemTime.get(); }
 
         //! Get aircraft latitude in degrees
-        double getLatitude() const { return m_latitude.get(); }
+        double getLatitudeDeg() const { return m_latitude.get(); }
 
         //! Get aircraft longitude in degrees
-        double getLongitude() const { return m_longitude.get(); }
+        double getLongitudeDeg() const { return m_longitude.get(); }
 
         //! Get aircraft altitude in meters
-        double getAltitudeMSL() const { return m_elevation.get(); }
+        double getAltitudeMslM() const { return m_elevation.get(); }
 
         //! Get aircraft height in meters
-        double getHeightAGL() const { return m_agl.get(); }
+        double getHeightAglM() const { return m_agl.get(); }
 
         //! Get aircraft groundspeed in meters per second
-        double getGroundSpeed() const { return m_groundSpeed.get(); }
+        double getGroundSpeedMps() const { return m_groundSpeed.get(); }
 
         //! Get aircraft IAS in knots
-        double getIndicatedAirspeed() const { return m_indicatedAirspeed.get(); }
+        double getIndicatedAirspeedKias() const { return m_indicatedAirspeed.get(); }
 
         //! Get aircraft TAS in meters per second
-        double getTrueAirspeed() const { return m_trueAirspeed.get(); }
+        double getTrueAirspeedKias() const { return m_trueAirspeed.get(); }
 
         //! Get aircraft pitch in degrees above horizon
-        double getPitch() const { return m_pitch.get(); }
+        double getPitchDeg() const { return m_pitch.get(); }
 
         //! Get aircraft roll in degrees
-        double getRoll() const { return m_roll.get(); }
+        double getRollDeg() const { return m_roll.get(); }
 
         //! Get aircraft true heading in degrees
-        double getTrueHeading() const { return m_heading.get(); }
+        double getTrueHeadingDeg() const { return m_heading.get(); }
 
         //! Get whether any wheel is on the ground
         bool getAnyWheelOnGround() const { return m_onGroundAny.get(); }
@@ -143,16 +143,16 @@ namespace XSwiftBus
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
 
         //! Get the current COM1 active frequency in kHz
-        int getCom1Active() const { return m_com1Active.get() * 10; }
+        int getCom1ActiveKhz() const { return m_com1Active.get() * 10; }
 
         //! Get the current COM1 standby frequency in kHz
-        int getCom1Standby() const { return m_com1Standby.get() * 10; }
+        int getCom1StandbyKhz() const { return m_com1Standby.get() * 10; }
 
         //! Get the current COM2 active frequency in kHz
-        int getCom2Active() const { return m_com2Active.get() * 10; }
+        int getCom2ActiveKhz() const { return m_com2Active.get() * 10; }
 
         //! Get the current COM2 standby frequency in kHz
-        int getCom2Standby() const { return m_com2Standby.get() * 10; }
+        int getCom2StandbyKhz() const { return m_com2Standby.get() * 10; }
 
         //! Get the current transponder code in decimal
         int getTransponderCode() const { return m_xpdrCode.get(); }
@@ -179,19 +179,19 @@ namespace XSwiftBus
         bool getTaxiLightsOn() const { return m_taxiLightsOn.get(); }
 
         //! Get barometric pressure at sea level in inches of mercury.
-        double getQNH() const { return m_qnhInhg.get(); }
+        double getQNHInHg() const { return m_qnhInhg.get(); }
 
         //! Set the current COM1 active frequency in kHz
-        void setCom1Active(int freq) { m_com1Active.set(freq / 10); }
+        void setCom1ActiveKhz(int freq) { m_com1Active.set(freq / 10); }
 
         //! Set the current COM1 standby frequency in kHz
-        void setCom1Standby(int freq) { m_com1Standby.set(freq / 10); }
+        void setCom1StandbyKhz(int freq) { m_com1Standby.set(freq / 10); }
 
         //! Set the current COM2 active frequency in kHz
-        void setCom2Active(int freq) { m_com2Active.set(freq / 10); }
+        void setCom2ActiveKhz(int freq) { m_com2Active.set(freq / 10); }
 
         //! Set the current COM2 standby frequency in kHz
-        void setCom2Standby(int freq) { m_com2Standby.set(freq / 10); }
+        void setCom2StandbyKhz(int freq) { m_com2Standby.set(freq / 10); }
 
         //! Set the current transponder code in decimal
         void setTransponderCode(int code) { m_xpdrCode.set(code); }

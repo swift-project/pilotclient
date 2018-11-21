@@ -71,23 +71,22 @@ namespace BlackSimPlugin
         class CXSwiftBusWeatherProxy;
 
         //! X-Plane data
-        //! \todo Add units to members? pitchDeg?, altitudeFt?
         struct XPlaneData
         {
             QString aircraftModelPath;          //!< Aircraft model path
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
-            double latitude;                    //!< Longitude [deg]
-            double longitude;                   //!< Latitude [deg]
-            double altitude;                    //!< Altitude [m]
-            double groundspeed;                 //!< Ground speed [m/s]
-            double pitch;                       //!< Pitch [deg]
-            double roll;                        //!< Roll [deg]
-            double trueHeading;                 //!< True heading [deg]
+            double latitudeDeg;                 //!< Longitude [deg]
+            double longitudeDeg;                //!< Latitude [deg]
+            double altitudeM;                   //!< Altitude [m]
+            double groundspeedMs;               //!< Ground speed [m/s]
+            double pitchDeg;                    //!< Pitch [deg]
+            double rollDeg;                     //!< Roll [deg]
+            double trueHeadingDeg;              //!< True heading [deg]
             bool onGroundAll;                   //!< All wheels on ground?
-            int com1Active;                     //!< COM1 active [kHz]
-            int com1Standby;                    //!< COM1 standby [kHz]
-            int com2Active;                     //!< COM2 active [kHz]
-            int com2Standby;                    //!< COM2 standby [kHz]
+            int com1ActiveKhz;                  //!< COM1 active [kHz]
+            int com1StandbyKhz;                 //!< COM1 standby [kHz]
+            int com2ActiveKhz;                  //!< COM2 active [kHz]
+            int com2StandbyKhz;                 //!< COM2 standby [kHz]
             int xpdrCode;                       //!< Transpondder code
             int xpdrMode;                       //!< Transponder mode (off=0,stdby=1,on=2,test=3)
             bool xpdrIdent;                     //!< Is transponder in ident?
@@ -100,7 +99,7 @@ namespace BlackSimPlugin
             double gearReployRatio;             //!< Gear deployment ratio [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
             double speedBrakeRatio;             //!< Speed break ratio [%]
-            double seaLeveLPressure;            //!< Sea level pressure [inhg]
+            double seaLevelPressureInHg;        //!< Sea level pressure [inhg]
         };
 
         //! X-Plane ISimulator implementation

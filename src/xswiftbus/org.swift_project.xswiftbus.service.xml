@@ -57,34 +57,34 @@ R"(<node>
     <method name="isUsingRealTime">
       <arg type="b" direction="out"/>
     </method>
-    <method name="getLatitude">
+    <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getLongitude">
+    <method name="getLongitudeDeg">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getAltitudeMSL">
+    <method name="getAltitudeMslM">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getHeightAGL">
+    <method name="getHeightAglM">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getGroundSpeed">
+    <method name="getGroundSpeedMps">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getIndicatedAirspeed">
+    <method name="getIndicatedAirspeedKias">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getTrueAirspeed">
+    <method name="getTrueAirspeedKias">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getPitch">
+    <method name="getPitchDeg">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getRoll">
+    <method name="getRollDeg">
       <arg type="d" direction="out"/>
     </method>
-    <method name="getTrueHeading">
+    <method name="getTrueHeadingDeg">
       <arg type="d" direction="out"/>
     </method>
     <method name="getAnyWheelOnGround">
@@ -93,16 +93,16 @@ R"(<node>
     <method name="getAllWheelsOnGround">
       <arg type="b" direction="out"/>
     </method>
-    <method name="getCom1Active">
+    <method name="getCom1ActiveKhz">
       <arg type="i" direction="out"/>
     </method>
-    <method name="getCom1Standby">
+    <method name="getCom1StandbyKhz">
       <arg type="i" direction="out"/>
     </method>
-    <method name="getCom2Active">
+    <method name="getCom2ActiveKhz">
       <arg type="i" direction="out"/>
     </method>
-    <method name="getCom2Standby">
+    <method name="getCom2StandbyKhz">
       <arg type="i" direction="out"/>
     </method>
     <method name="getTransponderCode">
@@ -129,19 +129,19 @@ R"(<node>
     <method name="getTaxiLightsOn">
       <arg type="b" direction="out"/>
     </method>
-    <method name="getQNH">
+    <method name="getQNHInHg">
       <arg type="d" direction="out"/>
     </method>
-    <method name="setCom1Active">
+    <method name="setCom1ActiveKhz">
       <arg name="freq" type="i" direction="in"/>
     </method>
-    <method name="setCom1Standby">
+    <method name="setCom1StandbyKhz">
       <arg name="freq" type="i" direction="in"/>
     </method>
-    <method name="setCom2Active">
+    <method name="setCom2ActiveKhz">
       <arg name="freq" type="i" direction="in"/>
     </method>
-    <method name="setCom2Standby">
+    <method name="setCom2StandbyKhz">
       <arg name="freq" type="i" direction="in"/>
     </method>
     <method name="setTransponderCode">

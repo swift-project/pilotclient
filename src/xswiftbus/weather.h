@@ -81,21 +81,21 @@ namespace XSwiftBus
 
         //! Set a cloud layer.
         //! \param layer Layer 0, 1, or 2.
-        //! \param base Cloud base in meters above mean sea level.
-        //! \param tops Cloud tops in meters above mean sea level.
+        //! \param baseM Cloud base in meters above mean sea level.
+        //! \param topsM Cloud tops in meters above mean sea level.
         //! \param type Type of cloud: 0=clear, 1=cirrus, 2=scattered, 3=broken, 4=overcast, 5=stratus.
         //! \param coverage Amount of sky covered [0,6].
-        void setCloudLayer(int layer, int base, int tops, int type, int coverage);
+        void setCloudLayer(int layer, int baseM, int topsM, int type, int coverage);
 
         //! Set a wind layer.
         //! \param layer Layer 0, 1, or 2.
-        //! \param altitude Altitude in middle of layer in meters above mean sea level.
-        //! \param direction Direction from which wind is blowing in degrees true.
-        //! \param speed Wind speed in knots.
-        //! \param shearDirection Direction from which wind shears blow in degrees true.
-        //! \param shearSpeed Wind speed gain in knots (e.g. speed=10 and shearSpeed=5 means speed varies between 10 and 15).
+        //! \param altitudeM Altitude in middle of layer in meters above mean sea level.
+        //! \param directionDeg Direction from which wind is blowing in degrees true.
+        //! \param speedKt Wind speed in knots.
+        //! \param shearDirectionDeg Direction from which wind shears blow in degrees true.
+        //! \param shearSpeedKt Wind speed gain in knots (e.g. speed=10 and shearSpeed=5 means speed varies between 10 and 15).
         //! \param turbulence Amount of turbulence [0,10].
-        void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
+        void setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence);
 
         //! Perform generic processing
         int process();

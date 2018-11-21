@@ -44,22 +44,22 @@ namespace BlackSimPlugin
             bool hasSameSizes() const
             {
                 const int s = callsigns.size();
-                if (s != latitudes.size())  { return false; }
-                if (s != longitudes.size()) { return false; }
-                if (s != altitudes.size())  { return false; }
-                if (s != pitches.size())    { return false; }
-                if (s != rolls.size())      { return false; }
-                if (s != headings.size())   { return false; }
+                if (s != latitudesDeg.size())  { return false; }
+                if (s != longitudesDeg.size()) { return false; }
+                if (s != altitudesFt.size())  { return false; }
+                if (s != pitchesDeg.size())    { return false; }
+                if (s != rollsDeg.size())      { return false; }
+                if (s != headingsDeg.size())   { return false; }
                 return true;
             }
 
             QStringList callsigns;      //!< List of callsigns
-            QList<double> latitudes;    //!< List of latitudes
-            QList<double> longitudes;   //!< List of longitudes
-            QList<double> altitudes;    //!< List of altitudes
-            QList<double> pitches;      //!< List of pitches
-            QList<double> rolls;        //!< List of rolls
-            QList<double> headings;     //!< List of headings
+            QList<double> latitudesDeg;    //!< List of latitudes
+            QList<double> longitudesDeg;   //!< List of longitudes
+            QList<double> altitudesFt;    //!< List of altitudes
+            QList<double> pitchesDeg;      //!< List of pitches
+            QList<double> rollsDeg;        //!< List of rolls
+            QList<double> headingsDeg;     //!< List of headings
             QList<bool> onGrounds;      //!< List of onGrounds
         };
 

@@ -92,10 +92,10 @@ namespace BlackSimPlugin
             void setRunwayFriction(int friction);
 
             //! \copydoc XSwiftBus::CWeather::setCloudLayer
-            void setCloudLayer(int layer, int base, int tops, int type, int coverage);
+            void setCloudLayer(int layer, int baseM, int topsM, int type, int coverage);
 
             //! \copydoc XSwiftBus::CWeather::setWindLayer
-            void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
+            void setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence);
         };
 
     }

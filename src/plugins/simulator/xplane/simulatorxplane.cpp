@@ -207,26 +207,26 @@ namespace BlackSimPlugin
             if (this->isConnected())
             {
                 m_serviceProxy->getOwnAircraftSituationData(&m_xplaneData);
-                m_serviceProxy->getCom1ActiveAsync(&m_xplaneData.com1Active);
-                m_serviceProxy->getCom1StandbyAsync(&m_xplaneData.com1Standby);
-                m_serviceProxy->getCom2ActiveAsync(&m_xplaneData.com2Active);
-                m_serviceProxy->getCom2StandbyAsync(&m_xplaneData.com2Standby);
+                m_serviceProxy->getCom1ActiveKhzAsync(&m_xplaneData.com1ActiveKhz);
+                m_serviceProxy->getCom1StandbyKhzAsync(&m_xplaneData.com1StandbyKhz);
+                m_serviceProxy->getCom2ActiveKhzAsync(&m_xplaneData.com2ActiveKhz);
+                m_serviceProxy->getCom2StandbyKhzAsync(&m_xplaneData.com2StandbyKhz);
                 m_serviceProxy->getTransponderCodeAsync(&m_xplaneData.xpdrCode);
                 m_serviceProxy->getTransponderModeAsync(&m_xplaneData.xpdrMode);
                 m_serviceProxy->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
                 m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
 
                 CAircraftSituation situation;
-                situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
-                CAltitude altitude { m_xplaneData.altitude, CAltitude::MeanSeaLevel, CLengthUnit::m() };
-                situation.setAltitude({ m_xplaneData.altitude, CAltitude::MeanSeaLevel, CLengthUnit::m() });
-                CPressure seaLevelPressure({ m_xplaneData.seaLeveLPressure, CPressureUnit::inHg() });
+                situation.setPosition({ m_xplaneData.latitudeDeg, m_xplaneData.longitudeDeg, 0 });
+                CAltitude altitude { m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
+                situation.setAltitude({ m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() });
+                CPressure seaLevelPressure({ m_xplaneData.seaLevelPressureInHg, CPressureUnit::inHg() });
                 CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
                 situation.setPressureAltitude(pressureAltitude);
-                situation.setHeading({ m_xplaneData.trueHeading, CHeading::True, CAngleUnit::deg() });
-                situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
-                situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
-                situation.setGroundSpeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
+                situation.setHeading({ m_xplaneData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
+                situation.setPitch({ m_xplaneData.pitchDeg, CAngleUnit::deg() });
+                situation.setBank({ m_xplaneData.rollDeg, CAngleUnit::deg() });
+                situation.setGroundSpeed({ m_xplaneData.groundspeedMs, CSpeedUnit::m_s() });
 
                 // updates
                 updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
@@ -239,12 +239,12 @@ namespace BlackSimPlugin
                 CTransponder transponder(myAircraft.getTransponder());
 
                 // updates
-                com1.setFrequencyActive(CFrequency(m_xplaneData.com1Active, CFrequencyUnit::kHz()));
-                com1.setFrequencyStandby(CFrequency(m_xplaneData.com1Standby, CFrequencyUnit::kHz()));
+                com1.setFrequencyActive(CFrequency(m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz()));
+                com1.setFrequencyStandby(CFrequency(m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz()));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
 
-                com2.setFrequencyActive(CFrequency(m_xplaneData.com2Active, CFrequencyUnit::kHz()));
-                com2.setFrequencyStandby(CFrequency(m_xplaneData.com2Standby, CFrequencyUnit::kHz()));
+                com2.setFrequencyActive(CFrequency(m_xplaneData.com2ActiveKhz, CFrequencyUnit::kHz()));
+                com2.setFrequencyStandby(CFrequency(m_xplaneData.com2StandbyKhz, CFrequencyUnit::kHz()));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
 
                 transponder = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -493,21 +493,21 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
-            auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
-            auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
+            auto com1 = CComSystem::getCom1System({ m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz() }, { m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz() });
+            auto com2 = CComSystem::getCom2System({ m_xplaneData.com2ActiveKhz, CFrequencyUnit::kHz() }, { m_xplaneData.com2StandbyKhz, CFrequencyUnit::kHz() });
             auto xpdr = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
             if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
             {
-                m_xplaneData.com1Active  = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-                m_xplaneData.com1Standby = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
-                m_xplaneData.com2Active  = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-                m_xplaneData.com2Standby = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com1ActiveKhz  = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com1StandbyKhz = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com2ActiveKhz  = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+                m_xplaneData.com2StandbyKhz = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
                 m_xplaneData.xpdrCode = aircraft.getTransponderCode();
                 m_xplaneData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
-                m_serviceProxy->setCom1Active(m_xplaneData.com1Active);
-                m_serviceProxy->setCom1Standby(m_xplaneData.com1Standby);
-                m_serviceProxy->setCom2Active(m_xplaneData.com2Active);
-                m_serviceProxy->setCom2Standby(m_xplaneData.com2Standby);
+                m_serviceProxy->setCom1ActiveKhz(m_xplaneData.com1ActiveKhz);
+                m_serviceProxy->setCom1StandbyKhz(m_xplaneData.com1StandbyKhz);
+                m_serviceProxy->setCom2ActiveKhz(m_xplaneData.com2ActiveKhz);
+                m_serviceProxy->setCom2StandbyKhz(m_xplaneData.com2StandbyKhz);
                 m_serviceProxy->setTransponderCode(m_xplaneData.xpdrCode);
                 m_serviceProxy->setTransponderMode(m_xplaneData.xpdrMode);
 
@@ -821,12 +821,12 @@ namespace BlackSimPlugin
                     {
                         this->rememberLastSent(interpolatedSituation);
                         planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
-                        planesPositions.latitudes.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
-                        planesPositions.longitudes.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
-                        planesPositions.altitudes.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
-                        planesPositions.pitches.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
-                        planesPositions.rolls.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
-                        planesPositions.headings.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                        planesPositions.latitudesDeg.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
+                        planesPositions.longitudesDeg.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
+                        planesPositions.altitudesFt.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
+                        planesPositions.pitchesDeg.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
+                        planesPositions.rollsDeg.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
+                        planesPositions.headingsDeg.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
                         planesPositions.onGrounds.push_back(interpolatedSituation.getOnGround() == CAircraftSituation::OnGround);
                     }
                 }

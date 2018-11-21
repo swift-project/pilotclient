@@ -75,14 +75,14 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setRunwayFriction"), friction);
         }
 
-        void CXSwiftBusWeatherProxy::setCloudLayer(int layer, int base, int tops, int type, int coverage)
+        void CXSwiftBusWeatherProxy::setCloudLayer(int layer, int baseM, int topsM, int type, int coverage)
         {
-            m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, base, tops, type, coverage);
+            m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, baseM, topsM, type, coverage);
         }
 
-        void CXSwiftBusWeatherProxy::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+        void CXSwiftBusWeatherProxy::setWindLayer(int layer, int altitudeM, double directionDeg, int speedKt, int shearDirectionDeg, int shearSpeedKt, int turbulence)
         {
-            m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitude, direction, speed, shearDirection, shearSpeed, turbulence);
+            m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitudeM, directionDeg, speedKt, shearDirectionDeg, shearSpeedKt, turbulence);
         }
 
     }
