@@ -30,13 +30,13 @@ namespace BlackSimPlugin
     {
         CSimulatorFsCommon::CSimulatorFsCommon(
             const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
+            IOwnAircraftProvider    *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider,
+            IWeatherGridProvider    *weatherGridProvider,
+            IClientProvider         *clientProvider,
             QObject *parent) :
             CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
-            m_fsuipc(std::make_unique<CFsuipc>(this))
+            m_fsuipc(new CFsuipc(this))
         {
             CSimulatorFsCommon::registerHelp();
         }

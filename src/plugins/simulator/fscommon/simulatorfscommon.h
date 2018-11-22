@@ -79,9 +79,9 @@ namespace BlackSimPlugin
             //! Register help
             static void registerHelp();
 
-            std::unique_ptr<CFsuipc> m_fsuipc;                      //!< FSUIPC
-            bool m_useFsuipc = false;                               //!< use FSUIPC
-            bool m_simPaused = false;                               //!< Simulator paused?
+            CFsuipc *m_fsuipc = nullptr;                            //!< FSUIPC
+            bool m_useFsuipc  = false;                              //!< use FSUIPC
+            bool m_simPaused  = false;                              //!< Simulator paused?
             bool m_simTimeSynced = false;                           //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;  //!< time offset
             BlackMisc::Aviation::CAirportList    m_airportsInRangeFromSimulator; //!< airports in range of own aircraft

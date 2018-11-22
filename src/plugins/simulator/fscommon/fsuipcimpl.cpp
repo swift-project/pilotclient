@@ -18,13 +18,17 @@
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 
 #ifdef SWIFT_USING_FSUIPC32
+extern "C" {
 #include "../fsuipc32/IPCuser.h"
 #include "../fsuipc32/FSUIPC_User.h"
 #include "../fsuipc32/NewWeather.h"
+}
 #elif SWIFT_USING_FSUIPC64
+extern "C" {
 #include "../fsuipc64/IPCuser64.h"
 #include "../fsuipc64/FSUIPC_User64.h"
 #include "../fsuipc64/NewWeather.h"
+}
 #endif
 
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
@@ -526,6 +530,7 @@ namespace BlackSimPlugin
         void CFsuipc::processWeatherMessages()
         {
             if (m_weatherMessageQueue.empty()) { return; }
+            if (!m_connected) { return; }
             FsuipcWeatherMessage &weatherMessage = m_weatherMessageQueue.first();
 
             DWORD dwResult;
