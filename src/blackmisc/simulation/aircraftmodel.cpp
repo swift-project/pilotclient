@@ -144,7 +144,7 @@ namespace BlackMisc
             {
                 if (!this->hasExistingCorrespondingFile())
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationError("File '%1' not readable") << this->getFileName();
+                    const CStatusMessage m = CStatusMessage(this).validationWarning("File '%1' not readable") << this->getFileName();
                     msgs.push_back(m);
                 }
                 else
