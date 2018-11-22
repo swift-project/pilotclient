@@ -529,7 +529,7 @@ namespace BlackGui
             if (index < 0 || index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesAll))
             {
                 CLogMessage(this).validationError("Incorrect message channel");
-                return "";
+                return QStringLiteral("");
             }
             else
             {
@@ -605,7 +605,7 @@ namespace BlackGui
             QWidget *w = this->findTextMessageTabByCallsign(callsign, true);
             if (!w && sGui && sGui->getIContextNetwork())
             {
-                if (callsign.isAtcCallsign() && sGui->getIContextNetwork()->isAircraftInRange(callsign))
+                if (!callsign.isAtcCallsign() && sGui->getIContextNetwork()->isAircraftInRange(callsign))
                 {
                     // we assume a private message
                     w = this->addNewTextMessageTab(callsign);
