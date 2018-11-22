@@ -96,6 +96,9 @@ namespace BlackSimPlugin
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
         public slots:
+            //! Get XSwiftBus version number
+            QString getVersionNumber();
+
             //! Get own aircraft situation data
             void getOwnAircraftSituationData(XPlaneData *o_xplaneData);
 

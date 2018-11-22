@@ -1,5 +1,8 @@
 R"(<node>
   <interface name="org.swift_project.xswiftbus.service">
+    <method name="getVersionNumber">
+      <arg type="s" direction="out"/>
+    </method>
     <method name="addTextMessage">
       <arg name="text" type="s" direction="in"/>
       <arg name="red" type="d" direction="in"/>

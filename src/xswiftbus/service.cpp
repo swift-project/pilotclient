@@ -207,7 +207,14 @@ namespace XSwiftBus
         }
         else if (message.getInterfaceName() == XSWIFTBUS_SERVICE_INTERFACENAME)
         {
-            if (message.getMethodName() == "addTextMessage")
+            if (message.getMethodName() == "getVersionNumber")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, getVersionNumber());
+                });
+            }
+            else if (message.getMethodName() == "addTextMessage")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
                 std::string text;

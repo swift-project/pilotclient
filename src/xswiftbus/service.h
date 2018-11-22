@@ -61,6 +61,9 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when the model changes.
         void onAircraftModelChanged();
 
+        //! Returns the XSwiftBus version number
+        std::string getVersionNumber() const { return XSWIFTBUS_VERSION; }
+
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
         void addTextMessage(const std::string &text, double red, double green, double blue);
 
