@@ -32,7 +32,9 @@ extern "C" {
 #endif
 
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
+
 #include <QDebug>
 #include <QLatin1Char>
 #include <QDateTime>
@@ -72,6 +74,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::open(bool force)
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             DWORD result;
             m_lastErrorMessage = "";
             m_lastErrorIndex = 0;
@@ -113,6 +116,7 @@ namespace BlackSimPlugin
 
         void CFsuipc::close()
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (m_opened)
             {
                 CLogMessage(this).info("Closing FSUIPC: %1") << m_fsuipcVersion;
@@ -142,6 +146,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::write(const CTransponder &xpdr)
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (!this->isOpened()) { return false; }
 
             // should be the same as writing via SimConnect data area
@@ -157,6 +162,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::write(const CWeatherGrid &weatherGrid)
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (!this->isOpened()) { return false; }
 
             this->clearAllWeather();
@@ -295,6 +301,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             DWORD dwResult = 0;
             char localFsTimeRaw[3];
             char modelNameRaw[256];
