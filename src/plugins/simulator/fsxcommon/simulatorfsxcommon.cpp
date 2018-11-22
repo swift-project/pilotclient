@@ -1400,6 +1400,7 @@ namespace BlackSimPlugin
             // reset timer
             m_simObjectTimer.start(AddPendingAircraftIntervalMs); // restart
 
+            // remove outdated objects
             const CSimConnectObjects outdatedAdded = m_simConnectObjects.removeOutdatedPendingAdded(CSimConnectObject::AllTypes);
             if (!outdatedAdded.isEmpty())
             {
@@ -1509,7 +1510,14 @@ namespace BlackSimPlugin
             // FSX/P3D adding
             bool adding = false; // will be added flag
             const SIMCONNECT_DATA_REQUEST_ID requestId = probe ? this->obtainRequestIdForSimObjTerrainProbe() : this->obtainRequestIdForSimObjAircraft();
-            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(newRemoteAircraft.getSituation(), sendGround);
+
+            // under flow can cause a model not to be added
+            // FSX: underflow and NO(!) gnd flag can cause adding/remove issue
+            // P3D: underflow did not cause such issue
+            CStatusMessage underflowStatus;
+            const CAircraftSituation initialSituation = newRemoteAircraft.getSituation();
+            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(initialSituation, sendGround, true, &underflowStatus);
+
             const QString modelString(newRemoteAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
@@ -1518,6 +1526,11 @@ namespace BlackSimPlugin
             const HRESULT hr = probe ?
                                SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition, requestId) :
                                SimConnect_AICreateNonATCAircraft(m_hSimConnect, modelStringBa.constData(), csBa.constData(), initialPosition, requestId);
+
+            if (!underflowStatus.isEmpty())
+            {
+                CStatusMessage(this).warning("Underflow detecion for '%1', details '%2'") << callsign.asString() << underflowStatus.getMessage();
+            }
 
             if (isFailure(hr))
             {
@@ -2013,13 +2026,18 @@ namespace BlackSimPlugin
             });
         }
 
-        SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation, bool sendGnd)
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation, bool sendGnd, bool forceUnderflowDetection, CStatusMessage *details)
         {
             Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height (altitude)");
             Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO,  "Missing position");
 
             // lat/Lng, NO PBH
+            CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::UnknownCorrection;
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
+            if (forceUnderflowDetection)
+            {
+                position.Altitude = situation.getCorrectedAltitude(true, &altCorrection).value(CLengthUnit::ft());
+            }
 
             // MSFS has inverted pitch and bank angles
             position.Pitch    = -situation.getPitch().value(CAngleUnit::deg());
@@ -2042,10 +2060,28 @@ namespace BlackSimPlugin
                 position.Airspeed = static_cast<DWORD>(qRound(gsKts));
             }
 
-            if (sendGnd && situation.isOnGroundInfoAvailable())
+            // send GND flag also when underflow detection is available
+            if ((sendGnd || forceUnderflowDetection) && situation.isOnGroundInfoAvailable())
             {
                 const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;
+            }
+
+            // if we have no GND flag yet (gnd flag prevents underflow)
+            if (forceUnderflowDetection && position.OnGround == 0 && !CAircraftSituation::isCorrectedAltitude(altCorrection))
+            {
+                // logical resolution failed so far, likely we have no CG or elevantion
+                // primitive guessing
+                do
+                {
+                    if (position.Airspeed < 2)
+                    {
+                        position.OnGround = 1U;
+                        if (details) { *details = CStatusMessage(getLogCategories()).warning("Force GND flag for underflow protection"); }
+                        break;
+                    }
+                }
+                while (false);
             }
 
             // crosscheck

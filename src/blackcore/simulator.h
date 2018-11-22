@@ -233,6 +233,9 @@ namespace BlackCore
         //! \sa ISimulator::callbackReceivedRequestedElevation
         virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
+        //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+        bool requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation) { return this->requestElevation(situation, situation.getCallsign()); }
+
         //! A requested elevation has been received
         //! \remark public for testing purposes
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);

@@ -499,6 +499,9 @@ namespace BlackMisc
             //! Enum to string
             static const QString &altitudeCorrectionToString(AltitudeCorrection correction);
 
+            //! Means corrected altitude?
+            static bool isCorrectedAltitude(AltitudeCorrection correction);
+
             //! Enum to string
             static const QString &gndElevationInfoToString(GndElevationInfo details);
 

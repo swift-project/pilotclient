@@ -149,6 +149,21 @@ namespace BlackMisc
             return unknown;
         }
 
+        bool CAircraftSituation::isCorrectedAltitude(CAircraftSituation::AltitudeCorrection correction)
+        {
+            switch (correction)
+            {
+            case Underflow:
+            case DraggedToGround:
+                return true;
+            case NoElevation:
+            case NoCorrection:
+            case AGL:
+            default: break;
+            }
+            return false;
+        }
+
         const QString &CAircraftSituation::gndElevationInfoToString(GndElevationInfo details)
         {
             static const QString noDetails("no details");

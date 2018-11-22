@@ -294,7 +294,9 @@ namespace BlackSimPlugin
 
             //! Format conversion
             //! \note must be valid situation
-            static SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
+            static SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(
+                const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true,
+                bool forceUnderflowDetection = false, BlackMisc::CStatusMessage *details = nullptr);
 
             //! Format conversion
             //! \note must be valid situation
