@@ -52,7 +52,7 @@ namespace BlackSimPlugin
             {
                 const QString v(m_fsuipc->getVersion());
                 if (!v.isEmpty()) { m_simulatorInternals.setValue("fscommon/fsuipcversion", v); }
-                m_simulatorInternals.setValue("fscommon/fsuipcconnect", boolToYesNo(m_fsuipc->isConnected()));
+                m_simulatorInternals.setValue("fscommon/fsuipcopen", boolToYesNo(m_fsuipc->isOpened()));
             }
         }
 
@@ -78,7 +78,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsCommon::disconnectFrom()
         {
-            if (m_fsuipc) { m_fsuipc->disconnect(); }
+            if (m_fsuipc) { m_fsuipc->close(); }
 
             // reset flags
             m_simPaused = false;
@@ -86,9 +86,9 @@ namespace BlackSimPlugin
             return CSimulatorPluginCommon::disconnectFrom();
         }
 
-        bool CSimulatorFsCommon::isFsuipcConnected() const
+        bool CSimulatorFsCommon::isFsuipcOpened() const
         {
-            return m_fsuipc && m_fsuipc->isConnected();
+            return m_fsuipc && m_fsuipc->isOpened();
         }
 
         bool CSimulatorFsCommon::useFsuipc(bool on)
@@ -98,11 +98,11 @@ namespace BlackSimPlugin
             m_useFsuipc = on;
             if (on)
             {
-                m_useFsuipc = m_fsuipc->connect();
+                m_useFsuipc = m_fsuipc->open();
             }
             else
             {
-                m_fsuipc->disconnect();
+                m_fsuipc->close();
             }
 
             this->initSimulatorInternals(); // update internals

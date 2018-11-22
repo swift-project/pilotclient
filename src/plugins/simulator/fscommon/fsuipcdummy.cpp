@@ -30,16 +30,16 @@ namespace BlackSimPlugin
         CFsuipc::~CFsuipc()
         { }
 
-        bool CFsuipc::connect(bool force)
+        bool CFsuipc::open(bool force)
         {
             Q_UNUSED(force);
             return false;
         }
 
-        void CFsuipc::disconnect()
+        void CFsuipc::close()
         { }
 
-        bool CFsuipc::isConnected() const
+        bool CFsuipc::isOpened() const
         {
             return false;
         }

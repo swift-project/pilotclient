@@ -67,18 +67,18 @@ namespace BlackSimPlugin
 
         CFsuipc::~CFsuipc()
         {
-            this->disconnect();
+            this->close();
         }
 
-        bool CFsuipc::connect(bool force)
+        bool CFsuipc::open(bool force)
         {
             DWORD result;
             m_lastErrorMessage = "";
             m_lastErrorIndex = 0;
-            if (!force && m_connected) { return m_connected; } // already connected
+            if (!force && m_opened) { return m_opened; } // already connected
             if (FSUIPC_Open(SIM_ANY, &result))
             {
-                m_connected = true; // temp status
+                m_opened = true; // temp status
                 if (this->isOpen())
                 {
                     const int simIndex = static_cast<int>(FSUIPC_FS_Version);
@@ -94,7 +94,7 @@ namespace BlackSimPlugin
                 else
                 {
                     CLogMessage(this).warning("FSUIPC opened, but verification failed");
-                    m_connected = false;
+                    m_opened = false;
                     FSUIPC_Close(); // under any circumstances close
                 }
             }
@@ -104,31 +104,31 @@ namespace BlackSimPlugin
                 m_lastErrorIndex = index;
                 m_lastErrorMessage = CFsuipc::errorMessages().at(index);
                 CLogMessage(this).warning("FSUIPC not connected: %1") << m_lastErrorMessage;
-                m_connected = false;
+                m_opened = false;
                 FSUIPC_Close(); // under any circumstances close
             }
 
-            return m_connected;
+            return m_opened;
         }
 
-        void CFsuipc::disconnect()
+        void CFsuipc::close()
         {
-            if (m_connected)
+            if (m_opened)
             {
                 CLogMessage(this).info("Closing FSUIPC: %1") << m_fsuipcVersion;
             }
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
-            m_connected = false;
+            m_opened = false;
         }
 
-        bool CFsuipc::isConnected() const
+        bool CFsuipc::isOpened() const
         {
-            return m_connected;
+            return m_opened;
         }
 
         bool CFsuipc::isOpen() const
         {
-            if (!this->isConnected()) { return false; }
+            if (!this->isOpened()) { return false; }
 
             // test read
             DWORD dwResult;
@@ -142,7 +142,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::write(const CTransponder &xpdr)
         {
-            if (!this->isConnected()) { return false; }
+            if (!this->isOpened()) { return false; }
 
             // should be the same as writing via SimConnect data area
             DWORD dwResult;
@@ -157,7 +157,7 @@ namespace BlackSimPlugin
 
         bool CFsuipc::write(const CWeatherGrid &weatherGrid)
         {
-            if (!this->isConnected()) { return false; }
+            if (!this->isOpened()) { return false; }
 
             this->clearAllWeather();
             CGridPoint gridPoint = weatherGrid.front();
@@ -316,7 +316,7 @@ namespace BlackSimPlugin
             // https://www.ivao.aero/softdev/ivap/fsuipc_sdk.asp
             // http://squawkbox.ca/doc/sdk/fsuipc.php
 
-            if (!this->isConnected()) { return false; }
+            if (!this->isOpened()) { return false; }
             if (!(aircraftParts || situation || cockpit)) { return false; }
 
             bool read = false;
@@ -504,7 +504,7 @@ namespace BlackSimPlugin
 
         void CFsuipc::clearAllWeather()
         {
-            if (!this->isConnected()) { return; }
+            if (!this->isOpened()) { return; }
 
             // clear all weather
             NewWeather nw;
@@ -530,7 +530,7 @@ namespace BlackSimPlugin
         void CFsuipc::processWeatherMessages()
         {
             if (m_weatherMessageQueue.empty()) { return; }
-            if (!m_connected) { return; }
+            if (!m_opened) { return; }
             FsuipcWeatherMessage &weatherMessage = m_weatherMessageQueue.first();
 
             DWORD dwResult;

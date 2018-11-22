@@ -37,7 +37,7 @@ namespace BlackSimPlugin
             virtual ~CSimulatorFsCommon() override;
 
             //! FSUIPC connected?
-            bool isFsuipcConnected() const;
+            bool isFsuipcOpened() const;
 
             //! FSUIPC on/off, correctly disconnecting/connecting
             bool useFsuipc(bool on);

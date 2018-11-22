@@ -74,7 +74,7 @@ namespace BlackSimPlugin
                 ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTracingSendId());
                 ui->cb_EnableTerrainProbe->setChecked(fsxOrP3D->isUsingFsxTerrainProbe());
                 ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
-                ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcConnected());
+                ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcOpened());
             }
 
             const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);

@@ -106,7 +106,7 @@ namespace BlackSimPlugin
             // FSUIPC too
             if (m_useFsuipc)
             {
-                m_fsuipc->connect();
+                m_fsuipc->open();
             }
 
             // set structures and move on

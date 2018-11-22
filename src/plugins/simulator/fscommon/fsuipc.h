@@ -33,13 +33,13 @@ namespace BlackSimPlugin
             virtual ~CFsuipc() override;
 
             //! Open conenction with FSUIPC
-            bool connect(bool force = false);
+            bool open(bool force = false);
 
             //! Disconnect
-            void disconnect();
+            void close();
 
-            //! Is connected?
-            bool isConnected() const;
+            //! Is opened?
+            bool isOpened() const;
 
             //! Really open, means connected and data can be sent
             bool isOpen() const;
@@ -119,16 +119,18 @@ namespace BlackSimPlugin
             void timerEvent(QTimerEvent *event) override;
 
         private:
-            struct FsuipcWeatherMessage;
-
+            //! Clear weather
             void clearAllWeather();
+
+            //! Process weather
             void processWeatherMessages();
 
-            bool m_connected = false;
+            bool m_opened = false;
             int m_lastErrorIndex = 0;
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
 
+            struct FsuipcWeatherMessage;
             QVector<FsuipcWeatherMessage> m_weatherMessageQueue;
             unsigned int m_lastTimestamp = 0;
 

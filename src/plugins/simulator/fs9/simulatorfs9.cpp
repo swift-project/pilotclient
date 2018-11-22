@@ -140,7 +140,7 @@ namespace BlackSimPlugin
 
             if (m_useFsuipc)
             {
-                m_fsuipc->connect(); // connect FSUIPC too
+                m_fsuipc->open(); // connect FSUIPC too
             }
             this->initSimulatorInternals();
             m_timerId = startTimer(50);
@@ -305,7 +305,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::dispatch()
         {
-            if (m_useFsuipc && m_fsuipc && m_fsuipc->isConnected())
+            if (m_useFsuipc && m_fsuipc && m_fsuipc->isOpened())
             {
                 CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
                 const bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
@@ -394,7 +394,7 @@ namespace BlackSimPlugin
         void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
             if (!m_useFsuipc || !m_fsuipc) { return; }
-            if (!m_fsuipc->isConnected()) { return; }
+            if (!m_fsuipc->isOpened()) { return; }
             m_fsuipc->write(weatherGrid);
         }
 
