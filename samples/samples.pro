@@ -1,7 +1,7 @@
 load(common_pre)
 
 TEMPLATE = subdirs
-CONFIG += ordered
+CONFIG  += ordered
 
 SUBDIRS += samplecliclient
 SUBDIRS += sampleblackmiscquantities
