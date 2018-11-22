@@ -17,6 +17,8 @@
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
+#include <cstring>
+
 using namespace BlackCore;
 using namespace BlackConfig;
 using namespace BlackMisc;
