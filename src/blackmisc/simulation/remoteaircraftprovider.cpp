@@ -671,24 +671,20 @@ namespace BlackMisc
             return m_testOffset.contains(callsign);
         }
 
+        bool CRemoteAircraftProvider::hasTestAltitudeOffsetGlobalValue() const
+        {
+            QReadLocker l(&m_lockSituations);
+            return m_testOffset.contains(testAltitudeOffsetCallsign());
+        }
+
         CAircraftSituation CRemoteAircraftProvider::addTestAltitudeOffsetToSituation(const CAircraftSituation &situation) const
         {
-            // for global offset testing set "true"
-            constexpr bool globalOffsetTest = false;
-
             const CCallsign cs(situation.getCallsign());
-            // cppcheck-suppress knownConditionTrueFalse
-            if (!globalOffsetTest && !this->hasTestAltitudeOffset(cs)) { return situation; }
-            CLength os;
-            if (globalOffsetTest)
-            {
-                os = CLength(100, CLengthUnit::ft());
-            }
-            else
-            {
-                QReadLocker l(&m_lockSituations);
-                os = m_testOffset.value(cs);
-            }
+            const bool globalOffset = this->hasTestAltitudeOffsetGlobalValue();
+            if (!globalOffset && !this->hasTestAltitudeOffset(cs)) { return situation; }
+
+            QReadLocker l(&m_lockSituations);
+            const CLength os = m_testOffset.contains(cs) ? m_testOffset.value(cs) : m_testOffset.value(testAltitudeOffsetCallsign());
             if (os.isNull() || os.isZeroEpsilonConsidered()) { return situation; }
             return situation.withAltitudeOffset(os);
         }
@@ -1046,6 +1042,12 @@ namespace BlackMisc
             const qint64 ts = partsList.latestTimestampMsecsSinceEpoch() - MaxPartsAgePerCallsignSecs * 1000;
             partsList.removeBefore(ts);
             Q_ASSERT_X(partsList.size() >= 1, Q_FUNC_INFO, "Need at least 1 value");
+        }
+
+        const CCallsign &IRemoteAircraftProvider::testAltitudeOffsetCallsign()
+        {
+            static const CCallsign wildcard("ZZZZ");
+            return wildcard;
         }
     } // namespace
 } // namespace

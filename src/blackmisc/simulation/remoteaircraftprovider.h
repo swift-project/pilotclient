@@ -259,6 +259,9 @@ namespace BlackMisc
             //! Remove outdated aircraft parts, but never the most recent one
             static void removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
 
+            //! Wildcard callsign
+            static const Aviation::CCallsign &testAltitudeOffsetCallsign();
+
         protected:
             //! Constructor
             IRemoteAircraftProvider();
@@ -368,6 +371,9 @@ namespace BlackMisc
 
             //! Has test offset value?
             bool hasTestAltitudeOffset(const Aviation::CCallsign &callsign) const;
+
+            //! Has test offset value?
+            bool hasTestAltitudeOffsetGlobalValue() const;
 
             //! Offset for callsign
             bool testAddAltitudeOffset(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &offset);

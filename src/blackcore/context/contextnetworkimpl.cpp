@@ -364,11 +364,20 @@ namespace BlackCore
                 if (!m_airspace) { return false; }
                 if (parser.countParts() < 2) { return false; }
 
-                const CCallsign cs(parser.part(1));
-                if (!m_airspace->isAircraftInRange(cs))
+                const QString csPart(parser.part(1));
+                CCallsign cs;
+                if (csPart.contains('?'))
                 {
-                    CLogMessage(this).validationError("Altitude offset unknown callsign");
-                    return false;
+                    cs = IRemoteAircraftProvider::testAltitudeOffsetCallsign(); // wildcard
+                }
+                else
+                {
+                    cs = CCallsign(csPart);
+                    if (!m_airspace->isAircraftInRange(cs))
+                    {
+                        CLogMessage(this).validationError("Altitude offset unknown callsign");
+                        return false;
+                    }
                 }
 
                 CLength os(CLength::null());
