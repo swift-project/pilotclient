@@ -67,12 +67,16 @@ namespace BlackGui
             ui->tw_TextMessages->setCurrentIndex(0);
             ui->lep_textMessages->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
+            ui->comp_AtcStations->setWithIcons(false);
 
             // lep_textMessages is the own line edit
             bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressed, this, &CTextMessageComponent::textMessageEntered);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(ui->gb_MessageTo, &QGroupBox::toggled, this, &CTextMessageComponent::onMessageToChecked);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+
             c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
@@ -235,6 +239,12 @@ namespace BlackGui
             ui->comp_SettingsOverlay->setVisible(checked);
             ui->comp_SettingsStyle->setVisible(checked);
             ui->gb_Settings->setFlat(!checked);
+        }
+
+        void CTextMessageComponent::onMessageToChecked(bool checked)
+        {
+            ui->comp_AtcStations->setVisible(checked);
+            ui->gb_MessageTo->setFlat(!checked);
         }
 
         void CTextMessageComponent::onSettingsChanged()

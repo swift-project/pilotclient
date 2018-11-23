@@ -222,13 +222,43 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::Components::CAtcButtonComponent" name="comp_AtcStations">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+    <widget class="QGroupBox" name="gb_MessageTo">
+     <property name="title">
+      <string>Message to</string>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
+     <layout class="QHBoxLayout" name="hl_MessageTo">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="BlackGui::Components::CAtcButtonComponent" name="comp_AtcStations">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>

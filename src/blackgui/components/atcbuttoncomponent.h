@@ -39,6 +39,9 @@ namespace BlackGui
             //! Max.number
             void setMaxNumber(int number) { m_maxNumber = number; }
 
+            //! With icons
+            void setWithIcons(bool withIcons) { m_withIcons = withIcons; }
+
             //! Max.number
             int getMaxNumber() const { return m_maxNumber; }
 
@@ -66,6 +69,7 @@ namespace BlackGui
             void onButtonClicked();
 
             QScopedPointer<Ui::CAtcButtonComponent> ui;
+            bool m_withIcons = true;
             bool m_ignoreNonAtc = true;
             bool m_backgroundUpdates = true;
             int m_maxNumber = 8;

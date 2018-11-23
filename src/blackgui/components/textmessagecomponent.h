@@ -166,6 +166,9 @@ namespace BlackGui
             //! Settings have been checked (group box visible/invisible)
             void onSettingsChecked(bool checked);
 
+            //! Message group box has been checked (group box visible/invisible)
+            void onMessageToChecked(bool checked);
+
             //! Settings have been changed
             void onSettingsChanged();
 
