@@ -65,6 +65,9 @@ namespace XSwiftBus
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
 
+        //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired it.
+        bool acquireMultiplayerPlanes(std::string *owner = nullptr);
+
         //! Reverse the actions of initialize().
         void cleanup();
 
@@ -132,7 +135,7 @@ namespace XSwiftBus
 
     private:
         bool m_initialized = false;
-        bool m_enabled = false;
+        bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
 
         void emitSimFrame();

@@ -19,6 +19,8 @@
 #include "XPLMGraphics.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
+#include <XPLM/XPLMPlanes.h>
+#include <XPLM/XPLMPlugin.h>
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -83,25 +85,50 @@ namespace XSwiftBus
     {
         if (! s_legacyDataOK) { return false; }
 
-        auto err = XPMPMultiplayerInit(preferences, preferences);
-        if (*err) { cleanup(); return false; }
-        m_initialized = true;
+        if (! m_initialized)
+        {
+            auto err = XPMPMultiplayerInit(preferences, preferences);
+            if (*err) { cleanup(); }
+            else { m_initialized = true; }
+        }
 
-        err = XPMPMultiplayerEnable();
-        if (*err) { cleanup(); return false; }
-        m_enabled = true;
+        return m_initialized;
+    }
 
-        XPMPLoadPlanesIfNecessary();
-        return true;
+    bool CTraffic::acquireMultiplayerPlanes(std::string *owner)
+    {
+        if (! m_enabledMultiplayer)
+        {
+            auto err = XPMPMultiplayerEnable();
+            if (*err)
+            {
+                cleanup();
+            }
+            else
+            {
+                m_enabledMultiplayer = true;
+                XPMPLoadPlanesIfNecessary();
+            }
+        }
+
+        int totalAircraft;
+        int activeAircraft;
+        XPLMPluginID controller;
+        XPLMCountAircraft(&totalAircraft, &activeAircraft, &controller);
+
+        char pluginName[256];
+        XPLMGetPluginInfo(controller, pluginName, nullptr, nullptr, nullptr);
+        *owner = std::string(pluginName);
+        return m_enabledMultiplayer;
     }
 
     void CTraffic::cleanup()
     {
         removeAllPlanes();
 
-        if (m_enabled)
+        if (m_enabledMultiplayer)
         {
-            m_enabled = false;
+            m_enabledMultiplayer = false;
             XPMPMultiplayerDisable();
         }
 
@@ -474,7 +501,20 @@ namespace XSwiftBus
         }
         else if (message.getInterfaceName() == XSWIFTBUS_TRAFFIC_INTERFACENAME)
         {
-            if (message.getMethodName() == "initialize")
+            if (message.getMethodName() == "acquireMultiplayerPlanes")
+            {
+                queueDBusCall([ = ]()
+                {
+                    std::string owner;
+                    bool acquired = acquireMultiplayerPlanes(&owner);
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(acquired);
+                    reply.appendArgument(owner);
+                    sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "initialize")
             {
                 sendDBusReply(sender, serial, initialize());
             }

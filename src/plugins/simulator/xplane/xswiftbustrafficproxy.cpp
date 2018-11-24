@@ -41,6 +41,20 @@ namespace BlackSimPlugin
             }
         }
 
+        MultiplayerAcquireInfo CXSwiftBusTrafficProxy::acquireMultiplayerPlanes()
+        {
+            QDBusPendingReply<bool, QString> reply =  m_dbusInterface->asyncCall(QLatin1String("acquireMultiplayerPlanes"));
+            reply.waitForFinished();
+            if (reply.isError())
+            {
+                BlackMisc::CLogMessage(this).debug("CXSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
+            }
+            MultiplayerAcquireInfo info;
+            info.hasAcquired = reply.argumentAt<0>();
+            info.owner = reply.argumentAt<1>();
+            return info;
+        }
+
         bool CXSwiftBusTrafficProxy::initialize()
         {
             return m_dbusInterface->callDBusRet<bool>(QLatin1String("initialize"));

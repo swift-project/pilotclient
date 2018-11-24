@@ -99,6 +99,13 @@ namespace BlackSimPlugin
             QList<bool> idents;     //!< List of active idents
         };
 
+        //! Multiplayer Acquire Info
+        struct MultiplayerAcquireInfo
+        {
+            bool hasAcquired;       //!< Has XSwiftBus acquired multiplayer planes?
+            QString owner;          //!< Name of the plugin having multiplayer planes acquired
+        };
+
         /*!
          * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
          */
@@ -145,6 +152,9 @@ namespace BlackSimPlugin
             void remoteAircraftAddingFailed(const QString &callsign);
 
         public slots:
+            //! \copydoc XSwiftBus::CTraffic::acquireMultiplayerPlanes
+            MultiplayerAcquireInfo acquireMultiplayerPlanes();
+
             //! \copydoc XSwiftBus::CTraffic::initialize
             bool initialize();
 

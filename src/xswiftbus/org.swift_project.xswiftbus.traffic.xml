@@ -1,5 +1,9 @@
 R"(<node>
   <interface name="org.swift_project.xswiftbus.traffic">
+    <method name="acquireMultiplayerPlanes">
+      <arg name="acquired" type="b" direction="out"/>
+      <arg  name="owner" type="s" direction="out"/>
+    </method>
     <method name="initialize">
       <arg type="b" direction="out"/>
     </method>
