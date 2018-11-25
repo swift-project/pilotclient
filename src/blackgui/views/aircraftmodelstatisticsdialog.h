@@ -37,7 +37,11 @@ namespace BlackGui
             void analyzeModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
         private:
+            //! Display the HTML matrix
+            void displayHTMLMatrix();
+
             QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
+            BlackMisc::Simulation::CAircraftModelList m_models;
         };
     } // ns
 } // ns

@@ -21,13 +21,48 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTextEdit" name="te_Statistics">
-     <property name="documentTitle">
-      <string>Statistics</string>
+    <widget class="QTabWidget" name="tw_ModelStatistics">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
+     <widget class="QWidget" name="tb_GeneralStatistics">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_GeneralStatistics">
+       <item>
+        <widget class="QTextEdit" name="te_GeneralStatistics">
+         <property name="documentTitle">
+          <string>Statistics</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Matrix">
+      <attribute name="title">
+       <string>Matrix</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_MatitxInfo">
+         <property name="text">
+          <string>Generate matrix and display in browser</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="pb_GenerateMatrix">
+         <property name="text">
+          <string>generate matix</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>

@@ -9,6 +9,12 @@
 
 #include "aircraftmodelstatisticsdialog.h"
 #include "ui_aircraftmodelstatisticsdialog.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
+
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QUrl>
 
 using namespace BlackMisc::Simulation;
 
@@ -22,6 +28,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+            connect(ui->pb_GenerateMatrix, &QPushButton::clicked, this, &CAircraftModelStatisticsDialog::displayHTMLMatrix);
         }
 
         CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog()
@@ -29,7 +37,15 @@ namespace BlackGui
 
         void CAircraftModelStatisticsDialog::analyzeModels(const CAircraftModelList &models)
         {
-            ui->te_Statistics->setHtml(models.htmlStatistics(true, true));
+            ui->te_GeneralStatistics->setHtml(models.htmlStatistics(true, true));
+            m_models = models;
+        }
+
+        void CAircraftModelStatisticsDialog::displayHTMLMatrix()
+        {
+            const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(m_models, CGuiApplication::getTemporaryDirectory());
+            if (file.isEmpty()) { return; }
+            QDesktopServices::openUrl(QUrl::fromLocalFile(file));
         }
     } // ns
 } // ns
