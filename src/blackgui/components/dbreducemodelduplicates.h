@@ -13,6 +13,8 @@
 #define BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/settings/modelsettings.h"
+#include "blackmisc/settingscache.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -51,6 +53,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatorInfo     m_simulator;
             BlackMisc::Simulation::CAircraftModelList m_models;
             BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
         };
     } //ns
 } //ns

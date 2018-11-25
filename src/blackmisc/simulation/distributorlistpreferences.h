@@ -40,6 +40,9 @@ namespace BlackMisc
             //! Get distributors
             const CDistributorList &getDistributors(const CSimulatorInfo &simulator) const;
 
+            //! Get distributor for simulator
+            CDistributor getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const;
+
             //! Last updated simulator
             const CSimulatorInfo &getLastUpdatedSimulator() const {  return m_lastUpdatedSimulator; }
 

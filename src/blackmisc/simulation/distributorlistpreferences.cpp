@@ -36,6 +36,11 @@ namespace BlackMisc
             return empty;
         }
 
+        CDistributor CDistributorListPreferences::getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const
+        {
+            return this->getDistributors(simulator).frontOrDefault();
+        }
+
         void CDistributorListPreferences::setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");

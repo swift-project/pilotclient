@@ -20,6 +20,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 
 namespace BlackGui
@@ -33,6 +34,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             ui->tvp_RemoveModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
+            ui->tvp_RemoveModels->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
             ui->le_Distributor->setValidator(new CUpperCaseValidator(ui->le_Distributor));
 
             connect(ui->pb_Run, &QPushButton::clicked, this, &CDbReduceModelDuplicates::process);
@@ -45,6 +47,12 @@ namespace BlackGui
         {
             m_models = models;
             m_simulator = simulator;
+
+            if (ui->le_Distributor->text().isEmpty())
+            {
+                const CDistributor distributor = m_distributorPreferences.get().getFirstOrDefaultDistributor(simulator);
+                ui->le_Distributor->setText(distributor.getDbKey());
+            }
 
             const QStringList distributors = models.getDistributors().getDbKeysAndAliases(true);
             QCompleter *c = new QCompleter(distributors, this);
