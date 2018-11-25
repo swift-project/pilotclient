@@ -40,7 +40,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbDistributorSelectorComponent :
             public QFrame,
-            public BlackGui::CDropBase
+            public CDropBase
         {
             Q_OBJECT
 

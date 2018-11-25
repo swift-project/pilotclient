@@ -41,18 +41,18 @@ namespace BlackGui
 
         void CDbAutoSimulatorStashingComponent::accept()
         {
-            switch (this->m_state)
+            switch (m_state)
             {
             case Running: return;
             case Completed:
                 {
-                    if (!this->m_modelsToStash.isEmpty())
+                    if (!m_modelsToStash.isEmpty())
                     {
                         // this removes previously stashed models
-                        this->getMappingComponent()->replaceStashedModelsUnvalidated(this->m_modelsToStash);
-                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Stashed %1 models").arg(this->m_modelsToStash.size()));
+                        this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
+                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Stashed %1 models").arg(m_modelsToStash.size()));
                         this->addStatusMessage(stashedMsg);
-                        this->m_modelsToStash.clear();
+                        m_modelsToStash.clear();
                     }
                     QDialog::accept();
                     break;
@@ -84,7 +84,7 @@ namespace BlackGui
         {
             ui->bb_OkCancel->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
             ui->tvp_StatusMessages->clear();
-            this->m_state = Idle;
+            m_state = Idle;
             this->updateProgressIndicator(0);
 
             const QString infoAll = this->getMappingComponent()->getOwnModelsInfoStringFsFamily();
@@ -128,7 +128,7 @@ namespace BlackGui
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
 
             if (!this->currentModelView()) { return; }
-            this->m_state = Running;
+            m_state = Running;
             int maxObjectsStashed = -1;
             if (!ui->le_MaxModelsStashed->text().isEmpty())
             {
@@ -141,29 +141,31 @@ namespace BlackGui
             int ownModelsCount = 0;
             if (selected)
             {
-                const QString intro("Checking %1 selected models");
+                static const QString intro("Checking %1 selected models");
                 const CAircraftModelList selectedModels(this->currentModelView()->selectedObjects());
                 ownModelsCount = selectedModels.size();
                 this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModelsCount)));
-                this->m_modelsToStash = CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, maxObjectsStashed, this, true);
+                m_modelsToStash = CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, maxObjectsStashed, this, true);
             }
             else
             {
                 const CDbMappingComponent *mappincComponent = this->getMappingComponent();
                 const QSet<CSimulatorInfo> fsFamilySims(CSimulatorInfo::allFsFamilySimulators().asSingleSimulatorSet());
-                const QString intro("Checking %1 models for %2");
+                static const QString intro("Checking %1 models for %2");
+
+                // check all own models
                 for (const CSimulatorInfo &simulator : fsFamilySims)
                 {
                     const CAircraftModelList ownModels = mappincComponent->getOwnCachedModels(simulator);
                     const QString sim = simulator.toQString();
                     ownModelsCount += ownModels.size();
                     this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModels.size()).arg(sim)));
-                    this->m_modelsToStash.push_back(CDatabaseUtils::updateSimulatorForFsFamily(ownModels, maxObjectsStashed, this, true));
+                    m_modelsToStash.push_back(CDatabaseUtils::updateSimulatorForFsFamily(ownModels, maxObjectsStashed, this, true));
                 }
             }
             const QString result("Tested %1 own models, %2 models should be updated in DB");
-            this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(this->m_modelsToStash.size())));
-            this->m_state = Completed;
+            this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(m_modelsToStash.size())));
+            m_state = Completed;
         }
     } // ns
 } // ns

@@ -294,6 +294,7 @@ namespace BlackCore
 
         CAircraftModelList CDatabaseUtils::updateSimulatorForFsFamily(const CAircraftModelList &ownModels, int maxToStash, IProgressIndicator *progressIndicator, bool processEvents)
         {
+            if (!sApp || !sApp->getWebDataServices()) { return CAircraftModelList(); }
             CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().getAllFsFamilyModels());
             CAircraftModelList stashModels;
             if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
@@ -328,7 +329,7 @@ namespace BlackCore
                 // in DB
                 CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringOrDefault(ownModel.getModelString());
                 if (!dbModel.isLoadedFromDb()) {continue; }
-                if (dbModel.getSimulator() == ownModel.getSimulator()) {continue; }
+                if (dbModel.getSimulator() == ownModel.getSimulator()) { continue; }
 
                 // update simulator and add
                 CSimulatorInfo simulator(dbModel.getSimulator());
