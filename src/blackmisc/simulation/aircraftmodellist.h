@@ -121,20 +121,29 @@ namespace BlackMisc
             //! Find by a given list of models by strings
             CAircraftModelList findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
 
-            //! Find by a given list of models trings
+            //! Find by excluding given list of models strings
             CAircraftModelList findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
 
-            //! Find by model string
+            //! Find by ICAO designators
             CAircraftModelList findByIcaoDesignators(const Aviation::CAircraftIcaoCode &aircraftIcaoCode, const Aviation::CAirlineIcaoCode &airlineIcaoCode) const;
 
-            //! Find by model string
+            //! Find by ICAO of aircraft and airline
+            CAircraftModelList findByAircraftAndAirline(const Aviation::CAircraftIcaoCode &aircraftIcaoCode, const Aviation::CAirlineIcaoCode &airlineIcaoCode) const;
+
+            //! Find by designator and livery code
             CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+
+            //! Find by aircraft and livery
+            CAircraftModelList findByAircraftAndLivery(const Aviation::CAircraftIcaoCode &aircraftIcaoCode, const Aviation::CLivery &livery) const;
 
             //! Find by livery code
             CAircraftModelList findByLiveryCode(const Aviation::CLivery &livery) const;
 
             //! Models with file name
             CAircraftModelList findWithFileName() const;
+
+            //! All models from given distributors
+            CAircraftModelList findByDistributor(const CDistributor &distributor) const;
 
             //! All models from given distributors
             CAircraftModelList findByDistributors(const CDistributorList &distributors) const;
@@ -246,6 +255,18 @@ namespace BlackMisc
             //! Remove if excluded CAircraftModel::Exclude
             //! \return number of elements removed
             int removeIfExcluded();
+
+            //! Remove by distributor
+            //! \return number of elements removed
+            int removeByDistributor(const CDistributor &distributor);
+
+            //! Remove if aircraft and livery
+            //! \return number of elements removed
+            int removeByAircraftAndLivery(const Aviation::CAircraftIcaoCode &aircraftIcao, const Aviation::CLivery &livery);
+
+            //! Remove if aircraft and airline
+            //! \return number of elements removed
+            int removeByAircraftAndAirline(const Aviation::CAircraftIcaoCode &aircraftIcao, const Aviation::CAirlineIcaoCode &airline);
 
             //! Replace or add based on model string
             //! \return element removed?

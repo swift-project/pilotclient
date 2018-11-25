@@ -150,6 +150,11 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode) const
+        {
+            return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getAirlineIcaoCode, airlineIcaoCode);
+        }
+
         CAircraftModelList CAircraftModelList::findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
         {
             if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
@@ -158,6 +163,11 @@ namespace BlackMisc
                 if (!model.getAircraftIcaoCode().matchesDesignator(aircraftDesignator)) { return false; }
                 return model.getLivery().matchesCombinedCode(combinedCode);
             });
+        }
+
+        CAircraftModelList CAircraftModelList::findByAircraftAndLivery(const CAircraftIcaoCode &aircraftIcaoCode, const CLivery &livery) const
+        {
+            return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getLivery, livery);
         }
 
         CAircraftModelList CAircraftModelList::findByLiveryCode(const CLivery &livery) const
@@ -176,6 +186,14 @@ namespace BlackMisc
             return this->findBy([](const CAircraftModel & model)
             {
                 return model.hasFileName();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByDistributor(const CDistributor &distributor) const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                return model.getDistributor() == distributor;
             });
         }
 
@@ -570,6 +588,21 @@ namespace BlackMisc
             if (diff < 1) { return 0; }
             *this = onlyIncluded;
             return diff;
+        }
+
+        int CAircraftModelList::removeByDistributor(const CDistributor &distributor)
+        {
+            return this->removeIf(&CAircraftModel::getDistributor, distributor);
+        }
+
+        int CAircraftModelList::removeByAircraftAndLivery(const CAircraftIcaoCode &aircraftIcao, const CLivery &livery)
+        {
+            return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getLivery, livery);
+        }
+
+        int CAircraftModelList::removeByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcao, const CAirlineIcaoCode &airline)
+        {
+            return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getAirlineIcaoCode, airline);
         }
 
         bool CAircraftModelList::replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity)
