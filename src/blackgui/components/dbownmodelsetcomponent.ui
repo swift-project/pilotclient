@@ -110,9 +110,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_ShowMatrix">
+       <widget class="QPushButton" name="pb_ShowStatistics">
         <property name="text">
-         <string>matrix</string>
+         <string>statistics</string>
         </property>
        </widget>
       </item>

@@ -11,6 +11,7 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
 #include "blackgui/components/dbownmodelsetformdialog.h"
+#include "blackgui/components/dbreducemodelduplicates.h"
 #include "blackgui/components/firstmodelsetdialog.h"
 #include "blackgui/components/copymodelsfromotherswiftversionsdialog.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
@@ -18,6 +19,7 @@
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/views/aircraftmodelstatisticsdialog.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -81,7 +83,7 @@ namespace BlackGui
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_ShowStatistics, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
@@ -236,9 +238,9 @@ namespace BlackGui
                 return;
             }
 
-            if (sender == ui->pb_ShowMatrix)
+            if (sender == ui->pb_ShowStatistics)
             {
-                this->showAirlineAircraftMatrix();
+                this->showModelStatistics();
                 return;
             }
 
@@ -290,6 +292,27 @@ namespace BlackGui
             {
                 this->updateDistributorOrder(simuulator);
             }
+        }
+
+        void CDbOwnModelSetComponent::reduceModels()
+        {
+            if (!m_reduceModelsDialog)
+            {
+                m_reduceModelsDialog.reset(new CDbReduceModelDuplicates(this));
+            }
+
+            // CAircraftModelList models = this->getModelSet(); // saved set
+            CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
+            const CSimulatorInfo simulator = this->getModelSetSimulator();
+            m_reduceModelsDialog->setModels(models, simulator);
+            QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
+            if (ret != QDialog::Accepted) { return; }
+            const CAircraftModelList removeModels = m_reduceModelsDialog->getRemoveCandidates();
+            const CSimulatorInfo removeSimulator  = m_reduceModelsDialog->getSimulator();
+            if (removeModels.isEmpty()) { return; }
+            const QSet<int> keys = removeModels.toDbKeySet();
+            models.removeObjectsWithKeys(keys);
+            this->setModelSet(models, removeSimulator);
         }
 
         void CDbOwnModelSetComponent::viewModelChanged()
@@ -349,20 +372,20 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::firstSet()
         {
-            if (!m_firstModelSet)
+            if (!m_firstModelSetDialog)
             {
-                m_firstModelSet.reset(new CFirstModelSetDialog(this));
+                m_firstModelSetDialog.reset(new CFirstModelSetDialog(this));
             }
-            m_firstModelSet->show();
+            m_firstModelSetDialog->show();
         }
 
         void CDbOwnModelSetComponent::copyFromAnotherSwift()
         {
-            if (!m_copyFromAnotherSwift)
+            if (!m_copyFromAnotherSwiftDialog)
             {
-                m_copyFromAnotherSwift.reset(new CCopyModelsFromOtherSwiftVersionsDialog(this));
+                m_copyFromAnotherSwiftDialog.reset(new CCopyModelsFromOtherSwiftVersionsDialog(this));
             }
-            m_copyFromAnotherSwift->show();
+            m_copyFromAnotherSwiftDialog->show();
         }
 
         void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
@@ -392,12 +415,15 @@ namespace BlackGui
             });
         }
 
-        void CDbOwnModelSetComponent::showAirlineAircraftMatrix() const
+        void CDbOwnModelSetComponent::showModelStatistics()
         {
             const CAircraftModelList set(this->getModelSetFromView());
-            const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, CGuiApplication::getTemporaryDirectory());
-            if (file.isEmpty()) { return; }
-            QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+            if (!m_modelStatisticsDialog)
+            {
+                m_modelStatisticsDialog.reset(new CAircraftModelStatisticsDialog(this));
+            }
+            m_modelStatisticsDialog->analyzeModels(set);
+            m_modelStatisticsDialog->show();
         }
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
@@ -504,6 +530,10 @@ namespace BlackGui
 
                     QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
                     connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged);
+                    m_setActions.append(a);
+
+                    a = new QAction(CIcons::delete16(), "Reduce models (remove duplicates)", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::reduceModels);
                     m_setActions.append(a);
                 }
                 menuActions.addMenuModelSet();

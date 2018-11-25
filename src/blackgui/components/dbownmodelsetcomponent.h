@@ -33,11 +33,16 @@ namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
-    namespace Views { class CAircraftModelView; }
+    namespace Views
+    {
+        class CAircraftModelView;
+        class CAircraftModelStatisticsDialog;
+    }
     namespace Components
     {
         class CDbMappingComponent;
         class CDbOwnModelSetFormDialog;
+        class CDbReduceModelDuplicates;
         class CCopyModelsFromOtherSwiftVersionsDialog;
         class CFirstModelSetDialog;
 
@@ -140,6 +145,9 @@ namespace BlackGui
             //! Preferences changed
             void distributorPreferencesChanged();
 
+            //! Reduce models
+            void reduceModels();
+
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
@@ -156,15 +164,18 @@ namespace BlackGui
             void copyFromAnotherSwift();
 
             //! Show the airline/aircraft matrix
-            void showAirlineAircraftMatrix() const;
+            void showModelStatistics();
 
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetFormDialog> m_modelSetFormDialog;
-            QScopedPointer<CFirstModelSetDialog>     m_firstModelSet;
-            QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwift;
+            QScopedPointer<CFirstModelSetDialog>     m_firstModelSetDialog;
+            QScopedPointer<CDbReduceModelDuplicates> m_reduceModelsDialog;
+            QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwiftDialog;
+            QScopedPointer<Views::CAircraftModelStatisticsDialog>   m_modelStatisticsDialog;
+
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently set simulator
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
