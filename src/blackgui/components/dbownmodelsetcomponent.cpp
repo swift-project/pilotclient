@@ -61,14 +61,13 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tvp_OwnModelSet->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuStashing);
-            ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuMaterializeFilter);
+            ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuBackend);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear | CAircraftModelView::MenuMaterializeFilter);
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelSetMenu(this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnModelSet, this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithSimulatorModels(ui->tvp_OwnModelSet, this));
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave | CAircraftModelView::MenuOrderable);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave | CAircraftModelView::MenuRefresh | CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
             ui->tvp_OwnModelSet->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
@@ -90,6 +89,7 @@ namespace BlackGui
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::requestUpdate, this, &CDbOwnModelSetComponent::updateViewToCurrentModels);
 
             this->triggerSetSimulatorDeferred(simulator);
         }
