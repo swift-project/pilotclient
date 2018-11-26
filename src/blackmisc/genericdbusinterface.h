@@ -16,6 +16,7 @@
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
+#include <QDBusError>
 #include <QObject>
 #include <QMetaMethod>
 
@@ -80,6 +81,11 @@ namespace BlackMisc
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingReply<Ret> pr = this->asyncCallWithArgumentList(method, argumentList);
+            pr.waitForFinished();
+            if(pr.isError())
+            {
+                CLogMessage(this).debug("CGenericDBusInterface::callDBusRet(%1) returned: %2") << method << pr.error().message();
+            }
             return pr;
         }
 
