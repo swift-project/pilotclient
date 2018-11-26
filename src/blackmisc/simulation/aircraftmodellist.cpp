@@ -22,7 +22,6 @@
 #include <QJsonValue>
 #include <QList>
 #include <QMultiMap>
-#include <QMap>
 #include <tuple>
 
 using namespace BlackMisc::Network;
@@ -347,6 +346,37 @@ namespace BlackMisc
             {
                 return model.getModelMode() == CAircraftModel::Include;
             });
+        }
+
+        CAircraftModelList CAircraftModelList::findDuplicateModelStrings() const
+        {
+            const QMap<QString, int> modelStrings = this->countPerModelString();
+            CAircraftModelList duplicates;
+            for (const QString &ms : modelStrings.keys())
+            {
+                if (modelStrings[ms] > 1)
+                {
+                    duplicates.push_back(this->findByModelString(ms, Qt::CaseInsensitive));
+                }
+            }
+            return duplicates;
+        }
+
+        QMap<QString, int> CAircraftModelList::countPerModelString() const
+        {
+            QMap<QString, int> modelStrings;
+            for (const CAircraftModel &model : *this)
+            {
+                if (modelStrings.contains(model.getModelString()))
+                {
+                    modelStrings[model.getModelModeAsString()]++;
+                }
+                else
+                {
+                    modelStrings[model.getModelModeAsString()] = 1;
+                }
+            }
+            return modelStrings;
         }
 
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const

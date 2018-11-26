@@ -32,6 +32,7 @@
 #include <QStringList>
 #include <Qt>
 #include <QHash>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -205,6 +206,9 @@ namespace BlackMisc
             //! Find models where the filename is set and the file exists
             CAircraftModelList findModelsWithExistingFile() const;
 
+            //! Find duplicate model strings and return those models with at least 1 duplicate model string
+            CAircraftModelList findDuplicateModelStrings() const;
+
             //! All models of the FS (FSX, P3D, FS9) family
             CAircraftModelList getAllFsFamilyModels() const;
 
@@ -284,6 +288,9 @@ namespace BlackMisc
 
             //! Simulator counts
             CCountPerSimulator countPerSimulator() const;
+
+            //! Model strings plus count
+            QMap<QString, int> countPerModelString() const;
 
             //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;
