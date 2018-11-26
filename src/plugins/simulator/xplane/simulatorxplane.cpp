@@ -336,36 +336,32 @@ namespace BlackSimPlugin
             m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
             m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
-            bool ok = false;
             bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
                                               "Disconnected", this, SLOT(serviceUnregistered()));
             Q_ASSERT(s);
-
-            if (m_serviceProxy->isValid() && m_trafficProxy->isValid() && m_weatherProxy->isValid() && m_trafficProxy->initialize())
-            {
-                emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
-                                            m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
-                QString xplaneVersion = QString("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
-                setSimulatorDetails("X-Plane", {}, xplaneVersion);
-                connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
-                connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
-                m_serviceProxy->updateAirportsInRange();
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
-                if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
-                m_trafficProxy->removeAllPlanes();
-                this->loadCslPackages();
-                this->emitSimulatorCombinedStatus();
-                ok = true;
-            }
-            else
+            if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid() || !m_weatherProxy->isValid())
             {
                 this->disconnectFrom();
+                return false;
             }
 
-            if (ok) { this->initSimulatorInternals(); }
-            return ok;
+            emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
+                                        m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
+            QString xplaneVersion = QString("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
+            setSimulatorDetails("X-Plane", {}, xplaneVersion);
+            connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
+            connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+            m_serviceProxy->updateAirportsInRange();
+            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
+            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
+            connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
+            if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
+            m_trafficProxy->removeAllPlanes();
+            this->loadCslPackages();
+            this->emitSimulatorCombinedStatus();
+
+            this->initSimulatorInternals();
+            return true;
         }
 
         bool CSimulatorXPlane::disconnectFrom()
@@ -1134,35 +1130,16 @@ namespace BlackSimPlugin
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer.setInterval(QueryInterval);
             m_timer.setObjectName(this->objectName().append(":m_timer"));
-            connect(&m_timer, &QTimer::timeout, this, &CSimulatorXPlaneListener::checkConnectionViaPeer);
+            connect(&m_timer, &QTimer::timeout, this, &CSimulatorXPlaneListener::checkConnection);
         }
 
         void CSimulatorXPlaneListener::startImpl()
         {
-            QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
-
-            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
-            {
-                checkConnectionViaBus(dbusAddress);
-            }
-            else if (CDBusServer::isQtDBusAddress(dbusAddress))
-            {
-                m_timer.start();
-            }
-            else
-            {
-                CLogMessage(this).warning("Invalid DBus address. Not listening for X-Plane connections!");
-                return;
-            }
+            m_timer.start();
         }
 
         void CSimulatorXPlaneListener::stopImpl()
         {
-            if (m_watcher)
-            {
-                delete m_watcher;
-                m_watcher = nullptr;
-            }
             m_timer.stop();
         }
 
@@ -1176,54 +1153,82 @@ namespace BlackSimPlugin
             QTimer::singleShot(0, this, [ = ]
             {
                 if (!myself) { return; }
-                this->checkConnectionViaPeer();
+                checkConnection();
             });
+        }
+
+        void CSimulatorXPlaneListener::checkConnection()
+        {
+            if (this->isShuttingDown()) { return; }
+            Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+
+            QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
+            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
+            {
+                checkConnectionViaBus(dbusAddress);
+            }
+            else if (CDBusServer::isQtDBusAddress(dbusAddress))
+            {
+                checkConnectionViaPeer(dbusAddress);
+            }
         }
 
         void CSimulatorXPlaneListener::checkConnectionViaBus(const QString &address)
         {
-            if (m_watcher) { return; }
             m_conn = CSimulatorXPlane::connectionFromString(address);
-            CXSwiftBusServiceProxy *service = new CXSwiftBusServiceProxy(m_conn);
-            CXSwiftBusTrafficProxy *traffic = new CXSwiftBusTrafficProxy(m_conn);
-
-            bool result = service->isValid() && traffic->isValid();
-
-            service->deleteLater();
-            traffic->deleteLater();
-
-            if (result)
+            if (!m_conn.isConnected())
             {
-                emit simulatorStarted(getPluginInfo());
                 m_conn.disconnectFromBus(m_conn.name());
+                return;
             }
-            else
-            {
-                m_watcher = new QDBusServiceWatcher(xswiftbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
-                connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::serviceRegistered);
-            }
+            checkConnectionCommon();
+            m_conn.disconnectFromBus(m_conn.name());
         }
 
-        void CSimulatorXPlaneListener::checkConnectionViaPeer()
+        void CSimulatorXPlaneListener::checkConnectionViaPeer(const QString &address)
         {
-            m_conn = QDBusConnection::connectToPeer(m_xswiftbusServerSetting.getThreadLocal(), "xswiftbus");
+            m_conn = QDBusConnection::connectToPeer(address, "xswiftbus");
             if (!m_conn.isConnected())
             {
                 // This is required to cleanup the connection in QtDBus
                 m_conn.disconnectFromPeer(m_conn.name());
                 return;
             }
-
-            CXSwiftBusServiceProxy *service = new CXSwiftBusServiceProxy(m_conn);
-            CXSwiftBusTrafficProxy *traffic = new CXSwiftBusTrafficProxy(m_conn);
-
-            bool result = service->isValid() && traffic->isValid();
-
-            service->deleteLater();
-            traffic->deleteLater();
-
-            if (result) { emit simulatorStarted(getPluginInfo()); }
+            checkConnectionCommon();
             m_conn.disconnectFromPeer(m_conn.name());
+        }
+
+        void CSimulatorXPlaneListener::checkConnectionCommon()
+        {
+            CXSwiftBusServiceProxy service(m_conn);
+            CXSwiftBusTrafficProxy traffic(m_conn);
+            CXSwiftBusWeatherProxy weather(m_conn);
+
+            bool result = service.isValid() && traffic.isValid() && weather.isValid();
+            if (! result) { return; }
+
+            QString swiftVersion = BlackConfig::CBuildConfig::getVersionString();
+            QString xswiftbusVersion = service.getVersionNumber();
+            if (! swiftVersion.contains(xswiftbusVersion))
+            {
+                CLogMessage(this).error("You are using an incorrect version of XSwiftBus. Make sure to install %1 into X-Plane plugins!") << xswiftbusVersion;
+                return;
+            }
+
+            if(! traffic.initialize())
+            {
+                CLogMessage(this).error("Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
+                return;
+            }
+
+            MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
+            if (! info.hasAcquired)
+            {
+                CLogMessage(this).error("Connection to XSwiftBus successful, but could not acquire multiplayer planes. %1 has acquired them already. Disable %2 or remove it if not required and reload XSwiftBus.") << info.owner << info.owner;
+                return;
+            }
+
+            emit simulatorStarted(getPluginInfo());
         }
 
         void CSimulatorXPlaneListener::serviceRegistered(const QString &serviceName)
@@ -1237,12 +1242,8 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneListener::xSwiftBusServerSettingChanged()
         {
-            // user changed settings, restart the listener
-            if (m_watcher)
-            {
-                this->stop();
-                this->start();
-            }
+            this->stop();
+            this->start();
         }
     } // namespace
 } // namespace

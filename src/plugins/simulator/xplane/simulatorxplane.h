@@ -277,18 +277,16 @@ namespace BlackSimPlugin
             virtual void checkImpl() override;
 
         private:
-            //! Check if XSwiftBus service is already registered on the bus
+            void checkConnection();
             void checkConnectionViaBus(const QString &address);
-
-            //! Check if XSwiftBus service is available via P2P address
-            void checkConnectionViaPeer();
+            void checkConnectionViaPeer(const QString &address);
+            void checkConnectionCommon();
 
             void serviceRegistered(const QString &serviceName);
             void xSwiftBusServerSettingChanged();
 
             QTimer m_timer { this };
             QDBusConnection m_conn { "default" };
-            QDBusServiceWatcher *m_watcher { nullptr };
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::xSwiftBusServerSettingChanged };
         };
 
