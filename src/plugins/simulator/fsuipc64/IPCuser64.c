@@ -14,7 +14,7 @@ With acknowledgements to Adam Szofran (author of original FS6IPC).
 #include "IPCuser64.h"
 #include "FSUIPC_User64.h"
 
-#define FS6IPC_MSGNAME1      "FsasmLib:IPC" 
+#define FS6IPC_MSGNAME1      L"FsasmLib:IPC"
 
 /******************************************************************************
 			IPC client stuff
@@ -63,7 +63,7 @@ void FSUIPC_Close(void)
 // Start the client
 // return: TRUE if successful, FALSE otherwise
 BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
-{  char szName[MAX_PATH];
+{  wchar_t szName[MAX_PATH];
 	static int nTry = 0;
 	BOOL fWideFS = FALSE;
 	int i = 0;
@@ -77,11 +77,11 @@ BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
 	// Clear version information, so know when connected
 	FSUIPC_Version = FSUIPC_FS_Version = 0;
 	
-	m_hWnd = FindWindowEx(NULL, NULL, "UIPCMAIN", NULL);
+    m_hWnd = FindWindowEx(NULL, NULL, L"UIPCMAIN", NULL);
 	if (!m_hWnd)
 	{	// If there's no UIPCMAIN, we may be using WideClient
 		// which only simulates FS98
-		m_hWnd = FindWindowEx(NULL, NULL, "FS98MAIN", NULL);
+        m_hWnd = FindWindowEx(NULL, NULL, L"FS98MAIN", NULL);
 		fWideFS = TRUE;
 		if (!m_hWnd)
 		{	*pdwResult = FSUIPC_ERR_NOFS;
@@ -194,7 +194,7 @@ BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult)
 ******************************************************************************/
 
 BOOL FSUIPC_Process(DWORD *pdwResult)
-{	DWORD_PTR dwError;
+{	DWORD_PTR dwError = 0;
 	DWORD *pdw;
 	F64IPC_READSTATEDATA_HDR *pHdrR;
 	FS6IPC_WRITESTATEDATA_HDR *pHdrW;
