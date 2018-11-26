@@ -114,12 +114,12 @@ namespace BlackGui
                 return;
             }
 
-            // unempty set, consolidate
             CAircraftModelList cleanModelList(models.matchesSimulator(simulator)); // remove those not matching the simulator
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
-                CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).warning("Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
+                this->showMappingComponentOverlayHtmlMessage(m, 5000);
             }
             cleanModelList.resetOrder();
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
@@ -133,7 +133,8 @@ namespace BlackGui
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
-                CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).warning("Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
+                this->showMappingComponentOverlayHtmlMessage(m, 5000);
             }
             if (cleanModelList.isEmpty()) { return 0; }
             CAircraftModelList updatedModels(ui->tvp_OwnModelSet->container());

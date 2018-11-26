@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 
+#include "blackmisc/statusmessage.h"
 #include "blackgui/blackguiexport.h"
 #include <QObject>
 
@@ -37,6 +38,17 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CDbMappingComponentAware() {}
+
+            //! Copy constructor
+            CDbMappingComponentAware(const CDbMappingComponentAware &) = default;
+
+            //! Copy assignment operator
+            CDbMappingComponentAware &operator =(const CDbMappingComponentAware &) = default;
+
+            //! Overlay messages @{
+            void showMappingComponentOverlayMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
+            void showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
+            //! @}
 
         private :
             CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
