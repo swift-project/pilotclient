@@ -45,6 +45,13 @@ namespace BlackGui
 
         void CDbReduceModelDuplicates::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
+            const bool changedSim = (m_simulator != simulator);
+            if (changedSim)
+            {
+                ui->le_Distributor->clear();
+                ui->tvp_RemoveModels->clear();
+            }
+
             m_models = models;
             m_simulator = simulator;
 
@@ -71,16 +78,17 @@ namespace BlackGui
                 return;
             }
 
+            if (ui->le_Distributor->text().isEmpty())
+            {
+                const CStatusMessage m = CStatusMessage(this).validationError("No distributor");
+                ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
+                return;
+            }
+
             const CAircraftModelList keyDuplicates = m_models.findDuplicateModelStrings();
             if (!keyDuplicates.isEmpty())
             {
                 const CStatusMessage m = CStatusMessage(this).validationError("Found %1 key duplicates") << keyDuplicates.size();
-                ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
-            }
-
-            if (ui->le_Distributor->text().isEmpty())
-            {
-                const CStatusMessage m = CStatusMessage(this).validationError("No distributor");
                 ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
                 return;
             }
