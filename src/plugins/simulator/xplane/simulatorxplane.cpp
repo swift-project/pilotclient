@@ -475,7 +475,6 @@ namespace BlackSimPlugin
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
         {
             if (str == CDBusServer::sessionBusAddress()) { return QDBusConnection::sessionBus(); }
-            if (str == CDBusServer::systemBusAddress())  { return QDBusConnection::systemBus(); }
             Q_UNREACHABLE();
             return QDBusConnection("NO CONNECTION");
         }
