@@ -157,7 +157,7 @@ namespace BlackMisc
             CIcon toIcon() const;
 
             //! Add simulator
-            void add(const CSimulatorInfo &other);
+            CSimulatorInfo add(const CSimulatorInfo &other);
 
             //! As a set of single simulator info objects
             QSet<CSimulatorInfo> asSingleSimulatorSet() const;

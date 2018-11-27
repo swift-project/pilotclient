@@ -181,10 +181,15 @@ namespace BlackMisc
             return CValueObject::toIcon();
         }
 
-        void CSimulatorInfo::add(const CSimulatorInfo &other)
+        CSimulatorInfo CSimulatorInfo::add(const CSimulatorInfo &other)
         {
-            if (other.isUnspecified()) { return; }
+            // anything to add?
+            if (other.isUnspecified())   { return None; }
+            if (this->matchesAll(other)) { return None; }
+
             this->setSimulator(this->getSimulator() | other.getSimulator());
+            const CSimulatorInfo delta(this->getSimulator() & other.getSimulator());
+            return delta;
         }
 
         QSet<CSimulatorInfo> CSimulatorInfo::asSingleSimulatorSet() const
