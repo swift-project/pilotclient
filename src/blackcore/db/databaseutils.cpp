@@ -292,14 +292,14 @@ namespace BlackCore
             return c;
         }
 
-        CAircraftModelList CDatabaseUtils::updateSimulatorForFsFamily(const CAircraftModelList &ownModels, int maxToStash, IProgressIndicator *progressIndicator, bool processEvents)
+        CAircraftModelList CDatabaseUtils::updateSimulatorForFsFamily(const CAircraftModelList &ownModels, CStatusMessageList *updateInfo, int maxToStash, IProgressIndicator *progressIndicator, bool processEvents)
         {
-            if (!sApp || !sApp->getWebDataServices()) { return CAircraftModelList(); }
-            CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().getAllFsFamilyModels());
+            if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return CAircraftModelList(); }
+            const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().getAllFsFamilyModels());
             CAircraftModelList stashModels;
             if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
             const QSet<QString> dbKeys = dbFsFamilyModels.getModelStringSet();
-            const int maxModelsCount = maxToStash >= 0 ? maxToStash : ownModels.size();
+            const int maxModelsCount = (maxToStash >= 0) ? maxToStash : ownModels.size();
             if (maxModelsCount < 1) { return stashModels; }
 
             int c = 0; // counter
@@ -322,21 +322,31 @@ namespace BlackCore
                 }
 
                 // values to be skipped
-                if (maxToStash >= 0 && maxToStash == stashModels.size()) { break; }
+                if (maxToStash >= 0 && stashModels.size() > maxToStash) { break; }
                 if (!dbKeys.contains(ownModel.getModelString())) { continue; }
                 if (ownModel.matchesSimulatorFlag(CSimulatorInfo::XPLANE)) { continue; }
 
                 // in DB
                 CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringOrDefault(ownModel.getModelString());
-                if (!dbModel.isLoadedFromDb()) {continue; }
-                if (dbModel.getSimulator() == ownModel.getSimulator()) { continue; }
+                if (!dbModel.isLoadedFromDb()) { continue; }
 
                 // update simulator and add
                 CSimulatorInfo simulator(dbModel.getSimulator());
-                simulator.add(ownModel.getSimulator());
+                const CSimulatorInfo dbModelSimulator(simulator);
+                const CSimulatorInfo delta = simulator.add(ownModel.getSimulator());
+                if (delta.getSimulator() == CSimulatorInfo::None) { continue; }
+
                 dbModel.setSimulator(simulator);
-                stashModels.push_back(dbModel);
+                stashModels.push_back(dbModel); // changed DB model
+                if (updateInfo)
+                {
+                    const CStatusMessage m = CStatusMessage(getLogCategories()).info("%1 -> %2 (%3) for '%4'")
+                                             << dbModelSimulator.toQString(true) << simulator.toQString(true)
+                                             << delta.toQString(true) << dbModel.getModelStringAndDbKey();
+                    updateInfo->push_back(m);
+                }
             }
+            progressIndicator->updateProgressIndicatorAndProcessEvents(100);
             return stashModels;
         }
 

@@ -97,7 +97,7 @@ namespace BlackGui
             }
             else
             {
-                int selected = this->currentModelView()->selectedRowCount();
+                const int selected = this->currentModelView()->selectedRowCount();
                 ui->le_Selected->setText(QString::number(selected));
             }
         }
@@ -106,6 +106,15 @@ namespace BlackGui
         {
             if (msg.isEmpty()) { return; }
             ui->tvp_StatusMessages->insert(msg);
+        }
+
+        void CDbAutoSimulatorStashingComponent::addStatusMessages(const CStatusMessageList &msgs)
+        {
+            if (msgs.isEmpty()) { return; }
+            for (const CStatusMessage &msg : msgs)
+            {
+                this->addStatusMessage(msg);
+            }
         }
 
         void CDbAutoSimulatorStashingComponent::addStatusMessage(const CStatusMessage &msg, const CAircraftModel &model)
@@ -139,13 +148,14 @@ namespace BlackGui
 
             const bool selected = ui->rb_SelectedOnly->isChecked();
             int ownModelsCount = 0;
+            CStatusMessageList info;
             if (selected)
             {
                 static const QString intro("Checking %1 selected models");
                 const CAircraftModelList selectedModels(this->currentModelView()->selectedObjects());
                 ownModelsCount = selectedModels.size();
                 this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModelsCount)));
-                m_modelsToStash = CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, maxObjectsStashed, this, true);
+                m_modelsToStash = CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, &info, maxObjectsStashed, this, true);
             }
             else
             {
@@ -160,10 +170,12 @@ namespace BlackGui
                     const QString sim = simulator.toQString();
                     ownModelsCount += ownModels.size();
                     this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModels.size()).arg(sim)));
-                    m_modelsToStash.push_back(CDatabaseUtils::updateSimulatorForFsFamily(ownModels, maxObjectsStashed, this, true));
+                    m_modelsToStash.push_back(CDatabaseUtils::updateSimulatorForFsFamily(ownModels, &info, maxObjectsStashed, this, true));
                 }
             }
+
             const QString result("Tested %1 own models, %2 models should be updated in DB");
+            this->addStatusMessages(info);
             this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(m_modelsToStash.size())));
             m_state = Completed;
         }

@@ -71,7 +71,7 @@ namespace BlackCore
             static int fillInMissingAircraftAndLiveryEntities(BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Create stash models if the DB models miss that simulator
-            static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
+            static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, BlackMisc::CStatusMessageList *updateInfo, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
 
             //! Database JSON from content string, which can be compressed
             static QJsonDocument databaseJsonToQJsonDocument(const QString &content);

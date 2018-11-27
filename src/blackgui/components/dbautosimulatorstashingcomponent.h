@@ -76,6 +76,9 @@ namespace BlackGui
             //! Add a status message
             void addStatusMessage(const BlackMisc::CStatusMessage &msg);
 
+            //! Add a status messages
+            void addStatusMessages(const BlackMisc::CStatusMessageList &msgs);
+
             //! Add a status message for a given model (prefixed)
             void addStatusMessage(const BlackMisc::CStatusMessage &msg, const BlackMisc::Simulation::CAircraftModel &model);
 
