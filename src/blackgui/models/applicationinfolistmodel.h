@@ -34,7 +34,7 @@ namespace BlackGui
             virtual ~CApplicationInfoListModel() {}
 
             //! \copydoc BlackMisc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
-            void otherSwiftVersionsFromDataDirectories();
+            void otherSwiftVersionsFromDataDirectories(bool reinit);
         };
     } // ns
 } // ns

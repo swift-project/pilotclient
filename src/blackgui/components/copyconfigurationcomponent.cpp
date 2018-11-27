@@ -419,7 +419,7 @@ namespace BlackGui
         void CCopyConfigurationComponent::initOtherSwiftVersions()
         {
             ui->cb_OtherVersions->clear();
-            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
+            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(true);
             for (const QString &directory : otherVersions.keys())
             {
                 const CApplicationInfo info(otherVersions.value(directory));

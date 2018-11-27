@@ -42,10 +42,10 @@ namespace BlackMisc
         return names;
     }
 
-    int CApplicationInfoList::otherSwiftVersionsFromDataDirectories()
+    int CApplicationInfoList::otherSwiftVersionsFromDataDirectories(bool reinit)
     {
         this->clear();
-        const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
+        const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(reinit);
         for (const QString &directory : otherVersions.keys())
         {
             CApplicationInfo info(otherVersions.value(directory));
@@ -54,14 +54,10 @@ namespace BlackMisc
         return this->size();
     }
 
-    CApplicationInfoList CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories()
+    CApplicationInfoList CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(bool reinit)
     {
-        static CApplicationInfoList info = []
-        {
-            CApplicationInfoList il;
-            il.otherSwiftVersionsFromDataDirectories();
-            return il;
-        }();
-        return info;
+        CApplicationInfoList il;
+        il.otherSwiftVersionsFromDataDirectories(reinit);
+        return il;
     }
 } // ns

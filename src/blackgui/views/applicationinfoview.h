@@ -14,9 +14,10 @@
 
 #include "blackgui/views/viewbase.h"
 #include "blackgui/models/applicationinfolistmodel.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackgui/blackguiexport.h"
 
-class QWidget;
+#include <QAction>
 
 namespace BlackGui
 {
@@ -31,7 +32,28 @@ namespace BlackGui
 
             //! BlackMisc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
             int otherSwiftVersionsFromDataDirectories();
+
+            //! Delete the selected directories
+            void deleteSelectedDataDirectories();
         };
-    }
+
+        //! Menu base class for aircraft model view menus
+        class CApplicationInfoMenu : public Menus::IMenuDelegate
+        {
+        public:
+            //! Constructor
+            CApplicationInfoMenu(CApplicationInfoView *modelView) : Menus::IMenuDelegate(modelView)
+            {}
+
+            //! \copydoc Menus::IMenuDelegate::customMenu
+            virtual void customMenu(Menus::CMenuActions &menuActions);
+
+        private:
+            //! Model view
+            CApplicationInfoView *view() const;
+
+            QAction *m_menuActionDeleteDirectory = nullptr; //!< action to delete menu
+        };
+    } // ns
 } // ns
 #endif // guard

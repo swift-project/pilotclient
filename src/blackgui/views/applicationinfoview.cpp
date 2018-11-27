@@ -8,9 +8,14 @@
  */
 
 #include "applicationinfoview.h"
+#include "blackmisc/fileutils.h"
+
+#include <QMessageBox>
+#include <QDir>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -19,6 +24,7 @@ namespace BlackGui
         CApplicationInfoView::CApplicationInfoView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CApplicationInfoListModel(this));
+            this->setCustomMenu(new CApplicationInfoMenu(this));
         }
 
         int CApplicationInfoView::otherSwiftVersionsFromDataDirectories()
@@ -27,6 +33,42 @@ namespace BlackGui
             this->updateContainer(others);
             m_acceptRowSelection = (others.size() > 0);
             return others.size();
+        }
+
+        void CApplicationInfoView::deleteSelectedDataDirectories()
+        {
+            if (!this->hasSelection()) { return; }
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, "Delete?", "Delete selected data directories?", QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) { return; }
+
+            QStringList deletedDirectories;
+            for (const CApplicationInfo &info : this->selectedObjects())
+            {
+                const QString d = CFileUtils::fixWindowsUncPath(info.getApplicationDataDirectory());
+                QDir dir(d);
+                if (!dir.exists()) { continue; }
+                if (dir.removeRecursively())
+                {
+                    deletedDirectories << d;
+                }
+            }
+            if (deletedDirectories.isEmpty()) { return; }
+            this->otherSwiftVersionsFromDataDirectories();
+        }
+
+        void CApplicationInfoMenu::customMenu(CMenuActions &menuActions)
+        {
+            if (!this->view()) { return; }
+            if (!this->view()->isEmpty())
+            {
+                m_menuActionDeleteDirectory = menuActions.addAction(m_menuActionDeleteDirectory, CIcons::delete16(), "Delete data directories", CMenuAction::pathNone(), this, { this->view(), &CApplicationInfoView::deleteSelectedDataDirectories });
+            }
+            this->nestedCustomMenu(menuActions);
+        }
+
+        CApplicationInfoView *CApplicationInfoMenu::view() const
+        {
+            return static_cast<CApplicationInfoView *>(this->parent());
         }
     } // namespace
 } // namespace

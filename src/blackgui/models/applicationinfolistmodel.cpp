@@ -40,9 +40,9 @@ namespace BlackGui
             m_sortOrder = Qt::DescendingOrder;
         }
 
-        void CApplicationInfoListModel::otherSwiftVersionsFromDataDirectories()
+        void CApplicationInfoListModel::otherSwiftVersionsFromDataDirectories(bool reinit)
         {
-            this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories());
+            this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinit));
         }
     }  // namespace
 } // namespace

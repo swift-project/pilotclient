@@ -144,42 +144,41 @@ namespace BlackMisc
         return dirs;
     }
 
-    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
+    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(bool reinit)
     {
-        static const FilePerApplication dirs = [ = ]() -> FilePerApplication
-        {
-            FilePerApplication directories;
-            for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
-            {
-                if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
+        static FilePerApplication dirs;
+        if (!reinit && !dirs.isEmpty()) { return dirs; }
 
-                // the application info will be written by each swift application started
-                // so the application type will always contain that application
-                const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
-                const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
-                CApplicationInfo appInfo;
-                if (appInfoJson.isEmpty())
-                {
-                    const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
-                    appInfo.setExecutablePath(exeDir);
-                }
-                else
-                {
-                    appInfo = CApplicationInfo::fromJson(appInfoJson);
-                }
-                appInfo.setApplicationDataDirectory(info.filePath());
-                directories.insert(info.filePath(), appInfo);
+        FilePerApplication directories;
+        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
+        {
+            if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
+
+            // the application info will be written by each swift application started
+            // so the application type will always contain that application
+            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
+            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
+            CApplicationInfo appInfo;
+            if (appInfoJson.isEmpty())
+            {
+                const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
+                appInfo.setExecutablePath(exeDir);
             }
-            // https://stackoverflow.com/q/51635959/356726
-            // cppcheck-suppress returnReference
-            return directories;
-        }();
+            else
+            {
+                appInfo = CApplicationInfo::fromJson(appInfoJson);
+            }
+            appInfo.setApplicationDataDirectory(info.filePath());
+            directories.insert(info.filePath(), appInfo);
+        }
+
+        dirs = directories;
         return dirs;
     }
 
-    bool CDirectoryUtils::hasOtherSwiftDataDirectories()
+    bool CDirectoryUtils::hasOtherSwiftDataDirectories(bool reinit)
     {
-        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
+        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(reinit).size() > 0;
     }
 
     const QString &CDirectoryUtils::normalizedApplicationDataDirectory()

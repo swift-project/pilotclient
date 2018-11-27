@@ -44,10 +44,10 @@ namespace BlackMisc
         QStringList processNames() const;
 
         //! Fill from cache data directories
-        int otherSwiftVersionsFromDataDirectories();
+        int otherSwiftVersionsFromDataDirectories(bool reinit = false);
 
         //! Filled from cache data directories
-        static CApplicationInfoList fromOtherSwiftVersionsFromDataDirectories();
+        static CApplicationInfoList fromOtherSwiftVersionsFromDataDirectories(bool reinit = false);
     };
 } // ns
 
