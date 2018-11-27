@@ -14,6 +14,7 @@
 #include <QCompleter>
 
 using namespace BlackCore;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -36,7 +37,7 @@ namespace BlackGui
             this->initCompleter();
         }
 
-        BlackMisc::Simulation::CAircraftModel CDbModelKeyCompleter::getAircraftModel() const
+        CAircraftModel CDbModelKeyCompleter::getAircraftModel() const
         {
             return sGui->getWebDataServices()->getModelForModelString(this->text().toUpper().trimmed());
         }

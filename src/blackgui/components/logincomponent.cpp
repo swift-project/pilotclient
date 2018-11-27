@@ -248,14 +248,14 @@ namespace BlackGui
             {
                 if (!this->validateAircraftValues())
                 {
-                    this->showOverlayMessage(CStatusMessage(this).validationWarning("Invalid aircraft data, login not possible"), OverlayMessageMs);
+                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning("Invalid aircraft data, login not possible"), OverlayMessageMs);
                     return;
                 }
 
                 const CStatusMessageList pilotMsgs = ui->form_Pilot->validate();
                 if (pilotMsgs.isFailure())
                 {
-                    this->showOverlayMessage(CStatusMessage(this).validationWarning("Invalid pilot data, login not possible"), OverlayMessageMs);
+                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning("Invalid pilot data, login not possible"), OverlayMessageMs);
                     return;
                 }
 
@@ -365,7 +365,6 @@ namespace BlackGui
             const CServer lastServer = m_networkSetup.getLastServer();
             if (!lastServer.isNull())
             {
-
                 ui->tw_Network->setCurrentWidget(
                     lastServer.getServerType() == CServer::FSDServerVatsim ?
                     ui->tb_NetworkVatsim : ui->tb_OtherServers);
@@ -524,18 +523,17 @@ namespace BlackGui
             ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
 
             // reset the model
-            if (model.isLoadedFromDb())
+            if (model.isLoadedFromDb() || (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
             {
                 // full model from DB, take all values
                 this->setGuiIcaoValues(model, false);
             }
             else
             {
-                if (model.hasAircraftDesignator())
-                {
-                    // typed in model, override unempty values only
-                    this->setGuiIcaoValues(model, true);
-                }
+                // no model data from DB
+                ui->le_AircraftCombinedType->clear();
+                ui->selector_AircraftIcao->clear();
+                ui->selector_AirlineIcao->clear();
             }
 
             const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
@@ -646,7 +644,7 @@ namespace BlackGui
 
             const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Auto logoff in progress");
             const int delaySecs = 45;
-            this->showOverlayMessage(m, qRound(1000 * delaySecs * 0.8));
+            this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
             this->setLogoffCountdown(delaySecs);
 
             emit this->requestLoginPage();

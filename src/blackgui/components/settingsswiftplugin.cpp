@@ -12,6 +12,7 @@
 #include "ui_settingsswiftplugin.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackGui
@@ -55,9 +56,15 @@ namespace BlackGui
 
         CSwiftPluginSettings CSettingsSwiftPlugin::getSettings() const
         {
+            CAircraftModel model = ui->lep_OwnModel->getAircraftModel();
+            if (!model.hasModelString())
+            {
+                model.setModelString(ui->lep_OwnModel->text());
+            }
+
             CSwiftPluginSettings settings;
             settings.setEmulatedSimulator(ui->comp_EmulatedSimulatorSelector->getValue());
-            settings.setOwnModel(ui->lep_OwnModel->getAircraftModel());
+            settings.setOwnModel(model);
             settings.setDefaultModel(ui->lep_DefaultModel->getAircraftModel());
             settings.setLoggingFunctionCalls(ui->cb_LogFunctionCalls->isChecked());
             return settings;
