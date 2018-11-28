@@ -7,22 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/components/texteditdialog.h"
+#include "blackgui/views/viewbase.h"
+#include "blackgui/views/viewbaseproxystyle.h"
+#include "blackgui/views/viewbaseitemdelegate.h"
 #include "blackgui/filters/filterdialog.h"
 #include "blackgui/filters/filterwidget.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/loadindicator.h"
 #include "blackgui/models/allmodels.h"
 #include "blackgui/models/allmodelcontainers.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/menus/fontmenus.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/loadindicator.h"
 #include "blackgui/shortcut.h"
-#include "blackgui/views/viewbase.h"
-#include "blackgui/views/viewbaseproxystyle.h"
-#include "blackgui/views/viewbaseitemdelegate.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
@@ -30,6 +30,7 @@
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/worker.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QApplication>
 #include <QAction>
@@ -54,6 +55,7 @@
 #include <QShortcut>
 #include <QVariant>
 #include <QWidget>
+#include <QTextEdit>
 #include <QMetaMethod>
 #include <limits>
 
@@ -64,6 +66,7 @@ using namespace BlackGui::Menus;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 using namespace BlackGui::Settings;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -342,6 +345,15 @@ namespace BlackGui
             return directories.propertyByIndex(m_dirSettingsIndex).toQString();
         }
 
+        Components::CTextEditDialog *CViewBaseNonTemplate::textEditDialog()
+        {
+            if (!m_textEditDialog)
+            {
+                m_textEditDialog = new CTextEditDialog(this);
+            }
+            return m_textEditDialog;
+        }
+
         void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
         {
             // delegate?
@@ -371,8 +383,8 @@ namespace BlackGui
                 }
             }
 
-            if (m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
-            if (m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
+            if (m_menus.testFlag(MenuCopy))  { menuActions.addActions(this->initMenuActions(MenuCopy)); }
+            if (m_menus.testFlag(MenuCut))   { menuActions.addActions(this->initMenuActions(MenuCut)); }
             if (m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
             if (m_menus.testFlag(MenuFont) && m_fontMenu)
             {
@@ -438,6 +450,16 @@ namespace BlackGui
             {
                 QAction *a = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
                 a->setEnabled(!autoResize);
+            }
+
+            // export actions, display in text edit
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                menuActions.addAction(CIcons::tableSheet16(), "Display as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displayJsonPopup });
+                if (this->hasSelection())
+                {
+                    menuActions.addAction(CIcons::tableSheet16(), "Display selected as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displaySelectedJsonPopup });;
+                }
             }
 
             QAction *actionInteractiveResize = menuActions.addAction(CIcons::viewMultiColumn(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
@@ -644,6 +666,16 @@ namespace BlackGui
             {
                 CLogMessage::preformatted(m);
             }
+        }
+
+        void CViewBaseNonTemplate::displayJsonPopup()
+        {
+
+        }
+
+        void CViewBaseNonTemplate::displaySelectedJsonPopup()
+        {
+
         }
 
         void CViewBaseNonTemplate::ps_triggerReload()
@@ -1615,6 +1647,17 @@ namespace BlackGui
 
             emit this->jsonLoadCompleted(m);
             return m;
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::displayContainerAsJsonPopup(bool selectedOnly)
+        {
+            const ContainerType container = selectedOnly ? this->selectedObjects() : this->container();
+            const QString json = container.toJsonString();
+            QTextEdit *te = this->textEditDialog()->textEdit();
+            te->setReadOnly(true);
+            te->setText(json);
+            this->textEditDialog()->show();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

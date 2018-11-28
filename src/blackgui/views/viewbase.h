@@ -70,6 +70,11 @@ namespace BlackGui
         class CFilterWidget;
     }
 
+    namespace Components
+    {
+        class CTextEditDialog;
+    }
+
     namespace Views
     {
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
@@ -451,6 +456,12 @@ namespace BlackGui
             //! Save JSON for action/menu, void return signatur
             void saveSelectedJsonAction();
 
+            //! Display JSON data
+            virtual void displayJsonPopup() = 0;
+
+            //! Display JSON data
+            virtual void displaySelectedJsonPopup() = 0;
+
             //! Load JSON for action/menu, void return signatur
             void loadJsonAction();
 
@@ -483,6 +494,9 @@ namespace BlackGui
             virtual void paste() = 0;
             //! @}
 
+            //! Init text edit dialog if required and return pointer to it
+            Components::CTextEditDialog *textEditDialog();
+
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
             SelectionMode  m_originalSelectionMode    = this->selectionMode(); //!< Selection mode set
@@ -505,7 +519,8 @@ namespace BlackGui
             Menu m_menus                              = MenuDefault;           //!< Default menu settings
             Menus::IMenuDelegate *m_menu              = nullptr;               //!< custom menu if any
             Menus::CFontMenu *m_fontMenu              = nullptr;               //!< font menu if applicable
-            CLoadIndicator *m_loadIndicator           = nullptr;               //!< load indicator if needed
+            CLoadIndicator   *m_loadIndicator         = nullptr;               //!< load indicator if needed
+            Components::CTextEditDialog *m_textEditDialog = nullptr;           //!< text edit dialog
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
             QString        m_saveFileName;                                     //!< save file name (JSON)
             BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
@@ -738,6 +753,8 @@ namespace BlackGui
             virtual void copy() override;
             virtual void cut() override;
             virtual void paste() override;
+            virtual void displayJsonPopup() override { this->displayContainerAsJsonPopup(false); }
+            virtual void displaySelectedJsonPopup() override { this->displayContainerAsJsonPopup(true); }
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
@@ -755,6 +772,9 @@ namespace BlackGui
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
             virtual BlackMisc::CStatusMessage loadJsonFile(const QString &fileName) override;
+
+            //! Display the container as JSON popup
+            virtual void displayContainerAsJsonPopup(bool selectedOnly);
 
             // --------------------------------------------- SLOTS start here -----------------------------------------
 

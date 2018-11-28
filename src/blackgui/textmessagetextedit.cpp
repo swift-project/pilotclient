@@ -59,7 +59,7 @@ namespace BlackGui
     CTextMessageTextEdit::~CTextMessageTextEdit()
     { }
 
-    void CTextMessageTextEdit::insertTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int maxMessages)
+    void CTextMessageTextEdit::insertTextMessage(const CTextMessage &textMessage, int maxMessages)
     {
         if (maxMessages < 0 && m_keepMaxMessages >= 0) { maxMessages = m_keepMaxMessages; }
         if (maxMessages >= 0)
