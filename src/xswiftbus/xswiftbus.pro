@@ -108,6 +108,7 @@ target.CONFIG += no_check_exist
 INSTALLS += target
 
 dep_target.path = $$PREFIX/$$XSWIFTBUS_DIR
+dep_target.CONFIG += no_check_exist
 win32 {
     dep_target.files *= $$DestRoot/bin/dbus-daemon.exe
     win32-g++ {
@@ -119,7 +120,6 @@ win32 {
         dep_target.files *= $$DestRoot/bin/expat.dll
         dep_target.files *= $$DestRoot/bin/event_core.dll
     }
-    dep_target.CONFIG += no_check_exist
 
     dbus_share.path = $$PREFIX/$$XSWIFTBUS_DIR/share/dbus-1
     dbus_share.files = $$DestRoot/share/dbus-1/session.conf
@@ -144,8 +144,6 @@ win32 {
     QMAKE_EXTRA_TARGETS += fix_plugin_rpath
 
 } else:unix: {
-    dep_target.CONFIG += no_check_exist
-
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 }
