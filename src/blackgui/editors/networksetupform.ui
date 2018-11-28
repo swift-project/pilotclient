@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>118</width>
+    <width>99</width>
     <height>31</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QCheckBox" name="cb_DynamicOffsetTimes">
      <property name="text">
-      <string>dynamic offset times</string>
+      <string>for future usage</string>
      </property>
     </widget>
    </item>

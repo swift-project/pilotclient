@@ -29,6 +29,7 @@ namespace BlackMisc
         namespace Settings
         {
             //! Network settings
+            //! \remark CURRENTLY a STUB not used
             class BLACKMISC_EXPORT CNetworkSettings : public CValueObject<CNetworkSettings>
             {
             public:
@@ -41,12 +42,6 @@ namespace BlackMisc
                 //! Constructor
                 CNetworkSettings() {}
 
-                //! Dynamic offset values?
-                bool isUsingDynamicOffsetTimes() const { return m_dynamicOffsetTimes; }
-
-                //! Dynamic offset values?
-                void setDynamicOffsetTimes(bool dynamic) { m_dynamicOffsetTimes = dynamic; }
-
                 //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
 
@@ -57,11 +52,11 @@ namespace BlackMisc
                 void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                bool m_dynamicOffsetTimes = false;
+                bool m_dummy = false;
 
                 BLACK_METACLASS(
                     CNetworkSettings,
-                    BLACK_METAMEMBER(dynamicOffsetTimes)
+                    BLACK_METAMEMBER(dummy)
                 );
             };
         } // ns
