@@ -238,7 +238,7 @@ namespace BlackGui
             static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
             QScopedPointer<Ui::CLoginComponent> ui;
-            QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
+            QScopedPointer<CDbQuickMappingWizard> m_mappingWizard; //!< mapping wizard
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible         = false; //!< is this component selected?

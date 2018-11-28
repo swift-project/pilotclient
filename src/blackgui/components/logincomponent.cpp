@@ -156,9 +156,11 @@ namespace BlackGui
             this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
             const CServerList otherServers(m_networkSetup.getOtherServersPlusTestServers());
             ui->comp_OtherServers->setServers(otherServers);
+            ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
 
             connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
             connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
+
             this->setUiLoginState(false);
 
             const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
@@ -234,6 +236,7 @@ namespace BlackGui
 
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = this->isVatsimNetworkTabSelected();
+            m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
 
             ui->form_Pilot->setVatsimValidation(vatsimLogin);
             this->setUiLoginState(isConnected);
