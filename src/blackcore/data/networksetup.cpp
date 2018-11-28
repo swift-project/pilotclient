@@ -52,13 +52,20 @@ namespace BlackCore
             return m_otherTrafficNetworkServers.get();
         }
 
-        CServerList CNetworkSetup::getOtherServersPlusTestServers() const
+        CServerList CNetworkSetup::getOtherServersPlusPredefinedServers() const
         {
             // add a testserver when no servers can be loaded
             CServerList otherServers(this->getOtherServers());
-            if (otherServers.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
+            if (sApp)
             {
-                otherServers.push_back(sApp->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
+                if (otherServers.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
+                }
+                else
+                {
+                    otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServers());
+                }
             }
             return otherServers;
         }

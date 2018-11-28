@@ -61,7 +61,8 @@ namespace BlackCore
                 IndexWasLoadedFromWeb,
                 IndexWasLoadedFromFile,
                 IndexSharedUrls,
-                IndexMappingMinimumVersion
+                IndexMappingMinimumVersion,
+                IndexPredefinedServers
             };
 
             //! Add info when pinging
@@ -189,11 +190,11 @@ namespace BlackCore
             //! swift map URLs
             const BlackMisc::Network::CUrlList &getSwiftMapUrls() const;
 
-            //! FSD test servers
-            const BlackMisc::Network::CServerList &getFsdTestServers() const { return m_fsdTestServers; }
+            //! Predefined servers
+            const BlackMisc::Network::CServerList &getPredefinedServers() const { return m_predefinedServers; }
 
-            //! FSD test servers plus hardcoded
-            BlackMisc::Network::CServerList getFsdTestServersPlusHardcodedServers() const;
+            //! Predefined plus hardcoded
+            BlackMisc::Network::CServerList getPredefinedServersPlusHardcodedServers() const;
 
             //! Is server a development server?
             bool isDevelopment() const { return m_development; }
@@ -239,7 +240,7 @@ namespace BlackCore
         private:
             bool                            m_wasLoadedFromWeb = false;    //!< Loaded from web
             bool                            m_wasLoadedFromFile = false;   //!< Loaded from local file
-            int                             m_dbHttpPort = 80;             //!< port
+            int                             m_dbHttpPort  = 80;            //!< port
             int                             m_dbHttpsPort = 443;           //!< SSL port
             bool                            m_development = false;         //!< dev. version?
             QString                         m_mappingMinimumVersion;       //!< minimum version
@@ -253,7 +254,7 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_newsUrls;                    //!< where we can obtain latest news
             BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
             BlackMisc::Network::CUrlList    m_mapUrls;                     //!< swift map URLs
-            BlackMisc::Network::CServerList m_fsdTestServers;              //!< FSD test servers loaded from setup file
+            BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
             BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url
 
             // transient members, to be switched on/off via GUI or set from reader
@@ -279,7 +280,7 @@ namespace BlackCore
                 BLACK_METAMEMBER(newsUrls),
                 BLACK_METAMEMBER(onlineHelpUrls),
                 BLACK_METAMEMBER(mapUrls),
-                BLACK_METAMEMBER(fsdTestServers),
+                BLACK_METAMEMBER(predefinedServers),
                 BLACK_METAMEMBER(development),
                 BLACK_METAMEMBER(mappingMinimumVersion),
                 BLACK_METAMEMBER(ncepGlobalForecastSystemUrl),

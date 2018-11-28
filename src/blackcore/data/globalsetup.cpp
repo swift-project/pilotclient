@@ -250,10 +250,10 @@ namespace BlackCore
             return m_mapUrls;
         }
 
-        CServerList CGlobalSetup::getFsdTestServersPlusHardcodedServers() const
+        CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
         {
-            static const CServerList hardcoded({ CServer::swiftFsdTestServer(), CServer::fscServer() });
-            CServerList testServers(m_fsdTestServers);
+            static const CServerList hardcoded({ CServer::swiftFsdTestServer(), CServer::fscServer(), CServer::esTowerView() });
+            CServerList testServers(m_predefinedServers);
             testServers.addIfAddressNotExists(hardcoded);
             return testServers;
         }
@@ -338,8 +338,8 @@ namespace BlackCore
                 % getVatsimDataFileUrls().toQString(i18n)
                 % separator
 
-                % QStringLiteral("FSD test servers: ")
-                % getFsdTestServers().toQString(i18n)
+                % QStringLiteral("Predefined servers: ")
+                % getPredefinedServers().toQString(i18n)
                 % separator
 
                 % QStringLiteral("Crash report server: ")
@@ -356,26 +356,27 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory: return CVariant::fromValue(m_dbRootDirectoryUrl);
-            case IndexDbHttpPort: return CVariant::fromValue(m_dbHttpPort);
-            case IndexDbHttpsPort: return CVariant::fromValue(m_dbHttpsPort);
-            case IndexDbLoginService: return CVariant::fromValue(this->getDbLoginServiceUrl());
-            case IndexDbClientPingService: return CVariant::fromValue(this->getDbClientPingServiceUrl());
-            case IndexVatsimStatus: return CVariant::fromValue(m_vatsimStatusFileUrls);
-            case IndexVatsimData: return CVariant::fromValue(m_vatsimDataFileUrls);
-            case IndexVatsimBookings: return CVariant::fromValue(m_vatsimDataFileUrls);
-            case IndexVatsimMetars: return CVariant::fromValue(m_vatsimMetarsUrls);
-            case IndexBootstrapFileUrls: return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
-            case IndexUpdateInfoFileUrls: return CVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
-            case IndexSharedUrls: return CVariant::fromValue(m_sharedUrls);
-            case IndexNewsUrls: return CVariant::fromValue(m_newsUrls);
-            case IndexSwiftMapUrls: return CVariant::fromValue(m_mapUrls);
-            case IndexOnlineHelpUrls: return CVariant::fromValue(m_onlineHelpUrls);
-            case IndexCrashReportServerUrl: return CVariant::fromValue(m_crashReportServerUrl);
-            case IndexWasLoadedFromWeb: return CVariant::fromValue(m_wasLoadedFromWeb);
-            case IndexWasLoadedFromFile: return CVariant::fromValue(m_wasLoadedFromFile);
+            case IndexDbRootDirectory:       return CVariant::fromValue(m_dbRootDirectoryUrl);
+            case IndexDbHttpPort:            return CVariant::fromValue(m_dbHttpPort);
+            case IndexDbHttpsPort:           return CVariant::fromValue(m_dbHttpsPort);
+            case IndexDbLoginService:        return CVariant::fromValue(this->getDbLoginServiceUrl());
+            case IndexDbClientPingService:   return CVariant::fromValue(this->getDbClientPingServiceUrl());
+            case IndexVatsimStatus:          return CVariant::fromValue(m_vatsimStatusFileUrls);
+            case IndexVatsimData:            return CVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimBookings:        return CVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimMetars:          return CVariant::fromValue(m_vatsimMetarsUrls);
+            case IndexBootstrapFileUrls:     return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
+            case IndexUpdateInfoFileUrls:    return CVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
+            case IndexSharedUrls:            return CVariant::fromValue(m_sharedUrls);
+            case IndexNewsUrls:              return CVariant::fromValue(m_newsUrls);
+            case IndexSwiftMapUrls:          return CVariant::fromValue(m_mapUrls);
+            case IndexOnlineHelpUrls:        return CVariant::fromValue(m_onlineHelpUrls);
+            case IndexCrashReportServerUrl:  return CVariant::fromValue(m_crashReportServerUrl);
+            case IndexWasLoadedFromWeb:      return CVariant::fromValue(m_wasLoadedFromWeb);
+            case IndexWasLoadedFromFile:     return CVariant::fromValue(m_wasLoadedFromFile);
             case IndexMappingMinimumVersion: return CVariant::fromValue(m_mappingMinimumVersion);
-            default: return CValueObject::propertyByIndex(index);
+            case IndexPredefinedServers:     return CVariant::fromValue(m_predefinedServers);
+            default:                         return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -391,22 +392,23 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory: m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexDbHttpPort: m_dbHttpPort = variant.toInt(); break;
-            case IndexDbHttpsPort: m_dbHttpsPort = variant.toInt(); break;
-            case IndexDbLoginService: break; // cannot be changed
-            case IndexDbClientPingService: break; // cannot be changed
-            case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
-            case IndexVatsimBookings: m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
-            case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
-            case IndexNewsUrls: m_newsUrls = variant.value<CUrlList>(); break;
-            case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
-            case IndexSwiftMapUrls: m_mapUrls = variant.value<CUrlList>(); break;
-            case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
-            case IndexWasLoadedFromWeb: m_wasLoadedFromWeb = variant.toBool(); break;
-            case IndexWasLoadedFromFile: m_wasLoadedFromFile = variant.toBool(); break;
+            case IndexDbRootDirectory:       m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexDbHttpPort:            m_dbHttpPort = variant.toInt(); break;
+            case IndexDbHttpsPort:           m_dbHttpsPort = variant.toInt(); break;
+            case IndexDbLoginService:        break; // cannot be changed
+            case IndexDbClientPingService:   break; // cannot be changed
+            case IndexVatsimData:            m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
+            case IndexVatsimBookings:        m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexVatsimMetars:          m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
+            case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
+            case IndexNewsUrls:              m_newsUrls = variant.value<CUrlList>(); break;
+            case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;
+            case IndexSwiftMapUrls:          m_mapUrls = variant.value<CUrlList>(); break;
+            case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
+            case IndexWasLoadedFromWeb:      m_wasLoadedFromWeb = variant.toBool(); break;
+            case IndexWasLoadedFromFile:     m_wasLoadedFromFile = variant.toBool(); break;
             case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toQString(); break;
+            case IndexPredefinedServers:     m_predefinedServers = variant.value<CServerList>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

@@ -53,6 +53,7 @@ namespace BlackMisc
                 AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
                 AllSendingWithoutGnd    = SendAircraftParts | SendInterimPositions,       //!< all out, but no gnd.flag
                 AllReceiveWithoutGnd    = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in, but no gnd.flag
+                AllInterimPositions     = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
                 AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
                 VATSIMDefault           = AllParts | Force3LetterAirlineICAO
             };
@@ -85,6 +86,12 @@ namespace BlackMisc
 
             //! Set send / receive details
             void setSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive = sendReceive; }
+
+            //! Add send / receive details
+            void addSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive |= sendReceive; }
+
+            //! Remove send / receive details
+            void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
             //! Set send / receive details
             void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive);

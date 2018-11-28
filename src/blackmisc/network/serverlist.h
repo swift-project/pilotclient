@@ -45,6 +45,9 @@ namespace BlackMisc
             //! Remove by name
             bool removeByName(const QString &name);
 
+            //! Remove passwords
+            void removeUsers();
+
             //! Contains server with same address/port
             bool containsAddressPort(const CServer &server);
 

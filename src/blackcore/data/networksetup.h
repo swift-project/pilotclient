@@ -64,7 +64,7 @@ namespace BlackCore
             BlackMisc::Network::CServerList getOtherServers() const;
 
             //! The other servers plus test servers
-            BlackMisc::Network::CServerList getOtherServersPlusTestServers() const;
+            BlackMisc::Network::CServerList getOtherServersPlusPredefinedServers() const;
 
             //! Last used with VATSIM?
             bool wasLastUsedWithVatsim() const;

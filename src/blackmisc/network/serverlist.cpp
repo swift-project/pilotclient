@@ -43,6 +43,14 @@ namespace BlackMisc
             return removed;
         }
 
+        void CServerList::removeUsers()
+        {
+            for (CServer &s : *this)
+            {
+                s.setUser(CUser());
+            }
+        }
+
         bool CServerList::containsAddressPort(const CServer &server)
         {
             for (const CServer &s : *this)

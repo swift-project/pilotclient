@@ -154,7 +154,7 @@ namespace BlackGui
             this->validateAircraftValues();
             ui->form_Pilot->validate();
             this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            const CServerList otherServers(m_networkSetup.getOtherServersPlusTestServers());
+            const CServerList otherServers(m_networkSetup.getOtherServersPlusPredefinedServers());
             ui->comp_OtherServers->setServers(otherServers);
             ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
 

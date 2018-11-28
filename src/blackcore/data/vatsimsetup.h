@@ -73,7 +73,7 @@ namespace BlackCore
             //! Set all URLs and indicate if something has changed
             bool setUrls(const BlackMisc::Network::CUrlList &dataFileUrls, const BlackMisc::Network::CUrlList &serverFileUrls, const BlackMisc::Network::CUrlList &metarFileUrls);
 
-            //! FSD test servers
+            //! FSD servers
             const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
 
             //! Set FSD servers

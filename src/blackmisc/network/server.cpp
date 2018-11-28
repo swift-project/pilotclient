@@ -79,10 +79,23 @@ namespace BlackMisc
 
         const CServer &CServer::fscServer()
         {
-            static const CServer fsc("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
-                                     CUser(),
-                                     CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+            static const CServer fsc = []
+            {
+                CServer s = CServer("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
+                                    CUser(),
+                                    CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+                s.removeSendReceiveDetails(CFsdSetup::AllInterimPositions);
+                return s;
+            }();
             return fsc;
+        }
+
+        const CServer &CServer::esTowerView()
+        {
+            static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809,
+                                             CUser(),
+                                             CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
+            return s;
         }
 
         bool CServer::matchesName(const QString &name) const
@@ -189,17 +202,17 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAddress: return CVariant::fromValue(m_address);
-            case IndexDescription: return CVariant::fromValue(m_description);
-            case IndexName: return CVariant::fromValue(m_name);
-            case IndexPort: return CVariant::fromValue(m_port);
-            case IndexUser: return m_user.propertyByIndex(index.copyFrontRemoved());
-            case IndexFsdSetup: return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceSetup: return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
-            case IndexEcosystem: return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
+            case IndexAddress:                return CVariant::fromValue(m_address);
+            case IndexDescription:            return CVariant::fromValue(m_description);
+            case IndexName:                   return CVariant::fromValue(m_name);
+            case IndexPort:                   return CVariant::fromValue(m_port);
+            case IndexUser:                   return m_user.propertyByIndex(index.copyFrontRemoved());
+            case IndexFsdSetup:               return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
+            case IndexVoiceSetup:             return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
+            case IndexEcosystem:              return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections: return CVariant::fromValue(m_isAcceptingConnections);
-            case IndexServerType: return CVariant::fromValue(m_serverType);
-            case IndexServerTypeAsString: return CVariant::fromValue(getServerTypeAsString());
+            case IndexServerType:             return CVariant::fromValue(m_serverType);
+            case IndexServerTypeAsString:     return CVariant::fromValue(getServerTypeAsString());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -212,16 +225,16 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAddress: this->setAddress(variant.value<QString>()); break;
-            case IndexPort: this->setPort(variant.value<qint32>()); break;
+            case IndexAddress:     this->setAddress(variant.value<QString>()); break;
+            case IndexPort:        this->setPort(variant.value<qint32>()); break;
             case IndexDescription: this->setDescription(variant.value<QString>()); break;
-            case IndexName: this->setName(variant.value<QString>()); break;
-            case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexFsdSetup: m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexVoiceSetup: m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexEcosystem: m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexName:        this->setName(variant.value<QString>()); break;
+            case IndexUser:        m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexFsdSetup:    m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexVoiceSetup:  m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexEcosystem:   m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexServerType:  this->setServerType(static_cast<ServerType>(variant.toInt())); break;
             case IndexIsAcceptingConnections: this->setIsAcceptingConnections(variant.value<bool>()); break;
-            case IndexServerType: this->setServerType(static_cast<ServerType>(variant.toInt())); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -233,15 +246,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAddress: return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
+            case IndexAddress:     return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
             case IndexDescription: return this->getDescription().compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexFsdSetup: return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
-            case IndexVoiceSetup: return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
-            case IndexName: return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexFsdSetup:    return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
+            case IndexVoiceSetup:  return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
+            case IndexName:        return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexPort:        return Compare::compare(this->getPort(), compareValue.getPort());
+            case IndexUser:        return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());
+            case IndexEcosystem:   return this->getEcosystem().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getEcosystem());
             case IndexIsAcceptingConnections: return Compare::compare(this->isAcceptingConnections(), compareValue.isAcceptingConnections());
-            case IndexPort: return Compare::compare(this->getPort(), compareValue.getPort());
-            case IndexUser: return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());
-            case IndexEcosystem: return this->getEcosystem().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getEcosystem());
             case IndexServerType:
             case IndexServerTypeAsString:
                 return this->getServerTypeAsString().compare(compareValue.getServerTypeAsString(), Qt::CaseInsensitive);

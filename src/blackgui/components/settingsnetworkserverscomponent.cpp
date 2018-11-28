@@ -62,7 +62,7 @@ namespace BlackGui
             // this is debug/bootstrap feature we can continue to test when something goes wrong
             if (serverList.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                serverList.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
+                serverList.push_back(sGui->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
             }
             ui->tvp_Servers->updateContainer(serverList);
         }

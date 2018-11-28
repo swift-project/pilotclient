@@ -157,6 +157,12 @@ namespace BlackMisc
             //! Set FSD setup
             void setFsdSetup(const CFsdSetup &setup) { m_fsdSetup = setup; }
 
+            //! Add send / receive details
+            void addSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive) { m_fsdSetup.addSendReceiveDetails(sendReceive); }
+
+            //! Remove send / receive details
+            void removeSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive) { m_fsdSetup.removeSendReceiveDetails(sendReceive); }
+
             //! A FSD server?
             bool isFsdServer() const;
 
@@ -216,6 +222,9 @@ namespace BlackMisc
 
             //! FSC server
             static const CServer &fscServer();
+
+            //! ES tower server
+            static const CServer &esTowerView();
 
         private:
             QString     m_name;
