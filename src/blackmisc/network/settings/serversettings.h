@@ -16,7 +16,6 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
 
-
 namespace BlackMisc
 {
     namespace Network
@@ -43,7 +42,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "network/currenttrafficserver"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
@@ -52,6 +51,18 @@ namespace BlackMisc
                     static const CServer dv = CServer::swiftFsdTestServer();
                     return dv;
                 }
+            };
+
+            /*!
+             * Auto logoff
+             */
+            struct TAutoLogoff : public TSettingTrait<bool>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "network/autologoff"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("Auto logoff"); return name; }
             };
         } // ns
     } // ns
