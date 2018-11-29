@@ -22,28 +22,46 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <layout class="QFormLayout" name="fl_AboutDialog">
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Version">
-     <property name="text">
-      <string>Version:</string>
+  <layout class="QVBoxLayout" name="vl_Dialog">
+   <item>
+    <widget class="QGroupBox" name="gb_Version">
+     <property name="title">
+      <string>Version</string>
      </property>
+     <layout class="QVBoxLayout" name="vl_Details">
+      <item>
+       <widget class="QLabel" name="lbl_VersionValue">
+        <property name="text">
+         <string>Version ....</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QPlainTextEdit" name="pte_Info">
-     <property name="documentTitle">
-      <string>about swift details</string>
+   <item>
+    <widget class="QGroupBox" name="gb_Details">
+     <property name="title">
+      <string>Details</string>
      </property>
-     <property name="lineWrapMode">
-      <enum>QPlainTextEdit::NoWrap</enum>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
+     <layout class="QVBoxLayout" name="vl_Version">
+      <item>
+       <widget class="QPlainTextEdit" name="pte_Info">
+        <property name="documentTitle">
+         <string>about swift details</string>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QPlainTextEdit::NoWrap</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item>
     <widget class="QDialogButtonBox" name="bb_AboutDialog">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -53,22 +71,11 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lbl_VersionValue">
-     <property name="text">
-      <string>Version ....</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_Details">
-     <property name="text">
-      <string>Details:</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pte_Info</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
