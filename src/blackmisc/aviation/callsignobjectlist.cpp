@@ -133,9 +133,9 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        QMap<QString, int> ICallsignObjectList<OBJ, CONTAINER>::getSuffixes() const
+        QMap<QString, int> ICallsignObjectList<OBJ, CONTAINER>::getSuffixesAndCount() const
         {
-            QMap<QString, int> r;
+            QMap<QString, int> r; // sorted by key
             for (const OBJ &csObj : this->container())
             {
                 const QString s = csObj.getCallsign().getSuffix();
@@ -150,6 +150,19 @@ namespace BlackMisc
                 }
             }
             return r;
+        }
+
+        template<class OBJ, class CONTAINER>
+        QStringList ICallsignObjectList<OBJ, CONTAINER>::getSuffixes() const
+        {
+            QStringList suffixes;
+            for (const OBJ &csObj : this->container())
+            {
+                const QString s = csObj.getCallsign().getSuffix();
+                if (s.isEmpty() || suffixes.contains(s, Qt::CaseInsensitive)) { continue; }
+                suffixes << s;
+            }
+            return suffixes;
         }
 
         template <class OBJ, class CONTAINER>

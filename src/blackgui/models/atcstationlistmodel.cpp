@@ -114,11 +114,13 @@ namespace BlackGui
             QStandardItemModel *model = new QStandardItemModel();
             if (this->isEmpty()) { return model; }
             model->setColumnCount(4);
-            QMap<QString, int> types = this->container().getSuffixes();
-            for (const QString &type : types.keys())
+            const CAtcStationList atcStations = this->container().sortedByAtcSuffixSortOrderAndDistance();
+            const QStringList types = atcStations.getSuffixes();
+            for (const QString &type : types)
             {
                 // ownership of QStandardItem is taken by model
                 QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(type).toQIcon(), type);
+                typeFolderFirstColumn->setEditable(false);
                 QList<QStandardItem *> typeFolderRow { typeFolderFirstColumn };
                 model->invisibleRootItem()->appendRow(typeFolderRow);
                 CAtcStationList stations = this->container().findBySuffix(type);
@@ -150,6 +152,14 @@ namespace BlackGui
                         Q_ASSERT(false);
                         break;
                     }
+
+                    // make not editable
+                    for (QStandardItem *si : stationRow)
+                    {
+                        si->setEditable(false);
+                    }
+
+                    // add all items
                     typeFolderFirstColumn->appendRow(stationRow);
                 }
             }

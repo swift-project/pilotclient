@@ -77,7 +77,7 @@ namespace BlackMisc
             NetworkRoleGround,
             NetworkRoleI1,
             NetworkRoleI3,
-            NetworkRoleMnt,
+            NetworkRoleMnt, //!< Mentor
             NetworkRoleObs,
             NetworkRolePilot,
             NetworkRoleS1,

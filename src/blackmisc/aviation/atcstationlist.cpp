@@ -126,5 +126,17 @@ namespace BlackMisc
             Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
             return c;
         }
+
+        void CAtcStationList::sortByAtcSuffixSortOrderAndDistance()
+        {
+            this->sortBy(&CAtcStation::getSuffixSortOrder, &CAtcStation::getRelativeDistance);
+        }
+
+        CAtcStationList CAtcStationList::sortedByAtcSuffixSortOrderAndDistance() const
+        {
+            CAtcStationList stations = *this;
+            stations.sortByAtcSuffixSortOrderAndDistance();
+            return stations;
+        }
     } // namespace
 } // namespace

@@ -66,7 +66,7 @@ namespace BlackMisc
             CAtcStationList stationsWithValidFrequency() const;
 
             //! All controllers (with valid data)
-            BlackMisc::Network::CUserList getControllers() const;
+            Network::CUserList getControllers() const;
 
             //! Remove if marked outside of range
             int removeIfOutsideRange();
@@ -75,8 +75,13 @@ namespace BlackMisc
             //! Both sides (booking, online station) will be updated.
             //! \pre Can be used only if the stored data in this list are online ATC stations
             int synchronizeWithBookedStation(CAtcStation &bookedAtcStation);
-        };
 
+            //! Sort by ATC suffix sort order and distance
+            void sortByAtcSuffixSortOrderAndDistance();
+
+            //! Sorted by ATC suffix sort order and distance
+            CAtcStationList sortedByAtcSuffixSortOrderAndDistance() const;
+        };
     } //namespace
 } // namespace
 

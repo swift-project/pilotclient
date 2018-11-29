@@ -38,7 +38,8 @@ namespace BlackMisc
                 IndexCallsignString = CPropertyIndex::GlobalIndexCCallsign,
                 IndexCallsignStringAsSet,
                 IndexTelephonyDesignator,
-                IndexSuffix
+                IndexSuffix,
+                IndexSuffixSortOrder
             };
 
             //! Representing what
@@ -53,19 +54,13 @@ namespace BlackMisc
             CCallsign() {}
 
             //! Constructor
-            CCallsign(const QString &callsign, TypeHint hint = NoHint)
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
-            {}
+            CCallsign(const QString &callsign, TypeHint hint = NoHint);
 
             //! Constructor
-            CCallsign(const QString &callsign, const QString &telephonyDesignator, TypeHint hint = NoHint)
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
-            {}
+            CCallsign(const QString &callsign, const QString &telephonyDesignator, TypeHint hint = NoHint);
 
             //! Constructor, needed to disambiguate implicit conversion from string literal.
-            CCallsign(const char *callsign, TypeHint hint = NoHint)
-                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
-            {}
+            CCallsign(const char *callsign, TypeHint hint = NoHint);
 
             //! Is empty?
             bool isEmpty() const { return m_callsignAsSet.isEmpty(); }
@@ -122,11 +117,35 @@ namespace BlackMisc
             //! Has an ATC suffix?
             bool hasAtcSuffix() const;
 
+            //! Sort order by suffix
+            int getSuffixSortOrder() const;
+
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
             //! Valid callsign?
             bool isValid() const;
+
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            CIcon toIcon() const { return convertToIcon(*this); }
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;
+
+            //! \copydoc BlackMisc::Mixin::String::toQString()
+            QString convertToQString(bool i18n = false) const;
+
+            //! Clear this callsign
+            void clear();
+
+            //! Index for ATC suffix, if unknown int max value
+            static int suffixToSortOrder(const QString &suffix);
 
             //! Valid callsign?
             static bool isValidAircraftCallsign(const QString &callsign);
@@ -154,24 +173,6 @@ namespace BlackMisc
 
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
-
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return convertToIcon(*this); }
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
-
-            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;
-
-            //! \copydoc BlackMisc::Mixin::String::toQString()
-            QString convertToQString(bool i18n = false) const;
-
-            //! Clear this callsign
-            void clear();
 
             //! Register metadata
             static void registerMetadata();

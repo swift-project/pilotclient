@@ -21,6 +21,18 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        CCallsign::CCallsign(const QString &callsign, CCallsign::TypeHint hint)
+            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
+        {}
+
+        CCallsign::CCallsign(const QString &callsign, const QString &telephonyDesignator, CCallsign::TypeHint hint)
+            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
+        {}
+
+        CCallsign::CCallsign(const char *callsign, CCallsign::TypeHint hint)
+            : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
+        {}
+
         void CCallsign::registerMetadata()
         {
             CValueObject<CCallsign>::registerMetadata();
@@ -36,6 +48,23 @@ namespace BlackMisc
         void CCallsign::clear()
         {
             *this = CCallsign();
+        }
+
+        int CCallsign::suffixToSortOrder(const QString &suffix)
+        {
+            if ("CTR" == suffix)  { return 1; }
+            if ("APP" == suffix)  { return 2; }
+            if ("FSS" == suffix)  { return 3; }
+            if ("TWR" == suffix)  { return 5; }
+            if ("GND" == suffix)  { return 6; }
+            if ("DEL" == suffix)  { return 7; }
+            if ("ATIS" == suffix) { return 8; }
+            if ("SUP" == suffix)  { return 10; }
+            if ("OBS" == suffix)  { return 11; }
+            if ("INS" == suffix)  { return 13; } // instructor/mentor
+            if ("EXAM" == suffix)   { return 14; }
+            if ("VATSIM" == suffix) { return 14; }
+            return std::numeric_limits<int>::max();
         }
 
         QString CCallsign::unifyCallsign(const QString &callsign)
@@ -58,18 +87,18 @@ namespace BlackMisc
         const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)
         {
             if (suffix.length() < 3) { return CIcon::iconByIndex(CIcons::NetworkRoleUnknown); }
-            QString sfx = suffix.toUpper();
-            if ("APP" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
-            if ("GND" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
-            if ("TWR" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
-            if ("DEL" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
-            if ("CTR" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
-            if ("SUP" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
-            if ("OBS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
-            if ("INS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-            if ("FSS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
+            const QString sfx = suffix.toUpper();
+            if ("APP" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
+            if ("GND" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
+            if ("TWR" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
+            if ("DEL" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
+            if ("CTR" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
+            if ("SUP" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+            if ("OBS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
+            if ("INS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("FSS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
             if ("ATIS" == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
-            if ("EXAM" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("EXAM" == sfx)   { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
             if ("VATSIM" == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
             return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
         }
@@ -122,7 +151,7 @@ namespace BlackMisc
         {
             if (this->isEmpty()) { return ""; }
             QString obs = this->getStringAsSet();
-            if (obs.endsWith("_OBS", Qt::CaseInsensitive)) { return obs; }
+            if (obs.endsWith("_OBS", Qt::CaseInsensitive)) { return obs; } // already OBS
             if (obs.contains('_')) { obs = obs.left(obs.lastIndexOf('_')); }
             return obs.append("_OBS").toUpper();
         }
@@ -169,6 +198,11 @@ namespace BlackMisc
             return !s.isEmpty() && atcCallsignSuffixes().contains(s);
         }
 
+        int CCallsign::getSuffixSortOrder() const
+        {
+            return suffixToSortOrder(this->getSuffix());
+        }
+
         bool CCallsign::equalsString(const QString &callsignString) const
         {
             CCallsign other(callsignString);
@@ -181,10 +215,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString: return CVariant(this->asString());
+            case IndexCallsignString:      return CVariant(this->asString());
             case IndexCallsignStringAsSet: return CVariant(this->getStringAsSet());
             case IndexTelephonyDesignator: return CVariant(this->getTelephonyDesignator());
-            case IndexSuffix: return CVariant(this->getSuffix());
+            case IndexSuffix:              return CVariant(this->getSuffix());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -195,7 +229,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString: m_callsign = m_callsign = unifyCallsign(variant.toQString()); break;
+            case IndexCallsignString:      m_callsign = unifyCallsign(variant.toQString()); break;
             case IndexCallsignStringAsSet: m_callsignAsSet = variant.toQString(); break;
             case IndexTelephonyDesignator: m_telephonyDesignator = variant.toQString(); break;
             default:
@@ -210,10 +244,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+            case IndexCallsignString:      return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
             case IndexCallsignStringAsSet: return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
             case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
-            case IndexSuffix: return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
+            case IndexSuffix:              return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
             default:
                 return CValueObject::comparePropertyByIndex(index, compareValue);
             }

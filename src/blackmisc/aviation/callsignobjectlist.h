@@ -88,7 +88,12 @@ namespace BlackMisc
             int removeByCallsigns(const CCallsignSet &callsigns);
 
             //! All suffixes with their respective count
-            QMap<QString, int> getSuffixes() const;
+            //! \remark since using QMap sorted by suffix
+            QMap<QString, int> getSuffixesAndCount() const;
+
+            //! All suffixes, in the order of the list
+            //! \remark first found suffixes first
+            QStringList getSuffixes() const;
 
             //! Split into 0..n containers as per callsign
             QHash<CCallsign, CONTAINER> splitPerCallsign() const;

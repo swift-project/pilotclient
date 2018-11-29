@@ -70,6 +70,11 @@ namespace BlackMisc
             return m_callsign.getSuffix();
         }
 
+        int CAtcStation::getSuffixSortOrder() const
+        {
+            return m_callsign.getSuffixSortOrder();
+        }
+
         void CAtcStation::setCallsign(const CCallsign &callsign)
         {
             m_callsign = callsign;

@@ -95,6 +95,9 @@ namespace BlackMisc
             //! Callsign suffix (e.g. TWR)
             QString getCallsignSuffix() const;
 
+            //! Callsign suffix sort order
+            int getSuffixSortOrder() const;
+
             //! Set callsign
             void setCallsign(const CCallsign &callsign);
 
