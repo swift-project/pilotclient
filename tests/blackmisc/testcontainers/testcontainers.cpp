@@ -64,6 +64,7 @@ namespace BlackMiscTest
         void sequenceBasics();
         void joinAndSplit();
         void findTests();
+        void sortTests();
         void dictionaryBasics();
         void timestampList();
         void offsetTimestampList();
@@ -167,6 +168,35 @@ namespace BlackMiscTest
         callsigns.push_back(CCallsign("KLAX_TWR"));
         found = callsigns.findBy(&CCallsign::asString, "KLAX_TWR");
         QVERIFY2(found.size() == 1, "found");
+    }
+
+    void CTestContainers::sortTests()
+    {
+        struct Person
+        {
+            const QString &getName() const { return name; }
+            int getAge() const { return age; }
+            bool operator==(const Person &other) const { return name == other.name && age == other.age; }
+            QString name;
+            int age;
+        };
+        CSequence<Person> list
+        {
+            { "Alice", 33 },
+            { "Bob", 32 },
+            { "Cathy", 32 },
+            { "Dave", 31 },
+            { "Emily", 31 }
+        };
+        CSequence<Person> sorted
+        {
+            { "Dave", 31 },
+            { "Emily", 31 },
+            { "Bob", 32 },
+            { "Cathy", 32 },
+            { "Alice", 33 }
+        };
+        QVERIFY2(list.sortedBy(&Person::getAge, &Person::getName) == sorted, "sort by multiple members");
     }
 
     void CTestContainers::dictionaryBasics()

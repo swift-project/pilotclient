@@ -146,17 +146,6 @@ namespace BlackMisc
     {
         //! \private
         template <typename T, typename F, size_t... Is>
-        void tupleForEachImpl(T &&tuple, F &&visitor, std::index_sequence<Is...>)
-        {
-            // parameter pack swallow idiom
-            static_cast<void>(std::initializer_list<int>
-            {
-                //! \fixme C-style cast is needed due to a clang bug: https://bugs.llvm.org/show_bug.cgi?id=39375
-                ((void)(std::forward<F>(visitor)(std::get<Is>(std::forward<T>(tuple)))), 0)...
-            });
-        }
-        //! \private
-        template <typename T, typename F, size_t... Is>
         void tupleForEachPairImpl(T &&tuple, F &&visitor, std::index_sequence<Is...>)
         {
             // parameter pack swallow idiom
@@ -166,16 +155,6 @@ namespace BlackMisc
                 ((void)(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), 0)...
             });
         }
-    }
-
-    /*!
-     * Invoke a visitor function on each element of a tuple in order.
-     */
-    template <typename T, typename F>
-    void tupleForEach(T &&tuple, F &&visitor)
-    {
-        using seq = std::make_index_sequence<std::tuple_size<std::decay_t<T>>::value>;
-        return Private::tupleForEachImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
 
     /*!

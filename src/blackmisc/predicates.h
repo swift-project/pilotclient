@@ -62,15 +62,7 @@ namespace BlackMisc
         {
             return [vs...](const auto &a, const auto &b)
             {
-                bool less = true;
-                bool greater = false;
-                tupleForEach(std::make_tuple(vs...), [ & ](auto member)
-                {
-                    less = less && ! greater && (a.*member)() < (b.*member)();
-                    greater = (b.*member)() < (a.*member)();
-                });
-                Q_UNUSED(greater); // CPP style check
-                return less;
+                return std::forward_as_tuple((a.*vs)()...) < std::forward_as_tuple((b.*vs)()...);
             };
         }
 
@@ -119,9 +111,7 @@ namespace BlackMisc
         {
             return [vs...](const auto &a, const auto &b)
             {
-                bool equal = true;
-                tupleForEach(std::make_tuple(vs...), [ & ](auto member) { equal = equal && (a.*member)() == (b.*member)(); });
-                return equal;
+                return std::forward_as_tuple((a.*vs)()...) == std::forward_as_tuple((b.*vs)()...);
             };
         }
 
