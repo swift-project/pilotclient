@@ -1511,11 +1511,22 @@ namespace BlackSimPlugin
             bool adding = false; // will be added flag
             const SIMCONNECT_DATA_REQUEST_ID requestId = probe ? this->obtainRequestIdForSimObjTerrainProbe() : this->obtainRequestIdForSimObjAircraft();
 
+            // Initial situation, if possible from interpolation
+            CAircraftSituation initialSituation = newRemoteAircraft.getSituation(); // default
+            {
+                // Dummy CSimConnectObject just for interpolation
+                const CSimConnectObject dummyObject = CSimConnectObject(newRemoteAircraft, 0, this, this, this->getRemoteAircraftProvider(), &m_interpolationLogger);
+                const CInterpolationResult result = dummyObject.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup, 0);
+                if (result.getInterpolationStatus().isInterpolated())
+                {
+                    initialSituation = result.getInterpolatedSituation();
+                }
+            }
+
             // under flow can cause a model not to be added
             // FSX: underflow and NO(!) gnd flag can cause adding/remove issue
             // P3D: underflow did not cause such issue
             CStatusMessage underflowStatus;
-            const CAircraftSituation initialSituation = newRemoteAircraft.getSituation();
             const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(initialSituation, sendGround, true, &underflowStatus);
 
             const QString modelString(newRemoteAircraft.getModelString());
@@ -2036,7 +2047,8 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
             if (forceUnderflowDetection)
             {
-                position.Altitude = situation.getCorrectedAltitude(true, &altCorrection).value(CLengthUnit::ft());
+                const CAltitude alt = situation.getCorrectedAltitude(true, &altCorrection);
+                position.Altitude = alt.value(CLengthUnit::ft());
             }
 
             // MSFS has inverted pitch and bank angles
