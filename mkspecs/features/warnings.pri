@@ -2,13 +2,14 @@ msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 
 # swift standard warnings
 msvc:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
-clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas -Wno-undefined-inline
+clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas -Wno-undefined-inline -Wno-self-assign-overloaded
 gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
 gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPILE
 
 # elevated warnings
 swiftConfig(allowNoisyWarnings) {
     clang {
+        QMAKE_CXXFLAGS_WARN_ON -= -Wno-self-assign-overloaded
         QMAKE_CXXFLAGS_WARN_ON *= -Weverything --system-header-prefix=$$[QT_INSTALL_HEADERS]
         QMAKE_CXXFLAGS_WARN_ON += -Wno-system-headers -Wno-c++98-compat-pedantic -Wno-class-varargs -Wno-covered-switch-default
         QMAKE_CXXFLAGS_WARN_ON += -Wno-documentation -Wno-documentation-unknown-command -Wno-double-promotion -Wno-exit-time-destructors

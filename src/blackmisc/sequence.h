@@ -290,7 +290,7 @@ namespace BlackMisc
         int remove(const T &object)
         {
             const auto newEnd = std::remove(begin(), end(), object);
-            int count = std::distance(newEnd, end());
+            const auto count = std::distance(newEnd, end());
             erase(newEnd, end());
             return count;
         }
@@ -300,8 +300,8 @@ namespace BlackMisc
         template <class Predicate>
         int removeIf(Predicate p)
         {
-            auto newEnd = std::remove_if(begin(), end(), p);
-            int count = std::distance(newEnd, end());
+            const auto newEnd = std::remove_if(begin(), end(), p);
+            const auto count = std::distance(newEnd, end());
             erase(newEnd, end());
             return count;
         }
