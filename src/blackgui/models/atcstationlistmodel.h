@@ -19,8 +19,6 @@
 
 #include <QObject>
 
-class QStandardItemModel;
-
 namespace BlackGui
 {
     namespace Models

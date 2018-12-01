@@ -45,7 +45,7 @@ namespace BlackGui
         //! Non templated base class, allows Q_OBJECT and signals to be used
         class BLACKGUI_EXPORT CListModelBaseNonTemplate :
             public QStandardItemModel,
-            public BlackGui::CDropBase
+            public CDropBase
         {
             Q_OBJECT
 
