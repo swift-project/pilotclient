@@ -186,16 +186,6 @@ msvc:contains(QMAKE_CXXFLAGS, /permissive-): QMAKE_CXXFLAGS *= /FIpermissivework
 ################################
 
 clang_cl {
-    QMAKE_CXXFLAGS ~= s/-fms-compatibility-version=.+/
-    QMAKE_CXXFLAGS += -fms-compatibility-version=19.00.24210
-
-    # QtCreator ships with a version of clang-cl,
-    # but we want to use the one in PATH instead.
-    system($$(SYSTEMROOT)\system32\where /q $$QMAKE_CXX) {
-        QMAKE_CC = $$system($$(SYSTEMROOT)\system32\where $$QMAKE_CXX)
-        QMAKE_CXX = $$QMAKE_CC
-    }
-
     # Suppress warnings in Qt headers
     QMAKE_RUN_CC            = $(CC) -c $(CFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$obj $src
     QMAKE_RUN_CC_IMP        = $(CC) -c $(CFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$@ $<
