@@ -75,13 +75,16 @@ namespace BlackSimPlugin
         bool CFsuipc::open(bool force)
         {
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
-            DWORD result;
+            DWORD dwResult;
             m_lastErrorMessage = "";
             m_lastErrorIndex = 0;
             if (!force && m_opened) { return m_opened; } // already connected
-            if (FSUIPC_Open(SIM_ANY, &result))
+
+            if (FSUIPC_Open(SIM_ANY, &dwResult))
             {
                 m_opened = true; // temp status
+                m_openCount++;
+
                 if (this->isOpen())
                 {
                     const int simIndex = static_cast<int>(FSUIPC_FS_Version);
@@ -103,7 +106,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                const int index = static_cast<int>(result);
+                const int index = static_cast<int>(dwResult);
                 m_lastErrorIndex = index;
                 m_lastErrorMessage = CFsuipc::errorMessages().at(index);
                 CLogMessage(this).warning("FSUIPC not connected: %1") << m_lastErrorMessage;
@@ -122,6 +125,7 @@ namespace BlackSimPlugin
                 CLogMessage(this).info("Closing FSUIPC: %1") << m_fsuipcVersion;
             }
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
+            m_closeCount++;
             m_opened = false;
         }
 
@@ -329,13 +333,19 @@ namespace BlackSimPlugin
             bool read = false;
             bool cockpitN = !cockpit;
             bool situationN = !situation;
-            bool aircraftPartsN = ! aircraftParts;
+            bool aircraftPartsN = !aircraftParts;
 
             //! \todo KB 2018-11 BUG fix for broken connection, needs to go as soon as issue is fixed
-            if (!FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult))
+            if (!(FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult)))
             {
                 FSUIPC_Close();
                 FSUIPC_Open(SIM_ANY, &dwResult);
+                m_closeCount++;
+                m_openCount++;
+                if (m_openCount < 10)
+                {
+                    CLogMessage(this).warning("Used FSUIPC open/close workaround");
+                }
             }
 
             if (
@@ -442,7 +452,7 @@ namespace BlackSimPlugin
 
                     // MSFS has inverted pitch and bank angles
                     pitchRaw = ~pitchRaw;
-                    bankRaw = ~bankRaw;
+                    bankRaw  = ~bankRaw;
                     if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning("FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
 
                     // speeds, situation
@@ -492,7 +502,7 @@ namespace BlackSimPlugin
             if (m_lastErrorIndex != result && result > 0)
             {
                 m_lastErrorIndex = result;
-                m_lastErrorMessage = CFsuipc::errorMessages().at(result);
+                m_lastErrorMessage = CFsuipc::errorMessage(result);
                 CLogMessage(this).warning("FSUIPC read error '%1'") << m_lastErrorMessage;
             }
             return read;

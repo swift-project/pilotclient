@@ -126,6 +126,8 @@ namespace BlackSimPlugin
             void processWeatherMessages();
 
             bool m_opened = false;
+            int m_openCount  = 0; //!< statistics
+            int m_closeCount = 0; //!< statistics
             int m_lastErrorIndex = 0;
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
