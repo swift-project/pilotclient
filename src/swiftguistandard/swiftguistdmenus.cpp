@@ -141,7 +141,7 @@ void SwiftGuiStd::initMenus()
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
     ui->menu_MovingMap->setIcon(CIcons::swiftMap16());
 
-    if (CBuildConfig::isLocalDeveloperDebugBuild() && ui->menu_File)
+    if (CBuildConfig::isLocalDeveloperDebugBuild() && ui->menu_File && ui->menu_File->actions().size() > 5)
     {
         QAction *a = new QAction(CIcons::swift16(), "Copy XSwiftBus dialog");
         ui->menu_File->insertAction(ui->menu_File->actions().at(5), a);

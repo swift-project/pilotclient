@@ -26,7 +26,7 @@ namespace BlackGui
 {
     int CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile, QWidget *parent)
     {
-        if (sGui && sGui->isShuttingDown()) { return 0; }
+        if (!sGui || sGui->isShuttingDown()) { return 0; }
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return -1; }
         if (checkLatestFile && !CXPlaneUtil::hasNewerXSwiftBusBuild(xplaneRootDir)) { return 0; }
         if (!CXPlaneUtil::hasXSwiftBusBuildAndPluginDir(xplaneRootDir)) { return 0; }
