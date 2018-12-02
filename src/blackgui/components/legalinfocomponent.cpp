@@ -14,6 +14,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/crashsettings.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
 
@@ -37,9 +38,9 @@ namespace BlackGui
             this->setChecklistInfo();
 
             const CCrashSettings settings = m_crashDumpSettings.get();
-
             ui->cb_CrashDumps->setChecked(settings.isEnabled());
             ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
+
             connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
 
             QPointer<CLegalInfoComponent> myself(this);
@@ -70,7 +71,7 @@ namespace BlackGui
         {
             CCrashSettings settings = m_crashDumpSettings.get();
             settings.setEnabled(checked);
-            m_crashDumpSettings.setAndSave(settings);
+            CLogMessage::preformatted(m_crashDumpSettings.setAndSave(settings));
         }
 
         void CLegalInfoComponent::showCrashDumpHint()

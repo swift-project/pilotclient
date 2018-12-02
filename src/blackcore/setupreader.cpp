@@ -224,7 +224,7 @@ namespace BlackCore
 
         // same web load within 5000ms
         const CGlobalSetup setup = m_setup.get();
-        if (m_setup.lastUpdatedAge() < 5000 && setup.wasLoadedFromWeb())
+        if (m_setup.lastUpdatedAge() < 5000 && setup.wasLoadedFromWeb()) // really loaded from web
         {
             const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Update info just updated, skip read");
             CStatusMessageList msgs(m);
@@ -679,7 +679,7 @@ namespace BlackCore
         }
         else
         {
-            const bool cacheAvailable = m_setup.get().wasLoadedFromWeb();
+            const bool cacheAvailable = m_setup.get().wasLoaded(); // loaded from web or file
             available = cacheAvailable && m_bootstrapMode != Explicit;
         }
 

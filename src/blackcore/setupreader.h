@@ -162,8 +162,8 @@ namespace BlackCore
             CacheOnly
         };
 
-        std::atomic<bool> m_shutdown { false };
-        std::atomic<bool> m_setupAvailable { false };            //!< setup available
+        std::atomic<bool> m_shutdown { false };                  //!< shutdown in progress
+        std::atomic<bool> m_setupAvailable { false };            //!< setup available?
         std::atomic<bool> m_updateInfoAvailable   { false };     //!< update info available
         std::atomic<bool> m_ignoreCmdBootstrapUrl { false };     //!< ignore the explicitly set bootstrap URL
         std::atomic<bool> m_checkCmdBootstrapUrl { true };       //!< check connection on CMD bootstrap URL

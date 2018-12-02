@@ -20,6 +20,7 @@
 
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
+#include "blackmisc/crashsettings.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/iconlist.h"
@@ -96,6 +97,7 @@ namespace BlackMisc
         Network::registerMetadata();
         PhysicalQuantities::registerMetadata();
         Simulation::registerMetadata();
+        Settings::CCrashSettings::registerMetadata();
         Weather::registerMetadata();
 
         // needed by XSwiftBus proxy class

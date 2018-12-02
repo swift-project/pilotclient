@@ -260,7 +260,7 @@ namespace BlackCore
 
         bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
         {
-            if (!this->wasLoadedFromWeb()) { return false; }
+            if (!this->wasLoadedFromWeb()) { return false; } // only allowed from web
             if (m_mappingMinimumVersion.isEmpty()) { return false; }
             const QVersionNumber min = QVersionNumber::fromString(this->getMappingMinimumVersionString());
             return CBuildConfig::getVersion() >= min;
