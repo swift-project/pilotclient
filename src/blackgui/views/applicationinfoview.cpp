@@ -27,9 +27,9 @@ namespace BlackGui
             this->setCustomMenu(new CApplicationInfoMenu(this));
         }
 
-        int CApplicationInfoView::otherSwiftVersionsFromDataDirectories()
+        int CApplicationInfoView::otherSwiftVersionsFromDataDirectories(bool reInit)
         {
-            const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories();
+            const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reInit);
             this->updateContainer(others);
             m_acceptRowSelection = (others.size() > 0);
             return others.size();
@@ -53,7 +53,7 @@ namespace BlackGui
                 }
             }
             if (deletedDirectories.isEmpty()) { return; }
-            this->otherSwiftVersionsFromDataDirectories();
+            this->otherSwiftVersionsFromDataDirectories(true);
         }
 
         void CApplicationInfoMenu::customMenu(CMenuActions &menuActions)

@@ -53,6 +53,11 @@ namespace BlackGui
         CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent()
         { }
 
+        void CCopySettingsAndCachesComponent::reloadOtherVersions()
+        {
+            ui->comp_OtherSwiftVersions->reloadOtherVersions();
+        }
+
         void CCopySettingsAndCachesComponent::onOtherVersionChanged(const CApplicationInfo &info)
         {
             readOnlyCheckbox(ui->cb_SettingsAudio, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
@@ -396,7 +401,7 @@ namespace BlackGui
             if (copied > 0)
             {
                 const CStatusMessage m = CStatusMessage(this).validationInfo("Copied %1 settings") << copied;
-                this->showOverlayMessage(m);
+                this->showOverlayHTMLMessage(m);
             }
 
             return copied;
@@ -467,6 +472,12 @@ namespace BlackGui
             static const QString s("%1 [setting]");
             static const QString c("%1 [cache]");
             return setting ? s.arg(text) : c.arg(text);
+        }
+
+        void CCopySettingsAndCachesWizardPage::initializePage()
+        {
+            // re-init other versions
+            if (m_copyCachesAndSettings) { m_copyCachesAndSettings->reloadOtherVersions(); }
         }
 
         bool CCopySettingsAndCachesWizardPage::validatePage()

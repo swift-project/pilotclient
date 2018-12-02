@@ -59,13 +59,19 @@ namespace BlackMisc
         static int applicationDataDirectoriesCount();
 
         //! swift application data sub directories
+        static QFileInfoList currentApplicationDataDirectories();
+
+        //! swift application data sub directories
         static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool decodedDirName = false);
 
         //! swift application data sub directories with info if available
-        static const FilePerApplication &applicationDataDirectoryMapWithoutCurrentVersion(bool reinit = false);
+        static const FilePerApplication &applicationDataDirectoryMapWithoutCurrentVersion();
+
+        //! swift application data sub directories with info if available
+        static FilePerApplication currentApplicationDataDirectoryMapWithoutCurrentVersion();
 
         //! Other swift data directories
-        static bool hasOtherSwiftDataDirectories(bool reinit = false);
+        static bool hasOtherSwiftDataDirectories();
 
         //! Is MacOS application bundle?
         //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles on MacOS

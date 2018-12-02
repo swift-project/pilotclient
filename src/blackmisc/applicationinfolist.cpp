@@ -45,7 +45,10 @@ namespace BlackMisc
     int CApplicationInfoList::otherSwiftVersionsFromDataDirectories(bool reinit)
     {
         this->clear();
-        const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(reinit);
+        const QMap<QString, CApplicationInfo> otherVersions = reinit ?
+                CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion() :
+                CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
+
         for (const QString &directory : otherVersions.keys())
         {
             CApplicationInfo info(otherVersions.value(directory));

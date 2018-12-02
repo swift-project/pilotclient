@@ -36,7 +36,7 @@ namespace BlackGui
 
             connect(ui->tb_DataDir, &QToolButton::clicked, this, &COtherSwiftVersionsComponent::openDataDirectory);
             connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::objectSelected, this, &COtherSwiftVersionsComponent::onObjectSelected);
-            connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::requestUpdate, this, &COtherSwiftVersionsComponent::reloadVersions);
+            connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::requestUpdate, this, &COtherSwiftVersionsComponent::reloadOtherVersions);
         }
 
         COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent()
@@ -53,9 +53,9 @@ namespace BlackGui
             return ui->tvp_ApplicationInfo->selectedObject();
         }
 
-        void COtherSwiftVersionsComponent::reloadVersions()
+        void COtherSwiftVersionsComponent::reloadOtherVersions()
         {
-            ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDirectories();
+            ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDirectories(true);
         }
 
         void COtherSwiftVersionsComponent::openDataDirectory()

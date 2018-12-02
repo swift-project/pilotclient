@@ -38,6 +38,9 @@ namespace BlackGui
             //! Dtor
             virtual ~CCopyModelsFromOtherSwiftVersionsComponent();
 
+            //! Reload other versions
+            void reloadOtherVersions();
+
         private:
             //! Copy as per UI settings
             void copy();
@@ -54,7 +57,7 @@ namespace BlackGui
             QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsComponent> ui;
 
             // caches will be explicitly initialized in copy
-            BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
+            BlackMisc::Simulation::Data::CModelCaches    m_modelCaches    { false, this };
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this };
         };
 
@@ -69,6 +72,9 @@ namespace BlackGui
 
             //! Set config
             void setConfigComponent(CCopyModelsFromOtherSwiftVersionsComponent *config) { m_copyModels = config; }
+
+            //! \copydoc QWizardPage::initializePage
+            virtual void initializePage() override;
 
             //! \copydoc QWizardPage::validatePage
             virtual bool validatePage() override;

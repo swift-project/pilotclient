@@ -46,8 +46,8 @@ namespace BlackGui
         void CCopyModelsFromOtherSwiftVersionsComponent::copy()
         {
             const CSimulatorInfo selectedSimulators = ui->comp_SimulatorSelector->getValue();
-            const QSet<CSimulatorInfo> sims = selectedSimulators.asSingleSimulatorSet();
-            if (sims.isEmpty())
+            const QSet<CSimulatorInfo> simulators = selectedSimulators.asSingleSimulatorSet();
+            if (simulators.isEmpty())
             {
                 static const CStatusMessage m = CStatusMessage(this).validationError("No simulators selected");
                 this->showOverlayMessage(m);
@@ -73,22 +73,22 @@ namespace BlackGui
             int sets = 0;
             int caches = 0;
             const CApplicationInfo otherVersion = ui->comp_OtherSwiftVersions->selectedOtherVersion();
-            for (const CSimulatorInfo &sim : sims)
+            for (const CSimulatorInfo &simulator : simulators)
             {
                 if (set)
                 {
                     // inits current version cache
-                    m_modelSetCaches.synchronizeCache(sim);
+                    m_modelSetCaches.synchronizeCache(simulator);
 
                     // get file name
                     CAircraftModelList otherSet;
-                    const QString thisVersionModelSetFile = m_modelSetCaches.getFilename(sim);
-                    if (this->readDataFile(thisVersionModelSetFile, otherSet, otherVersion, sim) && !otherSet.isEmpty())
+                    const QString thisVersionModelSetFile = m_modelSetCaches.getFilename(simulator);
+                    if (this->readDataFile(thisVersionModelSetFile, otherSet, otherVersion, simulator) && !otherSet.isEmpty())
                     {
                         CApplication::processEventsFor(250);
-                        if (this->confirmOverride(QString("Override model set for '%1'").arg(sim.toQString())))
+                        if (this->confirmOverride(QString("Override model set for '%1'").arg(simulator.toQString())))
                         {
-                            m_modelSetCaches.setModelsForSimulator(otherSet, sim);
+                            m_modelSetCaches.setModelsForSimulator(otherSet, simulator);
                         }
                     }
                     sets++;
@@ -97,17 +97,17 @@ namespace BlackGui
                 if (cache)
                 {
                     // inits current version cache
-                    m_modelCaches.synchronizeCache(sim);
+                    m_modelCaches.synchronizeCache(simulator);
 
                     // get file name
                     CAircraftModelList otherCache;
-                    const QString thisVersionModelCacheFile = m_modelCaches.getFilename(sim);
-                    if (this->readDataFile(thisVersionModelCacheFile, otherCache, otherVersion, sim) && !otherCache.isEmpty())
+                    const QString thisVersionModelCacheFile = m_modelCaches.getFilename(simulator);
+                    if (this->readDataFile(thisVersionModelCacheFile, otherCache, otherVersion, simulator) && !otherCache.isEmpty())
                     {
                         CApplication::processEventsFor(250);
-                        if (this->confirmOverride(QString("Override model cache for '%1'").arg(sim.toQString())))
+                        if (this->confirmOverride(QString("Override model cache for '%1'").arg(simulator.toQString())))
                         {
-                            m_modelCaches.setModelsForSimulator(otherCache, sim);
+                            m_modelCaches.setModelsForSimulator(otherCache, simulator);
                         }
                     }
                     caches++;
@@ -184,6 +184,17 @@ namespace BlackGui
             ui->cb_ModelCache->setChecked(cacheSims.isAnySimulator());
             ui->cb_ModelSet->setChecked(setSims.isAnySimulator());
             ui->comp_SimulatorSelector->setValue(setSims);
+        }
+
+        void CCopyModelsFromOtherSwiftVersionsComponent::reloadOtherVersions()
+        {
+            ui->comp_OtherSwiftVersions->reloadOtherVersions();
+        }
+
+        void CCopyModelsFromOtherSwiftVersionsWizardPage::initializePage()
+        {
+            // force reload as the other version could be changed
+            if (m_copyModels) { m_copyModels->reloadOtherVersions(); }
         }
 
         bool CCopyModelsFromOtherSwiftVersionsWizardPage::validatePage()

@@ -117,13 +117,15 @@ namespace BlackMisc
 
     const QFileInfoList &CDirectoryUtils::applicationDataDirectories()
     {
-        static const QFileInfoList fileInfoList([]
-        {
-            const QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
-            if (!swiftAppData.isReadable()) { return QFileInfoList(); }
-            return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
-        }());
+        static QFileInfoList fileInfoList = currentApplicationDataDirectories();
         return fileInfoList;
+    }
+
+    QFileInfoList CDirectoryUtils::currentApplicationDataDirectories()
+    {
+        const QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
+        if (!swiftAppData.isReadable()) { return QFileInfoList(); }
+        return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
     }
 
     int CDirectoryUtils::applicationDataDirectoriesCount()
@@ -144,14 +146,18 @@ namespace BlackMisc
         return dirs;
     }
 
-    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(bool reinit)
+    const CDirectoryUtils::FilePerApplication &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
     {
-        static FilePerApplication dirs;
-        if (!reinit && !dirs.isEmpty()) { return dirs; }
+        static const FilePerApplication directories = currentApplicationDataDirectoryMapWithoutCurrentVersion();
+        return directories;
+    }
 
+    CDirectoryUtils::FilePerApplication CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion()
+    {
         FilePerApplication directories;
-        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
+        for (const QFileInfo &info : CDirectoryUtils::currentApplicationDataDirectories())
         {
+            // check for myself (the running swift)
             if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
 
             // the application info will be written by each swift application started
@@ -161,6 +167,7 @@ namespace BlackMisc
             CApplicationInfo appInfo;
             if (appInfoJson.isEmpty())
             {
+                // no JSON means the app no longer exists
                 const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
                 appInfo.setExecutablePath(exeDir);
             }
@@ -172,13 +179,12 @@ namespace BlackMisc
             directories.insert(info.filePath(), appInfo);
         }
 
-        dirs = directories;
-        return dirs;
+        return directories;
     }
 
-    bool CDirectoryUtils::hasOtherSwiftDataDirectories(bool reinit)
+    bool CDirectoryUtils::hasOtherSwiftDataDirectories()
     {
-        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(reinit).size() > 0;
+        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
     }
 
     const QString &CDirectoryUtils::normalizedApplicationDataDirectory()

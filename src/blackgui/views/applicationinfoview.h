@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CApplicationInfoView(QWidget *parent = nullptr);
 
             //! BlackMisc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
-            int otherSwiftVersionsFromDataDirectories();
+            int otherSwiftVersionsFromDataDirectories(bool reInit = false);
 
             //! Delete the selected directories
             void deleteSelectedDataDirectories();

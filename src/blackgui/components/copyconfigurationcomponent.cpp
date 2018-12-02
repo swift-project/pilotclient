@@ -419,7 +419,7 @@ namespace BlackGui
         void CCopyConfigurationComponent::initOtherSwiftVersions()
         {
             ui->cb_OtherVersions->clear();
-            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion(true);
+            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion();
             for (const QString &directory : otherVersions.keys())
             {
                 const CApplicationInfo info(otherVersions.value(directory));
@@ -445,8 +445,8 @@ namespace BlackGui
         void CCopyConfigurationComponent::setWidths()
         {
             const int w = this->width();
-            const int wCb = 0.45 * w;
-            const int wView = 0.4 * w;
+            const int wCb = qRound(0.45 * w);
+            const int wView = qRound(0.4 * w);
             ui->cb_OtherVersions->setMaximumWidth(wCb);
             ui->tv_Destination->setMinimumWidth(wView);
             ui->tv_Source->setMinimumWidth(wView);
