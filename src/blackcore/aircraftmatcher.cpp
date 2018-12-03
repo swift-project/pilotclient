@@ -708,32 +708,49 @@ namespace BlackCore
     int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator, bool forced)
     {
         if (!simulator.isSingleSimulator()) { return 0; }
-        if (!forced && m_simulator == simulator && m_modelSet.size() > 0)
-        {
-            // same simulator with models
-            return m_modelSet.size();
-        }
 
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();
         const int r2 = modelsCleaned.removeIfExcluded();
+
+        // sane simulator and model count? (minor risk of not updating when a model was changed)
+        if (!forced && m_simulator == simulator && m_modelSet.size() == modelsCleaned.size())
+        {
+            return m_modelSet.size();
+        }
+
+        QString warnings;
         if ((r1 + r2) > 0)
         {
-            CLogMessage(this).warning("Removed models for matcher, without string #: %1, excluded #: %2") << r1 << r2;
-            if (r1 > 0) { CLogMessage(this).warning("Without string: %1") << models.findEmptyModelStrings().getModelStringList().join(", "); }
-            if (r2 > 0) { CLogMessage(this).warning("Excluded: %1") << models.findByModelMode(CAircraftModel::Exclude).getModelStringList().join(", "); }
+            warnings = QStringLiteral("Removed models for matcher, without string #: %1, excluded #: %2.").arg(r1).arg(r2);
+            if (r1 > 0) { warnings += QStringLiteral(" Without string: '%1'.").arg(models.findEmptyModelStrings().getModelStringList().join(", ")); }
+            if (r2 > 0) { warnings += QStringLiteral(" Excluded: '%1'.").arg(models.findByModelMode(CAircraftModel::Exclude).getModelStringList().join(", ")); }
         }
+        const CAircraftModelList duplicateModels = modelsCleaned.findDuplicateModelStrings();
+
+        // Warning info
         if (modelsCleaned.isEmpty())
         {
+            // error to force popup
             CLogMessage(this).error("No models for matching ('%1'), swift without a model set will not work!") << simulator.toQString();
+        }
+        else if (!duplicateModels.isEmpty())
+        {
+            CLogMessage(this).error("Found model duplicate strings, check models: '%1'") << duplicateModels.dbKeysAsString(", ");
+        }
+        else if (!warnings.isEmpty())
+        {
+            CLogMessage(this).validationWarning(warnings);
         }
         else
         {
-            CLogMessage(this).info("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulator.toQString();
+            CLogMessage(this).validationInfo("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulator.toQString();
         }
-        m_modelSet = modelsCleaned;
+
+        // set values
+        m_modelSet  = modelsCleaned;
         m_simulator = simulator;
-        m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulator.toQString()).arg(modelsCleaned.size());
+        m_modelSetInfo = QStringLiteral("Set: '%1' entries: %2").arg(simulator.toQString()).arg(modelsCleaned.size());
         return models.size();
     }
 
