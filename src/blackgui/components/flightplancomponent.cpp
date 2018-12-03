@@ -830,10 +830,19 @@ namespace BlackGui
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
             const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().toList());
-            ui->le_AircraftType->setCompleter(new QCompleter(aircraft, this));
+            QCompleter *aircraftCompleter = new QCompleter(aircraft, this);
+            aircraftCompleter->setMaxVisibleItems(10);
+            aircraftCompleter->popup()->setMinimumWidth(75);
+            aircraftCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+            aircraftCompleter->setCompletionMode(QCompleter::PopupCompletion);
+            ui->le_AircraftType->setCompleter(aircraftCompleter);
 
             const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
             QCompleter *airportCompleter = new QCompleter(airports, this);
+            airportCompleter->setMaxVisibleItems(10);
+            airportCompleter->popup()->setMinimumWidth(75);
+            airportCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+            airportCompleter->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_AlternateAirport->setCompleter(airportCompleter);
             ui->le_DestinationAirport->setCompleter(airportCompleter);
             ui->le_OriginAirport->setCompleter(airportCompleter);
