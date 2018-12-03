@@ -249,8 +249,9 @@ namespace BlackGui
     void CDockWidget::toggleFloating()
     {
         const bool floating = !this->isFloating();
-        if (!floating) { this->setFrameless(false); }
+        if (!floating) { this->setFrameless(false); } // remove frameless if not floating
         this->setFloating(floating);
+        this->setAlwaysOnTop(m_alwaysOnTop);
     }
 
     void CDockWidget::toggleVisibility()
@@ -267,13 +268,28 @@ namespace BlackGui
 
     void CDockWidget::toggleFrameless()
     {
-        if (this->isFrameless())
+        const bool frameless = this->isFrameless();
+        this->setFrameless(!frameless);
+    }
+
+    void CDockWidget::toggleAlwaysOnTop()
+    {
+        m_alwaysOnTop = !m_alwaysOnTop;
+        if (this->isFloating())
         {
-            this->setFrameless(false);
+            this->setAlwaysOnTopFlag(m_alwaysOnTop);
+        }
+    }
+
+    void CDockWidget::setAlwaysOnTopFlag(bool onTop)
+    {
+        if (onTop)
+        {
+            this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
         }
         else
         {
-            this->setFrameless(true);
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint);
         }
     }
 
@@ -336,16 +352,13 @@ namespace BlackGui
     {
         if (this->isFloating())
         {
+            const bool frameless = this->isFrameless();
+            const bool onTop = this->windowFlags() | Qt::WindowStaysOnTopHint;
+
             contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
-            if (this->isFrameless())
-            {
-                contextMenu->addAction(CIcons::tableSheet16(), "Normal window", this, &CDockWidget::toggleFrameless);
-            }
-            else
-            {
-                contextMenu->addAction(CIcons::tableSheet16(), "Frameless", this, &CDockWidget::toggleFrameless);
-            }
-            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, SLOT(update()));
+            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
+            contextMenu->addAction(CIcons::dockTop16(), onTop ? "Not on top" : "Always on top", this, &CDockWidget::toggleAlwaysOnTop);
+            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, QOverload<>::of(&CDockWidget::update));
         }
         else
         {

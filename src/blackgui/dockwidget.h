@@ -108,6 +108,12 @@ namespace BlackGui
         //! Toggle frameless mode (EXPERIMENTAL)
         void toggleFrameless();
 
+        //! Toggle always on top
+        void toggleAlwaysOnTop();
+
+        //! Set always on top
+        void setAlwaysOnTop(bool onTop) { m_alwaysOnTop = onTop; }
+
         //! Restore from settings
         bool restoreFromSettings();
 
@@ -181,7 +187,10 @@ namespace BlackGui
         //! Margins when docked
         QMargins getMarginsWhenDocked() const;
 
-        //! Override close event
+        //! Set the on top flag
+        void setAlwaysOnTopFlag(bool onTop);
+
+        //! \copydoc QWidget::closeEvent
         virtual void closeEvent(QCloseEvent *event) override;
 
         //! \copydoc QWidget::paintEvent
@@ -219,6 +228,7 @@ namespace BlackGui
         bool m_selected                    = false;   //!< selected when tabbed
         bool m_dockWidgetVisible           = false;   //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless                = false;   //!< frameless when last floating
+        bool m_alwaysOnTop                 = false;   //!< only effective if floating
         CManagedStatusBar m_statusBar;                //!< status bar when floating
         QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
