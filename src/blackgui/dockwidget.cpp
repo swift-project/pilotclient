@@ -394,8 +394,8 @@ namespace BlackGui
 
     QString CDockWidget::windowTitleOrBackup() const
     {
-        QString t(windowTitle());
-        if (t.isEmpty()) { return windowTitleBackup(); }
+        const QString t(windowTitle());
+        if (t.isEmpty()) { return this->windowTitleBackup(); }
         return t;
     }
 

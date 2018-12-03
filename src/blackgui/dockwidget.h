@@ -99,13 +99,6 @@ namespace BlackGui
         //! \copydoc CEnableForFramelessWindow::setFrameless
         virtual void setFrameless(bool frameless) override;
 
-        //! Value for dynamic property "dockwidget"
-        static const QString &propertyOuterWidget();
-
-        //! Value for dynamic property "dockwidget"
-        static const QString &propertyInnerWidget();
-
-    public slots:
         //! Toggle floating
         void toggleFloating();
 
@@ -135,6 +128,12 @@ namespace BlackGui
 
         //! Display status messages
         void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+
+        //! Value for dynamic property "dockwidget"
+        static const QString &propertyOuterWidget();
+
+        //! Value for dynamic property "dockwidget"
+        static const QString &propertyInnerWidget();
 
     signals:
         //! Top level has changed for given widget
@@ -214,17 +213,17 @@ namespace BlackGui
         QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
         Components::CMarginsInput *m_input = nullptr; //!< margins widget
         Menus::CFontMenu *m_fontMenu       = nullptr; //!< Font menu
+        bool m_allowStatusBar              = true;
+        bool m_windowTitleWhenDocked       = true;
+        bool m_wasAlreadyFloating          = false;   //!< flag if widget was at least once in floating state
+        bool m_selected                    = false;   //!< selected when tabbed
+        bool m_dockWidgetVisible           = false;   //!< logical visible, not to be confused with QDockWidget::isVisible()
+        bool m_wasFrameless                = false;   //!< frameless when last floating
         CManagedStatusBar m_statusBar;                //!< status bar when floating
         QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
         QSize m_initialDockedMinimumSize;             //!< minimum size before first floating
         QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
-        bool m_allowStatusBar        = true;
-        bool m_windowTitleWhenDocked = true;
-        bool m_wasAlreadyFloating    = false;         //!< flag if widget was at least once in floating state
-        bool m_selected              = false;         //!< selected when tabbed
-        bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
-        bool m_wasFrameless          = false;         //!< frameless when last floating
         BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
 
         //! Top level has been chaged
