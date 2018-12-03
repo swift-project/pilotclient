@@ -482,7 +482,7 @@ QMenu > QFrame {
   color: black;
 }
 
-BlackGui--Components--CMarginsInput {
+BlackGui--Components--CMarginsInput QLineEdit {
   color: black;
 }
 
