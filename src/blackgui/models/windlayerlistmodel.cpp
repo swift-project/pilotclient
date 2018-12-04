@@ -24,14 +24,14 @@ namespace BlackGui
         CWindLayerListModel::CWindLayerListModel(QObject *parent) :
             CListModelBase("WindLayerListModel", parent)
         {
-            this->m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
-            this->m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));
-            this->m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedKtsFormatter()));
-            this->m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedKtsFormatter()));
+            m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
+            m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));
+            m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedKtsFormatter()));
+            m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedKtsFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CWindLayer::IndexLevel);
-            this->m_sortOrder = Qt::AscendingOrder;
+            m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "level");

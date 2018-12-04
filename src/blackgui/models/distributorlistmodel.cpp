@@ -40,41 +40,41 @@ namespace BlackGui
 
         void CDistributorListModel::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
         {
-            if (this->m_distributorMode == distributorMode) { return; }
-            this->m_distributorMode = distributorMode;
-            this->m_columns.clear();
+            if (m_distributorMode == distributorMode) { return; }
+            m_distributorMode = distributorMode;
+            m_columns.clear();
             switch (distributorMode)
             {
             case NormalWithOrder:
-                this->m_columns.addColumn(CColumn::orderColumn());
+                m_columns.addColumn(CColumn::orderColumn());
                 BLACK_FALLTHROUGH;
             case NotSet:
             case Normal:
                 {
-                    this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
-                    this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
-                    this->m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
-                    this->m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
-                    this->m_columns.addColumn(CColumn::standardString("sim.", "simulator", { CDistributor::IndexSimulator, CSimulatorInfo::IndexString}));
-                    this->m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
+                    m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
+                    m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
+                    m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
+                    m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
+                    m_columns.addColumn(CColumn::standardString("sim.", "simulator", { CDistributor::IndexSimulator, CSimulatorInfo::IndexString}));
+                    m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CDistributor::IndexDbStringKey);
-                    this->m_sortOrder = Qt::AscendingOrder;
+                    m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
 
             case MinimalWithOrder:
-                this->m_columns.addColumn(CColumn::orderColumn());
+                m_columns.addColumn(CColumn::orderColumn());
                 BLACK_FALLTHROUGH;
             case Minimal:
                 {
-                    this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
-                    this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
+                    m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
+                    m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CDistributor::IndexDbStringKey);
-                    this->m_sortOrder = Qt::AscendingOrder;
+                    m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
 

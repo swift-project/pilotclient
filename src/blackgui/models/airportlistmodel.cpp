@@ -28,17 +28,17 @@ namespace BlackGui
         CAirportListModel::CAirportListModel(QObject *parent) :
             CListModelBase("AirportListModel", parent)
         {
-            this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
-            this->m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
-            this->m_columns.addColumn(CColumn("bearing", CAirport::IndexRelativeBearing, new CAngleDegreeFormatter()));
-            this->m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
-            this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CAltitudeFormatter()));
-            this->m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
-            this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLongitude, new CLatLonFormatter()));
+            m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
+            m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
+            m_columns.addColumn(CColumn("bearing", CAirport::IndexRelativeBearing, new CAngleDegreeFormatter()));
+            m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
+            m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CAltitudeFormatter()));
+            m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
+            m_columns.addColumn(CColumn("longitude", CAirport::IndexLongitude, new CLatLonFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAirport::IndexRelativeDistance);
-            this->m_sortOrder = Qt::AscendingOrder;
+            m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelAirportList", "ICAO");

@@ -26,25 +26,25 @@ namespace BlackGui
         CAircraftIcaoCodeListModel::CAircraftIcaoCodeListModel(QObject *parent) :
             CListModelDbObjects("AircraftIcaoListModel", parent)
         {
-            this->m_columns.addColumn(CColumn::standardString("id", CAircraftIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
-            this->m_columns.addColumn(CColumn::standardString("ICAO", CAircraftIcaoCode::IndexAircraftDesignator));
-            this->m_columns.addColumn(CColumn::standardString("IATA", CAircraftIcaoCode::IndexIataCode));
-            this->m_columns.addColumn(CColumn::standardValueObject("rank", CAircraftIcaoCode::IndexRank, CDefaultFormatter::alignRightVCenter()));
-            this->m_columns.addColumn(CColumn::standardString("manufacturer", CAircraftIcaoCode::IndexManufacturer));
-            this->m_columns.addColumn(CColumn::standardString("family", CAircraftIcaoCode::IndexFamily));
-            this->m_columns.addColumn(CColumn::standardString("ICAO desc.", "ICAO description", CAircraftIcaoCode::IndexModelDescription));
-            this->m_columns.addColumn(CColumn::standardString("IATA desc.", "IATA description", CAircraftIcaoCode::IndexModelIataDescription));
-            this->m_columns.addColumn(CColumn::standardString("swift desc.", "swift description", CAircraftIcaoCode::IndexModelSwiftDescription));
-            this->m_columns.addColumn(CColumn::standardString("type", "combined type", CAircraftIcaoCode::IndexCombinedAircraftType));
-            this->m_columns.addColumn(CColumn::standardString("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
-            this->m_columns.addColumn(CColumn("mil.", "military", CAircraftIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civil")));
-            this->m_columns.addColumn(CColumn("VTOL", "vertical take-off and landing", CAircraftIcaoCode::IndexIsVtol, new CBoolIconFormatter("VTOL", "non VTOL"))); this->m_columns.addColumn(CColumn("leg.", "legacy", CAircraftIcaoCode::IndexIsLegacy, new CBoolIconFormatter("legacy", "operating")));
-            this->m_columns.addColumn(CColumn("real.", "real world aircraft", CAircraftIcaoCode::IndexIsRealworld, new CBoolIconFormatter("real", "non real")));
-            this->m_columns.addColumn(CColumn::standardString("changed", CAircraftIcaoCode::IndexUtcTimestampFormattedYmdhms));
+            m_columns.addColumn(CColumn::standardString("id", CAircraftIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
+            m_columns.addColumn(CColumn::standardString("ICAO", CAircraftIcaoCode::IndexAircraftDesignator));
+            m_columns.addColumn(CColumn::standardString("IATA", CAircraftIcaoCode::IndexIataCode));
+            m_columns.addColumn(CColumn::standardValueObject("rank", CAircraftIcaoCode::IndexRank, CDefaultFormatter::alignRightVCenter()));
+            m_columns.addColumn(CColumn::standardString("manufacturer", CAircraftIcaoCode::IndexManufacturer));
+            m_columns.addColumn(CColumn::standardString("family", CAircraftIcaoCode::IndexFamily));
+            m_columns.addColumn(CColumn::standardString("ICAO desc.", "ICAO description", CAircraftIcaoCode::IndexModelDescription));
+            m_columns.addColumn(CColumn::standardString("IATA desc.", "IATA description", CAircraftIcaoCode::IndexModelIataDescription));
+            m_columns.addColumn(CColumn::standardString("swift desc.", "swift description", CAircraftIcaoCode::IndexModelSwiftDescription));
+            m_columns.addColumn(CColumn::standardString("type", "combined type", CAircraftIcaoCode::IndexCombinedAircraftType));
+            m_columns.addColumn(CColumn::standardString("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
+            m_columns.addColumn(CColumn("mil.", "military", CAircraftIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civil")));
+            m_columns.addColumn(CColumn("VTOL", "vertical take-off and landing", CAircraftIcaoCode::IndexIsVtol, new CBoolIconFormatter("VTOL", "non VTOL"))); m_columns.addColumn(CColumn("leg.", "legacy", CAircraftIcaoCode::IndexIsLegacy, new CBoolIconFormatter("legacy", "operating")));
+            m_columns.addColumn(CColumn("real.", "real world aircraft", CAircraftIcaoCode::IndexIsRealworld, new CBoolIconFormatter("real", "non real")));
+            m_columns.addColumn(CColumn::standardString("changed", CAircraftIcaoCode::IndexUtcTimestampFormattedYmdhms));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAircraftIcaoCode::IndexAircraftDesignator);
-            this->m_sortOrder = Qt::AscendingOrder;
+            m_sortOrder = Qt::AscendingOrder;
         }
     } // ns
 } // ns
