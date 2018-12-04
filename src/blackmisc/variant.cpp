@@ -9,6 +9,7 @@
 
 //! \cond PRIVATE
 
+#include "blackmisc/imageutils.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/logmessage.h"
@@ -463,6 +464,10 @@ namespace BlackMisc
 
     QPixmap CVariant::toPixmap() const
     {
+        if (m_v.type() == QVariant::Pixmap) { return m_v.value<QPixmap>(); }
+        if (m_v.type() == QVariant::Image)  { return QPixmap::fromImage(m_v.value<QImage>()); }
+        if (m_v.type() == QVariant::Icon)   { return iconToPixmap(m_v.value<QIcon>()); }
+
         return toIcon().toPixmap();
     }
 
