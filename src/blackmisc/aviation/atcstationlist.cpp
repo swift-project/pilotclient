@@ -138,5 +138,25 @@ namespace BlackMisc
             stations.sortByAtcSuffixSortOrderAndDistance();
             return stations;
         }
+
+        QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
+        {
+            if (this->isEmpty()) { return QHash<QString, CAtcStationList>(); }
+            const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : * this;
+
+            QString suffix;
+            QHash<QString, CAtcStationList> split;
+            for (const CAtcStation &s : stations)
+            {
+                const QString currentSuffix = s.getCallsignSuffix();
+                if (suffix != currentSuffix)
+                {
+                    suffix = currentSuffix;
+                    split[currentSuffix] = CAtcStationList();
+                }
+                split[currentSuffix].push_back(s);
+            }
+            return split;
+        }
     } // namespace
 } // namespace

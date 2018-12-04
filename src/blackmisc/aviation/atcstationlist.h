@@ -24,6 +24,7 @@
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
+#include <QHash>
 
 namespace BlackMisc
 {
@@ -81,6 +82,10 @@ namespace BlackMisc
 
             //! Sorted by ATC suffix sort order and distance
             CAtcStationList sortedByAtcSuffixSortOrderAndDistance() const;
+
+            //! Split per suffix
+            //! \remark sort can be disabled if already sorted
+            QHash<QString, CAtcStationList> splitPerSuffix(bool sort = true) const;
         };
     } //namespace
 } // namespace
