@@ -45,6 +45,12 @@ namespace BlackGui
             //! Virtual destructor
             virtual ~CDefaultFormatter() {}
 
+            //! Copy constructor
+            CDefaultFormatter(const CDefaultFormatter &) = default;
+
+            //! Copy assignment operator
+            CDefaultFormatter &operator =(const CDefaultFormatter &) = default;
+
             //! Flags
             virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const;
 

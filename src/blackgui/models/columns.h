@@ -198,6 +198,14 @@ namespace BlackGui
             //! Clear
             void clear() { m_columns.clear(); }
 
+            //! Set columns @{
+            void setColumns(const QList<CColumn> &columns) { m_columns = columns; }
+            void setColumns(const CColumns &columns) { m_columns = columns.m_columns; }
+            //! @}
+
+            //! Columns
+            const QList<CColumn> &columns() const { return m_columns; }
+
         private:
             QList<CColumn> m_columns;
             QString m_translationContext;

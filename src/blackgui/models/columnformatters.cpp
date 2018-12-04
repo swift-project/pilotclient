@@ -59,11 +59,13 @@ namespace BlackGui
         CVariant CDefaultFormatter::decorationRole(const CVariant &dataCVariant) const
         {
             // direct return if type is already correct
-            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QPixmap) { return dataCVariant; }
-            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QIcon) { return dataCVariant; }
+            const QMetaType::Type type = static_cast<QMetaType::Type>(dataCVariant.type());
+
+            if (type == QMetaType::QPixmap) { return dataCVariant; }
+            if (type == QMetaType::QIcon) { return dataCVariant; }
 
             // convert to pixmap
-            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QImage)
+            if (type == QMetaType::QImage)
             {
                 const QImage img = dataCVariant.value<QImage>();
                 return CVariant::from(QPixmap::fromImage(img));
