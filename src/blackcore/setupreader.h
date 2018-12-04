@@ -149,6 +149,10 @@ namespace BlackCore
         //! \threadsafe
         bool isSetupAvailable() const { return m_setupAvailable; }
 
+        //! Force an availability update
+        //! \remark check for cached setup if the read check never got triggered
+        void forceAvailabilityUpdate();
+
         //! Version info available?
         //! \threadsafe
         bool isUpdateInfoAvailable() const { return m_updateInfoAvailable; }

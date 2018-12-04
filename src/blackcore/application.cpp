@@ -417,10 +417,21 @@ namespace BlackCore
         });
 
         // setup handling completed with success or failure, or we run into time out
-        if (m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
+        CStatusMessageList msgs;
+        bool forced = false;
+        if (!m_setupReader->isSetupAvailable())
+        {
+            forced = true;
+            m_setupReader->forceAvailabilityUpdate(); // maybe web reading still hanging
+        }
+        if (m_setupReader->isSetupAvailable())
+        {
+            msgs.push_back(CStatusMessage(this).info(forced ? "Setup available after forcing (so likely web read still pending)" : "Setup available"));
+            return msgs;
+        }
 
         // getting here can means no "real" read success, and NO available cache
-        CStatusMessageList msgs(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
+        msgs.push_back(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
         if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
         {
             msgs.push_back(m_setupReader->getLastSetupReadErrorMessages());

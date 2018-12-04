@@ -202,6 +202,11 @@ namespace BlackCore
         m_shutdown = true;
     }
 
+    void CSetupReader::forceAvailabilityUpdate()
+    {
+        this->manageSetupAvailability(false, false); // fake a failed web read
+    }
+
     void CSetupReader::readSetup()
     {
         const CStatusMessageList msgs(this->triggerReadSetup());
