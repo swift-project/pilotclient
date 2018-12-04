@@ -533,10 +533,13 @@ namespace BlackGui
             }
             else
             {
-                // no model data from DB
-                ui->le_AircraftCombinedType->clear();
-                ui->selector_AircraftIcao->clear();
-                ui->selector_AirlineIcao->clear();
+                if (sGui->getIContextSimulator()->isSimulatorAvailable())
+                {
+                    // sim. attached, but no model data from DB
+                    ui->le_AircraftCombinedType->clear();
+                    ui->selector_AircraftIcao->clear();
+                    ui->selector_AirlineIcao->clear();
+                }
             }
 
             const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
