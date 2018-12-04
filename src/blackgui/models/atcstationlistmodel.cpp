@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackmisc/audio/voiceroom.h"
@@ -24,8 +25,6 @@
 #include <QList>
 #include <QMap>
 #include <QModelIndex>
-#include <QStandardItem>
-#include <QStandardItemModel>
 #include <QString>
 #include <Qt>
 #include <QtDebug>
@@ -109,66 +108,17 @@ namespace BlackGui
             }
         }
 
-        QStandardItemModel *CAtcStationListModel::toAtcGroupModel() const
+        CAtcStationTreeModel *CAtcStationListModel::toAtcTreeModel() const
         {
-            QStandardItemModel *model = new QStandardItemModel();
-            if (this->isEmpty()) { return model; }
-            model->setColumnCount(4);
-            const CAtcStationList atcStations = this->container().sortedByAtcSuffixSortOrderAndDistance();
-            const QStringList types = atcStations.getSuffixes();
-            for (const QString &type : types)
-            {
-                // ownership of QStandardItem is taken by model
-                QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(type).toQIcon(), type);
-                typeFolderFirstColumn->setEditable(false);
-                QList<QStandardItem *> typeFolderRow { typeFolderFirstColumn };
-                model->invisibleRootItem()->appendRow(typeFolderRow);
-                CAtcStationList stations = this->container().findBySuffix(type);
-                for (const CAtcStation &station : stations)
-                {
-                    QList<QStandardItem *> stationRow;
-                    switch (m_stationMode)
-                    {
-                    case StationsOnline:
-                        stationRow = QList<QStandardItem *>
-                        {
-                            new QStandardItem(station.getCallsign().toQString()),
-                            new QStandardItem(station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 2, true)),
-                            new QStandardItem(station.getControllerRealName()),
-                            new QStandardItem(station.getRelativeDistance().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
-                        };
-                        break;
-                    case StationsBooked:
-                        stationRow = QList<QStandardItem *>
-                        {
-                            new QStandardItem(station.getCallsign().toQString()),
-                            new QStandardItem(station.getControllerRealName()),
-                            new QStandardItem(station.getBookedFromUtc().toString(CDateTimeFormatter::formatYmdhm())),
-                            new QStandardItem(station.getBookedUntilUtc().toString(CDateTimeFormatter::formatYmdhm()))
-                        };
-                        break;
-                    case NotSet:
-                    default:
-                        Q_ASSERT(false);
-                        break;
-                    }
-
-                    // make not editable
-                    for (QStandardItem *si : stationRow)
-                    {
-                        si->setEditable(false);
-                    }
-
-                    // add all items
-                    typeFolderFirstColumn->appendRow(stationRow);
-                }
-            }
-            return model;
+            CAtcStationTreeModel *tm = new CAtcStationTreeModel(QObject::parent());
+            tm->setColumns(m_columns);
+            tm->updateContainer(this->container());
+            return tm;
         }
 
         void CAtcStationListModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
-            if (station.getCallsign().isEmpty()) return;
+            if (station.getCallsign().isEmpty()) { return; }
             if (added)
             {
                 bool c = m_container.contains(&CAtcStation::getCallsign, station.getCallsign());

@@ -16,6 +16,7 @@
 #include "blackgui/infoarea.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/views/atcstationview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -377,7 +378,7 @@ namespace BlackGui
             //! \fixme EXPERIMENTAL CODE: change model so we can directly use hierarchies
             QAbstractItemModel *old = (ui->tvp_AtcStationsOnlineTree->model());
             ui->tvp_AtcStationsOnlineTree->setModel(
-                ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()
+                ui->tvp_AtcStationsOnline->derivedModel()->toAtcTreeModel()
             );
             if (old) { old->deleteLater(); } // delete old model replaced by current model
             if (!ui->tvp_AtcStationsOnlineTree->model()) { return; }

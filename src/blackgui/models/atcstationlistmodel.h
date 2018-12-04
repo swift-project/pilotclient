@@ -12,10 +12,10 @@
 #ifndef BLACKGUI_MODELS_ATCLISTMODEL_H
 #define BLACKGUI_MODELS_ATCLISTMODEL_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackgui/blackguiexport.h"
 
 #include <QObject>
 
@@ -23,6 +23,8 @@ namespace BlackGui
 {
     namespace Models
     {
+        class CAtcStationTreeModel;
+
         //! ATC list model
         class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
         {
@@ -48,7 +50,7 @@ namespace BlackGui
             AtcStationMode getStationMode() const { return this->m_stationMode; }
 
             //! A group by type (TWR, APP, ...) model
-            QStandardItemModel *toAtcGroupModel() const;
+            CAtcStationTreeModel *toAtcTreeModel() const;
 
         public slots:
             //! Used to quickly update single station (better response for the user)
