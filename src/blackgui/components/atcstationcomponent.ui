@@ -187,9 +187,12 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTreeView" name="tvp_AtcStationsOnlineTree">
+     <widget class="BlackGui::Views::CAtcStationTreeView" name="tvp_AtcStationsOnlineTree">
       <property name="selectionMode">
-       <enum>QAbstractItemView::NoSelection</enum>
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
       </property>
       <property name="animated">
        <bool>true</bool>
@@ -266,6 +269,11 @@
    <extends>QFrame</extends>
    <header>blackgui/components/settingsatcstationsinlinecomponent.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CAtcStationTreeView</class>
+   <extends>QTreeView</extends>
+   <header>blackgui/views/atcstationtreeview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

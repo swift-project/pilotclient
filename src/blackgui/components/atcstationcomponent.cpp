@@ -82,8 +82,9 @@ namespace BlackGui
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
 
-            // header
-            ui->tvp_AtcStationsOnlineTree->setHeaderHidden(true);
+            // menus
+            ui->tvp_AtcStationsOnline->menuRemoveItems(CAtcStationView::MenuClear);
+            ui->tvp_AtcStationsBooked->menuRemoveItems(CAtcStationView::MenuClear);
 
             // Signal / Slots
             connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
@@ -99,6 +100,8 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
+            connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
+            connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
 
