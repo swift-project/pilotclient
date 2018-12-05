@@ -49,6 +49,7 @@
 #include <QRegularExpression>
 #include <QSettings>
 #include <QSplashScreen>
+#include <QMessageBox>
 #include <QStyleFactory>
 #include <QStringList>
 #include <QStyle>
@@ -203,6 +204,15 @@ namespace BlackGui
     void CGuiApplication::registerMainApplicationWidget(QWidget *mainWidget)
     {
         CGuiUtility::registerMainApplicationWidget(mainWidget);
+    }
+
+    bool CGuiApplication::hasMinimumMappingVersion() const
+    {
+        if (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion()) { return true; }
+
+        const QString msg = QStringLiteral("Your are using swift version: '%1'.\nCreating mappings requires at least '%2'.").arg(CBuildConfig::getVersionString(), this->getGlobalSetup().getMappingMinimumVersionString());
+        QMessageBox::warning(this->mainApplicationWindow(), "Version check", msg, QMessageBox::Close);
+        return false;
     }
 
     QMainWindow *CGuiApplication::mainApplicationWindow()

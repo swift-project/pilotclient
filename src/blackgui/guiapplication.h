@@ -229,6 +229,9 @@ namespace BlackGui
         //! \copydoc BlackGui::CGuiUtility::registerMainApplicationWidget
         void registerMainApplicationWidget(QWidget *mainWidget);
 
+        //! \copydoc BlackCore::CApplication::hasMinimumMappingVersion
+        virtual bool hasMinimumMappingVersion() const override;
+
         //! Main application window
         static QMainWindow *mainApplicationWindow();
 

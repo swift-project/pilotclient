@@ -38,6 +38,7 @@
 #include "blackconfig/buildconfig.h"
 
 #include <QDialogButtonBox>
+#include <QMessageBox>
 #include <QGroupBox>
 #include <QIntValidator>
 #include <QLineEdit>
@@ -693,6 +694,8 @@ namespace BlackGui
         void CLoginComponent::mappingWizard()
         {
             if (!sGui || !sGui->getIContextOwnAircraft() || sGui->isShuttingDown()) { return; }
+            if (!sGui->hasMinimumMappingVersion()) { return; }
+
             if (!m_mappingWizard)
             {
                 m_mappingWizard.reset(new CDbQuickMappingWizard(this));

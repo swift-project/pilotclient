@@ -457,6 +457,11 @@ namespace BlackCore
         return m_setupReader->asyncLoad();
     }
 
+    bool CApplication::hasMinimumMappingVersion() const
+    {
+        return (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion());
+    }
+
     bool CApplication::hasWebDataServices() const
     {
         if (this->isShuttingDown()) { return false; } // service will not survive for long

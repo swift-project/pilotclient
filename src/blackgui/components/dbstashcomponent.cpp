@@ -269,6 +269,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
+            if (!sGui->hasMinimumMappingVersion())    { return; }
 
             // get models right here, because later steps might affect selection
             const CAircraftModelList models(getSelectedOrAllModels());

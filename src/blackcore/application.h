@@ -382,6 +382,9 @@ namespace BlackCore
         //! Reload setup and version
         BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
 
+        //! Minimum mapping version check
+        virtual bool hasMinimumMappingVersion() const;
+
         //! Read and wait for setup
         //! \sa waitForSetup
         BlackMisc::CStatusMessageList synchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
