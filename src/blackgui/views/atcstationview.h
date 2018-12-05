@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_ATCSTATIONVIEW_H
 #define BLACKGUI_ATCSTATIONVIEW_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -24,7 +24,6 @@
 #include <QObject>
 
 class QAction;
-class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace BlackGui

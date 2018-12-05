@@ -494,6 +494,12 @@ namespace BlackGui
             virtual void paste() = 0;
             //! @}
 
+            //! Trigger reload from backend by signal requestUpdate();
+            void triggerReload();
+
+            //! Trigger reload from backend by signal requestNewBackendData()
+            void triggerReloadFromBackend();
+
             //! Init text edit dialog if required and return pointer to it
             Components::CTextEditDialog *textEditDialog();
 
@@ -552,12 +558,6 @@ namespace BlackGui
             //! Save JSON
             virtual BlackMisc::CStatusMessage ps_saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
 
-            //! Trigger reload from backend by signal requestUpdate();
-            void ps_triggerReload();
-
-            //! Trigger reload from backend by signal requestNewBackendData()
-            void ps_triggerReloadFromBackend();
-
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
 
@@ -572,7 +572,7 @@ namespace BlackGui
             void toggleAutoDisplay();
 
             //! Custom menu was requested
-            void customMenuRequested(QPoint pos);
+            void customMenuRequested(const QPoint &pos);
 
             //! Indicator has been updated
             void updatedIndicator();

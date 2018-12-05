@@ -218,13 +218,13 @@ namespace BlackGui
                 {
                     static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
                     if (!this->isSignalConnected(requestSignal)) break;
-                    ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break;
+                    ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReload }); break;
                 }
             case MenuBackend:
                 {
                     static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
                     if (!this->isSignalConnected(requestSignal)) break;
-                    ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break;
+                    ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReloadFromBackend }); break;
                 }
             case MenuDisplayAutomatically:
                 {
@@ -636,23 +636,13 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::displayJsonPopup()
-        {
-
-        }
-
-        void CViewBaseNonTemplate::displaySelectedJsonPopup()
-        {
-
-        }
-
-        void CViewBaseNonTemplate::ps_triggerReload()
+        void CViewBaseNonTemplate::triggerReload()
         {
             this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
             emit this->requestUpdate();
         }
 
-        void CViewBaseNonTemplate::ps_triggerReloadFromBackend()
+        void CViewBaseNonTemplate::triggerReloadFromBackend()
         {
             this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
             emit this->requestNewBackendData();
@@ -787,7 +777,7 @@ namespace BlackGui
             this->setVisible(true);
         }
 
-        void CViewBaseNonTemplate::customMenuRequested(QPoint pos)
+        void CViewBaseNonTemplate::customMenuRequested(const QPoint &pos)
         {
             QMenu menu;
             CMenuActions menuActions;

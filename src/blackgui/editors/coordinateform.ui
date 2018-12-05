@@ -279,7 +279,7 @@
       <item>
        <widget class="QPushButton" name="pb_OwnAircraft">
         <property name="text">
-         <string> own aircraft </string>
+         <string>own aircraft</string>
         </property>
        </widget>
       </item>
@@ -325,7 +325,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_EW"/>
   <buttongroup name="bg_NS"/>
+  <buttongroup name="bg_EW"/>
  </buttongroups>
 </ui>
