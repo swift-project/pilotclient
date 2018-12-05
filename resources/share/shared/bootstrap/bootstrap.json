@@ -9,7 +9,7 @@
         "url": "https://datastore.swift-project.net"
     },
     "development": false,
-    "mappingMinimumVersion" : "0.8.6",
+    "mappingMinimumVersion" : "0.8.7",
     "fsdTestServers": {
         "containerbase": []
     },
