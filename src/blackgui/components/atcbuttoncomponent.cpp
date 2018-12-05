@@ -14,6 +14,7 @@
 #include "blackgui/guiutility.h"
 #include "blackmisc/aviation/atcstationlist.h"
 
+#include <math.h>
 #include <QGridLayout>
 #include <QPushButton>
 
@@ -91,10 +92,13 @@ namespace BlackGui
                 }
             }
 
+            const double a = added;
+            const double c = m_cols;
+            const int rows = qRound(ceil(a / c)); // row can be too high
             if (added > 0)
             {
                 this->setVisible(true);
-                this->setMinimumHeight(row * 25);
+                this->setMinimumHeight(rows * 25);
             }
         }
 

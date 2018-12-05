@@ -90,7 +90,7 @@ namespace BlackGui
             void setAtcButtonsBackgroundUpdates(bool backgroundUpdates);
 
             //! Update buttons
-            void updateAtcButtonStations();
+            void updateAtcStationsButtons();
 
         signals:
             //! Message to be displayed in info window

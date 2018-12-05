@@ -664,7 +664,7 @@ namespace BlackGui
             ui->comp_AtcStations->setBackgroundUpdates(backgroundUpdates);
         }
 
-        void CTextMessageComponent::updateAtcButtonStations()
+        void CTextMessageComponent::updateAtcStationsButtons()
         {
             ui->comp_AtcStations->updateStations();
         }

@@ -252,7 +252,7 @@ namespace BlackGui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
         ui->comp_OverlayTextMessage->setTab(tab);
-        ui->comp_OverlayTextMessage->updateAtcButtonStations();
+        ui->comp_OverlayTextMessage->updateAtcStationsButtons();
         this->setHeader("Text message");
         this->showKill(false);
         this->display();

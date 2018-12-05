@@ -55,7 +55,7 @@ namespace BlackGui
         //! Set the size factors
         void setOverlaySizeFactors(double widthFactor, double heightFactor, double middleFactor = 2)
         {
-            m_widthFactor = widthFactor;
+            m_widthFactor  = widthFactor;
             m_heightFactor = heightFactor;
             if (middleFactor >= 0) { m_middleFactor = middleFactor; }
         }
@@ -174,7 +174,7 @@ namespace BlackGui
         //! \copydoc BlackGui::COverlayMessages::showOverlayImage
         void showOverlayInlineTextMessage(Components::TextMessageTab tab)
         {
-            this->initInnerFrame();
+            this->initInnerFrame(0.75, 0.75);
             m_overlayMessages->showOverlayInlineTextMessage(tab);
             WIDGET::repaint();
         }
@@ -191,9 +191,9 @@ namespace BlackGui
         }
 
         //! Init the inner frame (if not yet initialized)
-        void initInnerFrame()
+        void initInnerFrame(double widthFactor = -1, double heightFactor = -1)
         {
-            const QSize inner(innerFrameSize());
+            const QSize inner(innerFrameSize(widthFactor, heightFactor));
             if (!m_overlayMessages)
             {
                 // lazy init
@@ -259,14 +259,17 @@ namespace BlackGui
 
     private:
         //! Calculate inner frame size
-        QSize innerFrameSize() const
+        QSize innerFrameSize(double widthFactor = -1, double heightFactor = -1) const
         {
             // check against minimum if widget is initialized, but not yet resized
             const int w = std::max(WIDGET::width(),  WIDGET::minimumWidth());
             const int h = std::max(WIDGET::height(), WIDGET::minimumHeight());
 
-            int wInner = qRound(m_widthFactor * w);
-            int hInner = qRound(m_heightFactor * h);
+            widthFactor  = qMin(widthFactor  < 0 ? m_widthFactor  : widthFactor,  0.95);
+            heightFactor = qMin(heightFactor < 0 ? m_heightFactor : heightFactor, 0.95);
+
+            int wInner = qRound(widthFactor  * w);
+            int hInner = qRound(heightFactor * h);
             if (wInner > WIDGET::maximumWidth())  { wInner = WIDGET::maximumWidth();  }
             if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
             return QSize(wInner, hInner);
