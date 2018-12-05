@@ -85,9 +85,9 @@ namespace BlackGui
         bool hasDockedWidgets = this->countDockedWidgetInfoAreas() > 0;
         if (hasDockedWidgets)
         {
-            menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
-            menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
-            menu->addAction(CIcons::floatOne16(), QString("Dock / float '%1'").arg(this->windowTitle()), this, SLOT(toggleFloatingWholeInfoArea()));
+            menu->addAction(CIcons::dockTop16(), "Dock all", this, &CInfoArea::dockAllWidgets);
+            menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
+            menu->addAction(CIcons::floatOne16(), QString("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
             lockTabBarMenuAction->setIconText("Lock tab bar");
@@ -511,6 +511,7 @@ namespace BlackGui
         {
             QPoint p = CGuiUtility::mainWidgetPosition();
             this->setWindowFlags(Qt::Dialog);
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->move(p.rx() + 20, p.ry() + 20);
             this->show(); // not working without show
         }
@@ -525,9 +526,12 @@ namespace BlackGui
 
             // RW: The line below is commented to prevent making this widget visible as a top window
             // in case it is constructed without parent or anchestor widget. Contrary to the comment,
-            // it does not seem to be necessary.
-            // https://dev.vatsim-germany.org/issues/738
-            // this->setVisible(true); // after redocking this is required
+            // it does not seem to be necessary https://dev.vatsim-germany.org/issues/738
+            // KB 2018-12 with T447 T452 re-eanled the line again, but wit parent condition
+            if (this->parentWidget()) // this line
+            {
+                this->setVisible(true); // after redocking this is required
+            }
         }
 
         emit changedWholeInfoAreaFloating(floating);

@@ -49,7 +49,7 @@ namespace BlackGui
 
     public:
         //! Destructor
-        virtual ~CInfoArea();
+        virtual ~CInfoArea() override;
 
         //! Add items to context menu
         void addToContextMenu(QMenu *menu) const;
