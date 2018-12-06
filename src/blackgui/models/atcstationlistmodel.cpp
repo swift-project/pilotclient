@@ -121,7 +121,7 @@ namespace BlackGui
             if (station.getCallsign().isEmpty()) { return; }
             if (added)
             {
-                bool c = m_container.contains(&CAtcStation::getCallsign, station.getCallsign());
+                const bool c = m_container.contains(&CAtcStation::getCallsign, station.getCallsign());
                 if (!c) { this->insert(station); }
             }
             else

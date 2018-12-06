@@ -54,14 +54,14 @@ namespace BlackGui
         CTemperatureLayerListModel::CTemperatureLayerListModel(QObject *parent) :
             CListModelBase("TemperatureLayerListModel", parent)
         {
-            this->m_columns.addColumn(CColumn("level", CTemperatureLayer::IndexLevel, new CAltitudeFormatter()));
-            this->m_columns.addColumn(CColumn("temperature", CTemperatureLayer::IndexTemperature, new CTemperatureFormatter()));
-            this->m_columns.addColumn(CColumn("dew point", CTemperatureLayer::IndexDewPoint, new CTemperatureFormatter()));
-            this->m_columns.addColumn(CColumn("relative humidity", CTemperatureLayer::IndexRelativeHumidity, new CRelativeHumidityFormatter()));
+            m_columns.addColumn(CColumn("level", CTemperatureLayer::IndexLevel, new CAltitudeFormatter()));
+            m_columns.addColumn(CColumn("temperature", CTemperatureLayer::IndexTemperature, new CTemperatureFormatter()));
+            m_columns.addColumn(CColumn("dew point", CTemperatureLayer::IndexDewPoint, new CTemperatureFormatter()));
+            m_columns.addColumn(CColumn("relative humidity", CTemperatureLayer::IndexRelativeHumidity, new CRelativeHumidityFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CTemperatureLayer::IndexLevel);
-            this->m_sortOrder = Qt::AscendingOrder;
+            m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelTemperatureLayerList", "level");

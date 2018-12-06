@@ -23,14 +23,14 @@ namespace BlackGui
         CServerListModel::CServerListModel(QObject *parent) :
             CListModelBase("ServerListModel", parent)
         {
-            this->m_columns.addColumn(CColumn::standardString("name", CServer::IndexName));
-            this->m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));
-            this->m_columns.addColumn(CColumn::standardString("address", CServer::IndexAddress));
-            this->m_columns.addColumn(CColumn::standardString("port", CServer::IndexPort));
-            this->m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId }));
-            this->m_columns.addColumn(CColumn::standardString("eco", { CServer::IndexEcosystem, CEcosystem::IndexSystemString }));
-            this->m_columns.addColumn(CColumn::standardString("type", CServer::IndexServerTypeAsString));
+            m_columns.addColumn(CColumn::standardString("name", CServer::IndexName));
+            m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));
+            m_columns.addColumn(CColumn::standardString("address", CServer::IndexAddress));
+            m_columns.addColumn(CColumn::standardString("port", CServer::IndexPort));
+            m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName }));
+            m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId }));
+            m_columns.addColumn(CColumn::standardString("eco", { CServer::IndexEcosystem, CEcosystem::IndexSystemString }));
+            m_columns.addColumn(CColumn::standardString("type", CServer::IndexServerTypeAsString));
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ServerListModel", "name");

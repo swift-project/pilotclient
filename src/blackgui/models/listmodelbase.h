@@ -78,7 +78,7 @@ namespace BlackGui
             virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const;
 
             //! Set sort column
-            virtual void setSortColumn(int column) { this->m_sortColumn = column; }
+            virtual void setSortColumn(int column) { m_sortColumn = column; }
 
             //! Sort by index
             void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
@@ -91,13 +91,13 @@ namespace BlackGui
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
             //! Get sort column property index
-            virtual int getSortColumn() const { return this->m_sortColumn; }
+            virtual int getSortColumn() const { return m_sortColumn; }
 
             //! Has valid sort column?
             virtual bool hasValidSortColumn() const;
 
             //! Get sort order
-            virtual Qt::SortOrder getSortOrder() const { return this->m_sortOrder; }
+            virtual Qt::SortOrder getSortOrder() const { return m_sortOrder; }
 
             //! Translation context
             virtual const QString &getTranslationContext() const;
@@ -118,7 +118,7 @@ namespace BlackGui
             virtual bool hasHighlightedRows() const;
 
             //! Drop actions
-            void setDropActions(Qt::DropActions dropActions) { this->m_dropActions = dropActions; }
+            void setDropActions(Qt::DropActions dropActions) { m_dropActions = dropActions; }
 
             //! Send signal that data have been changed.
             //! \note Meant for scenarios where the container is directly updated and a subsequent signal is required

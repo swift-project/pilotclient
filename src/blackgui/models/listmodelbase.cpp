@@ -53,12 +53,12 @@ namespace BlackGui
 
             if (role == Qt::DisplayRole)
             {
-                QString header = m_columns.at(section).getColumnName(false);
+                const QString header = m_columns.at(section).getColumnName(false);
                 return QVariant(header);
             }
             if (role == Qt::ToolTipRole)
             {
-                QString header = m_columns.at(section).getColumnToolTip(false);
+                const QString header = m_columns.at(section).getColumnToolTip(false);
                 return header.isEmpty() ? QVariant() : QVariant(header);
             }
             return QVariant();

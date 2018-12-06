@@ -27,17 +27,17 @@ namespace BlackGui
         {
             CColumn col("country", CCountry::IndexIcon);
             col.setSortPropertyIndex(CCountry::IndexIsoCode);
-            this->m_columns.addColumn(col);
-            this->m_columns.addColumn(CColumn::standardString("ISO2", CCountry::IndexIsoCode));
-            this->m_columns.addColumn(CColumn::standardString("ISO3", CCountry::IndexIso3Code));
-            this->m_columns.addColumn(CColumn::standardString("name", CCountry::IndexName));
-            this->m_columns.addColumn(CColumn::standardString("alias 1", CCountry::IndexAlias1));
-            this->m_columns.addColumn(CColumn::standardString("alias 2", CCountry::IndexAlias2));
-            this->m_columns.addColumn(CColumn::standardString("changed", CCountry::IndexUtcTimestampFormattedYmdhms));
+            m_columns.addColumn(col);
+            m_columns.addColumn(CColumn::standardString("ISO2", CCountry::IndexIsoCode));
+            m_columns.addColumn(CColumn::standardString("ISO3", CCountry::IndexIso3Code));
+            m_columns.addColumn(CColumn::standardString("name", CCountry::IndexName));
+            m_columns.addColumn(CColumn::standardString("alias 1", CCountry::IndexAlias1));
+            m_columns.addColumn(CColumn::standardString("alias 2", CCountry::IndexAlias2));
+            m_columns.addColumn(CColumn::standardString("changed", CCountry::IndexUtcTimestampFormattedYmdhms));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CCountry::IndexIsoCode);
-            this->m_sortOrder = Qt::AscendingOrder;
+            m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelCountryList", "cty.");
