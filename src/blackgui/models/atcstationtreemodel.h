@@ -35,11 +35,15 @@ namespace BlackGui
             //! Destructor
             virtual ~CAtcStationTreeModel() override {}
 
-            //! Set station mode
+            //! Set columns
             void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
 
             //! Update container
             void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
+
+            //! Clear everything
+            //! \remark hiding QStandardItemModel::clear()
+            void clear();
 
             //! Get container
             const BlackMisc::Aviation::CAtcStationList &container() const { return m_stations; }

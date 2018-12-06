@@ -81,6 +81,7 @@ namespace BlackGui
             // set station mode
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
+            ui->tvp_AtcStationsOnlineTree->setColumns(ui->tvp_AtcStationsOnline->getColumns());
 
             // menus
             ui->tvp_AtcStationsOnline->menuRemoveItems(CAtcStationView::MenuClear);
@@ -378,19 +379,8 @@ namespace BlackGui
 
         void CAtcStationComponent::updateTreeView()
         {
-            //! \fixme EXPERIMENTAL CODE: change model so we can directly use hierarchies
-            QAbstractItemModel *old = (ui->tvp_AtcStationsOnlineTree->model());
-            ui->tvp_AtcStationsOnlineTree->setModel(
-                ui->tvp_AtcStationsOnline->derivedModel()->toAtcTreeModel()
-            );
-            if (old) { old->deleteLater(); } // delete old model replaced by current model
-            if (!ui->tvp_AtcStationsOnlineTree->model()) { return; }
-
-            ui->tvp_AtcStationsOnlineTree->expandAll();
-            for (int i = 0; i < ui->tvp_AtcStationsOnlineTree->model()->columnCount(); i++)
-            {
-                ui->tvp_AtcStationsOnlineTree->resizeColumnToContents(i);
-            }
+            ui->tvp_AtcStationsOnlineTree->updateContainer(ui->tvp_AtcStationsOnline->container());
+            ui->tvp_AtcStationsOnlineTree->fullResizeToContents();
         }
 
         void CAtcStationComponent::initCompleters()
@@ -450,8 +440,7 @@ namespace BlackGui
         void CAtcStationComponent::clearOnlineViews()
         {
             ui->tvp_AtcStationsOnline->clear();
-            QAbstractItemModel *treeModelOld = (ui->tvp_AtcStationsOnlineTree->model());
-            if (treeModelOld) { CGuiUtility::clearModel(treeModelOld); }
+            ui->tvp_AtcStationsOnlineTree->clear();
         }
 
         void CAtcStationComponent::showOverlayInlineTextMessage()

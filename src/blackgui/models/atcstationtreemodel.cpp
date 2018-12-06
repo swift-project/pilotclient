@@ -57,10 +57,16 @@ namespace BlackGui
 
         void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
         {
+            if (stations.isEmpty())
+            {
+                CAtcStationTreeModel::clear();
+                return;
+            }
+
             m_stations = stations.sortedByAtcSuffixSortOrderAndDistance();
             m_stationsBySuffix = m_stations.splitPerSuffix();
             m_suffixes = m_stations.getSuffixes();
-            this->clear();
+            QStandardItemModel::clear();
 
             int visibleColumns = 0;
             for (const QString &suffix : m_suffixes)
@@ -103,6 +109,20 @@ namespace BlackGui
                 }
             }
             this->setColumnCount(visibleColumns);
+        }
+
+        void CAtcStationTreeModel::clear()
+        {
+            m_stations.clear();
+            m_stationsBySuffix.clear();
+            m_suffixes.clear();
+            QStandardItemModel::clear();
+        }
+
+        void CAtcStationTreeModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
+        {
+            Q_UNUSED(station);
+            Q_UNUSED(added);
         }
     }  // namespace
 } // namespace

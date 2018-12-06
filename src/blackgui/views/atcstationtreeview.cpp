@@ -31,14 +31,43 @@ namespace BlackGui
     {
         CAtcStationTreeView::CAtcStationTreeView(QWidget *parent) : QTreeView(parent)
         {
+            this->setModel(new CAtcStationTreeModel(this));
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &CAtcStationTreeView::customContextMenuRequested, this, &CAtcStationTreeView::customMenu);
+            connect(this, &CAtcStationTreeView::expanded, this, &CAtcStationTreeView::onExpanded);
         }
 
         void CAtcStationTreeView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
-            Q_UNUSED(station);
-            Q_UNUSED(added);
+            if (!this->stationModel()) { return; }
+            this->stationModel()->changedAtcStationConnectionStatus(station, added);
+        }
+
+        void CAtcStationTreeView::updateContainer(const CAtcStationList &stations)
+        {
+            if (!this->stationModel()) { return; }
+            this->storeState();
+            this->stationModel()->updateContainer(stations);
+            this->restoreState();
+        }
+
+        void CAtcStationTreeView::clear()
+        {
+            if (!this->stationModel()) { return; }
+            this->stationModel()->clear();
+        }
+
+        void CAtcStationTreeView::setColumns(const CColumns &columns)
+        {
+            if (this->stationModel()) { this->stationModel()->setColumns(columns); }
+        }
+
+        void CAtcStationTreeView::fullResizeToContents()
+        {
+            for (int c = 0; c < this->model()->columnCount(); c++)
+            {
+                this->resizeColumnToContents(c);
+            }
         }
 
         const CAtcStationTreeModel *CAtcStationTreeView::stationModel() const
@@ -46,33 +75,81 @@ namespace BlackGui
             return qobject_cast<const CAtcStationTreeModel *>(this->model());
         }
 
+        CAtcStationTreeModel *CAtcStationTreeView::stationModel()
+        {
+            return qobject_cast<CAtcStationTreeModel *>(this->model());
+        }
+
         CAtcStation CAtcStationTreeView::selectedObject() const
         {
             const QModelIndex index = this->currentIndex();
-            const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
+            // Qt 5.11 or later const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
+            const QVariant data = this->model()->data(index.sibling(index.row(), 0)); // supposed to be the callsign
             const QString callsign = data.toString();
             const CAtcStationTreeModel *model = this->stationModel();
             if (!model) { return CAtcStation(); }
             return model->container().findFirstByCallsign(CCallsign(callsign, CCallsign::Atc));
-         }
+        }
+
+        QString CAtcStationTreeView::suffixForIndex(const QModelIndex &index)
+        {
+            const QVariant data = this->model()->data(index); // supposed to be the suffix
+            return data.toString();
+        }
+
+        void CAtcStationTreeView::onExpanded(const QModelIndex &index)
+        {
+            Q_UNUSED(index);
+            this->fullResizeToContents();
+        }
 
         void CAtcStationTreeView::customMenu(const QPoint &point)
         {
+            if (!this->stationModel()) { return; }
+            if (this->stationModel()->container().isEmpty()) { return; }
+
             QMenu *menu = new QMenu(this);  // menu
 
             QAction *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1", this);
             QAction *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2", this);
             QAction *text = new QAction(CIcons::appTextMessages16(), "Show text messages", this);
+            QAction *resize = new QAction(CIcons::resize16(), "Resize", this);
 
             connect(com1, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom1);
             connect(com2, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom2);
             connect(text, &QAction::triggered, this, &CAtcStationTreeView::requestTextMessage);
+            connect(resize, &QAction::triggered, this, &CAtcStationTreeView::fullResizeToContents);
 
             menu->addAction(com1);
             menu->addAction(com2);
             menu->addAction(text);
+            menu->addSeparator();
+            menu->addAction(resize);
 
             menu->popup(this->viewport()->mapToGlobal(point));
+        }
+
+        void CAtcStationTreeView::storeState()
+        {
+            m_expanded.clear();
+            for (int row = 0; row < this->model()->rowCount(); ++row)
+            {
+                const QModelIndex i  = this->model()->index(row, 0);
+                const bool expanded  = this->isExpanded(i);
+                const QString suffix = this->suffixForIndex(i);
+                m_expanded.insert(suffix, expanded);
+            }
+        }
+
+        void CAtcStationTreeView::restoreState()
+        {
+            for (int row = 0; row < this->model()->rowCount(); ++row)
+            {
+                const QModelIndex i = this->model()->index(row, 0);
+                const QString suffix = this->suffixForIndex(i); // suffix of new data
+                const bool expanded = m_expanded.value(suffix, true); // default expanded
+                this->setExpanded(i, expanded);
+            }
         }
 
         void CAtcStationTreeView::tuneInAtcCom1()

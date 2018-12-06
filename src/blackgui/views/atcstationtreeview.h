@@ -21,10 +21,17 @@
 #include <QList>
 #include <QObject>
 #include <QPoint>
+#include <QMap>
+#include <QModelIndex>
 
 namespace BlackGui
 {
-    namespace Models { class CAtcStationTreeModel; }
+    namespace Models
+    {
+        class CAtcStationTreeModel;
+        class CColumns;
+    }
+
     namespace Views
     {
         //! ATC stations view
@@ -38,6 +45,18 @@ namespace BlackGui
 
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+
+            //! Update container
+            void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
+
+            //! Clear
+            void clear();
+
+            //! Set columns
+            void setColumns(const Models::CColumns &columns);
+
+            //! Resize all columns
+            void fullResizeToContents();
 
         signals:
             //! Request some dummy ATC stations
@@ -53,15 +72,34 @@ namespace BlackGui
             //! Used model
             const Models::CAtcStationTreeModel *stationModel() const;
 
+            //! Used model
+            Models::CAtcStationTreeModel *stationModel();
+
             //! The selected object
             BlackMisc::Aviation::CAtcStation selectedObject() const;
+
+            //! Suffix for index
+            QString suffixForIndex(const QModelIndex &index);
+
+            //! Expanded
+            void onExpanded(const QModelIndex &index);
 
             //! Custom menu
             void customMenu(const QPoint &point);
 
+            //! Store state
+            void storeState();
+
+            //! Restore state
+            void restoreState();
+
+            //! Tune in/invoke @{
             void tuneInAtcCom1();
             void tuneInAtcCom2();
             void requestTextMessage();
+            //! @}
+
+            QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
     } // ns
 } // ns
