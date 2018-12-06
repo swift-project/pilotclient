@@ -85,6 +85,18 @@ namespace BlackMisc
         //! Strip file from path a/b/c.json a/b, return path
         static QString stripFileFromPath(const QString &path);
 
+        //! Strip first slash part "/a/b" => "a/b", "h:/foo" => foo
+        static QString stripFirstSlashPart(const QString &path);
+
+        //! Strip first slash part "/a/b" => "a/b", "h:/foo" => foo
+        static QStringList stripFirstSlashParts(const QStringList &paths);
+
+        //! Strip leading slash or drive letter "/a/b" => "a/b" "H:/Foo" => "Foo"
+        static QString stripLeadingSlashOrDriveLetter(const QString &path);
+
+        //! Strip first slash part "/a/b" => "a/b", "h:/foo" => foo
+        static QStringList stripLeadingSlashOrDriveLetters(const QStringList &paths);
+
         //! Last path segment a/b/c => c
         static QString lastPathSegment(const QString &path);
 

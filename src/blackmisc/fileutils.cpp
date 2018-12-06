@@ -20,6 +20,7 @@
 #include <QIODevice>
 #include <QList>
 #include <QLockFile>
+#include <QRegularExpression>
 #include <QTextStream>
 #include <QtGlobal>
 #include <QMap>
@@ -127,6 +128,42 @@ namespace BlackMisc
         if (path.endsWith('/'))  { return path; }
         if (!path.contains('/')) { return path; }
         return path.left(path.lastIndexOf('/'));
+    }
+
+    QString CFileUtils::stripFirstSlashPart(const QString &path)
+    {
+        QString p = normalizeFilePathToQtStandard(path);
+        int i = p.indexOf('/');
+        if (i < 0) { return p; }
+        if ((i + 1) >= path.length()) { return QStringLiteral(""); }
+        return path.mid(i + 1);
+    }
+
+    QStringList CFileUtils::stripFirstSlashParts(const QStringList &paths)
+    {
+        QStringList stripped;
+        for (const QString &path : paths)
+        {
+            stripped.push_back(stripFileFromPath(path));
+        }
+        return stripped;
+    }
+
+    QString CFileUtils::stripLeadingSlashOrDriveLetter(const QString &path)
+    {
+        thread_local const QRegularExpression re("^\\/+|^[a-zA-Z]:\\/*");
+        QString p(path);
+        return p.replace(re, "");
+    }
+
+    QStringList CFileUtils::stripLeadingSlashOrDriveLetters(const QStringList &paths)
+    {
+        QStringList stripped;
+        for (const QString &path : paths)
+        {
+            stripped.push_back(stripLeadingSlashOrDriveLetter(path));
+        }
+        return stripped;
     }
 
     QString CFileUtils::lastPathSegment(const QString &path)
