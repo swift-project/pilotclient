@@ -130,6 +130,9 @@ namespace BlackGui
             //! Convert to JSON string
             virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const = 0;
 
+            //! The columns
+            const CColumns &getColumns() const { return m_columns; }
+
         signals:
             //! Asynchronous update finished
             void asyncUpdateFinished();

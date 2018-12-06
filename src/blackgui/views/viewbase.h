@@ -49,7 +49,6 @@ class QModelIndex;
 class QPaintEvent;
 class QPoint;
 class QShowEvent;
-class QWidget;
 class QTabWidget;
 
 namespace BlackMisc { class CWorker; }
@@ -62,6 +61,11 @@ namespace BlackGui
     {
         class IMenuDelegate;
         class CFontMenu;
+    }
+
+    namespace Models
+    {
+        class CColumns;
     }
 
     namespace Filters
@@ -603,6 +607,9 @@ namespace BlackGui
 
             //! Model
             const ModelClass *derivedModel() const { return m_model; }
+
+            //! The columns
+            const Models::CColumns &getColumns() const { return this->derivedModel()->getColumns(); }
 
             //! Update whole container
             //! \return int size after update
