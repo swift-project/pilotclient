@@ -106,9 +106,9 @@ namespace BlackMisc
             {
                 static const QString dir = []
                 {
-                    if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
+                    if (!xplane11Dir().isEmpty())      { return xplane11Dir(); }
                     else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
-                    else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
+                    else if (!xplane9Dir().isEmpty())  { return xplane9Dir(); }
                     else { return QString(); }
                 }();
                 return dir;

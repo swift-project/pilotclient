@@ -38,7 +38,6 @@
 class QAction;
 class QModelIndex;
 class QPoint;
-class QWidget;
 
 namespace BlackMisc
 {

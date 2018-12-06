@@ -160,7 +160,7 @@ namespace BlackMisc
                 (s.testFlag(FS9)    ? QStringLiteral("FS9 ") : QStringLiteral("")) %
                 (s.testFlag(P3D)    ? QStringLiteral("P3D ") : QStringLiteral("")) %
                 (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QStringLiteral("")) %
-                (s.testFlag(FG)     ? QStringLiteral("FG ") : QStringLiteral(""));
+                (s.testFlag(FG)     ? QStringLiteral("FG ")  : QStringLiteral(""));
             return str.trimmed();
         }
 
