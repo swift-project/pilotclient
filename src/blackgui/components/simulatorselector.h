@@ -21,8 +21,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSimulatorSelector; }
 namespace BlackGui
 {
@@ -51,7 +49,10 @@ namespace BlackGui
             virtual ~CSimulatorSelector();
 
             //! How to display
-            void setMode(Mode mode);
+            void setMode(Mode mode, bool forced = false);
+
+            //! Get mode
+            Mode getMode() { return m_mode; }
 
             //! No selection treated same as all selected (filters)
             void setNoSelectionMeansAll(bool v) { m_noSelectionMeansAll = v; }

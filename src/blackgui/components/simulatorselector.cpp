@@ -11,6 +11,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/context/contextsimulator.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/compare.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_simulatorselector.h"
@@ -22,6 +23,7 @@
 #include <QPointer>
 
 using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 
@@ -34,8 +36,12 @@ namespace BlackGui
             ui(new Ui::CSimulatorSelector)
         {
             ui->setupUi(this);
-            this->enableFG(false && CBuildConfig::isLocalDeveloperDebugBuild());
-            this->setMode(CheckBoxes);
+
+            const bool withFG = false; // CBuildConfig::isLocalDeveloperDebugBuild();
+            this->enableFG(withFG);
+            this->addComboxBoxValues();
+
+            this->setMode(CheckBoxes, true);
 
             connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
             connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
@@ -50,15 +56,14 @@ namespace BlackGui
             connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
 
             connect(ui->cb_Simulators, &QComboBox::currentTextChanged, this, &CSimulatorSelector::comboBoxChanged);
-
-            this->addComboxBoxValues();
         }
 
         CSimulatorSelector::~CSimulatorSelector()
         { }
 
-        void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode)
+        void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode, bool forced)
         {
+            if (m_mode == mode && !forced) { return; }
             m_mode = mode;
 
             ui->wi_CheckBoxes->setVisible(false);
@@ -88,9 +93,9 @@ namespace BlackGui
             switch (m_mode)
             {
             default:
-            case CheckBoxes: return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), m_withFG && ui->cb_FG->isChecked());
+            case CheckBoxes:   return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), m_withFG && ui->cb_FG->isChecked());
             case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), m_withFG && ui->rb_FG->isChecked());
-            case ComboBox: return CSimulatorInfo(ui->cb_Simulators->currentText());
+            case ComboBox:     return CSimulatorInfo(ui->cb_Simulators->currentText());
             }
         }
 
@@ -106,6 +111,9 @@ namespace BlackGui
             ui->cb_P3D->setChecked(simulator.isP3D());
             ui->cb_FG->setChecked(simulator.isFG());
 
+            // Combo
+            ui->cb_Simulators->setCurrentText(simulator.toQString(true));
+
             // radio buttons
             if (simulator.isFSX())    { ui->rb_FSX->setChecked(simulator.isFSX()); return; }
             if (simulator.isFS9())    { ui->rb_FS9->setChecked(simulator.isFS9()); return; }
@@ -113,12 +121,11 @@ namespace BlackGui
             if (simulator.isP3D())    { ui->rb_P3D->setChecked(simulator.isP3D()); return; }
             if (simulator.isFG())     { ui->rb_FG->setChecked(simulator.isFG()); return; }
 
-            ui->cb_Simulators->setCurrentText(simulator.toQString(true));
         }
 
         void CSimulatorSelector::setToLastSelection()
         {
-            const CSimulatorInfo simulator = (m_mode == RadioButtons) ?
+            const CSimulatorInfo simulator = (m_mode == RadioButtons || m_mode == CheckBoxes) ?
                                              m_currentSimulator.get() :
                                              m_currentSimulators.get();
             this->setValue(simulator);
@@ -370,7 +377,16 @@ namespace BlackGui
 
         void CSimulatorSelector::addComboxBoxValues()
         {
-            ui->cb_Simulators->addItems(CSimulatorInfo::allSimulatorStrings());
+            int cbi = 0;
+            ui->cb_Simulators->clear();
+            ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fs9().toQString());
+            ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fsx().toQString());
+            ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::p3d().toQString());
+            ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::xplane().toQString());
+            if (m_withFG)
+            {
+                ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fg().toQString());
+            }
         }
     } // ns
 } // ns
