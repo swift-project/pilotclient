@@ -55,10 +55,17 @@ namespace BlackGui
             //! Save data
             void save();
 
+            //! Has unsaved changes
+            bool hasUnsavedChanges() const { return m_unsavedChanges; }
+
+            //! Reset unsaved changes
+            void resetUnsavedChanges() { m_unsavedChanges = false; }
+
             //! Settings for given simulator
             BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const { return m_settings.getSpecializedSettings(simulator); }
 
         private:
+            bool m_unsavedChanges = false;
             QScopedPointer<Ui::CSettingsSimulatorBasicsComponent> ui;
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };
             Qt::CaseSensitivity m_fileCaseSensitivity = BlackMisc::CFileUtils::osFileNameCaseSensitivity();
@@ -93,8 +100,11 @@ namespace BlackGui
             //! Optimize for small layout
             void setSmallLayout(bool small);
 
-            //! Exclude directories from line edit
+            //! Model directories from line edit
             QStringList parseModelDirectories() const;
+
+            //! Exclude directories from line edit
+            QStringList parseExcludeDirectories() const;
 
             //! Exclude directories
             QStringList parseDirectories(const QString &rawString) const;

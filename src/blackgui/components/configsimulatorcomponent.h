@@ -40,6 +40,12 @@ namespace BlackGui
             //! Save data
             void save();
 
+            //! Has unsaved changes
+            bool hasUnsavedChanges() const;
+
+            //! Reset the flag
+            void resetUnsavedChanges();
+
         private:
             //! Preselect simulators
             void preselectSimulators();
@@ -63,6 +69,9 @@ namespace BlackGui
 
             //! Set config
             void setConfigComponent(CConfigSimulatorComponent *config) { m_config = config; }
+
+            //! \copydoc QWizardPage::initializePage
+            virtual void initializePage() override;
 
             //! \copydoc QWizardPage::validatePage
             virtual bool validatePage() override;

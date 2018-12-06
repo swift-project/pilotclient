@@ -101,6 +101,7 @@ namespace BlackGui
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Model directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
+            m_unsavedChanges = true;
             const QStringList newDirs = this->addDirectory(dir, this->parseModelDirectories());
             this->displayModelDirectories(newDirs);
         }
@@ -111,7 +112,10 @@ namespace BlackGui
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Exclude directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
-            const QStringList newDirs = this->addDirectory(dir, this->parseModelDirectories());
+            m_unsavedChanges = true;
+            const QStringList newDirs = CFileUtils::stripLeadingSlashOrDriveLetters(
+                                            this->addDirectory(dir, this->parseExcludeDirectories())
+                                        );
             this->displayExcludeDirectoryPatterns(newDirs);
         }
 
@@ -137,6 +141,7 @@ namespace BlackGui
             s.setModelExcludeDirectories(relativeDirs);
             const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+            m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
 
             // display as saved
             this->displaySettings(simulator);
@@ -152,12 +157,16 @@ namespace BlackGui
                 if (reply != QMessageBox::Yes) { return; }
             }
 
-            const QString sd(m_settings.defaultSimulatorDirectory(simulator));
-            ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(sd));
+            // override if values are not empty
+            const CSpecializedSimulatorSettings ss = m_settings.getSpecializedSettings(simulator);
+            const QString sd = CFileUtils::fixWindowsUncPath(CFileUtils::normalizeFilePathToQtStandard(ss.defaultSimulatorDirectory(simulator)));
+            if (!sd.isEmpty()) { ui->le_SimulatorDirectory->setText(sd); m_unsavedChanges = true; }
+
             const QStringList md(m_settings.defaultModelDirectories(simulator));
-            this->displayModelDirectories(md);
-            const QStringList excludes(m_settings.defaultModelExcludeDirectoryPatterns(simulator));
-            this->displayExcludeDirectoryPatterns(excludes);
+            if (!md.isEmpty()) { this->displayModelDirectories(md); m_unsavedChanges = true; }
+
+            const QStringList excludes(ss.defaultModelExcludeDirectoryPatterns(simulator));
+            if (!excludes.isEmpty()) { this->displayExcludeDirectoryPatterns(excludes); m_unsavedChanges = true; }
         }
 
         void CSettingsSimulatorBasicsComponent::adjustModelDirectory()
@@ -178,7 +187,10 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::reset()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+
             m_settings.resetToDefaults(simulator);
+            m_unsavedChanges = true;
+
             ui->le_SimulatorDirectory->clear();
             ui->pte_ModelDirectories->clear();
             ui->pte_ExcludeDirectories->clear();
@@ -206,6 +218,11 @@ namespace BlackGui
         QStringList CSettingsSimulatorBasicsComponent::parseModelDirectories() const
         {
             return this->parseDirectories(ui->pte_ModelDirectories->toPlainText());
+        }
+
+        QStringList CSettingsSimulatorBasicsComponent::parseExcludeDirectories() const
+        {
+            return this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText());
         }
 
         QStringList CSettingsSimulatorBasicsComponent::parseDirectories(const QString &rawString) const

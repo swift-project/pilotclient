@@ -41,6 +41,16 @@ namespace BlackGui
             CLogMessage::preformatted(msg);
         }
 
+        bool CConfigSimulatorComponent::hasUnsavedChanges() const
+        {
+            return ui->comp_SettingsSimulator->hasUnsavedChanges();
+        }
+
+        void CConfigSimulatorComponent::resetUnsavedChanges()
+        {
+            ui->comp_SettingsSimulator->resetUnsavedChanges();
+        }
+
         void CConfigSimulatorComponent::preselectSimulators()
         {
             CSimulatorInfo sims;
@@ -86,6 +96,11 @@ namespace BlackGui
             if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIdentifier(); }
 
             return ids;
+        }
+
+        void CConfigSimulatorWizardPage::initializePage()
+        {
+            m_config->resetUnsavedChanges();
         }
 
         bool CConfigSimulatorWizardPage::validatePage()
