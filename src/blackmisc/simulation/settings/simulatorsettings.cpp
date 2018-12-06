@@ -141,10 +141,12 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return m_simSettingsFG.get();
                 case CSimulatorInfo::FS9: return m_simSettingsFs9.get();
                 case CSimulatorInfo::FSX: return m_simSettingsFsx.get();
                 case CSimulatorInfo::P3D: return m_simSettingsP3D.get();
                 case CSimulatorInfo::XPLANE: return m_simSettingsXP.get();
+
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
@@ -162,6 +164,7 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return m_simSettingsFG.set(settings);
                 case CSimulatorInfo::FS9: return m_simSettingsFs9.set(settings);
                 case CSimulatorInfo::FSX: return m_simSettingsFsx.set(settings);
                 case CSimulatorInfo::P3D: return m_simSettingsP3D.set(settings);
@@ -195,6 +198,7 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return m_simSettingsFG.setAndSave(settings);
                 case CSimulatorInfo::FS9: return m_simSettingsFs9.setAndSave(settings);
                 case CSimulatorInfo::FSX: return m_simSettingsFsx.setAndSave(settings);
                 case CSimulatorInfo::P3D: return m_simSettingsP3D.setAndSave(settings);
@@ -216,6 +220,7 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return m_simSettingsFG.save();
                 case CSimulatorInfo::FS9: return m_simSettingsFs9.save();
                 case CSimulatorInfo::FSX: return m_simSettingsFsx.save();
                 case CSimulatorInfo::P3D: return m_simSettingsP3D.save();
@@ -281,16 +286,6 @@ namespace BlackMisc
                 return CSpecializedSimulatorSettings::defaultModelDirectories(simulator);
             }
 
-            const QStringList &CMultiSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
-            {
-                return CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(simulator);
-            }
-
-            const QString &CMultiSimulatorSettings::defaultSimulatorDirectory(const CSimulatorInfo &simulator)
-            {
-                return CSpecializedSimulatorSettings::defaultSimulatorDirectory(simulator);
-            }
-
             void CMultiSimulatorSettings::onFsxSettingsChanged()
             {
                 this->emitSettingsChanged(CSimulatorInfo::fsx());
@@ -309,6 +304,11 @@ namespace BlackMisc
             void CMultiSimulatorSettings::onXPSettingsChanged()
             {
                 this->emitSettingsChanged(CSimulatorInfo::xplane());
+            }
+
+            void CMultiSimulatorSettings::onFGSettingsChanged()
+            {
+                this->emitSettingsChanged(CSimulatorInfo::fg());
             }
 
             void CMultiSimulatorSettings::emitSettingsChanged(const CSimulatorInfo &simInfo)
@@ -498,6 +498,7 @@ namespace BlackMisc
                 QStringList dirs;
                 switch (m_simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG: break;
                 case CSimulatorInfo::FS9: dirs = QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)}); break;
                 case CSimulatorInfo::FSX: dirs = QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)}); break;
                 case CSimulatorInfo::P3D: dirs = QStringList({CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)}); break;
@@ -568,6 +569,10 @@ namespace BlackMisc
                 static const QStringList e;
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:
+                    {
+                        return e;
+                    }
                 case CSimulatorInfo::FS9:
                     {
                         if (CFsCommonUtil::fs9AircraftDir().isEmpty()) { return e; }
@@ -600,8 +605,10 @@ namespace BlackMisc
             const QString &CSpecializedSimulatorSettings::defaultSimulatorDirectory(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                static const QString empty;
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return empty;
                 case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
                 case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
                 case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
@@ -610,15 +617,16 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                static const QString empty;
                 return empty;
             }
 
             const QStringList &CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                static const QStringList empty;
                 switch (simulator.getSimulator())
                 {
+                case CSimulatorInfo::FG:  return empty;
                 case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
@@ -627,7 +635,6 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                static const QStringList empty;
                 return empty;
             }
 

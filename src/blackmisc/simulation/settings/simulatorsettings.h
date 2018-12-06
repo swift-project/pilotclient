@@ -261,6 +261,16 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
             };
 
+            //! Trait for simulator settings
+            struct TSimulatorFG : public TSettingTrait<CSimulatorSettings>
+            {
+                //! \copydoc BlackCore::TSettingTrait::key
+                static const char *key() { return "settingssimulatorfg"; }
+
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("FG settings"); return name; }
+            };
+
             //! Bundle of settings for all simulators
             class BLACKMISC_EXPORT CMultiSimulatorSettings : public QObject
             {
@@ -323,11 +333,11 @@ namespace BlackMisc
 
                 //! Default model exclude patterns per simulator
                 //! \deprecated use CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns
-                static const QStringList &defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator);
+                // static const QStringList &defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator);
 
                 //! Default simulator path per simulator
                 //! \deprecated use CSpecializedSimulatorSettings::defaultSimulatorDirectory
-                static const QString &defaultSimulatorDirectory(const CSimulatorInfo &simulator);
+                // static const QString &defaultSimulatorDirectory(const CSimulatorInfo &simulator);
 
             signals:
                 //! Simulator settings have been changed
@@ -338,12 +348,14 @@ namespace BlackMisc
                 CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
                 CSetting<Settings::TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
                 CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
+                CSetting<Settings::TSimulatorFG>  m_simSettingsFG  { this, &CMultiSimulatorSettings::onFGSettingsChanged  }; //!< FG settings
 
                 //! Settings changed, this will only detect if settings are changed elsewhere @{
                 void onFsxSettingsChanged();
                 void onFs9SettingsChanged();
                 void onP3DSettingsChanged();
                 void onXPSettingsChanged();
+                void onFGSettingsChanged();
                 //! @}
 
                 //! Emit the signal, allows breakpoint
