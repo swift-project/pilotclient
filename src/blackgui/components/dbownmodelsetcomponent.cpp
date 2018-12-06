@@ -403,6 +403,11 @@ namespace BlackGui
             this->updateViewToCurrentModels();
         }
 
+        void CDbOwnModelSetComponent::setSimulatorSelectorMode(CSimulatorSelector::Mode mode)
+        {
+            ui->comp_SimulatorSelector->setMode(mode);
+        }
+
         void CDbOwnModelSetComponent::triggerSetSimulatorDeferred(const CSimulatorInfo &simulator)
         {
             this->admitCache(simulator);

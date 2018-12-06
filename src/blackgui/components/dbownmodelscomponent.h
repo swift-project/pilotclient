@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 
+#include "blackgui/components/simulatorselector.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/datacache.h"
@@ -84,6 +85,9 @@ namespace BlackGui
 
             //! Change current simulator for own models
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! \copydoc BlackGui::Components::CSimulatorSelector::setMode
+            void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
 
             //! Number of own models
             int getOwnModelsCount() const;

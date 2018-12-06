@@ -22,6 +22,7 @@ namespace BlackGui
             ui(new Ui::CDbOwnModelsDialog)
         {
             ui->setupUi(this);
+            ui->comp_OwnModels->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this, &CDbOwnModelsDialog::successfullyLoadedModels);
         }

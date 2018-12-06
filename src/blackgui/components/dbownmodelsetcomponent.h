@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_CDBOWNMODELSETCOMPONENT_H
 
 #include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackgui/components/simulatorselector.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
@@ -100,6 +101,9 @@ namespace BlackGui
 
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! \copydoc BlackGui::Components::CSimulatorSelector::setMode
+            void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
 
             //! Deferred init of simulator
             void triggerSetSimulatorDeferred(const BlackMisc::Simulation::CSimulatorInfo &simulator);

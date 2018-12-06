@@ -70,7 +70,7 @@
        <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>50</width>
           <height>0</height>
          </size>
         </property>

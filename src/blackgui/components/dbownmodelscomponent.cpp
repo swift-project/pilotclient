@@ -147,6 +147,11 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
         }
 
+        void CDbOwnModelsComponent::setSimulatorSelectorMode(CSimulatorSelector::Mode mode)
+        {
+            ui->comp_SimulatorSelector->setMode(mode);
+        }
+
         void CDbOwnModelsComponent::onSimulatorSelectorChanged()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
