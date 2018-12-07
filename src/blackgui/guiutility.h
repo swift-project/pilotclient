@@ -30,6 +30,7 @@ class QCheckBox;
 class QComboBox;
 class QLayout;
 class QMimeData;
+class QLineEdit;
 class QTabWidget;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
@@ -140,6 +141,9 @@ namespace BlackGui
 
         //! Pseudo readonly state for checkboxes of widget
         static void checkBoxesReadOnly(QWidget *parent, bool readOnly);
+
+        //! Temp. unhide password
+        static void tempUnhidePassword(QLineEdit *lineEdit, int unhideMs = 5000);
 
         //! Enable/disable all child widgets
         template <class WIDGET>

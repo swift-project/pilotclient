@@ -16,6 +16,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QLineEdit>
 #include <QAbstractItemModel>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -33,6 +34,7 @@
 #include <QWidget>
 #include <QTimer>
 #include <Qt>
+#include <QPointer>
 #include <QtGlobal>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
@@ -279,6 +281,20 @@ namespace BlackGui
         {
             CGuiUtility::checkBoxReadOnly(cb, readOnly);
         }
+    }
+
+    void CGuiUtility::tempUnhidePassword(QLineEdit *lineEdit, int unhideMs)
+    {
+        if (!lineEdit) { return; }
+        if (lineEdit->text().isEmpty()) { return; }
+        if (lineEdit->echoMode() != QLineEdit::Password && lineEdit->echoMode() != QLineEdit::PasswordEchoOnEdit) { return; }
+        const QLineEdit::EchoMode mode = lineEdit->echoMode();
+        lineEdit->setEchoMode(QLineEdit::Normal);
+        QPointer<QLineEdit> qpLineEdit(lineEdit);
+        QTimer::singleShot(unhideMs, lineEdit, [ = ]
+        {
+            if (qpLineEdit) { qpLineEdit->setEchoMode(mode); }
+        });
     }
 
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
