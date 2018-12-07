@@ -175,7 +175,7 @@ namespace BlackGui
             void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Settings have been changed
-            void reloadSetup();
+            void reloadOtherServersSetup();
 
             //! Logoff countdown
             void logoffCountdown();

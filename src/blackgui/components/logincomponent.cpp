@@ -88,14 +88,15 @@ namespace BlackGui
 
             this->setLogoffCountdown();
             connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
-            connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+            connect(ui->comp_OtherServers,  &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+            connect(ui->pb_RefreshOtherServers, &QToolButton::clicked, this, &CLoginComponent::reloadOtherServersSetup);
             connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled);
             connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
             connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
-            connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadSetup, Qt::QueuedConnection);
+            connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
             ui->form_FsdDetails->showEnableInfo(true);
             ui->form_FsdDetails->setFsdSetupEnabled(false);
@@ -154,10 +155,9 @@ namespace BlackGui
             // inital setup, if data already available
             this->validateAircraftValues();
             ui->form_Pilot->validate();
-            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            const CServerList otherServers(m_networkSetup.getOtherServersPlusPredefinedServers());
-            ui->comp_OtherServers->setServers(otherServers);
             ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
+            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            this->reloadOtherServersSetup();
 
             connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
             connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
@@ -625,9 +625,10 @@ namespace BlackGui
             this->validateAircraftValues();
         }
 
-        void CLoginComponent::reloadSetup()
+        void CLoginComponent::reloadOtherServersSetup()
         {
-            ui->comp_OtherServers->setServers(m_networkSetup.getOtherServers());
+            const CServerList otherServers(m_networkSetup.getOtherServersPlusPredefinedServers());
+            ui->comp_OtherServers->setServers(otherServers);
         }
 
         void CLoginComponent::logoffCountdown()

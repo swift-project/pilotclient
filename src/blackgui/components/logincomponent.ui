@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
+    <width>329</width>
     <height>735</height>
    </rect>
   </property>
@@ -200,6 +200,17 @@
                  </spacer>
                 </item>
                 <item>
+                 <widget class="QPushButton" name="pb_RefreshOtherServers">
+                  <property name="text">
+                   <string>reload</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../blackmisc/blackmisc.qrc">
+                    <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QPushButton" name="pb_OtherServersGotoSettings">
                   <property name="text">
                    <string> goto settings </string>
@@ -277,7 +288,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>293</width>
                   <height>55</height>
                  </rect>
                 </property>
@@ -849,17 +860,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CTickLabel</class>
-   <extends>QLabel</extends>
-   <header>blackgui/ticklabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Editors::CServerForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/editors/serverform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Editors::CFsdSetupForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/fsdsetupform.h</header>
@@ -869,6 +869,17 @@
    <class>BlackGui::Editors::CVoiceSetupForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/voicesetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CTickLabel</class>
+   <extends>QLabel</extends>
+   <header>blackgui/ticklabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CServerForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/serverform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -908,7 +919,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tw_Network</tabstop>
   <tabstop>comp_VatsimServers</tabstop>
   <tabstop>pb_OverrideCredentialsVatsim</tabstop>
   <tabstop>tw_Details</tabstop>
@@ -929,9 +939,11 @@
   <tabstop>pb_Ok</tabstop>
   <tabstop>pb_Cancel</tabstop>
   <tabstop>comp_OtherServers</tabstop>
+  <tabstop>pb_RefreshOtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
   <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
   <tabstop>sa_FsdDetails</tabstop>
+  <tabstop>tw_Network</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

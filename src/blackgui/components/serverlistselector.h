@@ -22,8 +22,6 @@
 #include <QObject>
 #include <QStringList>
 
-class QWidget;
-
 namespace BlackGui
 {
     namespace Components
