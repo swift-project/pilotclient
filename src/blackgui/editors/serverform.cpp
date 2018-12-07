@@ -14,6 +14,7 @@
 #include <QIntValidator>
 #include <QLabel>
 #include <QLineEdit>
+#include <QToolButton>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
@@ -33,6 +34,7 @@ namespace BlackGui
 
             connect(ui->cbp_Ecosystem, &CEcosystemComboBox::currentTextChanged, this, &CServerForm::onChangedEcoSystem);
             connect(ui->cb_ServerType, &QComboBox::currentTextChanged, this, &CServerForm::onChangedServerType);
+            connect(ui->tb_Unhide, &QToolButton::clicked, this, &CServerForm::tempUnhidePassword);
         }
 
         CServerForm::~CServerForm()
@@ -97,15 +99,16 @@ namespace BlackGui
             ui->le_Password->setReadOnly(readOnly);
             ui->cb_ServerType->setEnabled(!readOnly);
             ui->cbp_Ecosystem->setEnabled(!readOnly);
+            ui->tb_Unhide->setVisible(!readOnly);
             this->forceStyleSheetUpdate();
         }
 
         void CServerForm::showPasswordField(bool show)
         {
-            if (ui->le_Password->isVisible() == show) { return; }
+            if (ui->wi_Password->isVisible() == show) { return; }
             if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
             ui->lbl_IdPassword->setText(show ? m_passwordNameLabel : "Id");
-            ui->le_Password->setVisible(show);
+            ui->wi_Password->setVisible(show);
         }
 
         void CServerForm::initServerTypes()
@@ -138,6 +141,11 @@ namespace BlackGui
             const CServer dummy(es);
             if (dummy.hasUnspecifiedServerType()) { return; }
             ui->cb_ServerType->setCurrentText(dummy.getServerTypeAsString());
+        }
+
+        void CServerForm::tempUnhidePassword()
+        {
+            CGuiUtility::tempUnhidePassword(ui->le_Password);
         }
 
         CStatusMessageList CServerForm::validate(bool nested) const

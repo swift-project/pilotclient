@@ -12,6 +12,7 @@
 #include "blackgui/components/airportsmallcompleter.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
 #include "blackconfig/buildconfig.h"
@@ -139,12 +140,7 @@ namespace BlackGui
 
         void CPilotForm::unhidePassword()
         {
-            static const QLineEdit::EchoMode originalMode = ui->le_Password->echoMode();
-            ui->le_Password->setEchoMode(QLineEdit::Normal);
-            QTimer::singleShot(5000, this, [ = ]
-            {
-                ui->le_Password->setEchoMode(originalMode);
-            });
+            CGuiUtility::tempUnhidePassword(ui->le_Password);
         }
 
         void CPilotForm::doValidation()

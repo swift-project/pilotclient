@@ -231,16 +231,48 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="le_Password">
-               <property name="maxLength">
-                <number>32</number>
-               </property>
-               <property name="echoMode">
-                <enum>QLineEdit::Password</enum>
-               </property>
-               <property name="placeholderText">
-                <string>password</string>
-               </property>
+              <widget class="QWidget" name="wi_Password" native="true">
+               <layout class="QHBoxLayout" name="hl_Password">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="le_Password">
+                  <property name="maxLength">
+                   <number>32</number>
+                  </property>
+                  <property name="echoMode">
+                   <enum>QLineEdit::Password</enum>
+                  </property>
+                  <property name="placeholderText">
+                   <string>password</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="tb_Unhide">
+                  <property name="toolTip">
+                   <string>unhide password</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../blackmisc/blackmisc.qrc">
+                    <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>
@@ -327,9 +359,20 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>le_RealName</tabstop>
   <tabstop>tw_ServerForm</tabstop>
+  <tabstop>le_Name</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>cbp_Ecosystem</tabstop>
+  <tabstop>cb_ServerType</tabstop>
+  <tabstop>le_Address</tabstop>
+  <tabstop>le_Port</tabstop>
+  <tabstop>le_RealName</tabstop>
+  <tabstop>le_NetworkId</tabstop>
+  <tabstop>le_Password</tabstop>
+  <tabstop>tb_Unhide</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

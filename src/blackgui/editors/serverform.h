@@ -22,8 +22,6 @@
 #include <QScopedPointer>
 #include <QString>
 
-class QWidget;
-
 namespace Ui { class CNetworkServerForm; }
 namespace BlackGui
 {
@@ -63,6 +61,7 @@ namespace BlackGui
             void initServerTypes();
             void onChangedServerType(const QString &text);
             void onChangedEcoSystem(const QString &text);
+            void tempUnhidePassword();
 
             QScopedPointer<Ui::CNetworkServerForm> ui;
             QString m_passwordNameLabel;
