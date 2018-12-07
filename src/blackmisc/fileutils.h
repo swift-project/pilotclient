@@ -107,6 +107,9 @@ namespace BlackMisc
         //! \remark unlike QDir::relativePath here reltive paths are only created when a directory is a subdir of rootDirectory
         static QStringList makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
+        //! Same directories, order in list does not matter and lists are cleaned up
+        static bool sameDirectories(const QStringList &dirs1, const QStringList &dirs2, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
         //! Case sensitivity for current OS
         static Qt::CaseSensitivity osFileNameCaseSensitivity();
 

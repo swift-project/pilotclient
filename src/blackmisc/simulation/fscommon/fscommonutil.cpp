@@ -22,6 +22,8 @@
 #include <QVariant>
 #include <QFileInfo>
 #include <QStandardPaths>
+#include <QDomDocument>
+#include <QDomNodeList>
 #include <QSettings>
 #include <QStringBuilder>
 
@@ -205,6 +207,16 @@ namespace BlackMisc
             {
                 static const QString dir(p3dSimObjectsDirImpl());
                 return dir;
+            }
+
+            QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir)
+            {
+                // finding the user settings only works on P3D machine
+                const QSet<QString> allP3dAddOnSimObjectPaths = CFsCommonUtil::allP3dAddOnSimObjectPaths("v4");
+                QStringList all(allP3dAddOnSimObjectPaths.toList());
+                all.push_front(simObjectsDir.isEmpty() ? p3dSimObjectsDir() : simObjectsDir);
+                all.sort(Qt::CaseInsensitive);
+                return all;
             }
 
             QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
@@ -402,6 +414,7 @@ namespace BlackMisc
                     const QStringList entries = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
                     for (const QString &entry : entries)
                     {
+                        // right version or just one file
                         if (entry.contains(versionHint, Qt::CaseInsensitive))
                         {
                             const QString f = CFileUtils::appendFilePaths(d.absolutePath(), entry, cfgFile);
@@ -442,11 +455,32 @@ namespace BlackMisc
                 QSet<QString> simObjectPaths;
                 for (const QString &addOnPath : addOnPaths)
                 {
-                    const QString so = CFileUtils::appendFilePaths(addOnPath, "SimObjects");
-                    const QFileInfo fi(so);
-                    if (!checked || fi.exists()) { simObjectPaths.insert(fi.absolutePath()); }
+                    const QString filename = CFileUtils::appendFilePaths(addOnPath, "add-on.xml");
+                    QDomDocument doc;
+                    QFile file(filename);
+                    if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) { continue; }
+                    const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
+                    for (int i = 0; i < components.size(); i++)
+                    {
+                        const QDomNode component = components.item(i);
+                        const QDomElement category = component.firstChildElement("Category");
+                        const QString categoryValue = category.text();
+                        if (!caseInsensitiveStringCompare(categoryValue, QStringLiteral("SimObjects"))) { continue; }
+                        const QDomElement path = component.firstChildElement("Path");
+                        const QString pathValue = path.text();
+                        if (pathValue.isEmpty()) { continue; }
+                        if (!checked || QDir(pathValue).exists()) { simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(pathValue)); }
+                    }
                 }
                 return simObjectPaths;
+            }
+
+            QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QString &versionHint)
+            {
+                const QStringList configFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
+                const QStringList addOnPaths = CFsCommonUtil::allP3dAddOnPaths(configFiles, true).toList();
+                const QSet<QString> all = CFsCommonUtil::allP3dAddOnSimObjectPaths(addOnPaths, true);
+                return all;
             }
 
             QStringList CFsCommonUtil::findFsxConfigFiles()

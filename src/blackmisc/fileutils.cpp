@@ -223,6 +223,27 @@ namespace BlackMisc
         return relativeDirectories;
     }
 
+    bool CFileUtils::sameDirectories(const QStringList &dirs1, const QStringList &dirs2, Qt::CaseSensitivity cs)
+    {
+        // clean up
+        QStringList dirs1Cleaned(dirs1);
+        QStringList dirs2Cleaned(dirs2);
+        dirs1Cleaned.removeAll("");
+        dirs1Cleaned.removeDuplicates();
+        dirs2Cleaned.removeAll("");
+        dirs2Cleaned.removeDuplicates();
+        if (dirs1Cleaned.size() != dirs2Cleaned.size()) { return false; }
+
+        int d2 = 0;
+        dirs1Cleaned.sort(cs);
+        dirs2Cleaned.sort(cs);
+        for (const QString &d1 : dirs1)
+        {
+            if (!stringCompare(d1, dirs2.at(d2), cs)) { return false; }
+        }
+        return true;
+    }
+
     Qt::CaseSensitivity CFileUtils::osFileNameCaseSensitivity()
     {
         return CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;

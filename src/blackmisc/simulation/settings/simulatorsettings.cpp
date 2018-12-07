@@ -501,7 +501,9 @@ namespace BlackMisc
                 case CSimulatorInfo::FG: break;
                 case CSimulatorInfo::FS9: dirs = QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)}); break;
                 case CSimulatorInfo::FSX: dirs = QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)}); break;
-                case CSimulatorInfo::P3D: dirs = QStringList({CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)}); break;
+                case CSimulatorInfo::P3D:
+                    dirs = QStringList(CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs(CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)));
+                    break;
                 case CSimulatorInfo::XPLANE: dirs = QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)}); break;
                 default: break;
                 }
@@ -521,10 +523,8 @@ namespace BlackMisc
             {
                 static const QStringList empty;
                 if (!m_genericSettings.hasModelDirectories()) { return empty; }
-                if (m_genericSettings.getModelDirectories() == CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator))
-                {
-                    return empty;
-                }
+                const QStringList defaultDirectories = CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator);
+                if (CFileUtils::sameDirectories(m_genericSettings.getModelDirectories(), defaultDirectories)) { return empty; }
                 return m_genericSettings.getModelDirectories();
             }
 
@@ -588,7 +588,7 @@ namespace BlackMisc
                 case CSimulatorInfo::P3D:
                     {
                         if (CFsCommonUtil::p3dSimObjectsDir().isEmpty()) { return e; }
-                        static const QStringList md({ CFsCommonUtil::p3dSimObjectsDir() });
+                        static const QStringList md = CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs();
                         return  md;
                     }
                 case CSimulatorInfo::XPLANE:

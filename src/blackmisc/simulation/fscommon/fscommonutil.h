@@ -57,8 +57,11 @@ namespace BlackMisc
                 //! P3D's simObject directory from registry
                 static const QString &p3dSimObjectsDirFromRegistry();
 
-                //! P3D's sim object dir, resolved from multiple sources
+                //! P3D's simObject dir, resolved from multiple sources
                 static const QString &p3dSimObjectsDir();
+
+                //! P3D's simObject dir and the add on dirs
+                static QStringList p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir = "");
 
                 //! P3D aircraft dir, relative to simulator directory
                 static QString p3dSimObjectsDirFromSimDir(const QString &simDir);
@@ -93,10 +96,10 @@ namespace BlackMisc
                 //! Copy the terrain probe
                 static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
 
-                //! Find the config files
+                //! Find the config files (add-ons.cfg)
                 //! \note C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
                 //! \param versionHint like "v4"
-                static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint);
+                static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint = "v4");
 
                 //! All add-on paths from the config files
                 static QSet<QString> allP3dAddOnPaths(const QStringList &addOnConfigsFiles, bool checked);
@@ -104,7 +107,10 @@ namespace BlackMisc
                 //! All add-on paths from the config files
                 static QSet<QString> allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked);
 
-                //! Find the config files
+                //! All add-on paths from the config files
+                static QSet<QString> allP3dAddOnSimObjectPaths(const QString &versionHint = "v4");
+
+                //! Find the config files (fsx.cfg)
                 // C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
                 static QStringList findFsxConfigFiles();
 
