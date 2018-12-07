@@ -240,7 +240,7 @@ namespace BlackCore
                 QPointer<CNetworkWatchdog> myself(this);
                 QTimer::singleShot(0, this, [ = ]
                 {
-                    if (!myself) { return; }
+                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                     this->setNetworkAccessibility(accessibility);
                 });
                 return;

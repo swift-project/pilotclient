@@ -183,17 +183,17 @@ namespace BlackCore
             std::atomic_bool m_logOwnMessages { true };
             std::atomic_bool m_doDetailedCheck { true };
             std::atomic_bool m_networkAccessible { true };
-            std::atomic_bool m_disableNetworkCheck { false }; //!< if this is true, network accessible always reports true/accessible
+            std::atomic_bool m_disableNetworkCheck { false };  //!< if this is true, network accessible always reports true/accessible
             std::atomic_bool m_online { true };
             std::atomic_bool m_internetAccessible { true };
             std::atomic_bool m_dbAccessible { true };
-            std::atomic_bool m_lastClientPingSuccess { true }; //!< ping swift DB client service
+            std::atomic_bool m_lastClientPingSuccess { true }; //!< ping swift DB client service, real HTTP response
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
-            std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress
+            std::atomic_bool m_checkInProgress { false };   //!< a check is currently in progress
             std::atomic_int  m_networkAccessibility { QNetworkAccessManager::Accessible }; //!< last state
-            std::atomic_int  m_totalCheckCount { 0 }; //!< counting number of checks
-            std::atomic_int  m_totalBadCountDb { 0 }; //!< Total number of DB failing counts (only real responses when tried)
+            std::atomic_int  m_totalCheckCount { 0 };       //!< counting number of checks
+            std::atomic_int  m_totalBadCountDb { 0 };       //!< Total number of DB failing counts (only real responses when tried)
             std::atomic_int  m_totalBadCountInternet { 0 }; //!< Total number of Internet failing count (only when network is accessible)
             std::atomic_int  m_totalGoodCountDb { 0 };
             std::atomic_int  m_totalGoodCountInternet  { 0 };

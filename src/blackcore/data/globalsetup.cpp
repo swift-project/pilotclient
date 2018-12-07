@@ -155,9 +155,9 @@ namespace BlackCore
 
             pingUrl.appendQuery("uuid", this->identifier().toUuidString());
             pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
-            if (type.testFlag(PingLogoff)) { pingUrl.appendQuery("logoff", "true"); }
+            if (type.testFlag(PingLogoff))   { pingUrl.appendQuery("logoff", "true"); }
             if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
-            if (type.testFlag(PingStarted)) { pingUrl.appendQuery("started", "true"); }
+            if (type.testFlag(PingStarted))  { pingUrl.appendQuery("started", "true"); }
             return pingUrl;
         }
 
