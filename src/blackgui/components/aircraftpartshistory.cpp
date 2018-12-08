@@ -10,12 +10,13 @@
 #include "aircraftpartshistory.h"
 #include "ui_aircraftpartshistory.h"
 
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/htmlutils.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackmisc/propertyindexlist.h"
+#include "blackmisc/htmlutils.h"
+
 #include <QCompleter>
 #include <QStringBuilder>
 #include <QStringListModel>
