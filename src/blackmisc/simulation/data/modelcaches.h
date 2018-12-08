@@ -220,6 +220,10 @@ namespace BlackMisc
                 //! \threadsafe
                 CSimulatorInfo simulatorsWithInitializedCache() const;
 
+                //! Simulators which have models
+                //! \threadsafe
+                CSimulatorInfo simulatorsWithModels() const;
+
                 //! Timestamp
                 //! \threadsafe
                 QDateTime getSynchronizedTimestamp(const CSimulatorInfo &simulator);

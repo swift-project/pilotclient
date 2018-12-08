@@ -162,6 +162,19 @@ namespace BlackMisc
                 return withInitializedCache;
             }
 
+            CSimulatorInfo IMultiSimulatorModelCaches::simulatorsWithModels() const
+            {
+                CSimulatorInfo withModels;
+                for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
+                {
+                    if (this->getCachedModelsCount(simInfo) > 0)
+                    {
+                        withModels.add(simInfo);
+                    }
+                }
+                return withModels;
+            }
+
             CModelCaches::CModelCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 const CSimulatorInfo sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();

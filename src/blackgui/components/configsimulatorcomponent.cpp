@@ -53,17 +53,14 @@ namespace BlackGui
 
         void CConfigSimulatorComponent::preselectSimulators()
         {
-            CSimulatorInfo sims;
-            if (m_enabledSimulators.isSaved())
+            CSimulatorInfo sims = m_enabledSimulators.get();
+            if (!sims.isAnySimulator())
             {
-                sims = CSimulatorInfo(m_enabledSimulators.get());
-            }
-            else
-            {
-                // by model set
-                sims = m_modelSets.simulatorsWithInitializedCache();
+                CSimulatorInfo simWithModels = m_modelSets.simulatorsWithModels();
+                sims = simWithModels;
             }
 
+            // no x64 check as we would allow to config 32bit with launcher x64 and vice versa
             const bool p3d = (sims.isP3D() || !CFsCommonUtil::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
             const bool fsx = (sims.isFSX() || !CFsCommonUtil::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
             const bool fs9 = (sims.isFS9() || !CFsCommonUtil::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
