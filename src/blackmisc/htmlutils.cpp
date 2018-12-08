@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include <QStringBuilder>
 #include "htmlutils.h"
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -24,18 +24,19 @@ namespace BlackMisc
             html += QStringLiteral("<tr>");
             for (int c = 0; c < columns; c++)
             {
-                if (i < size)
-                {
-                    html += QStringLiteral("<td>") % values.at(i) % QStringLiteral("</td>");
-                }
-                else
-                {
-                    html += QStringLiteral("<td></td>");
-                }
+                html += (i < size) ?
+                        QStringLiteral("<td>") % values.at(i) % QStringLiteral("</td>") :
+                        QStringLiteral("<td></td>");
                 i++;
             }
             html += QStringLiteral("</tr>");
         }
         return QStringLiteral("<table>") % html % QStringLiteral("</table>");
     }
+
+    QString unwrappedTooltip(const QString &text)
+    {
+        return QStringLiteral("<p style='white-space:pre'>") % text % QStringLiteral("</p>");
+    }
+
 } // ns

@@ -9,8 +9,10 @@
 
 #include "settingssimulatorbasicscomponent.h"
 #include "ui_settingssimulatorbasicscomponent.h"
+
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/htmlutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
@@ -329,10 +331,10 @@ namespace BlackGui
             }
             else
             {
-                const QString ms(m.join("<br>"));
+                const QString ms = m.join("<br>");
                 if (BrokenMultilinePlaceholder && m.size() > 1)
                 {
-                    ui->pte_ModelDirectories->setToolTip(ms);
+                    ui->pte_ModelDirectories->setToolTip(unwrappedTooltip(ms));
                     ui->pte_ModelDirectories->setPlaceholderText("See tooltip for defaults");
                 }
                 else
@@ -348,11 +350,11 @@ namespace BlackGui
             }
             else
             {
-                const QString es(e.join("<br>"));
+                const QString es = e.join("<br>");
                 if (BrokenMultilinePlaceholder && e.size() > 1)
                 {
                     //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
-                    ui->pte_ExcludeDirectories->setToolTip(es);
+                    ui->pte_ExcludeDirectories->setToolTip(unwrappedTooltip(es));
                     ui->pte_ExcludeDirectories->setPlaceholderText("See tooltip for defaults");
                 }
                 else

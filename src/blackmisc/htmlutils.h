@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_HTMLUTILS_H
 #define BLACKMISC_HTMLUTILS_H
 
-#include <QStringBuilder>
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexlist.h"
+#include <QStringBuilder>
 
 //! Free functions in BlackMisc
 namespace BlackMisc
@@ -38,6 +38,9 @@ namespace BlackMisc
 
     //! Values as HTML table
     BLACKMISC_EXPORT QString toHtmTable(const QStringList &values, int columns);
+
+    //! As white space preformatted
+    BLACKMISC_EXPORT QString unwrappedTooltip(const QString &text);
 
 } // ns
 
