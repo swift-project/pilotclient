@@ -591,7 +591,14 @@ namespace BlackGui
 
         bool CLoginComponent::validateAircraftValues()
         {
-            const CGuiAircraftValues values = this->getAircraftValuesFromGui();
+            CGuiAircraftValues values = this->getAircraftValuesFromGui();
+
+            // fill in combined type if empty
+            if (ui->le_AircraftCombinedType->text().isEmpty() && values.ownAircraftIcao.isLoadedFromDb())
+            {
+                ui->le_AircraftCombinedType->setText(values.ownAircraftIcao.getCombinedType());
+                values.ownAircraftCombinedType = values.ownAircraftIcao.getCombinedType();
+            }
 
             const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
