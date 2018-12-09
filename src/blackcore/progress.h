@@ -24,6 +24,9 @@ namespace BlackCore
         //! Update the progress indicator 0..100
         virtual void updateProgressIndicator(int percentage) = 0;
 
+        //! Dtor
+        virtual ~IProgressIndicator() {}
+
         //! Same as updateProgressIndicator but processing events
         void updateProgressIndicatorAndProcessEvents(int percentage)
         {

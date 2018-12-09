@@ -124,17 +124,18 @@
              <number>0</number>
             </property>
             <item>
-             <spacer name="hs_Button">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+             <widget class="QProgressBar" name="pb_Progress">
+              <property name="value">
+               <number>24</number>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pb_Stop">
+              <property name="text">
+               <string>stop</string>
               </property>
-             </spacer>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="pb_Run">
@@ -177,7 +178,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
    </item>
@@ -201,8 +202,9 @@
   <tabstop>le_Distributor</tabstop>
   <tabstop>rb_SameLiveryAndAircraft</tabstop>
   <tabstop>rb_SameAirlineAndAircraft</tabstop>
-  <tabstop>tvp_RemoveModels</tabstop>
+  <tabstop>pb_Stop</tabstop>
   <tabstop>pb_Run</tabstop>
+  <tabstop>tvp_RemoveModels</tabstop>
  </tabstops>
  <resources/>
  <connections>

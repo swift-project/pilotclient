@@ -306,13 +306,15 @@ namespace BlackGui
             CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
             const CSimulatorInfo simulator = this->getModelSetSimulator();
             m_reduceModelsDialog->setModels(models, simulator);
-            QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
+            const QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
             if (ret != QDialog::Accepted) { return; }
             const CAircraftModelList removeModels = m_reduceModelsDialog->getRemoveCandidates();
             const CSimulatorInfo removeSimulator  = m_reduceModelsDialog->getSimulator();
             if (removeModels.isEmpty()) { return; }
-            const QSet<int> keys = removeModels.toDbKeySet();
-            models.removeObjectsWithKeys(keys);
+            // const QSet<int> keys = removeModels.toDbKeySet();
+            // models.removeObjectsWithKeys(keys);
+            const QStringList modelStrings = removeModels.getModelStringList(false);
+            models.removeModelsWithString(modelStrings, Qt::CaseInsensitive); // by strings also removes if id is missing
             this->setModelSet(models, removeSimulator);
         }
 

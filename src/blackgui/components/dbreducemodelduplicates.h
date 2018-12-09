@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 #define BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 
+#include "blackcore/progress.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/settingscache.h"
@@ -25,7 +26,9 @@ namespace BlackGui
     namespace Components
     {
         //! Reduce modelss
-        class CDbReduceModelDuplicates : public QDialog
+        class CDbReduceModelDuplicates :
+            public QDialog,
+            public BlackCore::IProgressIndicator
         {
             Q_OBJECT
 
@@ -34,13 +37,16 @@ namespace BlackGui
             explicit CDbReduceModelDuplicates(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbReduceModelDuplicates();
+            virtual ~CDbReduceModelDuplicates() override;
 
             //! Set the models
             void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Process models
             void process();
+
+            //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
+            virtual void updateProgressIndicator(int percentage) override;
 
             //! The models to be removed
             const BlackMisc::Simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }
@@ -49,7 +55,14 @@ namespace BlackGui
             const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
 
         private:
+            //! Clear progress bar
+            void clearProgressBar();
+
+            //! Stop
+            void stop() { m_stop = true; }
+
             QScopedPointer<Ui::CDbReduceModelDuplicates> ui;
+            bool m_stop = false;
             BlackMisc::Simulation::CSimulatorInfo     m_simulator;
             BlackMisc::Simulation::CAircraftModelList m_models;
             BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
