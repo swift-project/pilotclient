@@ -34,6 +34,7 @@
 #include <QStandardItemModel>
 #include <QStringBuilder>
 #include <QTabBar>
+#include <QGroupBox>
 #include <QTableView>
 #include <QTextEdit>
 #include <QTimer>
@@ -56,15 +57,15 @@ namespace BlackGui
     namespace Components
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-            COverlayMessagesTabWidget(parent),
+            COverlayMessagesFrame(parent),
             CIdentifiable(this),
             ui(new Ui::CAtcStationComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             ui->setupUi(this);
-            this->setCurrentIndex(0);
-            this->tabBar()->setExpanding(false);
-            this->tabBar()->setUsesScrollButtons(true);
+            ui->tw_Atc->setCurrentIndex(0);
+            ui->tw_Atc->tabBar()->setExpanding(false);
+            ui->tw_Atc->tabBar()->setUsesScrollButtons(true);
             CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
             ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
@@ -92,7 +93,7 @@ namespace BlackGui
             connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
             connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
             connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
-            connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
+            connect(ui->tw_Atc, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this, &CAtcStationComponent::onlineAtcStationSelected);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onlineAtcStationSelected);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
@@ -113,6 +114,9 @@ namespace BlackGui
             connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
+            // Group box
+            connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled);
+
             // runtime based connects
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::changedAtcStationsBooked, Qt::QueuedConnection);
@@ -122,6 +126,10 @@ namespace BlackGui
             // selection
             ui->tvp_AtcStationsOnline->acceptClickSelection(true);
             ui->tvp_AtcStationsOnline->acceptRowSelection(true);
+
+            QVBoxLayout *layout = this->vLayout();
+            m_stretch.push_back(layout->stretch(0));
+            m_stretch.push_back(layout->stretch(1));
 
             // web readers
             if (sGui->hasWebDataServices())
@@ -140,7 +148,7 @@ namespace BlackGui
         void CAtcStationComponent::setTab(CAtcStationComponent::AtcTab tab)
         {
             const int t = static_cast<int>(tab);
-            this->setCurrentIndex(t);
+            ui->tw_Atc->setCurrentIndex(t);
         }
 
         int CAtcStationComponent::countBookedStations() const
@@ -326,7 +334,7 @@ namespace BlackGui
             const QPointer<CAtcStationComponent> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->update();
             });
             Q_UNUSED(index);
@@ -336,14 +344,18 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int io = this->indexOf(ui->tb_AtcStationsOnline);
-            int ib = this->indexOf(ui->tb_AtcStationsBooked);
-            QString o = this->tabBar()->tabText(io);
-            QString b = this->tabBar()->tabText(ib);
+            const int io = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnline);
+            const int it = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnlineTree);
+            const int ib = ui->tw_Atc->indexOf(ui->tb_AtcStationsBooked);
+            QString o = ui->tw_Atc->tabBar()->tabText(io);
+            QString t = ui->tw_Atc->tabBar()->tabText(it);
+            QString b = ui->tw_Atc->tabBar()->tabText(ib);
             o = CGuiUtility::replaceTabCountValue(o, this->countOnlineStations());
+            t = CGuiUtility::replaceTabCountValue(t, this->countOnlineStations());
             b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());
-            this->tabBar()->setTabText(io, o);
-            this->tabBar()->setTabText(ib, b);
+            ui->tw_Atc->tabBar()->setTabText(io, o);
+            ui->tw_Atc->tabBar()->setTabText(it, t);
+            ui->tw_Atc->tabBar()->setTabText(ib, b);
         }
 
         void CAtcStationComponent::setComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit unit)
@@ -416,13 +428,15 @@ namespace BlackGui
 
         void CAtcStationComponent::atcStationsTabChanged()
         {
-            if (this->currentWidget() == ui->tb_AtcStationsBooked)
+            const bool booked = ui->tw_Atc->currentWidget() == ui->tb_AtcStationsBooked;
+            if (booked)
             {
                 if (ui->tvp_AtcStationsBooked->isEmpty())
                 {
                     this->reloadAtcStationsBooked();
                 }
             }
+            ui->gb_Details->setVisible(!booked);
         }
 
         void CAtcStationComponent::requestAtis()
@@ -445,7 +459,39 @@ namespace BlackGui
 
         void CAtcStationComponent::showOverlayInlineTextMessage()
         {
-            COverlayMessagesTabWidget::showOverlayInlineTextMessage(TextMessagesCom1);
+            COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
+        }
+
+        void CAtcStationComponent::onDetailsToggled(bool checked)
+        {
+            QVBoxLayout *layout = this->vLayout();
+            if (layout)
+            {
+                if (checked)
+                {
+                    layout->setStretchFactor(ui->tw_Atc, m_stretch.at(0));
+                    layout->setStretchFactor(ui->gb_Details, m_stretch.at(1));
+                }
+                else
+                {
+                    layout->setStretchFactor(ui->tw_Atc, 0);
+                    layout->setStretchFactor(ui->gb_Details, 0);
+                }
+            }
+
+            ui->te_AtcStationsOnlineInfo->setVisible(checked);
+            ui->comp_AtcStationsSettings->setVisible(checked);
+            ui->le_AtcStationsOnlineMetar->setVisible(checked);
+            ui->tb_AtcStationsAtisReload->setVisible(checked);
+            ui->tb_AtcStationsLoadMetar->setVisible(checked);
+            ui->tb_TextMessageOverlay->setVisible(checked);
+            ui->tb_Audio->setVisible(checked);
+        }
+
+        QVBoxLayout *CAtcStationComponent::vLayout() const
+        {
+            QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(this->layout());
+            return layout;
         }
     } // namespace
 } // namespace

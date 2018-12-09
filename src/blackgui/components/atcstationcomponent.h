@@ -30,7 +30,9 @@
 #include <QString>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QVBoxLayout>
 #include <QTimer>
+#include <QList>
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace Ui { class CAtcStationComponent; }
@@ -41,7 +43,7 @@ namespace BlackGui
     {
         //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
-            public COverlayMessagesTabWidget,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {
@@ -155,13 +157,20 @@ namespace BlackGui
             //! Inline message
             void showOverlayInlineTextMessage();
 
+            //! Details toggled
+            void onDetailsToggled(bool checked);
+
+            //! Get the vertical layout
+            QVBoxLayout *vLayout() const;
+
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;
+            QList<int> m_stretch;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read
             QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace
 } // namespace
