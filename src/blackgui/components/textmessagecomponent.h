@@ -75,6 +75,9 @@ namespace BlackGui
             //! Show an text entry field
             void showTextMessageEntry(bool show);
 
+            //! Focus the text entry field
+            void focusTextEntry();
+
             //! Remove the all tab, the operation cannot be undone
             void removeAllMessagesTab();
 

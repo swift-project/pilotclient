@@ -256,6 +256,7 @@ namespace BlackGui
         this->setHeader("Text message");
         this->showKill(false);
         this->display();
+        ui->comp_OverlayTextMessage->focusTextEntry();
     }
 
     void COverlayMessages::showOverlayImage(const CPixmap &image, int timeOutMs)

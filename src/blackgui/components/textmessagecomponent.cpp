@@ -684,6 +684,12 @@ namespace BlackGui
             ui->lep_textMessages->setVisible(show);
         }
 
+        void CTextMessageComponent::focusTextEntry()
+        {
+            if (!ui->lep_textMessages->isVisible()) { return; }
+            ui->lep_textMessages->setFocus();
+        }
+
         void CTextMessageComponent::removeAllMessagesTab()
         {
             ui->tw_TextMessages->removeTab(0);
