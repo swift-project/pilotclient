@@ -86,7 +86,9 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67054 - Constructor inheritance with non-default constructible members
+            // using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+            CSimulatorP3DListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) : FsxCommon::CSimulatorFsxCommonListener(info) {}
 
         protected:
             virtual void startImpl() override;
