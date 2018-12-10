@@ -38,9 +38,11 @@ namespace BlackGui
             ui->tvp_RemoveModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_RemoveModels->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
             ui->le_Distributor->setValidator(new CUpperCaseValidator(ui->le_Distributor));
+            ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(false);
 
             connect(ui->pb_Run, &QPushButton::clicked, this, &CDbReduceModelDuplicates::process);
             connect(ui->pb_Stop, &QPushButton::clicked, this, &CDbReduceModelDuplicates::stop);
+            connect(this, &QDialog::finished, this, &CDbReduceModelDuplicates::stop);
         }
 
         CDbReduceModelDuplicates::~CDbReduceModelDuplicates()
@@ -67,10 +69,11 @@ namespace BlackGui
             }
 
             const QStringList distributors = models.getDistributors().getDbKeysAndAliases(true);
+            const int distributorCount = m_models.getDistributors().sizeInt();
             QCompleter *c = new QCompleter(distributors, this);
             c->setCaseSensitivity(Qt::CaseInsensitive);
             ui->le_Distributor->setCompleter(c);
-            ui->le_Models->setText(QStringLiteral("%1 models for simulator '%2', distributors: %3").arg(models.size()).arg(simulator.toQString(true)).arg(distributors.size()));
+            ui->le_Models->setText(QStringLiteral("%1 models for simulator '%2', distributors: %3").arg(models.size()).arg(simulator.toQString(true)).arg(distributorCount));
         }
 
         void CDbReduceModelDuplicates::process()
@@ -149,6 +152,7 @@ namespace BlackGui
                                        CStatusMessage(this).info("No duplicates to be removed!")  :
                                        CStatusMessage(this).info("You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
             ui->fr_Overlay->showOverlayHTMLMessage(msg, 5000);
+            ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(true);
         }
 
         void CDbReduceModelDuplicates::updateProgressIndicator(int percentage)
