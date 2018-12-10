@@ -228,8 +228,9 @@ namespace BlackSimPlugin
                 situation.setBank({ m_xplaneData.rollDeg, CAngleUnit::deg() });
                 situation.setGroundSpeed({ m_xplaneData.groundspeedMs, CSpeedUnit::m_s() });
 
-                // updates
-                updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
+                // Updates
+                // Do not update ICAO codes, as this overrides reverse lookups
+                // updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
                 updateOwnSituation(situation);
 
                 // defaults
@@ -276,7 +277,7 @@ namespace BlackSimPlugin
         {
             if (isConnected())
             {
-                m_serviceProxy->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath);
+                m_serviceProxy->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath); // this is NOT the model string
                 m_serviceProxy->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
                 m_serviceProxy->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
                 m_serviceProxy->getLandingLightsOnAsync(&m_xplaneData.landingLightsOn);

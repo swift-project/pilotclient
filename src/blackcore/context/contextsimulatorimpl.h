@@ -203,6 +203,9 @@ namespace BlackCore
             //! Listener reports the simulator has started
             void onSimulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+            //! Simulator model has been changed
+            void onOwnSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+
             //! Failed adding remote aircraft
             void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
 
@@ -235,6 +238,9 @@ namespace BlackCore
 
             //! Clear matching messages
             void clearMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Reverse lookup of a model
+            BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Load the last know model set
             void initByLastUsedModelSet();

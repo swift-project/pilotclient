@@ -13,6 +13,7 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulatorimpl.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
@@ -43,6 +44,7 @@
 #include <QPointer>
 
 using namespace BlackConfig;
+using namespace BlackCore::Db;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -374,7 +376,7 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::onAddingRemoteAircraftFailed);
             Q_ASSERT(c);
-            c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+            c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &CContextSimulator::onOwnSimulatorModelChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
             Q_ASSERT(c);
@@ -960,6 +962,16 @@ namespace BlackCore
             }
         }
 
+        void CContextSimulator::onOwnSimulatorModelChanged(const CAircraftModel &model)
+        {
+            CAircraftModel lookupModel(model);
+            if (!lookupModel.isLoadedFromDb())
+            {
+                lookupModel = this->reverseLookupModel(model);
+            }
+            this->ownAircraftModelChanged(lookupModel);
+        }
+
         void CContextSimulator::stopSimulatorListeners()
         {
             for (const CSimulatorPluginInfo &info : getAvailableSimulatorPlugins())
@@ -994,6 +1006,13 @@ namespace BlackCore
         {
             if (callsign.isEmpty()) { return; }
             m_matchingMessages.remove(callsign);
+        }
+
+        CAircraftModel CContextSimulator::reverseLookupModel(const CAircraftModel &model)
+        {
+            bool modified = false;
+            const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+            return reverseModel;
         }
 
         void CContextSimulator::initByLastUsedModelSet()

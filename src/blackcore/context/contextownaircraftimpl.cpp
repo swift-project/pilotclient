@@ -226,7 +226,6 @@ namespace BlackCore
                         }
                         emit this->movedAircraft();
                     }
-
                 }
             } // only if simulating
         }
@@ -249,7 +248,7 @@ namespace BlackCore
             }
 
             // changed model
-            emit this->changedModel(model);
+            emit this->changedModel(updateModel);
             return true;
         }
 
