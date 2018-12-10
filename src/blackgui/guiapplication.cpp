@@ -697,7 +697,7 @@ namespace BlackGui
 
     void CGuiApplication::addMenuWindow(QMenu &menu)
     {
-        QPointer<QWidget> w = mainApplicationWidget();
+        QPointer<QWidget> w = CGuiApplication::mainApplicationWidget();
         if (!w) { return; }
         const QSize iconSize = CIcons::empty16().size();
         QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
@@ -731,10 +731,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!w) { return; }
-            const bool onTop = CGuiUtility::toggleStayOnTop(w);
-            CLogMessage(w.data()).info(onTop ?
-                                       QStringLiteral("Window on top") :
-                                       QStringLiteral("Window not always on top"));
+            this->toggleStayOnTop();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -991,6 +988,15 @@ namespace BlackGui
         return info.
                arg(w->font().family()).
                arg(w->fontMetrics().averageCharWidth());
+    }
+
+    bool CGuiApplication::toggleStayOnTop()
+    {
+        QWidget *w = CGuiApplication::mainApplicationWidget();
+        if (!w) { return false; }
+        const bool onTop = CGuiUtility::toggleStayOnTop(w);
+        CLogMessage(w).info(onTop ? QStringLiteral("Window on top") : QStringLiteral("Window not always on top"));
+        return onTop;
     }
 
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)

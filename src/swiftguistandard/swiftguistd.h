@@ -88,16 +88,13 @@ protected:
     //! @}
 
     //! Get a minimize action which minimizes the window
+
+    //! Actions for navigator @{
     QAction *getWindowMinimizeAction(QObject *parent);
-
-    //! Get a normal window action which minimizes the window
     QAction *getWindowNormalAction(QObject *parent);
-
-    //! Toggle window visibility action
     QAction *getToggleWindowVisibilityAction(QObject *parent);
-
-    //! Toggle window stay on top action
     QAction *getToggleStayOnTopAction(QObject *parent);
+    //! @}
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;

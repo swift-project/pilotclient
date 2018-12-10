@@ -354,19 +354,13 @@ void SwiftGuiStd::onChangedWindowOpacity(int opacity)
 
 void SwiftGuiStd::toogleWindowStayOnTop()
 {
-    CGuiUtility::toggleStayOnTop(this);
+    if (sGui) { sGui->toggleStayOnTop(); }
 }
 
 void SwiftGuiStd::toggleWindowVisibility()
 {
-    if (this->isVisible())
-    {
-        this->hide();
-    }
-    else
-    {
-        this->show();
-    }
+    if (this->isVisible()) { this->hide(); return; }
+    this->show();
 }
 
 void SwiftGuiStd::onStyleSheetsChanged()

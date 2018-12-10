@@ -210,6 +210,9 @@ namespace BlackGui
         //! \copydoc BlackCore::CApplication::gracefulShutdown
         virtual void gracefulShutdown() override;
 
+        //! Toggle stay on top
+        bool toggleStayOnTop();
+
         //! Save the main widget state?
         void setSaveMainWidgetState(bool save) { m_saveMainWidgetState = save; }
 
