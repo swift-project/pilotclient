@@ -152,6 +152,9 @@ namespace BlackGui
             //! Reduce models
             void reduceModels();
 
+            //! Remove excluded models
+            void removeExcludedModels();
+
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
