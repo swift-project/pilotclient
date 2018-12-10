@@ -26,7 +26,7 @@ namespace BlackMisc
     QString IOrderable::getOrderAsString() const
     {
         if (this->hasValidOrder()) { return QString::number(this->getOrder()); }
-        return "-";
+        return QStringLiteral("-");
     }
 
     bool IOrderable::hasValidOrder() const
@@ -37,7 +37,7 @@ namespace BlackMisc
     bool IOrderable::canHandleIndex(const CPropertyIndex &index)
     {
         if (index.isEmpty()) { return false; }
-        int i = index.frontCasted<int>();
+        const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexOrder)) && (i <= static_cast<int>(IndexOrderString));
     }
 
@@ -45,15 +45,12 @@ namespace BlackMisc
     {
         if (!index.isEmpty())
         {
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexOrder:
-                return CVariant::fromValue(this->m_order);
-            case IndexOrderString:
-                return CVariant::fromValue(this->getOrderAsString());
-            default:
-                break;
+            case IndexOrder: return CVariant::fromValue(this->m_order);
+            case IndexOrderString: return CVariant::fromValue(this->getOrderAsString());
+            default: break;
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
@@ -65,12 +62,10 @@ namespace BlackMisc
     {
         if (!index.isEmpty())
         {
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexOrder:
-                this->setOrder(variant.toInt());
-                return;
+            case IndexOrder: this->setOrder(variant.toInt()); return;
             case IndexOrderString:
             default:
                 break;

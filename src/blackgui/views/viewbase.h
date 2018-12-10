@@ -168,7 +168,7 @@ namespace BlackGui
             virtual bool isOrderable() const = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setSorting
-            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+            virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! Sort by index
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
@@ -700,7 +700,7 @@ namespace BlackGui
             virtual bool isDropAllowed() const override;
             virtual void dropEvent(QDropEvent *event) override;
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
-            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             //! @}
 

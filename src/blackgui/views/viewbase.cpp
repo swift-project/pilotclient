@@ -468,10 +468,10 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
             Q_ASSERT(m_model);
-            m_model->setSorting(propertyIndex, order);
+            return m_model->setSorting(propertyIndex, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

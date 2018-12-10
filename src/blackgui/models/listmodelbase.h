@@ -85,10 +85,10 @@ namespace BlackGui
 
             //! Set column for sorting
             //! \param propertyIndex index of column to be sorted
-            virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
+            virtual bool setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
 
             //! Sorting
-            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+            virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
             //! Get sort column property index
             virtual int getSortColumn() const { return m_sortColumn; }

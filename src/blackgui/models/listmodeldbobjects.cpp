@@ -49,7 +49,7 @@ namespace BlackGui
         QVariant CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::data(const QModelIndex &index, int role) const
         {
             if (role != Qt::BackgroundRole) { return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role); }
-            if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
+            if (isHighlightedIndex(index) ) { return QBrush(m_highlightColor); }
             return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role);
         }
 
@@ -91,10 +91,10 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
-        void COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::setSortColumnToOrder()
+        bool COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::setSortColumnToOrder()
         {
             // force sorted by order, otherwise display looks confusing
-            this->setSorting(IOrderable::IndexOrder);
+            return this->setSorting(IOrderable::IndexOrder);
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>

@@ -91,7 +91,7 @@ namespace BlackGui
             //! @}
 
             //! Sort order to order property BlackMisc::IOrderable::IndexOrder
-            void setSortColumnToOrder();
+            bool setSortColumnToOrder();
 
         protected:
             //! Constructor

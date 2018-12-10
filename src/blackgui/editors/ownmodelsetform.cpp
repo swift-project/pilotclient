@@ -20,6 +20,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
@@ -59,7 +60,7 @@ namespace BlackGui
             const bool hasPreferences = this->hasDistributorPreferences();
             ui->cb_SortByPreferences->setChecked(hasPreferences);
             CGuiUtility::checkBoxReadOnly(ui->cb_SortByPreferences, !hasPreferences);
-            ui->comp_SimulatorSelector->setValue(this->m_simulator);
+            ui->comp_SimulatorSelector->setValue(m_simulator);
             this->setDistributorView(hasPreferences);
             this->initDistributorDisplay();
         }
@@ -142,29 +143,23 @@ namespace BlackGui
         {
             ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
             ui->tvp_Distributors->fullResizeToContents();
-            if (hasPreferences)
-            {
-                ui->tvp_Distributors->setSorting(CDistributor::IndexOrder);
-            }
-            else
-            {
-                ui->tvp_Distributors->setSorting(CDistributor::IndexDbStringKey);
-            }
+            const CPropertyIndex i = hasPreferences ? CPropertyIndex(CDistributor::IndexOrder) : CPropertyIndex(CDistributor::IndexDbStringKey);
+            ui->tvp_Distributors->sortByPropertyIndex(i);
         }
 
         CDistributorList COwnModelSetForm::getDistributorsFromPreferences() const
         {
-            Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
-            const CDistributorList distributors(prefs.getDistributors(this->m_simulator));
+            Q_ASSERT_X(m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const CDistributorListPreferences prefs(m_distributorPreferences.get());
+            const CDistributorList distributors(prefs.getDistributors(m_simulator));
             return distributors;
         }
 
         CDistributorList COwnModelSetForm::getAllDistributors() const
         {
-            Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            Q_ASSERT_X(m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-            return sGui->getWebDataServices()->getDistributors().matchesSimulator(this->m_simulator);
+            return sGui->getWebDataServices()->getDistributors().matchesSimulator(m_simulator);
         }
 
         CDistributorList COwnModelSetForm::getDistributorsBasedOnOptions() const
@@ -199,8 +194,8 @@ namespace BlackGui
 
         bool COwnModelSetForm::hasDistributorPreferences() const
         {
-            const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
-            return !prefs.getDistributors(this->m_simulator).isEmpty();
+            const CDistributorListPreferences prefs(m_distributorPreferences.get());
+            return !prefs.getDistributors(m_simulator).isEmpty();
         }
     } // ns
 } // ns

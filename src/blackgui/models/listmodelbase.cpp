@@ -97,15 +97,20 @@ namespace BlackGui
             this->sort(column, order);
         }
 
-        void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const CPropertyIndex &propertyIndex)
+        bool CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const CPropertyIndex &propertyIndex)
         {
-            m_sortColumn = m_columns.propertyIndexToColumn(propertyIndex);
+            const int column = m_columns.propertyIndexToColumn(propertyIndex);
+            if (m_sortColumn == column) { return false; } // not changed
+            m_sortColumn = column;
+            return true; // changed
         }
 
-        void CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        bool CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
-            this->setSortColumnByPropertyIndex(propertyIndex);
+            const bool changedColumn = this->setSortColumnByPropertyIndex(propertyIndex);
+            const bool changedOrder = (m_sortOrder == order);
             m_sortOrder = order;
+            return changedColumn || changedOrder;
         }
 
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
