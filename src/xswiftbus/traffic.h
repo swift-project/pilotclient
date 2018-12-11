@@ -134,6 +134,16 @@ namespace XSwiftBus
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
+        struct DeltaCameraPosition
+        {
+            double dx       = 0.0;
+            double dy       = 0.0;
+            double dz       = 0.0;
+            double heading  = 0.0;
+            double pitch    = 0.0;
+            bool isInitialized = false;
+        };
+
         bool m_initialized = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
@@ -190,9 +200,9 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::position::local_y> m_ownAircraftPositionY;
         DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
 
-        XPLMCameraPosition_t m_lastCameraPosition;
-
         bool m_isSpacePressed = false;
+        DeltaCameraPosition m_deltaCameraPosition;
+
         bool m_emitSimFrame = true;
 
         int getPlaneData(void *id, int dataType, void *io_data);
