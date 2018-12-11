@@ -249,7 +249,7 @@ namespace BlackSimPlugin
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
 
                 transponder = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
-                const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
+                const bool changedXpr = (myAircraft.getTransponder() != transponder);
 
                 if (changedCom1 || changedCom2 || changedXpr)
                 {
