@@ -227,14 +227,19 @@ private:
     //! Change opacity 0-100
     void onChangedWindowOpacity(int opacity = -1);
 
-    //! Toogle if windows stays on top
+    //! Toggle if windows stays on top
+    //! \remark mostly used with navigator
     void toogleWindowStayOnTop();
 
     //! Toggle window visibility
+    //! \remark mostly used with navigator
     void toggleWindowVisibility();
 
     //! Style sheet has been changed
     void onStyleSheetsChanged();
+
+    //! Toggle window on top
+    void onToggledWindowsOnTop(bool onTop);
 
     //! Main info area current widget changed
     void onCurrentMainWidgetChanged(int currentIndex);
@@ -249,7 +254,7 @@ private:
     void showNormal();
 
     //! Navigator dialog has been closed
-    void navigatorClosed();
+    void onNavigatorClosed();
 
     //! Checks if model set is available
     void verifyPrerequisites();

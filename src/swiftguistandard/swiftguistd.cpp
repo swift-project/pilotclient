@@ -368,6 +368,15 @@ void SwiftGuiStd::onStyleSheetsChanged()
     this->initStyleSheet();
 }
 
+void SwiftGuiStd::onToggledWindowsOnTop(bool onTop)
+{
+    if (onTop)
+    {
+        if (m_navigator) { m_navigator->showNavigator(true); }
+        ui->comp_MainInfoArea->allFloatingOnTop();
+    }
+}
+
 void SwiftGuiStd::onCurrentMainWidgetChanged(int currentIndex)
 {
     emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
@@ -390,9 +399,9 @@ void SwiftGuiStd::showNormal()
     this->showNormalModeChecked();
 }
 
-void SwiftGuiStd::navigatorClosed()
+void SwiftGuiStd::onNavigatorClosed()
 {
-    this->showNormal();
+    // this->showNormal();
 }
 
 void SwiftGuiStd::verifyPrerequisites()
@@ -411,14 +420,8 @@ void SwiftGuiStd::verifyPrerequisites()
 
     if (msgs.hasWarningOrErrorMessages())
     {
-        if (msgs.size() > 1)
-        {
-            this->displayInOverlayWindow(msgs);
-        }
-        else
-        {
-            this->displayInOverlayWindow(msgs.front());
-        }
+        if (msgs.size() > 1) { this->displayInOverlayWindow(msgs); }
+        else { this->displayInOverlayWindow(msgs.front()); }
     }
 
     this->copyXSwiftBusDialog(true);
