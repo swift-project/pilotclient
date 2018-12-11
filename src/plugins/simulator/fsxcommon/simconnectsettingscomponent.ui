@@ -156,14 +156,19 @@ console=1
       <item row="0" column="1">
        <widget class="QComboBox" name="cb_P3DVersion">
         <property name="currentText">
-         <string>4.2 64bit</string>
+         <string>4.4 64bit</string>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <item>
          <property name="text">
-          <string>4.1 64bit</string>
+          <string>4.4 64bit</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4.3 64bit</string>
          </property>
         </item>
         <item>
@@ -173,7 +178,7 @@ console=1
         </item>
         <item>
          <property name="text">
-          <string>4.3 64bit</string>
+          <string>4.1 64bit</string>
          </property>
         </item>
        </widget>
