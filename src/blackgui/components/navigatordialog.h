@@ -20,7 +20,9 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QWidgetAction>
+#include <QTimer>
 #include <QGridLayout>
+#include <QTimer>
 
 class QEvent;
 class QMenu;
@@ -57,22 +59,24 @@ namespace BlackGui
             //! Called when dialog is closed
             virtual void reject() override;
 
-        signals:
-            //! Navigator closed
-            void navigatorClosed();
-
-        public slots:
             //! Toggle frameless mode
             void toggleFrameless();
 
+            //! Visibility visibility
+            void showNavigator(bool visible);
+
             //! Toggle visibility
-            void toggleNavigator();
+            void toggleNavigatorVisibility();
 
             //! Restore from settings
             void restoreFromSettings();
 
             //! Save to settings
             void saveToSettings();
+
+        signals:
+            //! Navigator closed
+            void navigatorClosed();
 
         protected:
             //! \name Base class events
@@ -119,11 +123,15 @@ namespace BlackGui
             //! Adjust navigator size
             void adjustNavigatorSize(QGridLayout *layout = nullptr);
 
+            //! On watchdog
+            void onWatchdog();
+
             QScopedPointer<Ui::CNavigatorDialog> ui;
             bool m_firstBuild = true;
             int  m_currentColumns = 1;
             QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
             CMarginsInput *m_input = nullptr; //!< margins widget
+            QTimer m_watchdog;
             BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
         };
     } // ns

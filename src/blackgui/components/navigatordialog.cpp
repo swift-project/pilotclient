@@ -58,6 +58,10 @@ namespace BlackGui
             m_marginMenuAction = new QWidgetAction(this);
             m_marginMenuAction->setDefaultWidget(m_input);
 
+            // timer
+            m_watchdog.setObjectName(this->objectName() + ":m_timer");
+            connect(&m_watchdog, &QTimer::timeout, this, &CNavigatorDialog::onWatchdog);
+
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::menuChangeMargins);
             connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::showContextMenu);
@@ -116,7 +120,8 @@ namespace BlackGui
         void CNavigatorDialog::reject()
         {
             this->hide();
-            emit navigatorClosed();
+            m_watchdog.stop();
+            emit this->navigatorClosed();
         }
 
         void CNavigatorDialog::toggleFrameless()
@@ -124,9 +129,26 @@ namespace BlackGui
             this->setFrameless(!this->isFrameless());
         }
 
-        void CNavigatorDialog::toggleNavigator()
+        void CNavigatorDialog::showNavigator(bool visible)
         {
-            this->setVisible(!this->isVisible());
+            this->setVisible(visible);
+            CGuiUtility::stayOnTop(visible, this);
+            this->show();
+
+            if (visible)
+            {
+                m_watchdog.start(4000);
+            }
+            else
+            {
+                m_watchdog.stop();
+            }
+        }
+
+        void CNavigatorDialog::toggleNavigatorVisibility()
+        {
+            const bool visible = !this->isVisible();
+            this->showNavigator(visible);
         }
 
         void CNavigatorDialog::restoreFromSettings()
@@ -307,6 +329,13 @@ namespace BlackGui
             ui->fr_NavigatorDialogInner->setMinimumSize(min);
             this->setMinimumSize(min);
             this->adjustSize();
+        }
+
+        void CNavigatorDialog::onWatchdog()
+        {
+            // if (!this->isVisible()) { return; }
+            CGuiUtility::stayOnTop(true, this);
+            this->show();
         }
 
         void CNavigatorDialog::addToContextMenu(QMenu *contextMenu) const
