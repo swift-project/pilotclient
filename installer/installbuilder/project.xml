@@ -108,15 +108,23 @@ it and relaunch the installer.</text>
     <postInstallationActionList>
         <runProgram>
             <program>${installdir}/bin/dbus-uuidgen</program>
-            <programArguments>--ensure=/etc/machine-id</programArguments>
+            <programArguments>--ensure=${installdir}/share/dbus-1/machine-id</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
                 </platformTest>
             </ruleList>
         </runProgram>
+        <createDirectory>
+            <path>{user_home_directory}/Library/LaunchAgents</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </createDirectory>
         <writeFile>
-            <path>/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+            <path>{user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
             <encoding>utf-8</encoding>
             <text><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
@@ -151,8 +159,7 @@ it and relaunch the installer.</text>
         </writeFile>
         <runProgram>
             <program>launchctl</program>
-            <programArguments>load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist</programArguments>
-            <runAs>${env(USER)}</runAs>
+            <programArguments>load -w ${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -232,7 +239,7 @@ it and relaunch the uninstaller.</text>
             </ruleList>
         </runProgram>
         <deleteFile>
-            <path>/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+            <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -240,7 +247,7 @@ it and relaunch the uninstaller.</text>
             </ruleList>
         </deleteFile>
         <deleteFile>
-            <path>/etc/machine-id</path>
+            <path>${installdir}/share/dbus-1/machine-id</path>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -306,7 +313,6 @@ it and relaunch the uninstaller.</text>
             <program>open</program>
             <programArguments>${Installdir}/bin/swiftlauncher.app --args -i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
             <progressText>Run swift launcher wizard</progressText>
-            <runAs>${env(USER)}</runAs>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -351,7 +357,6 @@ it and relaunch the uninstaller.</text>
         <platformOptions>
             <height>430</height>
             <platform>osx</platform>
-            <requireInstallationByRootUser>1</requireInstallationByRootUser>
         </platformOptions>
         <platformOptions>
             <height>430</height>
