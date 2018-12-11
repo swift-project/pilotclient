@@ -268,7 +268,7 @@ it and relaunch the uninstaller.</text>
     <osxApplicationBundleIcon>../images/swiftinstaller.icns</osxApplicationBundleIcon>
     <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
     <!-- Create 64bit installers -->
-    <osxPlatforms>osx-intel osx-x86_64</osxPlatforms>
+    <osxPlatforms>osx-x86_64</osxPlatforms>
     <osxUninstallerApplicationBundleIcon>../images/swiftinstaller.icns</osxUninstallerApplicationBundleIcon>
     <outputDirectory>.</outputDirectory>
     <productDisplayIcon>${installdir}/share/icons/swiftinstaller.ico</productDisplayIcon>
