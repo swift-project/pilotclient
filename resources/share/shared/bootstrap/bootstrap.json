@@ -1,6 +1,6 @@
 {
     "crashReportServerUrl": {
-        "url": "http://crashreports.swift-project.org/crashreports"
+        "url": "http://swift-project.sp.backtrace.io:6097/"
     },
     "dbDebugFlag": false,
     "dbHttpPort": 80,

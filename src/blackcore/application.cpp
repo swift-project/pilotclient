@@ -1634,9 +1634,10 @@ namespace BlackCore
         const CUrl serverUrl = this->getGlobalSetup().getCrashReportServerUrl();
         std::map<std::string, std::string> annotations;
 
-        // Caliper (mini-breakpad-server) annotations
-        annotations["prod"] = executable().toStdString();
-        annotations["ver"] = CBuildConfig::getVersionString().toStdString();
+        // Backtrace annotations
+        annotations["token"] = "b15efd93e290be3cf5d39750cadc092b651327ff0c027b80abd75e0ee50df1da";
+        annotations["format"] = "minidump";
+        annotations["version"] = CBuildConfig::getVersionString().toStdString();
 
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
