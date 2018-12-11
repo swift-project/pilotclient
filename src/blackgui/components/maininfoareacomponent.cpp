@@ -183,17 +183,17 @@ namespace BlackGui
             const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaCockpit: return CIcons::appCockpit16();
-            case InfoAreaUsers: return CIcons::appUsers16();
-            case InfoAreaWeather: return CIcons::appWeather16();
-            case InfoAreaAtc: return CIcons::appAtc16();
-            case InfoAreaAircraft: return CIcons::appAircraft16();
-            case InfoAreaSettings: return CIcons::appSettings16();
+            case InfoAreaCockpit:    return CIcons::appCockpit16();
+            case InfoAreaUsers:      return CIcons::appUsers16();
+            case InfoAreaWeather:    return CIcons::appWeather16();
+            case InfoAreaAtc:        return CIcons::appAtc16();
+            case InfoAreaAircraft:   return CIcons::appAircraft16();
+            case InfoAreaSettings:   return CIcons::appSettings16();
             case InfoAreaFlightPlan: return CIcons::appFlightPlan16();
-            case InfoAreaTextMessages: return CIcons::appTextMessages16();
-            case InfoAreaSimulator: return CIcons::appSimulator16();
-            case InfoAreaMapping: return CIcons::appMappings16();
-            case InfoAreaLog: return CIcons::appLog16();
+            case InfoAreaSimulator:  return CIcons::appSimulator16();
+            case InfoAreaMapping:    return CIcons::appMappings16();
+            case InfoAreaLog:        return CIcons::appLog16();
+            case InfoAreaTextMessages:  return CIcons::appTextMessages16();
             case InfoAreaInterpolation: return CIcons::appInterpolation16();
             default: return CIcons::empty();
             }

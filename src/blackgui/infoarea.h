@@ -93,17 +93,6 @@ namespace BlackGui
         //! Docked area indexes
         QList<int> getAreaIndexesDockedOrFloating(bool floating) const;
 
-    signals:
-        //! Tab bar changed
-        void changedInfoAreaTabBarIndex(int index);
-
-        //! Status of info area changed
-        void changedInfoAreaStatus(int currentTabIndex, QList<int> dockedAreas, QList<int> floatingAreas);
-
-        //! Whole info area floating
-        void changedWholeInfoAreaFloating(bool floating);
-
-    public slots:
         //! Dock all widgets
         void dockAllWidgets();
 
@@ -112,6 +101,9 @@ namespace BlackGui
 
         //! All widgets floating
         void floatAllWidgets();
+
+        //! All floating info areas on top
+        void allFloatingOnTop();
 
         //! Toggle dock / floating of the whole info area
         virtual void toggleFloatingWholeInfoArea();
@@ -157,6 +149,16 @@ namespace BlackGui
 
         //! Display status messages in all info areas (according their state)
         void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+
+    signals:
+        //! Tab bar changed
+        void changedInfoAreaTabBarIndex(int index);
+
+        //! Status of info area changed
+        void changedInfoAreaStatus(int currentTabIndex, QList<int> dockedAreas, QList<int> floatingAreas);
+
+        //! Whole info area floating
+        void changedWholeInfoAreaFloating(bool floating);
 
     protected:
         //! Constructor

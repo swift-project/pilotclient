@@ -115,7 +115,7 @@ namespace BlackGui
             {
                 const CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(i);
                 const QString t = dw->windowTitleBackup();
-                const QPixmap pm = indexToPixmap(i);
+                const QPixmap pm = this->indexToPixmap(i);
                 QAction *toggleFloatingMenuAction = new QAction(menu);
                 toggleFloatingMenuAction->setObjectName(QString(t).append("ToggleFloatingAction"));
                 toggleFloatingMenuAction->setIconText(t);
@@ -125,16 +125,16 @@ namespace BlackGui
                 toggleFloatingMenuAction->setChecked(!dw->isFloating());
                 subMenuToggleFloat->addAction(toggleFloatingMenuAction);
                 c = connect(toggleFloatingMenuAction, SIGNAL(toggled(bool)), signalMapperToggleFloating, SLOT(map()));
-                Q_ASSERT(c);
+                BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot map floating action"); // do not make that shutdown reason in a release build
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
 
             // new syntax not yet possible because of overloaded signal
-            c = connect(signalMapperToggleFloating, SIGNAL(mapped(int)), this, SLOT(toggleFloatingByIndex(int)));
-            Q_ASSERT(c);
+            c = connect(signalMapperToggleFloating, static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped), this, &CInfoArea::toggleFloatingByIndex);
+            BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot connect mapper"); // do not make that shutdown reason in a release build
 
             menu->addMenu(subMenuDisplay);
-            menu->addMenu(subMenuToggleFloat);
+            if (c) { menu->addMenu(subMenuToggleFloat); }
             menu->addMenu(subMenuResetPositions);
             menu->addMenu(subMenuRestore);
 
@@ -339,8 +339,18 @@ namespace BlackGui
     {
         for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
         {
-            if (dw->isFloating()) continue;
+            if (dw->isFloating()) { continue; }
             dw->toggleFloating();
+        }
+    }
+
+    void CInfoArea::allFloatingOnTop()
+    {
+        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        {
+            const bool f = dw->isFloating();
+            CGuiUtility::stayOnTop(f, dw);
+            if (f) { dw->show(); }
         }
     }
 

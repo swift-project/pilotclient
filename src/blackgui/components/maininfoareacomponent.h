@@ -113,7 +113,6 @@ namespace BlackGui
             //! Display console
             void displayConsole();
 
-        public slots:
             //! Toggle floating of given area
             void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
 
