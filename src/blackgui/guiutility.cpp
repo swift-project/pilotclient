@@ -394,6 +394,24 @@ namespace BlackGui
         return Qt::WindowStaysOnTopHint & flags;
     }
 
+    bool CGuiUtility::stayOnTop(bool onTop, QWidget *widget)
+    {
+        if (!widget) { return false; }
+        Qt::WindowFlags flags = widget->windowFlags();
+        if (onTop)
+        {
+            flags &= ~Qt::WindowStaysOnBottomHint;
+            flags |= Qt::WindowStaysOnTopHint;
+        }
+        else
+        {
+            flags &= ~Qt::WindowStaysOnTopHint;
+            // flags |= Qt::WindowStaysOnBottomHint;
+        }
+        widget->setWindowFlags(flags);
+        return onTop;
+    }
+
     QString CGuiUtility::marginsToString(const QMargins &margins)
     {
         const QString s("%1:%2:%3:%4");

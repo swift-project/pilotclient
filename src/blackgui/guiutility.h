@@ -157,8 +157,11 @@ namespace BlackGui
             }
         }
 
-        //! Toogle window flags / stay on top
+        //! Toggle window flags / stay on top
         static bool toggleStayOnTop(QWidget *widget);
+
+        //! Window flags / stay on top
+        static bool stayOnTop(bool onTop, QWidget *widget);
 
         //! Window on top?
         static bool staysOnTop(QWidget *widget);

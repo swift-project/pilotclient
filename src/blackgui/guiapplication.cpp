@@ -996,6 +996,7 @@ namespace BlackGui
         if (!w) { return false; }
         const bool onTop = CGuiUtility::toggleStayOnTop(w);
         CLogMessage(w).info(onTop ? QStringLiteral("Window on top") : QStringLiteral("Window not always on top"));
+        emit this->alwaysOnTop(onTop);
         return onTop;
     }
 

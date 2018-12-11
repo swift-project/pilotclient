@@ -272,12 +272,21 @@ namespace BlackGui
         this->setFrameless(!frameless);
     }
 
-    void CDockWidget::toggleAlwaysOnTop()
+    void CDockWidget::windowAlwaysOnTop()
     {
-        m_alwaysOnTop = !m_alwaysOnTop;
         if (this->isFloating())
         {
-            this->setAlwaysOnTopFlag(m_alwaysOnTop);
+            this->setAlwaysOnTopFlag(true);
+            m_alwaysOnTop = true;
+        }
+    }
+
+    void CDockWidget::windowNotAlwaysOnTop()
+    {
+        if (this->isFloating())
+        {
+            this->setAlwaysOnTopFlag(false);
+            m_alwaysOnTop = false;
         }
     }
 
@@ -353,11 +362,11 @@ namespace BlackGui
         if (this->isFloating())
         {
             const bool frameless = this->isFrameless();
-            const bool onTop = this->windowFlags() | Qt::WindowStaysOnTopHint;
 
             contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
             contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
-            contextMenu->addAction(CIcons::dockTop16(), onTop ? "Not on top" : "Always on top", this, &CDockWidget::toggleAlwaysOnTop);
+            contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop);
+            contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
             contextMenu->addAction(CIcons::refresh16(), "Redraw", this, QOverload<>::of(&CDockWidget::update));
         }
         else

@@ -108,8 +108,11 @@ namespace BlackGui
         //! Toggle frameless mode (EXPERIMENTAL)
         void toggleFrameless();
 
-        //! Toggle always on top
-        void toggleAlwaysOnTop();
+        //! Window always on top
+        void windowAlwaysOnTop();
+
+        //! Window not on top
+        void windowNotAlwaysOnTop();
 
         //! Set always on top
         void setAlwaysOnTop(bool onTop) { m_alwaysOnTop = onTop; }

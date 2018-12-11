@@ -271,6 +271,9 @@ namespace BlackGui
         //! Font has been changed
         void fontChanged();
 
+        //! always on top
+        void alwaysOnTop(bool onTop);
+
     protected:
         //! \name print messages generated during parsing / cmd handling
         //! @{
