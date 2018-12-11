@@ -160,7 +160,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
-            if (this->isShuttingDown()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             if (reference.isNull()) { return false; }
 
             CCoordinateGeodetic pos(reference);
