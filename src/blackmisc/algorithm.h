@@ -22,6 +22,27 @@
 
 namespace BlackMisc
 {
+    /*!
+     * Removes those elements in range 1 that appear also in range 2 leaving only those that
+     * do not appear in range 2. Returns an iterator one past the new end of range 1.
+     * \pre All the elements of range 2 must be present in the same order in range 1.
+     */
+    template <typename I, typename J>
+    auto removeIfIn(I begin1, I end1, J begin2, J end2)
+    {
+        auto newEnd = end1;
+        std::for_each(begin2, end2, [&](const auto &rm)
+        {
+            const auto found = std::find(begin1, end1, rm);
+            Q_ASSERT(found != end1);
+            if (newEnd == end1) { newEnd = found; }
+            else { newEnd = std::move(begin1, found, newEnd); }
+            begin1 = std::next(found);
+        });
+        if (newEnd != end1) { newEnd = std::move(begin1, end1, newEnd); }
+        return newEnd;
+    }
+
     namespace Private
     {
         //! \private A high quality deterministic pseudo-random number generator.

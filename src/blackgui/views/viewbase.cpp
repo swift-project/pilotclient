@@ -340,10 +340,7 @@ namespace BlackGui
             else
             {
                 ContainerType unselectedObjects(container());
-                for (const ObjectType &obj : selected)
-                {
-                    unselectedObjects.remove(obj);
-                }
+                unselectedObjects.removeIfInSubset(selected);
                 this->updateContainerMaybeAsync(unselectedObjects);
                 delta = currentRows - unselectedObjects.size();
             }

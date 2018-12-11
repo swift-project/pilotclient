@@ -321,6 +321,13 @@ namespace BlackMisc
             return removeIf([&other](const T &v) { return other.contains(v); });
         }
 
+        //! Remove all elements if they are in other
+        //! \pre All elements of other must be present in the same order in this.
+        void removeIfInSubset(const CSequence &other)
+        {
+            erase(BlackMisc::removeIfIn(begin(), end(), other.begin(), other.end()), end());
+        }
+
         //! Replace elements matching the given element with a replacement.
         //! \return The number of elements replaced.
         int replace(const T &original, const T &replacement)

@@ -65,6 +65,7 @@ namespace BlackMiscTest
         void joinAndSplit();
         void findTests();
         void sortTests();
+        void removeTests();
         void dictionaryBasics();
         void timestampList();
         void offsetTimestampList();
@@ -197,6 +198,23 @@ namespace BlackMiscTest
             { "Alice", 33 }
         };
         QVERIFY2(list.sortedBy(&Person::getAge, &Person::getName) == sorted, "sort by multiple members");
+    }
+
+    void CTestContainers::removeTests()
+    {
+        const CSequence<int> base { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        const CSequence<CSequence<int>> subsets
+        {
+            {}, { 1 }, { 9 }, { 5 }, { 1, 9 }, { 1, 5 }, { 5, 9 }, { 1, 2 },
+            { 8, 9 }, { 4, 5, 6 }, { 1, 5, 9 }, { 3, 7 }, { 3, 5, 7 }, base
+        };
+        for (const auto &subset : subsets)
+        {
+            auto copy1 = base, copy2 = base;
+            copy1.removeIfIn(subset);
+            copy2.removeIfInSubset(subset);
+            QVERIFY2(copy1 == copy2, "removeIfInSubset");
+        }
     }
 
     void CTestContainers::dictionaryBasics()
