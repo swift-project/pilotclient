@@ -1604,6 +1604,7 @@ namespace BlackCore
     }
 
 #ifdef BLACK_USE_CRASHPAD
+    //! Convert to file path
     base::FilePath qstringToFilePath(const QString &str)
     {
 #   ifdef Q_OS_WIN
@@ -1641,11 +1642,16 @@ namespace BlackCore
 
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
-        auto settings = m_crashReportDatabase->GetSettings();
+        crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled());
         m_crashpadClient = std::make_unique<CrashpadClient>();
-        m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database), qstringToFilePath(metrics),
-                                       serverUrl.getFullUrl().toStdString(), annotations, {}, false, true);
+        m_crashpadClient->StartHandler(qstringToFilePath(handler),
+                                       qstringToFilePath(database),
+                                       qstringToFilePath(metrics),
+                                       serverUrl.getFullUrl().toStdString(),
+                                       annotations,
+                                        {},
+                                       false, true);
         return CStatusMessage(this).info("Using crash handler");
 #else
         return CStatusMessage(this).info("Not using crash handler");

@@ -20,7 +20,7 @@ PRECOMPILED_HEADER = pch/pch.h
 DEFINES += LOG_IN_FILE BUILD_BLACKCORE_LIB
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/mini_chromium
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad/mini_chromium
 
 HEADERS += *.h
 HEADERS += $$PWD/application/*.h
@@ -41,10 +41,11 @@ DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
 msvc {
-    CONFIG(debug, debug|release): LIBS *= -lcrashpad_clientd -lcrashpad_utild -lbased -lRpcrt4 -lAdvapi32
-    CONFIG(release, debug|release): LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lRpcrt4 -lAdvapi32
+    CONFIG(debug, debug|release): LIBS *= -lclientd -lutild -lbased -lRpcrt4 -lAdvapi32
+    CONFIG(release, debug|release): LIBS *= -lclient -lutil -lbase -lRpcrt4 -lAdvapi32
 }
-macx: LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lbsm -framework Security
+macx: LIBS *= -lclient -lutil -lbase -lbsm -framework Security
+unix:!macx: LIBS *= -lclient -lutil -lbase
 
 OTHER_FILES += readme.txt *.xml
 

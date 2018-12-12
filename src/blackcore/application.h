@@ -43,7 +43,7 @@
 #include <atomic>
 #include <functional>
 
-#if defined(Q_CC_MSVC) || defined(Q_OS_MACOS) // Crashpad only supported on MSVC and MacOS/X
+#if !defined(Q_CC_MINGW)
 #define BLACK_USE_CRASHPAD
 #endif
 
