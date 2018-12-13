@@ -62,6 +62,7 @@
 #include <QTimer>
 #include <QtGlobal>
 #include <QPointer>
+#include <math.h>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -938,9 +939,12 @@ namespace BlackSimPlugin
                 if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
                 const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
 
+                const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
                 const CAltitude elevationAlt(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
-                const CLength cg(verticalOffsetsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
+                const CLength cg = std::isnan(cgValue) ?
+                                   CLength::null() :
+                                   CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
                 this->rememberElevationAndCG(cs, xpAircraft.getAircraftModelString(), elevation, cg);
 
                 // loopback
@@ -1215,7 +1219,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            if(! traffic.initialize())
+            if (!traffic.initialize())
             {
                 CLogMessage(this).error("Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
                 return;
