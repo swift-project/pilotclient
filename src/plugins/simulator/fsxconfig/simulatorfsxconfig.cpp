@@ -10,6 +10,9 @@
 #include "simulatorfsxconfig.h"
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
+using namespace BlackGui;
+using namespace BlackSimPlugin::FsxCommon;
+
 namespace BlackSimPlugin
 {
     namespace Fsx
@@ -19,9 +22,9 @@ namespace BlackSimPlugin
             // void
         }
 
-        BlackGui::CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)
+        CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)
         {
-            return new FsxCommon::CSimulatorFsxConfigWindow("FSX", parent);
+            return new CSimulatorFsxConfigWindow("FSX", parent);
         }
     }
 }

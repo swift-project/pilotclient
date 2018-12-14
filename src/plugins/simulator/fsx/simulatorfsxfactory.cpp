@@ -14,12 +14,13 @@
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        BlackCore::ISimulator *CSimulatorFsxFactory::create(const CSimulatorPluginInfo &info,
+        ISimulator *CSimulatorFsxFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
                 IWeatherGridProvider *weatherGridProvider,
@@ -29,7 +30,7 @@ namespace BlackSimPlugin
             return new CSimulatorFsx(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(const CSimulatorPluginInfo &info)
+        ISimulatorListener *CSimulatorFsxFactory::createListener(const CSimulatorPluginInfo &info)
         {
             return new CSimulatorFsxListener(info);
         }

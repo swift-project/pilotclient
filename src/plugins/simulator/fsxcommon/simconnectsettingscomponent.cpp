@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "SimConnectsettingscomponent.h"
+#include "simconnectsettingscomponent.h"
 #include "ui_simconnectsettingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextapplication.h"

@@ -17,7 +17,6 @@
 
 namespace BlackGui
 {
-
     CPluginConfigWindow::CPluginConfigWindow(QWidget *parent) : COverlayMessagesFrame(parent, Qt::Window)
     {
         this->setWindowModality(Qt::WindowModal);

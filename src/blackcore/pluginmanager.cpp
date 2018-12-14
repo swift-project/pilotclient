@@ -129,7 +129,7 @@ namespace BlackCore
 
         if (!m_paths.contains(identifier))
         {
-            CLogMessage(this).warning("Plugin with id %1 does not exist") << identifier;
+            CLogMessage(this).warning("Plugin with id '%1' does not exist") << identifier;
             return nullptr;
         }
 
