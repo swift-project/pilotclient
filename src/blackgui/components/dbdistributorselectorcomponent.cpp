@@ -174,7 +174,7 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
             {
                 if (count > 0)
