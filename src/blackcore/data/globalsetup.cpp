@@ -153,7 +153,11 @@ namespace BlackCore
             CUrl pingUrl = this->getDbClientPingServiceUrl();
             if (pingUrl.isEmpty()) { CUrl(); }
 
-            pingUrl.appendQuery("uuid", this->identifier().toUuidString());
+            QString uuid = this->identifier().toUuidString();
+            uuid.remove('{');
+            uuid.remove('}');
+
+            pingUrl.appendQuery("uuid", uuid);
             pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
             if (type.testFlag(PingLogoff))   { pingUrl.appendQuery("logoff", "true"); }
             if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
