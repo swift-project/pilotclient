@@ -14,6 +14,7 @@
 
 #include <QColor>
 #include <QPainter>
+#include <QPointer>
 #include <QRect>
 #include <QSizePolicy>
 #include <QtGlobal>
@@ -32,12 +33,12 @@ namespace BlackGui
 
     bool CLoadIndicator::isAnimated() const
     {
-        return (this->m_timerId != -1);
+        return (m_timerId != -1);
     }
 
     void CLoadIndicator::setDisplayedWhenStopped(bool state)
     {
-        this->m_displayedWhenStopped = state;
+        m_displayedWhenStopped = state;
         this->update();
     }
 
@@ -48,26 +49,29 @@ namespace BlackGui
 
     int CLoadIndicator::startAnimation(int timeoutMs, bool processEvents)
     {
-        this->m_angle = 0;
+        m_angle = 0;
         this->show();
         this->setEnabled(true);
-        if (this->m_timerId == -1) { this->m_timerId = startTimer(m_delayMs); }
+        if (m_timerId == -1) { m_timerId = startTimer(m_delayMs); }
         if (processEvents && sGui)
         {
             sGui->processEventsToRefreshGui();
         }
 
-        const int stopId = this->m_currentId++; // copy
+        const int stopId = m_currentId++; // copy
         if (timeoutMs > 0)
         {
-            QTimer::singleShot(timeoutMs, this, [this, stopId]
+            QPointer<CLoadIndicator> myself(this);
+            QTimer::singleShot(timeoutMs, this, [ = ]
             {
+                if (!myself) { return; }
+
                 // only timeout myself id
                 this->stopAnimation(stopId);
                 emit this->timedOut();
             });
         }
-        this->m_pendingIds.push_back(stopId);
+        m_pendingIds.push_back(stopId);
         return stopId;
     }
 
@@ -75,13 +79,13 @@ namespace BlackGui
     {
         if (indicatorId > 0)
         {
-            this->m_pendingIds.removeOne(indicatorId);
+            m_pendingIds.removeOne(indicatorId);
             // if others pending do not stop
-            if (!this->m_pendingIds.isEmpty()) { return; }
+            if (!m_pendingIds.isEmpty()) { return; }
         }
-        this->m_pendingIds.clear();
-        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
-        this->m_timerId = -1;
+        m_pendingIds.clear();
+        if (m_timerId != -1) { killTimer(m_timerId); }
+        m_timerId = -1;
         this->hide();
         this->setEnabled(false);
         this->update();
@@ -89,14 +93,14 @@ namespace BlackGui
 
     void CLoadIndicator::setAnimationDelay(int delay)
     {
-        this->m_delayMs = delay;
-        if (this->m_timerId != -1) { this->killTimer(this->m_timerId); }
-        this->m_timerId = this->startTimer(this->m_delayMs);
+        m_delayMs = delay;
+        if (m_timerId != -1) { this->killTimer(m_timerId); }
+        m_timerId = this->startTimer(m_delayMs);
     }
 
     void CLoadIndicator::setColor(const QColor &color)
     {
-        this->m_color = color;
+        m_color = color;
         update();
     }
 
@@ -113,7 +117,7 @@ namespace BlackGui
     void CLoadIndicator::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event);
-        this->m_angle = (this->m_angle + 30) % 360;
+        m_angle = (m_angle + 30) % 360;
         this->update();
     }
 
@@ -190,15 +194,15 @@ namespace BlackGui
 
     void CLoadIndicatorEnabled::showLoading(int timeoutMs, bool processEvents)
     {
-        if (!this->m_loadIndicator)
+        if (!m_loadIndicator)
         {
-            this->m_loadIndicator = new CLoadIndicator(64, 64, m_usingWidget);
-            QObject::connect(this->m_loadIndicator, &CLoadIndicator::timedOut,
+            m_loadIndicator = new CLoadIndicator(64, 64, m_usingWidget);
+            QObject::connect(m_loadIndicator, &CLoadIndicator::timedOut,
                              [this] { this->indicatorTimedOut(); });
         }
 
         this->centerLoadIndicator();
-        m_indicatorId = this->m_loadIndicator->startAnimation(timeoutMs, processEvents);
+        m_indicatorId = m_loadIndicator->startAnimation(timeoutMs, processEvents);
     }
 
     void CLoadIndicatorEnabled::hideLoading()
@@ -212,8 +216,8 @@ namespace BlackGui
     void CLoadIndicatorEnabled::centerLoadIndicator()
     {
         if (!m_loadIndicator) { return; }
-        const QPoint middle = this->m_usingWidget->visibleRegion().boundingRect().center();
-        this->m_loadIndicator->centerLoadIndicator(middle);
+        const QPoint middle = m_usingWidget->visibleRegion().boundingRect().center();
+        m_loadIndicator->centerLoadIndicator(middle);
     }
 
     void CLoadIndicatorEnabled::indicatorTimedOut()
