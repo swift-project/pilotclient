@@ -27,7 +27,9 @@ namespace BlackMisc
         enum ColumnIndex
         {
             IndexUserName = CPropertyIndex::GlobalIndexCCrashInfo,
-            IndexInfo
+            IndexInfo,
+            IndexSimulatorString,
+            IndexFlightNetworkInfo
         };
 
         //! Default constructor.
@@ -44,6 +46,18 @@ namespace BlackMisc
 
         //! Set info
         void setInfo(const QString &info) { m_info = info; }
+
+        //! Simulator string
+        const QString &getSimulatorString() const { return m_simulatorString; }
+
+        //! Simulator string
+        void setSimulatorString(const QString &simString) { m_simulatorString = simString; }
+
+        //! Network string
+        const QString &getFlightNetworkString() const { return m_flightNetwork; }
+
+        //! Network string
+        void setFlightNetworkString(const QString &network) { m_flightNetwork = network; }
 
         //! Append some info
         void appendInfo(const QString &extraInfo);
@@ -63,6 +77,8 @@ namespace BlackMisc
     private:
         QString m_userName;
         QString m_info;
+        QString m_simulatorString;
+        QString m_flightNetwork;
 
         BLACK_METACLASS(
             CCrashInfo,

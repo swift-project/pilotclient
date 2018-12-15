@@ -155,8 +155,8 @@ namespace BlackGui
                 }
 
                 // crashpad info
-                sGui->setCrashInfoUserName(user.getRealNameAndId());
-                sGui->appendCrashInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
+                sGui->crashAndLogInfoUserName(user.getRealNameAndId());
+                sGui->crashAndLogAppendInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
             }
             else
             {

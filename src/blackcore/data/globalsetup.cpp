@@ -158,10 +158,18 @@ namespace BlackCore
             uuid.remove('}');
 
             pingUrl.appendQuery("uuid", uuid);
-            pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
             if (type.testFlag(PingLogoff))   { pingUrl.appendQuery("logoff", "true"); }
             if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
             if (type.testFlag(PingStarted))  { pingUrl.appendQuery("started", "true"); }
+            pingUrl.appendQuery("os", CBuildConfig::getPlatformString());
+            if (CBuildConfig::isLocalDeveloperDebugBuild()) { pingUrl.appendQuery("dev", "true"); }
+            if (sApp)
+            {
+                const CCrashInfo ci = sApp->getCrashInfo();
+                pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
+                if (!ci.getSimulatorString().isEmpty()) { pingUrl.appendQuery("fs", ci.getSimulatorString()); }
+                if (!ci.getFlightNetworkString().isEmpty()) { pingUrl.appendQuery("network", ci.getFlightNetworkString()); }
+            }
             return pingUrl;
         }
 

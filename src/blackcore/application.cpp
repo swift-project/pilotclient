@@ -1669,17 +1669,27 @@ namespace BlackCore
 
     void CApplication::setCrashInfo(const CCrashInfo &info)
     {
-        m_crashInfo = info;
+        m_crashAndLogInfo = info;
     }
 
-    void CApplication::setCrashInfoUserName(const QString &name)
+    void CApplication::crashAndLogInfoUserName(const QString &name)
     {
-        m_crashInfo.setUserName(name);
+        m_crashAndLogInfo.setUserName(name);
     }
 
-    void CApplication::appendCrashInfo(const QString &info)
+    void CApplication::crashAndLogInfoSimulator(const QString &simulator)
     {
-        m_crashInfo.appendInfo(info);
+        m_crashAndLogInfo.setSimulatorString(simulator);
+    }
+
+    void CApplication::crashAndLogInfoFlightNetwork(const QString &flightNetwork)
+    {
+        m_crashAndLogInfo.setFlightNetworkString(flightNetwork);
+    }
+
+    void CApplication::crashAndLogAppendInfo(const QString &info)
+    {
+        m_crashAndLogInfo.appendInfo(info);
     }
 
     void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)

@@ -95,11 +95,11 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Register metadata
-            static void registerMetadata();
-
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
+
+            //! Register metadata
+            static void registerMetadata();
 
         private:
             BlackMisc::CNameVariantPairList m_data;

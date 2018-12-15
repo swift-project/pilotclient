@@ -35,6 +35,8 @@ namespace BlackMisc
         {
         case IndexUserName: return CVariant::fromValue(m_userName);
         case IndexInfo: return CVariant::fromValue(m_info);
+        case IndexSimulatorString: return CVariant::fromValue(m_simulatorString);
+        case IndexFlightNetworkInfo: return CVariant::fromValue(m_flightNetwork);
         default: break;
         }
         return CValueObject::propertyByIndex(index);
@@ -48,6 +50,8 @@ namespace BlackMisc
         {
         case IndexUserName: this->setUserName(variant.toQString()); break;
         case IndexInfo: this->setUserName(variant.toQString()); break;
+        case IndexSimulatorString: this->setSimulatorString(variant.toQString()); break;
+        case IndexFlightNetworkInfo: this->setFlightNetworkString(variant.toQString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -60,6 +64,8 @@ namespace BlackMisc
         {
         case IndexUserName: return this->getUserName().compare(compareValue.getUserName());
         case IndexInfo: return this->getInfo().compare(compareValue.getInfo());
+        case IndexSimulatorString: return this->getSimulatorString().compare(compareValue.getInfo());
+        case IndexFlightNetworkInfo: return this->getFlightNetworkString().compare(compareValue.getFlightNetworkString());
         default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
     }

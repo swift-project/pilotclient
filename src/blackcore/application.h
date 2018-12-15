@@ -306,13 +306,19 @@ namespace BlackCore
         void setCrashInfo(const BlackMisc::CCrashInfo &info);
 
         //! User name for crash info
-        void setCrashInfoUserName(const QString &name);
+        void crashAndLogInfoUserName(const QString &name);
+
+        //! Simulator string
+        void crashAndLogInfoSimulator(const QString &simulator);
+
+        //! Flight network
+        void crashAndLogInfoFlightNetwork(const QString &flightNetwork);
 
         //! Append crash info
-        void appendCrashInfo(const QString &info);
+        void crashAndLogAppendInfo(const QString &info);
 
         //! Get the crash info
-        const BlackMisc::CCrashInfo &getCrashInfo() const { return m_crashInfo; }
+        const BlackMisc::CCrashInfo &getCrashInfo() const { return m_crashAndLogInfo; }
 
         // ----------------------- Input ----------------------------------------
 
@@ -592,12 +598,12 @@ namespace BlackCore
         // cmd parsing
         QList<QCommandLineOption> m_allOptions;                //!< all registered options
         QCommandLineParser m_parser;                           //!< cmd parser
-        QCommandLineOption m_cmdHelp {"help"};                 //!< help option
-        QCommandLineOption m_cmdVersion {"version"};           //!< version option
-        QCommandLineOption m_cmdDBusAddress {"emptyDBus"};     //!< DBus address
-        QCommandLineOption m_cmdDevelopment {"dev"};           //!< Development flag
-        QCommandLineOption m_cmdSharedDir {"shared"};          //!< Shared directory
-        QCommandLineOption m_cmdClearCache {"clearcache"};     //!< Clear cache
+        QCommandLineOption m_cmdHelp         {"help"};         //!< help option
+        QCommandLineOption m_cmdVersion      {"version"};      //!< version option
+        QCommandLineOption m_cmdDBusAddress  {"emptyDBus"};    //!< DBus address
+        QCommandLineOption m_cmdDevelopment  {"dev"};          //!< Development flag
+        QCommandLineOption m_cmdSharedDir    {"shared"};       //!< Shared directory
+        QCommandLineOption m_cmdClearCache   {"clearcache"};   //!< Clear cache
         QCommandLineOption m_cmdTestCrashpad {"testcrashpad"}; //!< Test a crasphpad upload
         bool               m_parsed  = false;                  //!< Parsing accomplished?
         bool               m_started = false;                  //!< started with success?
@@ -692,7 +698,7 @@ namespace BlackCore
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
         BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
 #endif
-        BlackMisc::CCrashInfo m_crashInfo; //!< info representing details
+        BlackMisc::CCrashInfo m_crashAndLogInfo; //!< info representing details
 
     };
 } // namespace
