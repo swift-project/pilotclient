@@ -125,7 +125,7 @@ namespace BlackGui
 
         void CSimulatorSelector::setToLastSelection()
         {
-            const CSimulatorInfo simulator = (m_mode == RadioButtons || m_mode == CheckBoxes) ?
+            const CSimulatorInfo simulator = (m_mode == RadioButtons || m_mode == ComboBox) ?
                                              m_currentSimulator.get() :
                                              m_currentSimulators.get();
             this->setValue(simulator);
@@ -136,9 +136,10 @@ namespace BlackGui
             if (sGui && sGui->supportsContexts() && sGui->getIContextSimulator())
             {
                 const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
+                if (!this->isSingleSelection()) { this->setMode(RadioButtons); }
+
                 if (pluginInfo.isValid())
                 {
-                    this->setMode(RadioButtons);
                     this->setReadOnly(makeReadOnly);
                     this->setValue(pluginInfo.getSimulator());
                 }
