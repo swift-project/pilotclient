@@ -122,7 +122,7 @@ namespace BlackGui
 
             // selector
             ui->comp_SimulatorSelector->setRememberSelection(false); // pilot client UI
-            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::ComboBox);
             ui->comp_SimulatorSelector->setToConnectedSimulator();
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);
 
