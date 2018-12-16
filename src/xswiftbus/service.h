@@ -146,16 +146,16 @@ namespace XSwiftBus
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
 
         //! Get the current COM1 active frequency in kHz
-        int getCom1ActiveKhz() const { return m_com1Active.get() * 10; }
+        int getCom1ActiveKhz() const { return m_com1Active.get(); }
 
         //! Get the current COM1 standby frequency in kHz
-        int getCom1StandbyKhz() const { return m_com1Standby.get() * 10; }
+        int getCom1StandbyKhz() const { return m_com1Standby.get(); }
 
         //! Get the current COM2 active frequency in kHz
-        int getCom2ActiveKhz() const { return m_com2Active.get() * 10; }
+        int getCom2ActiveKhz() const { return m_com2Active.get(); }
 
         //! Get the current COM2 standby frequency in kHz
-        int getCom2StandbyKhz() const { return m_com2Standby.get() * 10; }
+        int getCom2StandbyKhz() const { return m_com2Standby.get(); }
 
         //! Get the current transponder code in decimal
         int getTransponderCode() const { return m_xpdrCode.get(); }
@@ -185,16 +185,16 @@ namespace XSwiftBus
         double getQNHInHg() const { return m_qnhInhg.get(); }
 
         //! Set the current COM1 active frequency in kHz
-        void setCom1ActiveKhz(int freq) { m_com1Active.set(freq / 10); }
+        void setCom1ActiveKhz(int freq) { m_com1Active.set(freq); }
 
         //! Set the current COM1 standby frequency in kHz
-        void setCom1StandbyKhz(int freq) { m_com1Standby.set(freq / 10); }
+        void setCom1StandbyKhz(int freq) { m_com1Standby.set(freq); }
 
         //! Set the current COM2 active frequency in kHz
-        void setCom2ActiveKhz(int freq) { m_com2Active.set(freq / 10); }
+        void setCom2ActiveKhz(int freq) { m_com2Active.set(freq); }
 
         //! Set the current COM2 standby frequency in kHz
-        void setCom2StandbyKhz(int freq) { m_com2Standby.set(freq / 10); }
+        void setCom2StandbyKhz(int freq) { m_com2Standby.set(freq); }
 
         //! Set the current transponder code in decimal
         void setTransponderCode(int code) { m_xpdrCode.set(code); }
@@ -276,10 +276,10 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::position::psi> m_heading;
         DataRef<xplane::data::sim::flightmodel::failures::onground_any> m_onGroundAny;
         DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
-        DataRef<xplane::data::sim::cockpit::radios::com1_freq_hz> m_com1Active;
-        DataRef<xplane::data::sim::cockpit::radios::com1_stdby_freq_hz> m_com1Standby;
-        DataRef<xplane::data::sim::cockpit::radios::com2_freq_hz> m_com2Active;
-        DataRef<xplane::data::sim::cockpit::radios::com2_stdby_freq_hz> m_com2Standby;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_frequency_hz_833> m_com1Active;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_standby_frequency_hz_833> m_com1Standby;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com2_frequency_hz_833> m_com2Active;
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::com2_standby_frequency_hz_833> m_com2Standby;
         DataRef<xplane::data::sim::cockpit::radios::transponder_code> m_xpdrCode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_mode> m_xpdrMode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_id> m_xpdrIdent;
