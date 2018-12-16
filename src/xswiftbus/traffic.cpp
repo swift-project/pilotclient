@@ -26,6 +26,7 @@
 #include <cmath>
 #include <ctime>
 #include <algorithm>
+#include <limits>
 
 // clazy:excludeall=reserve-candidates
 
@@ -441,13 +442,13 @@ namespace XSwiftBus
             double groundElevation = plane->terrainProbe.getElevation(latDeg, lonDeg, plane->position.elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
-            XPMPGetVerticalOffset(plane->id, &fudgeFactor);
+            bool hasOffset = XPMPGetVerticalOffset(plane->id, &fudgeFactor);
 
             callsigns.push_back(requestedCallsign);
             latitudesDeg.push_back(latDeg);
             longitudesDeg.push_back(lonDeg);
             elevationsM.push_back(groundElevation);
-            verticalOffsets.push_back(fudgeFactor);
+            verticalOffsets.push_back(hasOffset ? fudgeFactor : std::numeric_limits<decltype(fudgeFactor)>::quiet_NaN());
         }
     }
 
