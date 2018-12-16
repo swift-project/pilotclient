@@ -20,6 +20,18 @@ namespace BlackMisc
 {
     namespace Db
     {
+        void IDatastoreObject::setTimestampAndVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        {
+            // we check 2 formats, the DB format and the backend object format
+            QString timestampString(json.value(prefix % u"lastupdated").toString());
+            if (timestampString.isEmpty()) { timestampString = json.value(prefix % u"tsLastUpdated").toString(); }
+            const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
+            this->setUtcTimestamp(ts);
+
+            // version
+            this->setVersion(json.value(prefix % u"version").toString());
+        }
+
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsString() const
         {
             if (m_dbKey < 0) { return {}; }
@@ -35,9 +47,8 @@ namespace BlackMisc
         void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)
         {
             bool ok;
-            int k = key.toInt(&ok);
-            if (!ok) { k = -1; }
-            m_dbKey = k;
+            const int k = key.toInt(&ok);
+            m_dbKey = ok ? k : -1;
         }
 
         bool IDatastoreObjectWithIntegerKey::isLoadedFromDb() const
@@ -78,12 +89,7 @@ namespace BlackMisc
             // this function is performance sensitive, as it is called for all DB data
             const int dbKey = json.value(prefix % u"id").toInt(-1);
             this->setDbKey(dbKey);
-
-            // we check 2 formats, the DB format and the backend object format
-            QString timestampString(json.value(prefix % u"lastupdated").toString());
-            if (timestampString.isEmpty()) { timestampString = json.value(prefix % u"tsLastUpdated").toString(); }
-            const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
-            this->setUtcTimestamp(ts);
+            IDatastoreObject::setTimestampAndVersionFromDatabaseJson(json, prefix);
         }
 
         bool IDatastoreObjectWithIntegerKey::existsKey(const QJsonObject &json, const QString &prefix)
@@ -98,10 +104,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIntegerKey: return CVariant::from(m_dbKey);
-            case IndexDbKeyAsString: return CVariant::from(this->getDbKeyAsString());
+            case IndexDbIntegerKey:   return CVariant::from(m_dbKey);
+            case IndexDbKeyAsString:  return CVariant::from(this->getDbKeyAsString());
             case IndexIsLoadedFromDb: return CVariant::from(this->hasValidDbKey());
-            case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
+            case IndexDatabaseIcon:   return CVariant::from(this->toDatabaseIcon());
+            case IndexVersion:        return CVariant::from(this->getVersion());
             default: break;
             }
             return CVariant();
@@ -113,8 +120,9 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIntegerKey: m_dbKey = variant.toInt(); break;
+            case IndexDbIntegerKey:  m_dbKey = variant.toInt(); break;
             case IndexDbKeyAsString: m_dbKey = stringToDbKey(variant.toQString()); break;
+            case IndexVersion: this->setVersion(variant.toQString()); break;
             default: break;
             }
         }
@@ -128,6 +136,7 @@ namespace BlackMisc
             case IndexDbKeyAsString: // fall thru
             case IndexDbIntegerKey: return Compare::compare(m_dbKey, compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
+            case IndexVersion:      return this->getVersion().compare(compareValue.getVersion());
             default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -138,7 +147,7 @@ namespace BlackMisc
         {
             if (ITimestampBased::canHandleIndex(index)) { return true; }
             const int i = index.frontCasted<int>();
-            return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
+            return (i >= static_cast<int>(IndexDbIntegerKey)) && (i < static_cast<int>(IndexEndMarker));
         }
 
         QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
@@ -170,9 +179,8 @@ namespace BlackMisc
         void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             QString dbKey = json.value(prefix % u"id").toString();
-            QDateTime ts(CDatastoreUtility::parseTimestamp(json.value(prefix % u"lastupdated").toString()));
             this->setDbKey(dbKey);
-            this->setUtcTimestamp(ts);
+            IDatastoreObject::setTimestampAndVersionFromDatabaseJson(json, prefix);
         }
 
         bool IDatastoreObjectWithStringKey::existsKey(const QJsonObject &json, const QString &prefix)
@@ -188,11 +196,11 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbKeyAsString: // fall thru
-            case IndexDbStringKey: return CVariant::from(m_dbKey);
-            case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
+            case IndexDbStringKey:    return CVariant::from(m_dbKey);
+            case IndexDatabaseIcon:   return CVariant::from(this->toDatabaseIcon());
             case IndexIsLoadedFromDb: return CVariant::from(m_loadedFromDb);
-            default:
-                break;
+            case IndexVersion:        return CVariant::from(this->getVersion());
+            default: break;
             }
             return CVariant();
         }
@@ -207,9 +215,8 @@ namespace BlackMisc
             case IndexDbKeyAsString:
                 m_dbKey = variant.value<QString>();
                 break;
-            case IndexIsLoadedFromDb:
-                m_loadedFromDb = variant.toBool();
-                break;
+            case IndexIsLoadedFromDb: m_loadedFromDb = variant.toBool(); break;
+            case IndexVersion: this->setVersion(variant.toQString()); break;
             default:
                 break;
             }
@@ -224,8 +231,8 @@ namespace BlackMisc
             case IndexDbKeyAsString: // fall thru
             case IndexDbStringKey:  return m_dbKey.compare(compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
-            default:
-                break;
+            case IndexVersion:     return this->getVersion().compare(compareValue.getVersion());
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
@@ -236,7 +243,7 @@ namespace BlackMisc
             if (index.isEmpty()) { return false; }
             if (ITimestampBased::canHandleIndex(index)) { return true;}
             const int i = index.frontCasted<int>();
-            return (i >= static_cast<int>(IndexDbStringKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
+            return (i >= static_cast<int>(IndexDbStringKey)) && (i < static_cast<int>(IndexEndMarker));
         }
     }
 } // namespace

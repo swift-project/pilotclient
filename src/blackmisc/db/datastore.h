@@ -12,10 +12,11 @@
 #ifndef BLACKMISC_DB_DATASTORE_H
 #define BLACKMISC_DB_DATASTORE_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -42,7 +43,30 @@ namespace BlackMisc
         /*!
          * Class from which a derived class can inherit datastore-related functions.
          */
-        class BLACKMISC_EXPORT IDatastoreObjectWithIntegerKey : public ITimestampBased
+        class BLACKMISC_EXPORT IDatastoreObject : public ITimestampBased
+        {
+            // since we use different keys all the compares, set, get are in the derived class
+            // in general we can say, it was a bad decisio to use different key types
+            // IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastore for future usage
+
+        public:
+            //! Version info
+            const QString &getVersion() const { return m_version; }
+
+            //! Version info
+            void setVersion(const QString &version) { m_version = version; }
+
+        protected:
+            //! Set versionn and timestamp values
+            void setTimestampAndVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+            QString m_version; //!< version info
+        };
+
+        /*!
+         * Class from which a derived class can inherit datastore-related functions.
+         */
+        class BLACKMISC_EXPORT IDatastoreObjectWithIntegerKey : public IDatastoreObject
         {
         public:
             //! Property index
@@ -51,7 +75,9 @@ namespace BlackMisc
                 IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger,
                 IndexDbKeyAsString,
                 IndexIsLoadedFromDb,
-                IndexDatabaseIcon
+                IndexDatabaseIcon,
+                IndexVersion,
+                IndexEndMarker //!< keep as last element
             };
 
             //! Get DB key.
@@ -113,7 +139,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithIntegerKey &compareValue) const;
 
             //! Can given index be handled?
@@ -125,7 +151,7 @@ namespace BlackMisc
         /*!
          * Class from which a derived class can inherit datastore-related functions.
          */
-        class BLACKMISC_EXPORT IDatastoreObjectWithStringKey : public ITimestampBased
+        class BLACKMISC_EXPORT IDatastoreObjectWithStringKey : public IDatastoreObject
         {
         public:
             //! Property index
@@ -134,7 +160,9 @@ namespace BlackMisc
                 IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString,
                 IndexDbKeyAsString,
                 IndexIsLoadedFromDb,
-                IndexDatabaseIcon
+                IndexDatabaseIcon,
+                IndexVersion,
+                IndexEndMarker //!< keep as last element
             };
 
             //! Get DB key.
@@ -192,7 +220,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const BlackMisc::CPropertyIndex &index, const IDatastoreObjectWithStringKey &compareValue) const;
 
             //! Can given index be handled
