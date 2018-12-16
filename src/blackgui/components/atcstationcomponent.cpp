@@ -71,13 +71,17 @@ namespace BlackGui
 
             // some icons
             ui->tb_AtcStationsAtisReload->setIcon(CIcons::atis());
-            ui->tb_AtcStationsAtisReload->setText("");
+            ui->tb_AtcStationsAtisReload->setText("ATIS");
+            ui->tb_AtcStationsAtisReload->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             ui->tb_AtcStationsLoadMetar->setIcon(CIcons::metar());
-            ui->tb_AtcStationsLoadMetar->setText("");
+            ui->tb_AtcStationsLoadMetar->setText("METAR");
+            ui->tb_AtcStationsLoadMetar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             ui->tb_Audio->setIcon(CIcons::appAudio16());
-            ui->tb_Audio->setText("");
+            ui->tb_Audio->setText("Audio");
+            ui->tb_Audio->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             ui->tb_TextMessageOverlay->setIcon(CIcons::appTextMessages16());
-            ui->tb_TextMessageOverlay->setText("");
+            ui->tb_TextMessageOverlay->setText("Text");
+            ui->tb_TextMessageOverlay->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
             // set station mode
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
