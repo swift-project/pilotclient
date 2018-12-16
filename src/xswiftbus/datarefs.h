@@ -33,6 +33,7 @@ namespace XSwiftBus
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(name);
+                XPLMDebugString("\n");
             }
         }
 
@@ -56,6 +57,7 @@ namespace XSwiftBus
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(name);
+                XPLMDebugString("\n");
             }
         }
 
@@ -95,7 +97,7 @@ namespace XSwiftBus
         using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the dataref (if it is writable)
-        void set(DataRefType d) { DataRefImpl::implSet(d); }
+        void set(DataRefType d) { static_assert(DataRefTraits::writable, "read-only dataref"); DataRefImpl::implSet(d); }
 
         //! Set as integer, avoids cast warnings such as "possible loss of data"
         void setAsInt(int d) { this->set(static_cast<DataRefType>(d)); }
@@ -126,13 +128,13 @@ namespace XSwiftBus
         using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the whole array (if it is writable)
-        void setAll(std::vector<DataRefType> const &a) { ArrayDataRefImpl::implSetAll(a); }
+        void setAll(std::vector<DataRefType> const &a) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAll(a); }
 
         //! Get the value of the whole array
         std::vector<DataRefType> getAll() const { return ArrayDataRefImpl::implGetAll<DataRefType>(); }
 
         //! Set the value of a single element (if it is writable)
-        void setAt(int index, DataRefType d) { ArrayDataRefImpl::implSetAt(index, d); }
+        void setAt(int index, DataRefType d) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAt(index, d); }
 
         //! Get the value of a single element
         DataRefType getAt(int index) const { return ArrayDataRefImpl::implGetAt<DataRefType>(index); }
@@ -154,6 +156,7 @@ namespace XSwiftBus
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(DataRefTraits::name());
+                XPLMDebugString("\n");
             }
         }
 
@@ -165,11 +168,21 @@ namespace XSwiftBus
 
         //! Set the value of part of the string (if it is writable)
         void setSubstr(size_t offset, std::string const &s)
-        { assert((s.size() + 1) <= (DataRefTraits::size - offset)); XPLMSetDatab(m_ref, (void *)s.c_str(), (int)offset, (int)s.size() + 1); }
+        {
+            static_assert(DataRefTraits::writable, "read-only dataref");
+            assert((s.size() + 1) <= (DataRefTraits::size - offset));
+            XPLMSetDatab(m_ref, (void *)s.c_str(), (int)offset, (int)s.size() + 1);
+        }
 
         //! Get the value of part of the string
         std::string getSubstr(size_t offset, size_t size) const
-        { std::string s(size, 0); XPLMGetDatab(m_ref, &s[0], (int)offset, (int)size); size = s.find(char(0)); if (size != std::string::npos) s.resize(size); return s; }
+        {
+            std::string s(size, 0);
+            XPLMGetDatab(m_ref, &s[0], (int)offset, (int)size);
+            size = s.find(char(0));
+            if (size != std::string::npos) s.resize(size);
+            return s;
+        }
 
     private:
         XPLMDataRef m_ref;
