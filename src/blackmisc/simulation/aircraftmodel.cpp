@@ -9,13 +9,13 @@
 
 #include "matchingutils.h"
 #include "aircraftmodel.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/fileutils.h"
-#include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/verify.h"
 
 #include <QJsonDocument>
@@ -28,6 +28,7 @@
 #include <QFileInfo>
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Db;
 
 namespace BlackMisc
@@ -77,7 +78,16 @@ namespace BlackMisc
             obj.insert("name", this->getName());
             obj.insert("modelstring", QJsonValue(m_modelString));
             obj.insert("description", QJsonValue(m_description));
+            obj.insert("version", QJsonValue(m_version));
             obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper())); // clazy:exclude=qstring-left
+            if (m_cg.isNull())
+            {
+                obj.insert("cgft", QJsonValue()); // null value
+            }
+            else
+            {
+                obj.insert("cgft", QJsonValue(m_cg.value(CLengthUnit::ft())));
+            }
 
             // sims
             const CSimulatorInfo sim(getSimulator());
@@ -89,6 +99,8 @@ namespace BlackMisc
             obj.insert("simfs9", QJsonValue(flag));
             flag = CDatastoreUtility::boolToDbYN(sim.isXPlane());
             obj.insert("simxplane", QJsonValue(flag));
+            flag = CDatastoreUtility::boolToDbYN(sim.isFG());
+            obj.insert("simfg", QJsonValue(flag));
 
             // foreign keys
             obj.insert("iddistributor", this->getDistributor().getDbKeyAsJsonValue());
