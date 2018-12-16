@@ -316,7 +316,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': EXPORT_NAME command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': EXPORT_NAME command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -329,7 +329,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).warning("XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
+                    CLogMessage(this).error("XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
                     return false;
                 }
             }
@@ -339,13 +339,13 @@ namespace BlackMisc
                 Q_UNUSED(package);
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("'%1' - '%2': DEPENDENCY command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("'%1' - '%2': DEPENDENCY command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
                 if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; }) == 0)
                 {
-                    CLogMessage(this).warning("XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
+                    CLogMessage(this).error("XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
                     return false;
                 }
 
@@ -369,7 +369,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJECT command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': OBJECT command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -378,7 +378,7 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2: package not found.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2: package not found.") << path << lineNum;
                     return false;
                 }
 
@@ -386,7 +386,7 @@ namespace BlackMisc
                 QFile objFile(fullPath);
                 if (!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
-                    CLogMessage(this).warning("XPlane object '%1' does not exist.") << fullPath;
+                    CLogMessage(this).error("XPlane object '%1' does not exist.") << fullPath;
                     return false;
                 }
                 QTextStream ts(&objFile);
@@ -432,7 +432,7 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': TEXTURE command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': TEXTURE command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -443,14 +443,14 @@ namespace BlackMisc
 
                 if (!doPackageSub(absoluteTexPath))
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': package not found.") << path << lineNum;
                     return false;
                 }
 
                 QFileInfo fileInfo(absoluteTexPath);
                 if (!fileInfo.exists())
                 {
-                    CLogMessage(this).warning("XPlane texture '%1' does not exist.") << absoluteTexPath;
+                    CLogMessage(this).error("XPlane texture '%1' does not exist.") << absoluteTexPath;
                     return false;
                 }
 
@@ -464,7 +464,7 @@ namespace BlackMisc
                 // AIRCAFT <min> <max> <path>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': AIRCRAFT command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': AIRCRAFT command requires 3 arguments.") << path << lineNum;
                 }
 
                 // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
@@ -478,7 +478,7 @@ namespace BlackMisc
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
                 }
 
                 package.planes.push_back(CSLPlane());
@@ -490,7 +490,7 @@ namespace BlackMisc
                 // OBJ8 <group> <animate YES|NO> <filename> {<texture filename> {<lit texture filename>}}
                 if (tokens.size() < 4 || tokens.size() > 6)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': OBJ8 command takes 3-5 arguments.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': OBJ8 command takes 3-5 arguments.") << path << lineNum;
                 }
 
                 if (tokens[1] != "SOLID") { return true; }
@@ -500,7 +500,7 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': package not found.") << path << lineNum;
                     return false;
                 }
 
@@ -529,14 +529,14 @@ namespace BlackMisc
 
                     if (!doPackageSub(absoluteTexPath))
                     {
-                        CLogMessage(this).warning("XPlane '%1' - '%2': package not found.") << path << lineNum;
+                        CLogMessage(this).error("XPlane '%1' - '%2': package not found.") << path << lineNum;
                         return false;
                     }
 
                     QFileInfo fileInfo(absoluteTexPath);
                     if (!fileInfo.exists())
                     {
-                        CLogMessage(this).warning("XPlane texture '%1' does not exist.") << absoluteTexPath;
+                        CLogMessage(this).error("XPlane texture '%1' does not exist.") << absoluteTexPath;
                         return false;
                     }
 
@@ -559,7 +559,7 @@ namespace BlackMisc
                 // ICAO <code>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': ICAO command requires 1 argument.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': ICAO command requires 1 argument.") << path << lineNum;
                     return false;
                 }
 
@@ -573,7 +573,7 @@ namespace BlackMisc
                 // AIRLINE <code> <airline>
                 if (tokens.size() != 3)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': AIRLINE command requires 2 arguments.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': AIRLINE command requires 2 arguments.") << path << lineNum;
                     return false;
                 }
 
@@ -589,7 +589,7 @@ namespace BlackMisc
                 // LIVERY <code> <airline> <livery>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).warning("XPlane '%1' - '%2': LIVERY command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).error("XPlane '%1' - '%2': LIVERY command requires 3 arguments.") << path << lineNum;
                     return false;
                 }
 
