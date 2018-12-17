@@ -351,6 +351,28 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
+    void COverlayMessages::showProgressBar(int percentage, const QString &message, int timeOutMs)
+    {
+        if (message.isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (this->hasPendingConfirmation())  { return; } // ignore if something else is pending
+
+        const int p = qMax(qMin(percentage, 100), 0);
+
+        ui->pb_ProgressBar->setValue(p);
+        ui->lbl_ProgressBar->setText(message);
+        this->setModeToProgressBar();
+
+        if (p >= 100)
+        {
+            this->close();
+        }
+        else
+        {
+            this->display(timeOutMs);
+        }
+    }
+
     void COverlayMessages::showKillButton(bool killButton)
     {
         m_hasKillButton = killButton;
@@ -383,6 +405,13 @@ namespace BlackGui
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_HTMLMessage);
         this->showKill(withKillButton);
         this->setHeader("Message");
+    }
+
+    void COverlayMessages::setModeToProgressBar(bool withKillButton)
+    {
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_ProgressBar);
+        this->showKill(withKillButton);
+        this->setHeader("Progress bar");
     }
 
     void COverlayMessages::setModeToTextMessage()

@@ -65,6 +65,9 @@ namespace BlackGui
         //! HTML message mode
         void setModeToHTMLMessage(bool withKillButton = false);
 
+        //! Progress bar
+        void setModeToProgressBar(bool withKillButton = false);
+
         //! Single Text message mode
         void setModeToTextMessage();
 
@@ -115,6 +118,9 @@ namespace BlackGui
 
         //! HTML message
         void showHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+
+        //! Progress bar
+        void showProgressBar(int percentage, const QString &message, int timeOutMs = -1);
 
         //! Allows to globally enable/disable kill button
         void showKillButton(bool killButton);
