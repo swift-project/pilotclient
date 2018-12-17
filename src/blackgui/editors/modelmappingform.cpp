@@ -14,6 +14,7 @@
 #include "blackgui/labelandicon.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/stringutils.h"
 #include "ui_modelmappingform.h"
 
 #include <QLineEdit>
@@ -21,7 +22,9 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -34,7 +37,10 @@ namespace BlackGui
             ui->setupUi(this);
             ui->le_LastUpdated->setReadOnly(true);
             ui->le_Id->setReadOnly(true);
+
             ui->lai_Id->set(CIcons::appMappings16(), "Id:");
+
+            connect(ui->le_CG, &QLineEdit::editingFinished, this, &CModelMappingForm::onCgEditFinished);
             connect(ui->pb_Stash, &QPushButton::clicked, this, &CModelMappingForm::requestStash);
 
             // for setting mode (include/exclude)
@@ -52,6 +58,7 @@ namespace BlackGui
             model.setModelString(ui->le_ModelKey->text());
             model.setName(ui->le_Name->text());
             model.setModelMode(ui->selector_ModelMode->getMode());
+            model.setCG(this->getCGFromUI());
             return model;
         }
 
@@ -86,6 +93,7 @@ namespace BlackGui
             ui->le_FileName->setText(model.getFileName());
             ui->selector_ModelMode->setValue(model.getModelMode());
             ui->selector_Simulator->setValue(model.getSimulator());
+            this->setCGtoUI(model.getCG());
             m_originalModel = model;
         }
 
@@ -103,6 +111,43 @@ namespace BlackGui
             }
 
             CFormDbUser::userChanged();
+        }
+
+        CLength CModelMappingForm::getCGFromUI() const
+        {
+            if (ui->le_CG->text().isEmpty()) { return CLength::null(); }
+            const QString v = ui->le_CG->text();
+
+            // without unit we assume ft
+            if (isDigitsOnlyString(v))
+            {
+                bool ok;
+                const double cgv = v.toDouble(&ok);
+                if (!ok) { return CLength::null(); }
+                return CLength(cgv, CLengthUnit::ft());
+            }
+
+            CLength cg;
+            cg.parseFromString(v);
+            return cg;
+        }
+
+        void CModelMappingForm::setCGtoUI(const CLength &cg)
+        {
+            if (cg.isNull())
+            {
+                ui->le_CG->clear();
+            }
+            else
+            {
+                ui->le_CG->setText(cg.valueRoundedWithUnit(CLengthUnit::ft(), 1));
+            }
+        }
+
+        void CModelMappingForm::onCgEditFinished()
+        {
+            const CLength cg = this->getCGFromUI();
+            this->setCGtoUI(cg);
         }
     } // ns
 } // ns

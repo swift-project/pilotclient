@@ -12,8 +12,8 @@
 #ifndef BLACKGUI_EDITORS_MODELMAPPINGFORM_H
 #define BLACKGUI_EDITORS_MODELMAPPINGFORM_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -51,7 +51,6 @@ namespace BlackGui
             virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects) const override;
             //! @}
 
-        public slots:
             //! Set model
             void setValue(BlackMisc::Simulation::CAircraftModel &model);
 
@@ -64,6 +63,15 @@ namespace BlackGui
             virtual void userChanged() override;
 
         private:
+            //! CG (aka vertical offset) from UI
+            BlackMisc::PhysicalQuantities::CLength getCGFromUI() const;
+
+            //! Set CG value properly formatted
+            void setCGtoUI(const BlackMisc::PhysicalQuantities::CLength &cg);
+
+            //! CG edited
+            void onCgEditFinished();
+
             QScopedPointer<Ui::CModelMappingForm> ui;
             BlackMisc::Simulation::CAircraftModel m_originalModel;
         };
