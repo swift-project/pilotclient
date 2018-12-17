@@ -58,6 +58,9 @@ namespace BlackMisc
         //! Move assignment operator.
         CVariantMap &operator =(CVariantMap &&other) noexcept { CDictionary::operator =(std::move(other)); return *this; }
 
+        //! Destructor.
+        ~CVariantMap() = default;
+
         //! Insert values from this map into an existing JSON object.
         QJsonObject &mergeToJson(QJsonObject &json) const;
 

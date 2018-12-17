@@ -297,6 +297,9 @@ namespace BlackMisc
         //! Move constructor
         CDictionary(CDictionary &&other) noexcept : m_impl(std::move(other.m_impl)) {}
 
+        //! Destructor
+        ~CDictionary() = default;
+
         //! Returns iterator at the beginning of the dictionary
         iterator begin() { return m_impl.begin(); }
 

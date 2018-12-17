@@ -33,6 +33,12 @@ namespace BlackGui
             //! Destructor
             ~CActionItem();
 
+            //! Not copyable
+            //! @{
+            CActionItem(const CActionItem &) = delete;
+            CActionItem &operator =(const CActionItem &) = delete;
+            //! @}
+
             //! Append a new child
             void appendChild(CActionItem *child);
 
