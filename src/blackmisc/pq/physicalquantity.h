@@ -214,7 +214,7 @@ namespace BlackMisc
             uint getValueHash() const;
 
             //! \copydoc CValueObject::qHash
-            friend uint qHash(const PQ &pq) { return pq.getValueHash(); }
+            friend uint qHash(const PQ &pq) { return pq.getValueHash(); } // clazy:exclude=qhash-namespace
 
             //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
             QJsonObject toJson() const;

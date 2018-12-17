@@ -487,7 +487,7 @@ namespace BlackMisc
         {
         public:
             //! qHash overload, needed for storing value in a QSet.
-            friend uint qHash(const Derived &value, uint seed = 0)
+            friend uint qHash(const Derived &value, uint seed = 0) // clazy:exclude=qhash-namespace
             {
                 return ::qHash(hashImpl(value), seed);
             }

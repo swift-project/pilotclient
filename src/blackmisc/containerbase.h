@@ -100,7 +100,7 @@ namespace BlackMisc
         }
 
         //! Simplifies composition, returns 0 for performance
-        friend uint qHash(const Derived &) { return 0; }
+        friend uint qHash(const Derived &) { return 0; } // clazy:exclude=qhash-namespace
 
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const
