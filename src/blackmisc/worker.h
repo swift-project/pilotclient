@@ -268,8 +268,8 @@ namespace BlackMisc
         void ps_runTask();
 
     private:
-        CWorker(std::function<CVariant()> task) : m_task(task) {}
-        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task);
+        CWorker(const std::function<CVariant()> &task) : m_task(task) {}
+        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<CVariant()> &task);
 
         template <typename R>
         R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }

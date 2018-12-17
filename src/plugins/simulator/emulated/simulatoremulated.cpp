@@ -387,7 +387,7 @@ namespace BlackSimPlugin
             },
             Qt::QueuedConnection));
 
-            m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](CAircraftModel model)
+            m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](const CAircraftModel &model)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());

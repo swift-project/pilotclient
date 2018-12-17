@@ -110,13 +110,13 @@ namespace BlackMisc
         return connection.name().contains(p2pConnectionName());
     }
 
-    bool CDBusServer::dBusAddressToHostAndPort(QString address, QString &host, int &port)
+    bool CDBusServer::dBusAddressToHostAndPort(const QString &address, QString &host, int &port)
     {
-        address = address.trimmed().toLower().replace(' ', "");
-        if (address.contains("host=") || address.contains("port="))
+        const QString canonicalAddress = address.trimmed().toLower().replace(' ', "");
+        if (canonicalAddress.contains("host=") || canonicalAddress.contains("port="))
         {
             // "tcp:host=foo.com,port=123"
-            const QStringList parts(address.split(','));
+            const QStringList parts(canonicalAddress.split(','));
             for (const QString &part : parts)
             {
                 // "host=" or "tcp:host="
@@ -145,7 +145,7 @@ namespace BlackMisc
         }
     }
 
-    bool CDBusServer::dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, QString &o_port)
+    bool CDBusServer::dBusAddressToHostAndPort(const QString &dbusAddress, QString &o_host, QString &o_port)
     {
         int port;
         const bool s = dBusAddressToHostAndPort(dbusAddress, o_host, port);

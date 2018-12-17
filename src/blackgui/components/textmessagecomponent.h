@@ -100,7 +100,7 @@ namespace BlackGui
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
             //! Command line was entered
-            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &originator);
+            void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
@@ -137,7 +137,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             //! For this text message's recepient, is the current tab selected?
-            bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
+            bool isCorrespondingTextMessageTabSelected(const BlackMisc::Network::CTextMessage &textMessage) const;
 
             //! Network connected?
             bool isNetworkConnected() const;

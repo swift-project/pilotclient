@@ -119,7 +119,7 @@ namespace BlackInput
             }
         }
 
-        for (CJoystickDeviceInput input : m_joystickDeviceInputs)
+        for (const CJoystickDeviceInput &input : m_joystickDeviceInputs)
         {
             const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
             bool isPressed = state.rgbButtons[buttonIndex] & 0x80;

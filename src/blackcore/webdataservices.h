@@ -445,10 +445,10 @@ namespace BlackCore
         int getSharedInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! For all available DB readers the log info is generated
-        QString getDbReadersLog(const QString separator = "\n") const;
+        QString getDbReadersLog(const QString &separator = "\n") const;
 
         //! For all available readers the log info is generated
-        QString getReadersLog(const QString separator = "\n") const;
+        QString getReadersLog(const QString &separator = "\n") const;
 
         //! Has already successfully connect swift DB?
         bool hasSuccesfullyConnectedSwiftDb() const;

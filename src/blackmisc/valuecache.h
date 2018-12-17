@@ -456,7 +456,7 @@ namespace BlackMisc
 
     protected:
         //! \private Connect a function to be called (only once) when the owner's objectName changes.
-        void onOwnerNameChanged(std::function<void()> function)
+        void onOwnerNameChanged(const std::function<void()> &function)
         {
             connectOnce(m_page->parent(), &QObject::objectNameChanged, [function](const QString &) { function(); });
         }

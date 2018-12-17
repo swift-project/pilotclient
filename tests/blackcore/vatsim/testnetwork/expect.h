@@ -171,7 +171,7 @@ namespace BlackCoreTest
         mutable ConnectGuard m_guard;
 
         mutable std::function<void(const ExpectUnit *)> m_onDone;
-        void onDone(std::function<void(const ExpectUnit *)> callback) const { m_onDone = callback; }
+        void onDone(const std::function<void(const ExpectUnit *)> &callback) const { m_onDone = callback; }
 
         // Helper traits class. Given T is a pointer-to-member-of-U, ClassOf<T>::type is U.
         template <class T> struct ClassOf;

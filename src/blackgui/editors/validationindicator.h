@@ -72,7 +72,7 @@ namespace BlackGui
             QScopedPointer<Ui::CValidationIndicator> ui;
 
             //! Set background color
-            void setBackgroundColor(const QString colorName);
+            void setBackgroundColor(const QString &colorName);
 
             QTimer m_resetTimer; //!< reset to neutral
             QString m_originalStyleSheet; //!< stored, to be able to reset

@@ -59,7 +59,7 @@ namespace BlackMisc
         Q_UNUSED(ok);
     }
 
-    CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
+    CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<CVariant()> &task)
     {
         auto *worker = new CWorker(task);
         emit worker->aboutToStart();

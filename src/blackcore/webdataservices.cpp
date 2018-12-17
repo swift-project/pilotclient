@@ -523,7 +523,7 @@ namespace BlackCore
         return this->getInfoObjectCount(entity, m_sharedInfoDataReader);
     }
 
-    QString CWebDataServices::getDbReadersLog(const QString separator) const
+    QString CWebDataServices::getDbReadersLog(const QString &separator) const
     {
         QStringList report;
         if (m_dbInfoDataReader)     { report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary(); }
@@ -536,7 +536,7 @@ namespace BlackCore
         return report.join(separator);
     }
 
-    QString CWebDataServices::getReadersLog(const QString separator) const
+    QString CWebDataServices::getReadersLog(const QString &separator) const
     {
         const QString db = this->getDbReadersLog(separator);
         QStringList report;

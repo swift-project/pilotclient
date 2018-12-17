@@ -16,6 +16,8 @@
 #include <SimConnect.h>
 #include <array>
 
+// clazy:excludeall=function-args-by-ref
+
 using namespace BlackMisc;
 
 bool loadAndResolveSimConnect(bool manifestProbing)

@@ -293,7 +293,7 @@ namespace BlackGui
                    styleSheet;
         }
 
-        bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(CTextMessage textMessage) const
+        bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(const CTextMessage &textMessage) const
         {
             if (!this->isVisibleWidgetHack()) { return false; }
             if (!textMessage.hasValidRecipient()) { return false; }

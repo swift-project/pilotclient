@@ -179,7 +179,7 @@ namespace BlackGui
             ui->tw_SpecializedViews->setCurrentIndex(tabIndex);
         }
 
-        CAircraftModelList CMappingComponent::findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs)
+        CAircraftModelList CMappingComponent::findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs)
         {
             Q_ASSERT(ui->tvp_AircraftModels);
             return ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);

@@ -101,7 +101,7 @@ namespace BlackGui
     {
         if (messages.isEmpty()) { return ""; }
         QString html("<table>");
-        for (CTextMessage msg : messages)
+        for (const CTextMessage &msg : messages)
         {
             html += toHtml(msg, withFrom, withTo);
         }

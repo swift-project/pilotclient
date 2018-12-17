@@ -82,7 +82,7 @@ namespace BlackMisc
             return encryptToByteArray(plaintextArray);
         }
 
-        QByteArray SimpleCrypt::encryptToByteArray(QByteArray plaintext)
+        QByteArray SimpleCrypt::encryptToByteArray(const QByteArray &plaintext)
         {
             if (m_keyParts.isEmpty())
             {
@@ -159,7 +159,7 @@ namespace BlackMisc
             return cypherString;
         }
 
-        QString SimpleCrypt::encryptToString(QByteArray plaintext)
+        QString SimpleCrypt::encryptToString(const QByteArray &plaintext)
         {
             QByteArray cypher = encryptToByteArray(plaintext);
             QString cypherString = QString::fromLatin1(cypher.toBase64());
@@ -175,7 +175,7 @@ namespace BlackMisc
             return plaintext;
         }
 
-        QString SimpleCrypt::decryptToString(QByteArray cypher)
+        QString SimpleCrypt::decryptToString(const QByteArray &cypher)
         {
             QByteArray ba = decryptToByteArray(cypher);
             QString plaintext = QString::fromUtf8(ba, ba.size());
@@ -191,7 +191,7 @@ namespace BlackMisc
             return ba;
         }
 
-        QByteArray SimpleCrypt::decryptToByteArray(QByteArray cypher)
+        QByteArray SimpleCrypt::decryptToByteArray(const QByteArray &cypher)
         {
             if (m_keyParts.isEmpty())
             {

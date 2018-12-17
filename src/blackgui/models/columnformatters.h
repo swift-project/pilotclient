@@ -259,7 +259,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
+            CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
@@ -344,7 +344,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
+            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
             //! \copydoc BlackGui::Models::CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override

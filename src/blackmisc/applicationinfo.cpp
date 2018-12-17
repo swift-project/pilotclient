@@ -83,7 +83,7 @@ namespace BlackMisc
         return this->getApplication() == Unknown && m_exePath.isNull();
     }
 
-    QString CApplicationInfo::asOtherSwiftVersionString(const QString separator) const
+    QString CApplicationInfo::asOtherSwiftVersionString(const QString &separator) const
     {
         return QStringLiteral("Version; ")  % this->getVersionString() % QStringLiteral(" os: ") % this->getPlatform() % separator %
                QStringLiteral("exe.path: ") % this->getExecutablePath() % separator %

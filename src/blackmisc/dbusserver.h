@@ -126,10 +126,10 @@ namespace BlackMisc
         static bool isP2PConnection(const QDBusConnection &connection);
 
         //! Extract host and port from a DBus address
-        static bool dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, int &o_port);
+        static bool dBusAddressToHostAndPort(const QString &dbusAddress, QString &o_host, int &o_port);
 
         //! Extract host and port from a DBus address
-        static bool dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, QString &o_port);
+        static bool dBusAddressToHostAndPort(const QString &dbusAddress, QString &o_host, QString &o_port);
 
         //! Is the given connection one of the default connections?
         static bool isQtDefaultConnection(const QDBusConnection &connection);

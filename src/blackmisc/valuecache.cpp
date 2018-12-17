@@ -608,7 +608,7 @@ namespace BlackMisc
 
     struct CValuePage::Element
     {
-        Element(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue) :
+        Element(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue) :
             m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
         {}
         const QString m_key;
@@ -624,7 +624,7 @@ namespace BlackMisc
         bool m_saved = false;
     };
 
-    CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType, Validator validator, const CVariant &defaultValue)
+    CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue)
     {
         if (parent()->objectName().isEmpty() && keyTemplate.contains("%OwnerName%"))
         {
@@ -667,7 +667,7 @@ namespace BlackMisc
         return element;
     }
 
-    void CValuePage::setNotifySlot(Element &element, NotifySlot slot)
+    void CValuePage::setNotifySlot(Element &element, const NotifySlot &slot)
     {
         element.m_notifySlot = slot;
     }

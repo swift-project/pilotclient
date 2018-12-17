@@ -84,7 +84,7 @@ namespace BlackGui
             void setTab(TabWidget tab);
 
             //! Find models starting with
-            BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs);
+            BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs);
 
         signals:
             //! Request a text message

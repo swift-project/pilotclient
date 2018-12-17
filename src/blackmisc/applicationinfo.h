@@ -129,7 +129,7 @@ namespace BlackMisc
         bool isNull() const;
 
         //! Formatted info
-        QString asOtherSwiftVersionString(const QString separator = " | ") const;
+        QString asOtherSwiftVersionString(const QString &separator = " | ") const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

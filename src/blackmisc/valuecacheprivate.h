@@ -84,10 +84,10 @@ namespace BlackMisc
             //! \param metaType The Qt metatype ID of the value object's expected type.
             //! \param validator Optional functor which returns true if the value is valid.
             //! \param defaultValue Optional value which is used in case the value is invalid.
-            Element &createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue);
+            Element &createElement(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue);
 
             //! Set the functor to call to notify that the value corresponding to the element's key was modified.
-            void setNotifySlot(Element &element, NotifySlot slot);
+            void setNotifySlot(Element &element, const NotifySlot &slot);
 
             //! True if the currently paged value corresponds to a valid key.
             bool isInitialized(const Element &element) const;

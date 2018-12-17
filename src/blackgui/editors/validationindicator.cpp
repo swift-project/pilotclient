@@ -103,7 +103,7 @@ namespace BlackGui
             Q_UNUSED(paintEvent);
         }
 
-        void CValidationIndicator::setBackgroundColor(const QString colorName)
+        void CValidationIndicator::setBackgroundColor(const QString &colorName)
         {
             if (colorName.isEmpty())
             {

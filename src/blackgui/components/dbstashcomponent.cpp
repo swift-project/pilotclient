@@ -142,13 +142,13 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->updateContainerMaybeAsync(models);
         }
 
-        int CDbStashComponent::unstashModels(QSet<int> keys)
+        int CDbStashComponent::unstashModels(const QSet<int> &keys)
         {
             if (keys.isEmpty()) { return 0; }
             return ui->tvp_StashAircraftModels->removeDbKeys(keys);
         }
 
-        int CDbStashComponent::unstashModels(QStringList modelStrings)
+        int CDbStashComponent::unstashModels(const QStringList &modelStrings)
         {
             if (modelStrings.isEmpty()) { return 0; }
             return ui->tvp_StashAircraftModels->removeModelsWithModelString(modelStrings);
