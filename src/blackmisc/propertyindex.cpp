@@ -74,7 +74,7 @@ namespace BlackMisc
     {
         m_indexes.clear();
         if (indexes.isEmpty()) { return; }
-        for (const QString &index : indexes.split(';'))
+        for (const QStringRef &index : indexes.splitRef(';'))
         {
             if (index.isEmpty()) { continue; }
             bool ok;
