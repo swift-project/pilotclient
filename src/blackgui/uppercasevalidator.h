@@ -21,6 +21,7 @@ namespace BlackGui
     //! Forces uppercase
     class BLACKGUI_EXPORT CUpperCaseValidator : public QValidator
     {
+        Q_OBJECT
 
     public:
         //! Constructor

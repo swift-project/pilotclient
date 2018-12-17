@@ -28,6 +28,8 @@ namespace BlackGui
         //! Client list model
         class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CClientListModel(QObject *parent = nullptr);

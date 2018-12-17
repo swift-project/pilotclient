@@ -26,6 +26,8 @@ namespace BlackGui
         //! Aircraft parts
         class BLACKGUI_EXPORT CAircraftPartsView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftPartsView(QWidget *parent = nullptr);

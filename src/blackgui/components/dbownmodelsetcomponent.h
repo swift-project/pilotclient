@@ -191,6 +191,7 @@ namespace BlackGui
 
             //! The menu for loading models from cache or create a new model set
             //! \note This is specific for that very model set component
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CLoadModelSetMenu : public Menus::IMenuDelegate
             {
             public:

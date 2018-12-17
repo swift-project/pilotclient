@@ -27,6 +27,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CCloudLayerListModel :
             public CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CCloudLayerListModel(QObject *parent = nullptr);

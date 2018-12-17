@@ -28,6 +28,8 @@ namespace BlackGui
          */
         class CViewBaseProxyStyle : public QProxyStyle
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style = nullptr);

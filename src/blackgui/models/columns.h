@@ -130,6 +130,8 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CColumns : public QObject
         {
+            Q_OBJECT
+
         public:
             /*!
              * Columns constructors

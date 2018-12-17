@@ -25,6 +25,8 @@ namespace BlackGui
      */
     class BLACKGUI_EXPORT CAltitudeEdit : public QLineEdit
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CAltitudeEdit(QWidget *parent = nullptr);

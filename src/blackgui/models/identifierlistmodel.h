@@ -24,6 +24,8 @@ namespace BlackGui
         //! Originator list model
         class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CIdentifierListModel(QObject *parent = nullptr);

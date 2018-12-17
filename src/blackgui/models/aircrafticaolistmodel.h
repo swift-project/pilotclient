@@ -25,6 +25,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CAircraftIcaoCodeListModel :
             public CListModelDbObjects<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftIcaoCodeListModel(QObject *parent = nullptr);

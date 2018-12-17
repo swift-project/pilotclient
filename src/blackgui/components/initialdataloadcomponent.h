@@ -54,6 +54,8 @@ namespace BlackGui
         */
         class CInitialDataLoadWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

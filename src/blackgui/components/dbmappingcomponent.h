@@ -354,6 +354,7 @@ namespace BlackGui
 
             //! The menu for loading and handling VPilot rules for mapping tasks
             //! \note This is a specific menu for that very component
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CMappingVPilotMenu : public Menus::IMenuDelegate
             {
             public:
@@ -377,6 +378,7 @@ namespace BlackGui
             //! -# toggle stash auto filtering
             //! -# show changed attributes
             //! \note This is a specific menu for the CDbMappingComponent component
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CStashToolsMenu : public Menus::IMenuDelegate
             {
             public:
@@ -399,6 +401,7 @@ namespace BlackGui
             };
 
             //! Menu for own model sets
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class COwnModelSetMenu : public Menus::IMenuDelegate
             {
             public:
@@ -418,6 +421,7 @@ namespace BlackGui
             };
 
             //! Menu for removed models
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CRemovedModelsMenu : public Menus::IMenuDelegate
             {
             public:
@@ -437,6 +441,7 @@ namespace BlackGui
             };
 
             //! Apply DB data to selected models
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CApplyDbDataMenu : public Menus::IMenuDelegate
             {
             public:
@@ -457,6 +462,7 @@ namespace BlackGui
 
             //! Merge with vPilot data
             //! \deprecated vPilot menus will be removed in the future
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CMergeWithVPilotMenu : public Menus::IMenuDelegate
             {
             public:

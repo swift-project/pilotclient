@@ -28,6 +28,8 @@ namespace BlackGui
         //! Client view
         class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CClientView(QWidget *parent = nullptr);

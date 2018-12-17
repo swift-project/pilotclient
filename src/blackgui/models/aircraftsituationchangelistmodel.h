@@ -27,6 +27,8 @@ namespace BlackGui
         //! Aircraft situation changes list model
         class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftSituationChangeListModel(QObject *parent = nullptr);

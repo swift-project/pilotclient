@@ -26,6 +26,8 @@ namespace BlackGui
         //! Matching statistics
         class BLACKGUI_EXPORT CMatchingStatisticsView : public CViewBase<Models::CMatchingStatisticsModel, BlackMisc::Simulation::CMatchingStatistics, BlackMisc::Simulation::CMatchingStatisticsEntry>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CMatchingStatisticsView(QWidget *parent = nullptr);

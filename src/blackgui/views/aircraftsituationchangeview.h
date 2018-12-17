@@ -26,6 +26,8 @@ namespace BlackGui
         //! Aircraft situation change view
         class BLACKGUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationChangeListModel, BlackMisc::Aviation::CAircraftSituationChangeList, BlackMisc::Aviation::CAircraftSituationChange>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftSituationChangeView(QWidget *parent = nullptr);

@@ -27,6 +27,8 @@ namespace BlackGui
         //! Airports view
         class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CTextMessageView(QWidget *parent = nullptr);

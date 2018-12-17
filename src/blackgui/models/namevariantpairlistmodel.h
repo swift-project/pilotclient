@@ -35,9 +35,9 @@ namespace BlackGui
         //! Simple model displaying name / variant values
         class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>
         {
+            Q_OBJECT
 
         public:
-
             //! Constructor
             explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
 

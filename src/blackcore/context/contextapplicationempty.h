@@ -25,6 +25,8 @@ namespace BlackCore
         //! Application context
         class BLACKCORE_EXPORT CContextApplicationEmpty : public IContextApplication
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CContextApplicationEmpty(CCoreFacade *runtime) : IContextApplication(CCoreFacadeConfig::NotUsed, runtime) {}

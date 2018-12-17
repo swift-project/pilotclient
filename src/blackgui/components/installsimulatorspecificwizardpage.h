@@ -27,6 +27,8 @@ namespace BlackGui
          */
         class CInstallSimulatorSpecificWizardPage : public COverlayMessagesWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using COverlayMessagesWizardPage::COverlayMessagesWizardPage;

@@ -58,6 +58,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CTimedFileDeleter : public QObject
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CTimedFileDeleter(const QString &file, int deleteAfterMs, QObject *parent = nullptr);

@@ -178,6 +178,8 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CDummyModelLoader : public IAircraftModelLoader
         {
+            Q_OBJECT
+
         public:
             //! Dummy loader
             CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent);

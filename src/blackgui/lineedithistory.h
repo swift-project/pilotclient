@@ -23,6 +23,8 @@ namespace BlackGui
      */
     class BLACKGUI_EXPORT CLineEditHistory : public QLineEdit
     {
+        Q_OBJECT
+
     public:
         //! Constructors
         using QLineEdit::QLineEdit;

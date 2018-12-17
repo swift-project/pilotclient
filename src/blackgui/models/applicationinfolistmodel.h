@@ -26,6 +26,8 @@ namespace BlackGui
         //! Application info list model
         class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfo, BlackMisc::CApplicationInfoList, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CApplicationInfoListModel(QObject *parent = nullptr);

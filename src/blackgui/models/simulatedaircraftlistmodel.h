@@ -27,6 +27,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CSimulatedAircraftListModel :
             public CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>
         {
+            Q_OBJECT
+
         public:
             //! Model modes
             enum AircraftMode

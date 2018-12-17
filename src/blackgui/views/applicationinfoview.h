@@ -26,6 +26,8 @@ namespace BlackGui
         //! Network servers
         class BLACKGUI_EXPORT CApplicationInfoView : public CViewBase<Models::CApplicationInfoListModel, BlackMisc::CApplicationInfoList, BlackMisc::CApplicationInfo>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CApplicationInfoView(QWidget *parent = nullptr);
@@ -40,6 +42,8 @@ namespace BlackGui
         //! Menu base class for aircraft model view menus
         class CApplicationInfoMenu : public Menus::IMenuDelegate
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CApplicationInfoMenu(CApplicationInfoView *modelView) : Menus::IMenuDelegate(modelView)

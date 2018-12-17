@@ -25,6 +25,8 @@ namespace BlackGui
         //! Matching statistics entry
         class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics, true>
         {
+            Q_OBJECT
+
         public:
             //! How to display
             enum MatchingStatisticsMode

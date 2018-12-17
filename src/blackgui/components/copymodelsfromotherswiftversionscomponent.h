@@ -66,6 +66,8 @@ namespace BlackGui
          */
         class CCopyModelsFromOtherSwiftVersionsWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

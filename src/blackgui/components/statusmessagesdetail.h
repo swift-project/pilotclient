@@ -83,6 +83,7 @@ namespace BlackGui
             void deferredUpdate();
 
             //! Custom menu for the log component
+            //! \fixme Move to namespace scope and add Q_OBJECT
             class CMessageMenu : public Menus::IMenuDelegate
             {
             public:

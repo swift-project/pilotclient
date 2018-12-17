@@ -27,9 +27,9 @@ namespace BlackGui
         //! Airports view
         class BLACKGUI_EXPORT CTemperatureLayerView : public CViewBase<Models::CTemperatureLayerListModel, BlackMisc::Weather::CTemperatureLayerList, BlackMisc::Weather::CTemperatureLayer>
         {
+            Q_OBJECT
 
         public:
-
             //! Constructor
             explicit CTemperatureLayerView(QWidget *parent = nullptr);
         };

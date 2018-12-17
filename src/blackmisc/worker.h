@@ -72,6 +72,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CRegularThread : public QThread
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}

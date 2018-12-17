@@ -26,8 +26,9 @@ namespace BlackGui
         class BLACKGUI_EXPORT CUserListModel :
             public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>
         {
-        public:
+            Q_OBJECT
 
+        public:
             //! What level of detail
             enum UserMode
             {

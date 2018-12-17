@@ -106,6 +106,8 @@ namespace BlackGui
          */
         class CInstallXSwiftBusWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

@@ -29,6 +29,8 @@ namespace BlackGui
         //! User view
         class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CNameVariantPairView(QWidget *parent = nullptr);

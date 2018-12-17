@@ -34,6 +34,8 @@ namespace BlackCore
     //! as data files via http, or file system and parsing (such as FSX models)
     class BLACKCORE_EXPORT CThreadedReader : public BlackMisc::CContinuousWorker
     {
+        Q_OBJECT
+
     public:
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();

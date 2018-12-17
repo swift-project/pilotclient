@@ -27,6 +27,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CWindLayerListModel :
             public CListModelBase<BlackMisc::Weather::CWindLayer, BlackMisc::Weather::CWindLayerList, false>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CWindLayerListModel(QObject *parent = nullptr);

@@ -62,6 +62,8 @@ namespace BlackGui
          */
         class CLegalInfoWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

@@ -35,6 +35,8 @@ namespace BlackGui
             public CFilterWidget,
             public Models::IModelFilterProvider<BlackMisc::Simulation::CDistributorList>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CDistributorFilterBar(QWidget *parent = nullptr);

@@ -35,6 +35,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CAircraftIcaoCodeView :
             public CViewWithDbObjects<Models::CAircraftIcaoCodeListModel, BlackMisc::Aviation::CAircraftIcaoCodeList, BlackMisc::Aviation::CAircraftIcaoCode, int>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftIcaoCodeView(QWidget *parent = nullptr);

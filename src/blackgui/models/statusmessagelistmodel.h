@@ -28,6 +28,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CStatusMessageListModel :
             public CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>
         {
+            Q_OBJECT
+
         public:
             //! Mode
             enum Mode

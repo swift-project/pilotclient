@@ -73,6 +73,8 @@ namespace BlackGui
          */
         class CConfigHotkeyWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

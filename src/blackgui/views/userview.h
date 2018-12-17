@@ -25,6 +25,8 @@ namespace BlackGui
         //! User view
         class BLACKGUI_EXPORT CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CUserView(QWidget *parent = nullptr);

@@ -24,6 +24,8 @@ namespace BlackCore
         //! Audio context implementation
         class BLACKCORE_EXPORT CContextAudioEmpty : public IContextAudio
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CContextAudioEmpty(CCoreFacade *runtime) : IContextAudio(CCoreFacadeConfig::NotUsed, runtime) {}

@@ -175,6 +175,7 @@ namespace BlackGui
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
+            //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
             class CLoadModelsMenu : public Menus::IMenuDelegate
             {
             public:

@@ -34,8 +34,10 @@ namespace BlackMisc
      * Used for hand written interface based on virtual methods.
      * Allows to relay a message to DBus in a single code line
      */
-    class CGenericDBusInterface : public QDBusAbstractInterface
+    class BLACKMISC_EXPORT CGenericDBusInterface : public QDBusAbstractInterface
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = nullptr) :

@@ -35,6 +35,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CLiveryView :
             public CViewWithDbObjects<Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery, int>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CLiveryView(QWidget *parent = nullptr);

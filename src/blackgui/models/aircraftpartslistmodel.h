@@ -28,6 +28,8 @@ namespace BlackGui
         //! Aircraft parts list model
         class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAircraftPartsListModel(QObject *parent = nullptr);

@@ -30,6 +30,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDistributorListModel :
             public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
         {
+            Q_OBJECT
+
         public:
             //! What kind of stations
             enum DistributorMode

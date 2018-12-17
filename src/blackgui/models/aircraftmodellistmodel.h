@@ -32,6 +32,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CAircraftModelListModel :
             public COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
         {
+            Q_OBJECT
+
         public:
             //! How to display
             //! \sa BlackMisc::Simulation::CAircraftModel::ModelType

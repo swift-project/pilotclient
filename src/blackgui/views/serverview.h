@@ -25,6 +25,8 @@ namespace BlackGui
         //! Network servers
         class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CServerView(QWidget *parent = nullptr);

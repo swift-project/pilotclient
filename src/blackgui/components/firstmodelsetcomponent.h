@@ -93,6 +93,8 @@ namespace BlackGui
         //! Wizard page for CFirstModelSetComponent
         class CFirstModelSetWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

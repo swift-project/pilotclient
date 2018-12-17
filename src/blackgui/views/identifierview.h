@@ -25,6 +25,8 @@ namespace BlackGui
         //! Originator servers
         class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel, BlackMisc::CIdentifierList, BlackMisc::CIdentifier>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CIdentifierView(QWidget *parent = nullptr);

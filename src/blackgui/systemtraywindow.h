@@ -34,6 +34,8 @@ namespace BlackGui
     //! QDialog which can minimize to system tray
     class BLACKGUI_EXPORT CSystemTrayWindow : public QMainWindow
     {
+        Q_OBJECT
+
     public:
         //! System Tray Flag
         enum SystemTrayFlag

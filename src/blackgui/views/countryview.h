@@ -26,6 +26,8 @@ namespace BlackGui
         //! Countries
         class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel, BlackMisc::CCountryList, BlackMisc::CCountry>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CCountryView(QWidget *parent = nullptr);

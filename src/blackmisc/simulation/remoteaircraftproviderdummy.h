@@ -27,6 +27,8 @@ namespace BlackMisc
         //! Dummy implementation for testing purpose
         class BLACKMISC_EXPORT CRemoteAircraftProviderDummy : public CRemoteAircraftProvider
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CRemoteAircraftProviderDummy(QObject *parent = nullptr);

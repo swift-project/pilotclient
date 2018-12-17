@@ -28,6 +28,8 @@ namespace BlackGui
         //! ATC list model
         class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
         {
+            Q_OBJECT
+
         public:
             //! What kind of stations
             enum AtcStationMode

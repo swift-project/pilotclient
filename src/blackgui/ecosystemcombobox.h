@@ -20,6 +20,8 @@ namespace BlackGui
     //! Combo box widget for ecosystems
     class CEcosystemComboBox : public QComboBox
     {
+        Q_OBJECT
+
     public:
         //! Constructor
         CEcosystemComboBox(QWidget *parent = nullptr);

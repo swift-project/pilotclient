@@ -36,6 +36,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDistributorView :
             public COrderableViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CDistributorView(QWidget *parent = nullptr);

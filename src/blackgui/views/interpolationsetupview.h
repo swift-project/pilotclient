@@ -26,6 +26,8 @@ namespace BlackGui
         //! Distributors
         class BLACKGUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CInterpolationSetupView(QWidget *parent = nullptr);

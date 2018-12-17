@@ -27,6 +27,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CAirportListModel :
             public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CAirportListModel(QObject *parent = nullptr);

@@ -32,6 +32,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CCountryListModel :
             public CListModelDbObjects<BlackMisc::CCountry, BlackMisc::CCountryList, QString, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CCountryListModel(QObject *parent = nullptr);

@@ -26,6 +26,8 @@ namespace BlackGui
         //! Base for filter dialog
         class BLACKGUI_EXPORT CFilterDialog : public QDialog
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CFilterDialog(QWidget *parent = nullptr);

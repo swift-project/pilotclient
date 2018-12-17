@@ -25,6 +25,8 @@ namespace BlackGui
          */
         class CViewBaseItemDelegate : public QStyledItemDelegate
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CViewBaseItemDelegate(QObject *parent = nullptr) : QStyledItemDelegate(parent) {}

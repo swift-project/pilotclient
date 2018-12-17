@@ -25,6 +25,8 @@ namespace BlackGui
          */
         class CDbModelKeyCompleter : public QLineEdit
         {
+            Q_OBJECT
+
         public:
             //! Ctor
             CDbModelKeyCompleter(QWidget *parent = nullptr);

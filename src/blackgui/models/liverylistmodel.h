@@ -34,6 +34,8 @@ namespace BlackGui
         class BLACKGUI_EXPORT CLiveryListModel :
             public CListModelDbObjects<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int, true>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CLiveryListModel(QObject *parent = nullptr);

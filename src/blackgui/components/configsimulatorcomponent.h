@@ -63,6 +63,8 @@ namespace BlackGui
          */
         class CConfigSimulatorWizardPage : public QWizardPage
         {
+            Q_OBJECT
+
         public:
             //! Constructors
             using QWizardPage::QWizardPage;

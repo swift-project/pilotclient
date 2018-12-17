@@ -26,6 +26,7 @@ namespace BlackGui
         //! Text message list model
         class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>
         {
+            Q_OBJECT
 
         public:
             //! What kind of stations

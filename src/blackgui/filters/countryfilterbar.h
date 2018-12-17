@@ -35,6 +35,8 @@ namespace BlackGui
             public CFilterWidget,
             public Models::IModelFilterProvider<BlackMisc::CCountryList>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             explicit CCountryFilterBar(QWidget *parent = nullptr);

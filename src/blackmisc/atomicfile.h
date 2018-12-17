@@ -32,6 +32,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CAtomicFile : public QFile
     {
+        Q_OBJECT
+
     public:
         //! \copydoc QFile::QFile(const QString &)
         CAtomicFile(const QString &filename) : QFile(filename) {}
