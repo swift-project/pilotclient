@@ -320,10 +320,10 @@ namespace BlackGui
             QList<CMenuAction> toQList() const;
 
             //! First action
-            CMenuAction first() const { return toQList().first(); }
+            CMenuAction first() const { return m_actions.first(); }
 
             //! Last action
-            CMenuAction last() const { return toQList().last(); }
+            CMenuAction last() const { return m_actions.last(); }
 
             //! All actions;
             operator QList<QAction *>() const;

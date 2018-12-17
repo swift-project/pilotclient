@@ -82,8 +82,8 @@ namespace BlackMisc
         auto finder = [ & ](const PatternPair &pair) { return pair.first == pattern; };
         auto comparator = [](const PatternPair &a, const PatternPair &b) { return a.first.isProperSubsetOf(b.first); };
 
-        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), finder);
-        if (it == m_patternHandlers.end())
+        auto it = std::find_if(m_patternHandlers.cbegin(), m_patternHandlers.cend(), finder);
+        if (it == m_patternHandlers.cend())
         {
             auto *handler = new CLogPatternHandler(this, pattern);
             topologicallySortedInsert(m_patternHandlers, PatternPair(pattern, handler), comparator);

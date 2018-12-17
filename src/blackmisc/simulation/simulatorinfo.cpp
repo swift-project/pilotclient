@@ -418,7 +418,7 @@ namespace BlackMisc
             if (simulator.isNoSimulator() || simulator.isUnspecified())
             {
                 // unknown count
-                m_counts[5] = m_counts[5] + 1;
+                m_counts[5]++;
                 return;
             }
             if (simulator.isFSX())    { m_counts[0]++; }

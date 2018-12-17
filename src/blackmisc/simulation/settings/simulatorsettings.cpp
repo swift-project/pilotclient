@@ -537,7 +537,7 @@ namespace BlackMisc
             {
                 static const QString empty;
                 if (this->getModelDirectoriesOrDefault().isEmpty()) { return empty; }
-                return this->getModelDirectoriesOrDefault().first();
+                return this->getModelDirectoriesOrDefault().constFirst();
             }
 
             const QStringList &CSpecializedSimulatorSettings::getDefaultModelDirectories() const

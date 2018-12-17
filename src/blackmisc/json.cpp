@@ -498,8 +498,8 @@ namespace BlackMisc
             // - type
             // - value
             if (object.size() != 1) { return object; } // no cache format
-            const QString key = object.keys().front();
-            const QJsonObject cacheObject = object.value(key).toObject();
+            const QString key = object.constBegin().key();
+            const QJsonObject cacheObject = object.constBegin()->toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
             {
                 const QString type = cacheObject.value("type").toString(); // just to verify in debugger
@@ -512,8 +512,8 @@ namespace BlackMisc
         QJsonObject unwrapCache(const QJsonObject &object)
         {
             if (object.size() != 1) { return object; } // no cache format
-            const QString key = object.keys().front();
-            const QJsonObject cacheObject = object.value(key).toObject();
+            const QString key = object.constBegin().key();
+            const QJsonObject cacheObject = object.constBegin()->toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
             {
                 // return object in form type/value

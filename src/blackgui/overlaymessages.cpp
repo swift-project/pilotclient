@@ -513,7 +513,7 @@ namespace BlackGui
 
         if (!m_pendingMessageCalls.isEmpty())
         {
-            std::function<void()> f = m_pendingMessageCalls.front();
+            std::function<void()> f = m_pendingMessageCalls.constFirst();
             m_pendingMessageCalls.removeFirst();
             const QPointer<COverlayMessages> myself(this);
             QTimer::singleShot(500, this, [ = ]

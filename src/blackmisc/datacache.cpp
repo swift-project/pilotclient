@@ -719,7 +719,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(! m_updateInProgress);
-        m_sessionValues[key]; // insert default-constructed value, unless key already present
+        m_sessionValues[key]; // clazy:exclude=detaching-member
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

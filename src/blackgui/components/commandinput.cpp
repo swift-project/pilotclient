@@ -59,7 +59,7 @@ namespace BlackGui
             if (c.isEmpty()) { return; }
             if (c.startsWith('.'))
             {
-                if (c.toLower().contains("help"))
+                if (c.contains("help", Qt::CaseInsensitive))
                 {
                     this->setCommandTooltip();
                     return;
