@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSUIPC_H
 #define BLACKSIMPLUGIN_FSUIPC_H
 
+#include "plugins/simulator/fscommon/fscommonexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/weather/weathergrid.h"
 #include <QStringList>
@@ -21,7 +22,7 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
         //! Class representing a FSUIPC "interface"
-        class CFsuipc : public QObject
+        class FSCOMMON_EXPORT CFsuipc : public QObject
         {
             Q_OBJECT
 

@@ -11,7 +11,7 @@ TEMPLATE = lib
 
 CONFIG += plugin shared
 CONFIG += blackconfig blackmisc blackcore blackgui
-CONFIG += simulatorfsxcommon simulatorfscommon simulatorplugincommon fsuipc simconnect
+CONFIG += simulatorfsxcommon simulatorfscommon simulatorplugincommon simconnect
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

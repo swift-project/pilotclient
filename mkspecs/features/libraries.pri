@@ -7,17 +7,17 @@ unix:!macx {
 }
 
 simulatorfsxcommon {
-    addStaticLibraryDependency(simulatorfsxcommon)
+    addLibraryDependency(simulatorfsxcommon)
     LIBS += -lsimulatorfsxcommon
 }
 
 simulatorfscommon {
-    addStaticLibraryDependency(simulatorfscommon)
+    addLibraryDependency(simulatorfscommon)
     LIBS += -lsimulatorfscommon
 }
 
 simulatorplugincommon {
-    addStaticLibraryDependency(simulatorplugincommon)
+    addLibraryDependency(simulatorplugincommon)
     LIBS +=  -lsimulatorplugincommon
 }
 
@@ -35,8 +35,6 @@ simconnect {
     equals(WORD_SIZE,32) {
         INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
     }
-
-    RC_FILE = $$SourceRoot/src/plugins/simulator/fsxcommon/simconnect.rc
 }
 
 blackgui {

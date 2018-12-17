@@ -12,10 +12,11 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
 
-#include "simconnectdatadefinition.h"
-#include "simconnectobject.h"
-#include "../fsxcommon/simconnectwindows.h"
-#include "../fscommon/simulatorfscommon.h"
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
+#include "plugins/simulator/fsxcommon/simconnectobject.h"
+#include "plugins/simulator/fsxcommon/simconnectwindows.h"
+#include "plugins/simulator/fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -115,7 +116,7 @@ namespace BlackSimPlugin
         };
 
         //! FSX Simulator Implementation
-        class CSimulatorFsxCommon : public FsCommon::CSimulatorFsCommon
+        class FSXCOMMON_EXPORT CSimulatorFsxCommon : public FsCommon::CSimulatorFsCommon
         {
             Q_OBJECT
             Q_INTERFACES(BlackCore::ISimulator)
@@ -615,7 +616,7 @@ namespace BlackSimPlugin
         };
 
         //! Listener for FSX
-        class CSimulatorFsxCommonListener : public BlackCore::ISimulatorListener
+        class FSXCOMMON_EXPORT CSimulatorFsxCommonListener : public BlackCore::ISimulatorListener
         {
             Q_OBJECT
 

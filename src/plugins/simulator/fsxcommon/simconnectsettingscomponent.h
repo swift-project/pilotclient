@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
@@ -27,7 +28,7 @@ namespace BlackSimPlugin
         /*!
          * A component that gathers all SimConnect related settings.
          */
-        class CSimConnectSettingsComponent : public BlackGui::COverlayMessagesFrame
+        class FSXCOMMON_EXPORT CSimConnectSettingsComponent : public BlackGui::COverlayMessagesFrame
         {
             Q_OBJECT
 

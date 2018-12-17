@@ -5,7 +5,7 @@ QT       += core testlib dbus network gui widgets
 TARGET = testblacksimpluginfsxp3d
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore blackconfig blackgui
-CONFIG   += simulatorfsxcommon simulatorfscommon simulatorplugincommon fsuipc simconnect
+CONFIG   += simulatorfsxcommon simulatorfscommon simulatorplugincommon simconnect
 CONFIG   += testcase
 CONFIG   += no_testcase_installs
 

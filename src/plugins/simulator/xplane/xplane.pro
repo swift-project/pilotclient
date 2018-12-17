@@ -6,7 +6,7 @@ TARGET = simulatorxplane
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blackgui blackconfig
+CONFIG += blackmisc blackcore blackgui blackconfig simulatorplugincommon
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
@@ -20,9 +20,6 @@ SOURCES += *.cpp
 HEADERS += *.h
 DISTFILES += simulatorxplane.json
 DESTDIR = $$DestRoot/bin/plugins/simulator
-
-LIBS *= -lsimulatorplugincommon
-addStaticLibraryDependency(simulatorplugincommon)
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator

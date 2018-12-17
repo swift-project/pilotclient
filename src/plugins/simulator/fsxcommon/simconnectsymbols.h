@@ -12,6 +12,8 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+
 #include <QtGlobal>
 
 #ifdef Q_OS_WIN64
@@ -26,12 +28,12 @@ enum P3DSimConnectVersion
 };
 
 //! String to the enum
-P3DSimConnectVersion stringToP3DVersion(const QString &p3d);
+FSXCOMMON_EXPORT P3DSimConnectVersion stringToP3DVersion(const QString &p3d);
 
 //! Load and resolve versioned P3D SimConnect.
 //! If a another version was already loaded previously, it won't unload it.
 //! You have to call /sa unloadSimConnect() before.
-bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
+FSXCOMMON_EXPORT bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
 
 //! Same but string version
 inline bool loadAndResolveP3DSimConnectByString(const QString &version) { return loadAndResolveP3DSimConnect(stringToP3DVersion(version)); }
@@ -41,7 +43,7 @@ inline bool loadAndResolveP3DSimConnectByString(const QString &version) { return
 //! Load and resolve FSX SimConnect.
 //! \param manifestProbing  Set to true if you want to try loading from the assembly cache with manifests.
 //!                         Otherwise the library in the bin folder will be loaded.
-bool loadAndResolveFsxSimConnect(bool manifestProbing);
+FSXCOMMON_EXPORT bool loadAndResolveFsxSimConnect(bool manifestProbing);
 
 #endif
 

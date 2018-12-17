@@ -2,7 +2,7 @@
     <name>qt5binaries</name>
     <description>Qt5 binaries</description>
     <canBeEdited>1</canBeEdited>
-    <detailedDescription>Qt 5.5 runtime binaries</detailedDescription>
+    <detailedDescription>Qt5 runtime binaries</detailedDescription>
     <selected>1</selected>
     <show>1</show>
     <folderList>

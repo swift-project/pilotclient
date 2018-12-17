@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 #define BLACKSIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 
+#include "plugins/simulator/plugincommon/simulatorplugincommonexport.h"
 #include "blackcore/simulator.h"
 #include <QObject>
 #include <QPointer>
@@ -22,7 +23,7 @@ namespace BlackSimPlugin
     namespace Common
     {
         //! Common base class for simulator plugins
-        class CSimulatorPluginCommon : public BlackCore::ISimulator
+        class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public BlackCore::ISimulator
         {
             Q_OBJECT
             Q_INTERFACES(BlackCore::ISimulator)

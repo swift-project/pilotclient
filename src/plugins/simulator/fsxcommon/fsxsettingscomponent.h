@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QFrame>
@@ -26,7 +27,7 @@ namespace BlackSimPlugin
         class CSimulatorFsxCommon;
 
         //! FSX/P3D settings
-        class CFsxSettingsComponent : public QFrame
+        class FSXCOMMON_EXPORT CFsxSettingsComponent : public QFrame
         {
             Q_OBJECT
 

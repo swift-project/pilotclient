@@ -12,11 +12,12 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
 
-#include <QtGlobal>
-
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include "plugins/simulator/fsxcommon/simconnectwindows.h"
 #include "blackmisc/aviation/aircraftlights.h"
-#include "../fsxcommon/simconnectwindows.h"
+
 #include <algorithm>
+#include <QtGlobal>
 #include <QString>
 
 namespace BlackMisc { namespace Aviation { class CAircraftParts; }}
@@ -86,7 +87,7 @@ namespace BlackSimPlugin
         };
 
         //! Data struct of remote aircraft parts
-        struct DataDefinitionRemoteAircraftPartsWithoutLights
+        struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftPartsWithoutLights
         {
             double flapsLeadingEdgeLeftPercent;   //!< Leading edge left in percent
             double flapsLeadingEdgeRightPercent;  //!< Leading edge right in percent
@@ -128,7 +129,7 @@ namespace BlackSimPlugin
         };
 
         //! Data for aircraft lighs
-        struct DataDefinitionRemoteAircraftLights
+        struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftLights
         {
             double lightStrobe;      //!< Is strobe light on?
             double lightLanding;     //!< Is landing light on?
@@ -206,7 +207,7 @@ namespace BlackSimPlugin
         };
 
         //! Handles SimConnect data definitions
-        class CSimConnectDefinitions
+        class FSXCOMMON_EXPORT CSimConnectDefinitions
         {
         public:
             //! SimConnect definiton IDs

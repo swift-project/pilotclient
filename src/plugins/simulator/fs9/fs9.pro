@@ -7,15 +7,12 @@ TEMPLATE = lib
 
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore blackgui
+CONFIG += simulatorfscommon simulatorplugincommon
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-addStaticLibraryDependency(simulatorplugincommon)
-addStaticLibraryDependency(simulatorfscommon)
-addStaticLibraryDependency(fsuipc)
-LIBS += -lsimulatorfscommon -lfsuipc -luuid -lsimulatorplugincommon
-LIBS += -ldxguid -lole32
+LIBS += -luuid -ldxguid -lole32
 
 SOURCES += *.cpp
 HEADERS += *.h

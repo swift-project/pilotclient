@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "blackgui/pluginconfigwindow.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
@@ -24,7 +25,7 @@ namespace BlackSimPlugin
         /**
          * A window that lets user set up the FSX plugin.
          */
-        class CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow
+        class FSXCOMMON_EXPORT CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow
         {
             Q_OBJECT
 

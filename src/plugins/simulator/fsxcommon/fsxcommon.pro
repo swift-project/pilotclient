@@ -9,20 +9,24 @@ SOURCES += *.cpp
 HEADERS += *.h
 FORMS += *.ui
 
-CONFIG += staticlib
-CONFIG += blackconfig blackmisc blackcore blackgui simconnect
+CONFIG += blackconfig blackmisc blackcore blackgui
+CONFIG += simulatorfscommon simulatorplugincommon simconnect
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
-DESTDIR = $$DestRoot/lib
 
-LIBS += -lsimulatorfscommon -lfsuipc -lsimulatorplugincommon
-
-addStaticLibraryDependency(fsuipc)
-addStaticLibraryDependency(simulatorplugincommon)
+DEFINES += BUILD_FSXCOMMON_LIB BUID_SIMCONNECT_LIB
 
 OTHER_FILES += \
         *.manifest \
         *.rc
+
+RC_FILE = $$SourceRoot/src/plugins/simulator/fsxcommon/simconnect.rc
+
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
+
+dlltarget.path = $$PREFIX/bin
+INSTALLS += dlltarget
 
 load(common_post)

@@ -12,7 +12,8 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 
-#include "simconnectdatadefinition.h"
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 #include <QSharedPointer>
@@ -24,7 +25,7 @@ namespace BlackSimPlugin
     namespace FsxCommon
     {
         //! Class representing a SimConnect object
-        class CSimConnectObject
+        class FSXCOMMON_EXPORT CSimConnectObject
         {
         public:
             //! Type

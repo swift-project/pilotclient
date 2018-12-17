@@ -1,12 +1,16 @@
 load(common_pre)
 
-QT += core dbus network
+QT += core dbus network widgets
 
 TARGET = simulatorfscommon
 TEMPLATE = lib
 
-CONFIG += staticlib
-CONFIG += blackconfig blackmisc
+CONFIG += blackconfig blackmisc blackcore blackgui
+CONFIG += simulatorplugincommon fsuipc
+
+contains(BLACK_CONFIG, Static) {
+    CONFIG += staticlib
+}
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
@@ -14,8 +18,7 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 
-LIBS *= -lsimulatorplugincommon
-addStaticLibraryDependency(simulatorplugincommon)
+DEFINES += BUILD_FSCOMMON_LIB
 
 swiftConfig(sims.fsuipc) {
     equals(WORD_SIZE,32) {
@@ -27,5 +30,9 @@ swiftConfig(sims.fsuipc) {
 }
 
 DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
+
+dlltarget.path = $$PREFIX/bin
+INSTALLS += dlltarget
 
 load(common_post)
