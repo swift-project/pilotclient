@@ -25,7 +25,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             m_allCheckBoxes = this->findChildren<QCheckBox *>(QString(), Qt::FindDirectChildrenOnly);
-            for (QCheckBox *cb : m_allCheckBoxes)
+            for (QCheckBox *cb : as_const(m_allCheckBoxes))
             {
                 connect(cb, &QCheckBox::stateChanged, this, &CInterpolationSetupForm::onCheckboxChanged);
             }

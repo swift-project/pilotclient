@@ -304,35 +304,21 @@ namespace BlackMisc
             QMap<QString, int> count;
             for (const CAircraftIcaoCode &icao : *this)
             {
-                if (!icao.hasManufacturer()) continue;
-                const QString m(icao.getManufacturer());
-                if (count.contains(m))
-                {
-                    count[m]++;
-                }
-                else
-                {
-                    count[m] = 1;
-                }
+                if (!icao.hasManufacturer()) { continue; }
+                count[icao.getManufacturer()]++;
             }
             return count;
         }
 
         QPair<QString, int> CAircraftIcaoCodeList::maxCountManufacturer() const
         {
-            if (this->isEmpty()) return QPair<QString, int>("", 0);
             const QMap<QString, int> counts(countManufacturers());
-            QPair<QString, int> max;
-            for (const QString &m : counts.keys())
+            if (counts.isEmpty()) return { {}, 0 };
+            const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto &a, const auto &b)
             {
-                const int mv = counts[m];
-                if (mv > max.second)
-                {
-                    max.first = m;
-                    max.second = mv;
-                }
-            }
-            return max;
+                return a.second < b.second;
+            });
+            return { pair.first, pair.second };
         }
 
         CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates, CAircraftIcaoCodeList *inconsistent)

@@ -96,54 +96,6 @@ namespace BlackMisc
         }
 
         /*!
-         * Iterator wrapper for Qt's STL-style associative container iterators, when dereferenced return the key instead of the value.
-         *
-         * By creating a CRange from such iterators, it is possible to create a container of keys without copying them.
-         */
-        template <class I> class KeyIterator
-            : public std::iterator<std::bidirectional_iterator_tag, std::decay_t<decltype(std::declval<I>().key())>>
-        {
-        public:
-            //! Constructor
-            KeyIterator(I iterator) : m_iterator(iterator) {}
-
-            //! Advance to the next element.
-            //! Undefined if iterator is at the end.
-            //! @{
-            KeyIterator &operator ++() { ++m_iterator; return *this; }
-            KeyIterator operator ++(int) { auto copy = *this; ++m_iterator; return copy; }
-            //! @}
-
-            //! Regress to the previous element.
-            //! Undefined if iterator is at the beginning.
-            //! @{
-            KeyIterator &operator --() { --m_iterator; return *this; }
-            KeyIterator operator --(int) { auto copy = *this; --m_iterator; return copy; }
-            //! @}
-
-            //! Return the value at this iterator position.
-            auto value() const { return m_iterator.value(); }
-
-            //! Return the key at this iterator position.
-            //! @{
-            auto key() const { return m_iterator.key(); }
-            auto operator *() const { return key(); }
-            //! @}
-
-            //! Indirection operator: pointer to the key at this iterator position.
-            auto operator ->() const { return &key(); }
-
-            //! Equality operators.
-            //! @{
-            bool operator ==(const KeyIterator &other) const { return m_iterator == other.m_iterator; }
-            bool operator !=(const KeyIterator &other) const { return m_iterator != other.m_iterator; }
-            //! @}
-
-        private:
-            I m_iterator;
-        };
-
-        /*!
          * Iterator wrapper which applies some transformation function to each element.
          *
          * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
@@ -324,14 +276,6 @@ namespace BlackMisc
         private:
             QVector<I> m_iterators;
         };
-
-        /*!
-         * Construct a KeyIterator of the appropriate type from deduced template function argument.
-         */
-        template <class I> auto makeKeyIterator(I iterator) -> KeyIterator<I>
-        {
-            return { iterator };
-        }
 
         /*!
          * Construct a TransformIterator of the appropriate type from deduced template function arguments.

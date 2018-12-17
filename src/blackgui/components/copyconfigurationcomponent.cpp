@@ -420,12 +420,12 @@ namespace BlackGui
         {
             ui->cb_OtherVersions->clear();
             const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion();
-            for (const QString &directory : otherVersions.keys())
+            for (const auto &pair : makePairsRange(otherVersions))
             {
-                const CApplicationInfo info(otherVersions.value(directory));
+                const CApplicationInfo &info(pair.second);
                 if (info.isNull())
                 {
-                    const QString infoString = CDirectoryUtils::decodeNormalizedDirectory(directory);
+                    const QString infoString = CDirectoryUtils::decodeNormalizedDirectory(pair.first);
                     ui->cb_OtherVersions->addItem(infoString);
                 }
                 else
@@ -433,7 +433,7 @@ namespace BlackGui
                     static const QString item("swift %1 (%2)");
                     ui->cb_OtherVersions->addItem(item.arg(info.getVersionString(), info.getPlatform()));
                 }
-                m_otherVersionDirs.push_back(directory);
+                m_otherVersionDirs.push_back(pair.first);
             }
         }
 

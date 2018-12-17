@@ -1103,7 +1103,7 @@ namespace BlackSimPlugin
             const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
             CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
             CCallsignSet toBeRemovedCallsigns;
-            for (const CSimConnectObject &pendingSimObj : m_addPendingAircraft.values())
+            for (const CSimConnectObject &pendingSimObj : as_const(m_addPendingAircraft))
             {
                 Q_ASSERT_X(!pendingSimObj.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
                 if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))

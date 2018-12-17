@@ -49,9 +49,8 @@ namespace BlackMisc
                 CDirectoryUtils::currentApplicationDataDirectoryMapWithoutCurrentVersion() :
                 CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
 
-        for (const QString &directory : otherVersions.keys())
+        for (const CApplicationInfo &info : otherVersions)
         {
-            CApplicationInfo info(otherVersions.value(directory));
             this->push_back(info);
         }
         return this->size();

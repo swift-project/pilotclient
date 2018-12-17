@@ -171,7 +171,7 @@ namespace BlackGui
         QList<QAction *> CMenuActions::getQActions() const
         {
             QList<QAction *> qActions;
-            for (const CMenuAction &a : this->toQList())
+            for (const CMenuAction &a : m_actions)
             {
                 qActions.append(a.getQAction());
             }
@@ -243,7 +243,7 @@ namespace BlackGui
         {
             CMenuAction a;
             CMenuActions menuActions;
-            for (const CMenuAction &action : actions.toQList())
+            for (const CMenuAction &action : actions.m_actions)
             {
                 a = this->addAction(action);
                 menuActions.addAction(a);
@@ -431,7 +431,7 @@ namespace BlackGui
         CMenuActions::operator QList<QAction *>() const
         {
             QList<QAction *> qActions;
-            for (const CMenuAction &a : toQList())
+            for (const CMenuAction &a : m_actions)
             {
                 if (!a.getQAction()) { continue; }
                 qActions.append(a.getQAction());

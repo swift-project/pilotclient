@@ -62,9 +62,9 @@ namespace BlackMisc
         {
             const SetupsPerCallsign setups = this->getSetupsPerCallsign();
             CCallsignSet callsigns;
-            for (const CCallsign &cs : setups.keys())
+            for (const auto &pair : makePairsRange(setups))
             {
-                if (setups.value(cs).logInterpolation()) { callsigns.insert(cs); }
+                if (pair.second.logInterpolation()) { callsigns.insert(pair.first); }
             }
             return callsigns;
         }
@@ -146,19 +146,19 @@ namespace BlackMisc
 
         void IInterpolationSetupProvider::clearInterpolationLogCallsigns()
         {
-            SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
+            const SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
             if (setupsCopy.isEmpty()) { return; }
 
             // potential risk, changes inbetween in another thread are missed now
             // on the other side, we keep locks for a minimal time frame
             SetupsPerCallsign setupsToKeep;
             CInterpolationAndRenderingSetupGlobal global = this->getInterpolationSetupGlobal();
-            for (const CCallsign &cs : setupsCopy.keys())
+            for (const auto &pair : makePairsRange(setupsCopy))
             {
-                CInterpolationAndRenderingSetupPerCallsign setup = setupsCopy.value(cs);
+                CInterpolationAndRenderingSetupPerCallsign setup = pair.second;
                 setup.setLogInterpolation(false);
                 if (setup.isEqualToGlobal(global)) { continue; }
-                setupsToKeep.insert(cs, setup);
+                setupsToKeep.insert(pair.first, setup);
             }
             {
                 QWriteLocker l(&m_lockSetup);
@@ -184,9 +184,9 @@ namespace BlackMisc
         {
             const SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
             if (setupsCopy.isEmpty()) { return false; }
-            for (const CCallsign &cs : setupsCopy.keys())
+            for (const CInterpolationAndRenderingSetupPerCallsign &setup : setupsCopy)
             {
-                if (setupsCopy.value(cs).logInterpolation()) { return true; }
+                if (setup.logInterpolation()) { return true; }
             }
             return false;
         }

@@ -352,11 +352,11 @@ namespace BlackMisc
         {
             const QMap<QString, int> modelStrings = this->countPerModelString();
             CAircraftModelList duplicates;
-            for (const QString &ms : modelStrings.keys())
+            for (const auto &pair : makePairsRange(modelStrings))
             {
-                if (modelStrings[ms] > 1)
+                if (pair.second > 1)
                 {
-                    duplicates.push_back(this->findByModelString(ms, Qt::CaseInsensitive));
+                    duplicates.push_back(this->findByModelString(pair.first, Qt::CaseInsensitive));
                 }
             }
             return duplicates;

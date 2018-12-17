@@ -423,7 +423,7 @@ namespace BlackMisc
                 if (updateUuid) { m_admittedQueue.clear(); }
                 else if (! m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>::fromList(m_timestamps.keys())); }
 
-                for (const auto &key : m_timestamps.keys())
+                for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                 {
                     if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
                 }

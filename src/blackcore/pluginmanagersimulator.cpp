@@ -76,7 +76,7 @@ namespace BlackCore
         if (m_plugins.isEmpty()) { return 0; }
 
         int c = 0;
-        for (PluginExtended &pi : m_plugins.values())
+        for (PluginExtended &pi : m_plugins)
         {
             if (!pi.listener) { continue; }
             if (!pi.listener->isRunning()) { continue; }

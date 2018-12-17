@@ -318,6 +318,26 @@ namespace BlackMisc
         //! Returns const iterator at the end of the dictionary
         const_iterator cend() const { return m_impl.cend(); }
 
+        //! Returns const iterator for iterating over keys
+        //! @{
+        auto keyBegin() const { return m_impl.keyBegin(); }
+        auto keyEnd() const { return m_impl.keyEnd(); }
+        //! @}
+
+        //! Returns iterator for iterating over keys and values together
+        //! @{
+        auto keyValueBegin() { return m_impl.keyValueBegin(); }
+        auto keyValueEnd() { return m_impl.keyValueEnd(); }
+        //! @}
+
+        //! Returns const iterator for iterating over keys and values together
+        //! @{
+        auto keyValueBegin() const { return m_impl.keyValueBegin(); }
+        auto constKeyValueBegin() const { return m_impl.constKeyValueBegin(); }
+        auto keyValueEnd() const { return m_impl.keyValueEnd(); }
+        auto constKeyValueEnd() const { return m_impl.constKeyValueEnd(); }
+        //! @}
+
         //! Removes all items from the dictionary
         void clear() { m_impl.clear(); }
 
@@ -369,8 +389,8 @@ namespace BlackMisc
         //! Return key assigned to value or if key is not found defaultKey
         const Key key(const Value &value, const Key & defaultKey) const { return m_impl.key(value, defaultKey); }
 
-        //! Return a range of all keys
-        CRange<Iterators::KeyIterator<const_iterator>> keys() const { return makeRange(Iterators::makeKeyIterator(begin()), end()); }
+        //! Return a range of all keys (does not allocate a temporary container)
+        auto keys() const { return makeRange(keyBegin(), keyEnd()); }
 
         //! Remove all items with key from the dictionary
         int	remove(const Key &key) { return m_impl.remove(key); }
@@ -387,7 +407,7 @@ namespace BlackMisc
         //! Returns the value associated with the key or if key is not found defaultValue
         const Value	value(const Key &key, const Value &defaultValue) const { return m_impl.value(key, defaultValue); }
 
-        //! Return a range of all values
+        //! Return a range of all values (does not allocate a temporary container)
         CRange<const_iterator> values() const { return makeRange(begin(), end()); }
 
         //! Copy assignment.
@@ -407,7 +427,6 @@ namespace BlackMisc
         Value &operator [](const Key &key) { return m_impl[key]; }
 
         //! Access an element by its key.
-        //! \note If dictionary does not contain any item with key, a default constructed value will be inserted.
         const Value	operator [](const Key &key) const { return m_impl[key]; }
 
         //! Test for equality.

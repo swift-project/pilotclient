@@ -329,7 +329,7 @@ namespace BlackGui
 
     void CInfoArea::adjustSizeForAllDockWidgets()
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             dw->adjustSize();
         }
@@ -337,7 +337,7 @@ namespace BlackGui
 
     void CInfoArea::floatAllWidgets()
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             if (dw->isFloating()) { continue; }
             dw->toggleFloating();
@@ -346,7 +346,7 @@ namespace BlackGui
 
     void CInfoArea::allFloatingOnTop()
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             const bool f = dw->isFloating();
             CGuiUtility::stayOnTop(f, dw);
@@ -479,11 +479,11 @@ namespace BlackGui
 
     void CInfoArea::displayStatusMessage(const CStatusMessage &statusMessage)
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             dw->displayStatusMessage(statusMessage);
         }
-        for (CInfoArea *ia : m_childInfoAreas)
+        for (CInfoArea *ia : as_const(m_childInfoAreas))
         {
             ia->displayStatusMessage(statusMessage);
         }
@@ -491,11 +491,11 @@ namespace BlackGui
 
     void CInfoArea::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             dw->displayStatusMessages(statusMessages);
         }
-        for (CInfoArea *ia : m_childInfoAreas)
+        for (CInfoArea *ia : as_const(m_childInfoAreas))
         {
             ia->displayStatusMessages(statusMessages);
         }
@@ -503,7 +503,7 @@ namespace BlackGui
 
     void CInfoArea::setDockArea(Qt::DockWidgetArea area)
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             Qt::DockWidgetAreas newAreas = static_cast<Qt::DockWidgetAreas>(area);
             Qt::DockWidgetAreas oldAreas = dw->allowedAreas();
@@ -624,7 +624,7 @@ namespace BlackGui
     void CInfoArea::unTabifyAllWidgets()
     {
         if (m_dockWidgetInfoAreas.size() < 2) return;
-        CDockWidgetInfoArea *first = m_dockWidgetInfoAreas.first();
+        CDockWidgetInfoArea *first = m_dockWidgetInfoAreas.constFirst();
         for (int i = 1; i < m_dockWidgetInfoAreas.size(); i++)
         {
             CDockWidgetInfoArea *after = m_dockWidgetInfoAreas.at(i);
@@ -641,7 +641,7 @@ namespace BlackGui
 
     void CInfoArea::connectTopLevelChanged()
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged);
         }
@@ -753,7 +753,7 @@ namespace BlackGui
 
     void CInfoArea::setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features)
     {
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             dw->setFeatures(features);
         }
@@ -826,7 +826,7 @@ namespace BlackGui
     {
         if (show == m_showTabTexts) { return; }
         m_showTabTexts = show;
-        for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
+        for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
             dw->showTitleWhenDocked(show);
         }

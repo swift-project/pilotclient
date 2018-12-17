@@ -321,14 +321,27 @@ namespace BlackMisc
     }
 
     /*!
-     * Returns a const CRange for iterating over the keys of an associative container.
+     * Returns a const CRange for iterating over the keys of a Qt associative container.
      *
      * This is more efficient than the keys() method of the container, as it doesn't allocate memory.
      */
     template <class T>
     auto makeKeysRange(const T &container)
     {
-        return makeRange(Iterators::makeKeyIterator(container.cbegin()), container.cend());
+        return makeRange(container.keyBegin(), container.keyEnd());
+    }
+
+    /*!
+     * Returns a const CRange for iterating over the keys and values of a Qt associative container.
+     * The value_type of the returned range is std::pair<T::key_type &, T::value_type &>.
+     *
+     * This is more efficient than using the keys() method of the container and thereafter looking up each key,
+     * as it neither allocates memory, nor performs any key lookups.
+     */
+    template <class T>
+    auto makePairsRange(const T &container)
+    {
+        return makeRange(container.keyValueBegin(), container.keyValueEnd());
     }
 
     /*!
@@ -344,6 +357,20 @@ namespace BlackMisc
      */
     template <class T>
     void makeKeysRange(const T &&container) = delete;
+
+    /*!
+     * Pairs range for a non-const lvalue would be unsafe due to iterator invalidation on detach().
+     *
+     * \see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
+     */
+    template <class T>
+    void makePairsRange(T &container) = delete;
+
+    /*!
+     * Pairs range for a temporary would be unsafe.
+     */
+    template <class T>
+    void makePairsRange(const T &&container) = delete;
 
     /*
      * Member functions of CRangeBase template defined out of line, because they depend on CRange etc.

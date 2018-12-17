@@ -296,7 +296,7 @@ namespace BlackSimPlugin
             if (this->isEmpty()) { return CCallsignSet(); }
             if (!withoutProbes)  { return CCallsignSet(this->keys()); }
             CCallsignSet callsigns;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isAircraft()) { callsigns.insert(simObject.getCallsign().asString()); }
             }
@@ -315,7 +315,7 @@ namespace BlackSimPlugin
 
         CSimConnectObject CSimConnectObjects::getSimObjectForObjectId(DWORD objectId) const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getObjectId() == objectId) { return simObject; }
             }
@@ -326,7 +326,7 @@ namespace BlackSimPlugin
         {
             if (this->isEmpty()) { return CSimConnectObject(); }
             CSimConnectObject oldestSimObj = *this->begin();
-            for (const CSimConnectObject &simObj : this->values())
+            for (const CSimConnectObject &simObj : *this)
             {
                 if (!simObj.hasCreatedTimestamp()) { continue; }
                 if (!oldestSimObj.hasCreatedTimestamp() || oldestSimObj.getCreatedTimestamp() > simObj.getCreatedTimestamp())
@@ -339,7 +339,7 @@ namespace BlackSimPlugin
 
         CSimConnectObject CSimConnectObjects::getSimObjectForRequestId(DWORD requestId) const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getRequestId() == requestId) { return simObject; }
             }
@@ -390,7 +390,7 @@ namespace BlackSimPlugin
 
         bool CSimConnectObjects::containsPendingAdded() const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingAdded()) { return true; }
             }
@@ -399,7 +399,7 @@ namespace BlackSimPlugin
 
         bool CSimConnectObjects::containsPendingRemoved() const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingRemoved()) { return true; }
             }
@@ -409,7 +409,7 @@ namespace BlackSimPlugin
         int CSimConnectObjects::countPendingAdded() const
         {
             int c = 0;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingAdded()) { c++; }
             }
@@ -419,7 +419,7 @@ namespace BlackSimPlugin
         int CSimConnectObjects::countPendingRemoved() const
         {
             int c = 0;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingRemoved()) { c++; }
             }
@@ -429,7 +429,7 @@ namespace BlackSimPlugin
         int CSimConnectObjects::countConfirmedAdded()
         {
             int c = 0;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : as_const(*this))
             {
                 if (simObject.isConfirmedAdded()) { c++; }
             }
@@ -439,7 +439,7 @@ namespace BlackSimPlugin
         CCallsignSet CSimConnectObjects::getPendingAddedCallsigns() const
         {
             CCallsignSet callsigns;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingAdded()) { callsigns.push_back(simObject.getCallsign()); }
             }
@@ -449,7 +449,7 @@ namespace BlackSimPlugin
         CCallsignSet CSimConnectObjects::getPendingRemovedCallsigns() const
         {
             CCallsignSet callsigns;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.isPendingRemoved()) { callsigns.push_back(simObject.getCallsign()); }
             }
@@ -459,7 +459,7 @@ namespace BlackSimPlugin
         QList<CSimConnectObject> CSimConnectObjects::getByType(CSimConnectObject::SimObjectType type) const
         {
             QList<CSimConnectObject> objs;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getType() == type) { objs.push_back(simObject); }
             }
@@ -468,7 +468,7 @@ namespace BlackSimPlugin
 
         CSimConnectObject CSimConnectObjects::getNotPendingProbe() const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending()) { return simObject; }
             }
@@ -478,7 +478,7 @@ namespace BlackSimPlugin
         CSimConnectObject CSimConnectObjects::getOldestNotPendingProbe() const
         {
             CSimConnectObject oldestProbe;
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending())
                 {
@@ -493,7 +493,7 @@ namespace BlackSimPlugin
 
         bool CSimConnectObjects::containsType(CSimConnectObject::SimObjectType type) const
         {
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : *this)
             {
                 if (simObject.getType() == type) { return true; }
             }
@@ -516,7 +516,7 @@ namespace BlackSimPlugin
             CSimConnectObjects removedObjects;
 
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-            for (const CSimConnectObject &simObject : this->values())
+            for (const CSimConnectObject &simObject : as_const(*this))
             {
                 // verification takes at least a second, so we need some time before outdating
                 if (type != CSimConnectObject::AllTypes && simObject.getType() != type)  { continue; }
