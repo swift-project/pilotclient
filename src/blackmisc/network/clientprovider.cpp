@@ -136,7 +136,7 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockClient);
             if (!m_clients.contains(callsign)) { return; }
-            return m_clients[callsign].setSwiftClient(true);
+            m_clients[callsign].setSwiftClient(true);
         }
 
         // Pin the vtable to this file

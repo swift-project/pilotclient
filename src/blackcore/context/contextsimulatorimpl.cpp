@@ -875,7 +875,7 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!m_simulatorPlugin.second) { return; }
-            return m_simulatorPlugin.second->recalculateAllAircraft();
+            m_simulatorPlugin.second->recalculateAllAircraft();
         }
 
         bool CContextSimulator::resetToModelMatchingAircraft(const CCallsign &callsign)

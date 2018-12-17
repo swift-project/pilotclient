@@ -80,7 +80,7 @@ namespace XSwiftBus
     void CDBusServer::onNewConnection(DBusServer *server, DBusConnection *conn, void *data)
     {
         auto *obj = static_cast<CDBusServer *>(data);
-        return obj->onNewConnection(server, conn);
+        obj->onNewConnection(server, conn);
     }
 
 }

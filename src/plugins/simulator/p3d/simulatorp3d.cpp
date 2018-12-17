@@ -294,10 +294,10 @@ namespace BlackSimPlugin
     {
     #ifdef Q_OS_WIN64
         if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return; }
-        return CSimulatorFsxCommonListener::startImpl();
+        CSimulatorFsxCommonListener::startImpl();
     #else
         if (!loadAndResolveFsxSimConnect(true)) { return; }
-        return CSimulatorFsxCommonListener::startImpl();
+        CSimulatorFsxCommonListener::startImpl();
     #endif
     }
 

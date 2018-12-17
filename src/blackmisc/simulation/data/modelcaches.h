@@ -466,8 +466,8 @@ namespace BlackMisc
                 CStatusMessage clearCachedModels(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().clearCachedModels(simulator); }
                 QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheTimestamp(simulator); }
                 CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setCacheTimestamp(ts, simulator); }
-                void synchronizeCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
-                void admitCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().admitCache(simulator); }
+                void synchronizeCache(const CSimulatorInfo &simulator) { CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
+                void admitCache(const CSimulatorInfo &simulator) { CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().admitCache(simulator); }
                 QString getFilename(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getFilename(simulator); }
                 bool isSaved(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().isSaved(simulator); }
                 QString getDescription() const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getDescription(); }
@@ -519,8 +519,8 @@ namespace BlackMisc
                 CStatusMessage clearCachedModels(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().clearCachedModels(simulator); }
                 QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCacheTimestamp(simulator); }
                 CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setCacheTimestamp(ts, simulator); }
-                void synchronizeCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
-                void admitCache(const CSimulatorInfo &simulator) { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().admitCache(simulator); }
+                void synchronizeCache(const CSimulatorInfo &simulator) { CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator); }
+                void admitCache(const CSimulatorInfo &simulator) { CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().admitCache(simulator); }
                 QString getFilename(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getFilename(simulator); }
                 bool isSaved(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().isSaved(simulator); }
                 QString getDescription() const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getDescription(); }

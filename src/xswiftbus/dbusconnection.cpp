@@ -159,7 +159,7 @@ namespace XSwiftBus
     void CDBusConnection::setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status, void *data)
     {
         auto *obj = static_cast<CDBusConnection *>(data);
-        return obj->setDispatchStatus(connection, status);
+        obj->setDispatchStatus(connection, status);
     }
 
     DBusHandlerResult CDBusConnection::filterDisconnectedFunction(DBusConnection *connection, DBusMessage *message, void *data)

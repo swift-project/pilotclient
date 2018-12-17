@@ -786,8 +786,8 @@ namespace BlackGui
     void CGuiApplication::showHelp(const QObject *qObject) const
     {
         if (this->isShuttingDown()) { return; }
-        if (!qObject || qObject->objectName().isEmpty()) { return this->showHelp(); }
-        return this->showHelp(qObject->objectName());
+        if (!qObject || qObject->objectName().isEmpty()) { this->showHelp(); }
+        this->showHelp(qObject->objectName());
     }
 
     bool CGuiApplication::triggerShowHelp(const QWidget *widget, QEvent *event)

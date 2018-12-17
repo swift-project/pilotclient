@@ -83,7 +83,7 @@ namespace BlackSimPlugin
         void CSimulatorEmulated::unload()
         {
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-            return CSimulatorPluginCommon::unload();
+            CSimulatorPluginCommon::unload();
         }
 
         bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
