@@ -91,8 +91,8 @@ namespace BlackMisc
         QString CAirlineIcaoCode::getDesignatorNameCountry() const
         {
             return this->getDesignator() %
-                   (this->hasName() ? (QStringLiteral(" ") % this->getName()) : QStringLiteral("")) %
-                   (this->hasValidCountry() ? (QStringLiteral(" ") % this->getCountryIso()) : QStringLiteral(""));
+                   (this->hasName() ? (QStringLiteral(" ") % this->getName()) : QString()) %
+                   (this->hasValidCountry() ? (QStringLiteral(" ") % this->getCountryIso()) : QString());
         }
 
         QString CAirlineIcaoCode::getSimplifiedName() const
@@ -185,7 +185,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             return this->getDesignatorDbKey() %
-                   (this->hasName() ? QStringLiteral(" ") % m_name : QStringLiteral("")) %
+                   (this->hasName() ? QStringLiteral(" ") % m_name : QString()) %
                    QStringLiteral(" Op: ") % boolToYesNo(this->isOperating()) %
                    QStringLiteral(" VA: ") % boolToYesNo(this->isVirtualAirline()) %
                    QStringLiteral(" Mil: ") % boolToYesNo(this->isMilitary());
@@ -302,8 +302,8 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
-            return (this->hasValidDesignator() ? this->getVDesignator() : QStringLiteral("")) %
-                   (this->hasName() ? QStringLiteral(" ") % m_name : QStringLiteral("")) %
+            return (this->hasValidDesignator() ? this->getVDesignator() : QString()) %
+                   (this->hasName() ? QStringLiteral(" ") % m_name : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 

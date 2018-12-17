@@ -59,7 +59,7 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             const QString s =
-                (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QStringLiteral("")) %
+                (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QString()) %
                 QStringLiteral(" type: '") % this->getModelTypeAsString() %
                 QStringLiteral("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
                 QStringLiteral(" CG: ") % this->getCG().valueRoundedWithUnit(1) %
@@ -534,11 +534,11 @@ namespace BlackMisc
         QString CAircraftModel::getSwiftLiveryString() const
         {
             const QString l =
-                (this->getLivery().hasValidDbKey() ? QStringLiteral("l") % this->getLivery().getDbKeyAsString() : QStringLiteral("")) %
-                (this->getAircraftIcaoCode().hasValidDbKey() ? QStringLiteral("a") % this->getAircraftIcaoCode().getDbKeyAsString() : QStringLiteral("")) %
-                (this->hasValidDbKey() ? QStringLiteral("m") % this->getDbKeyAsString() : QStringLiteral(""));
+                (this->getLivery().hasValidDbKey() ? QStringLiteral("l") % this->getLivery().getDbKeyAsString() : QString()) %
+                (this->getAircraftIcaoCode().hasValidDbKey() ? QStringLiteral("a") % this->getAircraftIcaoCode().getDbKeyAsString() : QString()) %
+                (this->hasValidDbKey() ? QStringLiteral("m") % this->getDbKeyAsString() : QString());
 
-            return l.isEmpty() ? QStringLiteral("") : liveryStringPrefix() % l;
+            return l.isEmpty() ? QString() : liveryStringPrefix() % l;
         }
 
         DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)

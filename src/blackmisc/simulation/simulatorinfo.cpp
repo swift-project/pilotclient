@@ -156,11 +156,11 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             const Simulator s = getSimulator();
             const QString str =
-                (s.testFlag(FSX)    ? QStringLiteral("FSX ") : QStringLiteral("")) %
-                (s.testFlag(FS9)    ? QStringLiteral("FS9 ") : QStringLiteral("")) %
-                (s.testFlag(P3D)    ? QStringLiteral("P3D ") : QStringLiteral("")) %
-                (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QStringLiteral("")) %
-                (s.testFlag(FG)     ? QStringLiteral("FG ")  : QStringLiteral(""));
+                (s.testFlag(FSX)    ? QStringLiteral("FSX ") : QString()) %
+                (s.testFlag(FS9)    ? QStringLiteral("FS9 ") : QString()) %
+                (s.testFlag(P3D)    ? QStringLiteral("P3D ") : QString()) %
+                (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QString()) %
+                (s.testFlag(FG)     ? QStringLiteral("FG ")  : QString());
             return str.trimmed();
         }
 

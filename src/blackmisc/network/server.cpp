@@ -189,7 +189,7 @@ namespace BlackMisc
 
         QString CServer::getServerSessionId() const
         {
-            if (!this->isConnected()) { return ""; }
+            if (!this->isConnected()) { return {}; }
             static const QString session("%1 %2:%3 [%4] %5 %6");
             return session.arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getEcosystem().getSystemString(), this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
         }

@@ -144,7 +144,7 @@ namespace BlackGui
 
         const CVariant &CDefaultFormatter::emptyStringVariant()
         {
-            static const CVariant e = CVariant::from(QStringLiteral(""));
+            static const CVariant e = CVariant::from(QString());
             return e;
         }
 

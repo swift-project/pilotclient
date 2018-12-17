@@ -399,7 +399,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getDesignatorManufacturer() const
         {
             return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral(""));
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString());
         }
 
         bool CAircraftIcaoCode::hasManufacturer() const
@@ -478,8 +478,8 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
             return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
@@ -487,9 +487,9 @@ namespace BlackMisc
         {
             if (!this->hasIataCode()) { return ""; }
             return this->getIataCode() % QStringLiteral(" [IATA") %
-                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QStringLiteral("")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QString()) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
@@ -497,9 +497,9 @@ namespace BlackMisc
         {
             if (!this->hasFamily()) { return ""; }
             return this->getFamily() % QStringLiteral(" [family") %
-                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QStringLiteral("")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QStringLiteral("")) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QStringLiteral("")) %
+                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QString()) %
+                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 

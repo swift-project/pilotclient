@@ -1217,7 +1217,7 @@ namespace BlackMisc
                    (
                        checkModel.hasAirlineDesignator() ?
                        QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airlineForModel) :
-                       QStringLiteral("")
+                       QString()
                    );
         }
 

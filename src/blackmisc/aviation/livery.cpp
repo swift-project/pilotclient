@@ -71,7 +71,7 @@ namespace BlackMisc
         {
             return this->getCombinedCode() % (
                        this->getDescription().isEmpty() ?
-                       QStringLiteral("") :
+                       QString() :
                        (QStringLiteral(" ") % this->getDescription())
                    );
         }

@@ -118,7 +118,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::fsxSimObjectsDirFromSimDir(const QString &simDir)
             {
-                if (simDir.isEmpty()) { return QStringLiteral(""); }
+                if (simDir.isEmpty()) { return {}; }
                 return CFileUtils::appendFilePaths(simDir, "SimObjects");
             }
 
@@ -221,7 +221,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
             {
-                if (simDir.isEmpty()) { return QStringLiteral(""); }
+                if (simDir.isEmpty()) { return {}; }
                 return CFileUtils::appendFilePaths(simDir, "SimObjects");
             }
 
@@ -293,7 +293,7 @@ namespace BlackMisc
             QString fs9AircraftDirFromRegistryImpl()
             {
                 QString fs9Path = CFsCommonUtil::fs9DirFromRegistry();
-                if (fs9Path.isEmpty()) { return QStringLiteral(""); }
+                if (fs9Path.isEmpty()) { return {}; }
                 return CFsCommonUtil::fs9AircraftDirFromSimDir(fs9Path);
             }
 
@@ -306,7 +306,7 @@ namespace BlackMisc
             QString fs9AircraftDirImpl()
             {
                 const QString dir(CFsCommonUtil::fs9Dir());
-                if (dir.isEmpty()) { return QStringLiteral(""); }
+                if (dir.isEmpty()) { return {}; }
                 return CFsCommonUtil::fs9AircraftDirFromSimDir(dir);
             }
 
@@ -318,7 +318,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::fs9AircraftDirFromSimDir(const QString &simDir)
             {
-                if (simDir.isEmpty()) { return QStringLiteral(""); }
+                if (simDir.isEmpty()) { return {}; }
                 return CFileUtils::appendFilePaths(simDir, "Aircraft");
             }
 

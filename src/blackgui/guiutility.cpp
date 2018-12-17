@@ -617,7 +617,7 @@ namespace BlackGui
 
     QString CGuiUtility::asSimpleHtmlImageWidth(const CIcon &icon, int width)
     {
-        if (!icon.hasFileResourcePath()) return QStringLiteral("");
+        if (!icon.hasFileResourcePath()) return {};
         const QString p = icon.getFileResourcePath();
 
         static const QString htmlNoWidth("<img src=\"%1\">");
@@ -630,7 +630,7 @@ namespace BlackGui
     QString CGuiUtility::asSimpleHtmlImageHeight(const CIcon &icon, int height)
     {
         if (height < 0) { return CGuiUtility::asSimpleHtmlImageWidth(icon); }
-        if (!icon.hasFileResourcePath()) return QStringLiteral("");
+        if (!icon.hasFileResourcePath()) return {};
         const QString p = icon.getFileResourcePath();
 
         static const QString htmlHeight("<img src=\"%1\" height=%2>");

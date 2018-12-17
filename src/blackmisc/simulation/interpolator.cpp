@@ -650,7 +650,7 @@ namespace BlackMisc
                    QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
                    QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
                    (
-                       m_extraInfo.isEmpty() ? QStringLiteral("") : QStringLiteral(" info: ") % m_extraInfo
+                       m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo
                    );
         }
 

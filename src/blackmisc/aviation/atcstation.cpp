@@ -107,18 +107,18 @@ namespace BlackMisc
                               QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
 
                               // controller
-                              (m_controller.isNull() ? QStringLiteral("") :
+                              (m_controller.isNull() ? QString() :
                                QStringLiteral(" ") % m_controller.toQString(i18n)) %
 
                               // frequency
                               QLatin1Char(' ') % m_frequency.valueRoundedWithUnit(3, i18n) %
 
                               // ATIS
-                              (!this->hasAtis() ? QStringLiteral("") :
+                              (!this->hasAtis() ? QString() :
                                QStringLiteral(" ") % m_atis.toQString(i18n)) %
 
                               // METAR
-                              (!this->hasMetar() ? QStringLiteral("") :
+                              (!this->hasMetar() ? QString() :
                                QStringLiteral(" ") % m_metar.toQString(i18n)) %
 
                               // range

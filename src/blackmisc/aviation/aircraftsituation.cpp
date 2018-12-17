@@ -72,7 +72,7 @@ namespace BlackMisc
                    QStringLiteral(" | alt: ") % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                    QStringLiteral(" ") % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                    QStringLiteral("[cor] | og: ") % this->getOnGroundInfo() %
-                   (m_onGroundGuessingDetails.isEmpty() ? QStringLiteral("") : QStringLiteral(" ") % m_onGroundGuessingDetails) %
+                   (m_onGroundGuessingDetails.isEmpty() ? QString() : QStringLiteral(" ") % m_onGroundGuessingDetails) %
                    QStringLiteral(" | cg: ") %
                    (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                    QStringLiteral(" | offset: ") %

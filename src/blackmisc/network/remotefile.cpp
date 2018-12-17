@@ -30,7 +30,7 @@ namespace BlackMisc
 
         QString CRemoteFile::getNameAndSize() const
         {
-            if (!this->hasName()) { return QStringLiteral(""); }
+            if (!this->hasName()) { return {}; }
             static const QString s("%1 (%2)");
             return s.arg(this->getName(), this->getSizeHumanReadable());
         }

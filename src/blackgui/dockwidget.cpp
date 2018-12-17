@@ -575,7 +575,7 @@ namespace BlackGui
     void CDockWidget::forceStyleSheetUpdate()
     {
         const QString qss = this->styleSheet();
-        this->setStyleSheet(qss.isEmpty() ? QStringLiteral(" ") : QStringLiteral(""));
+        this->setStyleSheet(qss.isEmpty() ? QStringLiteral(" ") : QString());
         this->setStyleSheet(qss);
     }
 

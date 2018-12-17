@@ -47,7 +47,7 @@ namespace BlackMisc
 
         QString CArtifact::getFileSizeHumanReadable() const
         {
-            if (m_size < 0) { return QStringLiteral(""); }
+            if (m_size < 0) { return {}; }
             return CFileUtils::humanReadableFileSize(m_size);
         }
 
@@ -208,14 +208,14 @@ namespace BlackMisc
 
         QString CArtifact::versionNumberFromFilename(const QString &filename)
         {
-            if (filename.isEmpty()) { return QStringLiteral(""); }
+            if (filename.isEmpty()) { return {}; }
 
             // swift-installer-linux-64-0.7.3_2017-03-25_11-24-50.run
             thread_local const QRegularExpression firstSegments("\\d+\\.\\d+\\.\\d+");
             const QRegularExpressionMatch firstSegmentsMatch = firstSegments.match(filename);
             if (!firstSegmentsMatch.hasMatch())
             {
-                return QStringLiteral(""); // no version, invalid
+                return {}; // no version, invalid
             }
             QString v = firstSegmentsMatch.captured(0); // first 3 segments, like 0.9.3
             if (!v.endsWith('.')) { v += '.'; }

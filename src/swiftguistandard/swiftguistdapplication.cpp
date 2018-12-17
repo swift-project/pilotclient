@@ -32,7 +32,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
 
     QString dBusAddress(this->getCmdDBusAddressValue());
-    const QString coreModeStr = this->isParserOptionSet(m_cmdFacadeMode) ? this->getParserValue(m_cmdFacadeMode) : QStringLiteral("");
+    const QString coreModeStr = this->isParserOptionSet(m_cmdFacadeMode) ? this->getParserValue(m_cmdFacadeMode) : QString();
     CoreModes::CoreMode coreMode = CoreModes::stringToCoreMode(coreModeStr);
 
     // Valid combination?

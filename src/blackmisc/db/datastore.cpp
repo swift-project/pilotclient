@@ -22,13 +22,13 @@ namespace BlackMisc
     {
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsString() const
         {
-            if (m_dbKey < 0) { return QStringLiteral(""); }
+            if (m_dbKey < 0) { return {}; }
             return QString::number(m_dbKey);
         }
 
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
-            if (m_dbKey < 0) { return QStringLiteral(""); }
+            if (m_dbKey < 0) { return {}; }
             return prefix % QStringLiteral("(") % QString::number(m_dbKey) % QStringLiteral(")");
         }
 

@@ -67,7 +67,7 @@ namespace BlackMisc
             if (cap.testFlag(FsdWithAircraftConfig)) sl << "aircraft config";
             if (cap.testFlag(FsdWithGroundFlag)) sl << "gnd.flag";
             if (cap.testFlag(FsdModelString)) sl << "modelstring";
-            if (sl.isEmpty()) { return QStringLiteral(""); }
+            if (sl.isEmpty()) { return {}; }
             return sl.join(", ");
         }
 

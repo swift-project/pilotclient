@@ -316,7 +316,7 @@ namespace BlackMisc
 
         QString CAltitude::asFpICAOAltitudeString() const
         {
-            if (this->isNull()) { return QStringLiteral(""); }
+            if (this->isNull()) { return {}; }
             if (this->isFlightLevel())
             {
                 if (this->getUnit() == CLengthUnit::m())

@@ -701,7 +701,7 @@ namespace BlackGui
         {
             if (ui->cb_Heavy->isChecked()) { return QStringLiteral("H"); }
             else if (ui->cb_Tcas->isChecked()) { return QStringLiteral("T"); }
-            return QStringLiteral("");
+            return {};
         }
 
         CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const

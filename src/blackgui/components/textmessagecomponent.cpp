@@ -539,7 +539,7 @@ namespace BlackGui
             if (index < 0 || index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesAll))
             {
                 CLogMessage(this).validationError("Incorrect message channel");
-                return QStringLiteral("");
+                return {};
             }
             else
             {

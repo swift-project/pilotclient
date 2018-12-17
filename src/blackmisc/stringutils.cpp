@@ -395,7 +395,6 @@ namespace BlackMisc
 
     QString joinStringSet(const QSet<QString> &set, const QString &separator)
     {
-        if (set.isEmpty()) { return QStringLiteral(""); }
         return set.toList().join(separator);
     }
 

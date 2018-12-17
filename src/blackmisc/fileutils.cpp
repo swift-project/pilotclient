@@ -135,7 +135,7 @@ namespace BlackMisc
         QString p = normalizeFilePathToQtStandard(path);
         int i = p.indexOf('/');
         if (i < 0) { return p; }
-        if ((i + 1) >= path.length()) { return QStringLiteral(""); }
+        if ((i + 1) >= path.length()) { return {}; }
         return path.mid(i + 1);
     }
 
@@ -168,7 +168,7 @@ namespace BlackMisc
 
     QString CFileUtils::lastPathSegment(const QString &path)
     {
-        if (path.isEmpty()) { return QStringLiteral(""); }
+        if (path.isEmpty()) { return {}; }
         if (path.endsWith('/')) { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
         if (!path.contains('/')) { return path; }
         return path.mid(path.lastIndexOf('/') + 1);
@@ -484,7 +484,7 @@ namespace BlackMisc
 
     QString CFileUtils::windowsUncMachine(const QString &filePath)
     {
-        if (!CFileUtils::isWindowsUncPath(filePath)) { return QStringLiteral(""); }
+        if (!CFileUtils::isWindowsUncPath(filePath)) { return {}; }
         QString f = filePath;
         f.replace("\\", "/");
         f.replace("//", "");

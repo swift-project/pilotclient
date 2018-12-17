@@ -50,7 +50,7 @@ namespace BlackMisc
 
         QString CCallsignSet::getCallsignsAsString(bool sorted, const QString &separator) const
         {
-            if (this->isEmpty()) { return QStringLiteral(""); }
+            if (this->isEmpty()) { return {}; }
             return this->getCallsignStrings(sorted).join(separator);
         }
 

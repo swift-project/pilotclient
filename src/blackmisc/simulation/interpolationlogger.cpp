@@ -339,7 +339,7 @@ namespace BlackMisc
                     QStringLiteral("<td>") % log.cgAboveGround.valueRoundedWithUnit(ft, 0) % QStringLiteral("</td>") %
                     QStringLiteral("<td>") % boolToYesNo(log.useParts) % QStringLiteral("</td>") %
                     (changedParts ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
-                    QStringLiteral("<td>") % (log.useParts ? log.parts.toQString(true) : QStringLiteral("")) % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % (log.useParts ? log.parts.toQString(true) : QString()) % QStringLiteral("</td>") %
                     QStringLiteral("</tr>\n");
             }
 
@@ -411,13 +411,13 @@ namespace BlackMisc
             return (
                        withSetup ?
                        QStringLiteral("setup: ") % usedSetup.toQString(true) % separator :
-                       QStringLiteral("")
+                       QString()
                    ) %
                    (
                        withElevation ?
                        QStringLiteral("Elev.info: ") % elevationInfo %
                        QStringLiteral(" scenery os: ") % sceneryOffset.valueRoundedWithUnit(1) % separator :
-                       QStringLiteral("")
+                       QString()
                    ) %
                    QStringLiteral("change: ") % change.toQString(true) %
                    separator %
@@ -441,13 +441,13 @@ namespace BlackMisc
                        QStringLiteral(" | old int.pos.: ") % situationOldInterpolation.getTimestampAndOffset(true) %
                        QStringLiteral(" | new int.pos.: ") % situationNewInterpolation.getTimestampAndOffset(true) %
                        QStringLiteral(" | #int.pos.: ") % QString::number(interpolationSituations.size()) :
-                       QStringLiteral("")
+                       QString()
                    ) %
                    (
                        withCurrentSituation ?
                        separator %
                        QStringLiteral("cur.sit.(interpolated): ") % situationCurrent.toQString(true) :
-                       QStringLiteral("")
+                       QString()
                    ) %
                    (
                        withOtherPositions ?
@@ -455,7 +455,7 @@ namespace BlackMisc
                        QStringLiteral("old: ") % situationOldInterpolation.toQString(true) %
                        separator %
                        QStringLiteral("new: ") % situationNewInterpolation.toQString(true) :
-                       QStringLiteral("")
+                       QString()
                    );
         }
 

@@ -1048,7 +1048,7 @@ namespace BlackCore
                  QStringLiteral("\n\n") %
                  QStringLiteral("Situation: ") % s.toQString(false, true, true, true, true, sep);
         }
-        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
+        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QString() : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
         return dm;
     }
 

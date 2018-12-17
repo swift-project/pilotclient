@@ -132,7 +132,7 @@ namespace BlackMisc
                     return m_callsign.left(4).toUpper();
                 }
             }
-            return QStringLiteral("");
+            return {};
         }
 
         bool CCallsign::isAtcAlikeCallsign() const

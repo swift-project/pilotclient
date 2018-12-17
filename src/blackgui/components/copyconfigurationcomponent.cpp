@@ -324,9 +324,9 @@ namespace BlackGui
 
         QString CCopyConfigurationComponent::getOtherVersionsSelectedDirectory() const
         {
-            if (ui->cb_OtherVersions->count() < 1) { return QStringLiteral(""); }
+            if (ui->cb_OtherVersions->count() < 1) { return {}; }
             const QFileInfoList dirs(CDirectoryUtils::applicationDataDirectories());
-            if (dirs.isEmpty()) { return QStringLiteral(""); }
+            if (dirs.isEmpty()) { return {}; }
             const QString otherVersionDir = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;
             for (const QFileInfo &info : dirs)
@@ -337,7 +337,7 @@ namespace BlackGui
                     break;
                 }
             }
-            if (dir.isEmpty()) { return QStringLiteral(""); }
+            if (dir.isEmpty()) { return {}; }
             dir = CFileUtils::appendFilePaths(dir, ui->rb_Cache->isChecked() ?
                                               CDataCache::relativeFilePath() :
                                               CSettingsCache::relativeFilePath());

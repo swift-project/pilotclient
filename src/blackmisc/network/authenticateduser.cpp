@@ -51,7 +51,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             if (m_realname.isEmpty()) { return QStringLiteral("<no realname>"); }
-            return m_realname % (this->hasValidDbKey() ? this->getDbKeyAsStringInParentheses(" ") : QStringLiteral(""));
+            return m_realname % (this->hasValidDbKey() ? this->getDbKeyAsStringInParentheses(" ") : QString());
         }
 
         CAuthenticatedUser CAuthenticatedUser::fromDatabaseJson(const QJsonObject &json)

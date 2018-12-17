@@ -46,7 +46,7 @@ namespace BlackMisc
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
                    QStringLiteral(" details: ") % this->getPartsDetailsAsString() %
-                   (m_guessingDetails.isEmpty() ? QStringLiteral("") : QStringLiteral(" - ") % m_guessingDetails) %
+                   (m_guessingDetails.isEmpty() ? QString() : QStringLiteral(" - ") % m_guessingDetails) %
                    QStringLiteral(" | on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
                    QStringLiteral(" | lights: ") % m_lights.toQString(i18n) %
                    QStringLiteral(" | gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %

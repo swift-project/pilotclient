@@ -61,7 +61,7 @@ namespace BlackGui
             const CUser user(
                 ui->le_NetworkId->text().trimmed(),
                 ui->le_RealName->text().trimmed().simplified(),
-                QStringLiteral(""),
+                QString(),
                 ui->le_Password->text().trimmed()
             );
             const CFsdSetup fsdSetup(ui->form_ServerFsd->getValue());

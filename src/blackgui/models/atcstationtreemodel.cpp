@@ -89,7 +89,7 @@ namespace BlackGui
                         if (column.getFormatter()->supportsRole(Qt::DecorationRole))
                         {
                             const QIcon icon = column.getFormatter()->decorationRole(v).toPixmap();
-                            si = new QStandardItem(icon, QStringLiteral(""));
+                            si = new QStandardItem(icon, QString());
                         }
                         else if (column.getFormatter()->supportsRole(Qt::DisplayRole))
                         {

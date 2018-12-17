@@ -65,11 +65,11 @@ namespace BlackMisc
         QString CFlightPlanRemarks::convertToQString(bool i18n) const
         {
             const QString s =
-                (m_registration.isEmpty() ? QStringLiteral("") : QStringLiteral("reg.: ") % m_registration.toQString(i18n))
-                % (!this->hasValidAirlineIcao() ? QStringLiteral("") : QStringLiteral(" airline: ") % m_airlineIcao.getDesignator())
-                % (m_radioTelephony.isEmpty() ?  QStringLiteral("") : QStringLiteral(" radio tel.:") % m_radioTelephony)
-                % (m_flightOperator.isEmpty() ? QStringLiteral("") : QStringLiteral(" operator: ") % m_flightOperator)
-                % (!m_selcalCode.isValid() ? QStringLiteral("") : QStringLiteral(" SELCAL: ") % m_selcalCode.getCode())
+                (m_registration.isEmpty() ? QString() : QStringLiteral("reg.: ") % m_registration.toQString(i18n))
+                % (!this->hasValidAirlineIcao() ? QString() : QStringLiteral(" airline: ") % m_airlineIcao.getDesignator())
+                % (m_radioTelephony.isEmpty() ?  QString() : QStringLiteral(" radio tel.:") % m_radioTelephony)
+                % (m_flightOperator.isEmpty() ? QString() : QStringLiteral(" operator: ") % m_flightOperator)
+                % (!m_selcalCode.isValid() ? QString() : QStringLiteral(" SELCAL: ") % m_selcalCode.getCode())
                 % QStringLiteral(" voice: ") % m_voiceCapabilities.toQString(i18n);
             return s.simplified().trimmed();
         }
@@ -587,7 +587,7 @@ namespace BlackMisc
             QString s = prefix;
             if (!icao.isEmpty())
             {
-                s += (s.isEmpty() ? QStringLiteral("") : QStringLiteral("/")) % icao;
+                s += (s.isEmpty() ? QString() : QStringLiteral("/")) % icao;
             }
             if (suffix.isEmpty()) { return s; }
             if (s.isEmpty()) { return suffix; }
