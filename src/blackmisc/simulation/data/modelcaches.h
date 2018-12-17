@@ -277,7 +277,7 @@ namespace BlackMisc
             signals:
                 //! Cache has been changed
                 //! \note this detects caches changed elsewhere or set here (the normal caches detect only "elsewhere"
-                void cacheChanged(const CSimulatorInfo &simulator);
+                void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             protected:
                 //! Construtor

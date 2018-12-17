@@ -337,7 +337,7 @@ namespace BlackCore
 
     signals:
         //! Simulator combined status
-        void simulatorStatusChanged(SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
+        void simulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
 
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);

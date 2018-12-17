@@ -132,15 +132,15 @@ namespace BlackMisc
         signals:
             //! Disk loading started
             //! \remark will only indicate loading from disk, not cache loading
-            void diskLoadingStarted(const CSimulatorInfo &simulator, LoadMode loadMode);
+            void diskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode loadMode);
 
             //! Parsing is finished or cache has been loaded
             //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
-            void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+            void loadingFinished(const BlackMisc::CStatusMessageList &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Relayed from centralized caches
             //! \remark this can result from loading, the cache changed elsewhere or clearing data
-            void cacheChanged(const CSimulatorInfo &simulator);
+            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         protected:
             //! Constructor
@@ -219,13 +219,13 @@ namespace BlackMisc
 
         signals:
             //! \copydoc IAircraftModelLoader::loadingFinished
-            void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
+            void loadingFinished(const BlackMisc::CStatusMessageList &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! \copydoc IAircraftModelLoader::diskLoadingStarted
-            void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode);
+            void diskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! \copydoc IAircraftModelLoader::cacheChanged
-            void cacheChanged(const CSimulatorInfo &simulator);
+            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private:
             IAircraftModelLoader *m_loaderFsx = nullptr;

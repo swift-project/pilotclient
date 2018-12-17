@@ -53,14 +53,14 @@ namespace BlackGui
 
         signals:
             //! Filter button clicked
-            void buttonClicked(FilterButton filterButton);
+            void buttonClicked(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
 
         public slots:
             //! Row count has been changed
             void onRowCountChanged(int count, bool withFilter);
 
             //! Trigger button
-            void clickButton(FilterButton filterButton);
+            void clickButton(BlackGui::Filters::CFilterBarButtons::FilterButton filterButton);
 
         private slots:
             //! Button was clicked

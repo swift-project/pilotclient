@@ -189,13 +189,13 @@ namespace BlackSimPlugin
             void removeAllPlanes();
 
             //! \copydoc XSwiftBus::CTraffic::setPlanesPositions
-            void setPlanesPositions(const PlanesPositions &planesPositions);
+            void setPlanesPositions(const BlackSimPlugin::XPlane::PlanesPositions &planesPositions);
 
             //! \copydoc XSwiftBus::CTraffic::setPlanesSurfaces
-            void setPlanesSurfaces(const PlanesSurfaces &planesSurfaces);
+            void setPlanesSurfaces(const BlackSimPlugin::XPlane::PlanesSurfaces &planesSurfaces);
 
             //! \copydoc XSwiftBus::CTraffic::setPlanesTransponders
-            void setPlanesTransponders(const PlanesTransponders &planesTransponders);
+            void setPlanesTransponders(const BlackSimPlugin::XPlane::PlanesTransponders &planesTransponders);
 
             //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);

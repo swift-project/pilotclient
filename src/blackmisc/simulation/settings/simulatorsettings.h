@@ -341,7 +341,7 @@ namespace BlackMisc
 
             signals:
                 //! Simulator settings have been changed
-                void settingsChanged(const CSimulatorInfo &simulator);
+                void settingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             private:
                 CSetting<Settings::TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings

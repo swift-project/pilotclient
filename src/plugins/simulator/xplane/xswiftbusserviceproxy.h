@@ -100,7 +100,7 @@ namespace BlackSimPlugin
             QString getVersionNumber();
 
             //! Get own aircraft situation data
-            void getOwnAircraftSituationData(XPlaneData *o_xplaneData);
+            void getOwnAircraftSituationData(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
 
             //! \copydoc XSwiftBus::CService::addTextMessage
             void addTextMessage(const QString &text, double red, double green, double blue);

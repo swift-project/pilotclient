@@ -146,7 +146,7 @@ namespace BlackGui
 
     signals:
         //! Top level has changed for given widget
-        void widgetTopLevelChanged(CDockWidget *, bool topLevel);
+        void widgetTopLevelChanged(BlackGui::CDockWidget *, bool topLevel);
 
         //! Font size signals @{
         void fontSizePlus();

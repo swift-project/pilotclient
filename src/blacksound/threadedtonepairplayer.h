@@ -43,7 +43,7 @@ namespace BlackSound
     public slots:
         //! Play the list of tones.
         //! If the player is currently active, this call will be ignored.
-        void play(int volume, const QList<CTonePair> &tonePairs);
+        void play(int volume, const QList<BlackSound::CTonePair> &tonePairs);
 
     protected slots:
         //! \copydoc BlackMisc::CContinuousWorker::initialize
