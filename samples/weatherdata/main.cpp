@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     CLineReader lineReader(&a);
     CWeatherDataPrinter printer(&a);
     QObject::connect(&lineReader, &CLineReader::weatherDataRequest, &printer, &CWeatherDataPrinter::fetchAndPrintWetherData);
-    QObject::connect(&lineReader, &CLineReader::quit, &lineReader, &CLineReader::terminate);
+    QObject::connect(&lineReader, &CLineReader::wantsToQuit, &lineReader, &CLineReader::terminate);
     QObject::connect(&lineReader, &CLineReader::finished, &a, &QCoreApplication::quit);
 
     QTextStream qtout(stdout);

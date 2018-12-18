@@ -38,7 +38,7 @@ signals:
     void weatherDataRequest(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
     //! User is asking to quit
-    void quit();
+    void wantsToQuit();
 };
 
 #endif // guard

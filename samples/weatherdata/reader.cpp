@@ -40,7 +40,7 @@ void CLineReader::run()
 
         if (line == "x")
         {
-            emit quit();
+            emit wantsToQuit();
             continue;
         }
 
