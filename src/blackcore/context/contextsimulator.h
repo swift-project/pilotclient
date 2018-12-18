@@ -12,17 +12,6 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_H
 #define BLACKCORE_CONTEXTSIMULATOR_H
 
-//! \addtogroup dbus
-//! @{
-
-//! DBus interface for context
-#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift_project.blackcore.contextsimulator"
-
-//! DBus object path for context
-#define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/simulator"
-
-//! @}
-
 #include "blackconfig/buildconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
@@ -48,6 +37,17 @@
 #include <QString>
 
 // clazy:excludeall=const-signal-or-slot
+
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
+#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift_project.blackcore.contextsimulator"
+
+//! DBus object path for context
+#define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/simulator"
+
+//! @}
 
 class QDBusConnection;
 
