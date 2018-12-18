@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <QTimer>
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 
 namespace BlackMisc

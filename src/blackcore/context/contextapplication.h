@@ -34,6 +34,8 @@
 #include <QStringList>
 #include <QtGlobal>
 
+// clazy:excludeall=const-signal-or-slot
+
 //! \addtogroup dbus
 //! @{
 

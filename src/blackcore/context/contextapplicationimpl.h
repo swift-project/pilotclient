@@ -24,6 +24,8 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 namespace BlackMisc
 {
     class CDBusServer;

@@ -16,6 +16,8 @@
 #include "contextsimulator.h"
 #include "blackmisc/logmessage.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 namespace BlackCore
 {
     namespace Context

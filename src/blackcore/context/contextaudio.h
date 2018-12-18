@@ -30,6 +30,8 @@
 #include <QObject>
 #include <QString>
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 
 namespace BlackMisc

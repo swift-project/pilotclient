@@ -43,6 +43,8 @@
 #include <QTimer>
 #include <atomic>
 
+// clazy:excludeall=const-signal-or-slot
+
 namespace BlackMisc
 {
     class CDBusServer;

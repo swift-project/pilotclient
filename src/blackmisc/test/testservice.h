@@ -47,6 +47,8 @@
 #include <QDBusConnection>
 #include <QDBusObjectPath>
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusObjectPath;
 class QVariant;
 

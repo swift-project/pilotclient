@@ -22,6 +22,8 @@
 #include <QStringList>
 #include <functional>
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 class QDBusPendingCallWatcher;
 

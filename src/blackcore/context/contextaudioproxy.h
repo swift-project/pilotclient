@@ -28,6 +28,8 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 
 namespace BlackMisc

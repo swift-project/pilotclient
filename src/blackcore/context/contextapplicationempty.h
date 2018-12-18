@@ -17,6 +17,8 @@
 #include "corefacade.h"
 #include "blackmisc/identifierlist.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 namespace BlackCore
 {
     class CCoreFacade;

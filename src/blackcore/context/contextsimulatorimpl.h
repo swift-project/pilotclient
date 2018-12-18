@@ -43,6 +43,8 @@
 #include <QString>
 #include <QPointer>
 
+// clazy:excludeall=const-signal-or-slot
+
 namespace BlackMisc
 {
     class CDBusServer;

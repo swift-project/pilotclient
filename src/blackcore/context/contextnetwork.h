@@ -43,6 +43,8 @@
 
 #include <functional>
 
+// clazy:excludeall=const-signal-or-slot
+
 //! \addtogroup dbus
 //! @{
 

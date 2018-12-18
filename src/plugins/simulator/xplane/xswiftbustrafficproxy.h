@@ -20,6 +20,8 @@
 #include <QString>
 #include <QStringList>
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 
 //! \cond PRIVATE

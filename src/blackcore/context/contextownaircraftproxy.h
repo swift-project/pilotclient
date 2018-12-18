@@ -27,6 +27,8 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 class QDBusConnection;
 
 namespace BlackMisc

@@ -51,6 +51,8 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/simplecommandparser.h"
 
+// clazy:excludeall=const-signal-or-slot
+
 class QTimer;
 
 namespace BlackMisc

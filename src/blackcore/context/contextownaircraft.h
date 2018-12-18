@@ -28,6 +28,8 @@
 #include <QObject>
 #include <QString>
 
+// clazy:excludeall=const-signal-or-slot
+
 //! \addtogroup dbus
 //! @{
 
