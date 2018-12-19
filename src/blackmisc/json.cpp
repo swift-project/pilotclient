@@ -498,12 +498,15 @@ namespace BlackMisc
             // - type
             // - value
             if (object.size() != 1) { return object; } // no cache format
-            const QString key = object.constBegin().key();
             const QJsonObject cacheObject = object.constBegin()->toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
             {
-                const QString type = cacheObject.value("type").toString(); // just to verify in debugger
+#ifdef QT_DEBUG
+                const QString key = object.constBegin().key(); // clazy:exclude=unused-non-trivial-variable
+                const QString type = cacheObject.value("type").toString(); // clazy:exclude=unused-non-trivial-variable
+                Q_UNUSED(key);
                 Q_UNUSED(type);
+#endif
                 return cacheObject.value("value").toObject();
             }
             return object;

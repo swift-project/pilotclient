@@ -377,7 +377,6 @@ namespace BlackCore
 
         const QUrl url(nwReply->url());
         const QString urlString(url.toString());
-        const QString replyMessage(nwReply->errorString());
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
@@ -464,7 +463,6 @@ namespace BlackCore
 
         const QUrl url(nwReply->url());
         const QString urlString(url.toString());
-        const QString replyMessage(nwReply->errorString());
 
         if (nwReply->error() == QNetworkReply::NoError)
         {

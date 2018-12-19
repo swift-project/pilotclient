@@ -126,7 +126,6 @@ namespace BlackGui
 
         void CSettingsFontComponent::initUiValues(const QFont &font, const QColor &color)
         {
-            const QString family = font.family();
             ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
             ui->cb_SettingsGuiFont->setCurrentFont(font);
             ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
