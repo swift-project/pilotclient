@@ -969,7 +969,7 @@ namespace BlackCore
             {
                 lookupModel = this->reverseLookupModel(model);
             }
-            this->ownAircraftModelChanged(lookupModel);
+            emit this->ownAircraftModelChanged(lookupModel);
         }
 
         void CContextSimulator::stopSimulatorListeners()
