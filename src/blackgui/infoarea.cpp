@@ -124,7 +124,7 @@ namespace BlackGui
                 toggleFloatingMenuAction->setCheckable(true);
                 toggleFloatingMenuAction->setChecked(!dw->isFloating());
                 subMenuToggleFloat->addAction(toggleFloatingMenuAction);
-                c = connect(toggleFloatingMenuAction, SIGNAL(toggled(bool)), signalMapperToggleFloating, SLOT(map()));
+                c = connect(toggleFloatingMenuAction, &QAction::toggled, signalMapperToggleFloating, qOverload<>(&QSignalMapper::map));
                 BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot map floating action"); // do not make that shutdown reason in a release build
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
@@ -160,7 +160,7 @@ namespace BlackGui
             connect(showTabbar, &QAction::toggled, this, &CInfoArea::showTabBar);
 
             // tab bar position
-            menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(toggleTabBarPosition()));
+            menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, &CInfoArea::toggleTabBarPosition);
             Q_UNUSED(c);
         }
     }

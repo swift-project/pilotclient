@@ -349,7 +349,7 @@ namespace BlackGui
             a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::changeLayout);
             a->setData("2c");
             const QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
-            contextMenu->addAction(CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
+            contextMenu->addAction(CIcons::tableSheet16(), frameLessActionText, this, &CNavigatorDialog::toggleFrameless);
             contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::dummyFunction);
             contextMenu->addAction(m_marginMenuAction);
             contextMenu->addSeparator();

@@ -42,7 +42,7 @@ namespace BlackGui
         void CConsoleTextEdit::customMenuRequested(const QPoint &pos)
         {
             QMenu *menu = QPlainTextEdit::createStandardContextMenu();
-            menu->addAction(CIcons::delete16(), "Clear console", this, SLOT(clear()));
+            menu->addAction(CIcons::delete16(), "Clear console", this, &QPlainTextEdit::clear);
             menu->exec(this->mapToGlobal(pos));
         }
 
