@@ -46,16 +46,19 @@ namespace BlackGui
 
         const char *CColumn::getTranslationContextChar() const
         {
+            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
             return m_translationContext.toUtf8().constData();
         }
 
         const char *CColumn::getColumnNameChar() const
         {
+            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
             return m_columnName.toUtf8().constData();
         }
 
         const char *CColumn::getColumnToolTipChar() const
         {
+            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
             return m_columnToolTip.toUtf8().constData();
         }
 
@@ -219,6 +222,7 @@ namespace BlackGui
 
         const char *CColumns::getTranslationContextChar() const
         {
+            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
             return m_translationContext.toUtf8().constData();
         }
     }
