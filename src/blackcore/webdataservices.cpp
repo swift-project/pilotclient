@@ -1340,7 +1340,7 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(delayMs, [ = ]()
+        QTimer::singleShot(delayMs, [ = ]() // clazy:exclude=connect-3arg-lambda
         {
             if (!myself || m_shuttingDown) { return; }
             this->readInBackground(entities); // deferred

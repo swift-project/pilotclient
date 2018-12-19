@@ -80,20 +80,20 @@ namespace BlackCore
                 m_logSubscriptions[subscriber].removeAll(pattern);
             });
 
-            connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [ = ](const CValueCachePacket & settings)
+            connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket & settings)
             {
                 if (!myself) { return; }
                 this->changeSettings(settings, {});
             });
 
-            connect(this, &IContextApplication::settingsChanged, [](const CValueCachePacket & settings, const CIdentifier & origin)
+            connect(this, &IContextApplication::settingsChanged, CSettingsCache::instance(), [](const CValueCachePacket & settings, const CIdentifier & origin)
             {
                 // Intentionally don't check for round trip here
                 CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
             });
 
             Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-            bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, [ = ](const QStringList & actions)
+            bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, this, [ = ](const QStringList & actions)
             {
                 if (!myself) { return; }
                 this->registerHotkeyActions(actions, {});
@@ -101,7 +101,7 @@ namespace BlackCore
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey action failed");
             Q_UNUSED(s);
 
-            s = connect(this, &IContextApplication::hotkeyActionsRegistered, [ = ](const QStringList & actions, const CIdentifier & origin)
+            s = connect(this, &IContextApplication::hotkeyActionsRegistered, sApp->getInputManager(), [ = ](const QStringList & actions, const CIdentifier & origin)
             {
                 if (origin.hasApplicationProcessId()) { return; }
                 sApp->getInputManager()->registerRemoteActions(actions);
