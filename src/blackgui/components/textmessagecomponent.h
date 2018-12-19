@@ -97,7 +97,7 @@ namespace BlackGui
 
         signals:
             //! Message to be displayed in info window
-            void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
+            void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs);
 
             //! Command line was entered
             void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
