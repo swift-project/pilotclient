@@ -12,6 +12,7 @@
 #include "blackgui/editors/modelmappingform.h"
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/labelandicon.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/stringutils.h"
@@ -37,8 +38,11 @@ namespace BlackGui
             ui->setupUi(this);
             ui->le_LastUpdated->setReadOnly(true);
             ui->le_Id->setReadOnly(true);
-
+            ui->le_Parts->setPlaceholderText("Allowed: " + CAircraftModel::supportedParts());
             ui->lai_Id->set(CIcons::appMappings16(), "Id:");
+            CUpperCaseValidator *uc = new CUpperCaseValidator(0, 5, ui->le_Parts);
+            uc->setAllowedCharacters(CAircraftModel::supportedParts());
+            ui->le_Parts->setValidator(uc);
 
             connect(ui->le_CG, &QLineEdit::editingFinished, this, &CModelMappingForm::onCgEditFinished);
             connect(ui->pb_Stash, &QPushButton::clicked, this, &CModelMappingForm::requestStash);
@@ -59,6 +63,7 @@ namespace BlackGui
             model.setName(ui->le_Name->text());
             model.setModelMode(ui->selector_ModelMode->getMode());
             model.setCG(this->getCGFromUI());
+            model.setSupportedParts(ui->le_Parts->text().trimmed().toUpper());
             return model;
         }
 
@@ -90,6 +95,7 @@ namespace BlackGui
             ui->le_Id->setText(model.getDbKeyAsString());
             ui->le_Description->setText(model.getDescription());
             ui->le_Name->setText(model.getName());
+            ui->le_Parts->setText(model.getSupportedParts());
             ui->le_FileName->setText(model.getFileName());
             ui->selector_ModelMode->setValue(model.getModelMode());
             ui->selector_Simulator->setValue(model.getSimulator());

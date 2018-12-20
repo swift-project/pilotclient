@@ -951,16 +951,9 @@ namespace BlackMisc
                                      CDistributor::fromDatabaseJson(json, prefixDistributor));
 
             if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
-            if (!livery.isLoadedFromDb())
-            {
-                const int idLivery = json.value(prefix % u"idlivery").toInt(-1);
-                if (idLivery >= 0) { livery.setDbKey(idLivery); }
-            }
-            if (!distributor.isLoadedFromDb())
-            {
-                const QString idDistributor = json.value(prefix % u"iddistributor").toString();
-                if (!idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
-            }
+            if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
+            if (!livery.isLoadedFromDb() && idLivery >= 0) { livery.setDbKey(idLivery); }
+            if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
 
             // store in temp.cache
             if (!cachedAircraftIcao && aircraftIcao.isLoadedFromDb()) { aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao; }

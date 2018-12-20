@@ -175,12 +175,6 @@
         <property name="focusPolicy">
          <enum>Qt::StrongFocus</enum>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
        </widget>
       </item>
       <item row="1" column="6">
@@ -191,6 +185,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="placeholderText">
+         <string>e.g. 3ft or 2.3m</string>
+        </property>
        </widget>
       </item>
       <item row="2" column="3" colspan="4">
@@ -200,10 +197,27 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3" colspan="4">
+      <item row="0" column="3" colspan="2">
        <widget class="QLineEdit" name="le_ModelKey">
         <property name="placeholderText">
          <string>Model  key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="lbl_Parts">
+        <property name="text">
+         <string>Parts:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLineEdit" name="le_Parts">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -241,6 +255,7 @@
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>le_ModelKey</tabstop>
+  <tabstop>le_Parts</tabstop>
   <tabstop>selector_Simulator</tabstop>
   <tabstop>le_Name</tabstop>
   <tabstop>le_Description</tabstop>
