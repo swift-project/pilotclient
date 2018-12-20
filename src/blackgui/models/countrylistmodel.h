@@ -30,7 +30,7 @@ namespace BlackGui
     {
         //! Country list model
         class BLACKGUI_EXPORT CCountryListModel :
-            public CListModelDbObjects<BlackMisc::CCountry, BlackMisc::CCountryList, QString, true>
+            public CListModelDbObjects<BlackMisc::CCountryList, QString, true>
         {
             Q_OBJECT
 

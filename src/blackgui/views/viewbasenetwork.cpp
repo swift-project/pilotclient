@@ -13,9 +13,9 @@ namespace BlackGui
 {
     namespace Views
     {
-        template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>;
-        template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
-        template class CViewBase<BlackGui::Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>;
-        template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
+        template class CViewBase<BlackGui::Models::CClientListModel>;
+        template class CViewBase<BlackGui::Models::CServerListModel>;
+        template class CViewBase<BlackGui::Models::CTextMessageListModel>;
+        template class CViewBase<BlackGui::Models::CUserListModel>;
     } // namespace
 } // namespace

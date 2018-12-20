@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Models
     {
         //! Matching statistics entry
-        class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics, true>
+        class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>
         {
             Q_OBJECT
 

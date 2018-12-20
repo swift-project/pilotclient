@@ -30,7 +30,7 @@ namespace BlackGui
     {
         //! Aircraft model list model
         class BLACKGUI_EXPORT CAircraftModelListModel :
-            public COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
+            public COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModelList, int, true>
         {
             Q_OBJECT
 

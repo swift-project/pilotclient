@@ -13,9 +13,9 @@ namespace BlackGui
 {
     namespace Views
     {
-        template class CViewBase<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor>;
-        template class CViewBase<BlackGui::Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>;
-        template class CViewBase<BlackGui::Models::CMatchingStatisticsModel, BlackMisc::Simulation::CMatchingStatistics, BlackMisc::Simulation::CMatchingStatisticsEntry>;
-        template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
+        template class CViewBase<BlackGui::Models::CDistributorListModel>;
+        template class CViewBase<BlackGui::Models::CInterpolationSetupListModel>;
+        template class CViewBase<BlackGui::Models::CMatchingStatisticsModel>;
+        template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel>;
     } // namespace
 } // namespace

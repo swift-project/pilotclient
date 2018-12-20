@@ -26,9 +26,16 @@ namespace BlackGui
     namespace Models
     {
         //! List model for timestamp based objects with offset
-        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelTimestampObjects :
-            public CListModelBase<ObjectType, ContainerType, UseCompare>
+        template <typename T, bool UseCompare = false> class CListModelTimestampObjects :
+            public CListModelBase<T, UseCompare>
         {
+        public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
         protected:
             //! Constructor
             CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);
@@ -38,10 +45,16 @@ namespace BlackGui
         };
 
         //! List model for timestamp based objects with offset
-        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
-            public CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>
+        template <typename T, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
+            public CListModelTimestampObjects<T, UseCompare>
         {
         public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
             //! Destructor
             virtual ~CListModelTimestampWithOffsetObjects() {}
 

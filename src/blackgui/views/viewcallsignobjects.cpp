@@ -29,28 +29,28 @@ namespace BlackGui
 {
     namespace Views
     {
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::CViewWithCallsignObjects(QWidget *parent) :
-            CViewBase<ModelClass, ContainerType, ObjectType>(parent)
+        template <class T>
+        CViewWithCallsignObjects<T>::CViewWithCallsignObjects(QWidget *parent) :
+            CViewBase<T>(parent)
         {
             // void
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::selectCallsign(const CCallsign &callsign)
+        template <class T>
+        void CViewWithCallsignObjects<T>::selectCallsign(const CCallsign &callsign)
         {
             const CCallsignSet cs({callsign});
             this->selectCallsigns(cs);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::selectCallsigns(const CCallsignSet &callsigns)
+        template <class T>
+        void CViewWithCallsignObjects<T>::selectCallsigns(const CCallsignSet &callsigns)
         {
             if (callsigns.isEmpty()) { return; }
             this->clearSelection();
             int r = -1;
             QSet<int> rows;
-            for (const ObjectType &obj : CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer())
+            for (const ObjectType &obj : CViewBase<T>::containerOrFilteredContainer())
             {
                 r++;
                 if (callsigns.contains(obj.getCallsign()))
@@ -61,24 +61,24 @@ namespace BlackGui
             this->selectRows(rows);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CCallsignSet CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::selectedCallsigns() const
+        template <class T>
+        CCallsignSet CViewWithCallsignObjects<T>::selectedCallsigns() const
         {
             if (!this->hasSelection()) { return CCallsignSet(); }
             const ContainerType selected(this->selectedObjects());
             return selected.getCallsigns();
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::removeCallsign(const CCallsign &callsign)
+        template<class T>
+        int CViewWithCallsignObjects<T>::removeCallsign(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return 0; }
             const CCallsignSet set({ callsign });
             return this->removeCallsigns(set);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::removeCallsigns(const CCallsignSet &callsigns)
+        template <class T>
+        int CViewWithCallsignObjects<T>::removeCallsigns(const CCallsignSet &callsigns)
         {
             if (callsigns.isEmpty()) { return 0; }
             if (this->isEmpty()) { return 0; }
@@ -92,8 +92,8 @@ namespace BlackGui
             return delta;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::replaceOrAddObjectsByCallsign(const ContainerType &container)
+        template <class T>
+        int CViewWithCallsignObjects<T>::replaceOrAddObjectsByCallsign(const ContainerType &container)
         {
             if (container.isEmpty()) { return 0; }
             ContainerType copy(this->container());
@@ -103,8 +103,8 @@ namespace BlackGui
             return c;
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::replaceOrAddObjectByCallsign(const ObjectType &object)
+        template<class T>
+        int CViewWithCallsignObjects<T>::replaceOrAddObjectByCallsign(const ObjectType &object)
         {
             ContainerType copy(this->container());
             const int c = copy.replaceOrAddObjectByCallsign(object);
@@ -113,8 +113,8 @@ namespace BlackGui
             return c;
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::selectObjects(const ContainerType &selectedObjects)
+        template<class T>
+        void CViewWithCallsignObjects<T>::selectObjects(const ContainerType &selectedObjects)
         {
             if (!selectedObjects.isEmpty())
             {
@@ -122,9 +122,9 @@ namespace BlackGui
             }
         }
 
-        template class CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
-        template class CViewWithCallsignObjects<BlackGui::Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>;
-        template class CViewWithCallsignObjects<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
+        template class CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel>;
+        template class CViewWithCallsignObjects<BlackGui::Models::CInterpolationSetupListModel>;
+        template class CViewWithCallsignObjects<BlackGui::Models::CSimulatedAircraftListModel>;
 
     } // namespace
 } // namespace

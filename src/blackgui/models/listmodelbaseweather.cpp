@@ -16,9 +16,9 @@ namespace BlackGui
     {
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>;
-        template class CListModelBase<BlackMisc::Weather::CTemperatureLayer, BlackMisc::Weather::CTemperatureLayerList, false>;
-        template class CListModelBase<BlackMisc::Weather::CWindLayer, BlackMisc::Weather::CWindLayerList, false>;
+        template class CListModelBase<BlackMisc::Weather::CCloudLayerList, false>;
+        template class CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>;
+        template class CListModelBase<BlackMisc::Weather::CWindLayerList, false>;
 
     } // namespace
 } // namespace

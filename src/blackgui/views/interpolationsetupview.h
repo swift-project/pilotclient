@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Distributors
-        class BLACKGUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>
+        class BLACKGUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<Models::CInterpolationSetupListModel>
         {
             Q_OBJECT
 

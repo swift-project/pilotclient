@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircraft situation change view
-        class BLACKGUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationChangeListModel, BlackMisc::Aviation::CAircraftSituationChangeList, BlackMisc::Aviation::CAircraftSituationChange>
+        class BLACKGUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationChangeListModel>
         {
             Q_OBJECT
 

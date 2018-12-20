@@ -25,7 +25,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>
+        class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel>
         {
             Q_OBJECT
 

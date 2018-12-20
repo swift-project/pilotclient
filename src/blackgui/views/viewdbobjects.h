@@ -30,10 +30,22 @@ namespace BlackGui
     namespace Views
     {
         //! Base class for views with DB objects
-        template <class ModelClass, class ContainerType, class ObjectType, class KeyType> class CViewWithDbObjects :
-            public CViewBase<ModelClass, ContainerType, ObjectType>
+        template <class T> class CViewWithDbObjects :
+            public CViewBase<T>
         {
         public:
+            //! Model type
+            using ModelClass = T;
+
+            //! Model container type
+            using ContainerType = typename T::ContainerType;
+
+            //! Model container element type
+            using ObjectType = typename T::ObjectType;
+
+            //! Model DB key type
+            using KeyType = typename T::KeyType;
+
             //! Get latest object
             ObjectType latestObject() const;
 
@@ -64,9 +76,22 @@ namespace BlackGui
         };
 
         //! Base class for views with DB objects also orderable (based on BlackMisc::IOrderableList )
-        template <class ModelClass, class ContainerType, class ObjectType, class KeyType> class COrderableViewWithDbObjects :
-            public CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>
+        template <class T> class COrderableViewWithDbObjects :
+            public CViewWithDbObjects<T>
         {
+        public:
+            //! Model type
+            using ModelClass = T;
+
+            //! Model container type
+            using ContainerType = typename T::ContainerType;
+
+            //! Model container element type
+            using ObjectType = typename T::ObjectType;
+
+            //! Model DB key type
+            using KeyType = typename T::KeyType;
+
         protected:
             //! Constructor
             explicit COrderableViewWithDbObjects(QWidget *parent = nullptr);

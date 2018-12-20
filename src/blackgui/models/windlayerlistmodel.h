@@ -25,7 +25,7 @@ namespace BlackGui
     {
         //! Wind layer list model
         class BLACKGUI_EXPORT CWindLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CWindLayer, BlackMisc::Weather::CWindLayerList, false>
+            public CListModelBase<BlackMisc::Weather::CWindLayerList, false>
         {
             Q_OBJECT
 

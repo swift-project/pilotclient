@@ -39,7 +39,7 @@ namespace BlackGui
     {
         //! Aircraft view
         class BLACKGUI_EXPORT CSimulatedAircraftView :
-            public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
+            public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel>
         {
             Q_OBJECT
 

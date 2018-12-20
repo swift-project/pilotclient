@@ -28,10 +28,19 @@ namespace BlackGui
     namespace Models
     {
         //! List model for DB objects
-        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare = false> class CListModelDbObjects :
-            public CListModelBase<ObjectType, ContainerType, UseCompare>
+        template <typename T, typename K, bool UseCompare = false> class CListModelDbObjects :
+            public CListModelBase<T, UseCompare>
         {
         public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
+            //! DB key type
+            using KeyType = K;
+
             //! Destructor
             virtual ~CListModelDbObjects() {}
 
@@ -45,7 +54,7 @@ namespace BlackGui
             virtual void clearHighlighting() override
             {
                 this->clearHighlightedDbKeys();
-                CListModelBase<ObjectType, ContainerType, UseCompare>::clearHighlighting();
+                CListModelBase<ContainerType, UseCompare>::clearHighlighting();
             }
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::hasHighlightedRows
@@ -76,10 +85,19 @@ namespace BlackGui
         };
 
         //! List model for DB objects
-        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare = false> class COrderableListModelDbObjects :
-            public CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>
+        template <typename T, typename K, bool UseCompare = false> class COrderableListModelDbObjects :
+            public CListModelDbObjects<T, K, UseCompare>
         {
         public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
+            //! DB key type
+            using KeyType = K;
+
             //! Destructor
             virtual ~COrderableListModelDbObjects() {}
 

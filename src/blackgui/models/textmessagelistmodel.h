@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Models
     {
         //! Text message list model
-        class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>
+        class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessageList>
         {
             Q_OBJECT
 

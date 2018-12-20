@@ -25,7 +25,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class BLACKGUI_EXPORT CCloudLayerView : public CViewBase<Models::CCloudLayerListModel, BlackMisc::Weather::CCloudLayerList, BlackMisc::Weather::CCloudLayer>
+        class BLACKGUI_EXPORT CCloudLayerView : public CViewBase<Models::CCloudLayerListModel>
         {
             Q_OBJECT
 

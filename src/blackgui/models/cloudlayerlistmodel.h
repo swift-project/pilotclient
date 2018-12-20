@@ -25,7 +25,7 @@ namespace BlackGui
     {
         //! Cloud layer list model
         class BLACKGUI_EXPORT CCloudLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>
+            public CListModelBase<BlackMisc::Weather::CCloudLayerList, false>
         {
             Q_OBJECT
 

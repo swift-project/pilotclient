@@ -32,7 +32,7 @@ namespace BlackGui
     {
         //! Distributor list model
         class BLACKGUI_EXPORT CLiveryListModel :
-            public CListModelDbObjects<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int, true>
+            public CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>
         {
             Q_OBJECT
 

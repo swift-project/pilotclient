@@ -26,7 +26,7 @@ namespace BlackGui
         class CAtcStationTreeModel;
 
         //! ATC list model
-        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
+        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>
         {
             Q_OBJECT
 

@@ -33,7 +33,7 @@ namespace BlackGui
     {
         //! Distributors
         class BLACKGUI_EXPORT CLiveryView :
-            public CViewWithDbObjects<Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery, int>
+            public CViewWithDbObjects<Models::CLiveryListModel>
         {
             Q_OBJECT
 

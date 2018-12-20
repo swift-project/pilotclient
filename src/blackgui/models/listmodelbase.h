@@ -39,9 +39,16 @@ namespace BlackGui
     namespace Models
     {
         //! List model
-        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelBase : public CListModelBaseNonTemplate
+        template <typename T, bool UseCompare = false>
+        class CListModelBase : public CListModelBaseNonTemplate
         {
         public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
             //! Destructor
             virtual ~CListModelBase() {}
 

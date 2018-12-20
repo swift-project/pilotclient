@@ -29,10 +29,19 @@ namespace BlackGui
     namespace Views
     {
         //! Base class for views with DB objects
-        template <class ModelClass, class ContainerType, class ObjectType> class CViewWithCallsignObjects :
-            public CViewBase<ModelClass, ContainerType, ObjectType>
+        template <class T> class CViewWithCallsignObjects :
+            public CViewBase<T>
         {
         public:
+            //! Model type
+            using ModelClass = T;
+
+            //! Model container type
+            using ContainerType = typename T::ContainerType;
+
+            //! Model container element type
+            using ObjectType = typename T::ObjectType;
+
             //! Select callsign
             void selectCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 

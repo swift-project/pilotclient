@@ -591,14 +591,23 @@ namespace BlackGui
         Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CViewBaseNonTemplate::Menu)
 
         //! Base class for views
-        template <class ModelClass, class ContainerType, class ObjectType> class CViewBase :
+        template <class T> class CViewBase :
             public CViewBaseNonTemplate,
-            public Models::ISelectionModel<ContainerType>
+            public Models::ISelectionModel<typename T::ContainerType>
         {
             // I cannot use Q_OBJECT here, because: Template classes are not supported by Q_OBJECT
             // and I cannot declare slots as SLOT because I have no Q_OBJECT macro
 
         public:
+            //! Model type
+            using ModelClass = T;
+
+            //! Model container type
+            using ContainerType = typename T::ContainerType;
+
+            //! Model container element type
+            using ObjectType = typename T::ObjectType;
+
             //! Destructor
             virtual ~CViewBase() { if (m_model) { m_model->markDestroyed(); }}
 

@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Views
     {
         //! Originator servers
-        class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel, BlackMisc::CIdentifierList, BlackMisc::CIdentifier>
+        class BLACKGUI_EXPORT CIdentifierView : public CViewBase<Models::CIdentifierListModel>
         {
             Q_OBJECT
 

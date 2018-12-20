@@ -22,7 +22,7 @@ namespace BlackGui
     namespace Models
     {
         //! Originator list model
-        class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>
+        class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifierList>
         {
             Q_OBJECT
 

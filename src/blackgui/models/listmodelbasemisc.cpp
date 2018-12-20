@@ -15,11 +15,11 @@ namespace BlackGui
     {
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList, false>;
-        template class CListModelBase<BlackMisc::CApplicationInfo, BlackMisc::CApplicationInfoList, true>;
-        template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
-        template class CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList, false>;
-        template class CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList, true>;
+        template class CListModelBase<BlackMisc::CIdentifierList, false>;
+        template class CListModelBase<BlackMisc::CApplicationInfoList, true>;
+        template class CListModelBase<BlackMisc::CStatusMessageList, true>;
+        template class CListModelBase<BlackMisc::CNameVariantPairList, false>;
+        template class CListModelBase<BlackMisc::CCountryList, true>;
 
     } // namespace
 } // namespace

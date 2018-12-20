@@ -28,7 +28,7 @@ namespace BlackGui
     {
         //! Distributor list model
         class BLACKGUI_EXPORT CDistributorListModel :
-            public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
+            public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>
         {
             Q_OBJECT
 

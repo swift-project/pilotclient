@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Models
     {
         //! Client list model
-        class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
+        class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClientList>
         {
             Q_OBJECT
 

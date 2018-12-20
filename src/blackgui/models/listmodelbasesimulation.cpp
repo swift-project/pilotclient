@@ -15,11 +15,11 @@ namespace BlackGui
     {
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>;
-        template class CListModelBase<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList, false>;
-        template class CListModelBase<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics, true>;
+        template class CListModelBase<BlackMisc::Simulation::CAircraftModelList, true>;
+        template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraftList, true>;
+        template class CListModelBase<BlackMisc::Simulation::CDistributorList, true>;
+        template class CListModelBase<BlackMisc::Simulation::CInterpolationSetupList, false>;
+        template class CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>;
 
     } // namespace
 } // namespace

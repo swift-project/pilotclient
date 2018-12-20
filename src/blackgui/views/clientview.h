@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Views
     {
         //! Client view
-        class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>
+        class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel>
         {
             Q_OBJECT
 

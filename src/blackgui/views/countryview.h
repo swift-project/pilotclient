@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Countries
-        class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel, BlackMisc::CCountryList, BlackMisc::CCountry>
+        class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel>
         {
             Q_OBJECT
 

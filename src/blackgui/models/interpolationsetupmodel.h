@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Country list model
         class BLACKGUI_EXPORT CInterpolationSetupListModel :
-            public CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList, false>
+            public CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>
         {
             Q_OBJECT
 

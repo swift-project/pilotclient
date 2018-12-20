@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Wind layer view
-        class BLACKGUI_EXPORT CWindLayerView : public CViewBase<Models::CWindLayerListModel, BlackMisc::Weather::CWindLayerList, BlackMisc::Weather::CWindLayer>
+        class BLACKGUI_EXPORT CWindLayerView : public CViewBase<Models::CWindLayerListModel>
         {
             Q_OBJECT
 

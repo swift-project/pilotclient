@@ -26,7 +26,7 @@ namespace BlackGui
          * Status message list model
          */
         class BLACKGUI_EXPORT CStatusMessageListModel :
-            public CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>
+            public CListModelTimestampObjects<BlackMisc::CStatusMessageList, true>
         {
             Q_OBJECT
 

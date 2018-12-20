@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Models
     {
         //! Server list model
-        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>
+        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServerList, true>
         {
             Q_OBJECT
 

@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Matching statistics
-        class BLACKGUI_EXPORT CMatchingStatisticsView : public CViewBase<Models::CMatchingStatisticsModel, BlackMisc::Simulation::CMatchingStatistics, BlackMisc::Simulation::CMatchingStatisticsEntry>
+        class BLACKGUI_EXPORT CMatchingStatisticsView : public CViewBase<Models::CMatchingStatisticsModel>
         {
             Q_OBJECT
 

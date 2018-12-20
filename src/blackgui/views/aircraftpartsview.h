@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircraft parts
-        class BLACKGUI_EXPORT CAircraftPartsView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>
+        class BLACKGUI_EXPORT CAircraftPartsView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftPartsListModel>
         {
             Q_OBJECT
 

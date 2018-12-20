@@ -50,7 +50,7 @@ namespace BlackGui
 
         //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView :
-            public COrderableViewWithDbObjects<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>
+            public COrderableViewWithDbObjects<Models::CAircraftModelListModel>
         {
             Q_OBJECT
 

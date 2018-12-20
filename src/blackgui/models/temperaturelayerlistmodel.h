@@ -25,7 +25,7 @@ namespace BlackGui
     {
         //! Temperature layer list model
         class BLACKGUI_EXPORT CTemperatureLayerListModel :
-            public CListModelBase<BlackMisc::Weather::CTemperatureLayer, BlackMisc::Weather::CTemperatureLayerList, false>
+            public CListModelBase<BlackMisc::Weather::CTemperatureLayerList, false>
         {
             Q_OBJECT
 

@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Models
     {
         //! Client list model
-        class BLACKGUI_EXPORT CAircraftSituationListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>
+        class BLACKGUI_EXPORT CAircraftSituationListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationList, true>
         {
             Q_OBJECT
 

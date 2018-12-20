@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>
+        class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel>
         {
             Q_OBJECT
 

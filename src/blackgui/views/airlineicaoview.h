@@ -33,7 +33,7 @@ namespace BlackGui
     {
         //! Aircraft ICAO codes view
         class BLACKGUI_EXPORT CAirlineIcaoCodeView :
-            public CViewWithDbObjects<Models::CAirlineIcaoCodeListModel, BlackMisc::Aviation::CAirlineIcaoCodeList, BlackMisc::Aviation::CAirlineIcaoCode, int>
+            public CViewWithDbObjects<Models::CAirlineIcaoCodeListModel>
         {
             Q_OBJECT
 

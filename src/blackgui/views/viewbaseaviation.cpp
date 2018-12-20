@@ -13,14 +13,14 @@ namespace BlackGui
 {
     namespace Views
     {
-        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>;
-        template class CViewBase<BlackGui::Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>;
-        template class CViewBase<BlackGui::Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>;
-        template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel, BlackMisc::Aviation::CAircraftSituationChangeList, BlackMisc::Aviation::CAircraftSituationChange>;
-        template class CViewBase<BlackGui::Models::CAirlineIcaoCodeListModel, BlackMisc::Aviation::CAirlineIcaoCodeList, BlackMisc::Aviation::CAirlineIcaoCode>;
-        template class CViewBase<BlackGui::Models::CAircraftIcaoCodeListModel, BlackMisc::Aviation::CAircraftIcaoCodeList, BlackMisc::Aviation::CAircraftIcaoCode>;
-        template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>;
-        template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
-        template class CViewBase<BlackGui::Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery>;
+        template class CViewBase<BlackGui::Models::CAircraftModelListModel>;
+        template class CViewBase<BlackGui::Models::CAircraftPartsListModel>;
+        template class CViewBase<BlackGui::Models::CAircraftSituationListModel>;
+        template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel>;
+        template class CViewBase<BlackGui::Models::CAirlineIcaoCodeListModel>;
+        template class CViewBase<BlackGui::Models::CAircraftIcaoCodeListModel>;
+        template class CViewBase<BlackGui::Models::CAirportListModel>;
+        template class CViewBase<BlackGui::Models::CAtcStationListModel>;
+        template class CViewBase<BlackGui::Models::CLiveryListModel>;
     } // namespace
 } // namespace

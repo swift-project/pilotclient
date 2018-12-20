@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Views
     {
         //! Network servers
-        class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
+        class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel>
         {
             Q_OBJECT
 

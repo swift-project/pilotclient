@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Network servers
-        class BLACKGUI_EXPORT CApplicationInfoView : public CViewBase<Models::CApplicationInfoListModel, BlackMisc::CApplicationInfoList, BlackMisc::CApplicationInfo>
+        class BLACKGUI_EXPORT CApplicationInfoView : public CViewBase<Models::CApplicationInfoListModel>
         {
             Q_OBJECT
 

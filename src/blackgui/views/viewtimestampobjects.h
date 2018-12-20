@@ -23,10 +23,19 @@ namespace BlackGui
     namespace Views
     {
         //! Base class for views timestamp offset objects
-        template <class ModelClass, class ContainerType, class ObjectType> class CViewWithTimestampWithOffsetObjects :
-            public CViewBase<ModelClass, ContainerType, ObjectType>
+        template <class T> class CViewWithTimestampWithOffsetObjects :
+            public CViewBase<T>
         {
         public:
+            //! Model type
+            using ModelClass = T;
+
+            //! Model container type
+            using ContainerType = typename T::ContainerType;
+
+            //! Model container element type
+            using ObjectType = typename T::ObjectType;
+
             //! Insert as first element by keeping maxElements and the latest first
             void push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max);
 

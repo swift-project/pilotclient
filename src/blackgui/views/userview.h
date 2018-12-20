@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class BLACKGUI_EXPORT CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>
+        class BLACKGUI_EXPORT CUserView : public CViewBase<Models::CUserListModel>
         {
             Q_OBJECT
 

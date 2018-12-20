@@ -20,46 +20,46 @@ namespace BlackGui
 {
     namespace Models
     {
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>::CListModelTimestampObjects(const QString &translationContext, QObject *parent) :
-            CListModelBase<ObjectType, ContainerType, UseCompare>(translationContext, parent)
+        template <typename T, bool UseCompare>
+        CListModelTimestampObjects<T, UseCompare>::CListModelTimestampObjects(const QString &translationContext, QObject *parent) :
+            CListModelBase<ContainerType, UseCompare>(translationContext, parent)
         { }
 
-        template<typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>::addTimestampColumns()
+        template<typename T, bool UseCompare>
+        void CListModelTimestampObjects<T, UseCompare>::addTimestampColumns()
         {
             CListModelBaseNonTemplate::m_columns.addColumn(CColumn::standardString("timestamp", ObjectType::IndexUtcTimestampFormattedMdhmsz));
             CListModelBaseNonTemplate::m_columns.addColumn(CColumn("timestamp ms", "milliseconds since epoch", ObjectType::IndexMSecsSinceEpoch, new CIntegerFormatter()));
         }
 
-        template class CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
-        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
-        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
-        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>;
+        template class CListModelTimestampObjects<BlackMisc::CStatusMessageList, true>;
+        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftPartsList, true>;
+        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationList, true>;
+        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        CListModelTimestampWithOffsetObjects<ObjectType, ContainerType, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) :
-            CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>(translationContext, parent)
+        template <typename T, bool UseCompare>
+        CListModelTimestampWithOffsetObjects<T, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) :
+            CListModelTimestampObjects<ContainerType, UseCompare>(translationContext, parent)
         { }
 
-        template<typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelTimestampWithOffsetObjects<ObjectType, ContainerType, UseCompare>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
+        template<typename T, bool UseCompare>
+        void CListModelTimestampWithOffsetObjects<T, UseCompare>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
         {
             this->beginInsertRows(QModelIndex(), 0, 0);
-            CListModelBase<ObjectType, ContainerType, UseCompare>::m_container.push_frontKeepLatestAdjustedFirst(object, max);
+            CListModelBase<ContainerType, UseCompare>::m_container.push_frontKeepLatestAdjustedFirst(object, max);
             this->endInsertRows();
         }
 
-        template<typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelTimestampWithOffsetObjects<ObjectType, ContainerType, UseCompare>::addTimestampOffsetColumns()
+        template<typename T, bool UseCompare>
+        void CListModelTimestampWithOffsetObjects<T, UseCompare>::addTimestampOffsetColumns()
         {
-            CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>::addTimestampColumns();
+            CListModelTimestampObjects<ContainerType, UseCompare>::addTimestampColumns();
             CListModelBaseNonTemplate::m_columns.addColumn(CColumn("ms adj.", "milliseconds adjusted", ObjectType::IndexAdjustedMsWithOffset, new CIntegerFormatter()));
             CListModelBaseNonTemplate::m_columns.addColumn(CColumn("t.os.", "time offset", ObjectType::IndexOffsetMs, new CIntegerFormatter()));
         }
 
-        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
-        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
-        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>;
+        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftPartsList, true>;
+        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationList, true>;
+        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
     } // namespace
 } // namespace

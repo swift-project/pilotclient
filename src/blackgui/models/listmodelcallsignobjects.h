@@ -29,10 +29,16 @@ namespace BlackGui
     namespace Models
     {
         //! List model for callsign based objects (callsign is unique key)
-        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelCallsignObjects :
-            public CListModelBase<ObjectType, ContainerType, UseCompare>
+        template <typename T, bool UseCompare = false> class CListModelCallsignObjects :
+            public CListModelBase<T, UseCompare>
         {
         public:
+            //! Container type
+            using ContainerType = T;
+
+            //! Container element type
+            using ObjectType = typename T::value_type;
+
             //! Destructor
             virtual ~CListModelCallsignObjects() {}
 
@@ -46,7 +52,7 @@ namespace BlackGui
             virtual void clearHighlighting() override
             {
                 this->clearHighlightedCallsigns();
-                CListModelBase<ObjectType, ContainerType, UseCompare>::clearHighlighting();
+                CListModelBase<ContainerType, UseCompare>::clearHighlighting();
             }
 
             //! Set color for highlighting

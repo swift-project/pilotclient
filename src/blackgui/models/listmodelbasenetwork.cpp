@@ -15,10 +15,10 @@ namespace BlackGui
     {
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-        template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>;
-        template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>;
-        template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList, false>;
-        template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList, false>;
+        template class CListModelBase<BlackMisc::Network::CServerList, true>;
+        template class CListModelBase<BlackMisc::Network::CUserList, true>;
+        template class CListModelBase<BlackMisc::Network::CTextMessageList, false>;
+        template class CListModelBase<BlackMisc::Network::CClientList, false>;
 
     } // namespace
 } // namespace

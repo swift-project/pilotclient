@@ -13,8 +13,8 @@ namespace BlackGui
 {
     namespace Views
     {
-        template class CViewBase<BlackGui::Models::CCloudLayerListModel, BlackMisc::Weather::CCloudLayerList, BlackMisc::Weather::CCloudLayer>;
-        template class CViewBase<BlackGui::Models::CTemperatureLayerListModel, BlackMisc::Weather::CTemperatureLayerList, BlackMisc::Weather::CTemperatureLayer>;
-        template class CViewBase<BlackGui::Models::CWindLayerListModel, BlackMisc::Weather::CWindLayerList, BlackMisc::Weather::CWindLayer>;
+        template class CViewBase<BlackGui::Models::CCloudLayerListModel>;
+        template class CViewBase<BlackGui::Models::CTemperatureLayerListModel>;
+        template class CViewBase<BlackGui::Models::CWindLayerListModel>;
     } // namespace
 } // namespace

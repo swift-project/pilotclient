@@ -28,7 +28,7 @@ namespace BlackGui
     namespace Models
     {
         CClientListModel::CClientListModel(QObject *parent) :
-            CListModelBase<CClient, CClientList>("ViewClientList", parent)
+            CListModelBase<CClientList>("ViewClientList", parent)
         {
             m_columns.addColumn(CColumn("client", CClient::IndexIcon));
             m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));

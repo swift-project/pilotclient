@@ -28,20 +28,20 @@ namespace BlackGui
 {
     namespace Models
     {
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        CListModelBase<ObjectType, ContainerType, UseCompare>::CListModelBase(const QString &translationContext, QObject *parent)
+        template <typename T, bool UseCompare>
+        CListModelBase<T, UseCompare>::CListModelBase(const QString &translationContext, QObject *parent)
             : CListModelBaseNonTemplate(translationContext, parent)
         { }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        int CListModelBase<ObjectType, ContainerType, UseCompare>::rowCount(const QModelIndex &parentIndex) const
+        template <typename T, bool UseCompare>
+        int CListModelBase<T, UseCompare>::rowCount(const QModelIndex &parentIndex) const
         {
             Q_UNUSED(parentIndex);
             return this->containerOrFilteredContainer().size();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
         {
             Q_UNUSED(action);
             Q_UNUSED(row);
@@ -52,8 +52,8 @@ namespace BlackGui
             return true;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
         {
             Q_UNUSED(row);
             Q_UNUSED(column);
@@ -73,16 +73,16 @@ namespace BlackGui
             return true;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::isValidIndex(const QModelIndex &index) const
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::isValidIndex(const QModelIndex &index) const
         {
             if (!index.isValid()) { return false; }
             return (index.row() >= 0 && index.row() < this->rowCount(index) &&
                     index.column() >= 0 && index.column() < this->columnCount(index));
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QVariant CListModelBase<ObjectType, ContainerType, UseCompare>::data(const QModelIndex &index, int role) const
+        template <typename T, bool UseCompare>
+        QVariant CListModelBase<T, UseCompare>::data(const QModelIndex &index, int role) const
         {
             // check / init
             if (!this->isValidIndex(index)) { return QVariant(); }
@@ -113,8 +113,8 @@ namespace BlackGui
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
         {
             Qt::ItemDataRole dataRole = static_cast<Qt::ItemDataRole>(role);
             if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole)) { return false; }
@@ -145,8 +145,8 @@ namespace BlackGui
             return false;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::setInContainer(const QModelIndex &index, const ObjectType &obj)
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::setInContainer(const QModelIndex &index, const ObjectType &obj)
         {
             if (!index.isValid()) { return false; }
             int row = index.row();
@@ -155,8 +155,8 @@ namespace BlackGui
             return true;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        int CListModelBase<ObjectType, ContainerType, UseCompare>::update(const ContainerType &container, bool sort)
+        template <typename T, bool UseCompare>
+        int CListModelBase<T, UseCompare>::update(const ContainerType &container, bool sort)
         {
             if (m_modelDestroyed) { return 0; }
 
@@ -192,8 +192,8 @@ namespace BlackGui
             return newSize;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::update(const QModelIndex &index, const ObjectType &object)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::update(const QModelIndex &index, const ObjectType &object)
         {
             if (m_modelDestroyed) { return; }
             if (index.row() >= m_container.size()) { return; }
@@ -204,14 +204,14 @@ namespace BlackGui
             emit this->dataChanged(i1, i2); // which range has been changed
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::update(int rowIndex, const ObjectType &object)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::update(int rowIndex, const ObjectType &object)
         {
             this->update(this->index(rowIndex, 0), object);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        CWorker *CListModelBase<ObjectType, ContainerType, UseCompare>::updateAsync(const ContainerType &container, bool sort)
+        template <typename T, bool UseCompare>
+        CWorker *CListModelBase<T, UseCompare>::updateAsync(const ContainerType &container, bool sort)
         {
             Q_UNUSED(sort);
             if (m_modelDestroyed) { return nullptr; }
@@ -230,8 +230,8 @@ namespace BlackGui
             return worker;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
         {
             if (m_modelDestroyed) { return; }
             if (container.size() > asyncThreshold && sort)
@@ -245,15 +245,15 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::hasFilter() const
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::hasFilter() const
         {
             const bool f =  m_filter && m_filter->isValid();
             return f;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::removeFilter()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::removeFilter()
         {
             if (!this->hasFilter()) { return; }
             m_filter.reset(nullptr);
@@ -263,8 +263,8 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter)
         {
             if (!filter)
             {
@@ -286,8 +286,8 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ObjectType &CListModelBase<ObjectType, ContainerType, UseCompare>::at(const QModelIndex &index) const
+        template <typename T, bool UseCompare>
+        const typename CListModelBase<T, UseCompare>::ObjectType &CListModelBase<T, UseCompare>::at(const QModelIndex &index) const
         {
             if (index.row() < 0 || index.row() >= this->rowCount())
             {
@@ -300,20 +300,20 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::container() const
+        template <typename T, bool UseCompare>
+        const typename CListModelBase<T, UseCompare>::ContainerType &CListModelBase<T, UseCompare>::container() const
         {
             return m_container;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerFiltered() const
+        template <typename T, bool UseCompare>
+        const typename CListModelBase<T, UseCompare>::ContainerType &CListModelBase<T, UseCompare>::containerFiltered() const
         {
             return m_containerFiltered;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer(bool *filtered) const
+        template <typename T, bool UseCompare>
+        const typename CListModelBase<T, UseCompare>::ContainerType &CListModelBase<T, UseCompare>::containerOrFilteredContainer(bool *filtered) const
         {
             if (this->hasFilter())
             {
@@ -327,8 +327,8 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::push_back(const ObjectType &object)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::push_back(const ObjectType &object)
         {
             beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
             m_container.push_back(object);
@@ -344,8 +344,8 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template<typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::push_back(const ContainerType &container)
+        template<typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::push_back(const ContainerType &container)
         {
             beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
             m_container.push_back(container);
@@ -361,8 +361,8 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::insert(const ObjectType &object)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::insert(const ObjectType &object)
         {
             beginInsertRows(QModelIndex(), 0, 0);
             m_container.insert(m_container.begin(), object);
@@ -378,8 +378,8 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::insert(const ContainerType &container)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::insert(const ContainerType &container)
         {
             if (container.isEmpty()) { return; }
             beginInsertRows(QModelIndex(), 0, 0);
@@ -396,8 +396,8 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::remove(const ObjectType &object)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::remove(const ObjectType &object)
         {
             int oldSize = m_container.size();
             beginRemoveRows(QModelIndex(), 0, 0);
@@ -416,8 +416,8 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::clear()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::clear()
         {
             beginResetModel();
             m_container.clear();
@@ -426,14 +426,14 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::isEmpty() const
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::isEmpty() const
         {
             return m_container.isEmpty();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::updateFilteredContainer()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::updateFilteredContainer()
         {
             if (this->hasFilter())
             {
@@ -445,16 +445,16 @@ namespace BlackGui
             }
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::emitModelDataChanged()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::emitModelDataChanged()
         {
             const int n = this->containerOrFilteredContainer().size();
             emit this->modelDataChanged(n, this->hasFilter());
             emit this->changed();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
         {
             // underlying base class changed
             Q_UNUSED(topLeft);
@@ -463,30 +463,30 @@ namespace BlackGui
             this->emitModelDataChanged();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::onChangedDigest()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::onChangedDigest()
         {
             const int n = this->containerOrFilteredContainer().size();
             emit this->changedDigest();
             emit this->modelDataChangedDigest(n, this->hasFilter());
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::moveItems(const ContainerType &items, int position)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::moveItems(const ContainerType &items, int position)
         {
             // overridden in specialized class
             Q_UNUSED(items);
             Q_UNUSED(position);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::sort()
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::sort()
         {
             this->sort(this->getSortColumn(), this->getSortOrder());
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::sort(int column, Qt::SortOrder order)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::sort(int column, Qt::SortOrder order)
         {
             if (column == m_sortColumn && order == m_sortOrder) { return; }
 
@@ -502,8 +502,8 @@ namespace BlackGui
             this->updateContainerMaybeAsync(m_container, true);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::truncate(int maxNumber, bool forceSort)
+        template <typename T, bool UseCompare>
+        void CListModelBase<T, UseCompare>::truncate(int maxNumber, bool forceSort)
         {
             if (this->rowCount() <= maxNumber) { return; }
             if (forceSort)
@@ -515,8 +515,8 @@ namespace BlackGui
             this->updateContainerMaybeAsync(container, false);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        ContainerType CListModelBase<ObjectType, ContainerType, UseCompare>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
+        template <typename T, bool UseCompare>
+        typename CListModelBase<T, UseCompare>::ContainerType CListModelBase<T, UseCompare>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
         {
             if (m_modelDestroyed) { return container; }
             if (container.size() < 2 || !m_columns.isSortable(column))
@@ -542,8 +542,8 @@ namespace BlackGui
             return container.sorted(p);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QMimeData *CListModelBase<ObjectType, ContainerType, UseCompare>::mimeData(const QModelIndexList &indexes) const
+        template <typename T, bool UseCompare>
+        QMimeData *CListModelBase<T, UseCompare>::mimeData(const QModelIndexList &indexes) const
         {
             QMimeData *mimeData = new QMimeData();
             if (indexes.isEmpty()) { return mimeData; }
@@ -569,8 +569,8 @@ namespace BlackGui
             return mimeData;
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QJsonObject CListModelBase<ObjectType, ContainerType, UseCompare>::toJson(bool selectedOnly) const
+        template <typename T, bool UseCompare>
+        QJsonObject CListModelBase<T, UseCompare>::toJson(bool selectedOnly) const
         {
             const CVariant variant = CVariant::fromValue(
                                          selectedOnly && m_selectionModel ?
@@ -579,8 +579,8 @@ namespace BlackGui
             return variant.toJson();
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        QString CListModelBase<ObjectType, ContainerType, UseCompare>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
+        template <typename T, bool UseCompare>
+        QString CListModelBase<T, UseCompare>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
         {
             const CVariant variant = CVariant::fromValue(
                                          selectedOnly && m_selectionModel ?
@@ -589,8 +589,8 @@ namespace BlackGui
             return variant.toJsonString(format);
         }
 
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        bool CListModelBase<ObjectType, ContainerType, UseCompare>::isOrderable() const
+        template <typename T, bool UseCompare>
+        bool CListModelBase<T, UseCompare>::isOrderable() const
         {
             return false;
         }

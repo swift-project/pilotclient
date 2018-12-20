@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Models
     {
         //! Application info list model
-        class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfo, BlackMisc::CApplicationInfoList, true>
+        class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfoList, true>
         {
             Q_OBJECT
 

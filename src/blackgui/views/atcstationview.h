@@ -32,7 +32,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class BLACKGUI_EXPORT CAtcStationView : public CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
+        class BLACKGUI_EXPORT CAtcStationView : public CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel>
         {
             Q_OBJECT
 

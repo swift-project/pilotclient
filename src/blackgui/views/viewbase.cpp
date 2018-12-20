@@ -33,8 +33,8 @@ namespace BlackGui
 {
     namespace Views
     {
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CViewBase<ModelClass, ContainerType, ObjectType>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
+        template <class T>
+        CViewBase<T>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
         {
             this->setSortingEnabled(true);
             if (model)
@@ -43,8 +43,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::updateContainer(const ContainerType &container, bool sort, bool resize)
+        template <class T>
+        int CViewBase<T>::updateContainer(const ContainerType &container, bool sort, bool resize)
         {
             Q_ASSERT_X(m_model, Q_FUNC_INFO, "Missing model");
             if (container.isEmpty())
@@ -95,8 +95,8 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
+        template <class T>
+        CWorker *CViewBase<T>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
             // avoid unnecessary effort when empty
             if (container.isEmpty())
@@ -122,8 +122,8 @@ namespace BlackGui
             return worker;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
+        template <class T>
+        void CViewBase<T>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
         {
             if (container.isEmpty())
             {
@@ -140,8 +140,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
+        template <class T>
+        void CViewBase<T>::insert(const ObjectType &value, bool resize)
         {
             Q_ASSERT(m_model);
             if (this->rowCount() < 1)
@@ -156,8 +156,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ContainerType &container, bool resize)
+        template <class T>
+        void CViewBase<T>::insert(const ContainerType &container, bool resize)
         {
             Q_ASSERT(m_model);
             if (this->rowCount() < 1)
@@ -172,8 +172,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::push_back(const ObjectType &value, bool resize)
+        template <class T>
+        void CViewBase<T>::push_back(const ObjectType &value, bool resize)
         {
             Q_ASSERT(m_model);
             if (this->rowCount() < 1)
@@ -188,8 +188,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::push_back(const ContainerType &container, bool resize)
+        template <class T>
+        void CViewBase<T>::push_back(const ContainerType &container, bool resize)
         {
             Q_ASSERT(m_model);
             if (this->rowCount() < 1)
@@ -204,29 +204,29 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
+        template <class T>
+        const typename CViewBase<T>::ObjectType &CViewBase<T>::at(const QModelIndex &index) const
         {
             Q_ASSERT(m_model);
             return m_model->at(index);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::container() const
+        template <class T>
+        const typename CViewBase<T>::ContainerType &CViewBase<T>::container() const
         {
             Q_ASSERT(m_model);
             return m_model->container();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer(bool *filtered) const
+        template <class T>
+        const typename CViewBase<T>::ContainerType &CViewBase<T>::containerOrFilteredContainer(bool *filtered) const
         {
             Q_ASSERT(m_model);
             return m_model->containerOrFilteredContainer(filtered);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObjects() const
+        template <class T>
+        typename CViewBase<T>::ContainerType CViewBase<T>::selectedObjects() const
         {
             if (!this->hasSelection()) { return ContainerType(); }
             ContainerType c;
@@ -238,8 +238,8 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::unselectedObjects() const
+        template <class T>
+        typename CViewBase<T>::ContainerType CViewBase<T>::unselectedObjects() const
         {
             if (!this->hasSelection()) { return this->containerOrFilteredContainer(); }
             ContainerType c;
@@ -251,8 +251,8 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        ObjectType CViewBase<ModelClass, ContainerType, ObjectType>::firstSelectedOrDefaultObject() const
+        template <class T>
+        typename CViewBase<T>::ObjectType CViewBase<T>::firstSelectedOrDefaultObject() const
         {
             if (this->hasSelection())
             {
@@ -267,8 +267,8 @@ namespace BlackGui
             return ObjectType();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CPropertyIndexVariantMap &vm)
+        template <class T>
+        int CViewBase<T>::updateSelected(const CPropertyIndexVariantMap &vm)
         {
             if (vm.isEmpty()) { return 0; }
             if (!hasSelection()) { return 0; }
@@ -306,22 +306,22 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CVariant &variant, const CPropertyIndex &index)
+        template <class T>
+        int CViewBase<T>::updateSelected(const CVariant &variant, const CPropertyIndex &index)
         {
             const CPropertyIndexVariantMap vm(index, variant);
             return this->updateSelected(vm);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        ObjectType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObject() const
+        template <class T>
+        typename CViewBase<T>::ObjectType CViewBase<T>::selectedObject() const
         {
             const ContainerType c = this->selectedObjects();
             return c.frontOrDefault();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::removeSelectedRows()
+        template <class T>
+        int CViewBase<T>::removeSelectedRows()
         {
             if (!this->hasSelection()) { return 0; }
             if (this->isEmpty()) { return 0; }
@@ -348,8 +348,8 @@ namespace BlackGui
             return delta;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::presizeOrFullResizeToContents()
+        template <class T>
+        void CViewBase<T>::presizeOrFullResizeToContents()
         {
             const int rc = this->rowCount();
             if (rc > ResizeSubsetThreshold)
@@ -369,15 +369,15 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::clearHighlighting()
+        template <class T>
+        void CViewBase<T>::clearHighlighting()
         {
             Q_ASSERT(m_model);
             return m_model->clearHighlighting();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::materializeFilter()
+        template <class T>
+        void CViewBase<T>::materializeFilter()
         {
             Q_ASSERT(m_model);
             if (!m_model->hasFilter()) { return; }
@@ -387,44 +387,44 @@ namespace BlackGui
             this->updateContainerMaybeAsync(filtered);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::clear()
+        template <class T>
+        void CViewBase<T>::clear()
         {
             Q_ASSERT(m_model);
             m_model->clear();
             this->hideLoadIndicator();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::rowCount() const
+        template <class T>
+        int CViewBase<T>::rowCount() const
         {
             Q_ASSERT(m_model);
             return m_model->rowCount();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::columnCount() const
+        template <class T>
+        int CViewBase<T>::columnCount() const
         {
             Q_ASSERT(m_model);
             return m_model->columnCount(QModelIndex());
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::isEmpty() const
+        template <class T>
+        bool CViewBase<T>::isEmpty() const
         {
             Q_ASSERT(m_model);
             return m_model->rowCount() < 1;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::isOrderable() const
+        template <class T>
+        bool CViewBase<T>::isOrderable() const
         {
             Q_ASSERT(m_model);
             return m_model->isOrderable();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile)
+        template <class T>
+        void CViewBase<T>::allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile)
         {
             Q_ASSERT(m_model);
 
@@ -436,15 +436,15 @@ namespace BlackGui
             m_model->allowFileDrop(allowDropJsonFile);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::isDropAllowed() const
+        template <class T>
+        bool CViewBase<T>::isDropAllowed() const
         {
             Q_ASSERT(m_model);
             return m_model->isDropAllowed();
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::dropEvent(QDropEvent *event)
+        template<class T>
+        void CViewBase<T>::dropEvent(QDropEvent *event)
         {
             if (m_model && m_model->isJsonFileDropAllowed() && CGuiUtility::isMimeRepresentingReadableJsonFile(event->mimeData()))
             {
@@ -456,43 +456,43 @@ namespace BlackGui
             CViewBaseNonTemplate::dropEvent(event);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::acceptDrop(const QMimeData *mimeData) const
+        template <class T>
+        bool CViewBase<T>::acceptDrop(const QMimeData *mimeData) const
         {
             Q_ASSERT(m_model);
             const bool a = m_model->acceptDrop(mimeData);
             return a;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        template <class T>
+        bool CViewBase<T>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
             Q_ASSERT(m_model);
             return m_model->setSorting(propertyIndex, order);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        template <class T>
+        void CViewBase<T>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
             m_model->sortByPropertyIndex(propertyIndex, order);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson(bool selectedOnly) const
+        template <class T>
+        QJsonObject CViewBase<T>::toJson(bool selectedOnly) const
         {
             Q_ASSERT(m_model);
             return m_model->toJson(selectedOnly);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        QString CViewBase<ModelClass, ContainerType, ObjectType>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
+        template <class T>
+        QString CViewBase<T>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
         {
             Q_ASSERT(m_model);
             return m_model->toJsonString(format, selectedOnly);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::setObjectName(const QString &name)
+        template <class T>
+        void CViewBase<T>::setObjectName(const QString &name)
         {
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
@@ -501,33 +501,33 @@ namespace BlackGui
             m_model->setObjectName(modelName);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::takeFilterOwnership(std::unique_ptr<BlackGui::Models::IModelFilter<ContainerType> > &filter)
+        template <class T>
+        void CViewBase<T>::takeFilterOwnership(std::unique_ptr<BlackGui::Models::IModelFilter<ContainerType> > &filter)
         {
             this->derivedModel()->takeFilterOwnership(filter);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::removeFilter()
+        template <class T>
+        void CViewBase<T>::removeFilter()
         {
             this->derivedModel()->removeFilter();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::hasFilter() const
+        template <class T>
+        bool CViewBase<T>::hasFilter() const
         {
             return derivedModel()->hasFilter();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::addContainerTypesAsDropTypes(bool objectType, bool containerType)
+        template <class T>
+        void CViewBase<T>::addContainerTypesAsDropTypes(bool objectType, bool containerType)
         {
             if (objectType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>()); }
             if (containerType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>()); }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::initAsOrderable()
+        template <class T>
+        void CViewBase<T>::initAsOrderable()
         {
             Q_ASSERT_X(isOrderable(), Q_FUNC_INFO, "Model not orderable");
             this->allowDragDrop(true, true);
@@ -536,8 +536,8 @@ namespace BlackGui
             this->addContainerTypesAsDropTypes(true, true);
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::setTabWidgetViewText(QTabWidget *tw, int index)
+        template<class T>
+        void CViewBase<T>::setTabWidgetViewText(QTabWidget *tw, int index)
         {
             if (!tw) { return; }
             QString o = tw->tabText(index);
@@ -546,8 +546,8 @@ namespace BlackGui
             tw->setTabText(index, o);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
+        template <class T>
+        void CViewBase<T>::setSortIndicator()
         {
             if (m_model->hasValidSortColumn())
             {
@@ -558,8 +558,8 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
+        template <class T>
+        void CViewBase<T>::standardInit(ModelClass *model)
         {
             Q_ASSERT_X(model || m_model, Q_FUNC_INFO, "Missing model");
             if (model)
@@ -590,15 +590,15 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::reachedResizeThreshold(int containerSize) const
+        template <class T>
+        bool CViewBase<T>::reachedResizeThreshold(int containerSize) const
         {
             if (containerSize < 0) { return this->rowCount() > m_skipResizeThreshold; }
             return containerSize > m_skipResizeThreshold;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::performModeBasedResizeToContent()
+        template <class T>
+        void CViewBase<T>::performModeBasedResizeToContent()
         {
             // small set or large set? This only performs real resizing, no presizing
             // remark, see also presizeOrFullResizeToContents
@@ -612,15 +612,15 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
+        template <class T>
+        int CViewBase<T>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
         {
             ContainerType c(variant.to<ContainerType>());
             return this->updateContainer(c, sort, resize);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::updateSortIndicator()
+        template <class T>
+        void CViewBase<T>::updateSortIndicator()
         {
             if (this->derivedModel()->hasValidSortColumn())
             {
@@ -630,50 +630,50 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::mouseOverCallback(const QModelIndex &index, bool mouseOver)
+        template <class T>
+        void CViewBase<T>::mouseOverCallback(const QModelIndex &index, bool mouseOver)
         {
             // void
             Q_UNUSED(index);
             Q_UNUSED(mouseOver);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::drawDropIndicator(bool indicator)
+        template <class T>
+        void CViewBase<T>::drawDropIndicator(bool indicator)
         {
             m_dropIndicator = indicator;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::selectObjects(const ContainerType &selectedObjects)
+        template <class T>
+        void CViewBase<T>::selectObjects(const ContainerType &selectedObjects)
         {
             Q_UNUSED(selectedObjects);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::modifyLoadedJsonData(ContainerType &data) const
+        template <class T>
+        CStatusMessage CViewBase<T>::modifyLoadedJsonData(ContainerType &data) const
         {
             Q_UNUSED(data);
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no modification", true);
             return e;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::validateLoadedJsonData(const ContainerType &data) const
+        template <class T>
+        CStatusMessage CViewBase<T>::validateLoadedJsonData(const ContainerType &data) const
         {
             Q_UNUSED(data);
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "validation passed", true);
             return e;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::jsonLoadedAndModelUpdated(const ContainerType &data)
+        template <class T>
+        void CViewBase<T>::jsonLoadedAndModelUpdated(const ContainerType &data)
         {
             Q_UNUSED(data);
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(CMenuActions &menuActions)
+        template<class T>
+        void CViewBase<T>::customMenu(CMenuActions &menuActions)
         {
             CViewBaseNonTemplate::customMenu(menuActions);
 
@@ -684,8 +684,8 @@ namespace BlackGui
             }
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::loadJsonFile(const QString &fileName)
+        template<class T>
+        CStatusMessage CViewBase<T>::loadJsonFile(const QString &fileName)
         {
             CStatusMessage m;
             do
@@ -761,8 +761,8 @@ namespace BlackGui
             return m;
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::displayContainerAsJsonPopup(bool selectedOnly)
+        template<class T>
+        void CViewBase<T>::displayContainerAsJsonPopup(bool selectedOnly)
         {
             const ContainerType container = selectedOnly ? this->selectedObjects() : this->container();
             const QString json = container.toJsonString();
@@ -772,8 +772,8 @@ namespace BlackGui
             this->textEditDialog()->show();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson(const QString &directory)
+        template <class T>
+        CStatusMessage CViewBase<T>::ps_loadJson(const QString &directory)
         {
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
                                      tr("Load data file"),
@@ -782,8 +782,8 @@ namespace BlackGui
             return this->loadJsonFile(fileName);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson(bool selectedOnly, const QString &directory)
+        template <class T>
+        CStatusMessage CViewBase<T>::ps_saveJson(bool selectedOnly, const QString &directory)
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
                                      tr("Save data file"),
@@ -800,8 +800,8 @@ namespace BlackGui
                    CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::copy()
+        template<class T>
+        void CViewBase<T>::copy()
         {
             QClipboard *clipboard = QApplication::clipboard();
             if (!clipboard) { return; }
@@ -813,16 +813,16 @@ namespace BlackGui
             clipboard->setText(json);
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::cut()
+        template<class T>
+        void CViewBase<T>::cut()
         {
             if (!QApplication::clipboard()) { return; }
             this->copy();
             this->removeSelectedRows();
         }
 
-        template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::paste()
+        template<class T>
+        void CViewBase<T>::paste()
         {
             const QClipboard *clipboard = QApplication::clipboard();
             if (!clipboard) { return; }
@@ -844,15 +844,15 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::ps_filterDialogFinished(int status)
+        template <class T>
+        bool CViewBase<T>::ps_filterDialogFinished(int status)
         {
             QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
             return ps_filterWidgetChangedFilter(statusCode == QDialog::Accepted);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        bool CViewBase<ModelClass, ContainerType, ObjectType>::ps_filterWidgetChangedFilter(bool enabled)
+        template <class T>
+        bool CViewBase<T>::ps_filterWidgetChangedFilter(bool enabled)
         {
             if (enabled)
             {
@@ -885,30 +885,30 @@ namespace BlackGui
             return true; // handled
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_removeFilter()
+        template <class T>
+        void CViewBase<T>::ps_removeFilter()
         {
             this->derivedModel()->removeFilter();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_clicked(const QModelIndex &index)
+        template <class T>
+        void CViewBase<T>::ps_clicked(const QModelIndex &index)
         {
             if (!m_acceptClickSelection) { return; }
             if (!index.isValid()) { return; }
             emit objectClicked(CVariant::fromValue(at(index)));
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_doubleClicked(const QModelIndex &index)
+        template <class T>
+        void CViewBase<T>::ps_doubleClicked(const QModelIndex &index)
         {
             if (!m_acceptDoubleClickSelection) { return; }
             if (!index.isValid()) { return; }
             emit objectDoubleClicked(CVariant::fromValue(at(index)));
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_rowSelected(const QModelIndex &index)
+        template <class T>
+        void CViewBase<T>::ps_rowSelected(const QModelIndex &index)
         {
             if (!m_acceptRowSelection) { return; }
             if (!index.isValid()) { return; }

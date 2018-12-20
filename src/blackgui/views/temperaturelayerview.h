@@ -25,7 +25,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class BLACKGUI_EXPORT CTemperatureLayerView : public CViewBase<Models::CTemperatureLayerListModel, BlackMisc::Weather::CTemperatureLayerList, BlackMisc::Weather::CTemperatureLayer>
+        class BLACKGUI_EXPORT CTemperatureLayerView : public CViewBase<Models::CTemperatureLayerListModel>
         {
             Q_OBJECT
 

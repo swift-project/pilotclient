@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>
+        class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel>
         {
             Q_OBJECT
 

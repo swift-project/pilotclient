@@ -33,7 +33,7 @@ namespace BlackGui
     {
 
         //! Simple model displaying name / variant values
-        class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>
+        class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPairList>
         {
             Q_OBJECT
 
