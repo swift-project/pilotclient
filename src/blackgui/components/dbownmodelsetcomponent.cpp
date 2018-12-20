@@ -267,9 +267,8 @@ namespace BlackGui
             ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
             if (canSave)
             {
-                static const QString ss("save %1");
                 this->setSaveFileName(this->getModelSetSimulator());
-                ui->pb_SaveAsSetForSimulator->setText(ss.arg(this->getModelSetSimulator().toQString(true)));
+                ui->pb_SaveAsSetForSimulator->setText(QStringLiteral("save %1").arg(this->getModelSetSimulator().toQString(true)));
             }
             else
             {

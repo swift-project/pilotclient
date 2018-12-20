@@ -68,8 +68,7 @@ namespace BlackMisc
         QString CDbInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s("Table %1 with entries %1");
-            return s.arg(this->m_tableName).arg(this->m_entries);
+            return QStringLiteral("Table %1 with entries %1").arg(this->m_tableName).arg(this->m_entries);
         }
 
         CVariant CDbInfo::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

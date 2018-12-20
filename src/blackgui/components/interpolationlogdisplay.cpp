@@ -189,9 +189,8 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::onSliderChanged(int timeSecs)
         {
-            static const QString time("%1secs");
             m_updateTimer.setInterval(timeSecs * 1000);
-            ui->le_UpdateTime->setText(time.arg(timeSecs));
+            ui->le_UpdateTime->setText(QStringLiteral("%1secs").arg(timeSecs));
         }
 
         void CInterpolationLogDisplay::onCallsignEntered()

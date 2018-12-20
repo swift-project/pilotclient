@@ -89,12 +89,13 @@ namespace BlackSimPlugin
                 {
                     const int simIndex = static_cast<int>(FSUIPC_FS_Version);
                     const QString sim = CFsuipc::simulator(simIndex);
-                    QString ver = QStringLiteral("%1.%2.%3.%4%5").arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
+                    QString ver = QStringLiteral("%1.%2.%3.%4%5")
+                                  .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
                                   .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
                                   .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
                                   .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
                                   .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
-                    m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver, sim);
+                    m_fsuipcVersion = QStringLiteral("FSUIPC %1 (%2)").arg(ver, sim);
                     CLogMessage(this).info("FSUIPC connected: %1") << m_fsuipcVersion;
                 }
                 else

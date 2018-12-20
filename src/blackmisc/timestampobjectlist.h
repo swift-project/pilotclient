@@ -35,7 +35,7 @@ namespace BlackMisc
         void reset() { min = -1; max = -1; mean = -1;}
 
         //! As string
-        QString asString() const { static const QString s("Min: %1ms Max: %2ms Mean: %3ms"); return s.arg(min).arg(max).arg(mean, 0, 'f', 2); }
+        QString asString() const { return QStringLiteral("Min: %1ms Max: %2ms Mean: %3ms").arg(min).arg(max).arg(mean, 0, 'f', 2); }
     };
 
     //! List of objects with timestamp.

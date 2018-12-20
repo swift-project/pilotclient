@@ -1425,8 +1425,8 @@ namespace BlackSimPlugin
             Q_ASSERT_X(!hasPendingAdded || m_simConnectObjects.countPendingAdded() < 2, Q_FUNC_INFO, "There must be only 0..1 pending objects");
             if (this->showDebugLogMessage())
             {
-                this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' mode: '%2' model: '%3'").arg(newRemoteAircraft.getCallsignAsString(), modeToString(addMode), newRemoteAircraft.getModelString()));
-                this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' pending callsigns: '%2', pending objects: '%3'").arg(newRemoteAircraft.getCallsignAsString(), m_addPendingAircraft.getAllCallsignStrings(true).join(", "), m_simConnectObjects.getPendingAddedCallsigns().getCallsignStrings().join(", ")));
+                this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' mode: '%2' model: '%3'").arg(newRemoteAircraft.getCallsignAsString(), modeToString(addMode), newRemoteAircraft.getModelString()));
+                this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' pending callsigns: '%2', pending objects: '%3'").arg(newRemoteAircraft.getCallsignAsString(), m_addPendingAircraft.getAllCallsignStrings(true).join(", "), m_simConnectObjects.getPendingAddedCallsigns().getCallsignStrings().join(", ")));
             }
 
             // do we need to remove/add again because something has changed?
@@ -1452,7 +1452,7 @@ namespace BlackSimPlugin
 
                 this->physicallyRemoveRemoteAircraft(newRemoteAircraft.getCallsign());
                 m_addAgainAircraftWhenRemoved.replaceOrAddByCallsign(newRemoteAircraft);
-                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' re-added changed model '%2', will be added again").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
+                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' re-added changed model '%2', will be added again").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
                 return false;
             }
 
@@ -1530,7 +1530,7 @@ namespace BlackSimPlugin
             const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(initialSituation, sendGround, true, &underflowStatus);
 
             const QString modelString(newRemoteAircraft.getModelString());
-            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
             const QByteArray modelStringBa = toFsxChar(modelString);
             const QByteArray csBa = toFsxChar(callsign.toQString().left(12));
@@ -1553,9 +1553,8 @@ namespace BlackSimPlugin
             {
                 // we will request a new aircraft by request ID, later we will receive its object id
                 // so far this object id is 0 (DWORD)
-                static const QString mode("mode: %1");
                 const CSimConnectObject simObject = this->insertNewSimConnectObject(newRemoteAircraft, requestId, removedPendingObj);
-                this->traceSendId(simObject, Q_FUNC_INFO, mode.arg(CSimulatorFsxCommon::modeToString(addMode)), true);
+                this->traceSendId(simObject, Q_FUNC_INFO, QStringLiteral("mode: %1").arg(CSimulatorFsxCommon::modeToString(addMode)), true);
                 adding = true;
             }
             return adding;
@@ -1648,7 +1647,7 @@ namespace BlackSimPlugin
 
             // mark as removed
             simObject.setPendingRemoved(true);
-            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
             // call in SIM
             const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
@@ -2022,7 +2021,7 @@ namespace BlackSimPlugin
             }
 
             // missing lights info from simulator so far
-            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Missing light state in simulator for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Missing light state in simulator for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
 
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(DeferResendingLights, this, [ = ]
@@ -2032,7 +2031,7 @@ namespace BlackSimPlugin
                 const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
                 if (!currentSimObject.isReadyToSend()) { return; } // stale
                 if (lightsWanted != currentSimObject.getLightsAsSent())  { return; } // changed in between, so another call sendToggledLightsToSimulator is pending
-                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Resending light state for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
+                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Resending light state for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
                 this->sendToggledLightsToSimulator(currentSimObject, lightsWanted, true);
             });
         }
@@ -2567,7 +2566,7 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1'").arg(callsignsToBeRemoved.toStringList().join(", "))); }
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1'").arg(callsignsToBeRemoved.toStringList().join(", "))); }
             return callsignsToBeRemoved;
         }
 
@@ -2686,10 +2685,10 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_OPEN:
                 {
                     SIMCONNECT_RECV_OPEN *event = static_cast<SIMCONNECT_RECV_OPEN *>(pData);
-                    simListener->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
-                    simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simListener->m_simulatorVersion = QStringLiteral("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    simListener->m_simConnectVersion = QStringLiteral("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
-                    simListener->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
+                    simListener->m_simulatorDetails = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
                     const CStatusMessage msg = CStatusMessage(simListener).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
 
                     // avoid the same message over and over again

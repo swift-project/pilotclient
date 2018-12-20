@@ -449,7 +449,7 @@ namespace BlackCore
             if (clientParts.size() != clientSectionAttributes.size())
             {
                 logInconsistentData(
-                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, QString("VATSIM data file client parts: %1 attributes: %2 line: '%3'").arg(clientParts.size()).arg(clientSectionAttributes.size()).arg(currentLine))
+                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, QStringLiteral("VATSIM data file client parts: %1 attributes: %2 line: '%3'").arg(clientParts.size()).arg(clientSectionAttributes.size()).arg(currentLine))
                 );
                 return parts;
             }

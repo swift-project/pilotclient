@@ -548,7 +548,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         QString hr = m_humanReadable.value(key);
-        return hr.isEmpty() ? key : QString("%1 (%2)").arg(hr, key);
+        return hr.isEmpty() ? key : QStringLiteral("%1 (%2)").arg(hr, key);
     }
 
     void CValueCache::setHumanReadableName(const QString &key, const QString &name)
@@ -613,7 +613,7 @@ namespace BlackMisc
         {}
         const QString m_key;
         const QString m_name;
-        const QString m_nameWithKey = m_name.isEmpty() ? m_key : QString("%1 (%2)").arg(m_name, m_key);
+        const QString m_nameWithKey = m_name.isEmpty() ? m_key : QStringLiteral("%1 (%2)").arg(m_name, m_key);
         LockFree<CVariant> m_value;
         std::atomic<qint64> m_timestamp { 0 };
         const int m_metaType = QMetaType::UnknownType;
@@ -838,7 +838,7 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, QString("Empty cache value %1").arg(element.m_nameWithKey), true);
+            return CStatusMessage(this, invalidSeverity, QStringLiteral("Empty cache value %1").arg(element.m_nameWithKey), true);
         }
         else if (value.userType() != element.m_metaType)
         {

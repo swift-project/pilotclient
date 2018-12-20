@@ -503,7 +503,7 @@ namespace BlackMisc
             {
                 if (msgs)
                 {
-                    msgs->push_back(ex.toStatusMessage(getLogCategories(), QString("Parsing flight plan from '%1' failed.").arg(fileName)));
+                    msgs->push_back(ex.toStatusMessage(getLogCategories(), QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
                 }
             }
             return CFlightPlan();

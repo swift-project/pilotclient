@@ -148,8 +148,7 @@ namespace BlackMisc
         QString CUrlLogList::getSummary() const
         {
             static const QString s("Entries: %1, pending: %2, errors: %3, min: %4ms avg: %5ms max: %6ms");
-            static const QString e("No data");
-            if (this->isEmpty()) return e;
+            if (this->isEmpty()) return QStringLiteral("No data");
             return s.arg(this->size()).arg(this->sizePending()).arg(this->sizeErrors()).arg(this->getMinResponseTime()).arg(this->getAverageResponseTime()).arg(this->getMaxResponseTime());
         }
     } // namespace

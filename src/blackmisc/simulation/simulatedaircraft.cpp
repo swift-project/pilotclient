@@ -466,8 +466,7 @@ namespace BlackMisc
             if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw."); }
             if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
             if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignator(); }
-            static const QString diff("%1 -> %2");
-            return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
+            return QStringLiteral("%1 -> %2").arg(icaoNw.getDesignator(), icao.getDesignator());
         }
 
         QString CSimulatedAircraft::getNetworkModelAirlineIcaoDifference() const

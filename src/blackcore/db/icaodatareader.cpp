@@ -452,7 +452,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
-                            msgs.push_back(ex.toStatusMessage(this, QString("Reading countries from '%1'").arg(fileName)));
+                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading countries from '%1'").arg(fileName)));
                         }
                     }
                 }
@@ -490,7 +490,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
-                            msgs.push_back(ex.toStatusMessage(this, QString("Reading aircraft ICAOs from '%1'").arg(fileName)));
+                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading aircraft ICAOs from '%1'").arg(fileName)));
                         }
                     }
                 }
@@ -528,7 +528,7 @@ namespace BlackCore
                         catch (const CJsonException &ex)
                         {
                             emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
-                            msgs.push_back(ex.toStatusMessage(this, QString("Reading airline ICAOs from '%1'").arg(fileName)));
+                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading airline ICAOs from '%1'").arg(fileName)));
                         }
                     }
                 }

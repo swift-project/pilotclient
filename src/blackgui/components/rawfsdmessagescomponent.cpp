@@ -236,8 +236,7 @@ namespace BlackGui
 
         QString CRawFsdMessagesComponent::rawFsdMessageToString(const CRawFsdMessage &rawFsdMessage)
         {
-            static const QString s("%1 %2");
-            return s.arg(rawFsdMessage.getFormattedUtcTimestampHmsz(), rawFsdMessage.getRawMessage());
+            return QStringLiteral("%1 %2").arg(rawFsdMessage.getFormattedUtcTimestampHmsz(), rawFsdMessage.getRawMessage());
         }
     }
 } // namespace

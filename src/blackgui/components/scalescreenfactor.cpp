@@ -35,10 +35,9 @@ namespace BlackGui
             ui->hs_Factor->setMaximum(max);
             ui->le_Factor->setValidator(new QIntValidator(min, max, ui->le_Factor));
 
-            static const QString info("%1-%2");
-            ui->le_Factor->setToolTip(info.arg(min).arg(max));
-            ui->le_Factor->setPlaceholderText(info.arg(min).arg(max));
-            ui->hs_Factor->setToolTip(info.arg(min, max));
+            ui->le_Factor->setToolTip(QStringLiteral("%1-%2").arg(min).arg(max));
+            ui->le_Factor->setPlaceholderText(QStringLiteral("%1-%2").arg(min).arg(max));
+            ui->hs_Factor->setToolTip(QStringLiteral("%1-%2").arg(min, max));
 
             const int v = (min + max) / 2;
             ui->hs_Factor->setValue(v);

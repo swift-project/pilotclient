@@ -982,10 +982,9 @@ namespace BlackGui
 
     QString CGuiApplication::getFontInfo() const
     {
-        static const QString info("Family: '%1', average width: %2");
         const QWidget *w = this->mainApplicationWidget();
         if (!w) { return QStringLiteral("Font info not available"); }
-        return info.
+        return QStringLiteral("Family: '%1', average width: %2").
                arg(w->font().family()).
                arg(w->fontMetrics().averageCharWidth());
     }

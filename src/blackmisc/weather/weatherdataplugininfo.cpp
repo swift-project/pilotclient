@@ -43,7 +43,7 @@ namespace BlackMisc
         QString CWeatherDataPluginInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QString("%1 (%2)").arg(m_name, m_identifier);
+            return QStringLiteral("%1 (%2)").arg(m_name, m_identifier);
         }
 
     } // ns

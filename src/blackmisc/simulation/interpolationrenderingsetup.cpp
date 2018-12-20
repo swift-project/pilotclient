@@ -112,7 +112,7 @@ namespace BlackMisc
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
-            return QString("Wrong index for %1").arg(i);
+            return QStringLiteral("Wrong index for %1").arg(i);
         }
 
         void CInterpolationAndRenderingSetupBase::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)

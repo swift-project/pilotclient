@@ -76,15 +76,15 @@ namespace BlackMisc
         {
             QString windAsString = QString("Wind: ");
             if (m_directionVariable) windAsString += "variable ";
-            else windAsString += QString("%1 ").arg(m_directionMain.toQString());
+            else windAsString += QStringLiteral("%1 ").arg(m_directionMain.toQString());
 
             if (m_directionFrom != CAngle() && m_directionTo != CAngle())
             {
-                windAsString += QString("variable between %1 and %2 ").arg(m_directionFrom.toQString(), m_directionTo.toQString());
+                windAsString += QStringLiteral("variable between %1 and %2 ").arg(m_directionFrom.toQString(), m_directionTo.toQString());
             }
 
-            windAsString += QString("at %2").arg(m_speed.toQString());
-            if (m_gustSpeed.value() > 0.5) windAsString += QString(" and gusts at %1").arg(m_gustSpeed.toQString());
+            windAsString += QStringLiteral("at %2").arg(m_speed.toQString());
+            if (m_gustSpeed.value() > 0.5) windAsString += QStringLiteral(" and gusts at %1").arg(m_gustSpeed.toQString());
             return windAsString;
         }
 

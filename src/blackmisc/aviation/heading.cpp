@@ -20,13 +20,12 @@ namespace BlackMisc
     {
         QString CHeading::convertToQString(bool i18n) const
         {
-            static const QString s("%1 %2");
             return i18n ?
-                   s.arg(CAngle::convertToQString(i18n),
+                   QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
                          this->isMagneticHeading() ?
                          QCoreApplication::translate("Aviation", "magnetic") :
                          QCoreApplication::translate("Aviation", "true")) :
-                   s.arg(CAngle::convertToQString(i18n),
+                   QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
                          this->isMagneticHeading() ? "magnetic" : "true");
         }
 

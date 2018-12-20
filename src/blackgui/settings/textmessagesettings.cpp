@@ -65,8 +65,7 @@ namespace BlackGui
         QString CTextMessageSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("Private: %1 supervisor: %2 frequency: %3 all: %4");
-            return s.arg(
+            return QStringLiteral("Private: %1 supervisor: %2 frequency: %3 all: %4").arg(
                        boolToOnOff(this->getPopupPrivateMessages()),
                        boolToOnOff(this->getPopupSupervisorMessages()),
                        boolToOnOff(this->getPopupFrequencyMessages()),

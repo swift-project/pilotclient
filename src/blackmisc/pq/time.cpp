@@ -128,14 +128,14 @@ namespace BlackMisc
         QString CTime::formattedHrsMinSec() const
         {
             const QList<int> parts = getHrsMinSecParts();
-            const QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
-            const QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
-            const QString s = QString("00%1").arg(QString::number(parts.at(2))).right(2);
+            const QString h = QStringLiteral("00%1").arg(QString::number(parts.at(0))).right(2);
+            const QString m = QStringLiteral("00%1").arg(QString::number(parts.at(1))).right(2);
+            const QString s = QStringLiteral("00%1").arg(QString::number(parts.at(2))).right(2);
 
             const QString fs = QStringLiteral("%1:%2:%3").arg(h, m, s);
             if (this->isNegativeWithEpsilonConsidered())
             {
-                return QString("-").append(fs);
+                return QStringLiteral("-").append(fs);
             }
             else
             {
@@ -158,9 +158,9 @@ namespace BlackMisc
         QString CTime::formattedHrsMin() const
         {
             const QList<int> parts = getHrsMinSecParts();
-            const QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
-            const QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
-            const QString fs = QString("%1:%2").arg(h, m);
+            const QString h = QStringLiteral("00%1").arg(QString::number(parts.at(0))).right(2);
+            const QString m = QStringLiteral("00%1").arg(QString::number(parts.at(1))).right(2);
+            const QString fs = QStringLiteral("%1:%2").arg(h, m);
             if (this->isNegativeWithEpsilonConsidered())
             {
                 return QString("-").append(fs);

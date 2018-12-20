@@ -145,7 +145,7 @@ namespace BlackGui
 
             if (!conflicts.isEmpty())
             {
-                QString message = QString("The selected combination conflicts with the following %1 combination(s):\n\n").arg(conflicts.size());
+                QString message = QStringLiteral("The selected combination conflicts with the following %1 combination(s):\n\n").arg(conflicts.size());
                 for (const CActionHotkey &conflict : conflicts)
                 {
                     message += conflict.toQString();

@@ -117,7 +117,7 @@ namespace BlackMisc
     QString CAtomicFile::randomSuffix()
     {
         constexpr auto max = 2176782335;
-        return QString("%1").arg(std::uniform_int_distribution<std::decay_t<decltype(max)>>(0, max)(Private::defaultRandomGenerator()), 6, 36, QChar('0'));
+        return QStringLiteral("%1").arg(std::uniform_int_distribution<std::decay_t<decltype(max)>>(0, max)(Private::defaultRandomGenerator()), 6, 36, QChar('0'));
     }
 
 #if defined(Q_OS_POSIX)

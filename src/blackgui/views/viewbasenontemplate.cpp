@@ -790,7 +790,7 @@ namespace BlackGui
             if (dockWidget)
             {
                 if (!menu.isEmpty()) { menu.addSeparator(); }
-                const QString mm = QString("Dock widget '%1'").arg(dockWidget->windowTitleOrBackup());
+                const QString mm = QStringLiteral("Dock widget '%1'").arg(dockWidget->windowTitleOrBackup());
                 QMenu *dockWidgetSubMenu = menu.addMenu(CIcons::text16(), mm);
                 dockWidget->addToContextMenu(dockWidgetSubMenu);
             }

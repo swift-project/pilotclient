@@ -196,7 +196,7 @@ namespace BlackMisc
             {
                 if (!msg.isEmpty())
                 {
-                    m_errorMsgs.append(QString("URL: %1 error: %2").arg(url.toQString(), msg));
+                    m_errorMsgs.append(QStringLiteral("URL: %1 error: %2").arg(url.toQString(), msg));
                 }
                 return obtainNextWorkingUrl(random, connectTimeoutMs);
             }

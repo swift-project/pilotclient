@@ -163,7 +163,7 @@ namespace BlackCore
                 const QFile f(localSetupFileValue);
                 if (!f.exists())
                 {
-                    sApp->cmdLineErrorMessage(QString("File '%1' does not exist)").arg(localSetupFileValue));
+                    sApp->cmdLineErrorMessage(QStringLiteral("File '%1' does not exist)").arg(localSetupFileValue));
                     break;
                 }
             }
@@ -183,7 +183,7 @@ namespace BlackCore
                             ok = true;
                             break;
                         }
-                        retry = sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString), true);
+                        retry = sApp->cmdLineErrorMessage(QStringLiteral("URL '%1' not reachable").arg(urlString), true);
                     }
                     while (retry);
                 }
@@ -364,7 +364,7 @@ namespace BlackCore
         }
         catch (const CJsonException &ex)
         {
-            return ex.toStatusMessage(this, QString("Parsing local setup file '%1'").arg(fn));
+            return ex.toStatusMessage(this, QStringLiteral("Parsing local setup file '%1'").arg(fn));
         }
     }
 
@@ -430,7 +430,7 @@ namespace BlackCore
                 {
                     // we downloaded an unparsable JSON file.
                     // as we control those files something is wrong
-                    const QString errorMsg = QString("Setup file loaded from '%1' cannot be parsed").arg(urlString);
+                    const QString errorMsg = QStringLiteral("Setup file loaded from '%1' cannot be parsed").arg(urlString);
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 
@@ -510,7 +510,7 @@ namespace BlackCore
                 {
                     // we downloaded an unparsable JSON file.
                     // as we control those files something is wrong
-                    const QString errorMsg = QString("Update info file loaded from '%1' cannot be parsed").arg(urlString);
+                    const QString errorMsg = QStringLiteral("Update info file loaded from '%1' cannot be parsed").arg(urlString);
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 

@@ -973,8 +973,8 @@ namespace BlackMisc
             ScoredModels scoreMap;
 
             // normally prefer colors if there is no airline
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models").arg(this->size()));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Start scoring in list with %1 models").arg(this->size()));
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
 
             int c = 1;
@@ -984,11 +984,9 @@ namespace BlackMisc
                 const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
                 if (ignoreZeroScores && score < 1) { continue; }
 
-                static const QString bMsg("--- Calculating #%1 '%2'---");
-                static const QString eMsg("--- End calculating #%1 ---");
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), bMsg.arg(c).arg(model.getModelStringAndDbKey()));
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Calculating #%1 '%2'---").arg(c).arg(model.getModelStringAndDbKey()));
                 if (log) { log->push_back(subMsgs); }
-                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), eMsg.arg(c));
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End calculating #%1 ---").arg(c));
                 c++;
                 scoreMap.insertMulti(score, model);
             }

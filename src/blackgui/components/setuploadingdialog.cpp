@@ -183,7 +183,7 @@ namespace BlackGui
         void CSetupLoadingDialog::displayOtherVersionsInfo()
         {
             const int other = CDirectoryUtils::applicationDataDirectoriesCount() - 1 ;
-            ui->le_OtherSwiftVersions->setText(QString("There is/are %1 other swift version(s) installed").arg(other));
+            ui->le_OtherSwiftVersions->setText(QStringLiteral("There is/are %1 other swift version(s) installed").arg(other));
             ui->pb_CopyFromSwift->setEnabled(other > 0);
         }
 

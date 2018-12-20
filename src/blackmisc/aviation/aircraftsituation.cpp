@@ -1030,8 +1030,7 @@ namespace BlackMisc
 
         QString CAircraftSituation::getPBHInfo() const
         {
-            static const QString pbh("P: %1 %2 B: %3 %4 H: %5 %6");
-            return pbh.arg(
+            return QStringLiteral("P: %1 %2 B: %3 %4 H: %5 %6").arg(
                        this->getPitch().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getPitch().valueRoundedWithUnit(CAngleUnit::rad(), 5, true),
                        this->getBank().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getBank().valueRoundedWithUnit(CAngleUnit::rad(), 5, true),
                        this->getHeading().valueRoundedWithUnit(CAngleUnit::deg(), 1, true), this->getHeading().valueRoundedWithUnit(CAngleUnit::rad(), 5, true)

@@ -65,7 +65,7 @@ namespace BlackMisc
 
         QString CVisibilityLayer::convertToQString(bool /** i18n **/) const
         {
-            QString visibilityAsString = QString("Visibility: %1 from %2 to %3");
+            QString visibilityAsString = QStringLiteral("Visibility: %1 from %2 to %3");
             visibilityAsString = visibilityAsString.arg(m_visibility.toQString(), m_base.toQString(), m_top.toQString());
             return visibilityAsString;
         }

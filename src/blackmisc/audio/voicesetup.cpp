@@ -23,8 +23,7 @@ namespace BlackMisc
         QString CVoiceSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("Port: %1");
-            return s.arg(getVatsimUdpVoicePort());
+            return QStringLiteral("Port: %1").arg(getVatsimUdpVoicePort());
         }
 
         CStatusMessageList CVoiceSetup::validate() const

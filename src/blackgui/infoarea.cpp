@@ -87,7 +87,7 @@ namespace BlackGui
         {
             menu->addAction(CIcons::dockTop16(), "Dock all", this, &CInfoArea::dockAllWidgets);
             menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
-            menu->addAction(CIcons::floatOne16(), QString("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
+            menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
             lockTabBarMenuAction->setIconText("Lock tab bar");
@@ -217,8 +217,7 @@ namespace BlackGui
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             if (withShortcut && i < keys.length())
             {
-                static const QString ks("Ctrl+%1"); // Qt::CTRL
-                action->setShortcut(QKeySequence(ks.arg(keys.at(i))));
+                action->setShortcut(QKeySequence(QStringLiteral("Ctrl+%1").arg(keys.at(i))));
             }
 
             connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);

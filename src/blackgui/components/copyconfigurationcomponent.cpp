@@ -430,8 +430,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    static const QString item("swift %1 (%2)");
-                    ui->cb_OtherVersions->addItem(item.arg(info.getVersionString(), info.getPlatform()));
+                    ui->cb_OtherVersions->addItem(QStringLiteral("swift %1 (%2)").arg(info.getVersionString(), info.getPlatform()));
                 }
                 m_otherVersionDirs.push_back(pair.first);
             }

@@ -414,8 +414,7 @@ namespace BlackGui
 
     QString CGuiUtility::marginsToString(const QMargins &margins)
     {
-        const QString s("%1:%2:%3:%4");
-        return s.arg(margins.left()).arg(margins.top()).arg(margins.right()).arg(margins.bottom());
+        return QStringLiteral("%1:%2:%3:%4").arg(margins.left()).arg(margins.top()).arg(margins.right()).arg(margins.bottom());
     }
 
     QMargins CGuiUtility::stringToMargins(const QString &str)
@@ -580,8 +579,8 @@ namespace BlackGui
         {
             // const QSize sd = QApplication::desktop()->screenGeometry().size();
             const QSize sd = QApplication::desktop()->screenGeometry(mainWidget).size();
-            desktop = QString("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
-            ratio = QString("ratio: %1").arg(mainWidget->devicePixelRatioF());
+            desktop = QStringLiteral("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
+            ratio = QStringLiteral("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }
         return s.
                arg(desktop).
@@ -620,11 +619,8 @@ namespace BlackGui
         if (!icon.hasFileResourcePath()) return {};
         const QString p = icon.getFileResourcePath();
 
-        static const QString htmlNoWidth("<img src=\"%1\">");
-        static const QString htmlWidth("<img src=\"%1\" width=%2>");
-
-        if (width < 0) { return htmlNoWidth.arg(p); }
-        return htmlWidth.arg(p, QString::number(width));
+        if (width < 0) { return QStringLiteral("<img src=\"%1\">").arg(p); }
+        return QStringLiteral("<img src=\"%1\" width=%2>").arg(p, QString::number(width));
     }
 
     QString CGuiUtility::asSimpleHtmlImageHeight(const CIcon &icon, int height)
@@ -633,7 +629,6 @@ namespace BlackGui
         if (!icon.hasFileResourcePath()) return {};
         const QString p = icon.getFileResourcePath();
 
-        static const QString htmlHeight("<img src=\"%1\" height=%2>");
-        return htmlHeight.arg(p, QString::number(height));
+        return QStringLiteral("<img src=\"%1\" height=%2>").arg(p, QString::number(height));
     }
 } // ns

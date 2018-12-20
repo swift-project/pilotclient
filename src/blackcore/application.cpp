@@ -504,7 +504,7 @@ namespace BlackCore
 
     const QString &CApplication::swiftVersionString() const
     {
-        static const QString s(QString("swift %1").arg(versionStringDetailed()));
+        static const QString s(QStringLiteral("swift %1").arg(versionStringDetailed()));
         return s;
     }
 

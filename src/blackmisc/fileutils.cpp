@@ -455,8 +455,7 @@ namespace BlackMisc
         if (!win) { return filePath; }
         if (!filePath.startsWith('/')) { return filePath; }
         if (filePath.startsWith("//")) { return filePath; }
-        static const QString f("/%1");
-        return f.arg(filePath);
+        return QStringLiteral("/%1").arg(filePath);
     }
 
     QStringList CFileUtils::fixWindowsUncPaths(const QStringList &filePaths)
@@ -546,7 +545,7 @@ namespace BlackMisc
             unit = i.next();
             currentSize /= 1024.0;
         }
-        return QString("%1 %2").arg(CMathUtils::roundAsString(currentSize, 2), unit);
+        return QStringLiteral("%1 %2").arg(CMathUtils::roundAsString(currentSize, 2), unit);
     }
 
     const QStringList &CFileUtils::executableSuffixes()

@@ -232,7 +232,7 @@ namespace BlackGui
             ui->led_MapperReady->setOn(on);
             if (on)
             {
-                const QString m = QString("Mapper with %1 models").arg(models);
+                const QString m = QStringLiteral("Mapper with %1 models").arg(models);
                 ui->led_MapperReady->setToolTip(m);
             }
         }

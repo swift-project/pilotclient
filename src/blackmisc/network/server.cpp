@@ -57,8 +57,7 @@ namespace BlackMisc
 
         QString CServer::convertToQString(bool i18n) const
         {
-            static const QString str("%1 %2 %3:%4 %5 %6 accepting: %7 FSD: %8 con.since: %9");
-            return str.
+            return QStringLiteral("%1 %2 %3:%4 %5 %6 accepting: %7 FSD: %8 con.since: %9").
                    arg(m_name, m_description, m_address).arg(m_port).
                    arg(m_user.toQString(i18n), m_ecosystem.getSystemString(),
                        boolToYesNo(m_isAcceptingConnections), m_fsdSetup.toQString(i18n), this->isConnected() ? this->getFormattedUtcTimestampHms() : "not con.");

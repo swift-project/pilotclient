@@ -232,8 +232,7 @@ namespace BlackGui
         QString CDbOwnModelsComponent::directorySelector(const CSimulatorInfo &simulatorInfo)
         {
             QString dir = m_directorySettings.get().getLastModelDirectoryOrDefault();
-            const QString text("Open directory (%1)");
-            dir = QFileDialog::getExistingDirectory(this, text.arg(simulatorInfo.toQString()), dir,
+            dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Open directory (%1)").arg(simulatorInfo.toQString()), dir,
                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             const QDir d(dir);
             if (d.exists())

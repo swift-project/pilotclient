@@ -22,8 +22,7 @@ namespace BlackMisc
             QString CModelSettings::convertToQString(bool i18n) const
             {
                 Q_UNUSED(i18n);
-                static const QString ms("Allow exclude: %1");
-                return ms.arg(boolToYesNo(this->m_allowExcludeModels));
+                return QStringLiteral("Allow exclude: %1").arg(boolToYesNo(this->m_allowExcludeModels));
             }
 
             CVariant CModelSettings::propertyByIndex(const CPropertyIndex &index) const

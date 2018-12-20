@@ -201,7 +201,7 @@ namespace BlackMisc
             default: break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return CVariant::fromValue(m);
     }
@@ -228,7 +228,7 @@ namespace BlackMisc
             default: break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
@@ -302,8 +302,7 @@ namespace BlackMisc
 
     QString ITimestampWithOffsetBased::getTimeOffsetWithUnit() const
     {
-        static const QString os("%1ms");
-        return os.arg(this->getTimeOffsetMs());
+        return QStringLiteral("%1ms").arg(this->getTimeOffsetMs());
     }
 
     CVariant ITimestampWithOffsetBased::propertyByIndex(const CPropertyIndex &index) const
@@ -320,7 +319,7 @@ namespace BlackMisc
             default: break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return CVariant();
     }
@@ -339,7 +338,7 @@ namespace BlackMisc
             default: break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
@@ -357,7 +356,7 @@ namespace BlackMisc
             default: break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return 0;
     }

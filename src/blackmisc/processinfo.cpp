@@ -27,13 +27,13 @@ namespace BlackMisc
 
     QString CProcessInfo::convertToQString(bool) const
     {
-        return QString("{ %1, %2 }").arg(QString::number(m_pid), m_name);
+        return QStringLiteral("{ %1, %2 }").arg(QString::number(m_pid), m_name);
     }
 
 #if defined(Q_OS_LINUX)
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
-        QString path = QFileInfo(QString("/proc/%1/exe").arg(pid)).symLinkTarget();
+        QString path = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
         return QFileInfo(path).fileName();
     }
 #elif defined(Q_OS_MACOS)

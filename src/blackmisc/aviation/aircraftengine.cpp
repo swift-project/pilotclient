@@ -31,8 +31,7 @@ namespace BlackMisc
         QString CAircraftEngine::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("%1: %2");
-            return s.arg(m_number).arg(BlackMisc::boolToOnOff(m_on));
+            return QStringLiteral("%1: %2").arg(m_number).arg(BlackMisc::boolToOnOff(m_on));
         }
     } // namespace
 } // namespace

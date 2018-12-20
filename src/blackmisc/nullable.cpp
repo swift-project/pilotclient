@@ -38,7 +38,7 @@ namespace BlackMisc
                 break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return CVariant::fromValue(m);
     }
@@ -57,7 +57,7 @@ namespace BlackMisc
                 break;
             }
         }
-        const QString m = QString("Cannot handle index %1").arg(index.toQString());
+        const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 

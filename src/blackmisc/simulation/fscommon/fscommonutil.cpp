@@ -366,7 +366,7 @@ namespace BlackMisc
                 messages.clear();
                 if (!CDirectoryUtils::existsUnemptyDirectory(CDirectoryUtils::shareTerrainProbeDirectory()))
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
                     return -1;
                 }
 
@@ -380,7 +380,7 @@ namespace BlackMisc
                 QDir td(targetDir);
                 if (!td.exists())
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("Cannot access target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("Cannot access target directory '%1'").arg(targetDir)));
                     return -1;
                 }
 
@@ -389,12 +389,12 @@ namespace BlackMisc
                 const bool hasDir = td.mkpath(targetDir);
                 if (!hasDir)
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QString("Cannot create target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("Cannot create target directory '%1'").arg(targetDir)));
                     return -1;
                 }
 
                 const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, QString("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
+                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, QStringLiteral("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
                 return copied;
             }
 

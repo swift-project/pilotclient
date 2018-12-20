@@ -48,8 +48,7 @@ namespace BlackGui
         QString CGeneralGuiSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("Widget style: %1");
-            return s.arg(this->m_widgetStyle);
+            return QStringLiteral("Widget style: %1").arg(this->m_widgetStyle);
         }
 
         BlackMisc::CVariant CGeneralGuiSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

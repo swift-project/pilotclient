@@ -155,7 +155,7 @@ namespace BlackGui
 
             m_currentDataSource = dataSource;
             ui->le_modelString->setCompleter(new QCompleter(modelStrings, this));
-            ui->le_modelString->setPlaceholderText(QString("model strings (%1/%2)").arg(modelStrings.size()).arg(simInfo));
+            ui->le_modelString->setPlaceholderText(QStringLiteral("model strings (%1/%2)").arg(modelStrings.size()).arg(simInfo));
         }
 
         void CAircraftModelStringCompleter::onTextChanged()

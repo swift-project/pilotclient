@@ -551,11 +551,11 @@ namespace BlackCore
                 brokenAircraft.setEnabled(false);
                 brokenAircraft.setRendered(false);
                 emit this->aircraftRenderingChanged(brokenAircraft);
-                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
+                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
                 return;
             }
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
-            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
 
             this->clearMatchingMessages(callsign);
             this->addMatchingMessages(callsign, matchingMessages);

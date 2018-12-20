@@ -116,7 +116,7 @@ namespace BlackGui
         const QFont f = widget->font();
         return CStyleSheetUtility::asStylesheet(
                    f.family(),
-                   QString("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
+                   QStringLiteral("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
                    CStyleSheetUtility::fontStyleAsString(f),
                    CStyleSheetUtility::fontWeightAsString(f)
                );

@@ -104,7 +104,7 @@ namespace BlackMisc
             {
                 QString file = filePatternInterpolationLog();
                 file.remove('*');
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 %2").arg(ts, file));
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -114,7 +114,7 @@ namespace BlackMisc
             {
                 QString file = filePatternPartsLog();
                 file.remove('*');
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 %2").arg(ts, file));
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -393,11 +393,9 @@ namespace BlackMisc
 
         QString CInterpolationLogger::msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3)
         {
-            static const QString s2("%1 %2");
-            if (t3 < 0) { return s2.arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2)); }
+            if (t3 < 0) { return QStringLiteral("%1 %2").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2)); }
 
-            static const QString s3("%1 %2 %3");
-            return s3.arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
+            return QStringLiteral("%1 %2 %3").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
         }
 
         QString SituationLog::toQString(

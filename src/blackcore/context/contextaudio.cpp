@@ -64,8 +64,8 @@ namespace BlackCore
             if (this->isEmptyObject()) { return "no audio"; }
             const CIdentifier i = this->audioRunsWhere();
             return this->isUsingImplementingObject() ?
-                   QString("Local audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName()) :
-                   QString("Remote audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
+                QStringLiteral("Local audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName()) :
+                QStringLiteral("Remote audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
         }
     } // ns
 } // ns

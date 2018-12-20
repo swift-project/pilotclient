@@ -78,9 +78,8 @@ namespace BlackMisc
 
             if (m_datum == FlightLevel)
             {
-                static const QString fls("FL%1");
                 const int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
-                return fls.arg(fl);
+                return QStringLiteral("FL%1").arg(fl);
             }
             else
             {

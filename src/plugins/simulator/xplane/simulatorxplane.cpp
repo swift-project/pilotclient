@@ -136,8 +136,7 @@ namespace BlackSimPlugin
 
         QString CSimulatorXPlane::getStatisticsSimulatorSpecific() const
         {
-            static const QString s("Add-time: %1ms/%2ms");
-            return s.arg(m_statsAddCurrentTimeMs).arg(m_statsAddMaxTimeMs);
+            return QStringLiteral("Add-time: %1ms/%2ms").arg(m_statsAddCurrentTimeMs).arg(m_statsAddMaxTimeMs);
         }
 
         void CSimulatorXPlane::resetAircraftStatistics()
@@ -349,7 +348,7 @@ namespace BlackSimPlugin
 
             emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
                                         m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
-            QString xplaneVersion = QString("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
+            QString xplaneVersion = QStringLiteral("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
             setSimulatorDetails("X-Plane", {}, xplaneVersion);
             connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
             connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);

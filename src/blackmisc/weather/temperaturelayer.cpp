@@ -71,7 +71,7 @@ namespace BlackMisc
 
         QString CTemperatureLayer::convertToQString(bool /** i18n **/) const
         {
-            return QString("%1 %2 at %3").arg(m_temperature.toQString(), QString::number(m_relativeHumidity), m_level.toQString());
+            return QStringLiteral("%1 %2 at %3").arg(m_temperature.toQString(), QString::number(m_relativeHumidity), m_level.toQString());
         }
 
     } // namespace

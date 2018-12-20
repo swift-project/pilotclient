@@ -50,7 +50,7 @@ namespace BlackGui
                     {
                         // this removes previously stashed models
                         this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
-                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Stashed %1 models").arg(m_modelsToStash.size()));
+                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Stashed %1 models").arg(m_modelsToStash.size()));
                         this->addStatusMessage(stashedMsg);
                         m_modelsToStash.clear();
                     }

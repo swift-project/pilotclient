@@ -82,8 +82,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("%1 %2 %3");
-            return s.arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
+            return QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
         }
 
         void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
@@ -143,8 +142,7 @@ namespace BlackMisc
                 score += 50; // same designator
                 if (log)
                 {
-                    static const QString s("Same designator: %1");
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
                 }
 
                 int scoreOld = score;
@@ -153,30 +151,27 @@ namespace BlackMisc
                 else if (this->getRank() < 10) { score += (10 - this->getRank()); }
                 if (score > scoreOld)
                 {
-                    static const QString s("Added rank: %1");
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
                 }
             }
             else
             {
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
-                    static const QString s("Added family: %1");
                     score += 30;
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
-                    static const QString s("Added combined code: %1");
                     score += 20;
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
                     if (this->getEnginesCount() == otherCode.getEnginesCount()) { score += 2; }
                     if (this->getEngineType() == otherCode.getEngineType()) { score += 2; }
                     if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
-                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added combined code parts: %1").arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }
             }
 
@@ -185,14 +180,12 @@ namespace BlackMisc
             {
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
-                    static const QString s("Matches manufacturer '%1': %2");
                     score += 10;
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(this->getManufacturer()).arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
-                    static const QString s("Contains manufacturer '%1': %2");
-                    CMatchingUtils::addLogDetailsToList(log, *this, s.arg(this->getManufacturer()).arg(score));
+                    CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                     score += 5;
                 }
             }
@@ -200,9 +193,8 @@ namespace BlackMisc
             // 0..75 so far
             if (this->isMilitary() == otherCode.isMilitary())
             {
-                static const QString s("Matches military flag '%1': %2");
                 score += 10;
-                CMatchingUtils::addLogDetailsToList(log, *this, s.arg(boolToYesNo(this->isMilitary())).arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             // 0..85
             return score;

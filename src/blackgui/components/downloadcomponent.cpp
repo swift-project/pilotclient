@@ -303,10 +303,9 @@ namespace BlackGui
 
         void CDownloadComponent::showStartedFileMessage(const CRemoteFile &rf)
         {
-            static const QString of("%1/%2");
             const int current = m_remoteFiles.size() - m_waitingForDownload.size();
             ui->le_Started->setText(rf.getName());
-            ui->le_StartedNumber->setText(of.arg(current).arg(m_remoteFiles.size()));
+            ui->le_StartedNumber->setText(QStringLiteral("%1/%2").arg(current).arg(m_remoteFiles.size()));
             ui->le_StartedUrl->setText(rf.getUrl().getFullUrl());
             ui->prb_Total->setMaximum(m_remoteFiles.size());
             ui->prb_Total->setValue(current - 1);
@@ -314,10 +313,9 @@ namespace BlackGui
 
         void CDownloadComponent::showCompletedFileMessage(const CRemoteFile &rf)
         {
-            static const QString of("%1/%2");
             const int current = m_remoteFiles.size() - m_waitingForDownload.size();
             ui->le_Completed->setText(rf.getName());
-            ui->le_CompletedNumber->setText(of.arg(current).arg(m_remoteFiles.size()));
+            ui->le_CompletedNumber->setText(QStringLiteral("%1/%2").arg(current).arg(m_remoteFiles.size()));
             ui->le_CompletedUrl->setText(rf.getUrl().getFullUrl());
             ui->prb_Total->setMaximum(m_remoteFiles.size());
             ui->prb_Total->setValue(current);
@@ -336,8 +334,7 @@ namespace BlackGui
 
         void CDownloadComponent::showFileInfo()
         {
-            static const QString info("Files: %1 size: %2");
-            ui->le_Info->setText(info.arg(m_remoteFiles.size()).arg(m_remoteFiles.getTotalFileSizeHumanReadable()));
+            ui->le_Info->setText(QStringLiteral("Files: %1 size: %2").arg(m_remoteFiles.size()).arg(m_remoteFiles.getTotalFileSizeHumanReadable()));
         }
     } // ns
 } // ns

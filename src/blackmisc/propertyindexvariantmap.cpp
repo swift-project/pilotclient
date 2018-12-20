@@ -51,7 +51,7 @@ namespace BlackMisc
 
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const
     {
-        if (this->isEmpty()) return QString("{wildcard: %1}").arg(m_wildcard ? "true" : "false");
+        if (this->isEmpty()) return QStringLiteral("{wildcard: %1}").arg(m_wildcard ? "true" : "false");
         QString s;
         for (const CPropertyIndex &index : makeKeysRange(m_values))
         {

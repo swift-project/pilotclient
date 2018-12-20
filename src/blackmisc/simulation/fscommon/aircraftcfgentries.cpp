@@ -38,9 +38,7 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::convertToQString(bool) const
             {
-                static const QString s = "{%1, %2, %3, %4, %5, %6}";
-                return s.
-                       arg(m_fileName).arg(m_index).
+                return QStringLiteral("{%1, %2, %3, %4, %5, %6}").arg(m_fileName).arg(m_index).
                        arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
             }
 

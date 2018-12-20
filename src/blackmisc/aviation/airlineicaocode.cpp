@@ -379,31 +379,31 @@ namespace BlackMisc
             if (otherCode.hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
                 score += 60;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same designator: %1").arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
             }
 
             // only for DB values we check VA
             if (bothFromDb && this->isVirtualAirline() == otherCode.isVirtualAirline())
             {
                 score += 20;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("VA equality: %1").arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("VA equality: %1").arg(score));
             }
 
             // consider the various names
             if (this->hasName() && this->getName() == otherCode.getName())
             {
                 score += 20;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same name '%1': %2").arg(this->getName()).arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same name '%1': %2").arg(this->getName()).arg(score));
             }
             else if (this->hasTelephonyDesignator() && this->getTelephonyDesignator() == otherCode.getTelephonyDesignator())
             {
                 score += 15;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
             }
             else if (this->hasSimplifiedName() && this->getSimplifiedName() == otherCode.getSimplifiedName())
             {
                 score += 10;
-                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
             }
             return score;
         }

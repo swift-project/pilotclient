@@ -119,7 +119,7 @@ namespace BlackMiscTest
             QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Value was not interpolated");
             const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
-            QVERIFY2(latDeg < latOld && lngDeg < lngOld, QString("Values shall decrease: %1/%2 %3/%4").arg(latDeg).arg(latOld).arg(lngDeg).arg(lngOld).toLatin1());
+            QVERIFY2(latDeg < latOld && lngDeg < lngOld, QStringLiteral("Values shall decrease: %1/%2 %3/%4").arg(latDeg).arg(latOld).arg(lngDeg).arg(lngOld).toLatin1());
             QVERIFY2(latDeg >= 0 && latDeg <= IRemoteAircraftProvider::MaxSituationsPerCallsign, "Values shall be in range");
             latOld = latDeg;
             lngOld = lngDeg;

@@ -43,7 +43,7 @@ namespace BlackMisc
         {
             constexpr int fieldWidth = 4;
             constexpr int base = 16;
-            QString subBlockNameBuffer = QString("\\StringFileInfo\\%1%2\\%3")
+            QString subBlockNameBuffer = QStringLiteral("\\StringFileInfo\\%1%2\\%3")
                     .arg(codePage.wLanguage, fieldWidth, base, QLatin1Char('0'))
                     .arg(codePage.wCodePage, fieldWidth, base, QLatin1Char('0'))
                     .arg(stringName);
@@ -62,7 +62,7 @@ namespace BlackMisc
         const QFile dllQFile(dllFile);
         if (!dllQFile.exists())
         {
-            result.errorMsg = QString("No file '%1'").arg(dllFile);
+            result.errorMsg = QStringLiteral("No file '%1'").arg(dllFile);
             return result;
         }
         const QString dll(QDir::toNativeSeparators(dllFile));
@@ -79,27 +79,27 @@ namespace BlackMisc
         dwSize = GetFileVersionInfoSize(pszFilePath, nullptr);
         if (dwSize == 0)
         {
-            result.errorMsg = QString("Error in GetFileVersionInfoSize: %1\n").arg(GetLastError());
+            result.errorMsg = QStringLiteral("Error in GetFileVersionInfoSize: %1\n").arg(GetLastError());
             return result;
         }
 
         std::vector<BYTE> pbVersionInfo(dwSize);
         if (!GetFileVersionInfo(pszFilePath, 0, dwSize, pbVersionInfo.data()))
         {
-            result.errorMsg = QString("Error in GetFileVersionInfo: %1\n").arg(GetLastError());
+            result.errorMsg = QStringLiteral("Error in GetFileVersionInfo: %1\n").arg(GetLastError());
             return result;
         }
 
         // Language independent version of VerQueryValue
         if (!VerQueryValue(pbVersionInfo.data(), TEXT("\\"), reinterpret_cast<LPVOID *>(&pFileInfo), &puLenFileInfo))
         {
-            result.errorMsg = QString("Error in VerQueryValue: %1\n").arg(GetLastError());
+            result.errorMsg = QStringLiteral("Error in VerQueryValue: %1\n").arg(GetLastError());
             return result;
         }
 
         // pFileInfo->dwFileVersionMS is usually zero.
         // However, you should check this if your version numbers seem to be wrong
-        result.fileVersion = QString("%1.%2.%3.%4")
+        result.fileVersion = QStringLiteral("%1.%2.%3.%4")
                                    .arg((pFileInfo->dwFileVersionMS >> 16) & 0xffff)
                                    .arg((pFileInfo->dwFileVersionMS >>  0) & 0xffff)
                                    .arg((pFileInfo->dwFileVersionLS >> 16) & 0xffff)
@@ -107,7 +107,7 @@ namespace BlackMisc
 
         // pFileInfo->dwProductVersionMS is usually zero. However, you should check
         // this if your version numbers seem to be wrong
-        result.productVersion = QString("%1.%2.%3.%4")
+        result.productVersion = QStringLiteral("%1.%2.%3.%4")
                                       .arg((pFileInfo->dwProductVersionMS >> 16) & 0xffff)
                                       .arg((pFileInfo->dwProductVersionMS >>  0) & 0xffff)
                                       .arg((pFileInfo->dwProductVersionLS >> 16) & 0xffff)

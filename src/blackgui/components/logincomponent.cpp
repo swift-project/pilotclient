@@ -311,8 +311,7 @@ namespace BlackGui
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
-                    static const QString extraInfo("[%1]");
-                    sGui->setExtraWindowTitle(extraInfo.arg(ownAircraft.getCallsignAsString()));
+                    sGui->setExtraWindowTitle(QStringLiteral("[%1]").arg(ownAircraft.getCallsignAsString()));
                     sGui->crashAndLogInfoUserName(currentServer.getUser().getRealNameAndId());
                     sGui->crashAndLogInfoFlightNetwork(currentServer.getEcosystem().toQString(true));
                     sGui->crashAndLogAppendInfo(currentServer.getServerSessionId());
@@ -770,8 +769,7 @@ namespace BlackGui
                     color = warning;
                 }
             }
-            static const QString sheet("background-color: %1;");
-            ui->le_SimulatorModel->setStyleSheet(sheet.arg(color));
+            ui->le_SimulatorModel->setStyleSheet(QStringLiteral("background-color: %1;").arg(color));
         }
 
         bool CLoginComponent::isVatsimNetworkTabSelected() const

@@ -86,7 +86,7 @@ namespace BlackGui
                     if (this->readDataFile(thisVersionModelSetFile, otherSet, otherVersion, simulator) && !otherSet.isEmpty())
                     {
                         CApplication::processEventsFor(250);
-                        if (this->confirmOverride(QString("Override model set for '%1'").arg(simulator.toQString())))
+                        if (this->confirmOverride(QStringLiteral("Override model set for '%1'").arg(simulator.toQString())))
                         {
                             m_modelSetCaches.setModelsForSimulator(otherSet, simulator);
                         }
@@ -105,7 +105,7 @@ namespace BlackGui
                     if (this->readDataFile(thisVersionModelCacheFile, otherCache, otherVersion, simulator) && !otherCache.isEmpty())
                     {
                         CApplication::processEventsFor(250);
-                        if (this->confirmOverride(QString("Override model cache for '%1'").arg(simulator.toQString())))
+                        if (this->confirmOverride(QStringLiteral("Override model cache for '%1'").arg(simulator.toQString())))
                         {
                             m_modelCaches.setModelsForSimulator(otherCache, simulator);
                         }
@@ -136,8 +136,7 @@ namespace BlackGui
             const QFileInfo fiOtherModelFile(otherModelFile);
             if (!fiOtherModelFile.exists())
             {
-                static const QString noSet("No models here: '%1'");
-                ui->le_Status->setText(noSet.arg(fiOtherModelFile.absoluteFilePath()));
+                ui->le_Status->setText(QStringLiteral("No models here: '%1'").arg(fiOtherModelFile.absoluteFilePath()));
                 return false;
             }
 
@@ -148,18 +147,15 @@ namespace BlackGui
             {
                 models = CAircraftModelList::fromMultipleJsonFormats(jsonString);
                 ui->tvp_AircraftModels->updateContainerAsync(models);
-                static const QString importSet("Imported models: '%1'");
-                ui->le_Status->setText(importSet.arg(fiOtherModelFile.absoluteFilePath()));
+                ui->le_Status->setText(QStringLiteral("Imported models: '%1'").arg(fiOtherModelFile.absoluteFilePath()));
             }
             catch (const CJsonException &ex)
             {
-                static const QString m("JSON format error. '%1'");
-                this->showOverlayMessage(ex.toStatusMessage(this, m.arg(fiOtherModelFile.absoluteFilePath())));
+                this->showOverlayMessage(ex.toStatusMessage(this, QStringLiteral("JSON format error. '%1'").arg(fiOtherModelFile.absoluteFilePath())));
                 return false;
             }
 
-            static const QString importSet("Imported %1 models '%2' for %3");
-            ui->le_Status->setText(importSet.arg(models.size()).arg(fiOtherModelFile.fileName(), sim.toQString()));
+            ui->le_Status->setText(QStringLiteral("Imported %1 models '%2' for %3").arg(models.size()).arg(fiOtherModelFile.fileName(), sim.toQString()));
             return true;
         }
 

@@ -51,9 +51,9 @@ namespace BlackMisc
             // from WGS is slow, so static const (only 1 time init)
             // https://dev.vatsim-germany.org/issues/322#note-2
             static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
-            const QString cs = QString("%1_TWR").arg(index);
-            const QString usr = QString("Joe %1").arg(index);
-            const QString id = QString("00000%1").arg(index).right(6);
+            const QString cs = QStringLiteral("%1_TWR").arg(index);
+            const QString usr = QStringLiteral("Joe %1").arg(index);
+            const QString id = QStringLiteral("00000%1").arg(index).right(6);
             const double f = 118.0 + (index % 30) * 0.25;
 
             const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
@@ -114,7 +114,7 @@ namespace BlackMisc
             for (int i = 0; i < number; i++)
             {
                 const char cc = 65 + (i % 26);
-                const QString icao = QString("EXX%1").arg(QLatin1Char(cc));
+                const QString icao = QStringLiteral("EXX%1").arg(QLatin1Char(cc));
                 CAirport a(icao);
                 a.setPosition(CCoordinateGeodetic(i, i, i));
                 list.push_back(a);
@@ -127,14 +127,14 @@ namespace BlackMisc
             CClientList list;
             for (int i = 0; i < number; i++)
             {
-                const CCallsign cs(QString("DXX%1").arg(i));
-                const QString rn = QString("Joe Doe%1").arg(i);
+                const CCallsign cs(QStringLiteral("DXX%1").arg(i));
+                const QString rn = QStringLiteral("Joe Doe%1").arg(i);
                 CUser user(QString::number(i), rn, cs);
                 user.setCallsign(cs);
                 CClient client(user);
                 client.addCapability(CClient::FsdWithInterimPositions);
                 client.addCapability(CClient::FsdWithIcaoCodes);
-                const QString myFooModel = QString("fooModel %1").arg(i);
+                const QString myFooModel = QStringLiteral("fooModel %1").arg(i);
                 client.setQueriedModelString(myFooModel);
                 list.push_back(client);
             }

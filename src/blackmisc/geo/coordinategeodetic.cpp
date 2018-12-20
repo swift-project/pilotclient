@@ -175,10 +175,9 @@ namespace BlackMisc
 
         QString ICoordinateGeodetic::convertToQString(bool i18n) const
         {
-            static const QString s = "Geodetic: {%1/%2, %3/%4, %5}";
             const CLatitude lat = this->latitude();
             const CLongitude lng = this->longitude();
-            return s.arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+            return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}").arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
                          lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
                          lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
                          lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),

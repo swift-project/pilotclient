@@ -78,7 +78,7 @@ namespace BlackMisc
         QString CJoystickButton::buttonIndexToString(qint32 buttonIndex)
         {
             QString buttonString("Button");
-            return buttonString.append(QString("%1").arg(buttonIndex));
+            return buttonString.append(QStringLiteral("%1").arg(buttonIndex));
         }
 
         int CJoystickButton::buttonIndexFromString(const QString &buttonName)

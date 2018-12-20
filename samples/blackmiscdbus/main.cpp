@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
             port = cmdlineArgs.at(cmdlineArgs.length() - 1);
         }
     }
-    QString addressTcp = QString("tcp:host=%1,port=%2").arg(ip, port);
+    QString addressTcp = QStringLiteral("tcp:host=%1,port=%2").arg(ip, port);
     QString address(useSessionBusForServer ? "session" : addressTcp); // testing with real transfer
 
     // Create a Testservice instance and register it with the session bus only if
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
         if (mode.startsWith("l"))
         {
             ip = "127.0.0.1";
-            addressTcp = QString("tcp:host=%1,port=%2").arg(ip, port);
+            addressTcp = QStringLiteral("tcp:host=%1,port=%2").arg(ip, port);
             goto Menu;
         }
         if (mode.startsWith("i"))
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
             if (p.length() > 1)
             {
                 ip = p.at(1);
-                addressTcp = QString("tcp:host=%1,port=%2").arg(ip, port);
+                addressTcp = QStringLiteral("tcp:host=%1,port=%2").arg(ip, port);
             }
             goto Menu;
         }
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
             if (p.length() > 1)
             {
                 port = p.at(1);
-                addressTcp = QString("tcp:host=%1,port=%2").arg(ip, port);
+                addressTcp = QStringLiteral("tcp:host=%1,port=%2").arg(ip, port);
             }
             goto Menu;
         }

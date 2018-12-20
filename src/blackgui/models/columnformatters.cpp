@@ -268,8 +268,7 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
             if (!dataCVariant.isValid()) { static const CVariant iv("invalid"); return iv; }
-            static const QString s("Invalid type: '%1'");
-            return CVariant::from(s.arg(dataCVariant.typeName()));
+            return CVariant::from(QStringLiteral("Invalid type: '%1'").arg(dataCVariant.typeName()));
         }
 
         Qt::ItemFlags CDelegateFormatter::flags(Qt::ItemFlags flags, bool editable) const

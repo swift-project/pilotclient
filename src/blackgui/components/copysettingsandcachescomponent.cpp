@@ -469,9 +469,7 @@ namespace BlackGui
 
         QString CCopySettingsAndCachesComponent::checkBoxText(const QString &text, bool setting)
         {
-            static const QString s("%1 [setting]");
-            static const QString c("%1 [cache]");
-            return setting ? s.arg(text) : c.arg(text);
+            return setting ? QStringLiteral("%1 [setting]").arg(text) : QStringLiteral("%1 [cache]").arg(text);
         }
 
         void CCopySettingsAndCachesWizardPage::initializePage()

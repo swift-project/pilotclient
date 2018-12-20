@@ -30,8 +30,7 @@ namespace BlackMisc
         QString CRawFsdMessage::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            static const QString s("%1 %2");
-            return s.arg(this->getFormattedUtcTimestampHmsz(), m_rawMessage);
+            return QStringLiteral("%1 %2").arg(this->getFormattedUtcTimestampHmsz(), m_rawMessage);
         }
 
         bool CRawFsdMessage::isPacketType(const QString &type) const

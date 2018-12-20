@@ -21,9 +21,8 @@ namespace BlackMisc
     {
         QString CElevationPlane::convertToQString(bool i18n) const
         {
-            static const QString s = "%1 radius: %2";
             const QString coordinate = CCoordinateGeodetic::toQString(i18n);
-            return s.arg(coordinate, m_radius.valueRoundedWithUnit(2, i18n));
+            return QStringLiteral("%1 radius: %2").arg(coordinate, m_radius.valueRoundedWithUnit(2, i18n));
         }
 
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :

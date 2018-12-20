@@ -128,8 +128,7 @@ namespace BlackMisc
 
         QString CAircraftModel::asHtmlSummary(const QString &separator) const
         {
-            static const QString html = "Model: %1 changed: %2%3Simulator: %4 Mode: %5 Distributor: %6%7Aircraft ICAO: %8%9Livery: %10";
-            return html
+            return QStringLiteral("Model: %1 changed: %2%3Simulator: %4 Mode: %5 Distributor: %6%7Aircraft ICAO: %8%9Livery: %10")
                    .arg(this->getModelStringAndDbKey(), this->getFormattedUtcTimestampYmdhms(), separator,
                         this->getSimulator().toQString(true), this->getModelModeAsString(), this->getDistributor().getIdAndDescription(), separator,
                         this->getAircraftIcaoCode().asHtmlSummary(), separator)
@@ -701,7 +700,7 @@ namespace BlackMisc
         {
             const int icaoScore = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode(), log);
             const int liveryScore = this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries, log);
-            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("ICAO score: %1 | livery score: %2").arg(icaoScore).arg(liveryScore));
+            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QStringLiteral("ICAO score: %1 | livery score: %2").arg(icaoScore).arg(liveryScore));
             return qRound(0.5 * (icaoScore + liveryScore));
         }
 

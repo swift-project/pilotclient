@@ -89,7 +89,7 @@ namespace BlackGui
                         {
                             this->currentModelView()->removeModelsWithModelString(m_modelsToStash);
                         }
-                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Auto stashed %1 models").arg(m_modelsToStash.size()));
+                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Auto stashed %1 models").arg(m_modelsToStash.size()));
                         this->addStatusMessage(stashedMsg);
                         m_modelsToStash.clear();
                     }
@@ -285,7 +285,7 @@ namespace BlackGui
             this->updateProgressIndicator(100);
             sGui->processEventsToRefreshGui();
 
-            const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Ready to auto stash %1 models").arg(autoStashed.size()));
+            const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Ready to auto stash %1 models").arg(autoStashed.size()));
             this->addStatusMessage(stashedMsg);
             m_modelsToStash = autoStashed;
             m_state = Completed;

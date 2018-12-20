@@ -283,7 +283,7 @@ namespace BlackGui
             if (validModels.size() > MaxModelPublished)
             {
                 validModels.truncate(MaxModelPublished);
-                msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QString("More than %1 values, values skipped").arg(MaxModelPublished)));
+                msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QStringLiteral("More than %1 values, values skipped").arg(MaxModelPublished)));
             }
 
             msgs.push_back(sGui->getWebDataServices()->asyncPublishModels(validModels));
@@ -340,7 +340,7 @@ namespace BlackGui
             {
                 return CStatusMessageList(
                 {
-                    CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
+                    CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, QStringLiteral("No errors in %1 model(s)").arg(models.size()))
                 });
             }
             else

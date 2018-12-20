@@ -19,7 +19,7 @@ namespace BlackCore
         QString CLauncherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QString("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
+            return QStringLiteral("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
         }
 
         CVariant CLauncherSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

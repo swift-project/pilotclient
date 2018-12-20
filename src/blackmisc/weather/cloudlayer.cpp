@@ -118,7 +118,7 @@ namespace BlackMisc
                 { Overcast, "overcast" }
             };
 
-            return QString("%1 from %2 to %3").arg(hash.value(getCoverage()), m_base.toQString(), m_top.toQString());
+            return QStringLiteral("%1 from %2 to %3").arg(hash.value(getCoverage()), m_base.toQString(), m_top.toQString());
         }
 
     } // namespace

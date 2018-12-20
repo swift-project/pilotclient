@@ -262,7 +262,7 @@ namespace BlackMisc
     }
 
     CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
-        CContinuousWorker(owner, QString("CDataCacheSerializer '%1'").arg(revisionFileName)),
+        CContinuousWorker(owner, QStringLiteral("CDataCacheSerializer '%1'").arg(revisionFileName)),
         m_cache(owner),
         m_revisionFileName(revisionFileName)
     {}
