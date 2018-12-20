@@ -355,7 +355,7 @@ namespace BlackMisc
         return caseInsensitiveStringCompare(c1, c2);
     }
 
-    const QString inApostrophes(const QString &in, bool ignoreEmpty)
+    QString inApostrophes(const QString &in, bool ignoreEmpty)
     {
         static const QString e;
         static const QString ea("''");
@@ -363,7 +363,7 @@ namespace BlackMisc
         return QStringLiteral("'") % in % QStringLiteral("'");
     }
 
-    const QString inQuotes(const QString &in, bool ignoreEmpty)
+    QString inQuotes(const QString &in, bool ignoreEmpty)
     {
         static const QString e;
         static const QString ea("\"\"");
