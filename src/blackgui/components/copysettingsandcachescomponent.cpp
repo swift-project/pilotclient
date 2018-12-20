@@ -445,7 +445,7 @@ namespace BlackGui
             }
             else
             {
-                ui->le_Status->setText(msg.getMessage() % QStringLiteral(" ") % value);
+                ui->le_Status->setText(msg.getMessage() % u' ' % value);
             }
             if (sGui) { sGui->processEventsToRefreshGui(); }
         }

@@ -119,28 +119,28 @@ namespace BlackMisc
             for (const auto &presentWeather : m_presentWeathers)
             {
                 if (!presentWeathers.isEmpty()) presentWeathers += ",";
-                presentWeathers += QStringLiteral(" ") % presentWeather.toQString();
+                presentWeathers += u' ' % presentWeather.toQString();
             }
 
             QString clouds;
             for (const auto &layer : m_cloudLayers)
             {
                 if (!clouds.isEmpty()) clouds += ",";
-                clouds += QStringLiteral(" ") % layer.toQString();
+                clouds += u' ' % layer.toQString();
             }
 
             const QString metarDescription =
                 QString("Station: %1 \n").arg(m_airport.getIcaoCode())
                 % QString("Date/Time: %1 %2 UTC\n").arg(m_reportDay).arg(m_reportTime.formattedHrsMin())
                 % m_windLayer.toQString()
-                % QStringLiteral("\n")
+                % u'\n'
                 % QString("Visibility: %1\n").arg(m_visibility.toQString())
-                % QString("Weather: ")
+                % u"Weather: "
                 % presentWeathers.simplified()
-                % QStringLiteral("\n")
-                % QStringLiteral("Clouds:")
+                % u'\n'
+                % u"Clouds:"
                 % clouds
-                % QStringLiteral("\n")
+                % u'\n'
                 % QString("Temperature: %1\n").arg(m_temperature.toQString())
                 % QString("Dewpoint: %1\n").arg(m_dewPoint.toQString())
                 % QString("Altimeter: %1\n").arg(m_altimeter.toQString());

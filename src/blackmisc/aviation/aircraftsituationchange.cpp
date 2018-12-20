@@ -111,23 +111,23 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             static const QString null("null");
             if (this->isNull()) { return null; }
-            return QStringLiteral("CS: '") % this->getCallsign().asString() %
-                   QStringLiteral(" ' ts: ") % this->getTimestampAndOffset(true) %
-                   QStringLiteral(" | situations:") % QString::number(m_situationsCount) %
-                   QStringLiteral(" | ts adj.: ") % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % QStringLiteral("-") % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
-                   QStringLiteral(" | just takeoff: ") % boolToYesNo(this->isJustTakingOff()) % QStringLiteral(" just touchdown: ") % boolToYesNo(this->isJustTouchingDown()) %
-                   QStringLiteral(" | all gnd: ") % boolToYesNo(this->isConstOnGround()) % QStringLiteral("/") % boolToYesNo(this->wasConstOnGround()) %
-                   QStringLiteral(" | all not gnd: ") % boolToYesNo(this->isConstNotOnGround()) % QStringLiteral("/") % boolToYesNo(this->wasConstNotOnGround()) %
-                   QStringLiteral(" | ascending: ") % boolToYesNo(this->isConstAscending()) % QStringLiteral(" descending: ") % boolToYesNo(this->isConstDescending()) %
-                   QStringLiteral(" | accelerating.: ") % boolToYesNo(this->isConstAccelerating()) % QStringLiteral(" decelarating: ") % boolToYesNo(this->isConstDecelarating()) %
-                   QStringLiteral(" | rotate up: ") % boolToYesNo(this->isRotatingUp()) %
-                   QStringLiteral(" | push back: ") % boolToYesNo(this->containsPushBack()) %
-                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % QStringLiteral(" [") % this->getSceneryDeviationHintAsString() %
-                   QStringLiteral("] | AGL delta: ") % m_gndDistMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_gndDistStdDev.valueRoundedWithUnit(1) %
-                   QStringLiteral(" | std.dev/mean: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
-                   QStringLiteral(" gs ") % m_gsMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_gsStdDev.valueRoundedWithUnit(1) %
-                   QStringLiteral(" alt. ") % m_altMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_altStdDev.valueRoundedWithUnit(1) %
-                   QStringLiteral(" elv. ") % m_elvMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_elvStdDev.valueRoundedWithUnit(1);
+            return u"CS: '" % this->getCallsign().asString() %
+                   u" ' ts: " % this->getTimestampAndOffset(true) %
+                   u" | situations:" % QString::number(m_situationsCount) %
+                   u" | ts adj.: " % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
+                   u" | just takeoff: " % boolToYesNo(this->isJustTakingOff()) % u" just touchdown: " % boolToYesNo(this->isJustTouchingDown()) %
+                   u" | all gnd: " % boolToYesNo(this->isConstOnGround()) % u'/' % boolToYesNo(this->wasConstOnGround()) %
+                   u" | all not gnd: " % boolToYesNo(this->isConstNotOnGround()) % u'/' % boolToYesNo(this->wasConstNotOnGround()) %
+                   u" | ascending: " % boolToYesNo(this->isConstAscending()) % u" descending: " % boolToYesNo(this->isConstDescending()) %
+                   u" | accelerating.: " % boolToYesNo(this->isConstAccelerating()) % u" decelarating: " % boolToYesNo(this->isConstDecelarating()) %
+                   u" | rotate up: " % boolToYesNo(this->isRotatingUp()) %
+                   u" | push back: " % boolToYesNo(this->containsPushBack()) %
+                   u" | scenery delta: " % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % u" [" % this->getSceneryDeviationHintAsString() %
+                   u"] | AGL delta: " % m_gndDistMean.valueRoundedWithUnit(1) % u'/' %  m_gndDistStdDev.valueRoundedWithUnit(1) %
+                   u" | std.dev/mean: pitch " %  m_pitchMean.valueRoundedWithUnit(1) % u'/' %  m_pitchStdDev.valueRoundedWithUnit(1) %
+                   u" gs " % m_gsMean.valueRoundedWithUnit(1) % u'/' % m_gsStdDev.valueRoundedWithUnit(1) %
+                   u" alt. " % m_altMean.valueRoundedWithUnit(1) % u'/' % m_altStdDev.valueRoundedWithUnit(1) %
+                   u" elv. " % m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
         }
 
         CVariant CAircraftSituationChange::propertyByIndex(const CPropertyIndex &index) const

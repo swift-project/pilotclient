@@ -44,15 +44,15 @@ namespace BlackMisc
 
         QString CAircraftParts::convertToQString(bool i18n) const
         {
-            return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
-                   QStringLiteral(" details: ") % this->getPartsDetailsAsString() %
-                   (m_guessingDetails.isEmpty() ? QString() : QStringLiteral(" - ") % m_guessingDetails) %
-                   QStringLiteral(" | on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
-                   QStringLiteral(" | lights: ") % m_lights.toQString(i18n) %
-                   QStringLiteral(" | gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
-                   QStringLiteral(" | flaps pct: ") % QString::number(m_flapsPercentage) %
-                   QStringLiteral(" | spoilers out: ") % BlackMisc::boolToYesNo(m_spoilersOut) %
-                   QStringLiteral(" | engines on: ") % m_engines.toQString(i18n);
+            return u"ts: " % this->getFormattedTimestampAndOffset(true) %
+                   u" details: " % this->getPartsDetailsAsString() %
+                   (m_guessingDetails.isEmpty() ? QString() : u" - " % m_guessingDetails) %
+                   u" | on ground: " % BlackMisc::boolToYesNo(m_isOnGround) %
+                   u" | lights: " % m_lights.toQString(i18n) %
+                   u" | gear down: " % BlackMisc::boolToYesNo(m_gearDown) %
+                   u" | flaps pct: " % QString::number(m_flapsPercentage) %
+                   u" | spoilers out: " % BlackMisc::boolToYesNo(m_spoilersOut) %
+                   u" | engines on: " % m_engines.toQString(i18n);
         }
 
         QJsonObject CAircraftParts::toIncrementalJson() const
@@ -130,13 +130,13 @@ namespace BlackMisc
                     const CSpeed slowSpeed = guessedVRotate * 0.30;
                     if (situation.getGroundSpeed() < slowSpeed)
                     {
-                        if (details) { *details += QStringLiteral("slow speed <") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                        if (details) { *details += u"slow speed <" % slowSpeed.valueRoundedWithUnit(1) % u" on ground"; }
                         parts.setFlapsPercent(0);
                         break;
                     }
                     else
                     {
-                        if (details) { *details += QStringLiteral("faster speed >") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                        if (details) { *details += u"faster speed >" % slowSpeed.valueRoundedWithUnit(1) % u" on ground"; }
                         parts.setFlapsPercent(0);
                         break;
                     }

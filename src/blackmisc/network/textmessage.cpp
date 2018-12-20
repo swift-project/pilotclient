@@ -41,10 +41,10 @@ namespace BlackMisc
             if (this->isPrivateMessage())
             {
                 return m_message %
-                       QStringLiteral(" ") % m_senderCallsign.toQString(i18n) %
-                       QStringLiteral(" ") % m_recipientCallsign.toQString(i18n);
+                       u' ' % m_senderCallsign.toQString(i18n) %
+                       u' ' % m_recipientCallsign.toQString(i18n);
             }
-            return m_message % QStringLiteral(" ") % m_frequency.toQString(i18n);
+            return m_message % u' ' % m_frequency.toQString(i18n);
         }
 
         bool CTextMessage::isPrivateMessage() const
@@ -87,7 +87,7 @@ namespace BlackMisc
         {
             if (textMessage.isEmpty()) { return false; }
             if (!this->canBeAppended(textMessage)) { return false; }
-            m_message += QStringLiteral(" ") % textMessage.getMessage();
+            m_message += u' ' % textMessage.getMessage();
             return true;
         }
 

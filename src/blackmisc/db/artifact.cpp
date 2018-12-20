@@ -105,16 +105,16 @@ namespace BlackMisc
         QString CArtifact::convertToQString(const QString &separator, bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QLatin1String("name: ") %
+            return u"name: " %
                    this->getName() %
                    separator %
-                   QLatin1String("size: ") %
+                   u"size: " %
                    this->getFileSizeHumanReadable() %
                    separator %
-                   QLatin1String("OS: ") %
+                   u"OS: " %
                    this->getPlatform().toQString(i18n) %
                    separator %
-                   QLatin1String("timestamp: ") %
+                   u"timestamp: " %
                    this->getFormattedUtcTimestampYmdhms();
         }
 

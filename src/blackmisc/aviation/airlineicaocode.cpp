@@ -60,7 +60,7 @@ namespace BlackMisc
         const QString CAirlineIcaoCode::getVDesignator() const
         {
             if (!this->isVirtualAirline()) { return m_designator; }
-            return QLatin1Char('V') % m_designator;
+            return u'V' % m_designator;
         }
 
         QString CAirlineIcaoCode::getVDesignatorDbKey() const
@@ -91,8 +91,8 @@ namespace BlackMisc
         QString CAirlineIcaoCode::getDesignatorNameCountry() const
         {
             return this->getDesignator() %
-                   (this->hasName() ? (QStringLiteral(" ") % this->getName()) : QString()) %
-                   (this->hasValidCountry() ? (QStringLiteral(" ") % this->getCountryIso()) : QString());
+                   (this->hasName() ? (u' ' % this->getName()) : QString()) %
+                   (this->hasValidCountry() ? (u' ' % this->getCountryIso()) : QString());
         }
 
         QString CAirlineIcaoCode::getSimplifiedName() const
@@ -185,10 +185,10 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             return this->getDesignatorDbKey() %
-                   (this->hasName() ? QStringLiteral(" ") % m_name : QString()) %
-                   QStringLiteral(" Op: ") % boolToYesNo(this->isOperating()) %
-                   QStringLiteral(" VA: ") % boolToYesNo(this->isVirtualAirline()) %
-                   QStringLiteral(" Mil: ") % boolToYesNo(this->isMilitary());
+                   (this->hasName() ? u' ' % m_name : QString()) %
+                   u" Op: " % boolToYesNo(this->isOperating()) %
+                   u" VA: " % boolToYesNo(this->isVirtualAirline()) %
+                   u" Mil: " % boolToYesNo(this->isMilitary());
         }
 
         CVariant CAirlineIcaoCode::propertyByIndex(const CPropertyIndex &index) const
@@ -303,7 +303,7 @@ namespace BlackMisc
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
             return (this->hasValidDesignator() ? this->getVDesignator() : QString()) %
-                   (this->hasName() ? QStringLiteral(" ") % m_name : QString()) %
+                   (this->hasName() ? u' ' % m_name : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
@@ -427,23 +427,23 @@ namespace BlackMisc
                 return CAirlineIcaoCode();
             }
 
-            QString designator(json.value(prefix % QStringLiteral("designator")).toString());
+            QString designator(json.value(prefix % u"designator").toString());
             if (!CAirlineIcaoCode::isValidAirlineDesignator(designator))
             {
                 designator = CAirlineIcaoCode::normalizeDesignator(designator);
             }
 
-            const QString iata(json.value(prefix % QStringLiteral("iata")).toString());
-            const QString telephony(json.value(prefix % QStringLiteral("callsign")).toString());
-            const QString name(json.value(prefix % QStringLiteral("name")).toString());
-            const QString countryIso(json.value(prefix % QStringLiteral("country")).toString());
-            const QString countryName(json.value(prefix % QStringLiteral("countryname")).toString());
-            const QString groupName(json.value(prefix % QStringLiteral("groupname")).toString());
-            const QString groupDesignator(json.value(prefix % QStringLiteral("groupdesignator")).toString());
-            const int groupId(json.value(prefix % QStringLiteral("groupid")).toInt(-1));
-            const bool va = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("va")).toString());
-            const bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("operating")).toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
+            const QString iata(json.value(prefix % u"iata").toString());
+            const QString telephony(json.value(prefix % u"callsign").toString());
+            const QString name(json.value(prefix % u"name").toString());
+            const QString countryIso(json.value(prefix % u"country").toString());
+            const QString countryName(json.value(prefix % u"countryname").toString());
+            const QString groupName(json.value(prefix % u"groupname").toString());
+            const QString groupDesignator(json.value(prefix % u"groupdesignator").toString());
+            const int groupId(json.value(prefix % u"groupid").toInt(-1));
+            const bool va = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"va").toString());
+            const bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"operating").toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
 
             CAirlineIcaoCode code(
                 designator, name,

@@ -221,7 +221,7 @@ namespace BlackMisc
                 v = m_simulatorVersion;
             }
 
-            if (!n.isEmpty() && !v.isEmpty()) { return n % QStringLiteral(" ") % v; }
+            if (!n.isEmpty() && !v.isEmpty()) { return n % u' ' % v; }
             if (!n.isEmpty()) { return n; }
 
             const CSimulatorInfo simInfo = this->getSimulatorInfo();

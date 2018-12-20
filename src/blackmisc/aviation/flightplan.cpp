@@ -65,12 +65,12 @@ namespace BlackMisc
         QString CFlightPlanRemarks::convertToQString(bool i18n) const
         {
             const QString s =
-                (m_registration.isEmpty() ? QString() : QStringLiteral("reg.: ") % m_registration.toQString(i18n))
-                % (!this->hasValidAirlineIcao() ? QString() : QStringLiteral(" airline: ") % m_airlineIcao.getDesignator())
-                % (m_radioTelephony.isEmpty() ?  QString() : QStringLiteral(" radio tel.:") % m_radioTelephony)
-                % (m_flightOperator.isEmpty() ? QString() : QStringLiteral(" operator: ") % m_flightOperator)
-                % (!m_selcalCode.isValid() ? QString() : QStringLiteral(" SELCAL: ") % m_selcalCode.getCode())
-                % QStringLiteral(" voice: ") % m_voiceCapabilities.toQString(i18n);
+                (m_registration.isEmpty() ? QString() : u"reg.: " % m_registration.toQString(i18n))
+                % (!this->hasValidAirlineIcao() ? QString() : u" airline: " % m_airlineIcao.getDesignator())
+                % (m_radioTelephony.isEmpty() ?  QString() : u" radio tel.:" % m_radioTelephony)
+                % (m_flightOperator.isEmpty() ? QString() : u" operator: " % m_flightOperator)
+                % (!m_selcalCode.isValid() ? QString() : u" SELCAL: " % m_selcalCode.getCode())
+                % u" voice: " % m_voiceCapabilities.toQString(i18n);
             return s.simplified().trimmed();
         }
 
@@ -89,7 +89,7 @@ namespace BlackMisc
             if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCapRemarks, Qt::CaseInsensitive); return r; }
             if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCapRemarks, Qt::CaseInsensitive); return r; }
             if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCapRemarks, Qt::CaseInsensitive); return r; }
-            return newCapRemarks % QStringLiteral(" ") % r;
+            return newCapRemarks % u' ' % r;
         }
 
         QString CFlightPlanRemarks::cleanRemarks(const QString &remarksIn)
@@ -282,18 +282,18 @@ namespace BlackMisc
         QString CFlightPlan::convertToQString(bool i18n) const
         {
             const QString s = m_callsign.toQString(i18n)
-                              % QLatin1Char(' ') % m_equipmentSuffix
-                              % QLatin1Char(' ') % m_originAirportIcao.toQString(i18n)
-                              % QLatin1Char(' ') % m_destinationAirportIcao.toQString(i18n)
-                              % QLatin1Char(' ') % m_alternateAirportIcao.toQString(i18n)
-                              % QLatin1Char(' ') % m_takeoffTimePlanned.toString("ddhhmm")
-                              % QLatin1Char(' ') % m_takeoffTimeActual.toString("ddhhmm")
-                              % QLatin1Char(' ') % m_enrouteTime.toQString(i18n)
-                              % QLatin1Char(' ') % m_fuelTime.toQString(i18n)
-                              % QLatin1Char(' ') % m_cruiseAltitude.toQString(i18n)
-                              % QLatin1Char(' ') % m_cruiseTrueAirspeed.toQString(i18n)
-                              % QLatin1Char(' ') % m_route
-                              % QLatin1Char(' ') % this->getRemarks();
+                              % u' ' % m_equipmentSuffix
+                              % u' ' % m_originAirportIcao.toQString(i18n)
+                              % u' ' % m_destinationAirportIcao.toQString(i18n)
+                              % u' ' % m_alternateAirportIcao.toQString(i18n)
+                              % u' ' % m_takeoffTimePlanned.toString("ddhhmm")
+                              % u' ' % m_takeoffTimeActual.toString("ddhhmm")
+                              % u' ' % m_enrouteTime.toQString(i18n)
+                              % u' ' % m_fuelTime.toQString(i18n)
+                              % u' ' % m_cruiseAltitude.toQString(i18n)
+                              % u' ' % m_cruiseTrueAirspeed.toQString(i18n)
+                              % u' ' % m_route
+                              % u' ' % this->getRemarks();
             return s;
         }
 
@@ -587,11 +587,11 @@ namespace BlackMisc
             QString s = prefix;
             if (!icao.isEmpty())
             {
-                s += (s.isEmpty() ? QString() : QStringLiteral("/")) % icao;
+                s += (s.isEmpty() ? u"" : u"/") % icao;
             }
             if (suffix.isEmpty()) { return s; }
             if (s.isEmpty()) { return suffix; }
-            return s % QStringLiteral("/") % suffix;
+            return s % u'/' % suffix;
         }
 
         CFlightPlan::FlightRules CFlightPlan::stringToFlightRules(const QString &flightRules)

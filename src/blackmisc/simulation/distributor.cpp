@@ -175,8 +175,8 @@ namespace BlackMisc
             }
 
             const CSimulatorInfo simulator = CSimulatorInfo::fromDatabaseJson(json, prefix);
-            const QString alias1(json.value(prefix % QStringLiteral("alias1")).toString());
-            const QString alias2(json.value(prefix % QStringLiteral("alias2")).toString());
+            const QString alias1(json.value(prefix % u"alias1").toString());
+            const QString alias2(json.value(prefix % u"alias2").toString());
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");
             CDistributor distributor("", description, alias1, alias2, simulator);
             distributor.setKeyAndTimestampFromDatabaseJson(json, prefix);

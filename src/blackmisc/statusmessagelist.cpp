@@ -232,20 +232,20 @@ namespace BlackMisc
             QString rowHtml;
             if (withLineNumbers)
             {
-                rowHtml = QLatin1String("<td>") % QString::number(line++) % QLatin1String("</td>");
+                rowHtml = u"<td>" % QString::number(line++) % u"</td>";
             }
 
             for (const CPropertyIndex &index : usedIndexes)
             {
-                rowHtml += QLatin1String("<td>") %
+                rowHtml += u"<td>" %
                            statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped().replace('\n', "<br>") %
-                           QLatin1String("</td>");
+                           u"</td>";
             }
 
             const QString severityClass = statusMessage.getSeverityAsString();
             html += QStringLiteral("<tr class=\"%1\">%2</tr>").arg(severityClass, rowHtml);
         }
-        return "<table>" % html % "</table>";
+        return u"<table>" % html % u"</table>";
     }
 
     const CPropertyIndexList &CStatusMessageList::simpleHtmlOutput()
@@ -262,10 +262,10 @@ namespace BlackMisc
 
     const QString htmlStyleSheetImpl()
     {
-        const QString style = QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % QLatin1String(" { color: lightgreen; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % QLatin1String(" { color: lightgreen; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % QLatin1String(" { color: yellow; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityError) % QLatin1String(" { color: red; }");
+        const QString style = u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % u" { color: lightgreen; } " %
+                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % u" { color: lightgreen; } " %
+                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % u" { color: yellow; } " %
+                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityError) % u" { color: red; }";
         return style;
     }
 

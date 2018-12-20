@@ -31,7 +31,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             if (m_hostName.isEmpty()) { return m_deviceName; }
-            return m_deviceName % QStringLiteral(" [") % this->getHostName() % QStringLiteral("]");
+            return m_deviceName % u" [" % this->getHostName() % u']';
         }
     } // Voice
 } // BlackMisc

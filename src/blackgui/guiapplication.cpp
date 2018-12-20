@@ -264,7 +264,7 @@ namespace BlackGui
     QString CGuiApplication::setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget) const
     {
         QString name(this->getApplicationNameVersionDetailed());
-        if (!extraInfo.isEmpty()) { name = extraInfo % QStringLiteral(" ") % name; }
+        if (!extraInfo.isEmpty()) { name = extraInfo % u' ' % name; }
         if (!mainWindowWidget) { return name; }
         mainWindowWidget->setWindowTitle(name);
         return name;

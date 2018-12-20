@@ -29,7 +29,7 @@ namespace BlackMisc
         if (m_dbKey.length() == 2)
         {
             // relative to images
-            return CIcon(QStringLiteral("flags/") % m_dbKey.toLower() % QStringLiteral(".png"), this->convertToQString());
+            return CIcon(u"flags/" % m_dbKey.toLower() % u".png", this->convertToQString());
         }
         else
         {
@@ -74,13 +74,13 @@ namespace BlackMisc
         if (!this->hasIsoCode()) { return QString(); }
         QString s(m_dbKey);
         if (m_name.isEmpty()) { return s; }
-        return QStringLiteral(" (") % m_name % QStringLiteral(")");
+        return u" (" % m_name % u')';
     }
 
     QString CCountry::getCombinedStringNameIso() const
     {
         if (!this->isValid()) { return QString(); }
-        return m_name % QStringLiteral(" -  ") % m_dbKey;
+        return m_name % u" -  " % m_dbKey;
     }
 
     void CCountry::setName(const QString &countryName)
@@ -185,12 +185,12 @@ namespace BlackMisc
             // when using relationship, this can be null
             return CCountry();
         }
-        const QString iso(json.value(prefix % QStringLiteral("id")).toString());
-        const QString name(json.value(prefix % QStringLiteral("country")).toString());
-        const QString alias1(json.value(prefix % QStringLiteral("alias1")).toString());
-        const QString alias2(json.value(prefix % QStringLiteral("alias2")).toString());
-        const QString iso3(json.value(prefix % QStringLiteral("iso3")).toString());
-        const QString historic(json.value(prefix % QStringLiteral("historic")).toString());
+        const QString iso(json.value(prefix % u"id").toString());
+        const QString name(json.value(prefix % u"country").toString());
+        const QString alias1(json.value(prefix % u"alias1").toString());
+        const QString alias2(json.value(prefix % u"alias2").toString());
+        const QString iso3(json.value(prefix % u"iso3").toString());
+        const QString historic(json.value(prefix % u"historic").toString());
         CCountry country(iso, name);
         country.setLoadedFromDb(true);
         country.setAlias1(alias1);

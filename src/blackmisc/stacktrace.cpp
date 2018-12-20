@@ -86,7 +86,7 @@ namespace BlackMisc
             SymFromAddr(process, reinterpret_cast<quintptr>(stack[i]), nullptr, &symbol.info);
             SymGetLineFromAddr64(process, reinterpret_cast<quintptr>(stack[i]), &displacement, &line);
 
-            result.push_back(QLatin1String(symbol.info.Name) % " line " % QString::number(line.LineNumber));
+            result.push_back(QLatin1String(symbol.info.Name) % u" line " % QString::number(line.LineNumber));
         }
         return result;
     }
@@ -120,12 +120,12 @@ namespace BlackMisc
 
             if (demangled)
             {
-                result.push_back(QLatin1String(demangled) % ' ' %
-                                 '(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')');
+                result.push_back(QLatin1String(demangled) % u' ' %
+                                 u'(' % QLatin1String(basename, basenameEnd - basename) % u' ' % QLatin1String(symbol, end - symbol) % u')');
             }
             else
             {
-                result.push_back('(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')');
+                result.push_back(u'(' % QLatin1String(basename, basenameEnd - basename) % u' ' % QLatin1String(symbol, end - symbol) % u')');
                 demangled = temp;
             }
         }

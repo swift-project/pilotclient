@@ -59,7 +59,7 @@ namespace BlackMisc
         {
             if (this->hasRealName())
             {
-                if (this->hasId()) { return this->getRealName() % QStringLiteral(" (") % this->getId()  % QStringLiteral(")"); }
+                if (this->hasId()) { return this->getRealName() % u" (" % this->getId()  % QStringLiteral(")"); }
                 return this->getRealName();
             }
             return this->getId();
@@ -78,11 +78,11 @@ namespace BlackMisc
             QString s = m_realname;
             if (this->hasId())
             {
-                s += QStringLiteral(" (") % m_id % QStringLiteral(")");
+                s += u" (" % m_id % u')';
             }
             if (this->hasCallsign())
             {
-                s += QStringLiteral(" ") % this->getCallsign().getStringAsSet();
+                s += u' ' % this->getCallsign().getStringAsSet();
             }
             return s;
         }

@@ -109,25 +109,25 @@ namespace BlackGui
                 m_altitudeStr = QStringLiteral("VFR");
                 break;
             case FlightFlevelInFeet:
-                m_altitudeStr = QStringLiteral("FL") % ui->le_FLft->text();
+                m_altitudeStr = u"FL" % ui->le_FLft->text();
                 break;
             case MetricLevelInTensOfMeters:
-                m_altitudeStr = QStringLiteral("S") % ui->le_Sm->text();
+                m_altitudeStr = u'S' % ui->le_Sm->text();
                 break;
             case AltitudeInHundredsOfFeet:
-                m_altitudeStr = QStringLiteral("A") % ui->le_AltitudeAFt->text();
+                m_altitudeStr = u'A' % ui->le_AltitudeAFt->text();
                 break;
             case AltitudeInTensOfMeters:
-                m_altitudeStr = QStringLiteral("M") % ui->le_AltitudeMm->text();
+                m_altitudeStr = u'M' % ui->le_AltitudeMm->text();
                 break;
             case AltitudeInFeet:
-                m_altitudeStr = ui->le_AltitudeFt->text() % QStringLiteral("ft");
+                m_altitudeStr = ui->le_AltitudeFt->text() % u"ft";
                 break;
             case AltitudeInMeters:
-                m_altitudeStr = ui->le_AltitudeM->text() % QStringLiteral("m");
+                m_altitudeStr = ui->le_AltitudeM->text() % u"m";
                 break;
             case AltitudeInMetersConvertedToFeet:
-                m_altitudeStr = ui->le_AltitudeConvertedFt->text() % QStringLiteral("m");
+                m_altitudeStr = ui->le_AltitudeConvertedFt->text() % u"m";
                 break;
             case StringOnly:
                 return;

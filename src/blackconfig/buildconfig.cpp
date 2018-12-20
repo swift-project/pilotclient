@@ -168,7 +168,7 @@ namespace BlackConfig
 
     const QString &CBuildConfig::getVersionStringPlatform()
     {
-        static const QString s = getPlatformString() % QStringLiteral(" ") % getVersionString();
+        static const QString s = getPlatformString() % u' ' % getVersionString();
         return s;
     }
 

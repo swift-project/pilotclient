@@ -427,8 +427,8 @@ namespace BlackMisc
 
         QString ICoordinateWithRelativePosition::convertToQString(bool i18n) const
         {
-            return m_relativeBearing.toQString(i18n) % QLatin1Char(' ') %
-                   m_relativeDistance.toQString(i18n) % QLatin1Char(' ') %
+            return m_relativeBearing.toQString(i18n) % u' ' %
+                   m_relativeDistance.toQString(i18n) % u' ' %
                    ICoordinateGeodetic::convertToQString(i18n);
         }
 

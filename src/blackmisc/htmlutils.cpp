@@ -24,18 +24,18 @@ namespace BlackMisc
             for (int c = 0; c < columns; c++)
             {
                 html += (i < size) ?
-                        QStringLiteral("<td>") % values.at(i) % QStringLiteral("</td>") :
+                        u"<td>" % values.at(i) % u"</td>" :
                         QStringLiteral("<td></td>");
                 i++;
             }
             html += QStringLiteral("</tr>");
         }
-        return QStringLiteral("<table>") % html % QStringLiteral("</table>");
+        return u"<table>" % html % u"</table>";
     }
 
     QString unwrappedTooltip(const QString &text)
     {
-        return QStringLiteral("<p style='white-space:pre'>") % text % QStringLiteral("</p>");
+        return u"<p style='white-space:pre'>" % text % u"</p>";
     }
 
 } // ns

@@ -48,10 +48,10 @@ namespace BlackMisc
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QStringLiteral("algorithm: '") % this->getMatchingAlgorithmAsString() %
-                   QStringLiteral("' mode: '") % this->getMatchingModeAsString() %
-                   QStringLiteral("' strategy: '") % this->getPickStrategyAsString() %
-                   QStringLiteral("'");
+            return u"algorithm: '" % this->getMatchingAlgorithmAsString() %
+                   u"' mode: '" % this->getMatchingModeAsString() %
+                   u"' strategy: '" % this->getPickStrategyAsString() %
+                   u'\'';
         }
 
         CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const

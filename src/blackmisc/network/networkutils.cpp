@@ -441,7 +441,7 @@ namespace BlackMisc
 
                 report +=
                     (report.isEmpty() ? empty : separator) %
-                    QString::number(++c) % QStringLiteral(": ") %
+                    QString::number(++c) % u": " %
                     CNetworkUtils::networkConfigurationToString(config);
             }
 
@@ -461,7 +461,7 @@ namespace BlackMisc
             {
                 report +=
                     (report.isEmpty() ? empty : separator) %
-                    QStringLiteral("QAM: ") %
+                    u"QAM: " %
                     CNetworkUtils::createNetworkAccessManagerReport(qam);
             }
 

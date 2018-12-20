@@ -85,9 +85,9 @@ namespace BlackMisc
 
     QString CApplicationInfo::asOtherSwiftVersionString(const QString &separator) const
     {
-        return QStringLiteral("Version; ")  % this->getVersionString() % QStringLiteral(" os: ") % this->getPlatform() % separator %
-               QStringLiteral("exe.path: ") % this->getExecutablePath() % separator %
-               QStringLiteral("app.data: ") % this->getApplicationDataDirectory();
+        return u"Version; "  % this->getVersionString() % u" os: " % this->getPlatform() % separator %
+               u"exe.path: " % this->getExecutablePath() % separator %
+               u"app.data: " % this->getApplicationDataDirectory();
     }
 
     QString CApplicationInfo::convertToQString(bool i18n) const

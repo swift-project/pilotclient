@@ -1183,7 +1183,7 @@ namespace BlackMisc
             {
                 html += html.isEmpty() ?
                         model.asHtmlSummary(" ") :
-                        QStringLiteral("<br>") % model.asHtmlSummary(" ");
+                        u"<br>" % model.asHtmlSummary(" ");
             }
             return html;
         }
@@ -1195,17 +1195,17 @@ namespace BlackMisc
             const int dbEntries = this->countWithValidDbKey();
             const double dbRatio = CMathUtils::round(static_cast<double>(100 * dbEntries) / this->size(), 1);
             return
-                QStringLiteral("Entries: ") % QString::number(this->size()) %
-                QStringLiteral(" | valid DB keys: ") % QString::number(dbEntries) %
-                QStringLiteral(" (") % QString::number(dbRatio) % QStringLiteral("%)") % separator %
-                QStringLiteral("color liveries: ") % QString::number(this->countModelsWithColorLivery()) %
-                QStringLiteral(" | airline liveries: ") % QString::number(this->countModelsWithAirlineLivery()) % separator %
-                QStringLiteral("VTOL: ") % QString::number(this->countVtolAircraft()) %
-                QStringLiteral(" | military: ") % QString::number(this->countMilitaryAircraft()) %
-                QStringLiteral(" | civilian: ") % QString::number(this->countCivilianAircraft()) % separator %
-                QStringLiteral("Different airlines: ") % QString::number(this->countDifferentAirlines()) % separator %
-                QStringLiteral("Combined types: '") % this->getCombinedTypesAsString() % QStringLiteral("'") % separator %
-                QStringLiteral("Simulators: ") % this->countPerSimulator().toQString();
+                u"Entries: " % QString::number(this->size()) %
+                u" | valid DB keys: " % QString::number(dbEntries) %
+                u" (" % QString::number(dbRatio) % u"%)" % separator %
+                u"color liveries: " % QString::number(this->countModelsWithColorLivery()) %
+                u" | airline liveries: " % QString::number(this->countModelsWithAirlineLivery()) % separator %
+                u"VTOL: " % QString::number(this->countVtolAircraft()) %
+                u" | military: " % QString::number(this->countMilitaryAircraft()) %
+                u" | civilian: " % QString::number(this->countCivilianAircraft()) % separator %
+                u"Different airlines: " % QString::number(this->countDifferentAirlines()) % separator %
+                u"Combined types: '" % this->getCombinedTypesAsString() % u'\'' % separator %
+                u"Simulators: " % this->countPerSimulator().toQString();
         }
 
         QString CAircraftModelList::coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator) const
@@ -1213,10 +1213,10 @@ namespace BlackMisc
             const bool combinedCodeForModel = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
             const bool airlineForModel = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
             return coverageSummary(separator) % separator %
-                   QStringLiteral("Data for input model, has combined: ") % boolToYesNo(combinedCodeForModel) %
+                   u"Data for input model, has combined: " % boolToYesNo(combinedCodeForModel) %
                    (
                        checkModel.hasAirlineDesignator() ?
-                       QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airlineForModel) :
+                       u" airline '" % checkModel.getAirlineIcaoCodeDesignator() % u"': " % boolToYesNo(airlineForModel) :
                        QString()
                    );
         }
@@ -1232,7 +1232,7 @@ namespace BlackMisc
                 QStringList designators(icaos.allDesignators().toList());
                 designators.sort();
                 stats += sep % sep %
-                         QStringLiteral("Aircraft ICAOs from DB: ") % sep %
+                         u"Aircraft ICAOs from DB: " % sep %
                          designators.join(", ");
             }
 
@@ -1241,7 +1241,7 @@ namespace BlackMisc
                 const CAirlineIcaoCodeList icaos = this->getAirlineIcaoCodesFromDb();
                 const QStringList designators = icaos.toIcaoDesignatorCompleterStrings();
                 stats += sep % sep %
-                         QStringLiteral("Airline ICAOs from DB: ") % sep %
+                         u"Airline ICAOs from DB: " % sep %
                          designators.join(", ");
             }
 
@@ -1250,7 +1250,7 @@ namespace BlackMisc
                 const CAircraftModelList dbModels = this->findObjectsWithDbKey();
                 stats += sep %
                          sep %
-                         QStringLiteral("DB objects:<br>---------") %
+                         u"DB objects:<br>---------" %
                          sep %
                          dbModels.htmlStatistics(false, false);
             }

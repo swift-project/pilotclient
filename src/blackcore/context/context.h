@@ -153,7 +153,7 @@ namespace BlackCore
             //! Path and context id
             QString buildPathAndContextId(const QString &path) const
             {
-                return path % QStringLiteral(":") % QString::number(this->getUniqueId());
+                return path % u':' % QString::number(this->getUniqueId());
             }
 
             //! Relay signals from this class

@@ -2397,7 +2397,7 @@ namespace BlackSimPlugin
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
             if (isFailure(hr)) { return; }
             if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeLast(); }
-            const TraceFsxSendId trace(dwLastId, simObject, details.isEmpty() ? functionName : details % QStringLiteral(", ") % functionName);
+            const TraceFsxSendId trace(dwLastId, simObject, details.isEmpty() ? functionName : details % u", " % functionName);
             m_sendIdTraces.push_front(trace);
         }
 
@@ -2418,7 +2418,7 @@ namespace BlackSimPlugin
             if (isOk(hr)) { return hr; }
             if (!warningMsg.isEmpty())
             {
-                CLogMessage(this).warning(warningMsg % QStringLiteral(" SimObject: ") % simObject.toQString());
+                CLogMessage(this).warning(warningMsg % u" SimObject: " % simObject.toQString());
             }
             this->triggerAutoTraceSendId();
             return hr;

@@ -114,7 +114,7 @@ namespace BlackGui
                 CActionItem *parentItem = m_rootItem.data();
                 for (const auto &token : tokens)
                 {
-                    currentPath += QLatin1Char('/') % token;
+                    currentPath += u'/' % token;
                     CActionItem *child = parentItem->findChildByName(token);
                     if (child == nullptr)
                     {

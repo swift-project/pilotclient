@@ -23,8 +23,8 @@ namespace BlackMisc
         QString CRole::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return "Role: " % m_name %
-                   " description: " % m_description %
+            return u"Role: " % m_name %
+                   u" description: " % m_description %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 

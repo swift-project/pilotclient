@@ -95,7 +95,7 @@ namespace BlackGui
             if (familySizeStlye.size() != 3) { return false; }
             static const QString f("font-family: \"%1\"; font-size: %2; font-style: %3");
 
-            const QString tableStyle = QStringLiteral("table { ") % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % QStringLiteral(" }");
+            const QString tableStyle = u"table { " % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % u" }";
             this->replaceTableStyle(tableStyle);
             return true;
         }
@@ -146,7 +146,7 @@ namespace BlackGui
                 if (ptSize < 6) { return false; }
             }
 
-            const QString pt = QString::number(ptSize) % "pt";
+            const QString pt = QString::number(ptSize) % u"pt";
             QString tableStyle = matches.front();
             thread_local const QRegularExpression rePt("\\d{1,2}pt");
             tableStyle.replace(rePt, pt);

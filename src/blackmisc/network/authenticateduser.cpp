@@ -39,7 +39,7 @@ namespace BlackMisc
         {
             if (hasValidRealName())
             {
-                return m_realname % QStringLiteral(" ") % getDbKeyAsStringInParentheses();
+                return m_realname % u' ' % getDbKeyAsStringInParentheses();
             }
             else
             {

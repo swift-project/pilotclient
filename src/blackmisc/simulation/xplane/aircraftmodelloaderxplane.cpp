@@ -70,22 +70,22 @@ namespace BlackMisc
                 {
                     if (model.getDistributor().hasDescription() && !model.getName().contains(model.getDistributor().getDescription()))
                     {
-                        return QStringLiteral("[ACF] ") % model.getName() % QStringLiteral(" by ") % model.getDistributor().getDescription();
+                        return u"[ACF] " % model.getName() % u" by " % model.getDistributor().getDescription();
                     }
                     else
                     {
-                        return QStringLiteral("[ACF] ") % model.getName();
+                        return u"[ACF] " % model.getName();
                     }
                 }
                 else if (model.hasAircraftDesignator())
                 {
                     if (model.getDistributor().hasDescription())
                     {
-                        return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator() % QStringLiteral(" by ") % model.getDistributor().getDescription();
+                        return u"[ACF] " % model.getAircraftIcaoCodeDesignator() % u" by " % model.getDistributor().getDescription();
                     }
                     else
                     {
-                        return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator();
+                        return u"[ACF] " % model.getAircraftIcaoCodeDesignator();
                     }
                 }
                 return QStringLiteral("[ACF]");
@@ -156,8 +156,8 @@ namespace BlackMisc
             {
                 QString modelName =
                     dirNames.join(' ') %
-                    QLatin1Char(' ') % objectName %
-                    QLatin1Char(' ') % textureName;
+                    u' ' % objectName %
+                    u' ' % textureName;
                 return std::move(modelName).trimmed();
             }
 
@@ -216,7 +216,7 @@ namespace BlackMisc
                     while (liveryIt.hasNext())
                     {
                         liveryIt.next();
-                        model.setModelString(baseModelString % ' ' % liveryIt.fileName());
+                        model.setModelString(baseModelString % u' ' % liveryIt.fileName());
                         addUniqueModel(model, installedModels);
                     }
                 }

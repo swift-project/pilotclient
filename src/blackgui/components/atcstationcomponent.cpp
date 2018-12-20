@@ -246,7 +246,7 @@ namespace BlackGui
             const CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
             if (metar.hasMessage())
             {
-                const QString metarText = metar.getMessage() % QStringLiteral("\n\n") % metar.getMetarText();
+                const QString metarText = metar.getMessage() % u"\n\n" % metar.getMetarText();
                 ui->te_AtcStationsOnlineInfo->setText(metarText);
             }
             else

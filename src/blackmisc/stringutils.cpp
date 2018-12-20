@@ -357,24 +357,20 @@ namespace BlackMisc
 
     QString inApostrophes(const QString &in, bool ignoreEmpty)
     {
-        static const QString e;
-        static const QString ea("''");
-        if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
-        return QStringLiteral("'") % in % QStringLiteral("'");
+        if (in.isEmpty()) { return ignoreEmpty ? QString() : QStringLiteral("''"); }
+        return u'\'' % in % u'\'';
     }
 
     QString inQuotes(const QString &in, bool ignoreEmpty)
     {
-        static const QString e;
-        static const QString ea("\"\"");
-        if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
-        return QStringLiteral("\"") % in % QStringLiteral("\"");
+        if (in.isEmpty()) { return ignoreEmpty ? QString() : QStringLiteral("\"\""); }
+        return u'"' % in % u'"';
     }
 
     QString withQuestionMark(const QString &question)
     {
         if (question.endsWith("?")) { return question; }
-        return question % QStringLiteral("?");
+        return question % u'?';
     }
 
     int nthIndexOf(const QString &string, QChar ch, int nth, Qt::CaseSensitivity cs)

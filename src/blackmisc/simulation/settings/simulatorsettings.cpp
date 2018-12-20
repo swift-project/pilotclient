@@ -98,10 +98,10 @@ namespace BlackMisc
             QString CSimulatorSettings::convertToQString(const QString &separator, bool i18n) const
             {
                 Q_UNUSED(i18n);
-                return QStringLiteral("model directories: ") %
+                return u"model directories: " %
                        m_modelDirectories.join(',') %
                        separator %
-                       QStringLiteral("exclude directories: ") %
+                       u"exclude directories: " %
                        m_excludeDirectoryPatterns.join(',');
             }
 

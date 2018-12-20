@@ -1425,22 +1425,22 @@ namespace BlackCore
                 {
                     if (ca >= 1000)
                     {
-                        cruiseAltString = QStringLiteral("FL") % QString::number(ca / 100);
+                        cruiseAltString = u"FL" % QString::number(ca / 100);
                     }
                     else
                     {
-                        cruiseAltString = QStringLiteral("FL") % cruiseAltString;
+                        cruiseAltString = u"FL" % cruiseAltString;
                     }
                 }
                 else // VFR
                 {
                     if (ca >= 5000)
                     {
-                        cruiseAltString = QStringLiteral("FL") % QString::number(ca / 100);
+                        cruiseAltString = u"FL" % QString::number(ca / 100);
                     }
                     else
                     {
-                        cruiseAltString = cruiseAltString % QStringLiteral("ft");
+                        cruiseAltString = cruiseAltString % u"ft";
                     }
                 }
             }

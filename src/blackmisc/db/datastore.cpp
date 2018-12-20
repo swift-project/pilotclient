@@ -29,7 +29,7 @@ namespace BlackMisc
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
             if (m_dbKey < 0) { return {}; }
-            return prefix % QStringLiteral("(") % QString::number(m_dbKey) % QStringLiteral(")");
+            return prefix % u'(' % QString::number(m_dbKey) % u')';
         }
 
         void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)
@@ -76,19 +76,19 @@ namespace BlackMisc
         void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             // this function is performance sensitive, as it is called for all DB data
-            const int dbKey = json.value(prefix % QStringLiteral("id")).toInt(-1);
+            const int dbKey = json.value(prefix % u"id").toInt(-1);
             this->setDbKey(dbKey);
 
             // we check 2 formats, the DB format and the backend object format
-            QString timestampString(json.value(prefix % QStringLiteral("lastupdated")).toString());
-            if (timestampString.isEmpty()) { timestampString = json.value(prefix % QStringLiteral("tsLastUpdated")).toString(); }
+            QString timestampString(json.value(prefix % u"lastupdated").toString());
+            if (timestampString.isEmpty()) { timestampString = json.value(prefix % u"tsLastUpdated").toString(); }
             const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
             this->setUtcTimestamp(ts);
         }
 
         bool IDatastoreObjectWithIntegerKey::existsKey(const QJsonObject &json, const QString &prefix)
         {
-            const QJsonValue jv(json.value(prefix % QStringLiteral("id")));
+            const QJsonValue jv(json.value(prefix % u"id"));
             return !(jv.isNull() || jv.isUndefined());
         }
 
@@ -151,7 +151,7 @@ namespace BlackMisc
         QString IDatastoreObjectWithStringKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
             if (m_dbKey.isEmpty()) { return ""; }
-            return prefix % QStringLiteral("(") % m_dbKey % QStringLiteral(")");
+            return prefix % '(' % m_dbKey % ')';
         }
 
         bool IDatastoreObjectWithStringKey::matchesDbKeyState(Db::DbKeyStateFilter filter) const
@@ -169,15 +169,15 @@ namespace BlackMisc
 
         void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            QString dbKey = json.value(prefix % QStringLiteral("id")).toString();
-            QDateTime ts(CDatastoreUtility::parseTimestamp(json.value(prefix + "lastupdated").toString()));
+            QString dbKey = json.value(prefix % u"id").toString();
+            QDateTime ts(CDatastoreUtility::parseTimestamp(json.value(prefix % u"lastupdated").toString()));
             this->setDbKey(dbKey);
             this->setUtcTimestamp(ts);
         }
 
         bool IDatastoreObjectWithStringKey::existsKey(const QJsonObject &json, const QString &prefix)
         {
-            const QJsonValue jv(json.value(prefix % QStringLiteral("id")));
+            const QJsonValue jv(json.value(prefix % u"id"));
             return !(jv.isNull() || jv.isUndefined());
         }
 

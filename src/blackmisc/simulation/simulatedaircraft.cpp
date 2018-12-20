@@ -150,7 +150,7 @@ namespace BlackMisc
 
         QString CSimulatedAircraft::getAirlineAndAircraftIcaoCodeDesignators() const
         {
-            if (this->hasAircraftAndAirlineDesignator()) { return this->getAircraftIcaoCodeDesignator() % QStringLiteral("/") % this->getAirlineIcaoCodeDesignator(); }
+            if (this->hasAircraftAndAirlineDesignator()) { return this->getAircraftIcaoCodeDesignator() % u'/' % this->getAirlineIcaoCodeDesignator(); }
             if (this->hasAirlineDesignator()) { return this->getAirlineIcaoCodeDesignator(); }
             return this->getAircraftIcaoCodeDesignator();
         }
@@ -464,8 +464,8 @@ namespace BlackMisc
             const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
             if (!icao.hasDesignator()) { return QStringLiteral("[x] no sim."); }
             if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw."); }
-            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[==] ") % icao.getDesignatorDbKey(); }
-            if (icao.getDesignator() == icaoNw.getDesignator()) { return QStringLiteral("[=] ") % icao.getDesignator(); }
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
+            if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignator(); }
             static const QString diff("%1 -> %2");
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
@@ -490,8 +490,8 @@ namespace BlackMisc
 
             const CAirlineIcaoCode icao(this->getModel().getAirlineIcaoCode());
             const CAirlineIcaoCode icaoNw(this->getNetworkModel().getAirlineIcaoCode());
-            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[==] ") % icao.getDesignatorDbKey(); }
-            if (icao.getDesignator() == icaoNw.getDesignator()) { return QStringLiteral("[=] ") % icao.getDesignatorDbKey(); }
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
+            if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignatorDbKey(); }
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
 
@@ -575,14 +575,14 @@ namespace BlackMisc
         QString CSimulatedAircraft::convertToQString(bool i18n) const
         {
             const QString s = m_callsign.toQString(i18n) %
-                              QLatin1Char(' ') % m_pilot.toQString(i18n) %
-                              QLatin1Char(' ') % m_situation.toQString(i18n) %
-                              QLatin1Char(' ') % m_com1system.toQString(i18n) %
-                              QLatin1Char(' ') % m_com2system.toQString(i18n) %
-                              QLatin1Char(' ') % m_transponder.toQString(i18n) %
-                              QLatin1String(" enabled: ") % BlackMisc::boolToYesNo(this->isEnabled()) %
-                              QLatin1String(" rendered: ") % BlackMisc::boolToYesNo(this->isRendered()) %
-                              QLatin1Char(' ') % this->getModel().toQString(i18n);
+                              u' ' % m_pilot.toQString(i18n) %
+                              u' ' % m_situation.toQString(i18n) %
+                              u' ' % m_com1system.toQString(i18n) %
+                              u' ' % m_com2system.toQString(i18n) %
+                              u' ' % m_transponder.toQString(i18n) %
+                              u" enabled: " % BlackMisc::boolToYesNo(this->isEnabled()) %
+                              u" rendered: " % BlackMisc::boolToYesNo(this->isRendered()) %
+                              u' '% this->getModel().toQString(i18n);
             return s;
         }
     } // namespace

@@ -142,10 +142,10 @@ namespace BlackMisc
     {
         Q_UNUSED(i18n);
         const QString s = m_name %
-                          QLatin1Char(' ') % m_machineIdBase64 %
-                          QLatin1Char(' ') % m_machineName %
-                          QLatin1Char(' ') % QString::number(m_processId) %
-                          QLatin1Char(' ') % m_processName;
+                          u' ' % m_machineIdBase64 %
+                          u' ' % m_machineName %
+                          u' ' % QString::number(m_processId) %
+                          u' ' % m_processName;
         return s;
     }
 

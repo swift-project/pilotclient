@@ -338,7 +338,7 @@ namespace BlackMisc
                 const QDir dir(simObjectsDirectoryFix);
                 if (!dir.exists()) { return false; }
 
-                const QString lastSegment = QStringLiteral("/") % CFileUtils::lastPathSegment(simObjectsDirectoryFix) % QStringLiteral("/");
+                const QString lastSegment = u'/' % CFileUtils::lastPathSegment(simObjectsDirectoryFix) % u'/';
                 const int index = model.getFileName().lastIndexOf(lastSegment);
                 if (index < 0) { return false; }
                 const QString relPart = model.getFileName().mid(index + lastSegment.length());

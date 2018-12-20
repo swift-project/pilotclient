@@ -101,7 +101,7 @@ namespace BlackGui
                 if (!action) { continue; }
                 QToolButton *tb = new QToolButton(ui->fr_NavigatorDialogInner);
                 tb->setDefaultAction(action);
-                tb->setObjectName(this->objectName() % QStringLiteral(":") % action->objectName());
+                tb->setObjectName(this->objectName() % u':' % action->objectName());
                 if (!action->text().isEmpty())
                 {
                     tb->setToolTip(action->text());

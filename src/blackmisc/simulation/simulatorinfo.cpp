@@ -333,11 +333,11 @@ namespace BlackMisc
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            const QJsonValue jfsx = json.value(prefix % QStringLiteral("simfsx"));
-            const QJsonValue jfs9 = json.value(prefix % QStringLiteral("simfs9"));
-            const QJsonValue jxp  = json.value(prefix % QStringLiteral("simxplane"));
-            const QJsonValue jp3d = json.value(prefix % QStringLiteral("simp3d"));
-            const QJsonValue jfg  = json.value(prefix % QStringLiteral("simfg"));
+            const QJsonValue jfsx = json.value(prefix % u"simfsx");
+            const QJsonValue jfs9 = json.value(prefix % u"simfs9");
+            const QJsonValue jxp  = json.value(prefix % u"simxplane");
+            const QJsonValue jp3d = json.value(prefix % u"simp3d");
+            const QJsonValue jfg  = json.value(prefix % u"simfg");
 
             // we handle bool JSON values and bool as string
             const bool fsx = jfsx.isBool() ? jfsx.toBool() : CDatastoreUtility::dbBoolStringToBool(jfsx.toString());
@@ -401,11 +401,11 @@ namespace BlackMisc
 
         QString CCountPerSimulator::toQString() const
         {
-            return QStringLiteral("FSX: ") % QString::number(m_counts[0]) %
-                   QStringLiteral(" P3D: ") % QString::number(m_counts[1]) %
-                   QStringLiteral(" FS9: ") % QString::number(m_counts[2]) %
-                   QStringLiteral(" XPlane: ") % QString::number(m_counts[3]) %
-                   QStringLiteral(" FG: ") % QString::number(m_counts[4]);
+            return u"FSX: " % QString::number(m_counts[0]) %
+                   u" P3D: " % QString::number(m_counts[1]) %
+                   u" FS9: " % QString::number(m_counts[2]) %
+                   u" XPlane: " % QString::number(m_counts[3]) %
+                   u" FG: " % QString::number(m_counts[4]);
         }
 
         void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)

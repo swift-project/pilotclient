@@ -108,13 +108,13 @@ namespace BlackGui
                 QString i(aircraft.getCallsign().toQString());
                 if (aircraft.hasAircraftDesignator())
                 {
-                    i += QStringLiteral(" (") %
+                    i += u" (" %
                          aircraft.getAircraftIcaoCode().toQString(false) %
-                         QStringLiteral(")");
+                         u')';
                 }
                 if (aircraft.hasRealName())
                 {
-                    i += QStringLiteral(" - ") % aircraft.getPilotRealName();
+                    i += u" - " % aircraft.getPilotRealName();
                 }
                 if (m_showPartsEnabled)
                 {

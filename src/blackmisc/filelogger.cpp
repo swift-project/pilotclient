@@ -75,12 +75,12 @@ namespace BlackMisc
         const QString categories = statusMessage.getCategoriesAsString();
         if (categories != m_previousCategories)
         {
-            writeContentToFile(QStringLiteral("\n[") % categories % QStringLiteral("]"));
+            writeContentToFile(u"\n[" % categories % u']');
             m_previousCategories = categories;
         }
         const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "))
                                    % statusMessage.getSeverityAsString()
-                                   % ": "
+                                   % u": "
                                    % statusMessage.getMessage());
 
         writeContentToFile(finalContent);

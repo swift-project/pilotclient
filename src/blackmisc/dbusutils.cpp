@@ -37,12 +37,12 @@ namespace BlackMisc
             qv = arg.asVariant(); // this advances in the stream
             if (qv.canConvert<QDBusArgument>())
             {
-                out += indent % type % QLatin1String("signature ") % signature % QLatin1Char('\n');
-                out += CDBusUtils::getQDBusArgumentSignature(qv.value<QDBusArgument>(), level + 1) % QLatin1Char('\n');
+                out += indent % type % u"signature " % signature % u'\n';
+                out += CDBusUtils::getQDBusArgumentSignature(qv.value<QDBusArgument>(), level + 1) % u'\n';
             }
             else
             {
-                out += indent % QLatin1String("type: ") % type % QLatin1String("signature ") % signature % QLatin1String(" value ") % qv.toString() % QLatin1Char('\n');
+                out += indent % u"type: " % type % u"signature " % signature % u" value " % qv.toString() % u'\n';
             }
         }
         arg.endArray();

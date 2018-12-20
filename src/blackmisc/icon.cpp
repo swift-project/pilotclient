@@ -86,7 +86,7 @@ namespace BlackMisc
     QString CIcon::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        const QString s = m_descriptiveText % QStringLiteral(" ") % QString::number(m_index);
+        const QString s = m_descriptiveText % u' ' % QString::number(m_index);
         return s;
     }
 

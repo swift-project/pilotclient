@@ -858,8 +858,8 @@ namespace BlackGui
             QString name("Flight plan");
             if (!ui->le_DestinationAirport->text().isEmpty() && !ui->le_OriginAirport->text().isEmpty())
             {
-                name += QStringLiteral(" ") % ui->le_OriginAirport->text() %
-                        QStringLiteral("-") % ui->le_DestinationAirport->text();
+                name += u' ' % ui->le_OriginAirport->text() %
+                        u'-' % ui->le_DestinationAirport->text();
             }
 
             if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))

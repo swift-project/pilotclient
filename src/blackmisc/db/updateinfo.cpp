@@ -96,13 +96,13 @@ namespace BlackMisc
         QString CUpdateInfo::convertToQString(const QString &separator, bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QLatin1String("artifacts (PC): ") %
+            return u"artifacts (PC): " %
                    this->getArtifactsPilotClient().toQString(i18n) %
                    separator %
-                   QLatin1String("artifacts (XSB): ") %
+                   u"artifacts (XSB): " %
                    this->getArtifactsXSwiftBus().toQString(i18n) %
                    separator %
-                   QLatin1String("distributions: ") %
+                   u"distributions: " %
                    this->getDistributions().toQString(i18n);
         }
 

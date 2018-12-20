@@ -85,7 +85,7 @@ namespace BlackMisc
         {
             if (m_callsign.isEmpty()) { return this->getControllerRealName(); }
             if (!m_controller.hasRealName()) { return m_callsign.asString(); }
-            return m_callsign.asString() % QStringLiteral(" ") % this->getControllerRealName();
+            return m_callsign.asString() % u' ' % this->getControllerRealName();
         }
 
         void CAtcStation::setController(const CUser &controller)
@@ -101,43 +101,43 @@ namespace BlackMisc
             static const QString fromUtcI18n(QCoreApplication::translate("Aviation", "from(UTC)"));
             static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
-            const QString s = (i18n ? atcI18n : QLatin1String("ATC station")) %
-                              QLatin1Char(' ') % m_callsign.toQString(i18n) %
-                              QLatin1Char(' ') % m_position.toQString(i18n) %
-                              QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
+            const QString s = (i18n ? atcI18n : QStringLiteral("ATC station")) %
+                              u' ' % m_callsign.toQString(i18n) %
+                              u' ' % m_position.toQString(i18n) %
+                              u" online: " % boolToYesNo(m_isOnline) %
 
                               // controller
                               (m_controller.isNull() ? QString() :
-                               QStringLiteral(" ") % m_controller.toQString(i18n)) %
+                               u' ' % m_controller.toQString(i18n)) %
 
                               // frequency
-                              QLatin1Char(' ') % m_frequency.valueRoundedWithUnit(3, i18n) %
+                              u' ' % m_frequency.valueRoundedWithUnit(3, i18n) %
 
                               // ATIS
                               (!this->hasAtis() ? QString() :
-                               QStringLiteral(" ") % m_atis.toQString(i18n)) %
+                               u' ' % m_atis.toQString(i18n)) %
 
                               // METAR
                               (!this->hasMetar() ? QString() :
-                               QStringLiteral(" ") % m_metar.toQString(i18n)) %
+                               u' ' % m_metar.toQString(i18n)) %
 
                               // range
-                              QLatin1Char(' ') % (i18n ? rangeI18n : QLatin1String("range")) %
-                              QLatin1Char(' ') % m_range.toQString(i18n) %
+                              u' ' % (i18n ? rangeI18n : QStringLiteral("range")) %
+                              u' ' % m_range.toQString(i18n) %
 
                               // distance / bearing
-                              QLatin1Char(' ') % ICoordinateWithRelativePosition::convertToQString(i18n) %
+                              u' ' % ICoordinateWithRelativePosition::convertToQString(i18n) %
 
                               // booking from/until
-                              QLatin1Char(' ') %
-                              (i18n ? fromUtcI18n : QLatin1String("from(UTC)")) %
-                              QLatin1Char(' ') %
-                              (m_bookedFromUtc.isNull() ? QLatin1String("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
+                              u' ' %
+                              (i18n ? fromUtcI18n : QStringLiteral("from(UTC)")) %
+                              u' ' %
+                              (m_bookedFromUtc.isNull() ? QStringLiteral("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
 
-                              QLatin1Char(' ') %
-                              (i18n ? untilUtcI18n : QLatin1String("until(UTC)")) %
-                              QLatin1Char(' ') %
-                              (m_bookedUntilUtc.isNull() ? QLatin1String("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
+                              u' ' %
+                              (i18n ? untilUtcI18n : QStringLiteral("until(UTC)")) %
+                              u' ' %
+                              (m_bookedUntilUtc.isNull() ? QStringLiteral("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
 
             return s;
 

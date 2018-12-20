@@ -32,9 +32,9 @@ namespace BlackCore
         {
             return
                 CDbFlags::flagToString(this->getRetrievalMode()) %
-                QStringLiteral(" ") %
+                u' ' %
                 CEntityFlags::flagToString(this->getEntities()) %
-                QStringLiteral(" ") %
+                u' ' %
                 this->m_cacheLifetime.toQString(i18n);
         }
 

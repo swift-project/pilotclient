@@ -67,24 +67,24 @@ namespace BlackMisc
 
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
-            return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
-                   QStringLiteral(" | ") % m_position.toQString(i18n) %
-                   QStringLiteral(" | alt: ") % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
-                   QStringLiteral(" ") % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
-                   QStringLiteral("[cor] | og: ") % this->getOnGroundInfo() %
-                   (m_onGroundGuessingDetails.isEmpty() ? QString() : QStringLiteral(" ") % m_onGroundGuessingDetails) %
-                   QStringLiteral(" | cg: ") %
-                   (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
-                   QStringLiteral(" | offset: ") %
-                   (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
-                   QStringLiteral(" | factor [0..1]: ") % QString::number(m_onGroundFactor, 'f', 2) %
-                   QStringLiteral(" | skip ng: ") % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
-                   QStringLiteral(" | bank: ") % m_bank.toQString(i18n) %
-                   QStringLiteral(" | pitch: ") % m_pitch.toQString(i18n) %
-                   QStringLiteral(" | heading: ") % m_heading.toQString(i18n) %
-                   QStringLiteral(" | gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
-                   QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
-                   QStringLiteral(" | elevation [") % this->getGroundElevationInfoAsString() % QStringLiteral("]: ") % (m_groundElevationPlane.toQString(i18n));
+            return u"ts: " % this->getFormattedTimestampAndOffset(true) %
+                   u" | " % m_position.toQString(i18n) %
+                   u" | alt: " % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+                   u' ' % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+                   u"[cor] | og: " % this->getOnGroundInfo() %
+                   (m_onGroundGuessingDetails.isEmpty() ? QString() : u' ' % m_onGroundGuessingDetails) %
+                   u" | cg: " %
+                   (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
+                   u" | offset: " %
+                   (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
+                   u" | factor [0..1]: " % QString::number(m_onGroundFactor, 'f', 2) %
+                   u" | skip ng: " % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
+                   u" | bank: " % m_bank.toQString(i18n) %
+                   u" | pitch: " % m_pitch.toQString(i18n) %
+                   u" | heading: " % m_heading.toQString(i18n) %
+                   u" | gs: " % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
+                   u' ' % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
+                   u" | elevation [" % this->getGroundElevationInfoAsString() % u"]: " % (m_groundElevationPlane.toQString(i18n));
         }
 
         const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
@@ -590,7 +590,7 @@ namespace BlackMisc
             // "extreme" values for which we are surely not on ground
             if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); }; return true; } // some tail wheel aircraft already have 11° pitch on ground
             if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }; return true; }
-            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = QStringLiteral("gs. > vr ") % sureRotateSpeed.valueRoundedWithUnit(1); }; return true; }
+            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); }; return true; }
 
             // use the most accurate or reliable guesses here first
             // ------------------------------------------------------
@@ -710,7 +710,7 @@ namespace BlackMisc
 
         QString CAircraftSituation::getOnGroundInfo() const
         {
-            return this->onGroundAsString() % QLatin1Char(' ') % this->getOnGroundDetailsAsString();
+            return this->onGroundAsString() % u' ' % this->getOnGroundDetailsAsString();
         }
 
         CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
@@ -722,7 +722,7 @@ namespace BlackMisc
         QString CAircraftSituation::getGroundElevationInfoAsString() const
         {
             return m_isElvInfoTransferred ?
-                   QStringLiteral("tx: ") % gndElevationInfoToString(this->getGroundElevationInfo()) :
+                   u"tx: " % gndElevationInfoToString(this->getGroundElevationInfo()) :
                    gndElevationInfoToString(this->getGroundElevationInfo());
         }
 
@@ -732,7 +732,7 @@ namespace BlackMisc
             if (m_groundElevationPlane.isNull()) { return n; };
 
             return m_groundElevationPlane.getAltitude().toQString(true) %
-                   QStringLiteral(" [") % this->getGroundElevationInfoAsString() % QStringLiteral("]");
+                   u" [" % this->getGroundElevationInfoAsString() % u']';
         }
 
         bool CAircraftSituation::canTransferGroundElevation(const CAircraftSituation &transferToSituation, const CLength &radius) const

@@ -87,14 +87,14 @@ namespace BlackMisc
         QString CAircraftLights::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            const QString s = QLatin1String("strobe: ") % boolToYesNo(m_strobeOn) %
-                              QLatin1String(" landing: ") % boolToYesNo(m_landingOn) %
-                              QLatin1String(" taxi: ") % boolToYesNo(m_taxiOn) %
-                              QLatin1String(" beacon: ") % boolToYesNo(m_beaconOn) %
-                              QLatin1String(" nav: ") % boolToYesNo(m_navOn) %
-                              QLatin1String(" logo: ") % boolToYesNo(m_logoOn) %
-                              QLatin1String(" recognition: ") % boolToYesNo(m_recognition) %
-                              QLatin1String(" cabin: ") % boolToYesNo(m_cabin);
+            const QString s = u"strobe: " % boolToYesNo(m_strobeOn) %
+                              u" landing: " % boolToYesNo(m_landingOn) %
+                              u" taxi: " % boolToYesNo(m_taxiOn) %
+                              u" beacon: " % boolToYesNo(m_beaconOn) %
+                              u" nav: " % boolToYesNo(m_navOn) %
+                              u" logo: " % boolToYesNo(m_logoOn) %
+                              u" recognition: " % boolToYesNo(m_recognition) %
+                              u" cabin: " % boolToYesNo(m_cabin);
             return s;
         }
 

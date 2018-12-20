@@ -258,16 +258,16 @@ namespace BlackMisc
 
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
-        return QLatin1String("Category: ") %
+        return u"Category: " %
                m_categories.toQString() %
 
-               QLatin1String(" Severity: ") %
+               u" Severity: " %
                severityToString(m_severity) %
 
-               QLatin1String(" when: ") %
+               u" when: " %
                this->getFormattedUtcTimestampYmdhms() %
 
-               QLatin1String(" ") %
+               u' ' %
                this->getMessage();
     }
 
@@ -369,8 +369,8 @@ namespace BlackMisc
         auto min = *minmax.first;
         auto max = *minmax.second;
         if (min == SeverityDebug && max == SeverityError) { static const QString all("all severities"); return all; }
-        if (min == SeverityDebug) { QStringLiteral("at or below ") % severityToString(max); }
-        if (max == SeverityError) { QStringLiteral("at or above ") % severityToString(min); }
+        if (min == SeverityDebug) { u"at or below " % severityToString(max); }
+        if (max == SeverityError) { u"at or above " % severityToString(min); }
         auto list = severities.toList();
         std::sort(list.begin(), list.end());
         QStringList ret;
@@ -458,8 +458,8 @@ namespace BlackMisc
         {
             switch (this->getSeverity())
             {
-            case SeverityWarning: return img % QStringLiteral("<font color=\"yellow\">") % this->getMessage() % QStringLiteral("</font>");
-            case SeverityError:   return img % QStringLiteral("<font color=\"red\">") % this->getMessage() % QStringLiteral("</font>");
+            case SeverityWarning: return img % u"<font color=\"yellow\">" % this->getMessage() % u"</font>";
+            case SeverityError:   return img % u"<font color=\"red\">" % this->getMessage() % u"</font>";
             case SeverityDebug: break;
             default: break;
             }

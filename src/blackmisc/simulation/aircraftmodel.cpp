@@ -60,11 +60,11 @@ namespace BlackMisc
         {
             const QString s =
                 (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QString()) %
-                QStringLiteral(" type: '") % this->getModelTypeAsString() %
-                QStringLiteral("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
-                QStringLiteral(" CG: ") % this->getCG().valueRoundedWithUnit(1) %
-                QStringLiteral("' {") % m_livery.toQString(i18n) %
-                QStringLiteral("} file: '") % m_fileName % QStringLiteral("'");
+                u" type: '" % this->getModelTypeAsString() %
+                u"' ICAO: '" % this->getAircraftIcaoCode().toQString(i18n) %
+                u" CG: " % this->getCG().valueRoundedWithUnit(1) %
+                u"' {" % m_livery.toQString(i18n) %
+                u"} file: '" % m_fileName % u'\'';
             return s;
         }
 
@@ -534,9 +534,9 @@ namespace BlackMisc
         QString CAircraftModel::getSwiftLiveryString() const
         {
             const QString l =
-                (this->getLivery().hasValidDbKey() ? QStringLiteral("l") % this->getLivery().getDbKeyAsString() : QString()) %
+                (this->getLivery().hasValidDbKey() ? u'l' % this->getLivery().getDbKeyAsString() : QString()) %
                 (this->getAircraftIcaoCode().hasValidDbKey() ? QStringLiteral("a") % this->getAircraftIcaoCode().getDbKeyAsString() : QString()) %
-                (this->hasValidDbKey() ? QStringLiteral("m") % this->getDbKeyAsString() : QString());
+                (this->hasValidDbKey() ? u'm' % this->getDbKeyAsString() : QString());
 
             return l.isEmpty() ? QString() : liveryStringPrefix() % l;
         }
@@ -851,10 +851,10 @@ namespace BlackMisc
             static const QString prefixLivery("liv_");
             static const QString prefixDistributor("dist_");
 
-            const QString modelString(json.value(prefix % QStringLiteral("modelstring")).toString());
-            const QString modelDescription(json.value(prefix % QStringLiteral("description")).toString());
-            const QString modelName(json.value(prefix % QStringLiteral("name")).toString());
-            const QString modelMode(json.value(prefix % QStringLiteral("mode")).toString());
+            const QString modelString(json.value(prefix % u"modelstring").toString());
+            const QString modelDescription(json.value(prefix % u"description").toString());
+            const QString modelName(json.value(prefix % u"name").toString());
+            const QString modelMode(json.value(prefix % u"mode").toString());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
             CDistributor distributor(CDistributor::fromDatabaseJson(json, prefixDistributor));
@@ -864,7 +864,7 @@ namespace BlackMisc
             //! \todo KB 2018-08 "idaircrafticao" seem not to be used anymore (remove???) in "vAircraftModelDenormalized", but was used in "vAircraftModelComplete"
             if (!aircraftIcao.isLoadedFromDb())
             {
-                const int idAircraftIcao = json.value(prefix % QStringLiteral("idaircrafticao")).toInt(-1);
+                const int idAircraftIcao = json.value(prefix % u"idaircrafticao").toInt(-1);
                 if (idAircraftIcao >= 0)
                 {
                     aircraftIcao.setDbKey(idAircraftIcao);
@@ -873,7 +873,7 @@ namespace BlackMisc
 
             if (!livery.isLoadedFromDb())
             {
-                const int idLivery = json.value(prefix % QStringLiteral("idlivery")).toInt(-1);
+                const int idLivery = json.value(prefix % u"idlivery").toInt(-1);
                 if (idLivery >= 0)
                 {
                     livery.setDbKey(idLivery);
@@ -882,7 +882,7 @@ namespace BlackMisc
 
             if (!distributor.isLoadedFromDb())
             {
-                const QString idDistributor = json.value(prefix % QStringLiteral("iddistributor")).toString();
+                const QString idDistributor = json.value(prefix % u"iddistributor").toString();
                 if (!idDistributor.isEmpty())
                 {
                     distributor.setDbKey(idDistributor);
@@ -907,15 +907,15 @@ namespace BlackMisc
             static const QString prefixLivery("liv_");
             static const QString prefixDistributor("dist_");
 
-            const QString modelString(json.value(prefix % QStringLiteral("modelstring")).toString());
-            const QString modelDescription(json.value(prefix % QStringLiteral("description")).toString());
-            const QString modelName(json.value(prefix % QStringLiteral("name")).toString());
-            const QString modelMode(json.value(prefix % QStringLiteral("mode")).toString());
+            const QString modelString(json.value(prefix % u"modelstring").toString());
+            const QString modelDescription(json.value(prefix % u"description").toString());
+            const QString modelName(json.value(prefix % u"name").toString());
+            const QString modelMode(json.value(prefix % u"mode").toString());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
-            const int idAircraftIcao = json.value(prefixAircraftIcao % QStringLiteral("id")).toInt(-1);
-            const int idLivery = json.value(prefixLivery % QStringLiteral("id")).toInt(-1);
-            const QString idDistributor = json.value(prefixDistributor % QStringLiteral("id")).toString();
+            const int idAircraftIcao = json.value(prefixAircraftIcao % u"id").toInt(-1);
+            const int idLivery = json.value(prefixLivery % u"id").toInt(-1);
+            const QString idDistributor = json.value(prefixDistributor % u"id").toString();
             const bool cachedAircraftIcao = (idAircraftIcao >= 0) && aircraftIcaos.contains(idAircraftIcao);
             const bool cachedLivery = (idLivery >= 0) && liveries.contains(idLivery);
             const bool cachedDistributor = !idDistributor.isEmpty() && distributors.contains(idDistributor);
@@ -939,13 +939,13 @@ namespace BlackMisc
 
             if (!livery.isLoadedFromDb())
             {
-                const int idLivery = json.value(prefix % QStringLiteral("idlivery")).toInt(-1);
+                const int idLivery = json.value(prefix % u"idlivery").toInt(-1);
                 if (idLivery >= 0) { livery.setDbKey(idLivery); }
             }
 
             if (!distributor.isLoadedFromDb())
             {
-                const QString idDistributor = json.value(prefix % QStringLiteral("iddistributor")).toString();
+                const QString idDistributor = json.value(prefix % u"iddistributor").toString();
                 if (!idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
             }
 

@@ -26,9 +26,9 @@ namespace BlackMisc
         {
             const QString s =
                 m_identifier.getMachineName() %
-                QStringLiteral(" ") %
+                u' ' %
                 m_combination.toQString() %
-                QStringLiteral(" ") %
+                u' ' %
                 m_action;
             return s;
         }

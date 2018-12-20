@@ -24,7 +24,7 @@ namespace BlackMisc
     {
         if (extraInfo.isEmpty()) { return; }
         if (m_info.isEmpty()) { this->setInfo(extraInfo); return; }
-        m_info += QStringLiteral(" ") % extraInfo;
+        m_info += u' ' % extraInfo;
     }
 
     CVariant CCrashInfo::propertyByIndex(const CPropertyIndex &index) const

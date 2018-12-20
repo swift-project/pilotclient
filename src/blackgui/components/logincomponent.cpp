@@ -586,8 +586,8 @@ namespace BlackGui
         {
             const QString ac(
                 ownAircraft.getAircraftIcaoCodeDesignator() %
-                (ownAircraft.hasAirlineDesignator() ? (QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator()) : QString()) %
-                (ownAircraft.hasModelString() ? (QLatin1Char(' ') % ownAircraft.getModelString()) : QString())
+                (ownAircraft.hasAirlineDesignator() ? (u' ' % ownAircraft.getAirlineIcaoCodeDesignator()) : QString()) %
+                (ownAircraft.hasModelString() ? (u' ' % ownAircraft.getModelString()) : QString())
             );
             ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
             ui->le_LoginAsAircaft->setText(ac);

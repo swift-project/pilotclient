@@ -29,11 +29,11 @@ namespace BlackMisc
             QString rowHtml;
             for (const CPropertyIndex &index : indexes)
             {
-                rowHtml += QStringLiteral("<td>") % obj.propertyByIndex(index).toQString(true) % QStringLiteral("</td>");
+                rowHtml += u"<td>" % obj.propertyByIndex(index).toQString(true) % u"</td>";
             }
-            html += QStringLiteral("<tr>") % rowHtml % QStringLiteral("</tr>");
+            html += u"<tr>" % rowHtml % u"</tr>";
         }
-        return QStringLiteral("<table>") % html % QStringLiteral("</table>");
+        return u"<table>" % html % u"</table>";
     }
 
     //! Values as HTML table

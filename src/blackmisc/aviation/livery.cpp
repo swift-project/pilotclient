@@ -72,7 +72,7 @@ namespace BlackMisc
             return this->getCombinedCode() % (
                        this->getDescription().isEmpty() ?
                        QString() :
-                       (QStringLiteral(" ") % this->getDescription())
+                       (u' ' % this->getDescription())
                    );
         }
 
@@ -134,12 +134,12 @@ namespace BlackMisc
             static const QString liveryI18n(QCoreApplication::translate("Aviation", "Livery"));
 
             return (i18n ? liveryI18n : livery) %
-                   QLatin1String(" cc: '") % m_combinedCode %
-                   QLatin1String("' airline: '") % m_airline.toQString(i18n) %
-                   QLatin1String("' desc.: '") % m_description %
-                   QLatin1String("' F: '") % m_colorFuselage.hex() %
-                   QLatin1String("' T: '") % m_colorTail.hex() %
-                   QLatin1String("' Mil: ") % boolToYesNo(this->isMilitary());
+                   u" cc: '" % m_combinedCode %
+                   u"' airline: '" % m_airline.toQString(i18n) %
+                   u"' desc.: '" % m_description %
+                   u"' F: '" % m_colorFuselage.hex() %
+                   u"' T: '" % m_colorTail.hex() %
+                   u"' Mil: " % boolToYesNo(this->isMilitary());
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("Aviation", "Livery");
@@ -239,7 +239,7 @@ namespace BlackMisc
                 return CLivery();
             }
 
-            const QString combinedCode(json.value(prefix % QStringLiteral("combinedcode")).toString());
+            const QString combinedCode(json.value(prefix % u"combinedcode").toString());
             if (combinedCode.isEmpty())
             {
                 CLivery liveryStub; // only consists of id, maybe key and timestamp
@@ -248,10 +248,10 @@ namespace BlackMisc
             }
 
             const bool isColorLivery = combinedCode.startsWith(colorLiveryMarker());
-            const QString description(json.value(prefix % QStringLiteral("description")).toString());
-            const CRgbColor colorFuselage(json.value(prefix % QStringLiteral("colorfuselage")).toString());
-            const CRgbColor colorTail(json.value(prefix % QStringLiteral("colortail")).toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
+            const QString description(json.value(prefix % u"description").toString());
+            const CRgbColor colorFuselage(json.value(prefix % u"colorfuselage").toString());
+            const CRgbColor colorTail(json.value(prefix % u"colortail").toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
             CAirlineIcaoCode airline;
             if (!isColorLivery) { airline = CAirlineIcaoCode::fromDatabaseJson(json, "al_"); }
             CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
@@ -271,7 +271,7 @@ namespace BlackMisc
                 return CLivery();
             }
 
-            const QString combinedCode(json.value(prefix % QStringLiteral("combinedcode")).toString());
+            const QString combinedCode(json.value(prefix % u"combinedcode").toString());
             if (combinedCode.isEmpty())
             {
                 CLivery liveryStub; // only consists of id, maybe key and timestamp
@@ -280,16 +280,16 @@ namespace BlackMisc
             }
 
             const bool isColorLivery = combinedCode.startsWith(colorLiveryMarker());
-            const QString description(json.value(prefix % QStringLiteral("description")).toString());
-            const CRgbColor colorFuselage(json.value(prefix % QStringLiteral("colorfuselage")).toString());
-            const CRgbColor colorTail(json.value(prefix % QStringLiteral("colortail")).toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
+            const QString description(json.value(prefix % u"description").toString());
+            const CRgbColor colorFuselage(json.value(prefix % u"colorfuselage").toString());
+            const CRgbColor colorTail(json.value(prefix % u"colortail").toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
 
             CAirlineIcaoCode airline;
             if (!isColorLivery)
             {
                 static const QString prefixAirline("al_");
-                const int idAirlineIcao = json.value(prefixAirline % "id").toInt(-1);
+                const int idAirlineIcao = json.value(prefixAirline % u"id").toInt(-1);
                 const bool cachedAirlineIcao = idAirlineIcao >= 0 && airlineIcaos.contains(idAirlineIcao);
 
                 airline = cachedAirlineIcao ?

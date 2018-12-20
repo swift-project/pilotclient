@@ -46,7 +46,7 @@ namespace BlackMisc
             if (m_location.isEmpty()) { return this->getDescriptiveName(); }
             if (m_descriptiveName.isEmpty()) { return this->getLocation(); }
             if (this->getDescriptiveName() == this->getLocation()) { return this->getLocation(); }
-            return this->getLocation() % QStringLiteral(" (") % this->getDescriptiveName() % QStringLiteral(")");
+            return this->getLocation() % u" (" % this->getDescriptiveName() % u')';
         }
 
         bool CAirport::matchesLocation(const QString &location) const

@@ -75,7 +75,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getDesignatorDbKey() const
         {
             return (this->isLoadedFromDb()) ?
-                   this->getDesignator() % QStringLiteral(" ") % this->getDbKeyAsStringInParentheses() :
+                   this->getDesignator() % u' ' % this->getDbKeyAsStringInParentheses() :
                    this->getDesignator();
         }
 
@@ -399,7 +399,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getDesignatorManufacturer() const
         {
             return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString());
+                   (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString());
         }
 
         bool CAircraftIcaoCode::hasManufacturer() const
@@ -478,28 +478,28 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
             return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
+                   (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
         QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
         {
             if (!this->hasIataCode()) { return ""; }
-            return this->getIataCode() % QStringLiteral(" [IATA") %
-                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QString()) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
+            return this->getIataCode() % u" [IATA" %
+                   (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
+                   (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
         QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
         {
             if (!this->hasFamily()) { return ""; }
-            return this->getFamily() % QStringLiteral(" [family") %
-                   (this->hasDesignator() ? (QStringLiteral(" ") % this->getDesignator()) : QString()) %
-                   (this->hasManufacturer() ? (QStringLiteral(" ") % this->getManufacturer()) : QString()) %
-                   (this->hasModelDescription() ? (QStringLiteral(" ") % this->getModelDescription()) : QString()) %
+            return this->getFamily() % u" [family" %
+                   (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
+                   (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
+                   (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
@@ -745,10 +745,10 @@ namespace BlackMisc
             }
 
             // turn E to P engine
-            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) % QStringLiteral("P")}); }
+            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) % u'P' }); }
 
             // turn T to H plane (tilt wing to helicopter
-            if (combinedCode.startsWith("T")) { return QStringList({ QStringLiteral("H") % combinedCode.rightRef(2)}); }
+            if (combinedCode.startsWith("T")) { return QStringList({ u'H' % combinedCode.rightRef(2)}); }
 
             // based on engine count
             QStringList codes;
@@ -773,18 +773,18 @@ namespace BlackMisc
                 return CAircraftIcaoCode();
             }
 
-            const QString designator(json.value(prefix % QStringLiteral("designator")).toString());
-            const QString iata(json.value(prefix % QStringLiteral("iata")).toString());
-            const QString family(json.value(prefix % QStringLiteral("family")).toString());
-            const QString manufacturer(json.value(prefix % QStringLiteral("manufacturer")).toString());
-            const QString model(json.value(prefix % QStringLiteral("model")).toString());
-            const QString modelIata(json.value(prefix % QStringLiteral("modeliata")).toString());
-            const QString modelSwift(json.value(prefix % QStringLiteral("modelswift")).toString());
-            const QString type(json.value(prefix % QStringLiteral("type")).toString());
-            const QString engine(json.value(prefix % QStringLiteral("engine")).toString());
-            const int engineCount(json.value(prefix % QStringLiteral("enginecount")).toInt(-1));
+            const QString designator(json.value(prefix % u"designator").toString());
+            const QString iata(json.value(prefix % u"iata").toString());
+            const QString family(json.value(prefix % u"family").toString());
+            const QString manufacturer(json.value(prefix % u"manufacturer").toString());
+            const QString model(json.value(prefix % u"model").toString());
+            const QString modelIata(json.value(prefix % u"modeliata").toString());
+            const QString modelSwift(json.value(prefix % u"modelswift").toString());
+            const QString type(json.value(prefix % u"type").toString());
+            const QString engine(json.value(prefix % u"engine").toString());
+            const int engineCount(json.value(prefix % u"enginecount").toInt(-1));
             const QString combined(createdCombinedString(type, engineCount, engine));
-            QString wtc(json.value(prefix % QStringLiteral("wtc")).toString());
+            QString wtc(json.value(prefix % u"wtc").toString());
             if (wtc.length() > 1 && wtc.contains("/"))
             {
                 // "L/M" -> "M"
@@ -792,10 +792,10 @@ namespace BlackMisc
             }
             Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
 
-            const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("realworld")).toString());
-            const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("legacy")).toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QStringLiteral("military")).toString());
-            const int rank(json.value(prefix % QStringLiteral("rank")).toInt(10));
+            const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"realworld").toString());
+            const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"legacy").toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
+            const int rank(json.value(prefix % u"rank").toInt(10));
 
             CAircraftIcaoCode code(
                 designator, iata, family, combined, manufacturer,

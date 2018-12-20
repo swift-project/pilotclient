@@ -285,19 +285,19 @@ namespace BlackMisc
                     }
                     // XX = Gust speed
                     const int gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
-                    if (gustSpeed > 0) { simconnectWinds += QStringLiteral("G") % arg1s.arg(gustSpeed, 2, 10, QLatin1Char('0')); }
+                    if (gustSpeed > 0) { simconnectWinds += u'G' % arg1s.arg(gustSpeed, 2, 10, QLatin1Char('0')); }
 
                     // UUU = Speed units
-                    simconnectWinds += QLatin1String("KT");
+                    simconnectWinds += QStringLiteral("KT");
 
                     if (surface)
                     {
                         // Surface extension:
                         // &DNNNNTS
                         static const QString surfaceWinds =
-                            QLatin1String("&D") % // D = specifier for surface layer
-                            QLatin1String("305") % // Surface default depth is 1000 feet or 305m
-                            QLatin1String("NG"); // We don't have turbulence or wind shear information, hence we use the defaults
+                            "&D" // D = specifier for surface layer
+                            "305" // Surface default depth is 1000 feet or 305m
+                            "NG"; // We don't have turbulence or wind shear information, hence we use the defaults
                         simconnectWinds += surfaceWinds;
                         surface = false;
                     }
@@ -310,9 +310,9 @@ namespace BlackMisc
                         // Winds aloft extension:
                         // &ANNNNTS
                         simconnectWinds +=
-                            QLatin1String("&A") % // A = specifier for altitude above mean sea-level (MSL)
+                            u"&A" % // A = specifier for altitude above mean sea-level (MSL)
                             arg1s.arg(altitudeValue, 4, 10, QLatin1Char('0')) % // NNNN = depth (height) in meters.
-                            QLatin1String("NG"); // We don't have turbulence or wind shear information, hence we use the defaults
+                            u"NG"; // We don't have turbulence or wind shear information, hence we use the defaults
                     }
                 }
                 return simconnectWinds;
@@ -375,7 +375,7 @@ namespace BlackMisc
                     // Ignore clouds higher than 99900 feet
                     if (level > 999) { continue; }
                     simconnectClouds += arg1s.arg(level, 3, 10, QLatin1Char('0')) %
-                                        QLatin1Char('&');
+                                        u'&';
 
                     // TT = Cloud type
                     switch (cloudLayer.getClouds())
@@ -447,9 +447,9 @@ namespace BlackMisc
                     const int altitude = temperatureLayer.getLevel().valueInteger(CLengthUnit::m());
 
                     simconnectTemperatures += arg1s.arg(temperature, 2, 10, QLatin1Char('0')) % // TT = temperature in Celsius
-                                              QLatin1String("/") %
+                                              u'/' %
                                               arg1s.arg(dewPoint, 2, 10, QLatin1Char('0')) % // DD = dewpoint in Celsius
-                                              QLatin1String("&A") %
+                                              u"&A" %
                                               arg1s.arg(altitude, 5, 10, QLatin1Char('0')); // NNNNN = altitude of the temperatures in meters.
                 }
                 return simconnectTemperatures;

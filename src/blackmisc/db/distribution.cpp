@@ -64,13 +64,13 @@ namespace BlackMisc
 
         QString CDistribution::convertToQString(const QString &separator, bool i18n) const
         {
-            return QLatin1String("channel: ") %
+            return u"channel: " %
                    this->getChannel() %
                    separator %
-                   QLatin1String("download URLs: ") %
+                   u"download URLs: " %
                    getDownloadUrls().toQString(i18n) %
                    separator %
-                   QLatin1String("timestamp: ") %
+                   u"timestamp: " %
                    this->getFormattedUtcTimestampYmdhms();
         }
 

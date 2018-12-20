@@ -1044,11 +1044,11 @@ namespace BlackCore
         QString dm;
         if (s.tsCurrent > 0)
         {
-            dm = QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
-                 QStringLiteral("\n\n") %
-                 QStringLiteral("Situation: ") % s.toQString(false, true, true, true, true, sep);
+            dm = u"Setup: " % s.usedSetup.toQString(true) %
+                 u"\n\n" %
+                 u"Situation: " % s.toQString(false, true, true, true, true, sep);
         }
-        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QString() : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
+        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? u"Parts: " : u"\n\nParts: ") % p.toQString(sep); }
         return dm;
     }
 

@@ -85,7 +85,7 @@ namespace BlackMisc
             else
             {
                 return this->CLength::valueRoundedWithUnit(1, i18n) %
-                       (this->isMeanSeaLevel() ? QStringLiteral(" MSL") : QStringLiteral(" AGL"));
+                       (this->isMeanSeaLevel() ? u" MSL" : u" AGL");
             }
         }
 

@@ -352,11 +352,11 @@ namespace BlackGui
             QString f2 = QStringLiteral("COM2: %1").arg(f2n);
             if (f1Stations.size() == 1)
             {
-                f1 += QStringLiteral(" ") % f1Stations.front().getCallsignAndControllerRealName();
+                f1 += u' ' % f1Stations.front().getCallsignAndControllerRealName();
             }
             if (f2Stations.size() == 1)
             {
-                f1 += QStringLiteral(" ") % f2Stations.front().getCallsignAndControllerRealName();
+                f1 += u' ' % f2Stations.front().getCallsignAndControllerRealName();
             }
 
             ui->tb_TextMessagesCOM1->setToolTip(f1);
