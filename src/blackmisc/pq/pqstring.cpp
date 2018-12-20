@@ -117,13 +117,13 @@ namespace BlackMisc
             double numberD = -1;
             switch (mode)
             {
-            case SeparatorsLocale:
+            case SeparatorLocale:
                 numberD = QLocale::system().toDouble(number, &success);
                 break;
-            case SeparatorsCLocale:
+            case SeparatorQtDefault:
                 numberD = number.toDouble(&success);
                 break;
-            case SeparatorsBestGuess:
+            case SeparatorBestGuess:
                 numberD = number.toDouble(&success);
                 if (!success) { numberD = QLocale::system().toDouble(number, &success); }
                 break;

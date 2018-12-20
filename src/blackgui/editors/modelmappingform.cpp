@@ -128,7 +128,7 @@ namespace BlackGui
             }
 
             CLength cg;
-            cg.parseFromString(v);
+            cg.parseFromString(v, CPqString::SeparatorBestGuess);
             return cg;
         }
 

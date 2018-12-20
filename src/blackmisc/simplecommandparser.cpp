@@ -96,7 +96,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         if (p.isEmpty()) { return false; }
         bool ok = false;
-        CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
+        CPqString::parseNumber(p, ok, CPqString::SeparatorBestGuess);
         return ok;
     }
 
@@ -122,7 +122,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         if (p.isEmpty()) { return def; }
         bool ok = false;
-        double d = CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
+        double d = CPqString::parseNumber(p, ok, CPqString::SeparatorBestGuess);
         return ok ? d : def;
     }
 

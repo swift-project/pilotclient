@@ -328,7 +328,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    const CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorsBestGuess);
+                    const CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorBestGuess);
                     if (!radioFrequency.isNull())
                     {
                         if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
@@ -383,7 +383,7 @@ namespace BlackCore
                 CLength os(CLength::null());
                 if (parser.hasPart(2))
                 {
-                    os.parseFromString(parser.part(2));
+                    os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
                 }
 
                 const bool added = this->testAddAltitudeOffset(cs, os);

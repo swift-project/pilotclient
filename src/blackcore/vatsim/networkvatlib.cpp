@@ -1445,7 +1445,7 @@ namespace BlackCore
                 }
             }
             CAltitude cruiseAlt;
-            cruiseAlt.parseFromString(cruiseAltString, CPqString::SeparatorsBestGuess);
+            cruiseAlt.parseFromString(cruiseAltString, CPqString::SeparatorBestGuess);
 
             const QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
             const QString depTimeActual  = QString("0000").append(QString::number(fp->departTimeActual)).right(4);

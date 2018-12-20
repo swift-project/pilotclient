@@ -265,7 +265,7 @@ namespace BlackGui
         {
             const QString e = ui->le_Elevation->text().trimmed();
             CAltitude a;
-            a.parseFromString(e);
+            a.parseFromString(e, CPqString::SeparatorBestGuess);
             ui->lblp_ElvCheck->setTicked(!e.isNull());
             CCoordinateGeodetic c = m_coordinate;
             c.setGeodeticHeight(a);

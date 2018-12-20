@@ -358,7 +358,7 @@ namespace BlackGui
             if (situations.isEmpty()) { return; }
 
             CAltitude alt;
-            alt.parseFromString(elv);
+            alt.parseFromString(elv, CPqString::SeparatorBestGuess);
             const CElevationPlane ep(situations.latestAdjustedObject(), alt, CElevationPlane::singlePointRadius());
 
             // inject as received from simulator

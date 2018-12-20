@@ -448,7 +448,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value)
         {
-            *this = CPqString::parse<PQ>(value, CPqString::SeparatorsCLocale);
+            *this = CPqString::parse<PQ>(value, CPqString::SeparatorQtDefault);
         }
 
         template <class MU, class PQ>

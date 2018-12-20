@@ -392,7 +392,7 @@ namespace BlackGui
             // TAS
             v = ui->le_CruiseTrueAirspeed->text();
             CSpeed cruiseTAS;
-            cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
+            cruiseTAS.parseFromString(v, CPqString::SeparatorBestGuess);
             if (cruiseTAS.isNull())
             {
                 messages.push_back(CStatusMessage(this).validationError("Wrong TAS, %1") << ui->lbl_CruiseTrueAirspeed->text());

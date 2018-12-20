@@ -125,7 +125,7 @@ namespace BlackMisc
 
         void CAltitude::parseFromString(const QString &value)
         {
-            this->parseFromString(value, CPqString::SeparatorsBestGuess);
+            this->parseFromString(value, CPqString::SeparatorBestGuess);
         }
 
         void CAltitude::parseFromString(const QString &value, CPqString::SeparatorMode mode)

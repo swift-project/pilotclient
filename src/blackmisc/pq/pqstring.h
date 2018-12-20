@@ -38,9 +38,9 @@ namespace BlackMisc
             //! Number separators / group separators
             enum SeparatorMode
             {
-                SeparatorsCLocale,  //!< 100,000.00
-                SeparatorsLocale,   //!< depending on QLocale, e.g. 100.000,00 in Germany
-                SeparatorsBestGuess //!< try to figure out
+                SeparatorQtDefault, //!< 100000.00 no group separator
+                SeparatorLocale,    //!< depending on QLocale, e.g. 100.000,00 in Germany
+                SeparatorBestGuess  //!< try to figure out
             };
 
             //! Group and digit separator
@@ -57,10 +57,10 @@ namespace BlackMisc
             CPqString(const QString &value) : m_string(value) {}
 
             //! Parse a string value like "100m", "10.3Mhz"
-            static CVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorsCLocale);
+            static CVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorQtDefault);
 
             //! Parse into concrete type
-            template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorsCLocale)
+            template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorQtDefault)
             {
                 if (value.isEmpty()) {return PQ::null(); }
                 if (value.contains("null", Qt::CaseInsensitive)) { return PQ::null(); }
@@ -73,7 +73,7 @@ namespace BlackMisc
             }
 
             //! Locale aware parsing
-            static double parseNumber(const QString &number, bool &success, SeparatorMode mode = SeparatorsCLocale);
+            static double parseNumber(const QString &number, bool &success, SeparatorMode mode = SeparatorBestGuess);
 
         private:
             QString m_string;

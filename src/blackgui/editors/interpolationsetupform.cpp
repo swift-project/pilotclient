@@ -127,7 +127,7 @@ namespace BlackGui
         {
             CAngle pitch;
             const QString p = ui->le_PitchOnGround->text().trimmed();
-            pitch.parseFromString(p, CPqString::SeparatorsBestGuess);
+            pitch.parseFromString(p, CPqString::SeparatorBestGuess);
             return pitch;
         }
 
