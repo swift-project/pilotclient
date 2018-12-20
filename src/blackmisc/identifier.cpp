@@ -10,9 +10,17 @@
 #include "blackmisc/identifier.h"
 
 #include <QCoreApplication>
-#include <QDBusConnection>
 #include <QHostInfo>
+#include <QSysInfo>
 #include <QStringBuilder>
+
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
+
+#ifdef Q_OS_MAC
+#include <sys/sysctl.h>
+#endif
 
 //! \private
 const QString &cachedLocalHostName()
@@ -21,12 +29,53 @@ const QString &cachedLocalHostName()
     return hostName;
 }
 
+enum {
+    UuidStringLen = sizeof("00000000-0000-0000-0000-000000000000")
+};
+
+QByteArray getMachineUniqueIdImpl()
+{
+    // TODO RR: Remove the workaround branches as soon as the following two changes are published in 5.12.2 (TBC)
+    // https://codereview.qt-project.org/#/c/249256
+    // https://codereview.qt-project.org/#/c/249399
+
+    QByteArray machineUniqueId;
+    #ifdef Q_OS_MAC
+        char uuid[UuidStringLen];
+        size_t uuidlen = sizeof(uuid);
+        int ret = sysctlbyname("kern.uuid", uuid, &uuidlen, nullptr, 0);
+        if (ret == 0 && uuidlen == sizeof(uuid))
+        {
+            machineUniqueId = QByteArray(uuid, uuidlen - 1);
+        }
+    #elif defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
+        HKEY key = nullptr;
+        if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Cryptography", 0, KEY_READ | KEY_WOW64_64KEY, &key) == ERROR_SUCCESS)
+        {
+            wchar_t buffer[UuidStringLen];
+            DWORD size = sizeof(buffer);
+            bool ok = (RegQueryValueEx(key, L"MachineGuid", nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer), &size) == ERROR_SUCCESS);
+            RegCloseKey(key);
+            if (ok) { machineUniqueId = QStringView(buffer, (size - 1) / 2).toLatin1(); }
+        }
+    #else
+        machineUniqueId = QSysInfo::machineUniqueId();
+    #endif
+    return machineUniqueId;
+}
+
+QByteArray cachedMachineUniqueId()
+{
+    static const QByteArray machineUniqueId = getMachineUniqueIdImpl();
+    return machineUniqueId;
+}
+
 namespace BlackMisc
 {
     CIdentifier::CIdentifier(const QString &name)
         : ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
           m_name(name.trimmed()),
-          m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
+          m_machineIdBase64(cachedMachineUniqueId().toBase64()),
           m_machineName(cachedLocalHostName()),
           m_processName(QCoreApplication::applicationName()),
           m_processId(QCoreApplication::applicationPid())
@@ -115,7 +164,7 @@ namespace BlackMisc
 
     bool CIdentifier::isFromLocalMachine() const
     {
-        return QDBusConnection::localMachineId() == getMachineId();
+        return cachedMachineUniqueId() == getMachineId();
     }
 
     bool CIdentifier::hasApplicationProcessId() const
@@ -175,4 +224,5 @@ namespace BlackMisc
     {
         CValueObject::setPropertyByIndex(index, variant);
     }
+
 } // ns

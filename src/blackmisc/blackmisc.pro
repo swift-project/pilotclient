@@ -69,6 +69,8 @@ SOURCES +=  *.cpp \
 
 win32 {
     LIBS *= -lShell32 -lDbghelp -lversion
+    # Remove the one below once the Reg functions are removed again from CIdentifier
+    LIBS *= -lAdvapi32
 }
 win32-g++ {
     LIBS *= -lpsapi

@@ -32,6 +32,9 @@ namespace BlackMiscTest
     private slots:
         //! Identifier tests
         void identifierBasics();
+
+        //! Machine unique id tests
+        void machineUniqueId();
     };
 
     //! Test identifiable object
@@ -57,6 +60,12 @@ namespace BlackMiscTest
         QVERIFY2(oa.identifier().getName() == q.objectName(), "Names shall be equal");
         q.setObjectName("bar");
         QVERIFY2(oa.identifier().getName() == q.objectName(), "Names shall be equal");
+    }
+
+    void CTestIdentifier::machineUniqueId()
+    {
+        CIdentifier o;
+        QVERIFY2(!o.getMachineId().isEmpty(), "Machine id shall never be empty! If this test failed on a supported platform, get a fallback solution!");
     }
 
     CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)
