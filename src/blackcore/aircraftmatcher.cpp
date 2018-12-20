@@ -613,8 +613,8 @@ namespace BlackCore
 
     QString CAircraftMatcher::reverseLookupAirlineName(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return ""; }
-        if (candidate.isEmpty()) { return ""; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (candidate.isEmpty()) { return {}; }
         const QStringList names = sApp->getWebDataServices()->getAirlineNames();
         if (names.contains(candidate, Qt::CaseInsensitive))
         {
@@ -623,13 +623,13 @@ namespace BlackCore
         }
 
         CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' not found in DB").arg(candidate));
-        return "";
+        return {};
     }
 
     QString CAircraftMatcher::reverseLookupTelephonyDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return ""; }
-        if (candidate.isEmpty()) { return ""; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (candidate.isEmpty()) { return {}; }
         const QStringList designators = sApp->getWebDataServices()->getTelephonyDesignators();
         if (designators.contains(candidate, Qt::CaseInsensitive))
         {
@@ -638,7 +638,7 @@ namespace BlackCore
         }
 
         CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' not found").arg(candidate));
-        return "";
+        return {};
     }
 
     bool CAircraftMatcher::isKnowAircraftDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
@@ -1291,7 +1291,7 @@ namespace BlackCore
 
     QString CAircraftMatcher::scoresToString(const ScoredModels &scores, int lastElements)
     {
-        if (scores.isEmpty()) { return ""; }
+        if (scores.isEmpty()) { return {}; }
         QMapIterator<int, CAircraftModel> i(scores);
         i.toBack();
         int c = 0;

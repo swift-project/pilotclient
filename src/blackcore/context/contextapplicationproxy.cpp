@@ -197,7 +197,7 @@ namespace BlackCore
 
         QString CContextApplicationProxy::readFromFile(const QString &fileName) const
         {
-            if (fileName.isEmpty()) { return ""; }
+            if (fileName.isEmpty()) { return {}; }
             return m_dBusInterface->callDBusRet<QString>(QLatin1String("readFromFile"), fileName);
         }
 

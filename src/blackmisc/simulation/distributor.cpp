@@ -38,10 +38,10 @@ namespace BlackMisc
         {
             if (!this->getDbKey().isEmpty() && !this->getDescription().isEmpty())
             {
-                return this->getDbKey() + " " + this->getDescription();
+                return this->getDbKey() % u' ' % this->getDescription();
             }
             if (!this->getDbKey().isEmpty()) { return this->getDbKey(); }
-            return "";
+            return {};
         }
 
         bool CDistributor::matchesKeyOrAlias(const QString &keyOrAlias) const

@@ -47,18 +47,18 @@ namespace BlackMisc
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         HANDLE proc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid));
-        if (! proc) { return ""; }
+        if (! proc) { return {}; }
         wchar_t path[1024];
         auto len = GetModuleFileNameEx(proc, nullptr, path, std::extent<decltype(path)>::value);
         CloseHandle(proc);
-        if (len <= 0) { return ""; }
+        if (len <= 0) { return {}; }
         return QFileInfo(QString::fromWCharArray(path)).completeBaseName();
     }
 #else
     QString CProcessInfo::processNameFromId(qint64)
     {
         qFatal("Not implemented");
-        return "";
+        return {};
     }
 #endif
 

@@ -29,8 +29,8 @@ namespace BlackMisc
         QString CAirportIcaoCode::unifyAirportCode(const QString &icaoCode)
         {
             const QString code = icaoCode.trimmed().toUpper();
-            if (code.length() != 4) return "";
-            if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return ""; }
+            if (code.length() != 4) return {};
+            if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return {}; }
             return code;
         }
 

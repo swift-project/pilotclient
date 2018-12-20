@@ -298,7 +298,7 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getEngineType() const
         {
-            if (m_combinedType.length() != 3) return "";
+            if (m_combinedType.length() != 3) return {};
             return m_combinedType.right(1);
         }
 
@@ -322,15 +322,15 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getEngineCountString() const
         {
-            if (m_combinedType.length() < 2) { return ""; }
+            if (m_combinedType.length() < 2) { return {}; }
             return m_combinedType.mid(1, 1);
         }
 
         QString CAircraftIcaoCode::getAircraftType() const
         {
-            if (m_combinedType.length() < 1) { return ""; }
+            if (m_combinedType.length() < 1) { return {}; }
             QString c(m_combinedType.at(0));
-            if (c == "-") { return ""; }
+            if (c == "-") { return {}; }
             return c;
         }
 
@@ -477,7 +477,7 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
         {
-            if (!this->hasIataCode()) { return ""; }
+            if (!this->hasIataCode()) { return {}; }
             return this->getIataCode() % u" [IATA" %
                    (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                    (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
@@ -487,7 +487,7 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
         {
-            if (!this->hasFamily()) { return ""; }
+            if (!this->hasFamily()) { return {}; }
             return this->getFamily() % u" [family" %
                    (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                    (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %

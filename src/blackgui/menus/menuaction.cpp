@@ -123,11 +123,11 @@ namespace BlackGui
         {
             if (m_path.contains('/'))
             {
-                if (m_path.endsWith('/')) { return ""; }
+                if (m_path.endsWith('/')) { return {}; }
                 const int i = m_path.lastIndexOf('/');
                 return m_path.mid(i + 1);
             }
-            return "";
+            return {};
         }
 
         void CMenuActions::splitSubMenus(const QString &key, QList<CMenuAction> &actions, QList<CMenuAction> &menus) const
@@ -546,7 +546,7 @@ namespace BlackGui
 
         QString CMenuActions::parentPath(const QString &currentPath)
         {
-            if (!currentPath.contains('/')) { return ""; }
+            if (!currentPath.contains('/')) { return {}; }
             const int i = currentPath.lastIndexOf('/');
             return currentPath.left(i);
         }
@@ -554,7 +554,7 @@ namespace BlackGui
         QString CMenuActions::keyRoot(const QString &key)
         {
             const int i = key.lastIndexOf('.');
-            if (i < 0) { return ""; }
+            if (i < 0) { return {}; }
             return key.left(i);
         }
 

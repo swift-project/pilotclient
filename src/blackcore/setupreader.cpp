@@ -541,7 +541,7 @@ namespace BlackCore
 
     QString CSetupReader::getCmdLineBootstrapUrl() const
     {
-        if (m_ignoreCmdBootstrapUrl) return "";
+        if (m_ignoreCmdBootstrapUrl) return {};
         return sApp->getParserValue(m_cmdBootstrapUrl);
     }
 
@@ -635,12 +635,12 @@ namespace BlackCore
     {
         switch (m_bootstrapMode)
         {
-        case CacheOnly: return "cache only";
-        case Explicit:  return "explicit";
-        case Implicit:  return "implicit";
+        case CacheOnly: return QStringLiteral("cache only");
+        case Explicit:  return QStringLiteral("explicit");
+        case Implicit:  return QStringLiteral("implicit");
         default: break;
         }
-        return "";
+        return {};
     }
 
     void CSetupReader::setLastSetupReadErrorMessages(const CStatusMessageList &messages)

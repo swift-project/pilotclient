@@ -130,9 +130,9 @@ namespace BlackMisc
         {
             const int maxIndex = remarks.size() - 1;
             int f = remarks.indexOf(marker);
-            if (f < 0) { return ""; }
+            if (f < 0) { return {}; }
             f += marker.length();
-            if (maxIndex <= f) { return ""; }
+            if (maxIndex <= f) { return {}; }
 
             // the remarks are poorly formatted:
             // 1) sometimes the values are enclosed in "/", like "/REG/D-AMBZ/"

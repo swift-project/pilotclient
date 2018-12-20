@@ -171,7 +171,7 @@ namespace BlackMisc
             const CIcon &toDatabaseIcon() const;
 
             //! Invalid key
-            static QString invalidDbKey() { return ""; }
+            static QString invalidDbKey() { return {}; }
 
         protected:
             //! Constructor

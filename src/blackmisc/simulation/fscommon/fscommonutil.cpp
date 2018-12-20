@@ -93,7 +93,7 @@ namespace BlackMisc
             QString fsxSimObjectsDirFromRegistryImpl()
             {
                 const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();
-                if (fsxPath.isEmpty()) { return ""; }
+                if (fsxPath.isEmpty()) { return {}; }
                 return CFsCommonUtil::fsxSimObjectsDirFromSimDir(fsxPath);
             }
 
@@ -106,7 +106,7 @@ namespace BlackMisc
             QString fsxSimObjectsDirImpl()
             {
                 QString dir(CFsCommonUtil::fsxDir());
-                if (dir.isEmpty()) { return ""; }
+                if (dir.isEmpty()) { return {}; }
                 return CFsCommonUtil::fsxSimObjectsDirFromSimDir(dir);
             }
 
@@ -186,7 +186,7 @@ namespace BlackMisc
             QString p3dSimObjectsDirFromRegistryImpl()
             {
                 const QString p3dPath = CFsCommonUtil::p3dDirFromRegistry();
-                if (p3dPath.isEmpty()) { return ""; }
+                if (p3dPath.isEmpty()) { return {}; }
                 return CFsCommonUtil::fsxSimObjectsDirFromSimDir(p3dPath);
             }
 
@@ -199,7 +199,7 @@ namespace BlackMisc
             QString p3dSimObjectsDirImpl()
             {
                 QString dir(CFsCommonUtil::p3dDir());
-                if (dir.isEmpty()) { return ""; }
+                if (dir.isEmpty()) { return {}; }
                 return CFsCommonUtil::fsxSimObjectsDirFromSimDir(dir);
             }
 

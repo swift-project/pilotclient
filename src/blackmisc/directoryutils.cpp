@@ -209,7 +209,7 @@ namespace BlackMisc
             return dir.absolutePath();
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "missing dir");
-        return "";
+        return {};
     }
 
     const QString &CDirectoryUtils::shareDirectory()
@@ -239,7 +239,7 @@ namespace BlackMisc
     const QString getBootstrapResourceFileImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return ""; }
+        if (d.isEmpty()) { return {}; }
         const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CDirectoryUtils::bootstrapFileName()));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
         return QFileInfo(file).absoluteFilePath();
@@ -254,7 +254,7 @@ namespace BlackMisc
     QString getSwiftStaticDbFilesDirImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return ""; }
+        if (d.isEmpty()) { return {}; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -269,7 +269,7 @@ namespace BlackMisc
     QString getSoundFilesDirImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return ""; }
+        if (d.isEmpty()) { return {}; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -284,7 +284,7 @@ namespace BlackMisc
     QString getStylesheetsDirImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return ""; }
+        if (d.isEmpty()) { return {}; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -359,7 +359,7 @@ namespace BlackMisc
     QString testFilesDirImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
-        if (d.isEmpty()) { return ""; }
+        if (d.isEmpty()) { return {}; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();

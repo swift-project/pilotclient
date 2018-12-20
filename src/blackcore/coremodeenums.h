@@ -50,11 +50,11 @@ namespace BlackCore
         {
             switch (mode)
             {
-            case CoreInGuiProcess: return "coreinguiprocess";
-            case CoreExternalCoreAudio: return "coreexternal";
-            case CoreExternalAudioGui: return "coreexternalaudiogui";
+            case CoreInGuiProcess: return QStringLiteral("coreinguiprocess");
+            case CoreExternalCoreAudio: return QStringLiteral("coreexternal");
+            case CoreExternalAudioGui: return QStringLiteral("coreexternalaudiogui");
             }
-            return "";
+            return {};
         }
     };
 }

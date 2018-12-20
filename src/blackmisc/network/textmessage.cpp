@@ -94,7 +94,7 @@ namespace BlackMisc
         QString CTextMessage::getRecipientCallsignOrFrequency() const
         {
             if (!m_recipientCallsign.isEmpty()) { return m_recipientCallsign.asString(); }
-            if (m_frequency.isNull()) { return ""; }
+            if (m_frequency.isNull()) { return {}; }
             return m_frequency.valueRoundedWithUnit(CFrequencyUnit::MHz(), 3);
         }
 

@@ -166,13 +166,13 @@ namespace BlackGui
 
         QString CDbOwnModelsComponent::getInfoString() const
         {
-            if (!m_modelLoader) { return ""; }
+            if (!m_modelLoader) { return {}; }
             return m_modelLoader->getInfoString();
         }
 
         QString CDbOwnModelsComponent::getInfoStringFsFamily() const
         {
-            if (!m_modelLoader) { return ""; }
+            if (!m_modelLoader) { return {}; }
             return m_modelLoader->getInfoStringFsFamily();
         }
 

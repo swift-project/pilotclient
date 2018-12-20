@@ -381,14 +381,14 @@ namespace BlackMisc
 
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
         {
-            if (modelString.isEmpty()) { return ""; }
+            if (modelString.isEmpty()) { return {}; }
             const CAircraftModel m(findFirstByModelStringOrDefault(modelString, Qt::CaseInsensitive));
             return m.getIconPath();
         }
 
         QString CAircraftModelList::findModelIconPathByCallsign(const CCallsign &callsign) const
         {
-            if (callsign.isEmpty()) { return ""; }
+            if (callsign.isEmpty()) { return {}; }
             const CAircraftModel m(findFirstByCallsignOrDefault(callsign));
             return m.getIconPath();
         }
@@ -1175,7 +1175,7 @@ namespace BlackMisc
 
         QString CAircraftModelList::asHtmlSummary() const
         {
-            if (this->isEmpty()) { return ""; }
+            if (this->isEmpty()) { return {}; }
             QString html;
             for (const CAircraftModel &model : *this)
             {

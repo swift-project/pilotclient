@@ -378,7 +378,7 @@ namespace BlackGui
     QString CGuiApplication::beautifyHelpMessage(const QString &helpText)
     {
         // just formatting Qt help message into HTML table
-        if (helpText.isEmpty()) { return ""; }
+        if (helpText.isEmpty()) { return {}; }
         const QStringList lines(helpText.split('\n'));
         QString html;
         bool tableMode = false;

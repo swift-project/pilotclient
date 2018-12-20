@@ -17,6 +17,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QSize>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
 
@@ -127,9 +128,9 @@ namespace BlackMisc
 
     QString CRgbColor::hex(bool withHash) const
     {
-        if (!isValid()) { return ""; }
+        if (!isValid()) { return {}; }
         const QString h(redHex() + greenHex() + blueHex());
-        return withHash ? "#" + h : h;
+        return withHash ? u'#' % h : h;
     }
 
     void CRgbColor::setByString(const QString &color, bool isName)

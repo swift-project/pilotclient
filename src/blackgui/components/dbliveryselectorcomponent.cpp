@@ -226,7 +226,7 @@ namespace BlackGui
 
         QString CDbLiverySelectorComponent::stripExtraInfo(const QString &liveryCode) const
         {
-            if (liveryCode.isEmpty()) { return ""; }
+            if (liveryCode.isEmpty()) { return {}; }
             const QString l(liveryCode.trimmed().toUpper());
             int is = l.indexOf(' ');
             int ib = l.indexOf('(');

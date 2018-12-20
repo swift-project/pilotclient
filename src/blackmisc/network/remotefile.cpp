@@ -72,7 +72,7 @@ namespace BlackMisc
 
         QString CRemoteFile::getFormattedCreatedYmdhms() const
         {
-            if (m_created < 1) { return ""; }
+            if (m_created < 1) { return {}; }
             const QDateTime dt = QDateTime::fromMSecsSinceEpoch(m_created);
             return dt.toString("yyyy-MM-dd HH:mm:ss");
         }

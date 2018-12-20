@@ -99,7 +99,7 @@ namespace BlackGui
 
     QString CTextMessageTextEdit::toHtml(const CTextMessageList &messages, bool withFrom, bool withTo)
     {
-        if (messages.isEmpty()) { return ""; }
+        if (messages.isEmpty()) { return {}; }
         QString html("<table>");
         for (const CTextMessage &msg : messages)
         {

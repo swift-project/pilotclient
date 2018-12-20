@@ -33,7 +33,7 @@ namespace BlackMisc
             {
                 if (CSelcal::isValidCharacter(c)) { s += c;}
             }
-            return CSelcal::isValidCode(s) ? s : QString("");
+            return CSelcal::isValidCode(s) ? s : QString();
         }
 
         bool CSelcal::equalsString(const QString &code) const

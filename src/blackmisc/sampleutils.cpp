@@ -17,7 +17,7 @@ namespace BlackMisc
     QString CSampleUtils::selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut, QTextStream &streamIn)
     {
         Q_ASSERT(!directoryOptions.isEmpty());
-        if (directoryOptions.isEmpty())  { return ""; }
+        if (directoryOptions.isEmpty()) { return {}; }
         if (directoryOptions.size() < 2) { return directoryOptions.first(); }
 
         QString selectedDir;

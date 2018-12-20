@@ -171,7 +171,7 @@ namespace BlackMisc
 
     QString CDBusServer::getDBusInterfaceFromClassInfo(QObject *object)
     {
-        if (! object) { return ""; }
+        if (! object) { return {}; }
         const QMetaObject *mo = object->metaObject();
         for (int i = 0; i < mo->classInfoCount(); i++)
         {
@@ -179,7 +179,7 @@ namespace BlackMisc
             const QString name = QString(ci.name()).toLower();
             if (name == "d-bus interface") { return QString(ci.value()); }
         }
-        return "";
+        return {};
     }
 
     QDBusConnection::RegisterOptions CDBusServer::registerOptions()

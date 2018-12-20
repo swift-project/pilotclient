@@ -174,8 +174,8 @@ void CSwiftCore::disconnectFromNetwork()
 
 QString CSwiftCore::getAudioCmdFromRadioButtons() const
 {
-    if (ui->rb_AudioOnCore->isChecked()) { return "--coreaudio"; }
-    return "";
+    if (ui->rb_AudioOnCore->isChecked()) { return QStringLiteral("--coreaudio"); }
+    return {};
 }
 
 QStringList CSwiftCore::getRestartCmdArgs() const

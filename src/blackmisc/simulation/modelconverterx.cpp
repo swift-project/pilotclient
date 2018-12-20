@@ -67,9 +67,9 @@ namespace BlackMisc
         {
             static const BlackMisc::CSettingReadOnly<TModelConverterXBinary> setting(new QObject());
             const QString mcx = setting.get();
-            if (mcx.isEmpty()) return "";
+            if (mcx.isEmpty()) return {};
             const QFile f(mcx);
-            return (f.exists()) ? mcx : "";
+            return (f.exists()) ? mcx : QString();
         }
     } // ns
 } // ns

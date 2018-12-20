@@ -50,7 +50,7 @@ namespace BlackGui
 
         QString CDBusServerAddressSelector::getP2PAddress() const
         {
-            if (!this->isP2P()) { return ""; }
+            if (!this->isP2P()) { return {}; }
             return CDBusServer::p2pAddress(
                        ui->cb_DBusServerAddress->currentText() + ":" +
                        ui->le_DBusServerPort->text()

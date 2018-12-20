@@ -109,7 +109,7 @@ namespace BlackMisc
 
         QString CUrl::getFullUrl(bool withQuery) const
         {
-            if (m_host.isEmpty()) { return ""; }
+            if (m_host.isEmpty()) { return {}; }
 
             QString qn(m_host);
             if (!hasDefaultPort() && hasPort()) { qn = qn.append(":").append(QString::number(m_port)); }
@@ -198,8 +198,8 @@ namespace BlackMisc
         {
             const QString f(this->getFileName());
             const int i = f.lastIndexOf('.');
-            if (i < 0) return "";
-            if (f.length() <= i + 1) return ""; // ends with "."
+            if (i < 0) return {};
+            if (f.length() <= i + 1) return {}; // ends with "."
             return f.mid(i + 1); // suffix without dot
         }
 
@@ -207,8 +207,8 @@ namespace BlackMisc
         {
             const QString f(this->getFileName());
             const int i = f.lastIndexOf('.');
-            if (i < 0) return "";
-            if (f.length() <= i + 1) return ""; // ends with "."
+            if (i < 0) return {};
+            if (f.length() <= i + 1) return {}; // ends with "."
             return f.mid(i);  // suffix with dot
         }
 

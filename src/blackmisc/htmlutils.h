@@ -22,7 +22,7 @@ namespace BlackMisc
     //! Container to standard HTML table
     template <class Obj, class Container> QString toHtmlTable(const CPropertyIndexList &indexes, const Container &container)
     {
-        if (indexes.isEmpty() || container.isEmpty()) { return ""; }
+        if (indexes.isEmpty() || container.isEmpty()) { return {}; }
         QString html;
         for (const Obj &obj : container)
         {

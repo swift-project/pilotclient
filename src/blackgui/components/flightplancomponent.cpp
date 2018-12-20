@@ -370,7 +370,7 @@ namespace BlackGui
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
                 messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_DestinationAirport->text());
-                flightPlan.setDestinationAirportIcao(QString(""));
+                flightPlan.setDestinationAirportIcao(QString());
             }
             else
             {
@@ -411,7 +411,7 @@ namespace BlackGui
                 {
                     messages.push_back(CStatusMessage(this).validationInfo("Missing %1") << ui->lbl_AlternateAirport->text());
                 }
-                flightPlan.setAlternateAirportIcao(QString(""));
+                flightPlan.setAlternateAirportIcao(QString());
             }
             else
             {

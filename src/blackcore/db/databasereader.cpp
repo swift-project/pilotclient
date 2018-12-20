@@ -688,7 +688,7 @@ namespace BlackCore
 
         QString CDatabaseReader::dateTimeToDbLatestTs(const QDateTime &ts)
         {
-            if (!ts.isValid()) { return ""; }
+            if (!ts.isValid()) { return {}; }
             return ts.toUTC().toString(Qt::ISODate);
         }
 
@@ -709,7 +709,7 @@ namespace BlackCore
 
         QString CDatabaseReader::queryLatestTimestamp(const QDateTime &ts)
         {
-            if (!ts.isValid()) return "";
+            if (!ts.isValid()) return {};
             const QString q = parameterLatestTimestamp() + "=" + dateTimeToDbLatestTs(ts);
             return q;
         }

@@ -62,7 +62,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         const int from = index < 1 ? 0 : nthIndexOf(m_cleanedLine, ' ', index, Qt::CaseInsensitive);
         const int fi = m_cleanedLine.indexOf(p, from, Qt::CaseInsensitive);
-        if (fi < 0) { return ""; }
+        if (fi < 0) { return {}; }
         return m_originalLine.mid(fi).trimmed();
     }
 
@@ -154,7 +154,7 @@ namespace BlackMisc
 
     QString CSimpleCommandParser::commandsHtmlHelp()
     {
-        if (s_commands.isEmpty()) { return ""; }
+        if (s_commands.isEmpty()) { return {}; }
 
         static const QString html("<table style=\"font-size: 8pt; white-space: nowrap;\">\n%1\n</table>");
         static const QString row("<td>%1</td><td>%2</td>");

@@ -84,7 +84,7 @@ namespace BlackMisc
 
         QString CVoiceRoom::getVoiceRoomUrl(bool noProtocol) const
         {
-            if (!this->isValid()) return "";
+            if (!this->isValid()) return {};
             QString url(noProtocol ? "" : CVoiceRoom::protocolComplete());
             url.append(this->m_hostname);
             url.append("/");

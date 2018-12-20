@@ -150,7 +150,7 @@ namespace BlackMisc
 
         QString IDatastoreObjectWithStringKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
-            if (m_dbKey.isEmpty()) { return ""; }
+            if (m_dbKey.isEmpty()) { return {}; }
             return prefix % '(' % m_dbKey % ')';
         }
 

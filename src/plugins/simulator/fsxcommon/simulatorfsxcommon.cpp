@@ -2444,7 +2444,7 @@ namespace BlackSimPlugin
             {
                 return this->getSendIdTraceDetails(trace);
             }
-            return "";
+            return {};
         }
 
         QString CSimulatorFsxCommon::getSendIdTraceDetails(const TraceFsxSendId &trace) const

@@ -34,7 +34,7 @@ namespace BlackMisc
 
         QString CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrix(const CAircraftModelList &models)
         {
-            if (models.isEmpty()) { return ""; }
+            if (models.isEmpty()) { return {}; }
             static const QString emptyDesignator = "----";
             static const QString colorLiveryDesignator = "-C-";
 
@@ -124,13 +124,13 @@ namespace BlackMisc
         QString CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(const CAircraftModelList &models, const QString &tempDir)
         {
             Q_ASSERT_X(!tempDir.isEmpty(), Q_FUNC_INFO, "Need directory");
-            if (models.isEmpty()) { return ""; }
+            if (models.isEmpty()) { return {}; }
             const QString html = createIcaoAirlineAircraftHtmlMatrix(models);
-            if (html.isEmpty()) { return ""; }
+            if (html.isEmpty()) { return {}; }
 
             QDir dir(tempDir);
             BLACK_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
-            if (!dir.exists()) { return ""; }
+            if (!dir.exists()) { return {}; }
 
             const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
             const QString fn("airlineAircraftMatrix.html");

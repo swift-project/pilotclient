@@ -79,19 +79,19 @@ namespace BlackMisc
     QString CCacheSettingsUtils::otherVersionFileName(const CApplicationInfo &info, const QString &relativeFileName)
     {
         thread_local const QRegularExpression re("bin$");
-        if (relativeFileName.isEmpty()) { return ""; }
+        if (relativeFileName.isEmpty()) { return {}; }
         QString otherFile = info.getApplicationDataDirectory();
         otherFile.replace(re, relativeFileName);
         const QFileInfo fi(otherFile);
-        if (!fi.isFile()) { return ""; }
+        if (!fi.isFile()) { return {}; }
         if (fi.exists()) { return fi.absoluteFilePath(); }
-        return "";
+        return {};
     }
 
     QString CCacheSettingsUtils::otherVersionSettingsFileContent(const CApplicationInfo &info, const QString &mySettingFile)
     {
         const QString file = otherVersionSettingsFileName(info, mySettingFile);
-        if (file.isEmpty()) { return ""; }
+        if (file.isEmpty()) { return {}; }
         const QString jsonStr = CFileUtils::readFileToString(file);
         return jsonStr;
     }
@@ -99,7 +99,7 @@ namespace BlackMisc
     QString CCacheSettingsUtils::otherVersionCacheFileContent(const CApplicationInfo &info, const QString &myCacheFile)
     {
         const QString file = otherVersionCacheFileName(info, myCacheFile);
-        if (file.isEmpty()) { return ""; }
+        if (file.isEmpty()) { return {}; }
         const QString jsonStr = CFileUtils::readFileToString(file);
         return jsonStr;
     }

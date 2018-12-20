@@ -221,7 +221,7 @@ namespace BlackMisc
 
     QString CStatusMessageList::toHtml(const CPropertyIndexList &indexes) const
     {
-        if (indexes.isEmpty() || this->isEmpty()) { return ""; }
+        if (indexes.isEmpty() || this->isEmpty()) { return {}; }
         QString html;
         int line = 1;
         const bool withLineNumbers = indexes.contains(CPropertyIndex::GlobalIndexLineNumber);

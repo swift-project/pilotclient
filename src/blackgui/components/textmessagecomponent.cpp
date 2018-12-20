@@ -532,7 +532,7 @@ namespace BlackGui
         QString CTextMessageComponent::textMessageToCommand(const QString &enteredLine)
         {
             // only if visible
-            if (enteredLine.isEmpty()) { return ""; }
+            if (enteredLine.isEmpty()) { return {}; }
 
             const int index = ui->tw_TextMessages->currentIndex();
             QString cmd(".msg ");

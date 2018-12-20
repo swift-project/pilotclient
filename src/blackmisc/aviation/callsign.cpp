@@ -149,7 +149,7 @@ namespace BlackMisc
 
         QString CCallsign::getAsObserverCallsignString() const
         {
-            if (this->isEmpty()) { return ""; }
+            if (this->isEmpty()) { return {}; }
             QString obs = this->getStringAsSet();
             if (obs.endsWith("_OBS", Qt::CaseInsensitive)) { return obs; } // already OBS
             if (obs.contains('_')) { obs = obs.left(obs.lastIndexOf('_')); }
@@ -168,8 +168,8 @@ namespace BlackMisc
 
         QString CCallsign::getAirlineSuffix() const
         {
-            if (m_callsign.length() < 3) { return ""; }
-            if (this->isAtcCallsign()) { return ""; }
+            if (m_callsign.length() < 3) { return {}; }
+            if (this->isAtcCallsign()) { return {}; }
 
             thread_local const QRegularExpression regExp("^[A-Z]{3,}");
             QRegularExpressionMatch match = regExp.match(m_callsign);
@@ -184,7 +184,7 @@ namespace BlackMisc
             const QString number = match.captured(1);
             if (number.length() >= 3 && airline.length() == 4) { return airline.left(3); }
 
-            return ""; // invalid
+            return {}; // invalid
         }
 
         bool CCallsign::hasSuffix() const

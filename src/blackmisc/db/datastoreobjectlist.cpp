@@ -134,7 +134,7 @@ namespace BlackMisc
         template<class OBJ, class CONTAINER, typename KEYTYPE>
         QString IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::dbKeysAsString(const QString &separator) const
         {
-            if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty()) { return ""; }
+            if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty()) { return {}; }
             const QSet<QString> keys = IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyStringSet();
             QString s;
             for (const QString &k : keys)

@@ -201,7 +201,7 @@ namespace BlackCore
 
         QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
         {
-            if (candidate.isEmpty()) return ""; // not possible
+            if (candidate.isEmpty()) return {}; // not possible
             static const QString version(QString(CGlobalSetup::schemaVersionString()).append("/"));
             if (candidate.endsWith(CDirectoryUtils::bootstrapFileName())) { return candidate; }
             CUrl url(candidate);

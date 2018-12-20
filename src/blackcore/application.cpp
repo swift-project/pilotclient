@@ -284,14 +284,14 @@ namespace BlackCore
         case CApplicationInfo::PilotClientGui:  searchFor = "gui"; break;
         default: break;
         }
-        if (searchFor.isEmpty()) { return ""; }
+        if (searchFor.isEmpty()) { return {}; }
 
         for (const QString &executable : CFileUtils::getSwiftExecutables())
         {
             if (!executable.contains("swift", Qt::CaseInsensitive)) { continue; }
             if (executable.contains(searchFor, Qt::CaseInsensitive)) { return executable; }
         }
-        return "";
+        return {};
     }
 
     bool CApplication::startLauncher()
@@ -1283,7 +1283,7 @@ namespace BlackCore
 
     QString CApplication::getCmdDBusAddressValue() const
     {
-        if (!this->isParserOptionSet(m_cmdDBusAddress)) { return ""; }
+        if (!this->isParserOptionSet(m_cmdDBusAddress)) { return {}; }
         const QString v(this->getParserValue(m_cmdDBusAddress));
         const QString dBusAddress(CDBusServer::normalizeAddress(v));
         return dBusAddress;
@@ -1407,7 +1407,7 @@ namespace BlackCore
     {
         QStringList args = QCoreApplication::arguments();
         if (!withExecutable && !args.isEmpty()) args.removeFirst();
-        if (args.isEmpty()) return "";
+        if (args.isEmpty()) return {};
         return args.join(' ');
     }
 
@@ -1556,13 +1556,13 @@ namespace BlackCore
 
     QString CApplication::getLastSuccesfulSetupUrl() const
     {
-        if (!this->hasSetupReader()) { return ""; }
+        if (!this->hasSetupReader()) { return {}; }
         return m_setupReader->getLastSuccessfulSetupUrl();
     }
 
     QString CApplication::getLastSuccesfulDistributionUrl() const
     {
-        if (!this->hasSetupReader()) { return ""; }
+        if (!this->hasSetupReader()) { return {}; }
         return m_setupReader->getLastSuccessfulUpdateInfoUrl();
     }
 

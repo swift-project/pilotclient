@@ -48,7 +48,7 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::getFileDirectory() const
             {
-                if (m_fileName.isEmpty()) { return ""; }
+                if (m_fileName.isEmpty()) { return {}; }
                 const QFileInfo fileInfo(m_fileName);
                 return fileInfo.absolutePath();
             }
@@ -166,8 +166,8 @@ namespace BlackMisc
 
             QString CAircraftCfgEntries::getThumbnailFileNameGuess() const
             {
-                if (m_texture.isEmpty()) { return ""; }
-                if (m_fileName.isEmpty()) { return ""; }
+                if (m_texture.isEmpty()) { return {}; }
+                if (m_fileName.isEmpty()) { return {}; }
                 QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + m_texture + QDir::separator() + "thumbnail.jpg");
                 return fn;
             }
@@ -175,9 +175,9 @@ namespace BlackMisc
             QString CAircraftCfgEntries::getThumbnailFileNameChecked() const
             {
                 const QString f(getThumbnailFileNameGuess());
-                if (f.isEmpty()) { return ""; }
+                if (f.isEmpty()) { return {}; }
                 if (QFile(f).exists()) { return f; }
-                return "";
+                return {};
             }
 
             CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

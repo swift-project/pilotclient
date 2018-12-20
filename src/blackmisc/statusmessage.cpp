@@ -198,7 +198,7 @@ namespace BlackMisc
 
     QString CStatusMessage::getHumanOrTechnicalCategoriesAsString() const
     {
-        if (m_categories.isEmpty()) { return ""; }
+        if (m_categories.isEmpty()) { return {}; }
         const QString c(getHumanReadablePattern());
         return c.isEmpty() ? this->getCategoriesAsString() : c;
     }

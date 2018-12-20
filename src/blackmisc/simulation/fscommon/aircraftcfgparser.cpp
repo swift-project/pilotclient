@@ -389,7 +389,7 @@ namespace BlackMisc
             {
                 if (qv.isNull() || !qv.isValid())
                 {
-                    return ""; // normal when there is no settings value
+                    return {}; // normal when there is no settings value
                 }
                 else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QStringList)
                 {
@@ -401,15 +401,15 @@ namespace BlackMisc
                     return qv.toString().trimmed();
                 }
                 Q_ASSERT(false);
-                return "";
+                return {};
             }
 
             QString CAircraftCfgParser::getFixedIniLineContent(const QString &line)
             {
-                if (line.isEmpty()) { return ""; }
+                if (line.isEmpty()) { return {}; }
                 int index = line.indexOf('=');
-                if (index < 0) { return ""; }
-                if (line.length() < index  + 1) { return ""; }
+                if (index < 0) { return {}; }
+                if (line.length() < index + 1) { return {}; }
 
                 QString content(line.midRef(index + 1).trimmed().toString());
 

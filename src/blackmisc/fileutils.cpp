@@ -75,7 +75,7 @@ namespace BlackMisc
     QString CFileUtils::readFileToString(const QString &fileNameAndPath)
     {
         QFile file(fileNameAndPath);
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return ""; }
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
         QTextStream stream(&file);
         QString content(stream.readAll());
         file.close();
@@ -196,7 +196,7 @@ namespace BlackMisc
 
     QString CFileUtils::normalizeFilePathToQtStandard(const QString &filePath)
     {
-        if (filePath.isEmpty()) { return ""; }
+        if (filePath.isEmpty()) { return {}; }
         QString n(filePath);
         n = n.replace('\\', '/').replace("//", "/");
         return n;
@@ -303,7 +303,7 @@ namespace BlackMisc
 
     QString CFileUtils::findFirstExisting(const QStringList &filesOrDirectory)
     {
-        if (filesOrDirectory.isEmpty()) { return ""; }
+        if (filesOrDirectory.isEmpty()) { return {}; }
         for (const QString &f : filesOrDirectory)
         {
             if (f.isEmpty()) { continue; }
@@ -311,7 +311,7 @@ namespace BlackMisc
             const QFileInfo fi(fn);
             if (fi.exists()) { return fi.absoluteFilePath(); }
         }
-        return "";
+        return {};
     }
 
     QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)

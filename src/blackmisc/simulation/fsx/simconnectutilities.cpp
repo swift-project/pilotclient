@@ -73,7 +73,7 @@ namespace BlackMisc
 
             QString CSimConnectUtilities::ipAddress(const QSettings *simConnectSettings)
             {
-                if (!simConnectSettings) { return QString(""); }
+                if (!simConnectSettings) { return {}; }
                 return simConnectSettings->value("SimConnect/Address").toString();
             }
 
@@ -167,8 +167,8 @@ namespace BlackMisc
             QString CSimConnectUtilities::getSimConnectIniFileDirectory(CSimulatorInfo &simulator)
             {
                 static const QString docDir = QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
-                if (docDir.isEmpty()) { return ""; }
-                if (!simulator.isSingleSimulator() || !simulator.isFsxP3DFamily()) return "";
+                if (docDir.isEmpty()) { return {}; }
+                if (!simulator.isSingleSimulator() || !simulator.isFsxP3DFamily()) return {};
 
                 const QString iniDir = CFileUtils::appendFilePaths(docDir, simulator.isP3D() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
                 if (getSimConnectIniFileDirectories().isEmpty()) { return iniDir; }

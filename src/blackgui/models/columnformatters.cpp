@@ -163,7 +163,7 @@ namespace BlackGui
 
         CVariant CPixmapFormatter::tooltipRole(const CVariant &dataCVariant) const
         {
-            if (dataCVariant.isNull()) return "";
+            if (dataCVariant.isNull()) return {};
             if (dataCVariant.canConvert<BlackMisc::CIcon>())
             {
                 BlackMisc::CIcon icon = dataCVariant.value<BlackMisc::CIcon>();
@@ -190,7 +190,7 @@ namespace BlackGui
 
         CVariant CDateTimeFormatter::displayRole(const CVariant &dateTime) const
         {
-            if (dateTime.isNull()) return "";
+            if (dateTime.isNull()) return {};
             if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDateTime)
             {
                 const QDateTime dt = dateTime.value<QDateTime>();
@@ -214,7 +214,7 @@ namespace BlackGui
             else
             {
                 Q_ASSERT_X(false, "formatQVariant", "No QDate, QTime or QDateTime");
-                return "";
+                return {};
             }
         }
 
