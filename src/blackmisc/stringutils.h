@@ -44,6 +44,18 @@ namespace BlackMisc
         return result;
     }
 
+    //! Remove if in string
+    inline QString removeIfInString(const QString &string, const QString &inString)
+    {
+        return removeChars(string.simplified(), [&](QChar c) { return inString.contains(c); });
+    }
+
+    //! Remove if NOT in string
+    inline QString removeIfNotInString(const QString &string, const QString &inString)
+    {
+        return removeChars(string.simplified(), [&](QChar c) { return !inString.contains(c); });
+    }
+
     //! Remove line breaks and tabs
     inline QString removeLineBreakAndTab(const QString &s)
     {

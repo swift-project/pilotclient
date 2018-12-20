@@ -7,10 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/stringutils.h"
 #include "blackgui/uppercasevalidator.h"
-
 #include <QString>
 #include <QtGlobal>
+
+using namespace BlackMisc;
 
 namespace BlackGui
 {
@@ -19,11 +21,15 @@ namespace BlackGui
 
     CUpperCaseValidator::CUpperCaseValidator(int minLength, int maxLength, QObject *parent) : QValidator(parent),
         m_minLength(minLength), m_maxLength(maxLength)
-    { }
+    {
+        if (minLength < 1) { m_optionalValue = true; };
+    }
 
     CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent) : QValidator(parent),
         m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
-    { }
+    {
+        if (minLength < 1) { m_optionalValue = true; };
+    }
 
     QValidator::State CUpperCaseValidator::validate(QString &input, int &pos) const
     {
@@ -54,6 +60,9 @@ namespace BlackGui
     {
         if (input.isEmpty()) { return; }
         input = input.toUpper();
+        if (!m_allowedCharacters.isEmpty())
+        {
+            input = removeIfNotInString(input, m_allowedCharacters);
+        }
     }
-
 } // namespace

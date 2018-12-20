@@ -36,6 +36,9 @@ namespace BlackGui
         //! Set restrictions
         void setRestrictions(const QStringList &restrictions) { m_restrictions = restrictions; }
 
+        //! Allowed characters
+        void setAllowedCharacters(const QString &chars) { m_allowedCharacters = chars.toUpper(); }
+
         //! \copydoc QValidator::validate
         virtual State validate(QString &input, int &pos) const override;
 
@@ -46,6 +49,7 @@ namespace BlackGui
         bool m_optionalValue = false; //!< allow empty
         int m_minLength = 0;
         int m_maxLength = 32678;      //!< standard length
+        QString m_allowedCharacters;  //!< allowedCharacters
         QStringList m_restrictions;   //!< list of allowed strings
     };
 }
