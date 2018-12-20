@@ -101,7 +101,7 @@ namespace BlackMisc
             const CCountry country = CCountry::fromDatabaseJson(json, "ctry_");
             airport.setCountry(country);
 
-            airport.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            airport.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return airport;
         }
 

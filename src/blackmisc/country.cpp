@@ -197,7 +197,7 @@ namespace BlackMisc
         country.setAlias2(alias2);
         country.setIso3Code(iso3);
         country.setHistoric(stringToBool(historic));
-        country.setKeyAndTimestampFromDatabaseJson(json, prefix);
+        country.setKeyVersionTimestampFromDatabaseJson(json, prefix);
         return country;
     }
 

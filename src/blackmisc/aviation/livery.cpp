@@ -243,7 +243,7 @@ namespace BlackMisc
             if (combinedCode.isEmpty())
             {
                 CLivery liveryStub; // only consists of id, maybe key and timestamp
-                liveryStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                liveryStub.setKeyVersionTimestampFromDatabaseJson(json, prefix);
                 return liveryStub;
             }
 
@@ -255,7 +255,7 @@ namespace BlackMisc
             CAirlineIcaoCode airline;
             if (!isColorLivery) { airline = CAirlineIcaoCode::fromDatabaseJson(json, "al_"); }
             CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
-            livery.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            livery.setKeyVersionTimestampFromDatabaseJson(json, prefix);
 
             // color liveries must have default ICAO, but airline liveries must have DB airline
             BLACK_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
@@ -275,7 +275,7 @@ namespace BlackMisc
             if (combinedCode.isEmpty())
             {
                 CLivery liveryStub; // only consists of id, maybe key and timestamp
-                liveryStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                liveryStub.setKeyVersionTimestampFromDatabaseJson(json, prefix);
                 return liveryStub;
             }
 
@@ -303,7 +303,7 @@ namespace BlackMisc
             }
 
             CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
-            livery.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            livery.setKeyVersionTimestampFromDatabaseJson(json, prefix);
 
             // color liveries must have default ICAO, but airline liveries must have DB airline
             BLACK_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");

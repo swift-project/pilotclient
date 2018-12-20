@@ -175,7 +175,7 @@ namespace BlackMisc
             const bool existing = json.value("existing").toBool();
 
             CArtifact artifact(name, version, md5, type, size, existing, platform);
-            artifact.setKeyAndTimestampFromDatabaseJson(json);
+            artifact.setKeyVersionTimestampFromDatabaseJson(json);
             if (json.contains("distributions"))
             {
                 const QJsonObject distJson = json.value("distributions").toObject();

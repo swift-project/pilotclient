@@ -20,7 +20,7 @@ namespace BlackMisc
 {
     namespace Db
     {
-        void IDatastoreObject::setTimestampAndVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        void IDatastoreObject::setTimestampVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             // we check 2 formats, the DB format and the backend object format
             QString timestampString(json.value(prefix % u"lastupdated").toString());
@@ -84,12 +84,12 @@ namespace BlackMisc
             return QJsonValue();
         }
 
-        void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        void IDatastoreObjectWithIntegerKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             // this function is performance sensitive, as it is called for all DB data
             const int dbKey = json.value(prefix % u"id").toInt(-1);
             this->setDbKey(dbKey);
-            IDatastoreObject::setTimestampAndVersionFromDatabaseJson(json, prefix);
+            IDatastoreObject::setTimestampVersionFromDatabaseJson(json, prefix);
         }
 
         bool IDatastoreObjectWithIntegerKey::existsKey(const QJsonObject &json, const QString &prefix)
@@ -176,11 +176,11 @@ namespace BlackMisc
             return empty;
         }
 
-        void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        void IDatastoreObjectWithStringKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             QString dbKey = json.value(prefix % u"id").toString();
             this->setDbKey(dbKey);
-            IDatastoreObject::setTimestampAndVersionFromDatabaseJson(json, prefix);
+            IDatastoreObject::setTimestampVersionFromDatabaseJson(json, prefix);
         }
 
         bool IDatastoreObjectWithStringKey::existsKey(const QJsonObject &json, const QString &prefix)

@@ -58,7 +58,7 @@ namespace BlackMisc
 
         protected:
             //! Set versionn and timestamp values
-            void setTimestampAndVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+            void setTimestampVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
             QString m_version; //!< version info
         };
@@ -128,7 +128,7 @@ namespace BlackMisc
             IDatastoreObjectWithIntegerKey(int key) : m_dbKey(key) {}
 
             //! Set key and timestamp values
-            void setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+            void setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
             //! Is a key available?
             static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
@@ -209,7 +209,7 @@ namespace BlackMisc
             IDatastoreObjectWithStringKey(const QString &key) : m_dbKey(key) {}
 
             //! Set key and timestamp values
-            void setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+            void setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
             //! Is a key available?
             static bool existsKey(const QJsonObject &json, const QString &prefix = QString());

@@ -455,7 +455,7 @@ namespace BlackMisc
             code.setGroupDesignator(groupDesignator);
             code.setGroupId(groupId);
             code.setGroupName(groupName);
-            code.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return code;
         }
 

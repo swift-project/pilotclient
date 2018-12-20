@@ -134,7 +134,7 @@ namespace BlackMisc
             const bool restricted = json.value("restricted").toBool();
             const int stability = json.value("stability").toInt();
             CDistribution distribution(channel, stability, restricted);
-            distribution.setKeyAndTimestampFromDatabaseJson(json);
+            distribution.setKeyVersionTimestampFromDatabaseJson(json);
 
             // add the URLs
             for (int i = 0; i < 5; i++)

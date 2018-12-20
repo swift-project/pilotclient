@@ -170,7 +170,7 @@ namespace BlackMisc
             {
                 // stub, only key, maybe also timestamps
                 CDistributor distributorStub;
-                distributorStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                distributorStub.setKeyVersionTimestampFromDatabaseJson(json, prefix);
                 return distributorStub;
             }
 
@@ -179,7 +179,7 @@ namespace BlackMisc
             const QString alias2(json.value(prefix % u"alias2").toString());
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");
             CDistributor distributor("", description, alias1, alias2, simulator);
-            distributor.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            distributor.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             distributor.setLoadedFromDb(true);
             return distributor;
         }

@@ -148,7 +148,7 @@ namespace BlackMisc
             const int entries(json.value(prefix + "entries").toInt());
             const QString tableName(json.value(prefix + "tablename").toString());
             CDbInfo dbInfo(id, tableName, entries);
-            dbInfo.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            dbInfo.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return dbInfo;
         }
 

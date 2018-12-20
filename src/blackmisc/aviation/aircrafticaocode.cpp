@@ -794,7 +794,7 @@ namespace BlackMisc
                 model, modelIata, modelSwift, wtc,
                 real, legacy, military, rank
             );
-            code.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return code;
         }
 
