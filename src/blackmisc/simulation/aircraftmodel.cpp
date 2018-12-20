@@ -17,6 +17,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -27,6 +28,7 @@
 #include <QStringBuilder>
 #include <QFileInfo>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Db;
@@ -53,6 +55,10 @@ namespace BlackMisc
             m_aircraftIcao(icao), m_livery(livery), m_modelString(model.trimmed().toUpper()), m_description(description.trimmed()), m_modelType(type)
         {}
 
+        CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description) :
+            m_simulator(simulator), m_modelString(model.trimmed().toUpper()), m_name(name.trimmed()), m_description(description.trimmed()), m_modelType(type)
+        { }
+
         CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description, const CAircraftIcaoCode &icao, const CLivery &livery) :
             m_aircraftIcao(icao), m_livery(livery), m_simulator(simulator), m_modelString(model.trimmed().toUpper()), m_name(name.trimmed()), m_description(description.trimmed()), m_modelType(type)
         { }
@@ -78,7 +84,8 @@ namespace BlackMisc
             obj.insert("name", this->getName());
             obj.insert("modelstring", QJsonValue(m_modelString));
             obj.insert("description", QJsonValue(m_description));
-            obj.insert("version", QJsonValue(m_version));
+            obj.insert("parts", QJsonValue(m_supportedParts));
+            obj.insert("version", CBuildConfig::getVersionString());
             obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper())); // clazy:exclude=qstring-left
             if (m_cg.isNull())
             {
@@ -228,6 +235,7 @@ namespace BlackMisc
             case IndexName: return CVariant(m_name);
             case IndexFileName: return CVariant(m_fileName);
             case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
+            case IndexSupportedParts: return CVariant(m_supportedParts);
             case IndexFileTimestamp: return CVariant::fromValue(this->getFileTimestamp());
             case IndexFileTimestampFormattedYmdhms: return CVariant::fromValue(this->getFormattedFileTimestampYmdhms());
             case IndexIconPath: return CVariant(m_iconPath);
@@ -257,6 +265,7 @@ namespace BlackMisc
             case IndexName: m_name = variant.toQString(); break;
             case IndexIconPath: m_iconPath = variant.toQString(); break;
             case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSupportedParts: this->setSupportedParts(variant.toQString()); break;
             case IndexModelType: m_modelType = variant.value<ModelType>(); break;
             case IndexFileName: m_fileName = variant.toQString(); break;
             case IndexCallsign:
@@ -315,6 +324,7 @@ namespace BlackMisc
             case IndexFileName: return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
             case IndexIconPath: return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
             case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
+            case IndexSupportedParts: return m_supportedParts.compare(compareValue.getSupportedParts());
             case IndexModelTypeAsString:
             case IndexModelType: return Compare::compare(m_modelType, compareValue.getModelType());
             case IndexSimulatorInfoAsString:
@@ -440,6 +450,11 @@ namespace BlackMisc
             if (distributors.isEmpty()) { return false; }
             if (!this->hasDbDistributor()) { return false; }
             return distributors.matchesAnyKeyOrAlias(m_distributor.getDbKey());
+        }
+
+        void CAircraftModel::setSupportedParts(const QString &supportedParts)
+        {
+            m_supportedParts = CAircraftModel::cleanUpPartsString(supportedParts);
         }
 
         bool CAircraftModel::matchesMode(ModelModeFilter mode) const
@@ -787,6 +802,14 @@ namespace BlackMisc
             if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("mode"), dbModel.getModelModeAsString(), this->getModelModeAsString())); }
             changed |= !equal;
 
+            equal = dbModel.getCG() == this->getCG();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("CG"), dbModel.getCG().toQString(true), this->getCG().toQString(true))); }
+            changed |= !equal;
+
+            equal = dbModel.getSupportedParts() == this->getSupportedParts();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("Supported parts"), dbModel.getSupportedParts(), this->getSupportedParts())); }
+            changed |= !equal;
+
             // clean messages
             if (changed && details)
             {
@@ -856,57 +879,47 @@ namespace BlackMisc
             return i; // default
         }
 
+        CAircraftModel CAircraftModel::fromDatabaseJsonBaseImpl(const QJsonObject &json, const QString &prefix, const CAircraftIcaoCode &aircraftIcao, const CLivery &livery, const CDistributor &distributor)
+        {
+            const QString modelString(json.value(prefix % u"modelstring").toString());
+            const QString modelDescription(json.value(prefix % u"description").toString());
+            const QString modelName(json.value(prefix % u"name").toString());
+            const QString modelMode(json.value(prefix % u"mode").toString());
+            const QString parts(json.value(prefix % u"parts").toString());
+            const QJsonValue cgjv = json.value(prefix % u"cgft");
+            const CLength cg = cgjv.isNull() ? CLength::null() : CLength(cgjv.toDouble(), CLengthUnit::ft());
+
+            const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
+            CAircraftModel model(modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription);
+            model.setModelModeAsString(modelMode);
+            model.setSupportedParts(parts);
+            model.setCG(cg);
+            model.setKeyVersionTimestampFromDatabaseJson(json, prefix);
+            model.setDistributor(distributor);
+            model.setAircraftIcaoCode(aircraftIcao);
+            model.setLivery(livery);
+            return model;
+        }
+
         CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             static const QString prefixAircraftIcao("ac_");
             static const QString prefixLivery("liv_");
             static const QString prefixDistributor("dist_");
+            const QString idDistributor = json.value(prefixDistributor % u"id").toString();
+            const int idAircraftIcao = json.value(prefixAircraftIcao % u"id").toInt(-1);
+            const int idLivery = json.value(prefixLivery % u"id").toInt(-1);
 
-            const QString modelString(json.value(prefix % u"modelstring").toString());
-            const QString modelDescription(json.value(prefix % u"description").toString());
-            const QString modelName(json.value(prefix % u"name").toString());
-            const QString modelMode(json.value(prefix % u"mode").toString());
-
-            const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
             CDistributor distributor(CDistributor::fromDatabaseJson(json, prefixDistributor));
             CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, prefixAircraftIcao));
             CLivery livery(CLivery::fromDatabaseJson(json, prefixLivery));
 
-            //! \todo KB 2018-08 "idaircrafticao" seem not to be used anymore (remove???) in "vAircraftModelDenormalized", but was used in "vAircraftModelComplete"
-            if (!aircraftIcao.isLoadedFromDb())
-            {
-                const int idAircraftIcao = json.value(prefix % u"idaircrafticao").toInt(-1);
-                if (idAircraftIcao >= 0)
-                {
-                    aircraftIcao.setDbKey(idAircraftIcao);
-                }
-            }
+            if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
+            if (!livery.isLoadedFromDb() && idLivery >= 0) { livery.setDbKey(idLivery); }
+            if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
 
-            if (!livery.isLoadedFromDb())
-            {
-                const int idLivery = json.value(prefix % u"idlivery").toInt(-1);
-                if (idLivery >= 0)
-                {
-                    livery.setDbKey(idLivery);
-                }
-            }
-
-            if (!distributor.isLoadedFromDb())
-            {
-                const QString idDistributor = json.value(prefix % u"iddistributor").toString();
-                if (!idDistributor.isEmpty())
-                {
-                    distributor.setDbKey(idDistributor);
-                }
-            }
-
-            CAircraftModel model(
-                modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery
-            );
-            model.setDistributor(distributor);
-            model.setModelModeAsString(modelMode);
-            model.setKeyAndTimestampFromDatabaseJson(json, prefix);
-            return model;
+            // full model
+            return CAircraftModel::fromDatabaseJsonBaseImpl(json, prefix, aircraftIcao, livery, distributor);
         }
 
         CAircraftModel CAircraftModel::fromDatabaseJsonCaching(
@@ -917,16 +930,10 @@ namespace BlackMisc
             static const QString prefixAircraftIcao("ac_");
             static const QString prefixLivery("liv_");
             static const QString prefixDistributor("dist_");
-
-            const QString modelString(json.value(prefix % u"modelstring").toString());
-            const QString modelDescription(json.value(prefix % u"description").toString());
-            const QString modelName(json.value(prefix % u"name").toString());
-            const QString modelMode(json.value(prefix % u"mode").toString());
-
-            const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
+            const QString idDistributor = json.value(prefixDistributor % u"id").toString();
             const int idAircraftIcao = json.value(prefixAircraftIcao % u"id").toInt(-1);
             const int idLivery = json.value(prefixLivery % u"id").toInt(-1);
-            const QString idDistributor = json.value(prefixDistributor % u"id").toString();
+
             const bool cachedAircraftIcao = (idAircraftIcao >= 0) && aircraftIcaos.contains(idAircraftIcao);
             const bool cachedLivery = (idLivery >= 0) && liveries.contains(idLivery);
             const bool cachedDistributor = !idDistributor.isEmpty() && distributors.contains(idDistributor);
@@ -943,40 +950,45 @@ namespace BlackMisc
                                      distributors[idDistributor] :
                                      CDistributor::fromDatabaseJson(json, prefixDistributor));
 
-            if (!aircraftIcao.isLoadedFromDb())
-            {
-                if (idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
-            }
-
+            if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
             if (!livery.isLoadedFromDb())
             {
                 const int idLivery = json.value(prefix % u"idlivery").toInt(-1);
                 if (idLivery >= 0) { livery.setDbKey(idLivery); }
             }
-
             if (!distributor.isLoadedFromDb())
             {
                 const QString idDistributor = json.value(prefix % u"iddistributor").toString();
                 if (!idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
             }
 
+            // store in temp.cache
             if (!cachedAircraftIcao && aircraftIcao.isLoadedFromDb()) { aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao; }
             if (!cachedLivery && livery.isLoadedFromDb()) { liveries[livery.getDbKey()] = livery; }
             if (!cachedDistributor && distributor.isLoadedFromDb()) { distributors[distributor.getDbKey()] = distributor; }
 
-            CAircraftModel model(
-                modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery
-            );
-            model.setDistributor(distributor);
-            model.setModelModeAsString(modelMode);
-            model.setKeyAndTimestampFromDatabaseJson(json, prefix);
-            return model;
+            // full model
+            return CAircraftModel::fromDatabaseJsonBaseImpl(json, prefix, aircraftIcao, livery, distributor);
         }
 
         const QString &CAircraftModel::autoGenerated()
         {
             static const QString ag("swift auto generated");
             return ag;
+        }
+
+        QString CAircraftModel::cleanUpPartsString(const QString &p)
+        {
+            if (p.isEmpty()) { return QString(); }
+            QString pc = removeChars(p.toUpper(), [](QChar c) { return !supportedParts().contains(c); });
+            std::sort(pc.begin(), pc.end());
+            return pc;
+        }
+
+        const QString &CAircraftModel::supportedParts()
+        {
+            static const QString p("EFGLS");
+            return p;
         }
     } // namespace
 } // namespace
