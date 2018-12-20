@@ -27,6 +27,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -96,10 +97,13 @@ namespace BlackGui
                 m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
                 m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode}));
                 m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
+                m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+                m_columns.addColumn(CColumn::standardString("parts",  CAircraftModel::IndexSupportedParts));
                 m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
                 m_columns.addColumn(CColumn::standardString("filename",  CAircraftModel::IndexFileName));
                 m_columns.addColumn(CColumn::standardString("file ts.", "file timestamp", CAircraftModel::IndexFileTimestampFormattedYmdhms));
                 m_columns.addColumn(CColumn::standardString("icon",  CAircraftModel::IndexIconPath));
+                m_columns.addColumn(CColumn::standardString("version",  CAircraftModel::IndexVersion));
                 m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 
                 // default sort order
@@ -126,9 +130,13 @@ namespace BlackGui
                 m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
                 m_columns.addColumn(CColumn::standardString("al.name", "airline name", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineName }));
 
+                m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+                m_columns.addColumn(CColumn::standardString("parts",  CAircraftModel::IndexSupportedParts));
+
                 m_columns.addColumn(CColumn("fuse.", "fuselage color", { CAircraftModel::IndexLivery, CLivery::IndexColorFuselage }, new CColorFormatter()));
                 m_columns.addColumn(CColumn("tail", "tail color", { CAircraftModel::IndexLivery, CLivery::IndexColorTail }, new CColorFormatter()));
                 m_columns.addColumn(CColumn("mil.", "military livery", { CAircraftModel::IndexLivery, CLivery::IndexIsMilitary }, new CBoolIconFormatter("military", "civil")));
+                m_columns.addColumn(CColumn::standardString("version",  CAircraftModel::IndexVersion));
                 m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 
                 // default sort order
