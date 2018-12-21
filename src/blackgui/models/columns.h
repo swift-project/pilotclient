@@ -81,10 +81,10 @@ namespace BlackGui
             BlackMisc::CVariant getAlignment() const;
 
             //! Column name
-            QString getColumnName(bool i18n = false) const;
+            const QString &getColumnName() const { return m_columnName; }
 
             //! Column tooltip
-            QString getColumnToolTip(bool i18n = false) const;
+            const QString &getColumnToolTip() const { return m_columnToolTip; }
 
             //! Property index
             const BlackMisc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex;}
@@ -120,9 +120,6 @@ namespace BlackGui
 
             bool m_editable = false;
             bool m_sortable = true;
-            const char *getTranslationContextChar() const;
-            const char *getColumnNameChar() const;
-            const char *getColumnToolTipChar() const;
         };
 
         /*!
@@ -188,9 +185,6 @@ namespace BlackGui
             //! Aligment as CVariant
             BlackMisc::CVariant getAlignment(const QModelIndex &index) const;
 
-            //! Translation context
-            const QString &getTranslationContext() const { return m_translationContext; }
-
             //! Formatter
             const CDefaultFormatter *getFormatter(const QModelIndex &index) const;
 
@@ -210,8 +204,7 @@ namespace BlackGui
 
         private:
             QList<CColumn> m_columns;
-            QString m_translationContext;
-            const char *getTranslationContextChar() const;
+            QString m_translationContext; //!< for future usage
         };
     }
 } // namespace BlackGui

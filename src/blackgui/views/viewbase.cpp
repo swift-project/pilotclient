@@ -497,8 +497,7 @@ namespace BlackGui
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
             QTableView::setObjectName(name);
-            const QString modelName = QString(name).append(':').append(m_model->getTranslationContext());
-            m_model->setObjectName(modelName);
+            m_model->setObjectName(name);
         }
 
         template <class T>

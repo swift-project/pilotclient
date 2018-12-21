@@ -52,13 +52,11 @@ namespace BlackGui
 
             if (role == Qt::DisplayRole)
             {
-                const QString header = m_columns.at(section).getColumnName(false);
-                return QVariant(header);
+                return QVariant(m_columns.at(section).getColumnName());
             }
             if (role == Qt::ToolTipRole)
             {
-                const QString header = m_columns.at(section).getColumnToolTip(false);
-                return header.isEmpty() ? QVariant() : QVariant(header);
+                return QVariant(m_columns.at(section).getColumnToolTip());
             }
             return QVariant();
         }
@@ -133,11 +131,6 @@ namespace BlackGui
             // drag and drop
             f = f | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
             return f;
-        }
-
-        const QString &CListModelBaseNonTemplate::getTranslationContext() const
-        {
-            return m_columns.getTranslationContext();
         }
 
         Qt::DropActions CListModelBaseNonTemplate::supportedDragActions() const

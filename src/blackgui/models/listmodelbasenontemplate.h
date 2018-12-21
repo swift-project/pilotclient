@@ -93,9 +93,6 @@ namespace BlackGui
             //! Get sort order
             virtual Qt::SortOrder getSortOrder() const { return m_sortOrder; }
 
-            //! Translation context
-            virtual const QString &getTranslationContext() const;
-
             //! Orderable, normally use a container BlackMisc::IOrderableList
             virtual bool isOrderable() const = 0;
 

@@ -44,36 +44,6 @@ namespace BlackGui
             m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
         {}
 
-        const char *CColumn::getTranslationContextChar() const
-        {
-            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
-            return m_translationContext.toUtf8().constData();
-        }
-
-        const char *CColumn::getColumnNameChar() const
-        {
-            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
-            return m_columnName.toUtf8().constData();
-        }
-
-        const char *CColumn::getColumnToolTipChar() const
-        {
-            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
-            return m_columnToolTip.toUtf8().constData();
-        }
-
-        QString CColumn::getColumnName(bool i18n) const
-        {
-            if (!i18n || m_translationContext.isEmpty()) return m_columnName;
-            return QCoreApplication::translate(this->getTranslationContextChar(), this->getColumnNameChar());
-        }
-
-        QString CColumn::getColumnToolTip(bool i18n) const
-        {
-            if (!i18n || m_columnToolTip.isEmpty()) return m_columnToolTip;
-            return QCoreApplication::translate(this->getTranslationContextChar(), this->getColumnToolTipChar());
-        }
-
         CColumn CColumn::standardValueObject(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, propertyIndex, new CValueObjectFormatter(alignment));
@@ -122,13 +92,15 @@ namespace BlackGui
         QString CColumns::propertyIndexToColumnName(const CPropertyIndex &propertyIndex, bool i18n) const
         {
             int column = this->propertyIndexToColumn(propertyIndex);
-            return m_columns.at(column).getColumnName(i18n);
+            Q_UNUSED(i18n); // not implemented
+            return m_columns.at(column).getColumnName();
         }
 
         QString CColumns::columnToName(int column, bool i18n) const
         {
             Q_ASSERT(isValidColumn(column));
-            return m_columns.at(column).getColumnName(i18n);
+            Q_UNUSED(i18n); // not implemented
+            return m_columns.at(column).getColumnName();
         }
 
         CPropertyIndex CColumns::columnToPropertyIndex(int column) const
@@ -163,8 +135,7 @@ namespace BlackGui
         {
             for (int i = 0; i < m_columns.size(); i++)
             {
-                if (m_columns.at(i).getColumnName(false) == name)
-                    return i;
+                if (m_columns.at(i).getColumnName() == name) { return i; }
             }
             return -1;
         }
@@ -218,12 +189,6 @@ namespace BlackGui
         {
             if (!isValidColumn(index)) { return nullptr; }
             return m_columns.at(index.column()).getFormatter();
-        }
-
-        const char *CColumns::getTranslationContextChar() const
-        {
-            //! \fixme MS 2018-12 Undefined behaviour: returning pointer to temporary data deleted when function returns.
-            return m_translationContext.toUtf8().constData();
         }
     }
 } // namespace
