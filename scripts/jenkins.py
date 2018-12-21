@@ -264,7 +264,7 @@ class Builder:
 class MSVCBuilder(Builder):
 
     def _specific_prepare(self):
-        os.environ['PATH'] += os.pathsep + self._get_externals_path()
+        os.environ['PATH'] += os.pathsep + self._get_externals_path() #TODO still needed? we copy externals anyway
         os.environ['PATH'] += os.pathsep + 'C:/Program Files/7-Zip'
         if self.word_size == '32':
             vs_env = get_vs_env('VS2017', 'x86')
@@ -274,18 +274,13 @@ class MSVCBuilder(Builder):
         os.environ.update(vs_env)
 
     def _get_qmake_spec(self):
-        return 'win32-msvc2015'
+        return 'win32-msvc'
 
     def _get_make_cmd(self):
         return path.abspath(path.join(self._get_qtcreator_path(), 'jom.exe'))
 
     def _get_qt_component(self):
-        if self.word_size == '32':
-            return 'msvc2015'
-        elif self.word_size == '64':
-            return 'msvc2017'
-        else:
-            raise RuntimeError('Illegal word size!')
+        return 'msvc2017'
 
     def __init__(self, config_file, word_size):
         Builder.__init__(self, config_file, word_size)
