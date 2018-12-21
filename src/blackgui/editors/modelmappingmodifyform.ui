@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>150</height>
+    <height>151</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -20,20 +20,17 @@
    <string>Modify model data</string>
   </property>
   <layout class="QGridLayout" name="gl_ModelMappingModifyForm">
-   <item row="2" column="2">
-    <widget class="QCheckBox" name="cb_Simulator">
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="cb_Name">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="selector_SimulatorSelector">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
+   <item row="4" column="2">
+    <widget class="QCheckBox" name="cb_Simulator">
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -47,20 +44,24 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
-    <widget class="QCheckBox" name="cb_Name">
+   <item row="4" column="1">
+    <widget class="QLabel" name="lbl_Simulator">
+     <property name="text">
+      <string>Simulator:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QCheckBox" name="cb_Description">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lbl_Name">
+   <item row="5" column="1">
+    <widget class="QLabel" name="lbl_Mode">
      <property name="text">
-      <string>Name:</string>
-     </property>
-     <property name="buddy">
-      <cstring>le_Name</cstring>
+      <string>Mode:</string>
      </property>
     </widget>
    </item>
@@ -74,17 +75,10 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="cb_Description">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="1">
-    <widget class="QLabel" name="lbl_Simulator">
+    <widget class="QLabel" name="lbl_CG">
      <property name="text">
-      <string>Simulator:</string>
+      <string>CG/vert.offset:</string>
      </property>
     </widget>
    </item>
@@ -101,25 +95,76 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="lbl_Mode">
-     <property name="text">
-      <string>Mode:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
+   <item row="5" column="3" alignment="Qt::AlignLeft">
     <widget class="BlackGui::Components::CModelModeSelector" name="selector_ModeSelector">
      <property name="minimumSize">
       <size>
-       <width>0</width>
-       <height>24</height>
+       <width>100</width>
+       <height>0</height>
       </size>
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
+   <item row="4" column="3" alignment="Qt::AlignLeft">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="selector_SimulatorSelector">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
     <widget class="QCheckBox" name="cb_Mode">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lbl_Name">
+     <property name="text">
+      <string>Name:</string>
+     </property>
+     <property name="buddy">
+      <cstring>le_Name</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="cb_CG">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLineEdit" name="le_CG">
+     <property name="placeholderText">
+      <string>CG/vert.offset e,g, 10ft</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QLineEdit" name="le_Parts">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>Parts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="lbl_Parts">
+     <property name="text">
+      <string>Parts:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QCheckBox" name="cb_Parts">
      <property name="text">
       <string/>
      </property>
@@ -146,6 +191,10 @@
   <tabstop>le_Name</tabstop>
   <tabstop>cb_Description</tabstop>
   <tabstop>le_Description</tabstop>
+  <tabstop>cb_CG</tabstop>
+  <tabstop>le_CG</tabstop>
+  <tabstop>cb_Parts</tabstop>
+  <tabstop>le_Parts</tabstop>
   <tabstop>cb_Simulator</tabstop>
   <tabstop>cb_Mode</tabstop>
  </tabstops>

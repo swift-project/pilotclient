@@ -64,6 +64,9 @@ namespace BlackGui
             //! Checkbox from its corresponding widgte
             QCheckBox *widgetToCheckbox(QObject *widget) const;
 
+            //! CG changed
+            void onCGEdited();
+
             QScopedPointer<Ui::CModelMappingModifyForm> ui;
         };
     } // ns

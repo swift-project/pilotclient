@@ -10,9 +10,11 @@
 #include "blackgui/components/modelmodeselector.h"
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/editors/modelmappingmodifyform.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/stringutils.h"
 #include "ui_modelmappingmodifyform.h"
 
 #include <QCheckBox>
@@ -21,6 +23,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Components;
 
@@ -33,12 +36,20 @@ namespace BlackGui
             ui(new Ui::CModelMappingModifyForm)
         {
             ui->setupUi(this);
-            connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
-            connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
-            connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::changed);
-            connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::changed);
-
+            ui->le_Parts->setPlaceholderText("Parts " + CAircraftModel::supportedParts());
             this->userChanged();
+
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(true, 0, CAircraftModel::supportedParts().size(), ui->le_Parts);
+            ucv->setAllowedCharacters(CAircraftModel::supportedParts());
+            ui->le_Parts->setValidator(ucv);
+
+            // "auto checked" disabled
+            // connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
+            // connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
+            // connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::changed);
+            // connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::changed);
+
+            connect(ui->le_CG, &QLineEdit::editingFinished, this, &CModelMappingModifyForm::onCGEdited);
         }
 
         CModelMappingModifyForm::~CModelMappingModifyForm()
@@ -49,6 +60,7 @@ namespace BlackGui
         CPropertyIndexVariantMap CModelMappingModifyForm::getValues() const
         {
             CPropertyIndexVariantMap vm;
+
             if (ui->cb_Name->isChecked())
             {
                 vm.addValue(CAircraftModel::IndexName, ui->le_Name->text().trimmed());
@@ -73,6 +85,23 @@ namespace BlackGui
             {
                 vm.addValue(CAircraftModel::IndexModelMode, ui->selector_ModeSelector->getMode());
             }
+
+            if (ui->cb_Parts->isChecked())
+            {
+                vm.addValue(CAircraftModel::IndexSupportedParts, ui->le_Parts->text().toUpper());
+            }
+
+            if (ui->cb_CG->isChecked())
+            {
+                const QString cgv = ui->le_CG->text().trimmed();
+                CLength cg = CLength::null();
+                if (!cgv.isEmpty())
+                {
+                    cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
+                }
+                vm.addValue(CAircraftModel::IndexCG, cg);
+            }
+
             return vm;
         }
 
@@ -127,8 +156,19 @@ namespace BlackGui
             if (widget == ui->le_Description) { return ui->cb_Description; }
             if (widget == ui->le_Name) { return ui->cb_Name; }
             if (widget == ui->selector_ModeSelector) { return ui->cb_Mode; }
+            if (widget == ui->le_CG) { return ui->cb_CG; }
+            if (widget == ui->le_Parts) { return ui->cb_Parts; }
             if (widget == ui->selector_SimulatorSelector) { return ui->cb_Simulator; }
             return nullptr;
+        }
+
+        void CModelMappingModifyForm::onCGEdited()
+        {
+            QString cgv = ui->le_CG->text().trimmed();
+            if (isDigitsOnlyString(cgv)) { cgv += "ft"; }
+            CLength cg = CLength::null();
+            cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
+            ui->le_CG->setText(cg.isNull() ? "" : cg.toQString(true));
         }
     } // ns
 } // ns
