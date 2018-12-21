@@ -11,13 +11,12 @@ defineTest(copyJsonFromTo) {
     to = $$2
     options = $$3
 
-    unset($${to}._KEYS_)
     for(key, $${from}._KEYS_) {
-        $${to}._KEYS_ += $$key
+        $${to}._KEYS_ *= $$key
         export($${to}._KEYS_)
         copyJsonFromTo($${from}.$$key, $${to}.$$key, $$options)
     }
-    contains(options, cache):defined($${to}._KEYS_, var): cache($${to}._KEYS_)
+    contains(options, cache):defined($${from}._KEYS_, var): cache($${to}._KEYS_)
 
     defined($$from, var) {
         contains(options, overwrite)|!defined($$to, var) {
@@ -39,7 +38,9 @@ for(jsonFile, SWIFT_CONFIG_JSON) {
     jsonPath = $$SourceRoot/$$jsonFile
     !exists($$jsonPath): error($$jsonPath not found)
     SWIFT_CONFIG_JSON_PATHS += $$jsonPath
+    SWIFT_CONFIG_JSON_SHELL_PATHS += $$shell_path($$jsonPath)
     export(SWIFT_CONFIG_JSON_PATHS)
+    export(SWIFT_CONFIG_JSON_SHELL_PATHS)
     swiftNoCacheConfig {
         message(Parsing $${jsonFile}...)
         jsonBlob = $$cat($$jsonPath, blob)
@@ -62,7 +63,7 @@ QMAKE_INTERNAL_INCLUDED_FILES *= $$SWIFT_CONFIG_JSON_PATHS
 load(touch)
 system($$TOUCH $$system_path($$BuildRoot/swift_config.cookie)) {
     swift_config_changed.target = $$shell_path($$BuildRoot/swift_config.cookie)
-    swift_config_changed.depends = $$shell_path($$SWIFT_CONFIG_JSON_PATHS)
+    swift_config_changed.depends = $$SWIFT_CONFIG_JSON_SHELL_PATHS
     swift_config_changed.commands = @echo ERROR: swift config changed, please run qmake again >&2 && exit 1
     QMAKE_EXTRA_TARGETS += swift_config_changed
     PRE_TARGETDEPS += $${swift_config_changed.target}
