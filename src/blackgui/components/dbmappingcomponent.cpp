@@ -11,7 +11,7 @@
 #include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/components/dbautosimulatorstashingcomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/components/dbmodelmappingmodifydialog.h"
 #include "blackgui/components/dbownmodelscomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
 #include "blackgui/components/dbstashcomponent.h"
@@ -74,7 +74,7 @@ namespace BlackGui
             ui(new Ui::CDbMappingComponent),
             m_autoStashDialog(new CDbAutoStashingComponent(this)),
             m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
-            m_modelModifyDialog(new CDbModelMappingModifyComponent(this))
+            m_modelModifyDialog(new CDbModelMappingModifyDialog(this))
         {
             ui->setupUi(this);
             ui->comp_StashAircraft->setMappingComponent(this);

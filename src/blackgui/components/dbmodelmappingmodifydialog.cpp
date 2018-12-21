@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/components/dbmodelmappingmodifydialog.h"
 #include "blackgui/editors/modelmappingmodifyform.h"
-#include "ui_dbmodelmappingmodifycomponent.h"
+#include "ui_dbmodelmappingmodifydialog.h"
 
 #include <QWidget>
 
@@ -20,25 +20,26 @@ namespace BlackGui
 {
     namespace Components
     {
-        CDbModelMappingModifyComponent::CDbModelMappingModifyComponent(QWidget *parent) :
+        CDbModelMappingModifyDialog::CDbModelMappingModifyDialog(QWidget *parent) :
             QDialog(parent),
             CDbMappingComponentAware(parent),
-            ui(new Ui::CDbModelMappingModifyComponent)
+            ui(new Ui::CDbModelMappingModifyDialog)
         {
             ui->setupUi(this);
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         }
 
-        CDbModelMappingModifyComponent::~CDbModelMappingModifyComponent()
+        CDbModelMappingModifyDialog::~CDbModelMappingModifyDialog()
         {
             // void
         }
 
-        CPropertyIndexVariantMap CDbModelMappingModifyComponent::getValues() const
+        CPropertyIndexVariantMap CDbModelMappingModifyDialog::getValues() const
         {
             return (ui->editor_ModelMappingModify->getValues());
         }
 
-        void CDbModelMappingModifyComponent::setValue(const CAircraftModel &model)
+        void CDbModelMappingModifyDialog::setValue(const CAircraftModel &model)
         {
             ui->editor_ModelMappingModify->setValue(model);
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDbModelMappingModifyComponent</class>
- <widget class="QDialog" name="CDbModelMappingModifyComponent">
+ <class>CDbModelMappingModifyDialog</class>
+ <widget class="QDialog" name="CDbModelMappingModifyDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,7 +20,7 @@
    <string>Model modify form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+   <item alignment="Qt::AlignTop">
     <widget class="BlackGui::Editors::CModelMappingModifyForm" name="editor_ModelMappingModify">
      <property name="minimumSize">
       <size>
@@ -35,19 +35,6 @@
       <enum>QFrame::Raised</enum>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="vs_ModelMappingModify">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="bb_ModelMappingModiyForm">
@@ -74,7 +61,7 @@
   <connection>
    <sender>bb_ModelMappingModiyForm</sender>
    <signal>accepted()</signal>
-   <receiver>CDbModelMappingModifyComponent</receiver>
+   <receiver>CDbModelMappingModifyDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -90,7 +77,7 @@
   <connection>
    <sender>bb_ModelMappingModiyForm</sender>
    <signal>rejected()</signal>
-   <receiver>CDbModelMappingModifyComponent</receiver>
+   <receiver>CDbModelMappingModifyDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

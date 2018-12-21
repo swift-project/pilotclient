@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DBMODELMAPPINGMODIFYCOMPONENT_H
-#define BLACKGUI_COMPONENTS_DBMODELMAPPINGMODIFYCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_DBMODELMAPPINGMODIFYDIALOG_H
+#define BLACKGUI_COMPONENTS_DBMODELMAPPINGMODIFYDIALOG_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
@@ -20,11 +20,8 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
-namespace Ui { class CDbModelMappingModifyComponent; }
-
+namespace Ui { class CDbModelMappingModifyDialog; }
 namespace BlackGui
 {
     namespace Components
@@ -32,7 +29,7 @@ namespace BlackGui
         /*!
          * Modify model fields as dialog
          */
-        class BLACKGUI_EXPORT CDbModelMappingModifyComponent :
+        class BLACKGUI_EXPORT CDbModelMappingModifyDialog :
             public QDialog,
             public CDbMappingComponentAware
         {
@@ -40,10 +37,10 @@ namespace BlackGui
 
         public:
             //! Constructor
-            explicit CDbModelMappingModifyComponent(QWidget *parent = nullptr);
+            explicit CDbModelMappingModifyDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbModelMappingModifyComponent();
+            virtual ~CDbModelMappingModifyDialog();
 
             //! Get the values
             BlackMisc::CPropertyIndexVariantMap getValues() const;
@@ -52,7 +49,7 @@ namespace BlackGui
             void setValue(const BlackMisc::Simulation::CAircraftModel &model);
 
         private:
-            QScopedPointer<Ui::CDbModelMappingModifyComponent> ui;
+            QScopedPointer<Ui::CDbModelMappingModifyDialog> ui;
         };
     } // ns
 } // ns
