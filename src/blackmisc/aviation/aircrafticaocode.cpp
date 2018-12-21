@@ -210,7 +210,7 @@ namespace BlackMisc
             CSpeed guessedVRotate = this->isVtol() ? CSpeed::null() : CSpeed(70, CSpeedUnit::km_h());
 
             const int engines = this->getEnginesCount();
-            const QChar engineType = this->getEngineType().at(0).toUpper();
+            const QChar engineType = this->getEngineTypeChar().toUpper();
             do
             {
                 if (engines == 1)
