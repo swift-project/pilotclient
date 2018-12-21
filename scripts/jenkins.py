@@ -389,7 +389,7 @@ def main(argv):
         print_help()
         sys.exit(2)
 
-    if len(opts) < 2 or len(opts) > 5:
+    if len(opts) < 2:
         print_help()
         sys.exit(2)
 
