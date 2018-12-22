@@ -98,6 +98,7 @@ namespace BlackGui
             ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this));
             ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this));
 
+            ui->comp_ModelWorkbench->view()->menuAddItems(CAircraftModelView::MenuClear | CAircraftModelView::MenuRemoveSelectedRows);
             ui->comp_ModelWorkbench->view()->setCustomMenu(new CApplyDbDataMenu(this));
             ui->comp_ModelWorkbench->view()->setCustomMenu(new COwnModelSetMenu(this));
             ui->comp_ModelWorkbench->view()->setCustomMenu(new CStashToolsMenu(this));
