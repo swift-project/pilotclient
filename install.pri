@@ -145,12 +145,17 @@ unix:!macx {
 ############### Install VC runtime ##############
 
 win32-msvc {
-    PROGRAM_FILES = $$getenv(programfiles(x86))
+    # https://github.com/Microsoft/vswhere/wiki/Find-VC
+    VS_WHERE = $$getenv(programfiles(x86))/Microsoft Visual Studio/Installer/vswhere.exe
+    VS_PATH = $$system($$system_quote($$system_path($$VS_WHERE)) -latest -property installationPath)
+    VC_REDIST_VERSION = $$cat($$VS_PATH/VC/Auxiliary/Build/Microsoft.VCRedistVersion.default.txt)
+    VC_REDIST_PATH = $$VS_PATH/VC/Redist/MSVC/$$VC_REDIST_VERSION
+
     equals(WORD_SIZE,64) {
-        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.14.26405/vcredist_x64.exe)
+        vc_redist_target.files *= $$shell_path($$VC_REDIST_PATH/vcredist_x64.exe)
     }
     equals(WORD_SIZE,32) {
-        vc_redist_target.files *= $$shell_path($$PROGRAM_FILES/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.14.26405/vcredist_x86.exe)
+        vc_redist_target.files *= $$shell_path($$VC_REDIST_PATH/vcredist_x86.exe)
     }
     vc_redist_target.path *= $${PREFIX}/vcredist
     INSTALLS += vc_redist_target
