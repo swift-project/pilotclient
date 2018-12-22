@@ -129,6 +129,9 @@ namespace BlackCore
         //! A shared URL was successfully read
         void successfullyReadSharedUrl(const BlackMisc::Network::CUrl &sharedUrl);
 
+        //! Message about the loading status
+        void setupLoadingMessages(const BlackMisc::CStatusMessageList &messages);
+
     protected:
         //! Constructor
         explicit CSetupReader(QObject *parent);

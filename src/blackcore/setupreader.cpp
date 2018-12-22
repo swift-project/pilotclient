@@ -385,7 +385,8 @@ namespace BlackCore
             nwReplyPtr->close();
             if (setupJson.isEmpty())
             {
-                CLogMessage(this).info("No bootstrap setup file at '%1'") << urlString;
+                const CStatusMessage m = CLogMessage(this).info("No bootstrap setup file at '%1'") << urlString;
+                emit this->setupLoadingMessages(m);
             }
             else
             {
@@ -416,7 +417,8 @@ namespace BlackCore
                     {
                         // no issue with cache
                         m_updateInfoUrls = loadedSetup.getSwiftUpdateInfoFileUrls();
-                        CLogMessage(this).info("Loaded setup from '%1'") << urlString;
+                        const CStatusMessage m = CLogMessage(this).info("Loaded setup from '%1'") << urlString;
+                        emit this->setupLoadingMessages(m);
                         CLogMessage(this).info("Setup: Updated data cache in '%1'") << m_setup.getFilename();
                         {
                             QWriteLocker l(&m_lockSetup);

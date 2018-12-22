@@ -34,9 +34,9 @@
 #include <Qt>
 
 class QMenu;
-class QSplashScreen;
 class QWidget;
 class QMainWindow;
+class CSplashScreen;
 
 namespace BlackMisc { class CLogCategoryList; }
 namespace BlackGui
@@ -107,12 +107,6 @@ namespace BlackGui
         //! Window mode (window flags)
         CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
-        //! Add a splash screen based on resource, empty means remove splash screen
-        void splashScreen(const QString &resource);
-
-        //! Add a splash screen based on resource, empty means remove splash screen
-        void splashScreen(const QPixmap &pixmap);
-
         //! Allow the GUI to refresh by processing events, call the event loop
         void processEventsToRefreshGui() const;
 
@@ -139,6 +133,20 @@ namespace BlackGui
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
         //! @}
+
+        // -------- Splash screen related ---------
+        //! Add a splash screen based on resource, empty means remove splash screen
+        void splashScreen(const QString &resource);
+
+        //! Add a splash screen based on resource, empty means remove splash screen
+        void splashScreen(const QPixmap &pixmap);
+
+        //! Display splash screen messages if screen is available and visible @{
+        void displaySplashMessage(const BlackMisc::CStatusMessage &msg);
+        void displaySplashMessages(const BlackMisc::CStatusMessageList &msgs);
+        //! @}
+
+        // -------- Splash screen related ---------
 
         //! Add menu items for settings and cache
         void addMenuForSettingsAndCache(QMenu &menu);
@@ -309,12 +317,12 @@ namespace BlackGui
         QCommandLineOption m_cmdWindowMode      { "emptyWindowMode" };     //!< window mode (flags: frameless ...)
         QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" };      //!< window size reset
         QCommandLineOption m_cmdWindowScaleSize { "emptyScale" };          //!< window scale size
-        CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
-        bool m_uiSetupCompleted = false;                          //!< ui setup completed
-        bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state
-        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
-        Components::CUpdateInfoDialog *m_updateDialog = nullptr;  //!< software installation dialog
-        Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
+        CStyleSheetUtility m_styleSheetUtility {{}, this};                 //!< style sheet utility
+        bool m_uiSetupCompleted = false;                                   //!< ui setup completed
+        bool m_saveMainWidgetState = true;                                 //!< save/restore main widget's state
+        QScopedPointer<CSplashScreen> m_splashScreen;                      //!< splash screen
+        Components::CUpdateInfoDialog *m_updateDialog = nullptr;           //!< software installation dialog
+        Components::CApplicationCloseDialog *m_closeDialog = nullptr;      //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 

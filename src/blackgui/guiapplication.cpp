@@ -7,19 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
+#include "blackgui/components/applicationclosedialog.h"
+#include "blackgui/components/updateinfodialog.h"
+#include "blackgui/components/aboutdialog.h"
+#include "blackgui/components/setuploadingdialog.h"
+#include "blackgui/splashscreen.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/registermetadata.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/networkwatchdog.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
-#include "blackgui/components/applicationclosedialog.h"
-#include "blackgui/components/updateinfodialog.h"
-#include "blackgui/components/aboutdialog.h"
-#include "blackgui/components/setuploadingdialog.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/registermetadata.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
@@ -30,6 +30,7 @@
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -42,6 +43,7 @@
 #include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
+#include <QFont>
 #include <QKeySequence>
 #include <QMenu>
 #include <QMessageBox>
@@ -104,8 +106,10 @@ namespace BlackGui
             this->settingsChanged();
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
+
             connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
             connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes, Qt::QueuedConnection);
+            connect(this->getSetupReader(), &CSetupReader::setupLoadingMessages, this, &CGuiApplication::displaySplashMessages, Qt::QueuedConnection);
         }
     }
 
@@ -185,9 +189,39 @@ namespace BlackGui
         {
             m_splashScreen.reset(); // delete old one
         }
-        m_splashScreen.reset(new QSplashScreen(pixmap.scaled(256, 256)));
+
+        QFont splashFont;
+        splashFont.setFamily("Arial");
+        // splashFont.setBold(true);
+        splashFont.setPointSize(10);
+        splashFont.setStretch(125);
+
+        m_splashScreen.reset(new CSplashScreen(pixmap.scaled(256, 256)));
         m_splashScreen->show();
+        m_splashScreen->showStatusMessage(CBuildConfig::getVersionString());
+        m_splashScreen->setSplashFont(splashFont);
+
         this->processEventsToRefreshGui();
+    }
+
+    void CGuiApplication::displaySplashMessage(const CStatusMessage &msg)
+    {
+        if (msg.isEmpty()) { return; }
+        if (!m_splashScreen) { return; }
+        if (this->isShuttingDown()) { return; }
+        if (!m_splashScreen->isVisible())  { return; }
+        m_splashScreen->showStatusMessage(msg);
+    }
+
+    void CGuiApplication::displaySplashMessages(const CStatusMessageList &msgs)
+    {
+        if (msgs.isEmpty()) { return; }
+        for (const CStatusMessage &m : msgs)
+        {
+            if (!m_splashScreen) { return; }
+            this->displaySplashMessage(m);
+            this->processEventsToRefreshGui();
+        }
     }
 
     void CGuiApplication::processEventsToRefreshGui() const
