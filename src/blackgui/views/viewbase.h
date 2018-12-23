@@ -141,6 +141,7 @@ namespace BlackGui
                 // maybe shifted in the future to elsewhere
                 MenuHighlightStashed     = 1 << 15,  //!< highlight stashed models
                 MenuCanStashModels       = 1 << 16,  //!< stash models
+                MenuDisableModelsTemp    = 1 << 17,  //!< temp. disable model
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
@@ -540,7 +541,7 @@ namespace BlackGui
             Menus::CFontMenu *m_fontMenu              = nullptr;               //!< font menu if applicable
             CLoadIndicator   *m_loadIndicator         = nullptr;               //!< load indicator if needed
             Components::CTextEditDialog *m_textEditDialog = nullptr;           //!< text edit dialog
-            QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
+            QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions for menu flag (enum)
             QString        m_saveFileName;                                     //!< save file name (JSON)
             BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save

@@ -332,6 +332,19 @@ namespace BlackGui
                 a->setChecked(this->derivedModel()->highlightModelStrings());
                 addStashMenu = true;
             }
+
+            // client specific
+            if (m_menus.testFlag(MenuDisableModelsTemp) && this->hasSelection())
+            {
+                if (!m_menuFlagActions.contains(MenuDisableModelsTemp))
+                {
+                    CMenuActions ma;
+                    ma.addAction(CIcons::delete16(), "Temp.disable model", CMenuAction::pathModel(), { this, &CAircraftModelView::requestTempDisable });
+                    m_menuFlagActions.insert(MenuDisableModelsTemp, ma);
+                }
+                menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuDisableModelsTemp));
+            }
+
             if (addStashMenu) { menuActions.addMenuStash(); }
 
             // base class menus
@@ -401,6 +414,15 @@ namespace BlackGui
                 this->clearSelection();
             }
             sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStringList(true).join(" ")));
+        }
+
+        void CAircraftModelView::requestTempDisable()
+        {
+            if (!m_menus.testFlag(MenuCanStashModels)) { return; }
+            if (!this->hasSelection()) { return; }
+            const CAircraftModelList models(this->selectedObjects());
+            emit this->requestTempDisableModelsForMatching(models);
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Temp.disabled " + models.getModelStringList(true).join(" ")));
         }
 
         void CAircraftModelView::displayModelStatisticsDialog()

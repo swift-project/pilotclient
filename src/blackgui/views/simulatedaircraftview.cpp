@@ -72,6 +72,10 @@ namespace BlackGui
                 menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
                 menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
                 menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
+                if (m_menus.testFlag(MenuDisableModelsTemp) && this->hasSelection())
+                {
+                    menuActions.addAction(CIcons::delete16(), "Temp.disable model", CMenuAction::pathModel(), { this, &CSimulatedAircraftView::requestTempDisable });
+                }
             }
 
             if (this->hasSelection())
@@ -154,6 +158,15 @@ namespace BlackGui
             const CSimulatedAircraft aircraft(this->selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             this->followAircraftInSimulator(aircraft);
+        }
+
+        void CSimulatedAircraftView::requestTempDisable()
+        {
+            if (!m_menus.testFlag(MenuCanStashModels)) { return; }
+            if (!this->hasSelection()) { return; }
+            const CAircraftModelList models(this->selectedObjects().getModels());
+            emit this->requestTempDisableModelsForMatching(models);
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Temp.disabled " + models.getModelStringList(true).join(" ")));
         }
 
         void CSimulatedAircraftView::showPositionLogInSimulator()

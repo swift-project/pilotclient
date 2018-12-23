@@ -119,6 +119,9 @@ namespace BlackGui
             //! Request update for models from backend
             void onModelsUpdateRequested();
 
+            //! Request temp.disablng of models (for matching)
+            void onTempDisableModelsForMatchingRequested(const BlackMisc::Simulation::CAircraftModelList &models);
+
             //! Rendered aircraft changed in backend
             void onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 

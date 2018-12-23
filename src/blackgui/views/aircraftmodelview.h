@@ -113,11 +113,14 @@ namespace BlackGui
             //! Request to stash if applicable
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
 
-            //! Highlight stashed models has been toggled
-            void toggledHighlightStashedModels();
-
             //! Request further handling of drops I cannot handle on my own
             void requestHandlingOfStashDrop(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+
+            //! Temp.disable model
+            void requestTempDisableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! Highlight stashed models has been toggled
+            void toggledHighlightStashedModels();
 
             //! Models for simulator loaded (JSON)
             void jsonModelsForSimulatorLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -147,6 +150,9 @@ namespace BlackGui
 
             //! Stash shortcut pressed
             void requestedStash();
+
+            //! Requested a temporary disabled model
+            void requestTempDisable();
 
             //! Dialog about model statistics
             void displayModelStatisticsDialog();

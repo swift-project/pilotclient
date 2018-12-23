@@ -60,6 +60,9 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Disable for matching
+            void requestTempDisableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &models);
+
         protected:
             //! \copydoc CViewBase::customMenu
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
@@ -82,6 +85,9 @@ namespace BlackGui
 
             //! Follow in simulator
             void requestFollowInSimulator();
+
+            //! Request temp disabling of matching models
+            void requestTempDisable();
 
             //! Show position log for selected aircraft
             void showPositionLogInSimulator();

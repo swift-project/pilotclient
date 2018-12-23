@@ -169,6 +169,9 @@ namespace BlackGui
             //! Client simulation/display related
             static const QString &pathClientSimulationTransfer() { static const QString p("ClientSimulation.Transfer/Transfer"); return p; }
 
+            //! Client model set related
+            static const QString &pathClientModelSet() { static const QString p("Client.Model set"); return p; }
+
             // ---- standard view paths --------
 
             //! Database

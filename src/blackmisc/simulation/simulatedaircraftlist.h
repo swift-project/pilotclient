@@ -56,6 +56,9 @@ namespace BlackMisc
             //! All pilots (with valid data)
             Network::CUserList getPilots() const;
 
+            //! Get all models
+            CAircraftModelList getModels() const;
+
             //! Enabled / disabled aircraft
             CSimulatedAircraftList findByEnabled(bool enabled) const;
 

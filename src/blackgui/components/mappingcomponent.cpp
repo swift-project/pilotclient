@@ -78,21 +78,25 @@ namespace BlackGui
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelClient);
             ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
             ui->tvp_AircraftModels->addFilterDialog();
-            ui->tvp_AircraftModels->menuRemoveItems(CViewBaseNonTemplate::MenuBackend);
+            ui->tvp_AircraftModels->menuRemoveItems(CAircraftModelView::MenuBackend);
+            ui->tvp_AircraftModels->menuAddItems(CAircraftModelView::MenuDisableModelsTemp);
 
             ui->tvp_RenderedAircraft->setAircraftMode(CSimulatedAircraftListModel::RenderedMode);
             ui->tvp_RenderedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
+            ui->tvp_RenderedAircraft->menuAddItems(CAircraftModelView::MenuDisableModelsTemp);
 
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onNetworkConnectionStatusChanged);
 
             connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::onModelsUpdateRequested);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::onRowCountChanged);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::onModelSelectedInView);
+            connect(ui->tvp_AircraftModels, &CAircraftModelView::requestTempDisableModelsForMatching, this, &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::modelDataChanged, this, &CMappingComponent::onRowCountChanged);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::onAircraftSelectedInView);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::tokenBucketUpdate);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
+            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTempDisableModelsForMatching, this, &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
             connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
@@ -411,6 +415,15 @@ namespace BlackGui
             const CAircraftModelList modelSet(sGui->getIContextSimulator()->getModelSet());
             ui->tvp_AircraftModels->updateContainerMaybeAsync(modelSet);
             ui->tw_SpecializedViews->setCurrentIndex(TabAircraftModels);
+        }
+
+        void CMappingComponent::onTempDisableModelsForMatchingRequested(const CAircraftModelList &models)
+        {
+            if (models.isEmpty()) { return; }
+            if (sGui && sGui->getIContextSimulator())
+            {
+                sGui->getIContextSimulator()->disableModelsForMatching(models, true);
+            }
         }
 
         void CMappingComponent::onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

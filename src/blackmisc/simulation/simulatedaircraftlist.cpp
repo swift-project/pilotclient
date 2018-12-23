@@ -40,6 +40,11 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
         }
 
+        CAircraftModelList CSimulatedAircraftList::getModels() const
+        {
+            return this->transform(Predicates::MemberTransform(&CSimulatedAircraft::getModel));
+        }
+
         CSimulatedAircraftList CSimulatedAircraftList::findByEnabled(bool enabled) const
         {
             return this->findBy(&CSimulatedAircraft::isEnabled, enabled);
