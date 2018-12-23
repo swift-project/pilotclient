@@ -23,35 +23,37 @@ namespace BlackMisc
 {
     namespace Private
     {
-        namespace
-        {
-            template <size_t... Is> QString arg(std::index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
-            QString arg(std::index_sequence<>, const QString &format, const QStringList &) { return format; }
-        }
-
-        QString arg(const QString &format, const QStringList &args)
+        QString arg(QStringView format, const QStringList &args)
         {
             if (format.isEmpty())
             {
-                return args.join(" ");
+                return args.join(u' ');
             }
-            else
+
+            thread_local QString temp;
+            temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
+
+            for (auto it = format.begin(); ; )
             {
-                switch (args.size())
+                const auto pc = std::find(it, format.end(), u'%');
+                temp.append(&*it, std::distance(it, pc));
+                if ((it = pc) == format.end()) { break; }
+                if (++it == format.end()) { temp += u'%'; break; }
+
+                if (*it == u'%') { temp += u'%'; ++it; continue; }
+                if (is09(*it))
                 {
-                case 0: return arg(std::make_index_sequence<0>(), format, args);
-                case 1: return arg(std::make_index_sequence<1>(), format, args);
-                case 2: return arg(std::make_index_sequence<2>(), format, args);
-                case 3: return arg(std::make_index_sequence<3>(), format, args);
-                case 4: return arg(std::make_index_sequence<4>(), format, args);
-                case 5: return arg(std::make_index_sequence<5>(), format, args);
-                case 6: return arg(std::make_index_sequence<6>(), format, args);
-                case 7: return arg(std::make_index_sequence<7>(), format, args);
-                case 8: return arg(std::make_index_sequence<8>(), format, args);
-                default: qWarning("Too many arguments to BlackMisc::Private::arg"); // intentional fall-through
-                case 9: return arg(std::make_index_sequence<9>(), format, args);
+                    int n = it->unicode() - u'0';
+                    Q_ASSERT(n >= 0 && n <= 9);
+                    if (++it != format.end() && is09(*it)) { n = n * 10 + it->unicode() - u'0'; ++it; }
+                    Q_ASSERT(n >= 0 && n <= 99);
+                    if (n <= args.size()) { temp += args[n - 1]; } else { temp += u'%' % QString::number(n); }
                 }
+                else { temp += u'%'; }
             }
+            QString result = temp;
+            result.squeeze(); // release unused capacity and implicitly detach so temp keeps its capacity for next time
+            return result;
         }
     }
 
@@ -235,13 +237,13 @@ namespace BlackMisc
     void CStatusMessage::prependMessage(const QString &msg)
     {
         if (msg.isEmpty()) { return; }
-        m_message = msg + m_message;
+        m_message = QString(msg % m_message.view());
     }
 
     void CStatusMessage::appendMessage(const QString &msg)
     {
         if (msg.isEmpty()) { return; }
-        m_message += msg;
+        m_message = QString(m_message.view() % msg);
     }
 
     void CStatusMessage::markAsHandledBy(const QObject *object) const

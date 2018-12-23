@@ -83,6 +83,7 @@ namespace BlackMisc
         CRgbColor::registerMetadata();
         CStatusMessage::registerMetadata();
         CStatusMessageList::registerMetadata();
+        CStrongStringView::registerMetadata();
         CValueCachePacket::registerMetadata();
         CVariant::registerMetadata();
         CVariantList::registerMetadata();

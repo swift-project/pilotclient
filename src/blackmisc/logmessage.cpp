@@ -67,9 +67,7 @@ namespace BlackMisc
     void CLogMessage::preformatted(const CStatusMessage &statusMessage)
     {
         if (statusMessage.isEmpty()) { return; } // just skip empty messages
-        CLogMessage msg(statusMessage.getCategories());
-        msg.m_severity = statusMessage.getSeverity();
-        msg.m_message = statusMessage.getMessage();
+        CLogMessage(statusMessage.getCategories()).log(statusMessage.getSeverity(), u"%1") << statusMessage.getMessage();
     }
 
     void CLogMessage::preformatted(const CStatusMessageList &statusMessages)

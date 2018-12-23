@@ -28,6 +28,8 @@ namespace BlackMiscTest
     private slots:
         //! Status message
         void statusMessage();
+        //! Message with arguments
+        void statusArgs();
     };
 
     void CTestStatusMessage::statusMessage()
@@ -47,6 +49,27 @@ namespace BlackMiscTest
         CStatusMessage cAssign;
         cAssign = s2;
         QVERIFY(cAssign.getMSecsSinceEpoch() == s2.getMSecsSinceEpoch());
+    }
+
+    void CTestStatusMessage::statusArgs()
+    {
+        auto s1 = CStatusMessage().info(u"literal percent: %1");
+        auto s2 = CStatusMessage().info(u"literal percent: %a");
+        auto s3 = CStatusMessage().info(u"literal percent: %");
+        auto s4 = CStatusMessage().info(u"literal percent: %%");
+        auto s5 = CStatusMessage().info(u"literal percents: %%%");
+        auto s6 = CStatusMessage().info(u"will be expanded: %1%2") << "foo" << "bar";
+        auto s7 = CStatusMessage().info(u"will be expanded: %1+%2") << "foo" << "bar";
+        auto s8 = CStatusMessage().info(u"will be expanded: %012") << "foo";
+
+        QVERIFY(s1.getMessage() == "literal percent: %1");
+        QVERIFY(s2.getMessage() == "literal percent: %a");
+        QVERIFY(s3.getMessage() == "literal percent: %");
+        QVERIFY(s4.getMessage() == "literal percent: %");
+        QVERIFY(s5.getMessage() == "literal percents: %%");
+        QVERIFY(s6.getMessage() == "will be expanded: foobar");
+        QVERIFY(s7.getMessage() == "will be expanded: foo+bar");
+        QVERIFY(s8.getMessage() == "will be expanded: foo2");
     }
 } // namespace
 

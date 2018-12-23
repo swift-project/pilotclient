@@ -27,8 +27,8 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! Like QString::arg() but accepts a QStringList of args.
-        BLACKMISC_EXPORT QString arg(const QString &format, const QStringList &args);
+        //! Like QString::arg() but accepts a QVector of args.
+        BLACKMISC_EXPORT QString arg(QStringView format, const QStringList &args);
     }
 
     /*!
@@ -40,6 +40,81 @@ namespace BlackMisc
         SeverityInfo,
         SeverityWarning,
         SeverityError
+    };
+
+    /*!
+     * Special-purpose string class used by CMessageBase.
+     *
+     * Wraps a QStringView that can be constructed from a UTF-16 string literal or from a QString.
+     * If constructed from a QString, the QString is stored to prevent a dangling pointer.
+     */
+    class CStrongStringView :
+        public Mixin::MetaType<CStrongStringView>,
+        public Mixin::EqualsByCompare<CStrongStringView>,
+        public Mixin::LessThanByCompare<CStrongStringView>,
+        public Mixin::DBusOperators<CStrongStringView>,
+        public Mixin::JsonOperators<CStrongStringView>
+    {
+    public:
+        //! Default constructor.
+        CStrongStringView() = default;
+
+        //! Construct from a UTF-16 character array.
+        template <size_t N>
+        CStrongStringView(const char16_t (&string)[N]) : m_view(string) {}
+
+        //! Construct from a QString.
+        CStrongStringView(const QString &string) : m_string(string), m_view(m_string) {}
+
+        //! Deleted constructor.
+        CStrongStringView(const char *) = delete;
+
+        //! Copy constructor.
+        CStrongStringView(const CStrongStringView &other) { *this = other; }
+
+        //! Copy assignment operator.
+        CStrongStringView &operator =(const CStrongStringView &other)
+        {
+            if (other.isOwning()) { m_view = m_string = other.m_string; } else { m_view = other.m_view; m_string.clear(); }
+            return *this;
+        }
+
+        //! Destructor.
+        ~CStrongStringView() = default;
+
+        //! String is empty.
+        bool isEmpty() const { return view().isEmpty(); }
+
+        //! Does it own its string data?
+        bool isOwning() const { return !m_string.isNull(); } // important distinction between isNull and isEmpty
+
+        //! Return as a QStringView.
+        QStringView view() const { return m_view; }
+
+        //! Return a copy as a QString.
+        QString toQString(bool i18n) const { Q_UNUSED(i18n); return isOwning() ? m_string : m_view.toString(); }
+
+        //! Compare two strings.
+        friend int compare(const CStrongStringView &a, const CStrongStringView &b) { return a.m_view.compare(b.m_view); }
+
+        //! Hash value.
+        friend uint qHash(const CStrongStringView &obj, uint seed = 0) { return ::qHash(obj.m_view, seed); }
+
+        //! DBus marshalling.
+        //! @{
+        void marshallToDbus(QDBusArgument &arg) const { if (isOwning()) { arg << m_string; } else { arg << m_view.toString(); } }
+        void unmarshallFromDbus(const QDBusArgument &arg) { QString s; arg >> s; *this = s; }
+        //! @}
+
+        //! JSON conversion.
+        //! @{
+        QJsonObject toJson() const { QJsonObject json; json.insert(QStringLiteral("value"), m_view.toString()); return json; }
+        void convertFromJson(const QJsonObject &json) { *this = json.value(QLatin1String("value")).toString(); }
+        //! @}
+
+    private:
+        QString m_string;
+        QStringView m_view;
     };
 
     /*!
@@ -65,34 +140,83 @@ namespace BlackMisc
         CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
         //! Set the severity and format string.
+        //! @{
+        template <size_t N>
+        Derived &log(StatusSeverity s, const char16_t (&m)[N]) { m_message = m; m_severity = s; return derived(); }
         Derived &log(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
+        //! @}
 
         //! Set the severity to debug.
-        Derived &debug() { return log(SeverityDebug, ""); }
+        Derived &debug() { return log(SeverityDebug, QString()); }
 
         //! Set the severity to debug, providing a format string.
+        //! @{
+        template <size_t N>
+        Derived &debug(const char16_t (&format)[N]) { return log(SeverityDebug, format); }
         Derived &debug(const QString &format) { return log(SeverityDebug, format); }
+        //! @}
 
         //! Set the severity to info, providing a format string.
+        //! @{
+        template <size_t N>
+        Derived &info(const char16_t (&format)[N]) { return log(SeverityInfo, format); }
         Derived &info(const QString &format) { return log(SeverityInfo, format); }
+        //! @}
 
         //! Set the severity to warning, providing a format string.
+        //! @{
+        template <size_t N>
+        Derived &warning(const char16_t (&format)[N]) { return log(SeverityWarning, format); }
         Derived &warning(const QString &format) { return log(SeverityWarning, format); }
+        //! @}
 
         //! Set the severity to error, providing a format string.
+        //! @{
+        template <size_t N>
+        Derived &error(const char16_t (&format)[N]) { return log(SeverityError, format); }
         Derived &error(const QString &format) { return log(SeverityError, format); }
+        //! @}
 
         //! Set the severity to s, providing a format string, and adding the validation category.
+        //! @{
+        template <size_t N>
+        Derived &validation(StatusSeverity s, const char16_t (&format)[N]) { setValidation(); return log(s, format); }
         Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
+        //! @}
 
         //! Set the severity to info, providing a format string, and adding the validation category.
+        //! @{
+        template <size_t N>
+        Derived &validationInfo(const char16_t (&format)[N]) { setValidation(); return log(SeverityInfo, format); }
         Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
+        //! @}
 
         //! Set the severity to warning, providing a format string, and adding the validation category.
+        //! @{
+        template <size_t N>
+        Derived &validationWarning(const char16_t (&format)[N]) { setValidation(); return log(SeverityWarning, format); }
         Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
+        //! @}
 
         //! Set the severity to error, providing a format string, and adding the validation category.
+        //! @{
+        template <size_t N>
+        Derived &validationError(const char16_t (&format)[N]) { setValidation(); return log(SeverityError, format); }
         Derived &validationError(const QString &format) { setValidation(); return log(SeverityError, format); }
+        //! @}
+
+        //! Deleted methods to avoid accidental implicit conversion from Latin-1 or UTF-8 string literals.
+        //! @{
+        Derived &log(StatusSeverity, const char *) = delete;
+        Derived &debug(const char *) = delete;
+        Derived &info(const char *) = delete;
+        Derived &warning(const char *) = delete;
+        Derived &error(const char *) = delete;
+        Derived &validation(StatusSeverity, const char *) = delete;
+        Derived &validationInfo(const char *) = delete;
+        Derived &validationWarning(const char *) = delete;
+        Derived &validationError(const char *) = delete;
+        //! @}
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
@@ -114,6 +238,9 @@ namespace BlackMisc
         template <class T, class = std::enable_if_t<THasToQString<T>::value>>
         Derived & operator <<(const T &v) { return arg(v.toQString()); }
         //! @}
+
+        //! Message empty
+        bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
 
     private:
         void setValidation() { m_categories.remove(CLogCategory::uncategorized()); this->addIfNotExisting(CLogCategory::validation()); }
@@ -144,14 +271,15 @@ namespace BlackMisc
             }
         }
 
+    protected:
         //! \private
         //! @{
-        QString m_message;
+        CStrongStringView m_message;
         QStringList m_args;
         CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
         StatusSeverity m_severity = SeverityDebug;
 
-        QString message() const { return Private::arg(m_message, m_args); }
+        QString message() const { return Private::arg(m_message.view(), m_args); }
         //! @}
     };
 
@@ -281,9 +409,6 @@ namespace BlackMisc
         //! Append message
         void appendMessage(const QString &msg);
 
-        //! Message empty
-        bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
-
         //! Returns true if this message was sent by an instance of class T.
         template <class T>
         bool isFromClass(const T *pointer = nullptr) const
@@ -409,6 +534,7 @@ namespace BlackMisc
     }
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::CStrongStringView)
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage::StatusSeverity)
 
