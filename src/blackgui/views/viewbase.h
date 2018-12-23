@@ -504,6 +504,15 @@ namespace BlackGui
             //! Trigger reload from backend by signal requestNewBackendData()
             void triggerReloadFromBackend();
 
+            //! Remove filter
+            virtual void removeFilter() = 0;
+
+            //! Filter dialog finished
+            virtual bool filterDialogFinished(int status) = 0;
+
+            //! Filter changed in filter widget
+            virtual bool filterWidgetChangedFilter(bool enabled) = 0;
+
             //! Init text edit dialog if required and return pointer to it
             Components::CTextEditDialog *textEditDialog();
 
@@ -538,15 +547,6 @@ namespace BlackGui
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         protected slots:
-            //! Remove filter
-            virtual void ps_removeFilter() = 0;
-
-            //! Filter dialog finished
-            virtual bool ps_filterDialogFinished(int status) = 0;
-
-            //! Filter changed in filter widget
-            virtual bool ps_filterWidgetChangedFilter(bool enabled) = 0;
-
             //! Index clicked
             virtual void ps_clicked(const QModelIndex &index) = 0;
 
@@ -728,9 +728,6 @@ namespace BlackGui
             //! Set filter and take ownership, any previously set filter will be destroyed
             void takeFilterOwnership(std::unique_ptr<Models::IModelFilter<ContainerType>> &filter);
 
-            //! Removes filter and destroys filter object
-            void removeFilter();
-
             //! Has filter set?
             bool hasFilter() const;
 
@@ -771,6 +768,9 @@ namespace BlackGui
             virtual void paste() override;
             virtual void displayJsonPopup() override { this->displayContainerAsJsonPopup(false); }
             virtual void displaySelectedJsonPopup() override { this->displayContainerAsJsonPopup(true); }
+            virtual bool filterDialogFinished(int status) override;
+            virtual bool filterWidgetChangedFilter(bool enabled) override;
+            virtual void removeFilter() override;
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
@@ -796,9 +796,6 @@ namespace BlackGui
 
             //! \name Slot overrides from base class
             //! @{
-            virtual bool ps_filterDialogFinished(int status) override;
-            virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
-            virtual void ps_removeFilter() override;
             virtual void ps_clicked(const QModelIndex &index) override;
             virtual void ps_doubleClicked(const QModelIndex &index) override;
             virtual void ps_rowSelected(const QModelIndex &index) override;

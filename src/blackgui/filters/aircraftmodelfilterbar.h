@@ -36,7 +36,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CAircraftModelFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
+            public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
         {
             Q_OBJECT
 
@@ -51,9 +51,8 @@ namespace BlackGui
             void displayCount(bool show);
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
+            virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
 
-        public slots:
             //! \copydoc CFilterWidget::onRowCountChanged
             virtual void onRowCountChanged(int count, bool withFilter) override;
 
@@ -61,15 +60,15 @@ namespace BlackGui
             //! \copydoc CFilterWidget::clearForm
             virtual void clearForm() override;
 
-        private slots:
+        private:
             //! Simulator selection changed
-            void ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
+            void onSimulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
 
             //! Distributor changed
-            void ps_distributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
+            void onDistributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
 
             //! Checkbox has been changed
-            void ps_checkBoxChanged(bool state);
+            void onCheckBoxChanged(bool state);
 
         private:
             QScopedPointer<Ui::CAircraftModelFilterBar> ui;

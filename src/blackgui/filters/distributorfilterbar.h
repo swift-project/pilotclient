@@ -20,10 +20,8 @@
 #include <QScopedPointer>
 #include <memory>
 
-class QWidget;
-
-namespace BlackMisc { namespace Simulation { class CDistributorList; class CSimulatorInfo; }}
 namespace Ui { class CDistributorFilterBar; }
+namespace BlackMisc { namespace Simulation { class CDistributorList; class CSimulatorInfo; }}
 namespace BlackGui
 {
     namespace Filters
@@ -44,13 +42,12 @@ namespace BlackGui
             //! Destructor
             virtual ~CDistributorFilterBar() override;
 
-            //! \copydoc Models::IModelFilterProvider::createModelFilter
-            virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;
-
             //! Set simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-        public slots:
+            //! \copydoc Models::IModelFilterProvider::createModelFilter
+            virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;
+
             //! \copydoc CFilterWidget::onRowCountChanged
             virtual void onRowCountChanged(int count, bool withFilter) override;
 

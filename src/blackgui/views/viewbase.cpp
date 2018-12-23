@@ -844,14 +844,14 @@ namespace BlackGui
         }
 
         template <class T>
-        bool CViewBase<T>::ps_filterDialogFinished(int status)
+        bool CViewBase<T>::filterDialogFinished(int status)
         {
             QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
-            return ps_filterWidgetChangedFilter(statusCode == QDialog::Accepted);
+            return filterWidgetChangedFilter(statusCode == QDialog::Accepted);
         }
 
         template <class T>
-        bool CViewBase<T>::ps_filterWidgetChangedFilter(bool enabled)
+        bool CViewBase<T>::filterWidgetChangedFilter(bool enabled)
         {
             if (enabled)
             {
@@ -882,12 +882,6 @@ namespace BlackGui
                 this->removeFilter();
             }
             return true; // handled
-        }
-
-        template <class T>
-        void CViewBase<T>::ps_removeFilter()
-        {
-            this->derivedModel()->removeFilter();
         }
 
         template <class T>

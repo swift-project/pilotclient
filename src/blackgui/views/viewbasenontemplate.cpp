@@ -131,7 +131,7 @@ namespace BlackGui
             this->setFilterWidgetImpl(filterDialog);
             if (filterDialog)
             {
-                const bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
+                const bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::filterDialogFinished);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter dialog connect");
                 Q_UNUSED(s);
             }
@@ -143,7 +143,7 @@ namespace BlackGui
             this->setFilterWidgetImpl(filterWidget);
             if (filterWidget)
             {
-                bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::ps_filterWidgetChangedFilter);
+                bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::filterWidgetChangedFilter);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
                 s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
@@ -241,7 +241,7 @@ namespace BlackGui
                     {
                         const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
                         if (dialog) ma.addAction(CIcons::filter16(), "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()), CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
-                        ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
+                        ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::removeFilter });
                     }
                     break;
                 }

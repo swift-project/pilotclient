@@ -79,7 +79,7 @@ namespace BlackGui
             ui->filter_Buttons->displayCount(show);
         }
 
-        std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
+        std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
         {
             CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
             if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)
@@ -115,7 +115,7 @@ namespace BlackGui
                        ui->le_AirlineName->text(),
                        ui->le_LiveryCode->text(),
                        ui->le_FileName->text(),
-                       ui->frp_SimulatorSelector->getValue(),
+                       ui->comp_SimulatorSelector->getValue(),
                        ui->comp_DistributorSelector->getDistributor()
                    );
         }
@@ -135,7 +135,7 @@ namespace BlackGui
             ui->le_AirlineName->clear();
             ui->le_LiveryCode->clear();
             ui->le_FileName->clear();
-            ui->frp_SimulatorSelector->checkAll();
+            ui->comp_SimulatorSelector->checkAll();
             ui->comp_DistributorSelector->clear();
             ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
             ui->cbt_Db->setCheckState(Qt::PartiallyChecked);
@@ -143,19 +143,19 @@ namespace BlackGui
             ui->cbt_ColorLiveries->setCheckState(Qt::PartiallyChecked);
         }
 
-        void CAircraftModelFilterBar::ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info)
+        void CAircraftModelFilterBar::onSimulatorSelectionChanged(const CSimulatorInfo &info)
         {
             Q_UNUSED(info);
             this->triggerFilter();
         }
 
-        void CAircraftModelFilterBar::ps_distributorChanged(const BlackMisc::Simulation::CDistributor &distributor)
+        void CAircraftModelFilterBar::onDistributorChanged(const CDistributor &distributor)
         {
             Q_UNUSED(distributor);
             this->triggerFilter();
         }
 
-        void CAircraftModelFilterBar::ps_checkBoxChanged(bool state)
+        void CAircraftModelFilterBar::onCheckBoxChanged(bool state)
         {
             Q_UNUSED(state);
             triggerFilter();

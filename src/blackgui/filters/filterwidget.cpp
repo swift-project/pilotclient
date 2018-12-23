@@ -22,8 +22,8 @@ namespace BlackGui
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "sGui missing");
             this->setWindowTitle("Filter widget");
-            ps_onStyleSheetChanged();
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::ps_onStyleSheetChanged, Qt::QueuedConnection);
+            this->onStyleSheetChanged();
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::onStyleSheetChanged, Qt::QueuedConnection);
         }
 
         CFilterWidget::~CFilterWidget()
@@ -33,7 +33,7 @@ namespace BlackGui
         {
             if (buttons)
             {
-                bool s = connect(buttons, &CFilterBarButtons::buttonClicked, this, &CFilterWidget::ps_filterButtonClicked);
+                bool s = connect(buttons, &CFilterBarButtons::buttonClicked, this, &CFilterWidget::onFilterButtonClicked);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter button connect");
                 Q_UNUSED(s);
             }
@@ -50,29 +50,29 @@ namespace BlackGui
 
         void CFilterWidget::triggerFilter()
         {
-            this->ps_filterButtonClicked(CFilterBarButtons::Filter);
+            this->onFilterButtonClicked(CFilterBarButtons::Filter);
         }
 
-        void CFilterWidget::ps_onStyleSheetChanged()
+        void CFilterWidget::onStyleSheetChanged()
         {
             const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
             this->setStyleSheet(qss);
         }
 
-        void CFilterWidget::ps_filterButtonClicked(CFilterBarButtons::FilterButton filterButton)
+        void CFilterWidget::onFilterButtonClicked(CFilterBarButtons::FilterButton filterButton)
         {
             switch (filterButton)
             {
             case CFilterBarButtons::Filter:
-                emit changeFilter(true);
+                emit this->changeFilter(true);
                 break;
             case CFilterBarButtons::RemoveFilter:
-                emit changeFilter(false);
-                emit rejectDialog();
+                emit this->changeFilter(false);
+                emit this->rejectDialog();
                 break;
             case CFilterBarButtons::ClearForm:
-                clearForm();
-                emit changeFilter(false);
+                this->clearForm();
+                emit this->changeFilter(false);
                 break;
             }
         }

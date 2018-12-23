@@ -17,10 +17,10 @@ namespace BlackGui
 {
     namespace Models
     {
-        CDistributorFilter::CDistributorFilter(const Simulation::CSimulatorInfo &simulator) :
+        CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) :
             m_simulator(simulator)
         {
-            this->m_valid = true;
+            m_valid = true;
         }
 
         CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const

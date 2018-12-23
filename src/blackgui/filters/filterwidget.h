@@ -36,7 +36,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CFilterWidget();
 
-        public slots:
             //! Row count has been changed
             virtual void onRowCountChanged(int count, bool withFilter) = 0;
 
@@ -60,12 +59,12 @@ namespace BlackGui
             //! Convert DB id
             static int convertDbId(const QString &candidate);
 
-        private slots:
+        private:
             //! Button clicked
-            void ps_filterButtonClicked(CFilterBarButtons::FilterButton filterButton);
+            void onFilterButtonClicked(CFilterBarButtons::FilterButton filterButton);
 
             //! Stylesheet changed
-            void ps_onStyleSheetChanged();
+            void onStyleSheetChanged();
         };
     } // namespace
 } // namespace

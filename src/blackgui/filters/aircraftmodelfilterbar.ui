@@ -281,7 +281,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="5">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector"/>
+    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector"/>
    </item>
   </layout>
  </widget>
