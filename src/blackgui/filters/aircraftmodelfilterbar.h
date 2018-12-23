@@ -70,7 +70,9 @@ namespace BlackGui
             //! Checkbox has been changed
             void onCheckBoxChanged(bool state);
 
-        private:
+            //! Trigger filter by changing a value
+            void connectTriggerFilterSignals();
+
             QScopedPointer<Ui::CAircraftModelFilterBar> ui;
         };
     } // ns

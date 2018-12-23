@@ -56,6 +56,9 @@ namespace BlackGui
             virtual void clearForm() override;
 
         private:
+            //! Trigger filter by changing a value
+            void connectTriggerFilterSignals();
+
             QScopedPointer<Ui::CDistributorFilterBar> ui;
         };
     } // ns

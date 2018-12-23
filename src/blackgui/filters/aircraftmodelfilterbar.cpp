@@ -21,6 +21,8 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QtGlobal>
+#include <QPointer>
+#include <QTimer>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Db;
@@ -37,27 +39,14 @@ namespace BlackGui
             ui(new Ui::CAircraftModelFilterBar)
         {
             ui->setupUi(this);
-            ui->frp_SimulatorSelector->checkAll();
+
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::CheckBoxes);
+            ui->comp_SimulatorSelector->setNoSelectionMeansAll(true);
+            ui->comp_SimulatorSelector->setRememberSelection(false);
+            ui->comp_SimulatorSelector->checkAll();
+
             ui->comp_DistributorSelector->withDistributorDescription(false);
             this->setButtonsAndCount(ui->filter_Buttons);
-
-            connect(ui->le_AircraftIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_AirlineIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_FileName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-
-            connect(ui->cbt_Db, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_IncludeExclude, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-
-            connect(ui->frp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::ps_simulatorSelectionChanged);
-            connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::ps_distributorChanged);
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             ui->le_AircraftIcao->setValidator(ucv);
@@ -69,6 +58,14 @@ namespace BlackGui
 
             // reset form
             this->clearForm();
+
+            // connect deferred, avoid to filter during the UI "swing in period"
+            QPointer<CAircraftModelFilterBar> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->connectTriggerFilterSignals();
+            });
         }
 
         CAircraftModelFilterBar::~CAircraftModelFilterBar()
@@ -159,6 +156,27 @@ namespace BlackGui
         {
             Q_UNUSED(state);
             triggerFilter();
+        }
+
+        void CAircraftModelFilterBar::connectTriggerFilterSignals()
+        {
+            connect(ui->le_AircraftIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_AirlineIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_FileName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+
+            connect(ui->cbt_Db, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
+            connect(ui->cbt_IncludeExclude, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
+            connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
+            connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
+
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
+            connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::onDistributorChanged);
         }
     } // ns
 } // ns

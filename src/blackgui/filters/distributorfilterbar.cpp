@@ -32,12 +32,21 @@ namespace BlackGui
             ui->setupUi(this);
             ui->comp_Simulator->setMode(CSimulatorSelector::CheckBoxes);
             ui->comp_Simulator->setNoSelectionMeansAll(true);
-            this->setButtonsAndCount(ui->filter_Buttons);
+            ui->comp_Simulator->setRememberSelection(false);
+            ui->comp_Simulator->checkAll();
 
-            connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter);
+            this->setButtonsAndCount(ui->filter_Buttons);
 
             // reset form
             this->clearForm();
+
+            // connect deferred, avoid to filter during the UI "swing in period"
+            QPointer<CDistributorFilterBar> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->connectTriggerFilterSignals();
+            });
         }
 
         CDistributorFilterBar::~CDistributorFilterBar()
@@ -61,6 +70,11 @@ namespace BlackGui
         void CDistributorFilterBar::clearForm()
         {
             ui->comp_Simulator->clear();
+        }
+
+        void CDistributorFilterBar::connectTriggerFilterSignals()
+        {
+            connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter);
         }
     } // ns
 } // ns
