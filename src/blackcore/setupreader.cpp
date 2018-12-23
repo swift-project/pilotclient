@@ -22,7 +22,6 @@
 
 #include <QByteArray>
 #include <QFile>
-#include <QNetworkReply>
 #include <QPointer>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
@@ -435,6 +434,7 @@ namespace BlackCore
                     const QString errorMsg = QStringLiteral("Setup file loaded from '%1' cannot be parsed").arg(urlString);
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
+                    emit this->setupLoadingMessages(msg);
 
                     // in dev. I get notified, in productive code I try next URL by falling thru
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());

@@ -22,12 +22,11 @@
 #include <QCommandLineOption>
 #include <QCoreApplication>
 #include <QJsonObject>
+#include <QNetworkReply>
 #include <QList>
 #include <QObject>
 #include <QString>
 #include <atomic>
-
-class QNetworkReply;
 
 namespace BlackMisc { class CLogCategoryList; }
 namespace BlackCoreTest { class CTestConnectivity; }
