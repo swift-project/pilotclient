@@ -221,7 +221,7 @@ namespace BlackGui
             const int modelsCount = this->modelLoader()->getCachedModelsCount(simulator);
             if (modelsCount < 1)
             {
-                static const CStatusMessage msg = CStatusMessage(this).validationError("No models indexed so far. Try 'reload'!");
+                static const CStatusMessage msg = CStatusMessage(this).validationError(u"No models indexed so far. Try 'reload'!");
                 this->showOverlayMessage(msg, 4000);
                 return;
             }
@@ -236,7 +236,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    static const CStatusMessage msg = CStatusMessage(this).validationError("No distributors selected");
+                    static const CStatusMessage msg = CStatusMessage(this).validationError(u"No distributors selected");
                     this->showOverlayMessage(msg, 4000);
                     return;
                 }

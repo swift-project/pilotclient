@@ -173,7 +173,7 @@ namespace BlackGui
 
                     if (msgSettings.popupSelcalMessages())
                     {
-                        emit this->displayInInfoWindow(CLogMessage(this).info("SELCAL received"), 3 * 1000);
+                        emit this->displayInInfoWindow(CLogMessage(this).info(u"SELCAL received"), 3 * 1000);
                     }
                     continue;
                 }
@@ -538,7 +538,7 @@ namespace BlackGui
             QString cmd(".msg ");
             if (index < 0 || index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesAll))
             {
-                CLogMessage(this).validationError("Incorrect message channel");
+                CLogMessage(this).validationError(u"Incorrect message channel");
                 return {};
             }
             else
@@ -609,7 +609,7 @@ namespace BlackGui
         {
             if (callsign.isEmpty())
             {
-                CLogMessage(this).warning("No callsign to display text message");
+                CLogMessage(this).warning(u"No callsign to display text message");
                 return;
             }
             QWidget *w = this->findTextMessageTabByCallsign(callsign, true);

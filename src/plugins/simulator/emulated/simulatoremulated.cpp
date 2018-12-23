@@ -368,7 +368,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).validationError("No valid plugin for '%1'") << simulator.toQString();
+                CLogMessage(this).validationError(u"No valid plugin for '%1'") << simulator.toQString();
             }
 
             // update provider, own name, title

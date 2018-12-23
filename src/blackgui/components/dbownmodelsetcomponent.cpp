@@ -118,7 +118,7 @@ namespace BlackGui
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
-                const CStatusMessage m = CStatusMessage(this).warning("Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).warning(u"Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
                 this->showMappingComponentOverlayHtmlMessage(m, 5000);
             }
             cleanModelList.resetOrder();
@@ -133,7 +133,7 @@ namespace BlackGui
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
-                const CStatusMessage m = CStatusMessage(this).warning("Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).warning(u"Removed %1 models from set, because not matching %2") << diff << simulator.toQString(true);
                 this->showMappingComponentOverlayHtmlMessage(m, 5000);
             }
             if (cleanModelList.isEmpty()) { return 0; }
@@ -350,7 +350,7 @@ namespace BlackGui
             CDbMappingComponent *mc = this->getMappingComponent();
             if (!mc)
             {
-                CLogMessage(this).error("No mapping component available!");
+                CLogMessage(this).error(u"No mapping component available!");
                 return;
             }
 
@@ -373,7 +373,7 @@ namespace BlackGui
             }
             else
             {
-                const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).error(u"No model data for %1") << simulator.toQString(true);
                 mc->showOverlayMessage(m);
             }
         }

@@ -52,7 +52,7 @@ namespace BlackMisc
 
         if (result == 0)
         {
-            CLogMessage(static_cast<CProcessCtrl*>(nullptr)).warning("Failed to start %1: %2") << program << GetLastError();
+            CLogMessage(static_cast<CProcessCtrl*>(nullptr)).warning(u"Failed to start %1: %2") << program << GetLastError();
             return false;
         }
 

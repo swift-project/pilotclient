@@ -198,7 +198,7 @@ namespace BlackGui
             ui->pte_ExcludeDirectories->clear();
             this->displayDefaultValuesAsPlaceholder(simulator);
 
-            CLogMessage(this).info("Reset values for settings of %1") << simulator.toQString(true);
+            CLogMessage(this).info(u"Reset values for settings of %1") << simulator.toQString(true);
         }
 
         void CSettingsSimulatorBasicsComponent::onSimulatorChanged()

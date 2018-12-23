@@ -219,7 +219,7 @@ namespace BlackCore
             // Fall back to observer mode, if no simulator is available or not simulating
             if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
             {
-                CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
+                CLogMessage(this).info(u"No simulator connected or connected simulator not simulating. Falling back to observer mode");
                 mode = INetwork::LoginAsObserver;
             }
 
@@ -288,17 +288,17 @@ namespace BlackCore
             {
                 if (!this->getIContextNetwork()->isConnected())
                 {
-                    CLogMessage(this).validationError("Network needs to be connected");
+                    CLogMessage(this).validationError(u"Network needs to be connected");
                     return false;
                 }
                 else if (!this->getIContextOwnAircraft())
                 {
-                    CLogMessage(this).validationError("No own aircraft data, no text message can be sent");
+                    CLogMessage(this).validationError(u"No own aircraft data, no text message can be sent");
                     return false;
                 }
                 if (parser.countParts() < 3)
                 {
-                    CLogMessage(this).validationError("Incorrect message");
+                    CLogMessage(this).validationError(u"Incorrect message");
                     return false;
                 }
 
@@ -307,7 +307,7 @@ namespace BlackCore
                 const CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
                 if (ownAircraft.getCallsign().isEmpty())
                 {
-                    CLogMessage(this).validationError("No own callsign");
+                    CLogMessage(this).validationError(u"No own callsign");
                     return false;
                 }
 
@@ -337,7 +337,7 @@ namespace BlackCore
                         }
                         else
                         {
-                            CLogMessage(this).validationError("Wrong COM frequency for text message");
+                            CLogMessage(this).validationError(u"Wrong COM frequency for text message");
                             return false;
                         }
                     }
@@ -352,7 +352,7 @@ namespace BlackCore
                 tm.setMessage(msg);
                 if (tm.isEmpty())
                 {
-                    CLogMessage(this).validationError("No text message body");
+                    CLogMessage(this).validationError(u"No text message body");
                     return false;
                 }
                 CTextMessageList tml(tm);
@@ -375,7 +375,7 @@ namespace BlackCore
                     cs = CCallsign(csPart);
                     if (!m_airspace->isAircraftInRange(cs))
                     {
-                        CLogMessage(this).validationError("Altitude offset unknown callsign");
+                        CLogMessage(this).validationError(u"Altitude offset unknown callsign");
                         return false;
                     }
                 }
@@ -387,8 +387,8 @@ namespace BlackCore
                 }
 
                 const bool added = this->testAddAltitudeOffset(cs, os);
-                if (added) { CLogMessage(this).info("Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
-                else       { CLogMessage(this).info("Removed altitude offset %1") << cs.asString(); }
+                if (added) { CLogMessage(this).info(u"Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
+                else       { CLogMessage(this).info(u"Removed altitude offset %1") << cs.asString(); }
 
                 return true;
             }
@@ -399,7 +399,7 @@ namespace BlackCore
 
                 const bool watchdog = parser.toBool(1, true);
                 m_airspace->enableAnalyzer(watchdog);
-                CLogMessage(this).info("Enabled watchdog: %1") << boolToYesNo(watchdog);
+                CLogMessage(this).info(u"Enabled watchdog: %1") << boolToYesNo(watchdog);
             }
             else if (parser.matchesCommand(".reinit", ".reinitialize"))
             {
@@ -407,7 +407,7 @@ namespace BlackCore
                 const int count = m_airspace->reInitializeAllAircraft();
                 if (count > 0)
                 {
-                    CLogMessage(this).info("Re-init %1 aircraft") << count;
+                    CLogMessage(this).info(u"Re-init %1 aircraft") << count;
                 }
             }
             else if (parser.matchesCommand(".wallop"))
@@ -546,7 +546,7 @@ namespace BlackCore
             // send 1st position
             if (to == INetwork::Connected)
             {
-                CLogMessage(this).info("Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
+                CLogMessage(this).info(u"Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
 
                 if (m_network)
                 {
@@ -595,7 +595,7 @@ namespace BlackCore
         void CContextNetwork::updateMetars(const BlackMisc::Weather::CMetarList &metars)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CLogMessage(this).info("%1 METARs updated") << metars.size();
+            CLogMessage(this).info(u"%1 METARs updated") << metars.size();
         }
 
         void CContextNetwork::onChangedAtisReceived(const CCallsign &callsign)
@@ -862,7 +862,7 @@ namespace BlackCore
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                CLogMessage(this).info("Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+                CLogMessage(this).info(u"Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
                 emit this->changedFastPositionUpdates(aircraft);
             }
             return c;
@@ -875,7 +875,7 @@ namespace BlackCore
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                CLogMessage(this).info("Callsign '%1' set gnd.capability: %2") << aircraft.getCallsign() << boolToOnOff(aircraft.isSupportingGndFlag());
+                CLogMessage(this).info(u"Callsign '%1' set gnd.capability: %2") << aircraft.getCallsign() << boolToOnOff(aircraft.isSupportingGndFlag());
                 emit this->changedGndFlagCapability(aircraft);
             }
             return c;

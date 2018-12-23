@@ -265,13 +265,13 @@ namespace BlackMisc
                     CStatusMessage m;
                     if (noSituation)
                     {
-                        m = CStatusMessage(this).warning("No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") <<
+                        m = CStatusMessage(this).warning(u"No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") <<
                             m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                     }
                     else
                     {
                         const qint64 diff = noSituation ? -1 : m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
-                        m = CStatusMessage(this).warning("Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") <<
+                        m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") <<
                             diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                     }
                     if (!m.isEmpty())
@@ -417,7 +417,7 @@ namespace BlackMisc
 
             if (log)
             {
-                const CStatusMessage m = CStatusMessage(this).warning("NULL parts reported for '%1', '%2')") << m_callsign.asString() << info;
+                const CStatusMessage m = CStatusMessage(this).warning(u"NULL parts reported for '%1', '%2')") << m_callsign.asString() << info;
                 if (m_interpolationMessages.isEmpty()) { CLogMessage::preformatted(m); }
                 m_interpolationMessages.push_back(m);
             }

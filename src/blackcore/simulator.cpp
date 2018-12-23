@@ -165,7 +165,7 @@ namespace BlackCore
     {
         if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
-        const CStatusMessage m = CStatusMessage(this).info("%1") << msg;
+        const CStatusMessage m = CStatusMessage(this).info(u"%1") << msg;
         emit this->driverMessages(m);
     }
 
@@ -173,7 +173,7 @@ namespace BlackCore
     {
         if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
-        const CStatusMessage m = CStatusMessage(this).info("%1 %2") << msg << funcInfo;
+        const CStatusMessage m = CStatusMessage(this).info(u"%1 %2") << msg << funcInfo;
         emit this->driverMessages(m);
     }
 
@@ -383,14 +383,14 @@ namespace BlackCore
             const QString part2 = parser.part(2).toLower();
             if (part2 == "off" || part2 == "false")
             {
-                CStatusMessage(this).info("Disabled interpolation logging");
+                CStatusMessage(this).info(u"Disabled interpolation logging");
                 this->clearInterpolationLogCallsigns();
                 return true;
             }
             if (part2 == "clear" || part2 == "clr")
             {
                 m_interpolationLogger.clearLog();
-                CStatusMessage(this).info("Cleared interpolation logging");
+                CStatusMessage(this).info(u"Cleared interpolation logging");
                 this->clearInterpolationLogCallsigns();
                 return true;
             }
@@ -401,7 +401,7 @@ namespace BlackCore
                 const int max = parser.part(3).toInt(&ok);
                 if (!ok) { return false; }
                 m_interpolationLogger.setMaxSituations(max);
-                CStatusMessage(this).info("Max.situations logged: %1") << max;
+                CStatusMessage(this).info(u"Max.situations logged: %1") << max;
                 return true;
             }
             if (part2 == "write" || part2 == "save")
@@ -411,7 +411,7 @@ namespace BlackCore
 
                 // write
                 m_interpolationLogger.writeLogInBackground();
-                CLogMessage(this).info("Started writing interpolation log");
+                CLogMessage(this).info(u"Started writing interpolation log");
                 return true;
             }
             if (part2 == "show")
@@ -424,7 +424,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).warning("No interpolation log directory");
+                    CLogMessage(this).warning(u"No interpolation log directory");
                 }
                 return true;
             }
@@ -433,13 +433,13 @@ namespace BlackCore
             if (!cs.isValid()) { return false; }
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
-                CLogMessage(this).info("Will log interpolation for '%1'") << cs.asString();
+                CLogMessage(this).info(u"Will log interpolation for '%1'") << cs.asString();
                 this->setLogCallsign(true, cs);
                 return true;
             }
             else
             {
-                CLogMessage(this).warning("Cannot log interpolation for '%1', no aircraft in range") << cs.asString();
+                CLogMessage(this).warning(u"Cannot log interpolation for '%1', no aircraft in range") << cs.asString();
                 return false;
             }
         } // logint
@@ -450,7 +450,8 @@ namespace BlackCore
             {
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
-                CLogMessage(this).info(changed ? "Changed interpolation mode for '%1'" : "Unchanged interpolation mode for '%1'") << cs.asString();
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'")
+                                               : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
                 return true;
             }
             else
@@ -458,7 +459,8 @@ namespace BlackCore
                 CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
                 const bool changed = setup.setInterpolatorMode(part1);
                 if (changed) { this->setInterpolationSetupGlobal(setup); }
-                CLogMessage(this).info(changed ? "Changed interpolation mode globally" : "Unchanged interpolation mode");
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally")
+                                               : QStringLiteral("Unchanged interpolation mode"));
                 return true;
             }
         } // spline/linear
@@ -476,7 +478,7 @@ namespace BlackCore
             }
 
             this->setLogCallsign(true, cs);
-            CLogMessage(this).info("Display position for '%1'") << cs.asString();
+            CLogMessage(this).info(u"Display position for '%1'") << cs.asString();
             this->displayLoggedSituationInSimulator(cs, true);
             return true;
         }
@@ -522,7 +524,7 @@ namespace BlackCore
         {
             const int perSecond = parser.toInt(2, -1);
             this->limitToUpdatesPerSecond(perSecond);
-            CLogMessage(this).info("Remote aircraft updates limitations: %1") << this->updateAircraftLimitationInfo();
+            CLogMessage(this).info(u"Remote aircraft updates limitations: %1") << this->updateAircraftLimitationInfo();
             return true;
         }
 
@@ -658,7 +660,7 @@ namespace BlackCore
         connect(this, &ISimulator::ownAircraftModelChanged, this, &ISimulator::onOwnModelChanged, Qt::QueuedConnection);
 
         // info
-        CLogMessage(this).info("Initialized simulator driver: '%1'") <<
+        CLogMessage(this).info(u"Initialized simulator driver: '%1'") <<
                 (this->getSimulatorInfo().isUnspecified() ?
                  this->getSimulatorPluginInfo().toQString() :
                  this->getSimulatorInfo().toQString());
@@ -999,7 +1001,7 @@ namespace BlackCore
     {
         CStatusMessageList msgs;
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
-        if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
+        if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error(u"m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
         return msgs;
     }
 

@@ -96,11 +96,11 @@ namespace BlackSimPlugin
                                   .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
                                   .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
                     m_fsuipcVersion = QStringLiteral("FSUIPC %1 (%2)").arg(ver, sim);
-                    CLogMessage(this).info("FSUIPC connected: %1") << m_fsuipcVersion;
+                    CLogMessage(this).info(u"FSUIPC connected: %1") << m_fsuipcVersion;
                 }
                 else
                 {
-                    CLogMessage(this).warning("FSUIPC opened, but verification failed");
+                    CLogMessage(this).warning(u"FSUIPC opened, but verification failed");
                     m_opened = false;
                     FSUIPC_Close(); // under any circumstances close
                 }
@@ -110,7 +110,7 @@ namespace BlackSimPlugin
                 const int index = static_cast<int>(dwResult);
                 m_lastErrorIndex = index;
                 m_lastErrorMessage = CFsuipc::errorMessages().at(index);
-                CLogMessage(this).warning("FSUIPC not connected: %1") << m_lastErrorMessage;
+                CLogMessage(this).warning(u"FSUIPC not connected: %1") << m_lastErrorMessage;
                 m_opened = false;
                 FSUIPC_Close(); // under any circumstances close
             }
@@ -123,7 +123,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (m_opened)
             {
-                CLogMessage(this).info("Closing FSUIPC: %1") << m_fsuipcVersion;
+                CLogMessage(this).info(u"Closing FSUIPC: %1") << m_fsuipcVersion;
             }
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
             m_closeCount++;
@@ -345,7 +345,7 @@ namespace BlackSimPlugin
                 m_openCount++;
                 if (m_openCount < 10)
                 {
-                    CLogMessage(this).warning("Used FSUIPC open/close workaround");
+                    CLogMessage(this).warning(u"Used FSUIPC open/close workaround");
                 }
             }
 
@@ -454,7 +454,7 @@ namespace BlackSimPlugin
                     // MSFS has inverted pitch and bank angles
                     pitchRaw = ~pitchRaw;
                     bankRaw  = ~bankRaw;
-                    if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning("FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
+                    if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning(u"FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
 
                     // speeds, situation
                     CAngle pitch = CAngle(pitchRaw, CAngleUnit::deg());
@@ -504,7 +504,7 @@ namespace BlackSimPlugin
             {
                 m_lastErrorIndex = result;
                 m_lastErrorMessage = CFsuipc::errorMessage(result);
-                CLogMessage(this).warning("FSUIPC read error '%1'") << m_lastErrorMessage;
+                CLogMessage(this).warning(u"FSUIPC read error '%1'") << m_lastErrorMessage;
             }
             return read;
         }

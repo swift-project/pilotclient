@@ -66,7 +66,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     this->initAudio();
 
     // log
-    CStatusMessage m = CStatusMessage(this).info("Cmd: " + CGuiApplication::arguments().join(" "));
+    CStatusMessage m = CStatusMessage(this).info(u"Cmd: %1") << CGuiApplication::arguments().join(" ");
     this->appendLogMessage(m);
 
     // command line

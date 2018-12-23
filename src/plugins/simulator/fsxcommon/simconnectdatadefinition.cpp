@@ -125,7 +125,7 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initOwnAircraft %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initOwnAircraft %1") << hr;
             }
             return hr;
         }
@@ -170,7 +170,7 @@ namespace BlackSimPlugin
 
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSituation %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initRemoteAircraftSituation %1") << hr;
             }
             return hr;
         }
@@ -185,7 +185,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "STATIC CG TO GROUND", "Feet");
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftGetPosition %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initRemoteAircraftSimData DataRemoteAircraftGetPosition %1") << hr;
             }
 
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "STATIC CG TO GROUND", "Feet");
@@ -197,7 +197,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftModelData %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initRemoteAircraftSimData DataRemoteAircraftModelData %1") << hr;
             }
 
             return hr;
@@ -210,7 +210,7 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataSimEnvironment, "LOCAL TIME", "", SIMCONNECT_DATATYPE_INT32);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initSimulatorEnvironment %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initSimulatorEnvironment %1") << hr;
             }
             return hr;
         }
@@ -224,7 +224,7 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientDataNameToID(hSimConnect, "SquawkBox Data", ClientAreaSquawkBox);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_MapClientDataNameToID %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: SimConnect_MapClientDataNameToID %1") << hr;
                 return hr;
             }
 
@@ -232,7 +232,7 @@ namespace BlackSimPlugin
             hr += SimConnect_CreateClientData(hSimConnect, ClientAreaSquawkBox, sbSize, SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_CreateClientData %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: SimConnect_CreateClientData %1") << hr;
                 return hr;
             }
 
@@ -245,7 +245,7 @@ namespace BlackSimPlugin
 
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SB data area data definitions %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: SB data area data definitions %1") << hr;
                 return hr;
             }
 
@@ -257,7 +257,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbRunning, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbRunning);
             if (isFailure(hr))
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_SetClientData %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: SimConnect_SetClientData %1") << hr;
             }
             return hr;
         }

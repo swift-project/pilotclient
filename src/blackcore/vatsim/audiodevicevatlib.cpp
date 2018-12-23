@@ -59,13 +59,13 @@ namespace BlackCore
             Q_ASSERT_X(m_inputCodec, "CAudioInputDeviceVatlib", "VatLocalCodec is invalid!");
             if (!device.isValid())
             {
-                CLogMessage(this).warning("Cannot set invalid input device!");
+                CLogMessage(this).warning(u"Cannot set invalid input device!");
                 return;
             }
 
             if (!Vat_SetAudioInputDevice(m_inputCodec.data(), device.getIndex()))
             {
-                CLogMessage(this).warning("Setting input device failed");
+                CLogMessage(this).warning(u"Setting input device failed");
             }
             m_currentDevice = device;
         }
@@ -100,7 +100,7 @@ namespace BlackCore
             Q_ASSERT_X(m_outputCodec, "CAudioOutputDeviceVatlib", "VatLocalCodec is invalid!");
             if (!device.isValid())
             {
-                CLogMessage(this).warning("Cannot set invalid output device!");
+                CLogMessage(this).warning(u"Cannot set invalid output device!");
                 return;
             }
 

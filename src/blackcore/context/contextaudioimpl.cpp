@@ -550,7 +550,7 @@ namespace BlackCore
                 break;
             case IVoiceChannel::ConnectingFailed:
             case IVoiceChannel::DisconnectedError:
-                CLogMessage(this).warning("Voice channel disconnecting error");
+                CLogMessage(this).warning(u"Voice channel disconnecting error");
             // intentional fall-through
             case IVoiceChannel::Disconnected:
                 emit this->changedVoiceRooms(getComVoiceRooms(), false);

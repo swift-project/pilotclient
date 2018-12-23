@@ -49,7 +49,7 @@ namespace BlackGui
             const QSet<CSimulatorInfo> simulators = selectedSimulators.asSingleSimulatorSet();
             if (simulators.isEmpty())
             {
-                static const CStatusMessage m = CStatusMessage(this).validationError("No simulators selected");
+                static const CStatusMessage m = CStatusMessage(this).validationError(u"No simulators selected");
                 this->showOverlayMessage(m);
                 return;
             }
@@ -58,14 +58,14 @@ namespace BlackGui
             const bool cache = ui->cb_ModelCache->isChecked();
             if (!cache && !set)
             {
-                static const CStatusMessage m = CStatusMessage(this).validationError("No simulators selected");
+                static const CStatusMessage m = CStatusMessage(this).validationError(u"No simulators selected");
                 this->showOverlayMessage(m);
                 return;
             }
 
             if (!ui->comp_OtherSwiftVersions->hasSelection())
             {
-                static const CStatusMessage m = CStatusMessage(this).validationError("No other version selected");
+                static const CStatusMessage m = CStatusMessage(this).validationError(u"No other version selected");
                 this->showOverlayMessage(m);
                 return;
             }
@@ -116,7 +116,7 @@ namespace BlackGui
 
             if (sets > 0 || caches > 0)
             {
-                const CStatusMessage m = CStatusMessage(this).validationInfo("Copied %1 sets and %2 caches for '%3'") << sets << caches << selectedSimulators.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).validationInfo(u"Copied %1 sets and %2 caches for '%3'") << sets << caches << selectedSimulators.toQString(true);
                 this->showOverlayHTMLMessage(m, 7500);
             }
         }

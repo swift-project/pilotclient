@@ -84,7 +84,7 @@ namespace BlackCore
         const CWeatherDataPluginInfoList weatherDataPluginInfos = m_pluginManagerWeatherData.getAvailableWeatherDataPlugins();
         if (weatherDataPluginInfos.isEmpty())
         {
-            CLogMessage(this).warning("No weather data plugin found!");
+            CLogMessage(this).warning(u"No weather data plugin found!");
             return false;
         }
 
@@ -93,14 +93,14 @@ namespace BlackCore
             IWeatherDataFactory *factory = m_pluginManagerWeatherData.getPluginById<IWeatherDataFactory>(pluginInfo.getIdentifier());
             if (!factory)
             {
-                CLogMessage(this).error("Failed to create IWeatherDataFactory for %1") << pluginInfo.getIdentifier();
+                CLogMessage(this).error(u"Failed to create IWeatherDataFactory for %1") << pluginInfo.getIdentifier();
                 return false;
             }
 
             IWeatherData *weatherData = factory->create(this);
             if (!weatherData)
             {
-                CLogMessage(this).error("Failed to create IWeatherData instance for %1") << pluginInfo.getIdentifier();
+                CLogMessage(this).error(u"Failed to create IWeatherData instance for %1") << pluginInfo.getIdentifier();
                 return false;
             }
 

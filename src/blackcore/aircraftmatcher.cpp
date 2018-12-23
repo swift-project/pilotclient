@@ -731,11 +731,11 @@ namespace BlackCore
         if (modelsCleaned.isEmpty())
         {
             // error to force popup
-            CLogMessage(this).error("No models for matching ('%1'), swift without a model set will not work!") << simulator.toQString();
+            CLogMessage(this).error(u"No models for matching ('%1'), swift without a model set will not work!") << simulator.toQString();
         }
         else if (!duplicateModels.isEmpty())
         {
-            CLogMessage(this).error("Found model duplicate strings, check models: '%1'") << duplicateModels.dbKeysAsString(", ");
+            CLogMessage(this).error(u"Found model duplicate strings, check models: '%1'") << duplicateModels.dbKeysAsString(", ");
         }
         else if (!warnings.isEmpty())
         {
@@ -743,7 +743,7 @@ namespace BlackCore
         }
         else
         {
-            CLogMessage(this).validationInfo("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulator.toQString();
+            CLogMessage(this).validationInfo(u"Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulator.toQString();
         }
 
         // set values
@@ -830,7 +830,7 @@ namespace BlackCore
             const bool r = m_modelSet.removeModelWithString(modelString, Qt::CaseInsensitive);
             if (r)
             {
-                CLogMessage(this).warning("Removed model '%1' from matching model set") << modelString;
+                CLogMessage(this).warning(u"Removed model '%1' from matching model set") << modelString;
                 m_removedModels.replaceOrAddModelWithString(remoteAircraft.getModel(), Qt::CaseInsensitive);
             }
         }

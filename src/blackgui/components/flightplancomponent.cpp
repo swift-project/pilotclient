@@ -252,7 +252,7 @@ namespace BlackGui
             const bool strict = ui->cb_StrictCheck->isChecked();
             const bool vfr = this->isVfr();
             const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
-            messages.push_back(CStatusMessage(this).validationInfo(strict ? "Strict validation" : "Lenient validation"));
+            messages.push_back(CStatusMessage(this).validationInfo(strict ? QStringLiteral("Strict validation") : QStringLiteral("Lenient validation")));
 
             const CFlightPlan::FlightRules rule = ui->cb_FlightRule->currentText().startsWith("I") ? CFlightPlan::IFR : CFlightPlan::VFR;
             flightPlan.setFlightRule(rule);
@@ -262,11 +262,11 @@ namespace BlackGui
             v = ui->le_Callsign->text().trimmed().toUpper();
             if (v.isEmpty())
             {
-                // messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_Callsign->text());
+                // messages.push_back(CStatusMessage(this).validationError(u"Missing '%1'") << ui->lbl_Callsign->text());
             }
             else if (!CCallsign::isValidAircraftCallsign(v))
             {
-                messages.push_back(CStatusMessage(this).validationError("Invalid callsign '%1'") << v);
+                messages.push_back(CStatusMessage(this).validationError(u"Invalid callsign '%1'") << v);
             }
             flightPlan.setCallsign(CCallsign(v));
 
@@ -274,15 +274,15 @@ namespace BlackGui
             v = ui->le_AircraftType->text().trimmed().toUpper();
             if (v.isEmpty())
             {
-                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_AircraftType->text());
+                messages.push_back(CStatusMessage(this).validationError(u"Missing '%1'") << ui->lbl_AircraftType->text());
             }
             else if (!CAircraftIcaoCode::isValidDesignator(v))
             {
-                messages.push_back(CStatusMessage(this).validationError("Invalid aircraft ICAO code '%1'") << v);
+                messages.push_back(CStatusMessage(this).validationError(u"Invalid aircraft ICAO code '%1'") << v);
             }
             else if (sApp && sApp->hasWebDataServices() && sApp->getWebDataServices()->hasDbAircraftData() && !sApp->getWebDataServices()->containsAircraftIcaoDesignator(v))
             {
-                messages.push_back(CStatusMessage(this).validationWarning("Are you sure '%1' is a valid type?") << v);
+                messages.push_back(CStatusMessage(this).validationWarning(u"Are you sure '%1' is a valid type?") << v);
             }
             flightPlan.setAircraftIcao(this->getAircraftIcaoCode());
 
@@ -290,14 +290,14 @@ namespace BlackGui
             v = this->getPrefix();
             if (!v.isEmpty() && !CFlightPlan::prefixCodes().contains(v))
             {
-                messages.push_back(CStatusMessage(this).validation(severity, "Invalid prefix"));
+                messages.push_back(CStatusMessage(this).validation(severity, u"Invalid prefix"));
             }
             flightPlan.setPrefix(v);
 
             v = this->getEquipmentSuffix();
             if (!v.isEmpty() && !CFlightPlan::equipmentCodes().contains(v))
             {
-                messages.push_back(CStatusMessage(this).validation(severity, "Invalid equipment code"));
+                messages.push_back(CStatusMessage(this).validation(severity, u"Invalid equipment code"));
             }
             flightPlan.setEquipmentSuffix(v);
 
@@ -308,11 +308,11 @@ namespace BlackGui
                 messages.push_back(CStatusMessage(this).validation(
                                        vfr ?
                                        CStatusMessage::SeverityInfo :
-                                       CStatusMessage::SeverityWarning, "Missing '%1'") << ui->lbl_Route->text());
+                                       CStatusMessage::SeverityWarning, u"Missing '%1'") << ui->lbl_Route->text());
             }
             else if (v.length() > CFlightPlan::MaxRouteLength)
             {
-                messages.push_back(CStatusMessage(this).validationError("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
+                messages.push_back(CStatusMessage(this).validationError(u"Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
             else
             {
@@ -323,11 +323,11 @@ namespace BlackGui
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CStatusMessage(this).validationError("No '%1', voice capabilities are mandatory") << ui->lbl_Remarks->text());
+                messages.push_back(CStatusMessage(this).validationError(u"No '%1', voice capabilities are mandatory") << ui->lbl_Remarks->text());
             }
             else if (v.length() > CFlightPlan::MaxRemarksLength)
             {
-                messages.push_back(CStatusMessage(this).validationError("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
+                messages.push_back(CStatusMessage(this).validationError(u"Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
             {
@@ -338,7 +338,7 @@ namespace BlackGui
             v = ui->le_EstimatedTimeEnroute->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_EstimatedTimeEnroute->text());
+                messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_EstimatedTimeEnroute->text());
             }
             flightPlan.setEnrouteTime(v);
 
@@ -346,7 +346,7 @@ namespace BlackGui
             v = ui->le_FuelOnBoard->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_FuelOnBoard->text());
+                messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_FuelOnBoard->text());
             }
             flightPlan.setFuelTime(v);
 
@@ -354,7 +354,7 @@ namespace BlackGui
             v = ui->le_TakeOffTimePlanned->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_TakeOffTimePlanned->text());
+                messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_TakeOffTimePlanned->text());
             }
             flightPlan.setTakeoffTimePlanned(v);
 
@@ -369,7 +369,7 @@ namespace BlackGui
             v = ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_DestinationAirport->text());
+                messages.push_back(CStatusMessage(this).validationError(u"Missing '%1'") << ui->lbl_DestinationAirport->text());
                 flightPlan.setDestinationAirportIcao(QString());
             }
             else
@@ -381,7 +381,7 @@ namespace BlackGui
             v = ui->le_OriginAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_OriginAirport->text());
+                messages.push_back(CStatusMessage(this).validationError(u"Missing '%1'") << ui->lbl_OriginAirport->text());
                 flightPlan.setOriginAirportIcao(defaultIcao());
             }
             else
@@ -395,7 +395,7 @@ namespace BlackGui
             cruiseTAS.parseFromString(v, CPqString::SeparatorBestGuess);
             if (cruiseTAS.isNull())
             {
-                messages.push_back(CStatusMessage(this).validationError("Wrong TAS, %1") << ui->lbl_CruiseTrueAirspeed->text());
+                messages.push_back(CStatusMessage(this).validationError(u"Wrong TAS, %1") << ui->lbl_CruiseTrueAirspeed->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
@@ -409,7 +409,7 @@ namespace BlackGui
             {
                 if (!messages.hasWarningOrErrorMessages())
                 {
-                    messages.push_back(CStatusMessage(this).validationInfo("Missing %1") << ui->lbl_AlternateAirport->text());
+                    messages.push_back(CStatusMessage(this).validationInfo(u"Missing %1") << ui->lbl_AlternateAirport->text());
                 }
                 flightPlan.setAlternateAirportIcao(QString());
             }
@@ -421,7 +421,7 @@ namespace BlackGui
             // OK
             if (!messages.isFailure())
             {
-                messages.push_back(CStatusMessage(this).validationInfo("Flight plan validation passed"));
+                messages.push_back(CStatusMessage(this).validationInfo(u"Flight plan validation passed"));
             }
             return messages;
         }
@@ -440,12 +440,12 @@ namespace BlackGui
                     flightPlan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
                     sGui->getIContextNetwork()->sendFlightPlan(flightPlan);
                     lastSent = flightPlan.whenLastSentOrLoaded().toString();
-                    m = CStatusMessage(this).validationInfo("Sent flight plan");
+                    m = CStatusMessage(this).validationInfo(u"Sent flight plan");
                 }
                 else
                 {
                     flightPlan.setWhenLastSentOrLoaded(QDateTime()); // empty
-                    m = CStatusMessage(this).validationError("No errors, but not connected, cannot send flight plan");
+                    m = CStatusMessage(this).validationError(u"No errors, but not connected, cannot send flight plan");
                 }
                 ui->le_LastSent->setText(lastSent);
                 this->showOverlayMessage(m, OverlayMessageMs);
@@ -544,7 +544,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextNetwork()->isConnected())
             {
-                const CStatusMessage m = CLogMessage(this).validationWarning("Cannot load network flight plan, network not connected");
+                const CStatusMessage m = CLogMessage(this).validationWarning(u"Cannot load network flight plan, network not connected");
                 this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
                 return;
             }
@@ -556,11 +556,11 @@ namespace BlackGui
                 const QMessageBox::StandardButton r = QMessageBox::warning(this, "Loaded FP", "Override current flight plan data?", QMessageBox::Yes | QMessageBox::No);
                 if (r != QMessageBox::Yes) { return; }
                 this->fillWithFlightPlanData(loadedPlan);
-                CLogMessage(this).info("Updated with loaded flight plan");
+                CLogMessage(this).info(u"Updated with loaded flight plan");
             }
             else
             {
-                const CStatusMessage m = CLogMessage(this).warning("No flight plan data in loaded plan");
+                const CStatusMessage m = CLogMessage(this).warning(u"No flight plan data in loaded plan");
                 this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
             }
         }
@@ -620,7 +620,7 @@ namespace BlackGui
             const QString generated = ui->pte_RemarksGenerated->toPlainText().trimmed();
             if (confirm && !this->overrideRemarks()) { return; }
             ui->pte_Remarks->setPlainText(generated);
-            CLogMessage(this).info("Copied remarks");
+            CLogMessage(this).info(u"Copied remarks");
         }
 
         void CFlightPlanComponent::currentTabGenerator()
@@ -752,11 +752,11 @@ namespace BlackGui
             if (vfr)
             {
                 ui->cb_NoSidsStarts->setChecked(true);
-                msgs.push_back(CStatusMessage(this).validationInfo("No SID/STARs"));
+                msgs.push_back(CStatusMessage(this).validationInfo(u"No SID/STARs"));
                 ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
                 ui->cb_PerformanceCategory->setCurrentIndex(0);
                 ui->cb_NavigationEquipment->setCurrentIndex(0);
-                msgs.push_back(CStatusMessage(this).validationInfo("Set navigation and performance to VFR"));
+                msgs.push_back(CStatusMessage(this).validationInfo(u"Set navigation and performance to VFR"));
             }
             else
             {
@@ -767,11 +767,11 @@ namespace BlackGui
                     if (icao.getEnginesCount() >= 2 && icao.getEngineType() == "J")
                     {
                         // jet with >=2 engines
-                        msgs.push_back(CStatusMessage(this).validationInfo("Jet >=2 engines"));
-                        msgs.push_back(CStatusMessage(this).validationInfo("SID/STARs"));
+                        msgs.push_back(CStatusMessage(this).validationInfo(u"Jet >=2 engines"));
+                        msgs.push_back(CStatusMessage(this).validationInfo(u"SID/STARs"));
                         ui->cb_NoSidsStarts->setChecked(false);
                         ui->cb_NavigationEquipment->setCurrentText("GPS or FMC capable of SIDs/STARs");
-                        msgs.push_back(CStatusMessage(this).validationInfo("GPS or FMC capable of SIDs/STARs"));
+                        msgs.push_back(CStatusMessage(this).validationInfo(u"GPS or FMC capable of SIDs/STARs"));
 
                         // reset those values
                         ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);

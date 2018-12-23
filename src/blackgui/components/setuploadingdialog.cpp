@@ -92,14 +92,14 @@ namespace BlackGui
                     for (const CUrl &url : bootstrapUrls)
                     {
                         const CStatusMessage msg = CNetworkUtils::canConnect(url) ?
-                        CStatusMessage(this).info("Can connect to '%1'") << url.getFullUrl() : CStatusMessage(this).warning("Cannot connect to '%1'") << url.getFullUrl();
+                        CStatusMessage(this).info(u"Can connect to '%1'") << url.getFullUrl() : CStatusMessage(this).warning(u"Cannot connect to '%1'") << url.getFullUrl();
                         ui->comp_Messages->appendStatusMessageToList(msg);
                     }
                 });
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this).warning("No loaded bootstrap setup available, skipping URL test");
+                const CStatusMessage msg = CStatusMessage(this).warning(u"No loaded bootstrap setup available, skipping URL test");
                 ui->comp_Messages->appendStatusMessageToList(msg);
             }
         }

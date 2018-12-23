@@ -132,7 +132,7 @@ namespace BlackSimPlugin
                         // Copy the Host Address
                         if (FAILED(hr = enumHostsResponseMsg->pAddressSender->Duplicate(hostNode.getHostAddressPtr())))
                         {
-                            CLogMessage(this).warning("Failed to duplicate host address!");
+                            CLogMessage(this).warning(u"Failed to duplicate host address!");
                             return hr;
                         }
 
@@ -176,14 +176,14 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Peer,
                                              reinterpret_cast<void **>(&m_directPlayPeer))))
             {
-                CLogMessage(this).warning("Failed to create DirectPlay8Peer object!");
+                CLogMessage(this).warning(u"Failed to create DirectPlay8Peer object!");
                 return hr;
             }
 
             // Init DirectPlay
             if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, 0)))
             {
-                CLogMessage(this).warning("Failed to initialize directplay peer!");
+                CLogMessage(this).warning(u"Failed to initialize directplay peer!");
                 return hr;
             }
 
@@ -191,7 +191,7 @@ namespace BlackSimPlugin
             if (!isServiceProviderValid(&CLSID_DP8SP_TCPIP))
             {
                 hr = E_FAIL;
-                CLogMessage(this).warning("Service provider is invalid!");
+                CLogMessage(this).warning(u"Service provider is invalid!");
                 return hr;
             }
 
@@ -208,7 +208,7 @@ namespace BlackSimPlugin
 
             if (hr != DPNERR_BUFFERTOOSMALL)
             {
-                CLogMessage(this).warning("Failed to enumerate service providers!");
+                CLogMessage(this).warning(u"Failed to enumerate service providers!");
                 return false;
             }
 
@@ -219,7 +219,7 @@ namespace BlackSimPlugin
 
             if (FAILED(hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize, &dwItems, 0)))
             {
-                CLogMessage(this).warning("Failed to enumerate service providers!");
+                CLogMessage(this).warning(u"Failed to enumerate service providers!");
                 return false;
             }
 
@@ -240,14 +240,14 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Address,
                                              reinterpret_cast<void **>(&m_deviceAddress))))
             {
-                CLogMessage(this).warning("Failed to create DirectPlay8Address instance!");
+                CLogMessage(this).warning(u"Failed to create DirectPlay8Address instance!");
                 return hr;
             }
 
             // Set the SP for our Device Address
             if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
-                CLogMessage(this).warning("Failed to set SP!");
+                CLogMessage(this).warning(u"Failed to set SP!");
                 return hr;
             }
 
@@ -292,7 +292,7 @@ namespace BlackSimPlugin
                             DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
             {
                 const QString m(message);
-                CLogMessage(this).warning("DirectPlay: Failed to send message!");
+                CLogMessage(this).warning(u"DirectPlay: Failed to send message!");
                 CLogMessage(this).debug() << m;
             }
             return hr;

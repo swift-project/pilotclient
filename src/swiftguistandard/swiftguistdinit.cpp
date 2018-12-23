@@ -279,12 +279,12 @@ void SwiftGuiStd::initialContextDataReads()
     this->setContextAvailability();
     if (!m_coreAvailable)
     {
-        CLogMessage(this).error("No initial data read as network context is not available");
+        CLogMessage(this).error(u"No initial data read as network context is not available");
         return;
     }
 
     this->reloadOwnAircraft(); // init read, independent of traffic network
-    CLogMessage(this).info("Initial data read");
+    CLogMessage(this).info(u"Initial data read");
 }
 
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)

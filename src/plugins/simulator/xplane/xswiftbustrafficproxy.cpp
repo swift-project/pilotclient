@@ -47,7 +47,7 @@ namespace BlackSimPlugin
             reply.waitForFinished();
             if (reply.isError())
             {
-                BlackMisc::CLogMessage(this).debug("CXSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
+                BlackMisc::CLogMessage(this).debug(u"CXSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
             }
             MultiplayerAcquireInfo info;
             info.hasAcquired = reply.argumentAt<0>();

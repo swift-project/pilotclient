@@ -205,19 +205,19 @@ namespace BlackGui
         {
             if (m_actionHotkey.getApplicableMachine().getMachineName().isEmpty())
             {
-                CLogMessage().validationWarning("Missing hotkey '%1'") << ui->gb_Machine->title();
+                CLogMessage().validationWarning(u"Missing hotkey '%1'") << ui->gb_Machine->title();
                 return;
             }
 
             if (m_actionHotkey.getCombination().isEmpty())
             {
-                CLogMessage().validationWarning("Missing hotkey '%1'") << ui->gb_Hotkey->title();
+                CLogMessage().validationWarning(u"Missing hotkey '%1'") << ui->gb_Hotkey->title();
                 return;
             }
 
             if (m_actionHotkey.getAction().isEmpty())
             {
-                CLogMessage().validationWarning("Missing hotkey '%1'") << ui->gb_Action->title();
+                CLogMessage().validationWarning(u"Missing hotkey '%1'") << ui->gb_Action->title();
                 return;
             }
 

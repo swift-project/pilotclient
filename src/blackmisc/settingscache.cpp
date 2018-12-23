@@ -41,11 +41,11 @@ namespace BlackMisc
         Q_ASSERT(!lock.isLocked());
         if (!QDir::root().mkpath(persistentStore()))
         {
-            return CStatusMessage(this).error("Failed to create %1") << persistentStore();
+            return CStatusMessage(this).error(u"Failed to create %1") << persistentStore();
         }
         if (!lock.lock())
         {
-            return CStatusMessage(this).error("Failed to lock %1: %2") << lockFileName() << CFileUtils::lockFileError(lock);
+            return CStatusMessage(this).error(u"Failed to lock %1: %2") << lockFileName() << CFileUtils::lockFileError(lock);
         }
         return {};
     }

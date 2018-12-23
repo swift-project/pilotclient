@@ -208,12 +208,12 @@ namespace BlackCore
             CStatusMessageList msgs;
             if (!sApp || !sApp->isNetworkAccessible())
             {
-                msgs.push_back(CStatusMessage(this).error("No network interface, simulation will not work properly"));
+                msgs.push_back(CStatusMessage(this).error(u"No network interface, simulation will not work properly"));
             }
             const CSimulatorInfo simulators = this->simulatorsWithInitializedModelSet();
             if (simulators.isNoSimulator())
             {
-                msgs.push_back(CStatusMessage(this).error("No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
+                msgs.push_back(CStatusMessage(this).error(u"No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
             }
             return msgs;
         }
@@ -358,7 +358,7 @@ namespace BlackCore
 
             if (!simulatorPluginInfo.isValid())
             {
-                CLogMessage(this).error("Illegal plugin");
+                CLogMessage(this).error(u"Illegal plugin");
                 return false;
             }
 
@@ -421,7 +421,7 @@ namespace BlackCore
             const bool connected = simulator->connectTo();
             if (!connected)
             {
-                CLogMessage(this).error("Simulator plugin connection to simulator '%1' failed") << simulatorPluginInfo.toQString(true);
+                CLogMessage(this).error(u"Simulator plugin connection to simulator '%1' failed") << simulatorPluginInfo.toQString(true);
                 return false;
             }
 
@@ -440,7 +440,7 @@ namespace BlackCore
                 emit this->simulatorPluginChanged(simulatorPluginInfo);
             });
 
-            CLogMessage(this).info("Simulator plugin loaded: '%1' connected: %2")
+            CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
                     << simulatorPluginInfo.toQString(true)
                     << boolToYesNo(connected);
 
@@ -470,7 +470,7 @@ namespace BlackCore
                 const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::onSimulatorStarted, Qt::QueuedConnection);
                 if (!c)
                 {
-                    CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
+                    CLogMessage(this).error(u"Unable to use '%1'") << simulatorInfo.toQString();
                     return false;
                 }
                 listener->setProperty("isInitialized", true);
@@ -484,7 +484,7 @@ namespace BlackCore
                 Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
                 Q_UNUSED(s);
             }
-            CLogMessage(this).info("Listening for simulator '%1'") << simulatorInfo.getIdentifier();
+            CLogMessage(this).info(u"Listening for simulator '%1'") << simulatorInfo.getIdentifier();
             return true;
         }
 
@@ -559,7 +559,7 @@ namespace BlackCore
                 if (this->isAircraftInRange(aircraftAfterModelApplied.getCallsign())) { return; } // removed, but callsig, we did crosscheck
 
                 // callsign, but no model string
-                CLogMessage(this).error("Matching error for '%1', no model string") << aircraftAfterModelApplied.getCallsign().asString();
+                CLogMessage(this).error(u"Matching error for '%1', no model string") << aircraftAfterModelApplied.getCallsign().asString();
 
                 CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
                 brokenAircraft.setEnabled(false);
@@ -854,7 +854,7 @@ namespace BlackCore
                 else if (p1 == "parts") { rs.setEnabledAircraftParts(on); }
                 else { return false; }
                 this->setInterpolationAndRenderingSetupGlobal(rs);
-                CLogMessage(this, CLogCategory::cmdLine()).info("Setup is: '%1'") << rs.toQString(true);
+                CLogMessage(this, CLogCategory::cmdLine()).info(u"Setup is: '%1'") << rs.toQString(true);
                 return true;
             }
             if (parser.matchesCommand("plugin") || parser.matchesCommand("drv") || parser.matchesCommand("driver"))
@@ -1035,7 +1035,7 @@ namespace BlackCore
             const CSimulatorInfo simulator(m_modelSetSimulator.get());
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
             const CAircraftModelList models(this->getModelSet());
-            CLogMessage(this).info("Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
+            CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
             m_aircraftMatcher.setModelSet(models, simulator, false);
         }
     } // namespace

@@ -204,7 +204,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).info("Model set loaded ('%1'), you can update the model view") << simulator.toQString(true);
+                CLogMessage(this).info(u"Model set loaded ('%1'), you can update the model view") << simulator.toQString(true);
             }
         }
 
@@ -231,7 +231,7 @@ namespace BlackGui
             if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
             const bool nowEnabled = sa.isEnabled();
             if (saFromBackend.isEnabled() == nowEnabled) { return; } // already same value
-            CLogMessage(this).info("Request to %1 aircraft '%2'") << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
+            CLogMessage(this).info(u"Request to %1 aircraft '%2'") << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
             sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), nowEnabled);
         }
 
@@ -272,7 +272,7 @@ namespace BlackGui
             const QString cs = ui->le_Callsign->text().trimmed();
             if (!CCallsign::isValidAircraftCallsign(cs))
             {
-                this->showOverlayMessage(CStatusMessage(this).validationError("Invalid callsign for mapping"), OverlayMessageMs);
+                this->showOverlayMessage(CStatusMessage(this).validationError(u"Invalid callsign for mapping"), OverlayMessageMs);
                 return CCallsign();
             }
 
@@ -280,7 +280,7 @@ namespace BlackGui
             const bool hasCallsign = ui->tvp_RenderedAircraft->container().containsCallsign(callsign);
             if (!hasCallsign)
             {
-                const CStatusMessage msg = CStatusMessage(this).validationError("Unmapped callsign '%1' for mapping") << callsign.asString();
+                const CStatusMessage msg = CStatusMessage(this).validationError(u"Unmapped callsign '%1' for mapping") << callsign.asString();
                 this->showOverlayMessage(msg);
                 return CCallsign();
             }
@@ -316,7 +316,7 @@ namespace BlackGui
         {
             if (!sGui || !sGui->getIContextSimulator() || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
             const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
-            CLogMessage(this).info("Triggered re-apping of %1 aircraft") << reMatchedNo;
+            CLogMessage(this).info(u"Triggered re-apping of %1 aircraft") << reMatchedNo;
         }
 
         void CMappingComponent::onSaveAircraft()
@@ -327,7 +327,7 @@ namespace BlackGui
             const QString modelString = ui->completer_ModelStrings->getModelString();
             if (modelString.isEmpty())
             {
-                this->showOverlayMessage(CStatusMessage(this).validationError("Missing model for mapping"), OverlayMessageMs);
+                this->showOverlayMessage(CStatusMessage(this).validationError(u"Missing model for mapping"), OverlayMessageMs);
                 return;
             }
 
@@ -340,7 +340,7 @@ namespace BlackGui
 
             if (!hasModel)
             {
-                this->showOverlayMessage(CStatusMessage(this).validationError("Invalid model for mapping, reloading model set"), OverlayMessageMs);
+                this->showOverlayMessage(CStatusMessage(this).validationError(u"Invalid model for mapping, reloading model set"), OverlayMessageMs);
                 if (ui->tvp_AircraftModels->isEmpty())
                 {
                     this->onModelsUpdateRequested();
@@ -358,7 +358,7 @@ namespace BlackGui
                 const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
                 if (models.isEmpty())
                 {
-                    const CStatusMessage msg = CStatusMessage(this).validationError("No model for title: '%1'") << modelString;
+                    const CStatusMessage msg = CStatusMessage(this).validationError(u"No model for title: '%1'") << modelString;
                     this->showOverlayMessage(msg, OverlayMessageMs);
                     return;
                 }
@@ -372,12 +372,12 @@ namespace BlackGui
                     }
                     else
                     {
-                        const CStatusMessage msg = CStatusMessage(this).validationInfo("Ambigious title: '%1', using '%2'") << modelString << model.getModelString();
+                        const CStatusMessage msg = CStatusMessage(this).validationInfo(u"Ambigious title: '%1', using '%2'") << modelString << model.getModelString();
                         this->showOverlayMessage(msg, OverlayMessageMs);
                     }
                 }
                 model.setModelType(CAircraftModel::TypeManuallySet);
-                CLogMessage(this).info("Requesting changes for '%1'") << callsign.asString();
+                CLogMessage(this).info(u"Requesting changes for '%1'") << callsign.asString();
                 changed = sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
             }
             if (aircraftFromBackend.isEnabled() != enabled)
@@ -387,7 +387,7 @@ namespace BlackGui
 
             if (!changed)
             {
-                this->showOverlayMessage(CLogMessage(this).info("Model mapping, nothing to change"), OverlayMessageMs);
+                this->showOverlayMessage(CLogMessage(this).info(u"Model mapping, nothing to change"), OverlayMessageMs);
             }
         }
 
@@ -398,8 +398,8 @@ namespace BlackGui
             if (callsign.isEmpty()) { return; }
             const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
             const CStatusMessage msg = reset ?
-                                       CStatusMessage(this).info("Model reset for '%1'") << callsign.toQString() :
-                                       CStatusMessage(this).info("Reset failed for '%1'") << callsign.toQString();
+                                       CStatusMessage(this).info(u"Model reset for '%1'") << callsign.toQString() :
+                                       CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
             this->showOverlayMessage(msg, 3000);
         }
 

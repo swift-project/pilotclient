@@ -57,7 +57,7 @@ namespace BlackMisc
             BLACK_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
             if (std::isnan(d))
             {
-                CLogMessage().debug("Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)") << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z()) << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
+                CLogMessage().debug(u"Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)") << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z()) << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
                 return CLength::null();
             }
             return { static_cast<double>(d), CLengthUnit::m() };

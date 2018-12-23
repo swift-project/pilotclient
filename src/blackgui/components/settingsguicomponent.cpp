@@ -113,7 +113,7 @@ namespace BlackGui
             if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
             {
                 // Style changes freeze the GUI, must not be done in flight mode
-                CLogMessage(this).validationError("Cannot change style while connected to network");
+                CLogMessage(this).validationError(u"Cannot change style while connected to network");
                 ui->cb_SettingsGuiWidgetStyle->setCurrentText(settings.getWidgetStyle());
                 return;
             }

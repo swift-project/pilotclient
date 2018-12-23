@@ -262,7 +262,7 @@ namespace BlackCore
                 if (!m_lastSuccessfulSetupUrl.isEmpty())
                 {
                     // already read
-                    CLogMessage(this).info("Cancel second bootstrap read ('%1'), as there was a 1st read: '%2'") << url.toQString() << m_lastSuccessfulSetupUrl;
+                    CLogMessage(this).info(u"Cancel second bootstrap read ('%1'), as there was a 1st read: '%2'") << url.toQString() << m_lastSuccessfulSetupUrl;
                     return;
                 }
                 sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
@@ -283,14 +283,14 @@ namespace BlackCore
         const CUrlList randomUrls = m_updateInfoUrls.randomElements(2);
         if (randomUrls.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, no URLs");
+            CLogMessage(this).warning(u"Cannot read update info, no URLs");
             this->manageUpdateInfoAvailability(false);
             return;
         }
 
         if (m_updateInfo.lastUpdatedAge() < 5000)
         {
-            CLogMessage(this).info("Update info just updated, skip read");
+            CLogMessage(this).info(u"Update info just updated, skip read");
             return;
         }
 
@@ -308,7 +308,7 @@ namespace BlackCore
             if (!m_lastSuccessfulUpdateInfoUrl.isEmpty())
             {
                 // already read
-                CLogMessage(this).info("Cancel second update info read ('%1'), as there was a 1st read '%2'") << url.toQString() << m_lastSuccessfulUpdateInfoUrl;
+                CLogMessage(this).info(u"Cancel second update info read ('%1'), as there was a 1st read '%2'") << url.toQString() << m_lastSuccessfulUpdateInfoUrl;
                 return;
             }
             sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
@@ -331,15 +331,15 @@ namespace BlackCore
 
     CStatusMessageList CSetupReader::readLocalBootstrapFile(const QString &fileName)
     {
-        if (fileName.isEmpty()) { return CStatusMessage(this).error("No file name for local bootstrap file"); }
-        if (!sApp || sApp->isShuttingDown()) { return CStatusMessage(this).error("No sApp, shutting down?"); }
+        if (fileName.isEmpty()) { return CStatusMessage(this).error(u"No file name for local bootstrap file"); }
+        if (!sApp || sApp->isShuttingDown()) { return CStatusMessage(this).error(u"No sApp, shutting down?"); }
         QString fn;
         const QFile file(fileName);
         if (!file.exists())
         {
             // relative name?
             const QString dir(sApp->getCmdSwiftPrivateSharedDir());
-            if (dir.isEmpty()) { return CStatusMessage(this).error("Empty shared directory '%1' for bootstrap file") << dir; }
+            if (dir.isEmpty()) { return CStatusMessage(this).error(u"Empty shared directory '%1' for bootstrap file") << dir; }
 
             // no version for local files, as those come with the current code
             fn = CFileUtils::appendFilePaths(dir, "bootstrap/" + CDirectoryUtils::bootstrapFileName());
@@ -350,7 +350,7 @@ namespace BlackCore
         }
 
         const QString content(CFileUtils::readFileToString(fn));
-        if (content.isEmpty()) { return CStatusMessage(this).error("File '%1' not existing or empty") << fn; }
+        if (content.isEmpty()) { return CStatusMessage(this).error(u"File '%1' not existing or empty") << fn; }
 
         try
         {
@@ -358,7 +358,7 @@ namespace BlackCore
             s.convertFromJson(content);
             s.markAsLoadedFromFile(true);
             const CStatusMessage setMsg = m_setup.set(s);
-            const CStatusMessage setInfo = CStatusMessage(this).info("Setup cache updated from local file '%1'") << fn;
+            const CStatusMessage setInfo = CStatusMessage(this).info(u"Setup cache updated from local file '%1'") << fn;
             return setMsg.isSuccess() ? setInfo : setMsg;
         }
         catch (const CJsonException &ex)
@@ -384,7 +384,7 @@ namespace BlackCore
             nwReplyPtr->close();
             if (setupJson.isEmpty())
             {
-                const CStatusMessage m = CLogMessage(this).info("No bootstrap setup file at '%1'") << urlString;
+                const CStatusMessage m = CLogMessage(this).info(u"No bootstrap setup file at '%1'") << urlString;
                 emit this->setupLoadingMessages(m);
             }
             else
@@ -403,7 +403,7 @@ namespace BlackCore
                     if (sameVersionLoaded)
                     {
                         m_updateInfoUrls = currentSetup.getSwiftUpdateInfoFileUrls(); // defaults
-                        CLogMessage(this).info("Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
+                        CLogMessage(this).info(u"Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
                     }
@@ -416,9 +416,9 @@ namespace BlackCore
                     {
                         // no issue with cache
                         m_updateInfoUrls = loadedSetup.getSwiftUpdateInfoFileUrls();
-                        const CStatusMessage m = CLogMessage(this).info("Loaded setup from '%1'") << urlString;
+                        const CStatusMessage m = CLogMessage(this).info(u"Loaded setup from '%1'") << urlString;
                         emit this->setupLoadingMessages(m);
-                        CLogMessage(this).info("Setup: Updated data cache in '%1'") << m_setup.getFilename();
+                        CLogMessage(this).info(u"Setup: Updated data cache in '%1'") << m_setup.getFilename();
                         {
                             QWriteLocker l(&m_lockSetup);
                             m_lastSuccessfulSetupUrl = urlString;
@@ -473,7 +473,7 @@ namespace BlackCore
             nwReplyPtr->close();
             if (updateInfoJsonString.isEmpty())
             {
-                CLogMessage(this).info("No update info file content");
+                CLogMessage(this).info(u"No update info file content");
                 // try next URL
             }
             else
@@ -483,7 +483,7 @@ namespace BlackCore
                     const CUpdateInfo updateInfo = CUpdateInfo::fromDatabaseJson(updateInfoJsonString);
                     if (updateInfo.isEmpty())
                     {
-                        CLogMessage(this).error("Loading of update info yielded no data");
+                        CLogMessage(this).error(u"Loading of update info yielded no data");
                         this->manageUpdateInfoAvailability(false);
                     }
                     else
@@ -501,8 +501,8 @@ namespace BlackCore
                                 QWriteLocker l(&m_lockUpdateInfo);
                                 m_lastSuccessfulUpdateInfoUrl = urlString;
                             }
-                            CLogMessage(this).info("Update info loaded from '%1") << urlString;
-                            CLogMessage(this).info("Update info: Updated data cache in '%1', artifacts: %2, distributions: %3") << m_updateInfo.getFilename() << updateInfo.getArtifactsPilotClient().size() << updateInfo.getDistributions().size();
+                            CLogMessage(this).info(u"Update info loaded from '%1") << urlString;
+                            CLogMessage(this).info(u"Update info: Updated data cache in '%1', artifacts: %2, distributions: %3") << m_updateInfo.getFilename() << updateInfo.getArtifactsPilotClient().size() << updateInfo.getDistributions().size();
                             this->manageUpdateInfoAvailability(true);
                         } // cache
                     }
@@ -578,7 +578,7 @@ namespace BlackCore
         const bool cacheAvailable = cachedSetup.wasLoaded();
         if (cacheAvailable)
         {
-            CLogMessage(this).info("Setup cache prefill (bootstrap already cached, no prefill needed");
+            CLogMessage(this).info(u"Setup cache prefill (bootstrap already cached, no prefill needed");
             return false;
         }
         const QString fn = CDirectoryUtils::bootstrapResourceFilePath();
@@ -659,7 +659,7 @@ namespace BlackCore
 
         if (webRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of update information"));
+            msgs.push_back(CStatusMessage(this).info(u"Setup loaded from web, will trigger read of update information"));
             QTimer::singleShot(500, this, [ = ]
             {
                 if (!myself) { return; }
@@ -669,7 +669,7 @@ namespace BlackCore
 
         if (localRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of update information"));
+            msgs.push_back(CStatusMessage(this).info(u"Setup loaded locally, will trigger read of update information"));
             QTimer::singleShot(500, this, [ = ]
             {
                 if (!myself) { return; }
@@ -705,7 +705,7 @@ namespace BlackCore
 
         if (!webRead && !localRead)
         {
-            msgs.push_back(CStatusMessage(this).warning("Since setup was not updated this time, will not start loading of update information"));
+            msgs.push_back(CStatusMessage(this).warning(u"Since setup was not updated this time, will not start loading of update information"));
             this->manageUpdateInfoAvailability(false);
         }
         return msgs;

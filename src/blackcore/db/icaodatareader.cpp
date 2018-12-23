@@ -300,7 +300,7 @@ namespace BlackCore
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch(); // ignores duplicates
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in aircraft ICAO list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in aircraft ICAO list, setting to last modified value");
                 latestTimestamp = this->lastModifiedMsSinceEpoch(nwReply.data());
             }
 
@@ -354,7 +354,7 @@ namespace BlackCore
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in airline ICAO list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in airline ICAO list, setting to last modified value");
                 latestTimestamp = this->lastModifiedMsSinceEpoch(nwReply.data());
             }
 
@@ -398,7 +398,7 @@ namespace BlackCore
             qint64 latestTimestamp = countries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in country list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in country list, setting to last modified value");
                 latestTimestamp = this->lastModifiedMsSinceEpoch(nwReply.data());
             }
 
@@ -413,7 +413,7 @@ namespace BlackCore
             const QDir directory(dir);
             if (!directory.exists())
             {
-                return CStatusMessage(this).error("Missing directory '%1'") << dir;
+                return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
             }
 
             // Hint: Do not emit while locked -> deadlock
@@ -426,7 +426,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::CountryEntity, msgs))
                 {
@@ -437,7 +437,7 @@ namespace BlackCore
                     const QJsonObject countriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (countriesJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {
@@ -464,7 +464,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AircraftIcaoEntity, msgs))
                 {
@@ -475,7 +475,7 @@ namespace BlackCore
                     const QJsonObject aircraftJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (aircraftJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {
@@ -502,7 +502,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirlineIcaoEntity, msgs))
                 {
@@ -513,7 +513,7 @@ namespace BlackCore
                     const QJsonObject airlineJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (airlineJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {

@@ -194,7 +194,7 @@ namespace BlackCore
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
         if (!apps.contains(myself)) { apps.push_back(myself); }
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
-        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
+        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file"); }
         return ok;
     }
 
@@ -206,7 +206,7 @@ namespace BlackCore
         if (!apps.contains(myself)) { return true; }
         apps.remove(myself);
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
-        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
+        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file"); }
         return ok;
     }
 
@@ -366,7 +366,7 @@ namespace BlackCore
 #ifdef BLACK_USE_CRASHPAD
                     CRASHPAD_SIMULATE_CRASH();
 #else
-                    CLogMessage(this).warning("This compiler or platform does not support crashpad. Cannot simulate crash dump!");
+                    CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
 #endif
                 });
             }
@@ -409,7 +409,7 @@ namespace BlackCore
 
     CStatusMessageList CApplication::waitForSetup(int timeoutMs)
     {
-        if (!m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
+        if (!m_setupReader) { return CStatusMessage(this).error(u"No setup reader"); }
         CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, timeoutMs, [this]
         {
             // init, if this is true event queue is not started
@@ -426,19 +426,20 @@ namespace BlackCore
         }
         if (m_setupReader->isSetupAvailable())
         {
-            msgs.push_back(CStatusMessage(this).info(forced ? "Setup available after forcing (so likely web read still pending)" : "Setup available"));
+            msgs.push_back(CStatusMessage(this).info(forced ? QStringLiteral("Setup available after forcing (so likely web read still pending)")
+                                                            : QStringLiteral("Setup available")));
             return msgs;
         }
 
         // getting here can means no "real" read success, and NO available cache
-        msgs.push_back(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
+        msgs.push_back(CStatusMessage(this).error(u"Setup not available, setup reading failed or timed out."));
         if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
         {
             msgs.push_back(m_setupReader->getLastSetupReadErrorMessages());
         }
         if (m_setupReader->hasCmdLineBootstrapUrl())
         {
-            msgs.push_back(CStatusMessage(this).info("Bootstrap URL cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
+            msgs.push_back(CStatusMessage(this).info(u"Bootstrap URL cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
         }
         return msgs;
     }
@@ -451,8 +452,8 @@ namespace BlackCore
 
     CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
-        if (m_shutdown) { return CStatusMessage(this).warning("Shutting down, not reading"); }
-        if (!m_setupReader) { return CStatusMessage(this).error("No reader for setup/version"); }
+        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
+        if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
         return m_setupReader->asyncLoad();
     }
@@ -864,7 +865,7 @@ namespace BlackCore
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
         if (!QSslSocket::supportsSsl())
         {
-            return CStatusMessage(this).error("No SSL supported, can`t be used");
+            return CStatusMessage(this).error(u"No SSL supported, can`t be used");
         }
 
         m_webReadersUsed = webReaders;
@@ -877,8 +878,8 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_useContexts) { return CStatusMessage(this).error("No need to start core facade"); } // we do not use context, so no need to startup
-        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
+        if (!m_useContexts) { return CStatusMessage(this).error(u"No need to start core facade"); } // we do not use context, so no need to startup
+        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
 
         Q_ASSERT_X(m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
@@ -886,7 +887,7 @@ namespace BlackCore
 
         this->startWebDataServices();
 
-        const CStatusMessageList msgs(CStatusMessage(this).info("Will start core facade now"));
+        const CStatusMessageList msgs(CStatusMessage(this).info(u"Will start core facade now"));
         m_coreFacade.reset(new CCoreFacade(m_coreFacadeConfig));
         emit this->coreFacadeStarted();
         return msgs;
@@ -896,14 +897,14 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_useWebData) { return CStatusMessage(this).warning("No need to start web data services"); }
-        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
+        if (!m_useWebData) { return CStatusMessage(this).warning(u"No need to start web data services"); }
+        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
 
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
         CStatusMessageList msgs;
         if (!m_webDataServices)
         {
-            msgs.push_back(CStatusMessage(this).info("Will start web data services now"));
+            msgs.push_back(CStatusMessage(this).info(u"Will start web data services now"));
             m_webDataServices.reset(
                 new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this)
             );
@@ -931,7 +932,7 @@ namespace BlackCore
         }
         else
         {
-            msgs.push_back(CStatusMessage(this).info("Web data services already running"));
+            msgs.push_back(CStatusMessage(this).info(u"Web data services already running"));
         }
 
         return msgs;
@@ -1080,21 +1081,21 @@ namespace BlackCore
         {
         case QNetworkAccessManager::Accessible:
             m_accessManager->setNetworkAccessible(accessible); // for some reasons the queried value still is unknown
-            CLogMessage(this).info("Network is accessible");
+            CLogMessage(this).info(u"Network is accessible");
             break;
         case QNetworkAccessManager::NotAccessible:
-            CLogMessage(this).error("Network not accessible");
+            CLogMessage(this).error(u"Network not accessible");
             break;
         default:
-            CLogMessage(this).warning("Network accessibility unknown");
+            CLogMessage(this).warning(u"Network accessibility unknown");
             break;
         }
     }
 
     void CApplication::onChangedInternetAccessibility(bool accessible)
     {
-        if (accessible) { CLogMessage(this).info("Internet reported accessible"); }
-        else { CLogMessage(this).warning("Internet not accessible"); }
+        if (accessible) { CLogMessage(this).info(u"Internet reported accessible"); }
+        else { CLogMessage(this).warning(u"Internet not accessible"); }
 
         emit this->changedInternetAccessibility(accessible);
     }
@@ -1103,11 +1104,11 @@ namespace BlackCore
     {
         if (accessible)
         {
-            CLogMessage(this).info("swift DB reported accessible: '%1'") << url.toQString();
+            CLogMessage(this).info(u"swift DB reported accessible: '%1'") << url.toQString();
         }
         else
         {
-            CLogMessage(this).warning("swift DB not accessible: '%1'") << url.toQString();
+            CLogMessage(this).warning(u"swift DB not accessible: '%1'") << url.toQString();
             if (m_networkWatchDog)
             {
                 CLogMessage(this).warning(m_networkWatchDog->getCheckInfo());
@@ -1130,7 +1131,7 @@ namespace BlackCore
             {
                 m_networkWatchDog->disableNetworkAccessibilityCheck(true);
                 m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
-                CLogMessage(this).warning("No network configurations found, disabling network accessibility checks");
+                CLogMessage(this).warning(u"No network configurations found, disabling network accessibility checks");
             }
         }
         else
@@ -1148,7 +1149,7 @@ namespace BlackCore
             const bool disable = activeCount < 1; // only inactive
             if (disable && m_networkWatchDog && m_networkWatchDog->isNetworkAccessibilityCheckEnabled())
             {
-                CLogMessage(this).warning("Disabling network accessibility check in watchdog");
+                CLogMessage(this).warning(u"Disabling network accessibility check in watchdog");
                 m_networkWatchDog->disableNetworkAccessibilityCheck(disable);
             }
 
@@ -1159,7 +1160,7 @@ namespace BlackCore
                 if (!m_noNwAccessPoint)
                 {
                     m_noNwAccessPoint = true;
-                    CLogMessage(this).warning("No network access point found for swift");
+                    CLogMessage(this).warning(u"No network access point found for swift");
                 }
             }
         }
@@ -1210,13 +1211,13 @@ namespace BlackCore
         {
             if (!sApp || sApp->isShuttingDown()) { return; }
             const QString r = CNetworkUtils::createNetworkConfigurationReport(m_networkConfigManager, m_accessManager);
-            CLogMessage(this).info("Network report:\n%1") << r;
+            CLogMessage(this).info(u"Network report:\n%1") << r;
         });
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()
     {
-        if (m_started) { return CStatusMessage(this).info("Already started "); }
+        if (m_started) { return CStatusMessage(this).info(u"Already started "); }
 
         // follow up startups
         CStatusMessageList msgs = this->startWebDataServices();
@@ -1619,7 +1620,7 @@ namespace BlackCore
     {
 #ifdef BLACK_USE_CRASHPAD
         // No crash handling for unit tests
-        if (this->getApplicationInfo().isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
+        if (this->getApplicationInfo().isUnitTest()) { return CStatusMessage(this).info(u"No crash handler for unit tests"); }
 
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), crashpadHandler);
@@ -1629,7 +1630,7 @@ namespace BlackCore
 
         if (!QFileInfo::exists(handler))
         {
-            return CStatusMessage(this).warning("Crashpad handler '%1' not found. Cannot init handler!") << handler;
+            return CStatusMessage(this).warning(u"Crashpad handler '%1' not found. Cannot init handler!") << handler;
         }
 
         const CUrl serverUrl = this->getGlobalSetup().getCrashReportServerUrl();
@@ -1652,9 +1653,9 @@ namespace BlackCore
                                        annotations,
                                         {},
                                        false, true);
-        return CStatusMessage(this).info("Using crash handler");
+        return CStatusMessage(this).info(u"Using crash handler");
 #else
-        return CStatusMessage(this).info("Not using crash handler");
+        return CStatusMessage(this).info(u"Not using crash handler");
 #endif
     }
 

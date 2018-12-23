@@ -41,7 +41,7 @@ namespace BlackInput
             strncpy(deviceName, "Unknown", sizeof(deviceName));
         }
 
-        CLogMessage(this).info("Found joystick: %1") << deviceName;
+        CLogMessage(this).info(u"Found joystick: %1") << deviceName;
 
         fcntl(m_fd->handle(), F_SETFL, O_NONBLOCK);
 

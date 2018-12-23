@@ -207,7 +207,7 @@ namespace BlackSimPlugin
             {
                 const bool written = CFileUtils::writeStringToFile(iniFile, fileName);
                 if (!written && madeDir) { d.removeRecursively(); } // clean up own created dir
-                if (written) { CLogMessage(this).info("Written '%1'") << fileName; }
+                if (written) { CLogMessage(this).info(u"Written '%1'") << fileName; }
             }
             // always refresh info, as the dialog can also be used to delete the file
             this->setSimConnectInfo();
@@ -259,7 +259,7 @@ namespace BlackSimPlugin
             const CStatusMessage saveMsg = m_p3dVersion.setAndSave(version);
             if (saveMsg.isSuccess())
             {
-                const CStatusMessage m = CStatusMessage(this).info("Changed P3D version to '%1'. Requires a new start of swift to become effective!") << version;
+                const CStatusMessage m = CStatusMessage(this).info(u"Changed P3D version to '%1'. Requires a new start of swift to become effective!") << version;
                 this->showOverlayMessage(m);
             }
         }

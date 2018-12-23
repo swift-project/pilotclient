@@ -207,7 +207,7 @@ namespace BlackSimPlugin
                     if (isFailure(hr))
                     {
                         this->triggerAutoTraceSendId();
-                        CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
+                        CLogMessage(this).warning(u"Setting transponder mode failed (SB offsets)");
                     }
                     changed = true;
                 }
@@ -276,9 +276,9 @@ namespace BlackSimPlugin
             CStatusMessageList msgs;
             if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
             msgs = CSimulatorFsCommon::debugVerifyStateAfterAllAircraftRemoved();
-            if (!m_simConnectObjects.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjects not empty: '%1'") << m_simConnectObjects.getAllCallsignStringsAsString(true)); }
-            if (!m_simConnectObjectsPositionAndPartsTraces.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjectsPositionAndPartsTraces not empty: '%1'") << m_simConnectObjectsPositionAndPartsTraces.getAllCallsignStringsAsString(true)); }
-            if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
+            if (!m_simConnectObjects.isEmpty()) { msgs.push_back(CStatusMessage(this).error(u"m_simConnectObjects not empty: '%1'") << m_simConnectObjects.getAllCallsignStringsAsString(true)); }
+            if (!m_simConnectObjectsPositionAndPartsTraces.isEmpty()) { msgs.push_back(CStatusMessage(this).error(u"m_simConnectObjectsPositionAndPartsTraces not empty: '%1'") << m_simConnectObjectsPositionAndPartsTraces.getAllCallsignStringsAsString(true)); }
+            if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error(u"m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
             return msgs;
         }
 
@@ -369,7 +369,7 @@ namespace BlackSimPlugin
             HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
             if (isFailure(hr))
             {
-                CLogMessage(this).warning("Setting network connected failed (SB offsets)");
+                CLogMessage(this).warning(u"Setting network connected failed (SB offsets)");
             }
 
             ISimulator::setFlightNetworkConnected(connected);
@@ -472,7 +472,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::onSimStopped()
         {
             // stopping events in FSX: Load menu, weather and season
-            CLogMessage(this).info("Simulator stopped: %1") << this->getSimulatorDetails();
+            CLogMessage(this).info(u"Simulator stopped: %1") << this->getSimulatorDetails();
             const SimulatorStatus oldStatus = this->getSimulatorStatus();
             m_simSimulating = false;
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
@@ -493,7 +493,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimExit()
         {
-            CLogMessage(this).info("Simulator exit: %1") << this->getSimulatorDetails();
+            CLogMessage(this).info(u"Simulator exit: %1") << this->getSimulatorDetails();
 
             // reset complete state, we are going down
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
@@ -582,7 +582,7 @@ namespace BlackSimPlugin
 
             static const QString format("hh:mm:ss.zzz");
             const QString untilString = QDateTime::fromMSecsSinceEpoch(traceUntil).toString(format);
-            CLogMessage(this).info("Triggered auto trace until %1") << untilString;
+            CLogMessage(this).info(u"Triggered auto trace until %1") << untilString;
             const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(traceTimeMs * 1.2, this, [ = ]
             {
@@ -590,7 +590,7 @@ namespace BlackSimPlugin
                 if (!myself) { return; }
                 if (m_traceAutoUntilTs > QDateTime::currentMSecsSinceEpoch()) { return; }
                 if (m_traceAutoUntilTs < 0) { return; } // alread off
-                CLogMessage(this).info("Auto trace id off");
+                CLogMessage(this).info(u"Auto trace id off");
                 m_traceAutoUntilTs = -1;
             });
             return true;
@@ -607,7 +607,7 @@ namespace BlackSimPlugin
 
             if (simulatorOwnAircraft.pitch < -90.0 || simulatorOwnAircraft.pitch >= 90.0)
             {
-                CLogMessage(this).warning("FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
+                CLogMessage(this).warning(u"FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
             }
             CAircraftSituation aircraftSituation;
             aircraftSituation.setMSecsSinceEpoch(ts);
@@ -884,7 +884,7 @@ namespace BlackSimPlugin
                 // no callsign
                 if (callsign.isEmpty())
                 {
-                    msg = CLogMessage(this).error("Cannot confirm AI object, empty callsign");
+                    msg = CLogMessage(this).error(u"Cannot confirm AI object, empty callsign");
                     break;
                 }
 
@@ -894,12 +894,12 @@ namespace BlackSimPlugin
                 {
                     if (aircraftStillInRange)
                     {
-                        msg = CLogMessage(this).warning("Callsign '%1' removed in meantime from AI objects, but still in range") << callsign.toQString();
+                        msg = CLogMessage(this).warning(u"Callsign '%1' removed in meantime from AI objects, but still in range") << callsign.toQString();
                     }
                     else
                     {
                         this->removeFromAddPendingAndAddAgainAircraft(callsign);
-                        msg = CLogMessage(this).info("Callsign '%1' removed in meantime and no longer in range") << callsign.toQString();
+                        msg = CLogMessage(this).info(u"Callsign '%1' removed in meantime and no longer in range") << callsign.toQString();
                     }
                     break;
                 }
@@ -909,7 +909,7 @@ namespace BlackSimPlugin
 
                 if (!simObject.hasValidRequestAndObjectId() || simObject.isPendingRemoved())
                 {
-                    msg = CStatusMessage(this).warning("Object for callsign '%1'/id: %2 removed in meantime/invalid") << callsign.toQString() << simObject.getObjectId();
+                    msg = CStatusMessage(this).warning(u"Object for callsign '%1'/id: %2 removed in meantime/invalid") << callsign.toQString() << simObject.getObjectId();
                     break;
                 }
 
@@ -919,7 +919,7 @@ namespace BlackSimPlugin
 
                 if (!released)
                 {
-                    msg = CStatusMessage(this).error("Cannot confirm model '%1' %2") << remoteAircraft.getModelString() << simObject.toQString();
+                    msg = CStatusMessage(this).error(u"Cannot confirm model '%1' %2") << remoteAircraft.getModelString() << simObject.toQString();
                     break;
                 }
 
@@ -942,7 +942,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 was already marked rendered") << callsign.asString() << remoteAircraft.getModelString() << simObject.getRequestId() << simObject.getObjectId();
+                    CLogMessage(this).warning(u"Verified aircraft '%1' model '%2', request/object id: %3 %4 was already marked rendered") << callsign.asString() << remoteAircraft.getModelString() << simObject.getRequestId() << simObject.getObjectId();
                 }
             }
             while (false);
@@ -970,7 +970,7 @@ namespace BlackSimPlugin
             m_simConnectObjects.removeByOtherSimObject(simObject);
             this->removeFromAddPendingAndAddAgainAircraft(simObject.getCallsign());
 
-            CLogMessage(this).warning("Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
+            CLogMessage(this).warning(u"Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
             CStatusMessage verifyMsg;
             const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
             if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
@@ -978,14 +978,14 @@ namespace BlackSimPlugin
             if (!canBeUsed || simObject.getAddingExceptions() >= ThresholdAddException)
             {
                 const CStatusMessage m = !canBeUsed ?
-                                         CLogMessage(this).warning("Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString()  :
-                                         CLogMessage(this).warning("Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions();
+                                         CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString()  :
+                                         CLogMessage(this).warning(u"Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions();
                 this->updateAircraftEnabled(simObject.getCallsign(), false); // disable
                 emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, m);
             }
             else
             {
-                CLogMessage(this).info("Will try '%1' again, aircraft: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
+                CLogMessage(this).info(u"Will try '%1' again, aircraft: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
                 CSimConnectObject simObjAddAgain(simObject);
                 simObjAddAgain.increaseAddingExceptions();
 
@@ -1018,18 +1018,18 @@ namespace BlackSimPlugin
                 {
                     if (entries.containsTitle(model.getModelString()))
                     {
-                        messages.push_back(CStatusMessage(this).info("Model '%1' exists in re-parsed file '%2'.") << model.getModelString() << model.getFileName());
+                        messages.push_back(CStatusMessage(this).info(u"Model '%1' exists in re-parsed file '%2'.") << model.getModelString() << model.getFileName());
                         canBeUsed = true; // all OK
                     }
                     else
                     {
-                        messages.push_back(CStatusMessage(this).warning("Model '%1' no longer in re-parsed file '%2'. Models are: %3.") << model.getModelString() << model.getFileName() << entries.getTitlesAsString(true));
+                        messages.push_back(CStatusMessage(this).warning(u"Model '%1' no longer in re-parsed file '%2'. Models are: %3.") << model.getModelString() << model.getFileName() << entries.getTitlesAsString(true));
                         canBeUsed = false; // absolute no chance to use that one
                     }
                 }
                 else
                 {
-                    messages.push_back(CStatusMessage(this).warning("CS: '%1' Cannot parse file: '%2' (existing: %3)") << model.getCallsign().asString() << model.getFileName() << boolToYesNo(model.hasExistingCorrespondingFile()));
+                    messages.push_back(CStatusMessage(this).warning(u"CS: '%1' Cannot parse file: '%2' (existing: %3)") << model.getCallsign().asString() << model.getFileName() << boolToYesNo(model.hasExistingCorrespondingFile()));
                 }
             }
             else
@@ -1065,7 +1065,7 @@ namespace BlackSimPlugin
                 simObject.setConfirmedAdded(true); // terrain probe
                 simObject.resetTimestampToNow();
                 cs = simObject.getCallsign();
-                CLogMessage(this).info("Probe: '%1' '%2' confirmed, %3") << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
+                CLogMessage(this).info(u"Probe: '%1' '%2' confirmed, %3") << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
 
                 // fails for probe
                 // SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe();
@@ -1075,7 +1075,7 @@ namespace BlackSimPlugin
 
             if (!verified)
             {
-                CLogMessage(this).info("Disable probes: '%1' failed to relase control") << cs.asString();
+                CLogMessage(this).info(u"Disable probes: '%1' failed to relase control") << cs.asString();
                 m_useFsxTerrainProbe = false;
             }
 
@@ -1137,7 +1137,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Pending aircraft without model string will be removed");
+                    CLogMessage(this).warning(u"Pending aircraft without model string will be removed");
                     m_addPendingAircraft.removeByOtherSimObject(oldestSimObject);
                 }
             }
@@ -1187,19 +1187,19 @@ namespace BlackSimPlugin
                     m_simConnectObjects.removeByOtherSimObject(simObject); // we have it in pending now, no need to keep it in this list
 
                     const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
-                    msg = CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
+                    msg = CLogMessage(this).warning(u"Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
                           << callsign.toQString() << simObject.getAircraftModelString()
                           << objectID << simObject.getInterpolatorInfo(setup.getInterpolatorMode());
                 }
                 else if (simObject.getAddingDirectlyRemoved() < ThresholdAddedAndDirectlyRemoved)
                 {
-                    const CStatusMessage m = CLogMessage(this).warning("Aircraft removed again multiple times and will be disabled, '%1' '%2' object id '%3'") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    const CStatusMessage m = CLogMessage(this).warning(u"Aircraft removed again multiple times and will be disabled, '%1' '%2' object id '%3'") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                     this->updateAircraftEnabled(simObject.getCallsign(), false);
                     emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, m);
                 }
                 else
                 {
-                    msg = CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us (swift): %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    msg = CLogMessage(this).warning(u"Removed '%1' from simulator, but was not initiated by us (swift): %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
 
                 // in all cases add verification details
@@ -1272,7 +1272,7 @@ namespace BlackSimPlugin
             {
                 const bool trace = parser.toBool(2);
                 this->setTraceSendId(trace);
-                CLogMessage(this, CLogCategory::cmdLine()).info("Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
+                CLogMessage(this, CLogCategory::cmdLine()).info(u"Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
                 return true;
             }
 
@@ -1281,7 +1281,7 @@ namespace BlackSimPlugin
             {
                 const bool on = parser.toBool(2);
                 this->setUsingSbOffsetValues(on);
-                CLogMessage(this, CLogCategory::cmdLine()).info("SB offsets is '%1'") << boolToOnOff(on);
+                CLogMessage(this, CLogCategory::cmdLine()).info(u"SB offsets is '%1'") << boolToOnOff(on);
                 return true;
             }
 
@@ -1354,12 +1354,12 @@ namespace BlackSimPlugin
                 {
                     // 2nd time, an error / avoid multiple messages
                     // idea: if it happens once ignore
-                    CLogMessage(this).error("%1: Dispatch error") << this->getSimulatorPluginInfo().getIdentifier();
+                    CLogMessage(this).error(u"%1: Dispatch error") << this->getSimulatorPluginInfo().getIdentifier();
                 }
                 else if (m_dispatchErrors > 5)
                 {
                     // this normally happens during a FSX crash or shutdown with simconnect
-                    CLogMessage(this).error("%1: Multiple dispatch errors, disconnecting") << this->getSimulatorPluginInfo().getIdentifier();
+                    CLogMessage(this).error(u"%1: Multiple dispatch errors, disconnecting") << this->getSimulatorPluginInfo().getIdentifier();
                     this->disconnectFrom();
                 }
                 return;
@@ -1405,7 +1405,7 @@ namespace BlackSimPlugin
             if (!outdatedAdded.isEmpty())
             {
                 const CCallsignSet callsigns = outdatedAdded.getAllCallsigns(false);
-                CLogMessage(this).warning("Removed %1 outdated objects pending for added: %2") << outdatedAdded.size() << callsigns.getCallsignsAsString(true);
+                CLogMessage(this).warning(u"Removed %1 outdated objects pending for added: %2") << outdatedAdded.size() << callsigns.getCallsignsAsString(true);
                 this->updateMultipleAircraftEnabled(callsigns, false);
 
                 static const QString msgText("%1 oudated adding, %2");
@@ -1441,7 +1441,7 @@ namespace BlackSimPlugin
                 // same model, nothing will change, otherwise add again when removed
                 if (sameModel)
                 {
-                    CLogMessage(this).info("CS: '%1' re-added same model '%2'") << newRemoteAircraft.getCallsignAsString() << newModelString;
+                    CLogMessage(this).info(u"CS: '%1' re-added same model '%2'") << newRemoteAircraft.getCallsignAsString() << newModelString;
 
                     // we restore rendered flag in case we are sure we are rendered
                     // this is used with rematching
@@ -1464,12 +1464,12 @@ namespace BlackSimPlugin
                 const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
                 if (situations.isEmpty())
                 {
-                    CLogMessage(this).warning("No valid situations for '%1', will be added as pending") << callsign.asString();
+                    CLogMessage(this).warning(u"No valid situations for '%1', will be added as pending") << callsign.asString();
                     canAdd = false;
                 }
                 else
                 {
-                    CLogMessage(this).warning("Invalid aircraft situation for new aircraft '%1', use closest situation") << callsign.asString();
+                    CLogMessage(this).warning(u"Invalid aircraft situation for new aircraft '%1', use closest situation") << callsign.asString();
                     situation = situations.findClosestTimeDistanceAdjusted(QDateTime::currentMSecsSinceEpoch());
                     Q_ASSERT_X(!situation.isPositionOrAltitudeNull(), Q_FUNC_INFO, "Invalid situation for new aircraft");
                 }
@@ -1480,7 +1480,7 @@ namespace BlackSimPlugin
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
                     BLACK_VERIFY_X(invalidSituation, Q_FUNC_INFO, "Expect valid situation");
-                    CLogMessage(this).warning("Invalid situation for '%1'") << callsign;
+                    CLogMessage(this).warning(u"Invalid situation for '%1'") << callsign;
                 }
             }
 
@@ -1499,7 +1499,7 @@ namespace BlackSimPlugin
             // create AI after crosschecking it
             if (!probe && !this->isAircraftInRange(callsign))
             {
-                CLogMessage(this).info("Skipping adding of '%1' since it is no longer in range") << callsign.asString();
+                CLogMessage(this).info(u"Skipping adding of '%1' since it is no longer in range") << callsign.asString();
                 return false;
             }
 
@@ -1540,12 +1540,12 @@ namespace BlackSimPlugin
 
             if (!underflowStatus.isEmpty())
             {
-                CStatusMessage(this).warning("Underflow detecion for '%1', details '%2'") << callsign.asString() << underflowStatus.getMessage();
+                CStatusMessage(this).warning(u"Underflow detecion for '%1', details '%2'") << callsign.asString() << underflowStatus.getMessage();
             }
 
             if (isFailure(hr))
             {
-                const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
+                const CStatusMessage msg = CStatusMessage(this).error(u"SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
                 CLogMessage::preformatted(msg);
                 emit this->physicallyAddingRemoteModelFailed(newRemoteAircraft, true, msg);
             }
@@ -1600,7 +1600,7 @@ namespace BlackSimPlugin
                 if (this->physicallyAddAITerrainProbe(coordinate, n)) { c++; }
             }
 
-            CLogMessage(this).info("Adding %1 FSX terrain probes") << number;
+            CLogMessage(this).info(u"Adding %1 FSX terrain probes") << number;
             m_addedProbes = c;
             return c;
         }
@@ -1628,7 +1628,7 @@ namespace BlackSimPlugin
             {
                 // problem: we try to delete an aircraft just requested to be added
                 // best solution so far, call remove again with a delay
-                CLogMessage(this).warning("'%1' requested to be removed, but pending added (%2) / or pending lights(%3). Object will be removed again: %4")
+                CLogMessage(this).warning(u"'%1' requested to be removed, but pending added (%2) / or pending lights(%3). Object will be removed again: %4")
                         << callsign.asString() << boolToYesNo(pendingAdded)
                         << boolToYesNo(stillWaitingForLights) << simObject.toQString();
                 simObject.setRemovedWhileAdding(true); // next time kill
@@ -1636,7 +1636,7 @@ namespace BlackSimPlugin
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     if (!myself) { return; }
-                    CLogMessage(this).info("Next trail to remove '%1'") << callsign.asString();
+                    CLogMessage(this).info(u"Next trail to remove '%1'") << callsign.asString();
                     myself->physicallyRemoveRemoteAircraft(callsign);
                 });
                 return false; // not yet deleted
@@ -1660,7 +1660,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).warning("Removing aircraft '%1' from simulator failed") << callsign.asString();
+                CLogMessage(this).warning(u"Removing aircraft '%1' from simulator failed") << callsign.asString();
             }
 
             // mark in provider
@@ -1711,7 +1711,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFlightLoaded, "FlightLoaded");
             if (isFailure(hr))
             {
-                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
+                CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
                 return hr;
             }
 
@@ -1755,7 +1755,7 @@ namespace BlackSimPlugin
 
             if (isFailure(hr))
             {
-                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
+                CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
                 return hr;
             }
 
@@ -1764,7 +1764,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, requestId);
             if (isFailure(hr))
             {
-                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
+                CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
                 return hr;
             }
             return hr;
@@ -1782,7 +1782,7 @@ namespace BlackSimPlugin
             HRESULT hr = this->initEvents();
             if (isFailure(hr))
             {
-                CLogMessage(this).error("FSX plugin: initEvents failed");
+                CLogMessage(this).error(u"FSX plugin: initEvents failed");
                 return hr;
             }
 
@@ -1790,7 +1790,7 @@ namespace BlackSimPlugin
             hr += this->initDataDefinitionsWhenConnected();
             if (isFailure(hr))
             {
-                CLogMessage(this).error("FSX plugin: initDataDefinitionsWhenConnected failed");
+                CLogMessage(this).error(u"FSX plugin: initDataDefinitionsWhenConnected failed");
                 return hr;
             }
 
@@ -2088,7 +2088,7 @@ namespace BlackSimPlugin
                     if (position.Airspeed < 2)
                     {
                         position.OnGround = 1U;
-                        if (details) { *details = CStatusMessage(getLogCategories()).warning("Force GND flag for underflow protection"); }
+                        if (details) { *details = CStatusMessage(getLogCategories()).warning(u"Force GND flag for underflow protection"); }
                         break;
                     }
                 }
@@ -2193,12 +2193,12 @@ namespace BlackSimPlugin
 
             if (isFailure(hr1, hr2))
             {
-                CLogMessage(this).warning("Sending time sync failed!");
+                CLogMessage(this).warning(u"Sending time sync failed!");
             }
             else
             {
                 m_syncTimeDeferredCounter = 5; // allow some time to sync
-                CLogMessage(this).info("Synchronized time to UTC: '%1'") << myTime.toString();
+                CLogMessage(this).info(u"Synchronized time to UTC: '%1'") << myTime.toString();
             }
         }
 
@@ -2474,7 +2474,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Removing probe '%1' from simulator failed") << probeSimObject.getObjectId();
+                    CLogMessage(this).warning(u"Removing probe '%1' from simulator failed") << probeSimObject.getObjectId();
                 }
             }
             m_simConnectObjects.removeAllProbes();
@@ -2689,7 +2689,7 @@ namespace BlackSimPlugin
                     simListener->m_simConnectVersion = QStringLiteral("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
                     simListener->m_simulatorDetails = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
-                    const CStatusMessage msg = CStatusMessage(simListener).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
+                    const CStatusMessage msg = CStatusMessage(simListener).info(u"Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
 
                     // avoid the same message over and over again
                     if (msg.getMessage() != simListener->m_lastMessage.getMessage())

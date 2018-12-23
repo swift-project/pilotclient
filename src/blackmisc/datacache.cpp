@@ -73,7 +73,7 @@ namespace BlackMisc
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
-            CLogMessage(this).error("Failed to create directory '%1'") << persistentStore();
+            CLogMessage(this).error(u"Failed to create directory '%1'") << persistentStore();
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
@@ -362,7 +362,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
+            CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             return {};
         }
         m_updateInProgress = true;
@@ -376,7 +376,7 @@ namespace BlackMisc
         {
             if (! revisionFile.open(QFile::ReadOnly | QFile::Text))
             {
-                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
                 return {};
             }
 
@@ -442,7 +442,7 @@ namespace BlackMisc
             }
             else if (revisionFile.size() > 0)
             {
-                CLogMessage(this).error("Invalid format of %1") << revisionFile.fileName();
+                CLogMessage(this).error(u"Invalid format of %1") << revisionFile.fileName();
 
                 if (m_pendingWrite) { return guard; }
                 return {};
@@ -464,7 +464,7 @@ namespace BlackMisc
         CAtomicFile revisionFile(CFileUtils::appendFilePaths(m_basename, ".rev"));
         if (! revisionFile.open(QFile::WriteOnly | QFile::Text))
         {
-            CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+            CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             return;
         }
 
@@ -492,7 +492,7 @@ namespace BlackMisc
 
         if (! revisionFile.checkedClose())
         {
-            CLogMessage(this).error("Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+            CLogMessage(this).error(u"Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
         }
     }
 
@@ -632,7 +632,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
+            CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
             return;
         }
@@ -642,7 +642,7 @@ namespace BlackMisc
         {
             if (! revisionFile.open(QFile::ReadWrite | QFile::Text))
             {
-                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
                 m_lockFile.unlock();
                 return;
             }
@@ -654,7 +654,7 @@ namespace BlackMisc
 
             if (!(revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
             {
-                CLogMessage(this).error("Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+                CLogMessage(this).error(u"Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
             }
         }
         m_lockFile.unlock();
@@ -668,7 +668,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
+            CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
             return 0;
         }
@@ -684,7 +684,7 @@ namespace BlackMisc
             }
             else
             {
-                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             }
         }
         m_lockFile.unlock();
@@ -788,7 +788,7 @@ namespace BlackMisc
         bool ok = file.open(QIODevice::ReadWrite | QFile::Text);
         if (! ok)
         {
-            CLogMessage(this).error("Failed to open session file %1: %2") << m_filename << file.errorString();
+            CLogMessage(this).error(u"Failed to open session file %1: %2") << m_filename << file.errorString();
             return;
         }
         auto json = QJsonDocument::fromJson(file.readAll()).object();
@@ -807,7 +807,7 @@ namespace BlackMisc
         json.insert("uuid", uuid.toString());
         if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()) && file.checkedClose()))
         {
-            CLogMessage(this).error("Failed to write to session file %1: %2 (%3 %4)") << m_filename << file.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+            CLogMessage(this).error(u"Failed to write to session file %1: %2 (%3 %4)") << m_filename << file.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
         }
     }
 

@@ -85,7 +85,7 @@ namespace BlackMisc
                         if (keys.contains(key))
                         {
                             CStatusMessage msg(this);
-                            msg.warning("Duplicate model string %1 in %2 %3")
+                            msg.warning(u"Duplicate model string %1 in %2 %3")
                                     << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
                             msgs.push_back(msg);
                             continue;

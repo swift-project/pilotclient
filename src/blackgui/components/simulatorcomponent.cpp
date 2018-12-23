@@ -185,7 +185,7 @@ namespace BlackGui
 
         void CSimulatorComponent::onAddingRemoteModelFailed(const CSimulatedAircraft &aircraft, bool disabled, const CStatusMessage &message)
         {
-            ui->comp_StatusMessages->appendStatusMessageToList(CStatusMessage(this).warning("Adding model failed, disabled: %1: '%2'") << boolToYesNo(disabled) << aircraft.toQString(true));
+            ui->comp_StatusMessages->appendStatusMessageToList(CStatusMessage(this).warning(u"Adding model failed, disabled: %1: '%2'") << boolToYesNo(disabled) << aircraft.toQString(true));
             ui->comp_StatusMessages->appendStatusMessageToList(message);
         }
 

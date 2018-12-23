@@ -184,7 +184,7 @@ namespace BlackMisc
                         }
                         else
                         {
-                            const CStatusMessage m = CStatusMessage(this).warning("Parsing failed for '%1'") << nextDir;
+                            const CStatusMessage m = CStatusMessage(this).warning(u"Parsing failed for '%1'") << nextDir;
                             messages.push_back(m);
                         }
                     }
@@ -200,7 +200,7 @@ namespace BlackMisc
                         CAircraftCfgEntriesList fileResults = CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
                         if (!fileOk)
                         {
-                            const CStatusMessage m = CStatusMessage(this).warning("Parsing of '%1' failed") << fileName;
+                            const CStatusMessage m = CStatusMessage(this).warning(u"Parsing of '%1' failed") << fileName;
                             messages.push_back(fileMsgs);
                             continue;
                         }
@@ -226,7 +226,7 @@ namespace BlackMisc
                 QFile file(fnFixed); // includes path
                 if (!file.open(QFile::ReadOnly | QFile::Text))
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning("Unable to read file '%1'") << fnFixed;
+                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning(u"Unable to read file '%1'") << fnFixed;
                     msgs.push_back(m);
                     return CAircraftCfgEntriesList();
                 }
@@ -366,7 +366,7 @@ namespace BlackMisc
                 {
                     if (e.getTitle().isEmpty())
                     {
-                        const CStatusMessage m = CStatusMessage(getLogCategories()).info("FS model in %1, index %2 has no title") << fileName << e.getIndex();
+                        const CStatusMessage m = CStatusMessage(getLogCategories()).info(u"FS model in %1, index %2 has no title") << fileName << e.getIndex();
                         msgs.push_back(m);
                         continue;
                     }

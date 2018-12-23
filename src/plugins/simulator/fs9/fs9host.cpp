@@ -141,7 +141,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).info("Hosting successfully started");
+                CLogMessage(this).info(u"Hosting successfully started");
                 m_hostStatus = Hosting;
             }
 
@@ -171,7 +171,7 @@ namespace BlackSimPlugin
 
             if (m_hostStatus == Terminated) return hr;
 
-            CLogMessage(this).info("Hosting terminated!");
+            CLogMessage(this).info(u"Hosting terminated!");
             if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
             {
                 return logDirectPlayError(hr);

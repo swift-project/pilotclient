@@ -162,7 +162,7 @@ namespace BlackCore
             //! Empty context called
             void logEmptyContextWarning(const QString &functionName) const
             {
-                BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
+                BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
             }
 
             //! Standard message when status message is returned in empty context

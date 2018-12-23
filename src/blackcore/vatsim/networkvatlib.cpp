@@ -974,7 +974,7 @@ namespace BlackCore
             {
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).debug("Wrong transponder code '%1' for '%2'") << position->transponderCode << callsign;
+                    CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).debug(u"Wrong transponder code '%1' for '%2'") << position->transponderCode << callsign;
                 }
 
                 // I set a default: IFR standby is a reasonable default
@@ -993,7 +993,7 @@ namespace BlackCore
 
             if (parserError.error != QJsonParseError::NoError)
             {
-                CLogMessage(self).warning("Failed to parse aircraft config packet: '%1' packet: '%2'") << parserError.errorString() << QString(json);
+                CLogMessage(self).warning(u"Failed to parse aircraft config packet: '%1' packet: '%2'") << parserError.errorString() << QString(json);
                 return; // we cannot parse the packet, so we give up here
             }
 
@@ -1075,7 +1075,7 @@ namespace BlackCore
             {
                 if (data.size() < 9)
                 {
-                    CLogMessage(this).warning("Malformed FSIPI packet");
+                    CLogMessage(this).warning(u"Malformed FSIPI packet");
                 }
                 else
                 {
@@ -1088,7 +1088,7 @@ namespace BlackCore
             {
                 if (data.size() < 9)
                 {
-                    CLogMessage(this).warning("Malformed FSIPIR packet");
+                    CLogMessage(this).warning(u"Malformed FSIPIR packet");
                 }
                 else
                 {
@@ -1108,7 +1108,7 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
+                CLogMessage(this).warning(u"Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
             }
         }
 
@@ -1476,30 +1476,30 @@ namespace BlackCore
             auto *self = cbvar_cast(cbvar);
             switch (error)
             {
-            case vatServerErrorCsInUs:          CLogMessage(self).error("The requested callsign is already taken"); emit self->terminate(); break;
-            case vatServerErrorCallsignInvalid: CLogMessage(self).error("The requested callsign is not valid"); emit self->terminate(); break;
-            case vatServerErrorCidInvalid:      CLogMessage(self).error("Wrong user ID or password"); emit self->terminate(); break;
-            case vatServerErrorRevision:        CLogMessage(self).error("This server does not support our protocol version"); emit self->terminate(); break;
-            case vatServerErrorLevel:           CLogMessage(self).error("You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
-            case vatServerErrorServFull:        CLogMessage(self).error("The server is full"); emit self->terminate(); break;
-            case vatServerErrorCsSuspended:     CLogMessage(self).error("Your user account is suspended"); emit self->terminate(); break;
-            case vatServerErrorInvPos:          CLogMessage(self).error("You are not authorized to use the requested rating"); emit self->terminate(); break;
-            case vatServerErrorUnAuth:          CLogMessage(self).error("This software is not authorized for use on this network"); emit self->terminate(); break;
+            case vatServerErrorCsInUs:          CLogMessage(self).error(u"The requested callsign is already taken"); emit self->terminate(); break;
+            case vatServerErrorCallsignInvalid: CLogMessage(self).error(u"The requested callsign is not valid"); emit self->terminate(); break;
+            case vatServerErrorCidInvalid:      CLogMessage(self).error(u"Wrong user ID or password"); emit self->terminate(); break;
+            case vatServerErrorRevision:        CLogMessage(self).error(u"This server does not support our protocol version"); emit self->terminate(); break;
+            case vatServerErrorLevel:           CLogMessage(self).error(u"You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
+            case vatServerErrorServFull:        CLogMessage(self).error(u"The server is full"); emit self->terminate(); break;
+            case vatServerErrorCsSuspended:     CLogMessage(self).error(u"Your user account is suspended"); emit self->terminate(); break;
+            case vatServerErrorInvPos:          CLogMessage(self).error(u"You are not authorized to use the requested rating"); emit self->terminate(); break;
+            case vatServerErrorUnAuth:          CLogMessage(self).error(u"This software is not authorized for use on this network"); emit self->terminate(); break;
 
-            case vatServerErrorNone:            CLogMessage(self).info("OK"); break;
-            case vatServerErrorSyntax:          CLogMessage(self).info("Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
-            case vatServerErrorSrcInvalid:      CLogMessage(self).info("Server: source invalid %1") << self->fromFSD(data); break;
-            case vatServerErrorNoSuchCs:        CLogMessage(self).info("Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
-            case vatServerErrorNoFP:            CLogMessage(self).info("Server: no flight plan"); break;
-            case vatServerErrorNoWeather:       CLogMessage(self).info("Server: requested weather profile does not exist"); break;
+            case vatServerErrorNone:            CLogMessage(self).info(u"OK"); break;
+            case vatServerErrorSyntax:          CLogMessage(self).info(u"Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
+            case vatServerErrorSrcInvalid:      CLogMessage(self).info(u"Server: source invalid %1") << self->fromFSD(data); break;
+            case vatServerErrorNoSuchCs:        CLogMessage(self).info(u"Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
+            case vatServerErrorNoFP:            CLogMessage(self).info(u"Server: no flight plan"); break;
+            case vatServerErrorNoWeather:       CLogMessage(self).info(u"Server: requested weather profile does not exist"); break;
 
             // we have no idea what these mean
             case vatServerErrorRegistered:
-            case vatServerErrorInvalidCtrl:     CLogMessage(self).info("Server: ") << self->fromFSD(msg); break;
+            case vatServerErrorInvalidCtrl:     CLogMessage(self).info(u"Server: ") << self->fromFSD(msg); break;
 
             // default:                         qFatal("vatlib: %s (error %d)", msg, error); emit self->terminate();
             // KB: Why the hard termination?
-            default:                            CLogMessage(self).error("vatlib: %1 (error %2)") << msg << error; emit self->terminate(); break;
+            default:                            CLogMessage(self).error(u"vatlib: %1 (error %2)") << msg << error; emit self->terminate(); break;
             }
         }
 

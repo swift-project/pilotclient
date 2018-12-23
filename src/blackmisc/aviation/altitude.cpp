@@ -184,13 +184,13 @@ namespace BlackMisc
             this->setNull();
             if (v.length() < 3)
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude empty or too short")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude empty or too short")); }
                 return false;
             }
 
             if (!fpAltitudeRegExp().globalMatch(v).hasNext())
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude '%1' needs to match format '%2'") << v << fpAltitudeExamples()); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude '%1' needs to match format '%2'") << v << fpAltitudeExamples()); }
                 return false;
             }
 
@@ -212,7 +212,7 @@ namespace BlackMisc
 
             if (numericPart.isEmpty())
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude '%1' has no numeric part")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude '%1' has no numeric part")); }
                 return false;
             }
 
@@ -255,7 +255,7 @@ namespace BlackMisc
             }
             else
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude '%1' needs to match format '%2'") << v << fpAltitudeExamples()); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude '%1' needs to match format '%2'") << v << fpAltitudeExamples()); }
                 return false;
             }
 
@@ -269,29 +269,29 @@ namespace BlackMisc
         {
             if (this->isNull())
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude NULL value")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude NULL value")); }
                 return false;
             }
             if (!(this->getReferenceDatum() == FlightLevel || this->getReferenceDatum() == MeanSeaLevel))
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude, must be FL or MSL")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude, must be FL or MSL")); }
                 return false;
             }
             if (!(this->getUnit() == CLengthUnit::m() || this->getUnit() == CLengthUnit::ft()))
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude, valid unit must be 'ft' or 'm'")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude, valid unit must be 'ft' or 'm'")); }
                 return false;
             }
             if (this->isNegativeWithEpsilonConsidered())
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError("Altitude must be positive")); }
+                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude must be positive")); }
                 return false;
             }
             if (this->isFlightLevel())
             {
                 if (!this->isInteger())
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(this).validationError("FL needs to be positive integer")); }
+                    if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL needs to be positive integer")); }
                     return false;
                 }
 
@@ -300,12 +300,12 @@ namespace BlackMisc
                     const int flInt = this->valueInteger() / 100; // internally represented as ft: FL10->1000
                     if (flInt < 10 || flInt >= 1000)
                     {
-                        if (msgs) { msgs->push_back(CStatusMessage(this).validationError("FL range is 10-999")); }
+                        if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL range is 10-999")); }
                         return false;
                     }
                     if (!CMathUtils::epsilonZero(fmod(flInt, 5)))
                     {
-                        if (msgs) { msgs->push_back(CStatusMessage(this).validationError("FL needs to end with 0 or 5")); }
+                        if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL needs to end with 0 or 5")); }
                         return false;
                     }
                 }

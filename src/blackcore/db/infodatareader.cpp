@@ -146,7 +146,7 @@ namespace BlackCore
 
             if (urlLogList.hasPending())
             {
-                CLogMessage(this).info("Info data reading still pending, summary: '%1'") << urlLogList.getSummary();
+                CLogMessage(this).info(u"Info data reading still pending, summary: '%1'") << urlLogList.getSummary();
                 return;
             }
             if (!url.isEmpty())
@@ -229,7 +229,7 @@ namespace BlackCore
             Q_UNUSED(overrideNewer);
             Q_ASSERT_X(false, Q_FUNC_INFO, "Not supported");
 
-            return CStatusMessage(this).error("Not supported");
+            return CStatusMessage(this).error(u"Not supported");
         }
 
         bool CInfoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewer)

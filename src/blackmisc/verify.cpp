@@ -66,11 +66,11 @@ namespace BlackMisc
 #   endif
             if (context && message)
             {
-                CLogMessage(CLogCategory::verification()).warning("Failed to verify: %1 (%2 in %3) in %4 line %5") << condition << message << context << filename << line;
+                CLogMessage(CLogCategory::verification()).warning(u"Failed to verify: %1 (%2 in %3) in %4 line %5") << condition << message << context << filename << line;
             }
             else
             {
-                CLogMessage(CLogCategory::verification()).warning("Failed to verify: %1 in %2 line %3") << condition << filename << line;
+                CLogMessage(CLogCategory::verification()).warning(u"Failed to verify: %1 in %2 line %3") << condition << filename << line;
             }
 #endif
         }

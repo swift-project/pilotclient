@@ -177,7 +177,7 @@ namespace BlackCore
         const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);
         if (!outdatedPendingUrls.isEmpty())
         {
-            CLogMessage(this).warning("Detected outdated reader pending calls: '%1'") << outdatedPendingUrls.toQString(true);
+            CLogMessage(this).warning(u"Detected outdated reader pending calls: '%1'") << outdatedPendingUrls.toQString(true);
             m_urlReadLog.removeOlderThanNowMinusOffset(OutdatedPendingCallMs); // clean up
         }
 

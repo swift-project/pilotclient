@@ -87,7 +87,7 @@ namespace BlackSimPlugin
             FS_PBH pbhstrct;
             pbhstrct.pbh = positionVelocity.pbh;
             int pitch = qRound(std::floor(pbhstrct.pitch / CFs9Sdk::pitchMultiplier()));
-            if (pitch < -90 || pitch > 89) { CLogMessage().warning("FS9: Pitch value out of limits: %1") << pitch; }
+            if (pitch < -90 || pitch > 89) { CLogMessage().warning(u"FS9: Pitch value out of limits: %1") << pitch; }
             int bank = qRound(std::floor(pbhstrct.bank / CFs9Sdk::bankMultiplier()));
 
             // MSFS has inverted pitch and bank angles
@@ -187,7 +187,7 @@ namespace BlackSimPlugin
             {
                 emit aircraftRenderingChanged(remoteAircraftCopy);
             }
-            CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
+            CLogMessage(this).info(u"FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
 
@@ -199,7 +199,7 @@ namespace BlackSimPlugin
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
             updateAircraftRendered(callsign, false);
-            CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
+            CLogMessage(this).info(u"FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }
 
@@ -453,7 +453,7 @@ namespace BlackSimPlugin
                 if (m_isConnecting || isOk(m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress())))
                 {
                     m_isConnecting = true;
-                    CLogMessage(this).info("swift is joining FS9 to the multiplayer session...");
+                    CLogMessage(this).info(u"swift is joining FS9 to the multiplayer session...");
                 }
             }
 

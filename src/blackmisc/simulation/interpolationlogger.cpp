@@ -93,7 +93,7 @@ namespace BlackMisc
 
         CStatusMessageList CInterpolationLogger::writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts)
         {
-            if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning("No data for log"); }
+            if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning(u"No data for log"); }
             static const QString html = QStringLiteral("Entries: %1\n\n%2");
             const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
 
@@ -124,8 +124,8 @@ namespace BlackMisc
         CStatusMessage CInterpolationLogger::logStatusFileWriting(bool success, const QString &fileName)
         {
             return success ?
-                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info("Written log file '%1'") << fileName :
-                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error("Failed to write log file '%1'") << fileName;
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info(u"Written log file '%1'") << fileName :
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error(u"Failed to write log file '%1'") << fileName;
         }
 
         void CInterpolationLogger::logInterpolation(const SituationLog &log)

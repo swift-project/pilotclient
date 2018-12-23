@@ -83,7 +83,7 @@ namespace BlackGui
         {
             if (!sGui || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
             const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
-            CLogMessage(this).info("Triggered re-apping of %1 aircraft") << reMatchedNo;
+            CLogMessage(this).info(u"Triggered re-apping of %1 aircraft") << reMatchedNo;
         }
 
         void CSettingsMatchingComponent::onSetupChanged()

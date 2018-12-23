@@ -89,7 +89,7 @@ namespace BlackCore
             // Worker thread, make sure to write no members here od do it threadsafe
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).info("Terminated booking parsing process");
+                CLogMessage(this).info(u"Terminated booking parsing process");
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -119,7 +119,7 @@ namespace BlackCore
                         bool changed = this->didContentChange(xmlData, xmlData.indexOf("</timestamp>"));
                         if (!changed)
                         {
-                            CLogMessage(this).info("Read bookings unchanged, skipped");
+                            CLogMessage(this).info(u"Read bookings unchanged, skipped");
                             emit this->atcBookingsReadUnchanged();
                             return; // stop, terminate straight away, ending thread
                         }
@@ -133,7 +133,7 @@ namespace BlackCore
                     {
                         if (!this->doWorkCheck())
                         {
-                            CLogMessage(this).info("Terminated booking parsing process"); // for users
+                            CLogMessage(this).info(u"Terminated booking parsing process"); // for users
                             return; // stop, terminate straight away, ending thread
                         }
 
@@ -189,7 +189,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading bookings failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading bookings failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
             }

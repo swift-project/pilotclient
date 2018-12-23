@@ -182,12 +182,12 @@ namespace BlackMisc
                 if (synchronizeCache)
                 {
                     this->synchronizeCacheImpl(sim);
-                    CLogMessage(this).info("Initialized model caches (%1) for %2") << this->getDescription() << simStr;
+                    CLogMessage(this).info(u"Initialized model caches (%1) for %2") << this->getDescription() << simStr;
                 }
                 else
                 {
                     this->admitCacheImpl(sim);
-                    CLogMessage(this).info("Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
                 }
             }
 
@@ -293,7 +293,7 @@ namespace BlackMisc
             CStatusMessage CModelCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                if (!ts.isValid()) { return CStatusMessage(this).error("Invalid timestamp for '%1'") << simulator.toQString() ; }
+                if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString() ; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9:    return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
@@ -398,12 +398,12 @@ namespace BlackMisc
                 if (synchronizeCache)
                 {
                     this->synchronizeCacheImpl(simulator);
-                    CLogMessage(this).info("Initialized model caches (%1) for %2") << this->getDescription() << simStr;
+                    CLogMessage(this).info(u"Initialized model caches (%1) for %2") << this->getDescription() << simStr;
                 }
                 else
                 {
                     this->admitCacheImpl(simulator);
-                    CLogMessage(this).info("Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
                 }
             }
 
@@ -478,7 +478,7 @@ namespace BlackMisc
             CStatusMessage CModelSetCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                if (!ts.isValid()) { return CStatusMessage(this).error("Invalid timestamp for '%1'") << simulator.toQString() ; }
+                if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString() ; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9:    return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());

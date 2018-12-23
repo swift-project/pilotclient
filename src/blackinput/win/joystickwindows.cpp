@@ -38,7 +38,7 @@ namespace BlackInput
             IDirectInputDevice8 *diDevice = nullptr;
             if (FAILED(hr = m_directInput->CreateDevice(m_guidDevice, &diDevice, nullptr)))
             {
-                CLogMessage(this).warning("IDirectInput8::CreateDevice failed: ") << hr;
+                CLogMessage(this).warning(u"IDirectInput8::CreateDevice failed: ") << hr;
                 return false;
             }
             m_directInputDevice.reset(diDevice);
@@ -48,14 +48,14 @@ namespace BlackInput
         if (!helperWindow) { return false; }
         if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
         {
-            CLogMessage(this).warning("IDirectInputDevice8::SetCooperativeLevel failed: ") << hr;
+            CLogMessage(this).warning(u"IDirectInputDevice8::SetCooperativeLevel failed: ") << hr;
             return false;
         }
 
         // Set data format to c_dfDIJoystick2
         if (FAILED(hr = m_directInputDevice->SetDataFormat(&c_dfDIJoystick2)))
         {
-            CLogMessage(this).warning("IDirectInputDevice8::SetDataFormat failed: ") << hr;
+            CLogMessage(this).warning(u"IDirectInputDevice8::SetDataFormat failed: ") << hr;
             return false;
         }
 
@@ -64,7 +64,7 @@ namespace BlackInput
         // Get device capabilities - we are interested in the number of buttons.
         if (FAILED(hr = m_directInputDevice->GetCapabilities(&deviceCaps)))
         {
-            CLogMessage(this).warning("IDirectInputDevice8::GetCapabilities failed: ") << hr;
+            CLogMessage(this).warning(u"IDirectInputDevice8::GetCapabilities failed: ") << hr;
             return false;
         }
 
@@ -73,11 +73,11 @@ namespace BlackInput
 
         if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_BUTTON)))
         {
-            CLogMessage(this).warning("IDirectInputDevice8::EnumObjects failed: ") << hr;
+            CLogMessage(this).warning(u"IDirectInputDevice8::EnumObjects failed: ") << hr;
             return false;
         }
 
-        CLogMessage(this).info("Created joystick device '%1' with %2 buttons") << m_deviceName << deviceCaps.dwButtons;
+        CLogMessage(this).info(u"Created joystick device '%1' with %2 buttons") << m_deviceName << deviceCaps.dwButtons;
         this->startTimer(50);
         return true;
     }
@@ -100,7 +100,7 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->Poll()))
                 {
-                    CLogMessage(this).warning("DirectInput error code: ") << hr;
+                    CLogMessage(this).warning(u"DirectInput error code: ") << hr;
                     return hr;
                 }
             }
@@ -113,7 +113,7 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
                 {
-                    CLogMessage(this).warning("DirectInput error code: ") << hr;
+                    CLogMessage(this).warning(u"DirectInput error code: ") << hr;
                     return hr;
                 }
             }
@@ -159,7 +159,7 @@ namespace BlackInput
         // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
         if (hr == RPC_E_CHANGED_MODE)
         {
-            CLogMessage(this).debug("CoInitializeEx was already called with a different mode. Trying again.");
+            CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
             hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
         }
 
@@ -179,7 +179,7 @@ namespace BlackInput
         }
         else
         {
-            CLogMessage(this).warning("CoInitializeEx returned error code %1");
+            CLogMessage(this).warning(u"CoInitializeEx returned error code %1");
         }
 
     }
@@ -219,20 +219,20 @@ namespace BlackInput
     {
         if (!m_directInput)
         {
-            CLogMessage(this).warning("No direct input");
+            CLogMessage(this).warning(u"No direct input");
             return E_FAIL;
         }
 
         HRESULT hr;
         if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
         {
-            CLogMessage(this).error("Error reading joystick devices");
+            CLogMessage(this).error(u"Error reading joystick devices");
             return hr;
         }
 
         if (m_joystickDevices.empty())
         {
-            CLogMessage(this).info("No joystick device found");
+            CLogMessage(this).info(u"No joystick device found");
         }
         return hr;
     }

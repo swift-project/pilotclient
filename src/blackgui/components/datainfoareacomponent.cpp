@@ -85,7 +85,7 @@ namespace BlackGui
         {
             if (!sGui || !sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb())
             {
-                CLogMessage(this).warning("No connection to DB yet, no new data loaded which can be written");
+                CLogMessage(this).warning(u"No connection to DB yet, no new data loaded which can be written");
                 return false;
             }
 
@@ -93,11 +93,11 @@ namespace BlackGui
             const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::staticDbFilesDirectory());
             if (s)
             {
-                CLogMessage(this).info("Written DB data");
+                CLogMessage(this).info(u"Written DB data");
             }
             else
             {
-                CLogMessage(this).error("Cannot write DB data");
+                CLogMessage(this).error(u"Cannot write DB data");
             }
             return s;
         }
@@ -111,7 +111,7 @@ namespace BlackGui
             bool ok = false;
             if (msgs.isSuccess())
             {
-                CLogMessage(this).info("Read DB data from directory: %1") << CDirectoryUtils::staticDbFilesDirectory();
+                CLogMessage(this).info(u"Read DB data from directory: %1") << CDirectoryUtils::staticDbFilesDirectory();
                 ui->comp_DbAircraftIcao->showLoadIndicator();
                 ui->comp_DbAirlineIcao->showLoadIndicator();
                 ui->comp_DbCountries->showLoadIndicator();

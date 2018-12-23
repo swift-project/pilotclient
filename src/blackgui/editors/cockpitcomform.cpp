@@ -170,7 +170,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).validationWarning("Wrong transponder code, reset");
+                CLogMessage(this).validationWarning(u"Wrong transponder code, reset");
                 ui->sbp_ComPanelTransponder->setValue(transponder.getTransponderCode());
             }
             transponder.setTransponderMode(ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode());

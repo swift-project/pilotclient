@@ -98,7 +98,7 @@ namespace BlackCore
             {
                 const QString e = m_dbusConnection.lastError().message();
                 BLACK_VERIFY_X(false, "CRuntime::init DBus problem", e.toUtf8().constData());
-                CLogMessage(this).error("DBus connection failed: '%1'") << e;
+                CLogMessage(this).error(u"DBus connection failed: '%1'") << e;
                 return;
             }
         }
@@ -136,7 +136,7 @@ namespace BlackCore
         time.restart();
         this->initPostSetup(times);
         times.insert("Post setup", time.restart());
-        CLogMessage(this).info("Init times: %1") << qmapToString(times);
+        CLogMessage(this).info(u"Init times: %1") << qmapToString(times);
 
         // flag
         m_initalized = true;
@@ -170,7 +170,7 @@ namespace BlackCore
         Q_ASSERT(!dBusAddress.isEmpty());
         if (m_dbusServer) { m_dbusServer->deleteLater(); } // delete if there was an existing one
         m_dbusServer = new CDBusServer(dBusAddress, this);
-        CLogMessage(this).info("DBus server on address: '%1'") << dBusAddress;
+        CLogMessage(this).info(u"DBus server on address: '%1'") << dBusAddress;
     }
 
     void CCoreFacade::initPostSetup(QMap<QString, int> &times)

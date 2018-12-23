@@ -34,7 +34,7 @@ namespace BlackCore
         QDir pluginDir(pluginDirectory());
         if (!pluginDir.exists())
         {
-            CLogMessage(this).warning("No such directory: %1") << pluginDir.path();
+            CLogMessage(this).warning(u"No such directory: %1") << pluginDir.path();
             return;
         }
 
@@ -100,7 +100,7 @@ namespace BlackCore
         const QJsonObject json = loader.metaData();
         if (!isValid(json))
         {
-            CLogMessage(this).warning("Plugin '%1' invalid, not loading it") << path;
+            CLogMessage(this).warning(u"Plugin '%1' invalid, not loading it") << path;
             return false;
         }
 
@@ -129,7 +129,7 @@ namespace BlackCore
 
         if (!m_paths.contains(identifier))
         {
-            CLogMessage(this).warning("Plugin with id '%1' does not exist") << identifier;
+            CLogMessage(this).warning(u"Plugin with id '%1' does not exist") << identifier;
             return nullptr;
         }
 

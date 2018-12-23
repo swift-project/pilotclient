@@ -156,7 +156,7 @@ namespace BlackGui
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
             if (selected.isUnspecified())
             {
-                CLogMessage(this).error("Simulator plugin does not exist: '%1'") << identifier;
+                CLogMessage(this).error(u"Simulator plugin does not exist: '%1'") << identifier;
                 return;
             }
 
@@ -198,11 +198,11 @@ namespace BlackGui
             const int noRendered = setup.getMaxRenderedAircraft();
             if (noRequested == noRendered)
             {
-                CLogMessage(this).info("Max.rendered aircraft: %1") << noRendered;
+                CLogMessage(this).info(u"Max.rendered aircraft: %1") << noRendered;
             }
             else
             {
-                CLogMessage(this).info("Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
+                CLogMessage(this).info(u"Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
                 ui->le_MaxAircraft->setText(QString::number(noRendered));
             }
             this->setGuiValues();
@@ -225,7 +225,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).info("Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
+                CLogMessage(this).info(u"Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
                 setup.setMaxRenderedDistance(newDistance);
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
                 this->setGuiValues();
@@ -251,7 +251,7 @@ namespace BlackGui
             }
             if (ost.isNull())
             {
-                CLogMessage().validationWarning("Invalid offset time");
+                CLogMessage().validationWarning(u"Invalid offset time");
             }
             else
             {

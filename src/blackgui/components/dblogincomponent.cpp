@@ -141,7 +141,7 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (user.isAuthenticated())
             {
-                CLogMessage(this).info("User authenticated: %1") << user.toQString();
+                CLogMessage(this).info(u"User authenticated: %1") << user.toQString();
                 this->setModeLogin(false);
                 ui->le_Name->setText(user.getRealNameAndId());
                 ui->te_Roles->setPlainText(user.getRolesAsString());

@@ -329,7 +329,7 @@ namespace BlackCore
                 // be a little less verbose
                 if ((m_totalGoodCountDb % 5 == 0) || m_consecutivePingBadCount > 0)
                 {
-                    CLogMessage(this).info("Watchdog pinged '%1'")  << url;
+                    CLogMessage(this).info(u"Watchdog pinged '%1'")  << url;
                 }
                 m_totalGoodCountDb++;
                 m_consecutivePingBadCount = 0;
@@ -340,7 +340,7 @@ namespace BlackCore
                 m_consecutivePingBadCount++;
                 if (m_logOwnMessages)
                 {
-                    CStatusMessage(this).warning("Watchdog ping failed, error: '%1', total good/bad DB counts: %2/%3") << errorString << m_totalGoodCountDb << m_totalBadCountDb;
+                    CStatusMessage(this).warning(u"Watchdog ping failed, error: '%1', total good/bad DB counts: %2/%3") << errorString << m_totalGoodCountDb << m_totalBadCountDb;
                 }
             }
             this->setDbAccessibility(ok);

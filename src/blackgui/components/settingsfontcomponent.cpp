@@ -98,11 +98,11 @@ namespace BlackGui
                 const bool ok = sGui->updateFont(m_qss);
                 if (ok)
                 {
-                    CLogMessage(this).info("Updated font style");
+                    CLogMessage(this).info(u"Updated font style");
                 }
                 else
                 {
-                    CLogMessage(this).warning("Updating style failed");
+                    CLogMessage(this).warning(u"Updating style failed");
                 }
             }
             emit this->accept();

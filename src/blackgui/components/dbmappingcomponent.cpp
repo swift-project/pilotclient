@@ -181,7 +181,7 @@ namespace BlackGui
                 const CAircraftModelList vPilotModels(m_vPilotReader.getAsModelsFromCache());
                 ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
                 const int noModels = vPilotModels.size();
-                CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
+                CLogMessage(this).info(u"%1 cached vPilot models loaded") << noModels;
             }
             ui->tab_VPilot->setEnabled(m_vPilotEnabled);
             ui->tab_VPilot->setVisible(m_vPilotEnabled);
@@ -292,7 +292,7 @@ namespace BlackGui
 
             if (updated)
             {
-                CLogMessage(this).info("Updated editor data for '%1'") << modelString;
+                CLogMessage(this).info(u"Updated editor data for '%1'") << modelString;
             }
         }
 
@@ -512,12 +512,12 @@ namespace BlackGui
         {
             if (m_vPilotReader.readInBackground(true))
             {
-                CLogMessage(this).info("Start loading vPilot rulesets");
+                CLogMessage(this).info(u"Start loading vPilot rulesets");
                 ui->tvp_AircraftModelsForVPilot->showLoadIndicator();
             }
             else
             {
-                CLogMessage(this).warning("Loading vPilot rulesets already in progress");
+                CLogMessage(this).warning(u"Loading vPilot rulesets already in progress");
             }
         }
 
@@ -526,7 +526,7 @@ namespace BlackGui
             if (!m_vPilotEnabled) { return; }
             if (success)
             {
-                CLogMessage(this).info("Loading vPilot ruleset completed");
+                CLogMessage(this).info(u"Loading vPilot ruleset completed");
                 const CAircraftModelList models(m_vPilotReader.getAsModels());
                 if (ui->tvp_AircraftModelsForVPilot->displayAutomatically())
                 {
@@ -535,7 +535,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).error("Loading vPilot ruleset failed");
+                CLogMessage(this).error(u"Loading vPilot ruleset failed");
             }
             ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
         }

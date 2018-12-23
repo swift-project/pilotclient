@@ -41,7 +41,7 @@ namespace BlackCore
             ISimulatorFactory *factory = this->getFactory(pluginId);
             if (!factory)
             {
-                CLogMessage(this).warning("Could not load plugin '%1'.") << pluginId;
+                CLogMessage(this).warning(u"Could not load plugin '%1'.") << pluginId;
                 m_plugins.remove(pluginId);
                 return nullptr;
             }

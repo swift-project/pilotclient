@@ -197,7 +197,7 @@ namespace BlackCore
                     consolidatedModels.push_back(model);
                 }
             }
-            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
             return consolidatedModels;
         }
 
@@ -218,7 +218,7 @@ namespace BlackCore
                     if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
                 }
             }
-            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2ms") << models.size() << timer.elapsed();
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 models in %2ms") << models.size() << timer.elapsed();
             return c;
         }
 
@@ -242,7 +242,7 @@ namespace BlackCore
                 model = consolidated;
                 c++;
             }
-            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2 ms") << simulatorModels.size() << timer.elapsed();
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 models in %2 ms") << simulatorModels.size() << timer.elapsed();
             return c;
         }
 
@@ -340,7 +340,7 @@ namespace BlackCore
                 stashModels.push_back(dbModel); // changed DB model
                 if (updateInfo)
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories()).info("%1 -> %2 (%3) for '%4'")
+                    const CStatusMessage m = CStatusMessage(getLogCategories()).info(u"%1 -> %2 (%3) for '%4'")
                                              << dbModelSimulator.toQString(true) << simulator.toQString(true)
                                              << delta.toQString(true) << dbModel.getModelStringAndDbKey();
                     updateInfo->push_back(m);

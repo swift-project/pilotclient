@@ -120,7 +120,7 @@ bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *fu
     funcPtr = reinterpret_cast<FuncPtr>(library.resolve(funcName));
     if (! funcPtr)
     {
-        CLogMessage(CLogCategory::driver()).error("Failed to resolve %1: %2") << funcName << library.errorString();
+        CLogMessage(CLogCategory::driver()).error(u"Failed to resolve %1: %2") << funcName << library.errorString();
         return false;
     }
     return true;
@@ -211,21 +211,21 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
         const bool resolvedP3DSimConnectSymbols = resolveP3DSimConnectSymbols(simConnectDll);
         if (!resolvedCommon)
         {
-            CLogMessage(CLogCategory::driver()).error("Failed to resolve common symbols from SimConnect.dll: '%1'") << simConnectFileName;
+            CLogMessage(CLogCategory::driver()).error(u"Failed to resolve common symbols from SimConnect.dll: '%1'") << simConnectFileName;
             return false;
         }
         if (!resolvedP3DSimConnectSymbols)
         {
-            CLogMessage(CLogCategory::driver()).error("Failed to resolve P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
+            CLogMessage(CLogCategory::driver()).error(u"Failed to resolve P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
             return false;
         }
 
-        CLogMessage(CLogCategory::driver()).info("Loaded and resolved P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
+        CLogMessage(CLogCategory::driver()).info(u"Loaded and resolved P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
         return  resolvedCommon && resolvedP3DSimConnectSymbols;
     }
     else
     {
-        CLogMessage(CLogCategory::driver()).error("Failed to load SimConnect.dll: '%1' '%2'") << simConnectFileName << simConnectDll.errorString();
+        CLogMessage(CLogCategory::driver()).error(u"Failed to load SimConnect.dll: '%1' '%2'") << simConnectFileName << simConnectDll.errorString();
         return false;
     }
 }
@@ -289,7 +289,7 @@ bool loadAndResolveFsxSimConnect(bool manifestProbing)
     }
     else
     {
-        CLogMessage(CLogCategory::driver()).error("Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
+        CLogMessage(CLogCategory::driver()).error(u"Failed to load SimConnect.dll: %1") << simConnectDll.errorString();
         return false;
     }
 }

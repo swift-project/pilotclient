@@ -249,7 +249,7 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Need a (valid) callsign to write a log");
+                    CLogMessage(this).warning(u"Need a (valid) callsign to write a log");
                     ok = true; // already a warning
                 }
             }
@@ -267,7 +267,7 @@ namespace BlackSimPlugin
             {
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button");
             }
-            if (!ok) { CLogMessage(this).warning("Cannot parse command for button: %1") << sender->objectName(); }
+            if (!ok) { CLogMessage(this).warning(u"Cannot parse command for button: %1") << sender->objectName(); }
         }
 
         void CSimulatorEmulatedMonitorDialog::enableInterpolationLogButtons(bool enable)

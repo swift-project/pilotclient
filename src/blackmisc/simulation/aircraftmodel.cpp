@@ -162,18 +162,18 @@ namespace BlackMisc
             {
                 if (!this->hasExistingCorrespondingFile())
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationWarning("File '%1' not readable") << this->getFileName();
+                    const CStatusMessage m = CStatusMessage(this).validationWarning(u"File '%1' not readable") << this->getFileName();
                     msgs.push_back(m);
                 }
                 else
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationInfo("File '%1' existing") << this->getFileName();
+                    const CStatusMessage m = CStatusMessage(this).validationInfo(u"File '%1' existing") << this->getFileName();
                     msgs.push_back(m);
                 }
             }
             else
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("Invalid model type to check: '%1'") << this->getModelTypeAsString();
+                const CStatusMessage m = CStatusMessage(this).validationError(u"Invalid model type to check: '%1'") << this->getModelTypeAsString();
                 msgs.push_back(m);
             }
             return msgs;

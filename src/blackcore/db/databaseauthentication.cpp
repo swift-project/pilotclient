@@ -123,12 +123,12 @@ namespace BlackCore
                 const QString json(nwReply->readAll().trimmed());
                 if (json.isEmpty())
                 {
-                    CLogMessage(this).error("Authentication failed, no response from '%1'") << urlString;
+                    CLogMessage(this).error(u"Authentication failed, no response from '%1'") << urlString;
                     return;
                 }
                 if (!Json::looksLikeJson(json))
                 {
-                    CLogMessage(this).error("Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
+                    CLogMessage(this).error(u"Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
                     return;
                 }
 
@@ -165,7 +165,7 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage(this).error("Authentication failed, %1") << nwReply->errorString();
+                CLogMessage(this).error(u"Authentication failed, %1") << nwReply->errorString();
                 return;
             }
         }

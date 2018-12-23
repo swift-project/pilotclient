@@ -106,20 +106,20 @@ namespace BlackGui
             Q_ASSERT(sGui->getIContextNetwork());
             if (!sGui->getIContextNetwork()->isConnected())
             {
-                CLogMessage(this).validationError("Cannot send aircraft parts, network not connected");
+                CLogMessage(this).validationError(u"Cannot send aircraft parts, network not connected");
                 return;
             }
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
             {
-                CLogMessage(this).validationError("No valid callsign selected");
+                CLogMessage(this).validationError(u"No valid callsign selected");
                 return;
             }
 
             CClient client = sGui->getIContextNetwork()->getClientsForCallsigns(callsign).frontOrDefault();
             if (client.getCallsign().isEmpty() || client.getCallsign() != callsign)
             {
-                CLogMessage(this).validationError("No valid client for '%1'") << callsign.asString();
+                CLogMessage(this).validationError(u"No valid client for '%1'") << callsign.asString();
                 return;
             }
 
@@ -140,7 +140,7 @@ namespace BlackGui
             ui->tb_History->setToolTip("");
             const bool incremental = ui->cb_AircraftPartsIncremental->isChecked();
             sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, incremental);
-            CLogMessage(this).info("Added parts for %1") << callsign.toQString();
+            CLogMessage(this).info(u"Added parts for %1") << callsign.toQString();
         }
 
         void CInternalsComponent::setCurrentParts()
@@ -152,7 +152,7 @@ namespace BlackGui
             const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign);
             if (partsList.isEmpty())
             {
-                CStatusMessage(this).info("No parts for '%1'") << callsign.asString();
+                CStatusMessage(this).info(u"No parts for '%1'") << callsign.asString();
                 return;
             }
             const CAircraftParts parts = partsList.latestObject();
@@ -261,12 +261,12 @@ namespace BlackGui
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
             {
-                CLogMessage(this).validationError("No valid callsign selected");
+                CLogMessage(this).validationError(u"No valid callsign selected");
                 return;
             }
             ui->pb_RequestFromNetwork->setEnabled(false);
             sGui->getIContextNetwork()->testRequestAircraftConfig(callsign);
-            CLogMessage(this).info("Request aircraft config for '%1'") << callsign.asString();
+            CLogMessage(this).info(u"Request aircraft config for '%1'") << callsign.asString();
 
             // simple approach to update UI when parts are received
             const QPointer<CInternalsComponent> myself(this);
@@ -290,7 +290,7 @@ namespace BlackGui
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
             {
-                CLogMessage(this).validationError("No valid callsign selected");
+                CLogMessage(this).validationError(u"No valid callsign selected");
                 return;
             }
 

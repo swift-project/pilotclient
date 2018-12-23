@@ -253,14 +253,14 @@ namespace BlackGui
             {
                 if (!this->validateAircraftValues())
                 {
-                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning("Invalid aircraft data, login not possible"), OverlayMessageMs);
+                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid aircraft data, login not possible"), OverlayMessageMs);
                     return;
                 }
 
                 const CStatusMessageList pilotMsgs = ui->form_Pilot->validate();
                 if (pilotMsgs.isFailure())
                 {
-                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning("Invalid pilot data, login not possible"), OverlayMessageMs);
+                    this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid pilot data, login not possible"), OverlayMessageMs);
                     return;
                 }
 
@@ -272,8 +272,8 @@ namespace BlackGui
                 const INetwork::LoginMode mode = ui->frp_LoginMode->getLoginMode();
                 switch (mode)
                 {
-                case INetwork::LoginStealth: CLogMessage(this).info("login in stealth mode"); break;
-                case INetwork::LoginAsObserver: CLogMessage(this).info("login in observer mode"); break;
+                case INetwork::LoginStealth: CLogMessage(this).info(u"login in stealth mode"); break;
+                case INetwork::LoginAsObserver: CLogMessage(this).info(u"login in observer mode"); break;
                 default: break; // INetwork::LoginNormal
                 }
 
@@ -685,8 +685,8 @@ namespace BlackGui
             const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (!model.hasModelString())
             {
-                CLogMessage(this).validationInfo("Invalid lookup for '%1' successful: %2") << modelStr << model.toQString();
-                CLogMessage(this).validationInfo("Hint: Are you using the emulated driver? Set a model if so!");
+                CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << model.toQString();
+                CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
                 return;
             }
             this->setOwnModelAndIcaoValues();

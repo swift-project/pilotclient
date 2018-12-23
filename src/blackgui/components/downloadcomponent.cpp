@@ -90,7 +90,7 @@ namespace BlackGui
             if (downloadDir.isEmpty()) { return; } // canceled
             if (!QDir(downloadDir).exists())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning("'%1' is not a valid download directory") << downloadDir;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return;
             }
@@ -172,7 +172,7 @@ namespace BlackGui
             if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return false; }
             if (!this->existsDownloadDir())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("Invalid download directory");
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Invalid download directory");
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return false;
             }
@@ -180,7 +180,7 @@ namespace BlackGui
             const CUrl download = remoteFile.getSmartUrl();
             if (download.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("No download URL for file name '%1'") << remoteFile.getNameAndSize();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"No download URL for file name '%1'") << remoteFile.getNameAndSize();
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
                 return false;
             }
@@ -193,14 +193,14 @@ namespace BlackGui
             if (r)
             {
                 // this->showLoading(10 * 1000);
-                CLogMessage(this).info("Triggered downloading of file from '%1'") << download.getHost();
+                CLogMessage(this).info(u"Triggered downloading of file from '%1'") << download.getHost();
                 connect(r, &QNetworkReply::downloadProgress, this, &CDownloadComponent::downloadProgress);
                 m_reply = r;
                 success = true;
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("Starting download for '%1' failed") << download.getFullUrl();
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
                 this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
             }
             return success;

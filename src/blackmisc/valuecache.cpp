@@ -373,33 +373,33 @@ namespace BlackMisc
         }
         if (! QDir::root().mkpath(dir))
         {
-            return CStatusMessage(this).error("Failed to create directory '%1'") << dir;
+            return CStatusMessage(this).error(u"Failed to create directory '%1'") << dir;
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
             if (! QDir::root().mkpath(QFileInfo(file).path()))
             {
-                return CStatusMessage(this).error("Failed to create directory '%1'") << QFileInfo(file).path();
+                return CStatusMessage(this).error(u"Failed to create directory '%1'") << QFileInfo(file).path();
             }
             if (! file.open(QFile::ReadWrite | QFile::Text))
             {
-                return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
+                return CStatusMessage(this).error(u"Invalid JSON format in %1") << file.fileName();
             }
             auto object = json.object();
             json.setObject(it->mergeToMemoizedJson(object));
 
             if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
-                return CStatusMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this).info("Written '%1' to value cache in '%2'") <<
+        return CStatusMessage(this).info(u"Written '%1' to value cache in '%2'") <<
             (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
@@ -417,11 +417,11 @@ namespace BlackMisc
     {
         if (! QDir(dir).exists())
         {
-            return CStatusMessage(this).warning("No such directory '%1'") << dir;
+            return CStatusMessage(this).warning(u"No such directory '%1'") << dir;
         }
         if (! QDir(dir).isReadable())
         {
-            return CStatusMessage(this).error("Failed to read from directory '%1'") << dir;
+            return CStatusMessage(this).error(u"Failed to read from directory '%1'") << dir;
         }
 
         QMap<QString, QStringList> keysInFiles;
@@ -447,12 +447,12 @@ namespace BlackMisc
             }
             if (! file.open(QFile::ReadOnly | QFile::Text))
             {
-                return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
+                return CStatusMessage(this).error(u"Invalid JSON format in %1") << file.fileName();
             }
 
             CVariantMap temp;
@@ -475,7 +475,7 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info("Loaded cache values '%1' from '%2' '%3'") <<
+        return CStatusMessage(this).info(u"Loaded cache values '%1' from '%2' '%3'") <<
             (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
     }
 
@@ -488,15 +488,15 @@ namespace BlackMisc
         if (QFile::exists(absolute)) { return; }
         if (! dir.mkpath(QFileInfo(relative).path()))
         {
-            CLogMessage(this).error("Failed to create %1") << QFileInfo(absolute).path();
+            CLogMessage(this).error(u"Failed to create %1") << QFileInfo(absolute).path();
             return;
         }
         if (! file.copy(absolute))
         {
-            CLogMessage(this).error("Failed to back up %1: %2") << QFileInfo(file).fileName() << file.errorString();
+            CLogMessage(this).error(u"Failed to back up %1: %2") << QFileInfo(file).fileName() << file.errorString();
             return;
         }
-        CLogMessage(this).info("Backed up %1 to %2") << QFileInfo(file).fileName() << dir.absoluteFilePath("backups");
+        CLogMessage(this).info(u"Backed up %1 to %2") << QFileInfo(file).fileName() << dir.absoluteFilePath("backups");
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
@@ -732,7 +732,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
             // All good info
-            status = CStatusMessage(this).info("Set value '%1'") << element.m_nameWithKey;
+            status = CStatusMessage(this).info(u"Set value '%1'") << element.m_nameWithKey;
         }
         return status;
     }
@@ -842,11 +842,11 @@ namespace BlackMisc
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CStatusMessage(this).error("Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
+            return CStatusMessage(this).error(u"Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
         }
         else if (element.m_validator && ! element.m_validator(value))
         {
-            return CStatusMessage(this).error("%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
+            return CStatusMessage(this).error(u"%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
         }
         else
         {

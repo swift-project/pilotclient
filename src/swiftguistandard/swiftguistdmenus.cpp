@@ -95,17 +95,17 @@ void SwiftGuiStd::attachSimulatorWindow()
     QWindow *w = CForeignWindows::getFirstFoundSimulatorWindow();
     if (!w)
     {
-        CLogMessage(this).warning("No simulator window found");
+        CLogMessage(this).warning(u"No simulator window found");
         return;
     }
     const bool a = CForeignWindows::setSimulatorAsParent(w, this);
     if (a)
     {
-        CLogMessage(this).info("Attached to simulator");
+        CLogMessage(this).info(u"Attached to simulator");
     }
     else
     {
-        CLogMessage(this).warning("No simulator window found");
+        CLogMessage(this).warning(u"No simulator window found");
     }
 }
 
@@ -113,11 +113,11 @@ void SwiftGuiStd::detachSimulatorWindow()
 {
     if (CForeignWindows::unsetSimulatorAsParent(this))
     {
-        CLogMessage(this).info("Detached simulator window");
+        CLogMessage(this).info(u"Detached simulator window");
     }
     else
     {
-        CLogMessage(this).info("No simulator window to detach");
+        CLogMessage(this).info(u"No simulator window to detach");
     }
 }
 
@@ -173,5 +173,5 @@ void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
     }
 
     const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, checkFileTimestamp, this);
-    if (c > 0) { CLogMessage(this).info("Copied %1 files from build directory") << c; }
+    if (c > 0) { CLogMessage(this).info(u"Copied %1 files from build directory") << c; }
 }

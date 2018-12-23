@@ -411,7 +411,7 @@ void SwiftGuiStd::verifyPrerequisites()
     CStatusMessageList msgs;
     if (!sGui->supportsContexts() || !sGui->getIContextSimulator())
     {
-        msgs.push_back(CStatusMessage(this).error("No simulator context"));
+        msgs.push_back(CStatusMessage(this).error(u"No simulator context"));
     }
     else
     {

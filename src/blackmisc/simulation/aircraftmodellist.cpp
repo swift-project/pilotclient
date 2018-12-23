@@ -1066,7 +1066,7 @@ namespace BlackMisc
             // Any DB distributors?
             if (distributorsFromDb.isEmpty())
             {
-                const CStatusMessage msg = CStatusMessage(this).validationError("No DB distributors for validation");
+                const CStatusMessage msg = CStatusMessage(this).validationError(u"No DB distributors for validation");
                 msgs.push_back(msg);
                 invalidModels.push_back(*this);
                 return msgs;
@@ -1080,7 +1080,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    const CStatusMessage msg = CStatusMessage(this).validationError("No valid distributor for '%1', was '%2'") << model.getModelString() << model.getDistributor().getDbKey();
+                    const CStatusMessage msg = CStatusMessage(this).validationError(u"No valid distributor for '%1', was '%2'") << model.getModelString() << model.getDistributor().getDbKey();
                     msgs.push_back(msg);
                     invalidModels.push_back(model);
                 }

@@ -195,7 +195,7 @@ void CSwiftData::checkMinimumVersion()
     if (!sApp || sApp->isShuttingDown()) { return; }
     if (sApp->getGlobalSetup().isSwiftVersionMinimumMappingVersion())
     {
-        CLogMessage(this).info("Checked mapping tool version, required '%1', this version '%2'") << sApp->getGlobalSetup().getMappingMinimumVersionString() << CBuildConfig::getVersionString();
+        CLogMessage(this).info(u"Checked mapping tool version, required '%1', this version '%2'") << sApp->getGlobalSetup().getMappingMinimumVersionString() << CBuildConfig::getVersionString();
     }
     else
     {

@@ -85,14 +85,14 @@ namespace BlackGui
 
             if (m_models.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("No models");
+                const CStatusMessage m = CStatusMessage(this).validationError(u"No models");
                 ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
                 return;
             }
 
             if (ui->le_Distributor->text().isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("No distributor");
+                const CStatusMessage m = CStatusMessage(this).validationError(u"No distributor");
                 ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
                 return;
             }
@@ -100,7 +100,7 @@ namespace BlackGui
             const CAircraftModelList keyDuplicates = m_models.findDuplicateModelStrings();
             if (!keyDuplicates.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("Found %1 key duplicates") << keyDuplicates.size();
+                const CStatusMessage m = CStatusMessage(this).validationError(u"Found %1 key duplicates") << keyDuplicates.size();
                 ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
                 return;
             }
@@ -109,7 +109,7 @@ namespace BlackGui
             const CDistributor distributor = distributors.findByKeyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
             if (!distributor.hasValidDbKey())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("Invalid distributor");
+                const CStatusMessage m = CStatusMessage(this).validationError(u"Invalid distributor");
                 ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
                 return;
             }
@@ -149,8 +149,8 @@ namespace BlackGui
 
             const QString distKeys = removeModels.getDistributors().dbKeysAsString(", ");
             const CStatusMessage msg = removeModels.isEmpty() ?
-                                       CStatusMessage(this).info("No duplicates to be removed!")  :
-                                       CStatusMessage(this).info("You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
+                                       CStatusMessage(this).info(u"No duplicates to be removed!")  :
+                                       CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
             ui->fr_Overlay->showOverlayHTMLMessage(msg, 5000);
             ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(true);
         }

@@ -56,7 +56,7 @@ namespace BlackSimPlugin
                     const QString details = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3").arg(name, version, simConnectVersion);
                     simulatorFsxP3D->setSimulatorDetails(name, details, version);
                     simulatorFsxP3D->m_simConnectVersion = simConnectVersion;
-                    CLogMessage(simulatorFsxP3D).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
+                    CLogMessage(simulatorFsxP3D).info(u"Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
                     simulatorFsxP3D->setSimConnected();
                     break; // SIMCONNECT_RECV_ID_OPEN
                 }
@@ -95,10 +95,10 @@ namespace BlackSimPlugin
                                     {
                                         const bool removed = simulatorFsxP3D->m_simConnectObjects.remove(simObject.getCallsign());
                                         Q_UNUSED(removed);
-                                        CLogMessage(simulatorFsxP3D).warning("Adding probe failed: %1 %2") << simObject.getCallsign().asString() << simObject.getAircraftModelString();
+                                        CLogMessage(simulatorFsxP3D).warning(u"Adding probe failed: %1 %2") << simObject.getCallsign().asString() << simObject.getAircraftModelString();
                                         if (simulatorFsxP3D->isUsingFsxTerrainProbe())
                                         {
-                                            CLogMessage(simulatorFsxP3D).warning("Disabling terrain probe");
+                                            CLogMessage(simulatorFsxP3D).warning(u"Disabling terrain probe");
                                             simulatorFsxP3D->setUsingFsxTerrainProbe(false);
                                         }
                                         logGenericExceptionInfo = false;
@@ -118,7 +118,7 @@ namespace BlackSimPlugin
                         ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                         const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
                         const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
-                        CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                        CLogMessage(simulatorFsxP3D).warning(u"Caught simConnect exception: '%1' '%2' | send details: '%3'")
                                 << exceptionString << ex
                                 << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
                     }
@@ -221,7 +221,7 @@ namespace BlackSimPlugin
                         {
                             const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);
                             const CSimulatedAircraft remoteAircraft(simObject.getAircraft());
-                            const CStatusMessage msg = CStatusMessage(simulatorFsxP3D).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
+                            const CStatusMessage msg = CStatusMessage(simulatorFsxP3D).error(u"Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
                             CLogMessage::preformatted(msg);
                             emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, false, msg);
                         }
@@ -312,7 +312,7 @@ namespace BlackSimPlugin
                                 {
                                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                                     {
-                                        CLogMessage(simulatorFsxP3D).error("Unknown subrequest (aircraft): '%1' %2")
+                                        CLogMessage(simulatorFsxP3D).error(u"Unknown subrequest (aircraft): '%1' %2")
                                                 << CSimConnectDefinitions::simObjectRequestToString(subRequest)
                                                 << simObject.toQString();
                                     }
@@ -341,7 +341,7 @@ namespace BlackSimPlugin
                                 {
                                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                                     {
-                                        CLogMessage(simulatorFsxP3D).error("Unknown subrequest (probe): '%1' %2")
+                                        CLogMessage(simulatorFsxP3D).error(u"Unknown subrequest (probe): '%1' %2")
                                                 << CSimConnectDefinitions::simObjectRequestToString(subRequest)
                                                 << probeObj.toQString();
                                     }

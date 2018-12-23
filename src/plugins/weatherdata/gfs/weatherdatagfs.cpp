@@ -69,7 +69,7 @@ namespace BlackWxPlugin
             {
                 if (!sApp->isInternetAccessible())
                 {
-                    CLogMessage(this).error("No weather download since network/internet not accessible");
+                    CLogMessage(this).error(u"No weather download since network/internet not accessible");
                     return;
                 }
 
@@ -256,22 +256,22 @@ namespace BlackWxPlugin
                     g2int expand = 1;
                     gribfield *gfld = nullptr;
                     g2_getfld(readPtr, n + 1, unpack, expand, &gfld);
-                    if (gfld->idsectlen < 12) { CLogMessage(this).warning("Identification section: wrong length!"); continue; }
+                    if (gfld->idsectlen < 12) { CLogMessage(this).warning(u"Identification section: wrong length!"); continue; }
 
-                    if (gfld->igdtnum != 0) { CLogMessage(this).warning("Can handle only grid definition template number = 0"); }
+                    if (gfld->igdtnum != 0) { CLogMessage(this).warning(u"Can handle only grid definition template number = 0"); }
 
                     int nscan = gfld->igdtmpl[18];
                     int npnts = gfld->ngrdpts;
                     int nx = gfld->igdtmpl[7];
                     int ny = gfld->igdtmpl[8];
-                    if (nscan != 0) {  CLogMessage(this).error("Can only handle scanning mode NS:WE."); }
-                    if (npnts != nx * ny) {  CLogMessage(this).error("Cannot handle non-regular grid."); }
+                    if (nscan != 0) {  CLogMessage(this).error(u"Can only handle scanning mode NS:WE."); }
+                    if (npnts != nx * ny) {  CLogMessage(this).error(u"Cannot handle non-regular grid."); }
 
                     if (m_gfsWeatherGrid.empty()) { createWeatherGrid(gfld); }
 
                     if (gfld->ipdtnum == 0) { handleProductDefinitionTemplate40(gfld); }
                     else if (gfld->ipdtnum == 8) { handleProductDefinitionTemplate48(gfld); }
-                    else { CLogMessage(this).warning("Cannot handle product definition template %1") << gfld->ipdtnum; continue; }
+                    else { CLogMessage(this).warning(u"Cannot handle product definition template %1") << gfld->ipdtnum; continue; }
 
                     g2_free(gfld);
                 }
@@ -398,17 +398,17 @@ namespace BlackWxPlugin
 
             if (latitude1 < -90.0 || latitude2 < -90.0 || latitude1 > 90.0 || latitude2 > 90.0)
             {
-                CLogMessage(this).warning("Invalid grid definition: lat1 = %1 - lat2 = %2") << latitude1 << latitude2;
+                CLogMessage(this).warning(u"Invalid grid definition: lat1 = %1 - lat2 = %2") << latitude1 << latitude2;
                 return;
             }
             if (longitude1 < 0.0 || longitude2 < 0.0 || longitude1 > 360.0 || longitude2 > 360.0)
             {
-                CLogMessage(this).warning("Invalid grid definition: lon1 = %1 - lon2 = %2") << longitude1 << longitude2;
+                CLogMessage(this).warning(u"Invalid grid definition: lon1 = %1 - lon2 = %2") << longitude1 << longitude2;
                 return;
             }
             if (npnts != nx * ny)
             {
-                CLogMessage(this).warning("Invalid grid definition: npnts != nx * ny!");
+                CLogMessage(this).warning(u"Invalid grid definition: npnts != nx * ny!");
                 return;
             }
 
@@ -418,7 +418,7 @@ namespace BlackWxPlugin
 
             if (south > north)
             {
-                CLogMessage(this).warning("Invalid grid definition: South = %1 - North = %2") << south << north;
+                CLogMessage(this).warning(u"Invalid grid definition: South = %1 - North = %2") << south << north;
                 return;
             }
 
@@ -430,7 +430,7 @@ namespace BlackWxPlugin
                 {
                     if (fabs(dy - dlatitude) > 0.001)
                     {
-                        CLogMessage(this).warning("Invalid grid definition: delta latitude is inconsistent");
+                        CLogMessage(this).warning(u"Invalid grid definition: delta latitude is inconsistent");
                         return;
                     }
                 }
@@ -460,7 +460,7 @@ namespace BlackWxPlugin
                 {
                     if (fabs(dx - fabs(dlongitude)) > 0.001)
                     {
-                        CLogMessage(this).warning("Invalid grid definition: delta longitude is inconsistent");
+                        CLogMessage(this).warning(u"Invalid grid definition: delta longitude is inconsistent");
                         return;
                     }
                 }
@@ -511,7 +511,7 @@ namespace BlackWxPlugin
         {
             if (gfld->ipdtlen != 15)
             {
-                CLogMessage(this).warning("Template 4.0 has wrong length");
+                CLogMessage(this).warning(u"Template 4.0 has wrong length");
                 return;
             }
 
@@ -525,7 +525,7 @@ namespace BlackWxPlugin
             // Make sure the key exists
             if (!m_grib2ParameterTable.contains(key))
             {
-                CLogMessage(this).warning("Unknown GRIB2 parameter: %1 - %2") << parameterCategory << parameterNumber;
+                CLogMessage(this).warning(u"Unknown GRIB2 parameter: %1 - %2") << parameterCategory << parameterNumber;
                 return;
             }
 
@@ -539,7 +539,7 @@ namespace BlackWxPlugin
                 level = std::round(millibarToLevel(valueFirstFixedSurface));
                 break;
             default:
-                CLogMessage(this).warning("Unexpected first fixed surface type: %1") << typeFirstFixedSurface;
+                CLogMessage(this).warning(u"Unexpected first fixed surface type: %1") << typeFirstFixedSurface;
                 return;
             }
 
@@ -573,7 +573,7 @@ namespace BlackWxPlugin
         {
             if (gfld->ipdtlen != 29)
             {
-                CLogMessage(this).warning("Template 4.8 has wrong length.");
+                CLogMessage(this).warning(u"Template 4.8 has wrong length.");
                 return;
             }
 
@@ -585,7 +585,7 @@ namespace BlackWxPlugin
             // Make sure the key exists
             if (!m_grib2ParameterTable.contains(key))
             {
-                CLogMessage(this).warning("Unknown GRIB2 parameter: %1 - %2") << parameterCategory << parameterNumber;
+                CLogMessage(this).warning(u"Unknown GRIB2 parameter: %1 - %2") << parameterCategory << parameterNumber;
                 return;
             }
 

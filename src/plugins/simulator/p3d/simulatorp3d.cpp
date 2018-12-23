@@ -138,7 +138,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not request ground info: '%1' '%2'") << requestId << callsign.asString();
+                const CStatusMessage msg = CStatusMessage(this).error(u"SimConnect, can not request ground info: '%1' '%2'") << requestId << callsign.asString();
                 CLogMessage::preformatted(msg);
             }
 
@@ -236,7 +236,7 @@ namespace BlackSimPlugin
             HRESULT hr = s_ok();
             if (isFailure(hr))
             {
-                CLogMessage(this).error("P3D plugin error: %1") << "initEventsP3D failed";
+                CLogMessage(this).error(u"P3D plugin error: %1") << "initEventsP3D failed";
                 return hr;
             }
             return hr;

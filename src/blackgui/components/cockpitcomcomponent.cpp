@@ -124,7 +124,7 @@ namespace BlackGui
             const CSelcal selcal = ui->editor_Com->getSelcal();
             if (!selcal.isValid())
             {
-                CLogMessage().validationWarning("Invalid SELCAL code");
+                CLogMessage().validationWarning(u"Invalid SELCAL code");
             }
             else if (sGui->getIContextAudio())
             {
@@ -132,7 +132,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage().validationWarning("No audio available");
+                CLogMessage().validationWarning(u"No audio available");
             }
         }
 

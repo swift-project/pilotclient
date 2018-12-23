@@ -368,7 +368,7 @@ namespace BlackGui
         window->restoreGeometry(g);
         window->restoreState(s);
         const QString location = settings.fileName();
-        CLogMessage(this).info("GUI settings are here: '%1'") << location;
+        CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
         return true;
     }
 
@@ -714,7 +714,7 @@ namespace BlackGui
             {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
-                CLogMessage(this).info("Displayed services log.");
+                CLogMessage(this).info(u"Displayed services log.");
             });
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         }
@@ -811,7 +811,7 @@ namespace BlackGui
         const CUrl helpPage = gs.getHelpPageUrl(context);
         if (helpPage.isEmpty())
         {
-            CLogMessage(this).warning("No help page");
+            CLogMessage(this).warning(u"No help page");
             return;
         }
         QDesktopServices::openUrl(helpPage);
@@ -1067,7 +1067,7 @@ namespace BlackGui
                 // changing style freezes the application, so it must not be done in flight mode
                 if (this->getIContextNetwork() && this->getIContextNetwork()->isConnected())
                 {
-                    CLogMessage(this).validationError("Cannot change style while connected to network");
+                    CLogMessage(this).validationError(u"Cannot change style while connected to network");
                 }
                 else
                 {

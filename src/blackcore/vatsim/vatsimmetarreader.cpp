@@ -99,7 +99,7 @@ namespace BlackCore
 
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).info("Terminated METAR decoding process"); // for users
+                CLogMessage(this).info(u"Terminated METAR decoding process"); // for users
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -111,7 +111,7 @@ namespace BlackCore
 
                 if (!this->didContentChange(metarData)) // Quick check by hash
                 {
-                    CLogMessage(this).info("METAR file has same content, skipped");
+                    CLogMessage(this).info(u"METAR file has same content, skipped");
                     return;
                 }
 
@@ -140,7 +140,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading METARs failed '%1' for '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
             }

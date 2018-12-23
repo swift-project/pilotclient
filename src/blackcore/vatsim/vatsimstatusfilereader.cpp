@@ -86,7 +86,7 @@ namespace BlackCore
             if (!this->doWorkCheck())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
-                CLogMessage(this).info("Terminated VATSIM status file parsing process"); // for users
+                CLogMessage(this).info(u"Terminated VATSIM status file parsing process"); // for users
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -110,7 +110,7 @@ namespace BlackCore
                     if (!this->doWorkCheck())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
-                        CLogMessage(this).info("Terminated status parsing process"); // for users
+                        CLogMessage(this).info(u"Terminated status parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
 
@@ -160,7 +160,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading VATSIM status file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading VATSIM status file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFailed, 0);
             }

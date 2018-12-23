@@ -137,7 +137,7 @@ namespace BlackGui
                 gs.setBaseValues(setup);
                 gs.setLogInterpolation(false); // that would globally log all values
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(gs);
-                CLogMessage(this).info("Set global setup: '%1'") << gs.toQString(true);
+                CLogMessage(this).info(u"Set global setup: '%1'") << gs.toQString(true);
 
                 const QPointer<CInterpolationSetupComponent> myself(this);
                 QTimer::singleShot(250, this, [ = ]
@@ -154,7 +154,7 @@ namespace BlackGui
                 const bool ignoreGlobal = ui->cb_IgnoreGlobal->isChecked();
                 if (ignoreGlobal && setup.isEqualToGlobal(gs))
                 {
-                    static const CStatusMessage m = CStatusMessage(this).validationWarning("Same as global setup");
+                    static const CStatusMessage m = CStatusMessage(this).validationWarning(u"Same as global setup");
                     this->showOverlayMessage(m);
                     return;
                 }
@@ -222,7 +222,7 @@ namespace BlackGui
             {
                 if (showOverlay)
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationError("No context");
+                    const CStatusMessage m = CStatusMessage(this).validationError(u"No context");
                     this->showOverlayMessage(m);
                 }
                 return false;
@@ -231,7 +231,7 @@ namespace BlackGui
             {
                 if (showOverlay)
                 {
-                    const CStatusMessage m = CStatusMessage(this).validationError("No simulator available");
+                    const CStatusMessage m = CStatusMessage(this).validationError(u"No simulator available");
                     this->showOverlayMessage(m);
                 }
                 return false;

@@ -121,19 +121,19 @@ namespace BlackGui
             const CUser user(this->getUser());
             const bool validId = m_vatsim ? user.hasValidVatsimId() : user.hasId();
             ui->lblp_Id->setTicked(validId);
-            if (!validId) { msgs.push_back(CStatusMessage(this).validationError("Invalid id")); }
+            if (!validId) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid id")); }
 
             const bool validHomeAirport = user.hasValidHomeBase();
             ui->lblp_HomeAirport->setTicked(validHomeAirport);
-            if (!validHomeAirport) { msgs.push_back(CStatusMessage(this).validationError("Wromg home airport")); }
+            if (!validHomeAirport) { msgs.push_back(CStatusMessage(this).validationError(u"Wromg home airport")); }
 
             const bool validCredentials = user.hasCredentials();
             ui->lblp_Password->setTicked(validCredentials);
-            if (!validCredentials) { msgs.push_back(CStatusMessage(this).validationError("Invalid credentials")); }
+            if (!validCredentials) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid credentials")); }
 
             const bool validRealName = user.hasRealName();
             ui->lblp_RealName->setTicked(validRealName);
-            if (!validRealName) { msgs.push_back(CStatusMessage(this).validationError("Invalid real name")); }
+            if (!validRealName) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid real name")); }
 
             return msgs;
         }

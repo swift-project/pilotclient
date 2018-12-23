@@ -85,18 +85,18 @@ namespace BlackMisc
         }
         if (!QFile(filePath).exists())
         {
-            msg = CStatusMessage().error("file %1 does not exist") << filePath;
+            msg = CStatusMessage().error(u"file %1 does not exist") << filePath;
             return CPixmap();
         }
         QPixmap pm;
         if (pm.load(filePath))
         {
-            msg = CStatusMessage().info("file %1 loaded") << filePath;
+            msg = CStatusMessage().info(u"file %1 loaded") << filePath;
             return CPixmap(pm);
         }
         else
         {
-            msg = CStatusMessage().error("file %1 not loaded") << filePath;
+            msg = CStatusMessage().error(u"file %1 not loaded") << filePath;
             return CPixmap();
         }
     }

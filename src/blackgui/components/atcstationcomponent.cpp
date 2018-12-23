@@ -268,7 +268,7 @@ namespace BlackGui
             if (sender == ui->tvp_AtcStationsBooked)
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
-                CLogMessage(this).info("Requested new bookings");
+                CLogMessage(this).info(u"Requested new bookings");
                 sGui->getIContextNetwork()->requestAtcBookingsUpdate();
             }
             else

@@ -63,7 +63,7 @@ namespace BlackSimPlugin
             {
                 const bool on = parser.toBool(2);
                 const bool s = this->useFsuipc(on);
-                CLogMessage(this, CLogCategory::cmdLine()).info("FSUIPC is '%1'") << boolToOnOff(s);
+                CLogMessage(this, CLogCategory::cmdLine()).info(u"FSUIPC is '%1'") << boolToOnOff(s);
                 return s;
             }
             return CSimulatorPluginCommon::parseDetails(parser);

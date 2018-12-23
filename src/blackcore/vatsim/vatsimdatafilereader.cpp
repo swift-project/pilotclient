@@ -212,7 +212,7 @@ namespace BlackCore
             // Worker thread, make sure to write only synced here!
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).info("Terminated VATSIM file parsing process");
+                CLogMessage(this).info(u"Terminated VATSIM file parsing process");
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -226,7 +226,7 @@ namespace BlackCore
                 if (dataFileData.isEmpty()) { return; }
                 if (!this->didContentChange(dataFileData)) // Quick check by hash
                 {
-                    CLogMessage(this).info("VATSIM file has same content, skipped");
+                    CLogMessage(this).info(u"VATSIM file has same content, skipped");
                     return;
                 }
                 const QList<QStringRef> lines = splitLinesRefs(dataFileData);
@@ -248,7 +248,7 @@ namespace BlackCore
                 {
                     if (!this->doWorkCheck())
                     {
-                        CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
+                        CLogMessage(this).info(u"Terminated VATSIM file parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
 
@@ -349,7 +349,7 @@ namespace BlackCore
                                 const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
                                 if (alreadyRead)
                                 {
-                                    CLogMessage(this).info("VATSIM file has same timestamp, skipped");
+                                    CLogMessage(this).info(u"VATSIM file has same timestamp, skipped");
                                     return;
                                 }
                             }
@@ -426,7 +426,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
             }

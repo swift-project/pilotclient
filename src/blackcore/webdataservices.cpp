@@ -72,7 +72,7 @@ namespace BlackCore
             // will remove info reader because not needed
             readers &= ~CWebReaderFlags::DbInfoDataReader;
             m_readers = readers;
-            CLogMessage(this).info("Remove info object reader because not needed");
+            CLogMessage(this).info(u"Remove info object reader because not needed");
         }
 
         // get entities to be read
@@ -80,7 +80,7 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::DbInfoObjectEntity))
         {
             Q_ASSERT_X(readers.testFlag(CWebReaderFlags::DbInfoDataReader), Q_FUNC_INFO, "info object but no reader");
-            CLogMessage(this).info("Using info objects for swift DB entities");
+            CLogMessage(this).info(u"Using info objects for swift DB entities");
         }
 
         this->initReaders(readers, entities); // reads info objects if required
@@ -312,7 +312,7 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
         if (!sApp->isSwiftDbAccessible())
         {
-            CLogMessage(this).warning("Not triggering load of '%1' because swift DB is not accessible") << CEntityFlags::flagToString(whatToRead);
+            CLogMessage(this).warning(u"Not triggering load of '%1' because swift DB is not accessible") << CEntityFlags::flagToString(whatToRead);
             return CEntityFlags::NoEntity;
         }
 
@@ -362,7 +362,7 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
         if (!sApp->hasWorkingSharedUrl())
         {
-            CLogMessage(this).warning("Not triggering load of '%1' because no working shared URL") << CEntityFlags::flagToString(whatToRead);
+            CLogMessage(this).warning(u"Not triggering load of '%1' because no working shared URL") << CEntityFlags::flagToString(whatToRead);
             return CEntityFlags::NoEntity;
         }
 
@@ -1002,7 +1002,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).warning("DB unreachable, skipping read from DB info data reader");
+                    CLogMessage(this).warning(u"DB unreachable, skipping read from DB info data reader");
                 }
             }
         }
@@ -1019,7 +1019,7 @@ namespace BlackCore
         {
             m_vatsimStatusReader = new CVatsimStatusFileReader(this);
             c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead, typeReaderReadSignals);
-            CLogMessage(this).info("Trigger read of VATSIM status file");
+            CLogMessage(this).info(u"Trigger read of VATSIM status file");
             m_vatsimStatusReader->start(QThread::LowPriority);
 
             // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
@@ -1268,22 +1268,22 @@ namespace BlackCore
 
     void CWebDataServices::receivedBookings(const CAtcStationList &stations)
     {
-        CLogMessage(this).info("Read %1 ATC bookings from network") << stations.size();
+        CLogMessage(this).info(u"Read %1 ATC bookings from network") << stations.size();
     }
 
     void CWebDataServices::receivedMetars(const CMetarList &metars)
     {
-        CLogMessage(this).info("Read %1 METARs") << metars.size();
+        CLogMessage(this).info(u"Read %1 METARs") << metars.size();
     }
 
     void CWebDataServices::vatsimDataFileRead(int lines)
     {
-        CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
+        CLogMessage(this).info(u"Read VATSIM data file, %1 lines") << lines;
     }
 
     void CWebDataServices::vatsimStatusFileRead(int lines)
     {
-        CLogMessage(this).info("Read VATSIM status file, %1 lines") << lines;
+        CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
     }
 
     void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
@@ -1296,16 +1296,16 @@ namespace BlackCore
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(cats).warning("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
             else
             {
-                CLogMessage(cats).error("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
         }
         else
         {
-            CLogMessage(cats).info("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+            CLogMessage(cats).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
         }
 
         m_swiftDbEntitiesRead |= entities;
@@ -1410,7 +1410,7 @@ namespace BlackCore
         if (infoReader->areAllInfoObjectsRead())
         {
             // we have all data and carry on
-            CLogMessage(this).info("Info objects (%1) triggered for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+            CLogMessage(this).info(u"Info objects (%1) triggered for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
             timeOut = QDateTime(); // reset to null
             return true; // no need to wait any longer
         }
@@ -1419,7 +1419,7 @@ namespace BlackCore
         if (timeOut.isValid() && QDateTime::currentDateTimeUtc() > timeOut)
         {
             const QString timeOutString = timeOut.toString();
-            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
+            CLogMessage(this).warning(u"Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
                     << info << CEntityFlags::flagToString(entities)
                     << infoReader->getInfoObjectsUrl().toQString() << timeOutString
                     << infoReader->getName();
@@ -1437,14 +1437,14 @@ namespace BlackCore
             {
                 // ok, this means we are parsing
                 this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                CLogMessage(this).info("Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
                 return false; // wait
             }
             else
             {
                 // we have a response, but a failure, means server is alive, but responded with error
                 // such an error (access, ...) normally will not go away
-                CLogMessage(this).error("Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
+                CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
                 infoReader->setMarkedAsFailed(true);
                 return true; // carry on, regardless of situation
             }
@@ -1470,7 +1470,7 @@ namespace BlackCore
     {
         const CEcosystem es(server.getEcosystem());
         this->setCurrentEcosystem(es);
-        CLogMessage(this).info("Changed data service ecosystem to '%1'") << es.toQString(true);
+        CLogMessage(this).info(u"Changed data service ecosystem to '%1'") << es.toQString(true);
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir) const
@@ -1520,7 +1520,7 @@ namespace BlackCore
             bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_icaoDataReader);
             if (ib)
             {
-                CLogMessage(this).info("Reading from disk in background: %1") << m_icaoDataReader->getSupportedEntitiesAsString();
+                CLogMessage(this).info(u"Reading from disk in background: %1") << m_icaoDataReader->getSupportedEntitiesAsString();
                 s1 = m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
             }
             else
@@ -1538,7 +1538,7 @@ namespace BlackCore
             bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_modelDataReader);
             if (ib)
             {
-                CLogMessage(this).info("Reading from disk in background: %1") << m_modelDataReader->getSupportedEntitiesAsString();
+                CLogMessage(this).info(u"Reading from disk in background: %1") << m_modelDataReader->getSupportedEntitiesAsString();
                 s2 = m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
             }
             else
@@ -1556,7 +1556,7 @@ namespace BlackCore
             bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_airportDataReader);
             if (ib)
             {
-                CLogMessage(this).info("Reading from disk in background: %1") << m_airportDataReader->getSupportedEntitiesAsString();
+                CLogMessage(this).info(u"Reading from disk in background: %1") << m_airportDataReader->getSupportedEntitiesAsString();
                 s3 = m_airportDataReader->readFromJsonFilesInBackground(dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
             }
             else
@@ -1576,17 +1576,17 @@ namespace BlackCore
         msgs.push_back(
             m_icaoDataReader ?
             m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info("No ICAO reader")
+            CStatusMessage(this).info(u"No ICAO reader")
         );
         msgs.push_back(
             m_modelDataReader ?
             m_modelDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info("No model reader")
+            CStatusMessage(this).info(u"No model reader")
         );
         msgs.push_back(
             m_airportDataReader ?
             m_airportDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info("No airport reader")
+            CStatusMessage(this).info(u"No airport reader")
         );
         return msgs;
     }
@@ -1598,17 +1598,17 @@ namespace BlackCore
         msgs.push_back(
             m_icaoDataReader && m_icaoDataReader->supportsAnyOfEntities(entities) ?
             m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info("No ICAO reader or not supporting entities")
+            CStatusMessage(this).info(u"No ICAO reader or not supporting entities")
         );
         msgs.push_back(
             m_modelDataReader && m_modelDataReader->supportsAnyOfEntities(entities) ?
             m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info("No model reader or not supporting entities")
+            CStatusMessage(this).info(u"No model reader or not supporting entities")
         );
         msgs.push_back(
             m_airportDataReader && m_airportDataReader->supportsAnyOfEntities(entities) ?
             m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info("No airport reader or not supporting entities")
+            CStatusMessage(this).info(u"No airport reader or not supporting entities")
         );
         return msgs;
     }

@@ -772,7 +772,7 @@ namespace BlackGui
     {
         if (m_lockTabBar)
         {
-            CLogMessage(this).info("Locked, double click will not cause floating");
+            CLogMessage(this).info(u"Locked, double click will not cause floating");
             return;
         }
         CDockWidgetInfoArea *dw = this->getDockWidgetInfoAreaByTabBarIndex(tabBarIndex);

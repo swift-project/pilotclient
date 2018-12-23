@@ -113,7 +113,7 @@ namespace BlackGui
             const int c = this->getMappingComponent()->getOwnModelsCount();
             if (c < 1)
             {
-                const CStatusMessage m = CStatusMessage(this).error("No models for '%1'") << m_simulatorInfo.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).error(u"No models for '%1'") << m_simulatorInfo.toQString(true);
                 ui->form_OwnModelSet->showOverlayMessage(m);
                 return false;
             }

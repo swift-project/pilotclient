@@ -74,13 +74,13 @@ namespace BlackCore
             const QDir directory(dir);
             if (!directory.exists())
             {
-                return CStatusMessage(this).error("Missing directory '%1'") << dir;
+                return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
             }
 
             whatToRead &= CEntityFlags::AirportEntity; // can handle these entities
             if (whatToRead == CEntityFlags::NoEntity)
             {
-                return CStatusMessage(this).info("'%1' No entity for this reader") << CEntityFlags::flagToString(whatToRead);
+                return CStatusMessage(this).info(u"'%1' No entity for this reader") << CEntityFlags::flagToString(whatToRead);
             }
 
             int c = 0;
@@ -91,7 +91,7 @@ namespace BlackCore
             const QFileInfo fi(fileName);
             if (!fi.exists())
             {
-                msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
             }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirportEntity, msgs))
             {
@@ -227,7 +227,7 @@ namespace BlackCore
             qint64 latestTimestamp = airports.latestTimestampMsecsSinceEpoch();
             if (size > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in airport list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in airport list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
 

@@ -452,7 +452,7 @@ namespace BlackGui
                 const bool equal = sGui->getWebDataServices()->isDbModelEqualForPublishing(model, &modelMsgs);
                 if (equal)
                 {
-                    msgs.push_back(CStatusMessage(this).info("Model '%1' has no change values") << model.getModelStringAndDbKey());
+                    msgs.push_back(CStatusMessage(this).info(u"Model '%1' has no change values") << model.getModelStringAndDbKey());
                 }
                 else
                 {

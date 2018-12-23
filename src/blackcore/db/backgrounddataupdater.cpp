@@ -60,18 +60,18 @@ namespace BlackCore
 
             emit this->consolidating(true);
             int cycle = m_cycle;
-            this->addHistory(CLogMessage(this).info("Background consolidation cycle %1") << cycle);
+            this->addHistory(CLogMessage(this).info(u"Background consolidation cycle %1") << cycle);
 
             switch (cycle)
             {
             case 0:
                 // normally redundant, will be read in other places as well
                 // new metadata for next comparison
-                this->addHistory(CLogMessage(this).info("Triggered info reads from DB"));
+                this->addHistory(CLogMessage(this).info(u"Triggered info reads from DB"));
                 this->triggerInfoReads();
                 break;
             case 1:
-                this->addHistory(CLogMessage(this).info("Synchronize DB entities"));
+                this->addHistory(CLogMessage(this).info(u"Synchronize DB entities"));
                 this->syncDbEntity(CEntityFlags::AirlineIcaoEntity);
                 this->syncDbEntity(CEntityFlags::LiveryEntity);
                 this->syncDbEntity(CEntityFlags::ModelEntity);
@@ -79,11 +79,11 @@ namespace BlackCore
                 this->syncDbEntity(CEntityFlags::AircraftIcaoEntity);
                 break;
             case 2:
-                this->addHistory(CLogMessage(this).info("Synchronize %1") << this->modelCaches(true).getDescription());
+                this->addHistory(CLogMessage(this).info(u"Synchronize %1") << this->modelCaches(true).getDescription());
                 this->syncModelOrModelSetCacheWithDbData(true); // set
                 break;
             case 3:
-                this->addHistory(CLogMessage(this).info("Synchronize %1") << this->modelCaches(false).getDescription());
+                this->addHistory(CLogMessage(this).info(u"Synchronize %1") << this->modelCaches(false).getDescription());
                 this->syncModelOrModelSetCacheWithDbData(false);
                 break;
             default:
@@ -142,13 +142,13 @@ namespace BlackCore
                 {
                     const CStatusMessage m = modelCaches.setCachedModels(simulatorModels, singleSimulator);
                     const int msElapsed = time.elapsed();
-                    this->addHistory(CLogMessage(this).info("Consolidated %1 models (%2) for '%3' in %4ms") << c << description << singleSimulator.convertToQString() << msElapsed);
+                    this->addHistory(CLogMessage(this).info(u"Consolidated %1 models (%2) for '%3' in %4ms") << c << description << singleSimulator.convertToQString() << msElapsed);
                     CLogMessage::preformatted(m);
                     this->addHistory(m);
                 }
                 else
                 {
-                    this->addHistory(CLogMessage(this).info("Synchronized, no changes for '%1'") << singleSimulator.convertToQString());
+                    this->addHistory(CLogMessage(this).info(u"Synchronized, no changes for '%1'") << singleSimulator.convertToQString());
                 }
 
                 if (simulatorsSet.size() > 1)
@@ -173,12 +173,12 @@ namespace BlackCore
             if (!latestDbTs.isValid()) { return; }
             if (latestDbTs <= latestCacheTs)
             {
-                this->addHistory(CLogMessage(this).info("Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
+                this->addHistory(CLogMessage(this).info(u"Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
                                  << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
                 return;
             }
 
-            this->addHistory(CLogMessage(this).info("Background updater (%1) triggering read of '%2' since '%3'")
+            this->addHistory(CLogMessage(this).info(u"Background updater (%1) triggering read of '%2' since '%3'")
                              << CThreadUtils::currentThreadInfo() << entityStr << latestCacheTsStr);
             sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(entity, latestCacheTs);
         }

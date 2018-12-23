@@ -136,7 +136,7 @@ void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
     {
         const QString html = nwReply->readAll().trimmed();
         if (html.isEmpty()) { return; }
-        CLogMessage(this).info("Received news from '%1'") << nwReply->url().toString();
+        CLogMessage(this).info(u"Received news from '%1'") << nwReply->url().toString();
         ui->tbr_LatestNews->setHtml(html); // causes QFSFileEngine::open: No file name specified
         constexpr qint64 newNews = 72 * 3600 * 1000;
         const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
@@ -147,7 +147,7 @@ void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
     }
     else
     {
-        CLogMessage(this).warning("Error received news from '%1'") << nwReply->url().toString();
+        CLogMessage(this).warning(u"Error received news from '%1'") << nwReply->url().toString();
     }
 }
 
@@ -202,7 +202,7 @@ void CSwiftLauncher::loadLatestNews()
 
     if (newsUrl.isEmpty())
     {
-        CLogMessage(this).warning("No working news URL in %1") << newsUrls.toQString();
+        CLogMessage(this).warning(u"No working news URL in %1") << newsUrls.toQString();
         return;
     }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::displayLatestNews});

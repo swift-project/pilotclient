@@ -82,7 +82,7 @@ namespace BlackGui
             const CDistributorList distributors(sGui->getWebDataServices()->getDistributors());
             if (distributors.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).error("No distributors");
+                const CStatusMessage m = CStatusMessage(this).error(u"No distributors");
                 this->showOverlayMessage(m);
                 return;
             }
@@ -95,7 +95,7 @@ namespace BlackGui
             const CDistributorList distributors(sGui->getWebDataServices()->getDistributors().matchesSimulator(sim));
             if (distributors.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).error("No distributors, or no distributors matching %1") << sim.toQString();
+                const CStatusMessage m = CStatusMessage(this).error(u"No distributors, or no distributors matching %1") << sim.toQString();
                 this->showOverlayMessage(m);
                 return;
             }
@@ -108,14 +108,14 @@ namespace BlackGui
             const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(sim);
             if (models.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).error("No data in model set %1") << sim.toQString();
+                const CStatusMessage m = CStatusMessage(this).error(u"No data in model set %1") << sim.toQString();
                 this->showOverlayMessage(m);
                 return;
             }
             const CDistributorList distributors = models.getDistributors();
             if (distributors.isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(this).error("No distributors for model set %1") << sim.toQString();
+                const CStatusMessage m = CStatusMessage(this).error(u"No distributors for model set %1") << sim.toQString();
                 this->showOverlayMessage(m);
                 return;
             }

@@ -62,7 +62,7 @@ namespace BlackGui
         bool CLegalInfoComponent::validateAgreement()
         {
             if (this->isAgreedTo()) { return true; }
-            static const CStatusMessage m = CStatusMessage(this).validationError("You need to agree with the swift license");
+            static const CStatusMessage m = CStatusMessage(this).validationError(u"You need to agree with the swift license");
             this->showOverlayMessage(m);
             return false;
         }
@@ -77,7 +77,7 @@ namespace BlackGui
         void CLegalInfoComponent::showCrashDumpHint()
         {
             if (ui->cb_CrashDumps->isChecked()) { return; }
-            const CStatusMessage m = CStatusMessage(this).info("We recommend to enable crash dump uploads");
+            const CStatusMessage m = CStatusMessage(this).info(u"We recommend to enable crash dump uploads");
             this->showOverlayHTMLMessage(m, 7500);
         }
 

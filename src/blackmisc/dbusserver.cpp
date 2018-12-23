@@ -38,8 +38,8 @@ namespace BlackMisc
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
-                    CLogMessage(this).warning("DBus registration: %1") << connection.lastError().message();
-                    CLogMessage(this).warning("Cannot register DBus service, check server running: dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
+                    CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
+                    CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
                 }
             }
             break;
@@ -50,8 +50,8 @@ namespace BlackMisc
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
-                    CLogMessage(this).warning("DBus registration: %1") << connection.lastError().message();
-                    CLogMessage(this).warning("Cannot register DBus service, check server running: dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
+                    CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
+                    CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
                 }
             }
             break;
@@ -69,11 +69,11 @@ namespace BlackMisc
                 // Note: P2P has no service name
                 if (m_busServer->isConnected())
                 {
-                    CLogMessage(this).info("DBus P2P Server listening on address: '%1'") << m_busServer->address();
+                    CLogMessage(this).info(u"DBus P2P Server listening on address: '%1'") << m_busServer->address();
                 }
                 else
                 {
-                    CLogMessage(this).warning("DBus P2P connection failed: %1") << lastQDBusServerError().message();
+                    CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message();
                 }
                 connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::registerObjectsWithP2PConnection);
             }
@@ -192,7 +192,7 @@ namespace BlackMisc
     {
         Q_ASSERT(! m_objects.isEmpty());
         m_connections.insert(connection.name(), connection);
-        CLogMessage(this).info("New Connection from: '%1'") << connection.name();
+        CLogMessage(this).info(u"New Connection from: '%1'") << connection.name();
         bool success = true;
         for (auto i = m_objects.cbegin(); i != m_objects.cend(); ++i)
         {
@@ -200,11 +200,11 @@ namespace BlackMisc
             const bool ok = connection.registerObject(key, i.value(), registerOptions());
             if (ok)
             {
-                CLogMessage(this).info("Adding '%1' to the new connection '%2'") << key << this->getDBusInterfaceFromClassInfo(i.value());
+                CLogMessage(this).info(u"Adding '%1' to the new connection '%2'") << key << this->getDBusInterfaceFromClassInfo(i.value());
             }
             else
             {
-                CLogMessage(this).info("Adding '%1' failed, connection '%2', error '%3'") << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
+                CLogMessage(this).info(u"Adding '%1' failed, connection '%2', error '%3'") << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
                 success = false;
             }
         }
@@ -223,11 +223,11 @@ namespace BlackMisc
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).info("Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
+                    CLogMessage(this).info(u"Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
                 }
                 else
                 {
-                    CLogMessage(this).error("Error, no success with session bus registration");
+                    CLogMessage(this).error(u"Error, no success with session bus registration");
                 }
             }
             break;
@@ -236,11 +236,11 @@ namespace BlackMisc
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).info("Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
+                    CLogMessage(this).info(u"Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
                 }
                 else
                 {
-                    CLogMessage(this).error("Error, no success with system bus registration");
+                    CLogMessage(this).error(u"Error, no success with system bus registration");
                 }
             }
             break;
@@ -250,11 +250,11 @@ namespace BlackMisc
                 {
                     if (connection.registerObject(path, object, registerOptions()))
                     {
-                        CLogMessage(this).info("Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
+                        CLogMessage(this).info(u"Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
                     }
                     else
                     {
-                        CLogMessage(this).error("Error, no success with %1 registration") << connection.name();
+                        CLogMessage(this).error(u"Error, no success with %1 registration") << connection.name();
                     }
                 }
             }

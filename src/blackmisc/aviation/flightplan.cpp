@@ -428,7 +428,7 @@ namespace BlackMisc
             {
                 if (fileName.isEmpty())
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("No file name")); }
+                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"No file name")); }
                     return CFlightPlan();
                 }
                 else
@@ -436,7 +436,7 @@ namespace BlackMisc
                     QFile f(fileName);
                     if (!f.exists())
                     {
-                        if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("File '%1' does not exist") << fileName); }
+                        if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"File '%1' does not exist") << fileName); }
                         return CFlightPlan();
                     }
                 }
@@ -444,7 +444,7 @@ namespace BlackMisc
                 const QString data = CFileUtils::readFileToString(fileName);
                 if (data.isEmpty())
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError("File '%1' does not contain data") << fileName); }
+                    if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"File '%1' does not contain data") << fileName); }
                     return CFlightPlan();
                 }
 

@@ -468,7 +468,7 @@ namespace BlackSimPlugin
             Q_UNUSED(offset);
             if (enable)
             {
-                CLogMessage(this).info("X-Plane provides real time synchronization, use this one");
+                CLogMessage(this).info(u"X-Plane provides real time synchronization, use this one");
             }
             return false;
         }
@@ -566,7 +566,7 @@ namespace BlackSimPlugin
                 }
             }
             while (dir.cdUp());
-            CLogMessage(this).warning("Failed to find CSL package for %1") << modelFile;
+            CLogMessage(this).warning(u"Failed to find CSL package for %1") << modelFile;
             return {};
         }
 
@@ -583,14 +583,14 @@ namespace BlackSimPlugin
             if (!this->isAircraftInRange(newRemoteAircraft.getCallsign()))
             {
                 // next cycle will be called by callbacks or timer
-                CLogMessage(this).warning("Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
+                CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
                 return false;
             }
 
             if (this->canAddAircraft())
             {
                 // no aircraft pending, add
-                CLogMessage(this).info("Adding '%1' to XPlane") << newRemoteAircraft.getCallsign();
+                CLogMessage(this).info(u"Adding '%1' to XPlane") << newRemoteAircraft.getCallsign();
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 m_addingInProgressAircraft.insert(newRemoteAircraft.getCallsign(), now);
                 const QString callsign = newRemoteAircraft.getCallsign().asString();
@@ -990,17 +990,17 @@ namespace BlackSimPlugin
 
             if (!addedRemoteAircraft.hasCallsign())
             {
-                CLogMessage(this).warning("Aircraft '%1' no longer in range, will be removed") << callsign;
+                CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will be removed") << callsign;
                 this->triggerRemoveAircraft(cs, TimeoutAdding);
                 return;
             }
 
-            CLogMessage(this).info("Added aircraft '%1'") << callsign;
+            CLogMessage(this).info(u"Added aircraft '%1'") << callsign;
             if (!wasPending)
             {
                 // timeout?
                 // slow adding?
-                CLogMessage(this).warning("Added callsign '%1' was not in progress anymore. Timeout?") << callsign;
+                CLogMessage(this).warning(u"Added callsign '%1' was not in progress anymore. Timeout?") << callsign;
             }
 
             const bool rendered = true;
@@ -1021,12 +1021,12 @@ namespace BlackSimPlugin
 
             if (failedRemoteAircraft.hasCallsign())
             {
-                CLogMessage(this).warning("Adding aircraft failed: '%1'") << callsign;
+                CLogMessage(this).warning(u"Adding aircraft failed: '%1'") << callsign;
                 failedRemoteAircraft.setRendered(false);
             }
             else
             {
-                CLogMessage(this).warning("Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
+                CLogMessage(this).warning(u"Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
             }
 
             const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
@@ -1053,7 +1053,7 @@ namespace BlackSimPlugin
             // next add cycle
             const CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
             m_pendingToBeAddedAircraft.pop_front();
-            CLogMessage(this).info("Adding next pending aircraft '%1', pending %2, in progress %3") << newRemoteAircraft.getCallsignAsString() << m_pendingToBeAddedAircraft.size() << m_addingInProgressAircraft.size();
+            CLogMessage(this).info(u"Adding next pending aircraft '%1', pending %2, in progress %3") << newRemoteAircraft.getCallsignAsString() << m_pendingToBeAddedAircraft.size() << m_addingInProgressAircraft.size();
             this->physicallyAddRemoteAircraft(newRemoteAircraft);
         }
 
@@ -1082,7 +1082,7 @@ namespace BlackSimPlugin
             for (const CCallsign &cs : as_const(timeoutCallsigns))
             {
                 m_addingInProgressAircraft.remove(cs);
-                CLogMessage(this).warning("Adding for '%1' timed out") << cs.asString();
+                CLogMessage(this).warning(u"Adding for '%1' timed out") << cs.asString();
             }
 
             return timeoutCallsigns.size();
@@ -1214,20 +1214,20 @@ namespace BlackSimPlugin
             QString xswiftbusVersion = service.getVersionNumber();
             if (! swiftVersion.contains(xswiftbusVersion))
             {
-                CLogMessage(this).error("You are using an incorrect version of XSwiftBus. Make sure to install %1 into X-Plane plugins!") << xswiftbusVersion;
+                CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. Make sure to install %1 into X-Plane plugins!") << xswiftbusVersion;
                 return;
             }
 
             if (!traffic.initialize())
             {
-                CLogMessage(this).error("Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
+                CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
                 return;
             }
 
             MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
             if (! info.hasAcquired)
             {
-                CLogMessage(this).error("Connection to XSwiftBus successful, but could not acquire multiplayer planes. %1 has acquired them already. Disable %2 or remove it if not required and reload XSwiftBus.") << info.owner << info.owner;
+                CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not acquire multiplayer planes. %1 has acquired them already. Disable %2 or remove it if not required and reload XSwiftBus.") << info.owner << info.owner;
                 return;
             }
 

@@ -41,7 +41,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
         if (coreMode == CoreModes::CoreInGuiProcess && !dBusAddress.isEmpty())
         {
             const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
-                                     error("Inconsistent pair DBus: '%1' and core: '%2'")
+                                     error(u"Inconsistent pair DBus: '%1' and core: '%2'")
                                      << dBusAddress << coreModeStr;
             return CStatusMessageList(m) ;
         }
@@ -53,7 +53,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     {
         coreMode = CoreModes::CoreExternalAudioGui; // default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
-                                 info("No DBus address, setting core mode: '%1'")
+                                 info(u"No DBus address, setting core mode: '%1'")
                                  << CoreModes::coreModeToString(coreMode);
         msgs.push_back(m);
     }
@@ -61,7 +61,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     {
         dBusAddress = CDBusServer::sessionBusAddress(); // a possible default
         const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
-                                 info("Setting DBus address to '%1'")
+                                 info(u"Setting DBus address to '%1'")
                                  << dBusAddress;
         msgs.push_back(m);
     }

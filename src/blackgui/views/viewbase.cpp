@@ -691,19 +691,19 @@ namespace BlackGui
             {
                 if (fileName.isEmpty())
                 {
-                    m = CStatusMessage(this).error("Load canceled, no file name");
+                    m = CStatusMessage(this).error(u"Load canceled, no file name");
                     break;
                 }
 
                 const QString json(CFileUtils::readFileToString(fileName));
                 if (json.isEmpty())
                 {
-                    m = CStatusMessage(this).warning("Reading '%1' yields no data") << fileName;
+                    m = CStatusMessage(this).warning(u"Reading '%1' yields no data") << fileName;
                     break;
                 }
                 if (!Json::looksLikeSwiftJson(json))
                 {
-                    m = CStatusMessage(this).warning("No swift JSON '%1'") << fileName;
+                    m = CStatusMessage(this).warning(u"No swift JSON '%1'") << fileName;
                     break;
                 }
 
@@ -713,7 +713,7 @@ namespace BlackGui
                     const QJsonObject jsonObject = Json::jsonObjectFromString(json, allowCacheFormat);
                     if (jsonObject.isEmpty())
                     {
-                        m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
+                        m = CStatusMessage(this).warning(u"No valid swift JSON '%1'") << fileName;
                         break;
                     }
 
@@ -726,7 +726,7 @@ namespace BlackGui
                         containerVariant.convertFromJson(jsonObject);
                         if (!containerVariant.canConvert<ContainerType>())
                         {
-                            m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
+                            m = CStatusMessage(this).warning(u"No valid swift JSON '%1'") << fileName;
                             break;
                         }
                         container = containerVariant.value<ContainerType>();

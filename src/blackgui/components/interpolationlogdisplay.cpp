@@ -400,7 +400,7 @@ namespace BlackGui
                 if (!sApp || sApp->isShuttingDown()) { break; } // stop and return
                 if (m_callsign.isEmpty())
                 {
-                    // static const CStatusMessage ms = CStatusMessage(this).validationError("No callsign for logging");
+                    // static const CStatusMessage ms = CStatusMessage(this).validationError(u"No callsign for logging");
                     // m = ms;
                     break;
                 }
@@ -408,14 +408,14 @@ namespace BlackGui
                 const bool canUpdateLog = m_airspaceMonitor && m_simulator && m_simulator->isConnected() && !m_simulator->isShuttingDown();
                 if (!canUpdateLog)
                 {
-                    static const CStatusMessage ms = CStatusMessage(this).validationError("No airspace monitor or simulator or shutting down");
+                    static const CStatusMessage ms = CStatusMessage(this).validationError(u"No airspace monitor or simulator or shutting down");
                     m = ms;
                     break;
                 }
 
                 if (!m_simulator->isLogCallsign(m_callsign))
                 {
-                    static const CStatusMessage ms = CStatusMessage(this).validationError("No longer logging callsign");
+                    static const CStatusMessage ms = CStatusMessage(this).validationError(u"No longer logging callsign");
                     m = ms;
                     break;
                 }

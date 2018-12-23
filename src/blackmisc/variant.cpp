@@ -97,7 +97,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(&a).warning("Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
+                    CLogMessage(&a).warning(u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
                             << a.typeName() << a.userType() << b.typeName() << b.userType();
                     return 0;
                 }
@@ -148,7 +148,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).warning("Unsupported CVariant type for toJson: %1 (%2)") << typeName() << userType();
+                    CLogMessage(this).warning(u"Unsupported CVariant type for toJson: %1 (%2)") << typeName() << userType();
                 }
             }
             catch (const Private::CVariantException &ex)
@@ -335,7 +335,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).warning("Unsupported CVariant type for getValueHash: %1 (%2)") << typeName() << userType();
+                    CLogMessage(this).warning(u"Unsupported CVariant type for getValueHash: %1 (%2)") << typeName() << userType();
                     return 0;
                 }
             }
@@ -475,7 +475,7 @@ namespace BlackMisc
     {
         if (localUserType == static_cast<int>(QVariant::Invalid))
         {
-            CLogMessage(&variant).warning("Invalid type for unmarshall: %1") << typeName;
+            CLogMessage(&variant).warning(u"Invalid type for unmarshall: %1") << typeName;
         }
 
         // my business?

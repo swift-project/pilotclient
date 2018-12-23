@@ -64,7 +64,7 @@ namespace BlackMisc
                 const bool c = this->connection().connect(this->service(), this->path(), this->interface(), method.name(), this->parent(), signature);
                 if (!c)
                 {
-                    CLogMessage(this).error("Cannot connect signal: %1") << QString(signature);
+                    CLogMessage(this).error(u"Cannot connect signal: %1") << QString(signature);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace BlackMisc
             pr.waitForFinished();
             if(pr.isError())
             {
-                CLogMessage(this).debug("CGenericDBusInterface::callDBusRet(%1) returned: %2") << method << pr.error().message();
+                CLogMessage(this).debug(u"CGenericDBusInterface::callDBusRet(%1) returned: %2") << method << pr.error().message();
             }
             return pr;
         }

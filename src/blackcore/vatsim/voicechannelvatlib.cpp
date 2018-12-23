@@ -52,7 +52,7 @@ namespace BlackCore
             CServer::ServerType connectedServerType = sApp->getIContextNetwork()->getConnectedServer().getServerType();
             if (!sApp->getIContextNetwork()->isConnected() || connectedServerType != CServer::FSDServerVatsim)
             {
-                CLogMessage(this).warning("Cannot join VATSIM voice channel without active VATSIM FSD connection!");
+                CLogMessage(this).warning(u"Cannot join VATSIM voice channel without active VATSIM FSD connection!");
                 return;
             }
 

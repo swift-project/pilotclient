@@ -200,12 +200,12 @@ namespace BlackGui
             const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
             if (dbModels.isEmpty())
             {
-                CLogMessage(this).warning("No DB models to consolidate with");
+                CLogMessage(this).warning(u"No DB models to consolidate with");
                 return;
             }
             if (!this->modelsTargetSetable())
             {
-                CLogMessage(this).warning("No setable target");
+                CLogMessage(this).warning(u"No setable target");
                 return;
             }
 
@@ -219,17 +219,17 @@ namespace BlackGui
                 if (filtered)
                 {
                     this->modelsTargetUpdatable()->updateModels(models);
-                    CLogMessage(this).info("Consolidated %1/%2 filtered models with DB") << c << models.size();
+                    CLogMessage(this).info(u"Consolidated %1/%2 filtered models with DB") << c << models.size();
                 }
                 else
                 {
                     this->modelsTargetSetable()->setModels(models);
-                    CLogMessage(this).info("Consolidated %1/%2 models with DB") << c << models.size();
+                    CLogMessage(this).info(u"Consolidated %1/%2 models with DB") << c << models.size();
                 }
             }
             else
             {
-                CLogMessage(this).info("No data consolidated with DB");
+                CLogMessage(this).info(u"No data consolidated with DB");
                 this->modelView()->hideLoadIndicator();
             }
         }
@@ -243,7 +243,7 @@ namespace BlackGui
             if (models.isEmpty()) { return; }
             if (!this->modelsTargetUpdatable())
             {
-                CLogMessage(this).warning("No updatable target");
+                CLogMessage(this).warning(u"No updatable target");
                 return;
             }
             const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
@@ -317,7 +317,7 @@ namespace BlackGui
             {
                 if (!this->modelsTargetUpdatable())
                 {
-                    CLogMessage(this).warning("No updatable target");
+                    CLogMessage(this).warning(u"No updatable target");
                 }
                 else
                 {
@@ -327,7 +327,7 @@ namespace BlackGui
             this->modelView()->hideLoadIndicator(i);
             if (!removedModelStrings.isEmpty() && this->getMappingComponent())
             {
-                const CStatusMessage m = CStatusMessage(this).info("Removed %1 model(s)") << removedModelStrings.size();
+                const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
                 this->getMappingComponent()->showOverlayMessage(m, 5000);
             }
         }
@@ -339,7 +339,7 @@ namespace BlackGui
             if (models.isEmpty()) { return; }
             if (!this->modelsTargetUpdatable())
             {
-                CLogMessage(this).warning("No updatable target");
+                CLogMessage(this).warning(u"No updatable target");
                 return;
             }
 
@@ -352,7 +352,7 @@ namespace BlackGui
             this->modelView()->hideLoadIndicator(i);
             if (!removedModelStrings.isEmpty() && this->getMappingComponent())
             {
-                const CStatusMessage m = CStatusMessage(this).info("Removed %1 model(s)") << removedModelStrings.size();
+                const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
                 this->getMappingComponent()->showOverlayMessage(m, 5000);
             }
         }

@@ -310,7 +310,7 @@ namespace BlackCore
             qint64 latestTimestamp = liveries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in livery list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in livery list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             const CStatusMessage cacheMsg = m_liveryCache.set(liveries, latestTimestamp);
@@ -357,7 +357,7 @@ namespace BlackCore
             qint64 latestTimestamp = distributors.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in distributor list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in distributor list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
 
@@ -406,7 +406,7 @@ namespace BlackCore
             qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
-                CLogMessage(this).error("No timestamp in model list, setting to last modified value");
+                CLogMessage(this).error(u"No timestamp in model list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             const CStatusMessage cacheMsg = m_modelCache.set(models, latestTimestamp);
@@ -421,7 +421,7 @@ namespace BlackCore
             const QDir directory(dir);
             if (!directory.exists())
             {
-                return CStatusMessage(this).error("Missing directory '%1'") << dir;
+                return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
             }
 
             whatToRead &= CEntityFlags::DistributorLiveryModel; // supported
@@ -434,7 +434,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::LiveryEntity, msgs))
                 {
@@ -445,7 +445,7 @@ namespace BlackCore
                     const QJsonObject liveriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (liveriesJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {
@@ -472,7 +472,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::ModelEntity, msgs))
                 {
@@ -483,7 +483,7 @@ namespace BlackCore
                     const QJsonObject modelsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (modelsJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {
@@ -510,7 +510,7 @@ namespace BlackCore
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
                 }
                 else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::DistributorEntity, msgs))
                 {
@@ -521,7 +521,7 @@ namespace BlackCore
                     const QJsonObject distributorsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                     if (distributorsJson.isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
                     }
                     else
                     {

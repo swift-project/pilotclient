@@ -186,7 +186,7 @@ namespace BlackInput
             // Is it grabbed by someone else?
             if ((ioctl(fd, EVIOCGRAB, 1) < 0))
             {
-                BlackMisc::CLogMessage(this).warning("Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
+                BlackMisc::CLogMessage(this).warning(u"Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
             }
             else
             {
@@ -194,7 +194,7 @@ namespace BlackInput
                 uint8_t keys[KEY_MAX / 8 + 1];
                 if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) && (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
                 {
-                    BlackMisc::CLogMessage(this).info("Found keyboard: %1") << deviceName;
+                    BlackMisc::CLogMessage(this).info(u"Found keyboard: %1") << deviceName;
 
                     fcntl(inputFile->handle(), F_SETFL, O_NONBLOCK);
                     connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile.data()), &QSocketNotifier::activated, this, &CKeyboardLinux::inputReadyRead);

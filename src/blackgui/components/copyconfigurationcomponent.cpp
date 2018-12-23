@@ -133,11 +133,11 @@ namespace BlackGui
             {
                 if (!copied.isEmpty())
                 {
-                    CLogMessage(this).info("Copied %1 files, list: '%2'") << copied.size() << copied.join(", ");
+                    CLogMessage(this).info(u"Copied %1 files, list: '%2'") << copied.size() << copied.join(", ");
                 }
                 if (!skipped.isEmpty())
                 {
-                    CLogMessage(this).info("Skipped %1 files, list: '%2'") << skipped.size() << skipped.join(", ");
+                    CLogMessage(this).info(u"Skipped %1 files, list: '%2'") << skipped.size() << skipped.join(", ");
                 }
             }
 

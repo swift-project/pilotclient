@@ -222,7 +222,7 @@ namespace BlackInput
         CKeyboardMacOS *keyboardMac = static_cast<CKeyboardMacOS*>(refcon);
         if (type == kCGEventTapDisabledByTimeout)
         {
-            BlackMisc::CLogMessage(static_cast<CKeyboardMacOS *>(nullptr)).warning("Event tap got disabled by timeout. Enable it again.");
+            BlackMisc::CLogMessage(static_cast<CKeyboardMacOS *>(nullptr)).warning(u"Event tap got disabled by timeout. Enable it again.");
             CGEventTapEnable(keyboardMac->m_eventTap, true);
         }
         else

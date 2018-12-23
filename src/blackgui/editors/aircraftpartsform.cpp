@@ -72,14 +72,14 @@ namespace BlackGui
             CAircraftParts parts;
             if (jsonParts.isEmpty())
             {
-                CLogMessage(this).validationError("No JSON content");
+                CLogMessage(this).validationError(u"No JSON content");
                 return parts;
             }
             QJsonParseError jsonError;
             QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonParts.toUtf8(), &jsonError));
             if (jsonError.error != QJsonParseError::NoError)
             {
-                CLogMessage(this).validationError("Parse error: %1") << jsonError.errorString();
+                CLogMessage(this).validationError(u"Parse error: %1") << jsonError.errorString();
                 return parts;
             }
 

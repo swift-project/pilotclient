@@ -99,7 +99,7 @@ namespace BlackCore
                         {
                             this->admitCaches(currentEntity);
                             cachedEntities |= currentEntity; // read from cache
-                            CLogMessage(this).info("Using cache for '%1' (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
+                            CLogMessage(this).info(u"Using cache for '%1' (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
                         }
                         else
                         {
@@ -109,23 +109,23 @@ namespace BlackCore
 
                             if (changedUrl)
                             {
-                                CLogMessage(this).info("Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
+                                CLogMessage(this).info(u"Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
                                         << currentEntityName << oldUrlInfo.toQString()
                                         << newUrlInfo.toQString() << rmDbOrSharedFlagString;
                             }
                             else
                             {
-                                CLogMessage(this).info("Cache for '%1' outdated, latest entity (%2, %3), reading '%4'") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp << rmDbOrSharedFlagString;
+                                CLogMessage(this).info(u"Cache for '%1' outdated, latest entity (%2, %3), reading '%4'") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp << rmDbOrSharedFlagString;
                             }
                         }
                     }
                     else
                     {
-                        if (!rmDbReadingOrShared) { CLogMessage(this).info("No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
-                        if (!hasDbInfoObjects) { CLogMessage(this).info("No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                        if (!rmDbReadingOrShared) { CLogMessage(this).info(u"No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                        if (!hasDbInfoObjects) { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
                         if (currentEntityCount > 0)
                         {
-                            CLogMessage(this).info("Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
+                            CLogMessage(this).info(u"Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
                         }
                         else
                         {
@@ -134,12 +134,12 @@ namespace BlackCore
                             if (!rmDbReadingOrShared)
                             {
                                 // intentionally we do not want to read from DB/shared
-                                CLogMessage(this).info("Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
+                                CLogMessage(this).info(u"Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
                             }
                             else
                             {
                                 // we want to read from DB/shared, but have no info object
-                                CLogMessage(this).info("No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                                CLogMessage(this).info(u"No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
                             }
                         }
                         cachedEntities |= currentEntity; // read from cache
@@ -164,14 +164,14 @@ namespace BlackCore
             // Real read from DB
             if (dbEntities != CEntityFlags::NoEntity)
             {
-                CLogMessage(this).info("Start reading DB entities: %1") << CEntityFlags::flagToString(dbEntities);
+                CLogMessage(this).info(u"Start reading DB entities: %1") << CEntityFlags::flagToString(dbEntities);
                 this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
             }
 
             // Real read from shared
             if (sharedEntities != CEntityFlags::NoEntity)
             {
-                CLogMessage(this).info("Start reading shared entities: %1") << CEntityFlags::flagToString(sharedEntities);
+                CLogMessage(this).info(u"Start reading shared entities: %1") << CEntityFlags::flagToString(sharedEntities);
                 this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::Shared, newerThan);
             }
         }
@@ -191,7 +191,7 @@ namespace BlackCore
                 if (newerHeaderEntities != entities)
                 {
                     const CEntityFlags::Entity validInCacheEntities = (entities ^ newerHeaderEntities) & entities;
-                    CLogMessage(this).info("Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::flagToString(entities) << CEntityFlags::flagToString(newerHeaderEntities);
+                    CLogMessage(this).info(u"Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::flagToString(entities) << CEntityFlags::flagToString(newerHeaderEntities);
 
                     // In case we have difference entities we treat them as they were loaded, they result from still being in the cache
                     // Using timer to first finish this function, then the resulting signal
@@ -394,7 +394,7 @@ namespace BlackCore
             const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
             if (urlSharedDbdata.isEmpty())
             {
-                CLogMessage(this).warning("No working shared URL, cannot request headers");
+                CLogMessage(this).warning(u"No working shared URL, cannot request headers");
                 return 0;
             }
 
@@ -407,7 +407,7 @@ namespace BlackCore
                 url.appendPath(fileName);
 
                 const QString entityString = CEntityFlags::flagToString(currentEntity);
-                CLogMessage(this).info("Triggered read of header for shared file of '%1'") << entityString;
+                CLogMessage(this).info(u"Triggered read of header for shared file of '%1'") << entityString;
                 const QNetworkReply *reply = sApp->headerFromNetwork(url, { this, &CDatabaseReader::receivedSharedFileHeader });
                 if (reply) { c++; }
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);
@@ -497,7 +497,7 @@ namespace BlackCore
         {
             // never emit when lock is held, deadlock
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
-            CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
+            CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
             emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
         }
 
@@ -553,7 +553,7 @@ namespace BlackCore
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
             m_sharedFileResponses[entity] = headerResponse;
 
-            CLogMessage(this).info("Received header for shared file of '%1' from '%2'") << fileName << headerResponse.getUrl().toQString();
+            CLogMessage(this).info(u"Received header for shared file of '%1' from '%2'") << fileName << headerResponse.getUrl().toQString();
             emit this->sharedFileHeaderRead(entity, fileName, !headerResponse.hasWarningOrAboveMessage());
         }
 
@@ -618,8 +618,8 @@ namespace BlackCore
             {
                 const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), entities, overrideNewerOnly);
                 return s ?
-                       CStatusMessage(this).info("Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
-                       CStatusMessage(this).error("Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
+                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
+                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
             }
             else
             {
@@ -657,19 +657,19 @@ namespace BlackCore
             const qint64 cacheTs = cacheDateTime.toUTC().toMSecsSinceEpoch();
             if (fileTs > cacheTs)
             {
-                msgs.push_back(CStatusMessage(this).info("File '%1' is newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+                msgs.push_back(CStatusMessage(this).info(u"File '%1' is newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
                 return true;
             }
             else
             {
-                msgs.push_back(CStatusMessage(this).info("File '%1' is not newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+                msgs.push_back(CStatusMessage(this).info(u"File '%1' is not newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
                 return true;
             }
         }
 
         void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed, const CDatabaseReader::JsonDatastoreResponse &response) const
         {
-            CLogMessage(this).info("Parsed %1 %2 in %3ms, thread %4 | '%5'")
+            CLogMessage(this).info(u"Parsed %1 %2 in %3ms, thread %4 | '%5'")
                     << size << entity << msElapsed
                     << CThreadUtils::currentThreadInfo() << response.toQString();
         }

@@ -214,11 +214,11 @@ namespace BlackMisc
             if (statusMsgs.hasWarningOrErrorMessages())
             {
                 CLogMessage(this).log(m_loadingMessages.worstSeverity(),
-                                      "Message loading produced %1 error and %2 warning messages") << errors << warnings;
+                                      u"Message loading produced %1 error and %2 warning messages") << errors << warnings;
             }
             else
             {
-                CLogMessage(this).info("Loading '%1' finished, success for '%2'") << IAircraftModelLoader::enumToString(info) << simulator.toQString();
+                CLogMessage(this).info(u"Loading '%1' finished, success for '%2'") << IAircraftModelLoader::enumToString(info) << simulator.toQString();
             }
         }
 
