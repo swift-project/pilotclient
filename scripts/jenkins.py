@@ -61,9 +61,9 @@ class Builder:
 
         if eolInMonth > 0:
             eolYear = date.today().year
-            eolMonth = date.today().month + eolInMonth
+            eolMonth = date.today().month + eolInMonth - 1
             eolYear = eolYear + ( eolMonth / 12 )
-            eolMonth = eolMonth % 12
+            eolMonth = eolMonth % 12 + 1
             eolDate = date(int(eolYear), int(eolMonth), 1)
             print('Setting EOL date to ' + eolDate.strftime('%Y%m%d'))
             qmake_call += ['BLACK_EOL=' + eolDate.strftime('%Y%m%d')]
