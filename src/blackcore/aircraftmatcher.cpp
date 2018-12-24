@@ -753,6 +753,26 @@ namespace BlackCore
         return models.size();
     }
 
+    void CAircraftMatcher::disableModelsForMatching(const CAircraftModelList &removedModels, bool incremental)
+    {
+        if (incremental)
+        {
+            m_modelSet.removeModelsWithString(removedModels, Qt::CaseInsensitive);
+            m_disabledModels.push_back(removedModels);
+        }
+        else
+        {
+            this->restoreDisabledModels();
+            m_disabledModels = removedModels;
+            m_modelSet.removeModelsWithString(removedModels, Qt::CaseInsensitive);
+        }
+    }
+
+    void CAircraftMatcher::restoreDisabledModels()
+    {
+        m_modelSet.replaceOrAddModelsWithString(m_disabledModels, Qt::CaseInsensitive);
+    }
+
     void CAircraftMatcher::setDefaultModel(const CAircraftModel &defaultModel)
     {
         m_defaultModel = defaultModel;

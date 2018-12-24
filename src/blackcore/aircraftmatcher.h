@@ -189,6 +189,13 @@ namespace BlackCore
         //! \note uses a set from "somewhere else" so it can also be used with arbitrary sets for testing
         int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator, bool forced);
 
+        //! Remove a model for matching
+        //! \remark effective until new set is set
+        void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental);
+
+        //! Restore the models removed with CAircraftMatcher::disableModelForMatching
+        void restoreDisabledModels();
+
         //! Default model
         const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const { return m_defaultModel; }
 
@@ -290,13 +297,14 @@ namespace BlackCore
         //! \threadsafe
         static bool isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb);
 
-        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;         //!< setup
-        BlackMisc::Simulation::CAircraftModel        m_defaultModel;  //!< model to be used as default model
-        BlackMisc::Simulation::CAircraftModelList    m_modelSet;      //!< models used for model matching
-        BlackMisc::Simulation::CAircraftModelList    m_removedModels; //!< removed models
-        BlackMisc::Simulation::CSimulatorInfo        m_simulator;     //!< simulator (optional)
-        BlackMisc::Simulation::CMatchingStatistics   m_statistics;    //!< matching statistics
-        QString                                      m_modelSetInfo;  //!< info string
+        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;          //!< setup
+        BlackMisc::Simulation::CAircraftModel        m_defaultModel;   //!< model to be used as default model
+        BlackMisc::Simulation::CAircraftModelList    m_modelSet;       //!< models used for model matching
+        BlackMisc::Simulation::CAircraftModelList    m_removedModels;  //!< removed models
+        BlackMisc::Simulation::CAircraftModelList    m_disabledModels; //!< disabled models for matching
+        BlackMisc::Simulation::CSimulatorInfo        m_simulator;      //!< simulator (optional)
+        BlackMisc::Simulation::CMatchingStatistics   m_statistics;     //!< matching statistics
+        QString                                      m_modelSetInfo;   //!< info string
     };
 } // namespace
 
