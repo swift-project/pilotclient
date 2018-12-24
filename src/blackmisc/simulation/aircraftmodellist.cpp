@@ -562,6 +562,12 @@ namespace BlackMisc
             return r > 0;
         }
 
+        int CAircraftModelList::removeModelsWithString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
+        {
+            if (models.isEmpty()) { return 0; }
+            return this->removeModelsWithString(models.getModelStringList(false), sensitivity);
+        }
+
         int CAircraftModelList::removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
         {
             if (modelStrings.isEmpty()) { return 0; }
