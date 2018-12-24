@@ -192,6 +192,12 @@ namespace BlackCore
             //! Model set completer string
             virtual QStringList getModelSetCompleterStrings(bool sorted) const = 0;
 
+            //! \copydoc CAircraftMatcher::disableModelsForMatching
+            virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) = 0;
+
+            //! \copydoc CAircraftMatcher::restoreDisabledModels
+            virtual void restoreDisabledModels() = 0;
+
             //! Known model?
             virtual bool isKnownModel(const QString &modelstring) const = 0;
 

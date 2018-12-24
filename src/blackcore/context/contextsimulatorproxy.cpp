@@ -169,6 +169,16 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInternals>(QLatin1String("getSimulatorInternals"));
         }
 
+        void CContextSimulatorProxy::disableModelsForMatching(const CAircraftModelList &removedModels, bool incremental)
+        {
+            m_dBusInterface->callDBus(QLatin1String("disableModelsForMatching"), removedModels, incremental);
+        }
+
+        void CContextSimulatorProxy::restoreDisabledModels()
+        {
+            m_dBusInterface->callDBus(QLatin1String("restoreDisabledModels"));
+        }
+
         bool CContextSimulatorProxy::setTimeSynchronization(bool enable, const CTime &offset)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("setTimeSynchronization"), enable, offset);
@@ -214,12 +224,12 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1String("getTimeSynchronizationOffset"));
         }
 
-        bool CContextSimulatorProxy::startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
+        bool CContextSimulatorProxy::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("startSimulatorPlugin"), simulatorInfo);
         }
 
-        void CContextSimulatorProxy::stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
+        void CContextSimulatorProxy::stopSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
         {
             m_dBusInterface->callDBus(QLatin1String("stopSimulatorPlugin"), simulatorInfo);
         }

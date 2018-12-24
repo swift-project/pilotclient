@@ -244,6 +244,20 @@ namespace BlackCore
             return this->getModelSet().size();
         }
 
+        void CContextSimulator::disableModelsForMatching(const CAircraftModelList &removedModels, bool incremental)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
+            m_aircraftMatcher.disableModelsForMatching(removedModels, incremental);
+        }
+
+        void CContextSimulator::restoreDisabledModels()
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
+            m_aircraftMatcher.restoreDisabledModels();
+        }
+
         CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }

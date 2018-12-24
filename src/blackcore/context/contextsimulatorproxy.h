@@ -76,6 +76,8 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override;
             virtual int getModelSetCount() const override;
             virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
+            virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override;
+            virtual void restoreDisabledModels() override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual bool isTimeSynchronized() const override;
             virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override;

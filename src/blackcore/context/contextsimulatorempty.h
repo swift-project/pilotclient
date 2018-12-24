@@ -132,6 +132,20 @@ namespace BlackCore
                 return QStringList();
             }
 
+            //! \copydoc CAircraftMatcher::disableModelsForMatching
+            virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(removedModels);
+                Q_UNUSED(incremental);
+            }
+
+            //! \copydoc CAircraftMatcher::restoreDisabledModels
+            virtual void restoreDisabledModels() override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextSimulator::isKnownModel
             virtual bool isKnownModel(const QString &modelstring) const override
             {
