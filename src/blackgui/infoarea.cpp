@@ -129,8 +129,7 @@ namespace BlackGui
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
 
-            // new syntax not yet possible because of overloaded signal
-            c = connect(signalMapperToggleFloating, static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped), this, &CInfoArea::toggleFloatingByIndex);
+            c = connect(signalMapperToggleFloating, qOverload<int>(&QSignalMapper::mapped), this, &CInfoArea::toggleFloatingByIndex);
             BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot connect mapper"); // do not make that shutdown reason in a release build
 
             menu->addMenu(subMenuDisplay);

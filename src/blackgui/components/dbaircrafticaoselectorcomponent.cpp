@@ -201,7 +201,7 @@ namespace BlackGui
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
                     c->popup()->setMinimumWidth(175);
-                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAircraftIcaoSelectorComponent::onCompleterActivated);
+                    connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbAircraftIcaoSelectorComponent::onCompleterActivated);
 
                     ui->le_Aircraft->setCompleter(c);
                     m_completerIcaoDescription.reset(c); // deletes any old completer

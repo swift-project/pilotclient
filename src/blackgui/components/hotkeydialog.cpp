@@ -100,7 +100,7 @@ namespace BlackGui
             connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
             connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
-            connect(ui->cb_Identifier, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
+            connect(ui->cb_Identifier, qOverload<int>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
             if (sGui)
             {
@@ -116,7 +116,7 @@ namespace BlackGui
 
         CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
         {
-            connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
+            connect(this, qOverload<int>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
         }
 
         void CKeySelectionBox::setSelectedIndex(int index)

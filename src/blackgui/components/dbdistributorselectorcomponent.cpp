@@ -184,7 +184,7 @@ namespace BlackGui
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
-                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbDistributorSelectorComponent::onCompleterActivated);
+                    connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbDistributorSelectorComponent::onCompleterActivated);
 
                     ui->le_Distributor->setCompleter(c);
                     m_completerDistributors.reset(c); // deletes any old completer

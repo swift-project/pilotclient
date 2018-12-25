@@ -39,7 +39,7 @@ namespace BlackGui
             c = connect(ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSlider);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(ui->sb_Volume, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
+            c = connect(ui->sb_Volume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
             Q_UNUSED(c);
             c = connect(ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);

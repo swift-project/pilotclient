@@ -38,7 +38,7 @@ namespace BlackGui
 
             // Widget style
             connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
-            connect(ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+            connect(ui->cb_SettingsGuiWidgetStyle, qOverload<const QString &>(&QComboBox::currentIndexChanged),
                     this, &CSettingsGuiComponent::widgetStyleChanged);
 
             // selection

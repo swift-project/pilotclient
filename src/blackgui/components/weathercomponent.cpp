@@ -197,8 +197,7 @@ namespace BlackGui
         void CWeatherComponent::setupConnections()
         {
             // UI connections
-            connect(ui->cb_weatherScenario, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-                    this, &CWeatherComponent::setWeatherScenario);
+            connect(ui->cb_weatherScenario, qOverload<int>(&QComboBox::currentIndexChanged), this, &CWeatherComponent::setWeatherScenario);
             connect(m_coordinateDialog.data(), &CCoordinateDialog::changedCoordinate, this, &CWeatherComponent::updateWeatherInformation);
             connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled, this, &CWeatherComponent::toggleUseOwnAircraftPosition);
             connect(&m_weatherUpdateTimer, &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformation);

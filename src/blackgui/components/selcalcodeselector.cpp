@@ -35,8 +35,8 @@ namespace BlackGui
             ui->cb_SelcalPairs1->setStyleSheet("combobox-popup: 0;");
             ui->cb_SelcalPairs2->setStyleSheet("combobox-popup: 0;");
 
-            connect(ui->cb_SelcalPairs1, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
-            connect(ui->cb_SelcalPairs2, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
+            connect(ui->cb_SelcalPairs1, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
+            connect(ui->cb_SelcalPairs2, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
         }
 
         CSelcalCodeSelector::~CSelcalCodeSelector()

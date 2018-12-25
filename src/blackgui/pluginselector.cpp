@@ -28,8 +28,8 @@ namespace BlackGui
         QVBoxLayout *layout = new QVBoxLayout;
         setLayout(layout);
 
-        connect(m_detailsButtonMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
-        connect(m_configButtonMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
+        connect(m_detailsButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
+        connect(m_configButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
     }
 
     void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)
@@ -62,13 +62,13 @@ namespace BlackGui
         {
             QPushButton *config = new QPushButton("...");
             m_configButtonMapper->setMapping(config, identifier);
-            connect(config, &QPushButton::clicked, m_configButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+            connect(config, &QPushButton::clicked, m_configButtonMapper, qOverload<>(&QSignalMapper::map));
             pw->layout()->addWidget(config);
         }
 
         QPushButton *details = new QPushButton("?");
         m_detailsButtonMapper->setMapping(details, identifier);
-        connect(details, &QPushButton::clicked, m_detailsButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+        connect(details, &QPushButton::clicked, m_detailsButtonMapper, qOverload<>(&QSignalMapper::map));
         pw->layout()->addWidget(details);
 
         layout->setStretch(0, 1);

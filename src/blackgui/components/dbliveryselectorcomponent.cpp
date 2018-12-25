@@ -196,7 +196,7 @@ namespace BlackGui
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
-                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbLiverySelectorComponent::onCompleterActivated);
+                    connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbLiverySelectorComponent::onCompleterActivated);
 
                     ui->le_Livery->setCompleter(c);
                     m_completerLiveries.reset(c); // deletes any old completer

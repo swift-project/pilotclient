@@ -59,9 +59,9 @@ namespace BlackGui
                 ui->cb_SetupAudioLoopback->setChecked(sGui->getIContextAudio()->isAudioLoopbackEnabled());
 
                 // the connects depend on initAudioDeviceLists
-                c = connect(ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
+                c = connect(ui->cb_SetupAudioInputDevice,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
+                c = connect(ui->cb_SetupAudioOutputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
                 Q_ASSERT(c);
 
                 // context
