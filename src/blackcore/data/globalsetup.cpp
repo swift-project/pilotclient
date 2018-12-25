@@ -286,75 +286,75 @@ namespace BlackCore
         QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
         {
             QString s =
-                QStringLiteral("timestamp: ")
+                u"timestamp: "
                 % this->getFormattedUtcTimestampYmdhms()
                 % separator
-                % QStringLiteral("Global setup loaded: ")
+                % u"Global setup loaded: "
                 % boolToYesNo(this->wasLoadedFromWeb())
-                % QStringLiteral("/")
+                % u'/'
                 % boolToYesNo(this->wasLoadedFromFile())
                 % separator
 
-                % QStringLiteral("For development: ")
+                % u"For development: "
                 % boolToYesNo(isDevelopment())
                 % separator
 
-                % QStringLiteral("Mapping min.version: ")
+                % u"Mapping min.version: "
                 % this->getMappingMinimumVersionString()
                 % separator
 
-                % QStringLiteral("Distribution URLs: ")
+                % u"Distribution URLs: "
                 % getSwiftUpdateInfoFileUrls().toQString(i18n)
                 % separator
-                % QStringLiteral("Bootstrap URLs: ")
+                % u"Bootstrap URLs: "
                 % getSwiftBootstrapFileUrls().toQString(i18n)
                 % separator
-                % QStringLiteral("News URLs: ")
+                % u"News URLs: "
                 % getSwiftLatestNewsUrls().toQString(i18n)
                 % separator
-                % QStringLiteral("Help URLs: ")
+                % u"Help URLs: "
                 % m_onlineHelpUrls.toQString(i18n)
                 % separator
-                % QStringLiteral("swift map URLs: ")
+                % u"swift map URLs: "
                 % getSwiftMapUrls().toQString(i18n)
                 % separator;
             s +=
-                QStringLiteral("DB root directory: ")
+                u"DB root directory: "
                 % getDbRootDirectoryUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("ICAO DB reader: ")
+                % u"ICAO DB reader: "
                 % getDbIcaoReaderUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("Model DB reader: ")
+                % u"Model DB reader: "
                 % getDbModelReaderUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("Airport DB reader: ")
+                % u"Airport DB reader: "
                 % getDbAirportReaderUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("DB home page: ")
+                % u"DB home page: "
                 % getDbHomePageUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("DB login service: ")
+                % u"DB login service: "
                 % getDbLoginServiceUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("DB client ping service: ")
+                % u"DB client ping service: "
                 % getDbClientPingServiceUrl().toQString(i18n);
             s +=
-                QStringLiteral("VATSIM bookings: ")
+                u"VATSIM bookings: "
                 % getVatsimBookingsUrl().toQString(i18n)
                 % separator
-                % QStringLiteral("VATSIM METARs: ")
+                % u"VATSIM METARs: "
                 % getVatsimMetarsUrls().toQString(i18n)
                 % separator
-                % QStringLiteral("VATSIM data file: ")
+                % u"VATSIM data file: "
                 % getVatsimDataFileUrls().toQString(i18n)
                 % separator
 
-                % QStringLiteral("Predefined servers: ")
+                % u"Predefined servers: "
                 % getPredefinedServers().toQString(i18n)
                 % separator
 
-                % QStringLiteral("Crash report server: ")
+                % u"Crash report server: "
                 % getCrashReportServerUrl().toQString(i18n);
 
             return s;

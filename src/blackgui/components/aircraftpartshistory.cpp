@@ -95,36 +95,36 @@ namespace BlackGui
             QString html;
             if (currentAircraftParts == CAircraftParts() && aircraftPartsHistory.isEmpty())
             {
-                html = cs.toQString() % QLatin1String(" does not support aircraft parts or nothing received yet.");
+                html = cs.toQString() % u" does not support aircraft parts or nothing received yet.";
             }
             else
             {
                 const QString s =
-                    QLatin1String("lights on:") %
-                    QLatin1String("<br>") %
-                    QLatin1String("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    u"lights on:"
+                    u"<br>"
+                    u"&nbsp;&nbsp;&nbsp;&nbsp;" %
                     currentAircraftParts.getLights().toQString() %
-                    QLatin1String("<br>") %
-                    QLatin1String("gear down: ") %
+                    u"<br>"
+                    u"gear down: " %
                     BlackMisc::boolToYesNo(currentAircraftParts.isGearDown()) %
-                    QLatin1String("<br>") %
-                    QLatin1String("flaps pct: ") %
+                    u"<br>"
+                    u"flaps pct: " %
                     QString::number(currentAircraftParts.getFlapsPercent()) %
-                    QLatin1String("<br>") %
-                    QLatin1String("spoilers out: ") %
+                    u"<br>"
+                    u"spoilers out: " %
                     BlackMisc::boolToYesNo(currentAircraftParts.isSpoilersOut()) %
-                    QLatin1String("<br>") %
-                    QLatin1String("engines on: ") %
-                    QLatin1String("<br>") %
-                    QLatin1String("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    u"<br>"
+                    u"engines on: "
+                    u"<br>"
+                    u"&nbsp;&nbsp;&nbsp;&nbsp;" %
                     currentAircraftParts.getEngines().toQString() %
-                    QLatin1String("<br>") %
-                    QLatin1String(" on ground: ") %
+                    u"<br>"
+                    u" on ground: " %
                     BlackMisc::boolToYesNo(currentAircraftParts.isOnGround());
                 html += s;
                 if (ui->cb_PartsHistoryEnabled->isChecked())
                 {
-                    html += QLatin1String("<hr>") %
+                    html += u"<hr>" %
                             aircraftPartsHistory.toHtml(CStatusMessageList::timestampHtmlOutput());
                 }
             }
