@@ -116,7 +116,7 @@ it and relaunch the installer.</text>
             </ruleList>
         </runProgram>
         <createDirectory>
-            <path>{user_home_directory}/Library/LaunchAgents</path>
+            <path>${user_home_directory}/Library/LaunchAgents</path>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
@@ -124,7 +124,7 @@ it and relaunch the installer.</text>
             </ruleList>
         </createDirectory>
         <writeFile>
-            <path>{user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+            <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
             <encoding>utf-8</encoding>
             <text><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
