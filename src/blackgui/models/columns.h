@@ -92,6 +92,15 @@ namespace BlackGui
             //! Translation context
             void setTranslationContext(const QString &translationContext) { m_translationContext = translationContext; }
 
+            //! Width in percentage
+            int getWidthPercentage() const { return m_widthPercentage; }
+
+            //! Having a width percentage
+            bool hasWidthPercentage() const { return m_widthPercentage > 0; }
+
+            //! Width percentage
+            void setWidthPercentage(int width) { m_widthPercentage = width; }
+
             //! Get a standard value object formatted column
             static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
@@ -114,6 +123,7 @@ namespace BlackGui
             QString m_translationContext;
             QString m_columnName;
             QString m_columnToolTip;
+            int m_widthPercentage = -1;
             QSharedPointer<CDefaultFormatter> m_formatter; //!< Used formatter
             BlackMisc::CPropertyIndex m_propertyIndex;     //!< Property index for column
             BlackMisc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
@@ -201,6 +211,15 @@ namespace BlackGui
 
             //! Columns
             const QList<CColumn> &columns() const { return m_columns; }
+
+            //! Any column with width percentage?
+            bool hasAnyWidthPercentage() const;
+
+            //! Set the width percentages
+            void setWidthPercentages(const QList<int> percentages);
+
+            //! Calculate the absolute width
+            QList<int> calculateWidths(int totalWidth) const;
 
         private:
             QList<CColumn> m_columns;

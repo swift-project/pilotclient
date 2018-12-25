@@ -185,6 +185,58 @@ namespace BlackGui
             return column >= 0 && column < m_columns.size();
         }
 
+        bool CColumns::hasAnyWidthPercentage() const
+        {
+            for (const CColumn &c : m_columns) { if (c.hasWidthPercentage()) { return true; }}
+            return false;
+        }
+
+        void CColumns::setWidthPercentages(const QList<int> percentages)
+        {
+            if (percentages.isEmpty())
+            {
+                for (CColumn &column : m_columns) { column.setWidthPercentage(-1); }
+                return;
+            }
+
+            int c = 0;
+            for (CColumn &column : m_columns)
+            {
+                column.setWidthPercentage(percentages.at(c++));
+            }
+        }
+
+        QList<int> CColumns::calculateWidths(int totalWidth) const
+        {
+            if (m_columns.isEmpty() || !this->hasAnyWidthPercentage()) { return {}; }
+
+            int totalPercentage = 0;
+            const int averagePercentage = 100 / m_columns.size();
+
+            for (const CColumn &c : m_columns)
+            {
+                totalPercentage += c.hasWidthPercentage() ? c.getWidthPercentage() : averagePercentage;
+            }
+
+            if (totalPercentage < 1) { return {}; }
+
+            // ideally totalPercentage would be 100%, but there is no guarantee
+            const double part = static_cast<double>(totalWidth) / totalPercentage;
+            QList<int> widths;
+
+            int usedWidth = 0;
+            for (const CColumn &c : m_columns)
+            {
+                const int percentage = c.hasWidthPercentage() ? c.getWidthPercentage() : averagePercentage;
+                const int restWidth = totalWidth - usedWidth;
+                const int width = qMin(restWidth, qRound(part * percentage));
+                widths.push_back(width);
+                usedWidth += width;
+            }
+
+            return widths;
+        }
+
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const
         {
             if (!isValidColumn(index)) { return nullptr; }

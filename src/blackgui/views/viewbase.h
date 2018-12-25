@@ -301,6 +301,9 @@ namespace BlackGui
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
             void setForceColumnsToMaxSize(bool force) { m_forceColumnsToMaxSize = force; }
 
+            //! Resize mode
+            void setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode);
+
             //! Index of the directory we "remember"
             void setSettingsDirectoryIndex(BlackMisc::CDirectories::ColumnIndex directoryIndex) { m_dirSettingsIndex = directoryIndex; }
 
@@ -743,6 +746,10 @@ namespace BlackGui
 
             //! Set a tab widget text based on row count, filter etc.
             void setTabWidgetViewText(QTabWidget *tw, int index);
+
+            //! Set the widths based on the column percentages
+            //! \sa CColumn::get
+            void setPercentageColumnWidths();
 
         protected:
             ModelClass *m_model = nullptr; //!< corresponding model

@@ -545,6 +545,19 @@ namespace BlackGui
             tw->setTabText(index, o);
         }
 
+        template<class T>
+        void CViewBase<T>::setPercentageColumnWidths()
+        {
+            const int width = this->width() - 25; // avoid scrollbars etc, reserve a little space
+            QList<int> widths = this->getColumns().calculateWidths(width);
+            if (widths.isEmpty()) { return; }
+            for (int c = 0; c < this->getColumns().size(); c++)
+            {
+                const int w = widths.at(c);
+                this->setColumnWidth(c, w);
+            }
+        }
+
         template <class T>
         void CViewBase<T>::setSortIndicator()
         {

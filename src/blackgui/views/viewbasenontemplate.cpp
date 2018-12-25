@@ -39,8 +39,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) :
-            QTableView(parent)
+        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) : QTableView(parent)
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::customMenuRequested);
@@ -184,6 +183,11 @@ namespace BlackGui
         CStatusMessage CViewBaseNonTemplate::showFileSaveDialog(bool selectedOnly, const QString &directory)
         {
             return this->ps_saveJson(selectedOnly, directory);
+        }
+
+        void CViewBaseNonTemplate::setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode)
+        {
+            this->horizontalHeader()->setSectionResizeMode(mode);
         }
 
         IMenuDelegate *CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
