@@ -325,11 +325,19 @@ namespace BlackMisc
      *
      * This is more efficient than the keys() method of the container, as it doesn't allocate memory.
      */
+    //! @{
     template <class T>
     auto makeKeysRange(const T &container)
     {
         return makeRange(container.keyBegin(), container.keyEnd());
     }
+    template <class T>
+    void makeKeysRange(T &container)
+    {
+        container.detach(); // http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
+        return makeRange(container.keyValueBegin(), container.keyValueEnd());
+    }
+    //! @}
 
     /*!
      * Returns a const CRange for iterating over the keys and values of a Qt associative container.
@@ -338,33 +346,25 @@ namespace BlackMisc
      * This is more efficient than using the keys() method of the container and thereafter looking up each key,
      * as it neither allocates memory, nor performs any key lookups.
      */
+    //! @{
     template <class T>
     auto makePairsRange(const T &container)
     {
         return makeRange(container.keyValueBegin(), container.keyValueEnd());
     }
-
-    /*!
-     * Keys range for a non-const lvalue would be unsafe due to iterator invalidation on detach().
-     *
-     * \see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
-     */
     template <class T>
-    void makeKeysRange(T &container) = delete;
+    auto makePairsRange(T &container)
+    {
+        container.detach(); // http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
+        return makeRange(container.keyValueBegin(), container.keyValueEnd());
+    }
+    //! @}
 
     /*!
      * Keys range for a temporary would be unsafe.
      */
     template <class T>
     void makeKeysRange(const T &&container) = delete;
-
-    /*!
-     * Pairs range for a non-const lvalue would be unsafe due to iterator invalidation on detach().
-     *
-     * \see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
-     */
-    template <class T>
-    void makePairsRange(T &container) = delete;
 
     /*!
      * Pairs range for a temporary would be unsafe.
