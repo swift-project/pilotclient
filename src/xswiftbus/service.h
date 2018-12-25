@@ -206,7 +206,7 @@ namespace XSwiftBus
         double getFlapsDeployRatio() const { return m_flapsReployRatio.get(); }
 
         //! Get gear deploy ratio, where 0 is up and 1 is down
-        double getGearDeployRatio() const { return m_gearReployRatio.get(); }
+        double getGearDeployRatio() const { return m_gearReployRatio.getAt(0); }
 
         //! Get the number of engines of current aircraft
         int getNumberOfEngines() const { return m_numberOfEngines.get(); }
@@ -289,7 +289,7 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::cockpit::electrical::strobe_lights_on> m_strobeLightsOn;
         DataRef<xplane::data::sim::cockpit::electrical::taxi_light_on> m_taxiLightsOn;
         DataRef<xplane::data::sim::flightmodel2::controls::flap_handle_deploy_ratio> m_flapsReployRatio;
-        DataRef<xplane::data::sim::flightmodel2::gear::deploy_ratio> m_gearReployRatio;
+        ArrayDataRef<xplane::data::sim::flightmodel2::gear::deploy_ratio> m_gearReployRatio;
         DataRef<xplane::data::sim::aircraft::engine::acf_num_engines> m_numberOfEngines;
         ArrayDataRef<xplane::data::sim::flightmodel::engine::ENGN_N1_> m_enginesN1Percentage;
         DataRef<xplane::data::sim::flightmodel2::controls::speedbrake_ratio> m_speedBrakeRatio;
