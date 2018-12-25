@@ -1044,7 +1044,7 @@ namespace BlackCore
             CLength range(pos->visibleRange, CLengthUnit::NM());
             QString cs = cbvar_cast(cbvar)->fromFSD(callsign);
             // ATIS often have a range of 0 nm. Correct this to a proper value.
-            if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(50.0); }
+            if (cs.contains("_ATIS") && pos->visibleRange == 0) { range.setValueSameUnit(150.0); }
             CCoordinateGeodetic position(pos->latitude, pos->longitude, 0);
             emit cbvar_cast(cbvar)->atcPositionUpdate(CCallsign(cs, CCallsign::Atc), freq, position, range);
         }
