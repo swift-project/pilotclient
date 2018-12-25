@@ -31,7 +31,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QtGlobal>
 #include <QDateTime>
 #include <QCryptographicHash>
+#include <QRandomGenerator>
 #include <QDataStream>
+#include <limits>
 
 namespace BlackMisc
 {
@@ -42,9 +44,7 @@ namespace BlackMisc
             m_compressionMode(CompressionAuto),
             m_protectionMode(ProtectionChecksum),
             m_lastError(ErrorNoError)
-        {
-            qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
-        }
+        {}
 
         SimpleCrypt::SimpleCrypt(quint64 key):
             m_key(key),
@@ -52,7 +52,6 @@ namespace BlackMisc
             m_protectionMode(ProtectionChecksum),
             m_lastError(ErrorNoError)
         {
-            qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
             splitKey();
         }
 
@@ -127,7 +126,8 @@ namespace BlackMisc
             }
 
             //prepend a random char to the string
-            char randomChar = char(qrand() & 0xFF);
+            thread_local QRandomGenerator rng(QRandomGenerator::global()->generate());
+            char randomChar = static_cast<char>(rng.bounded(static_cast<int>(std::numeric_limits<char>::min()), static_cast<int>(std::numeric_limits<char>::max()) + 1));
             ba = randomChar + integrityProtection + ba;
 
             int pos(0);

@@ -15,6 +15,7 @@
 #include "integersequence.h"
 
 #include <QThreadStorage>
+#include <QRandomGenerator>
 #include <QtGlobal>
 #include <algorithm>
 #include <iterator>
@@ -51,7 +52,7 @@ namespace BlackMisc
         {
             //! \fixme Qt 5.10: Use QRandomGenerator.
             static QThreadStorage<std::mt19937> rng;
-            if (rng.hasLocalData()) { rng.setLocalData(std::mt19937(static_cast<std::mt19937::result_type>(qrand()))); }
+            if (rng.hasLocalData()) { rng.setLocalData(std::mt19937(static_cast<std::mt19937::result_type>(QRandomGenerator::global()->generate()))); }
             return rng.localData();
         }
     }

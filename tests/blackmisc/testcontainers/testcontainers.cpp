@@ -25,6 +25,7 @@
 #include "blackmisc/range.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/math/mathutils.h"
 #include "test.h"
 
 #include <QDateTime>
@@ -44,6 +45,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
@@ -369,7 +371,6 @@ namespace BlackMiscTest
 
     void CTestContainers::offsetTimestampList()
     {
-        qsrand(QDateTime::currentDateTime().toTime_t());
         CAircraftSituationList situations;
         static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         qint64 ts = 1000000;
@@ -384,16 +385,14 @@ namespace BlackMiscTest
             s.setMSecsSinceEpoch(ts);
             s.setCallsign("CS" + QString::number(i));
 
-            if (qrand() % 2 == 0)
+            if (CMathUtils::randomBool())
             {
-                // 4500-5500
-                dt = 4500 + (qrand() % 1000);
+                dt = CMathUtils::randomInteger(4500, 5500);
                 s.setTimeOffsetMs(6000);
             }
             else
             {
-                // 900-1100
-                dt = 900 + (qrand() % 200);
+                dt = CMathUtils::randomInteger(900, 1100);
                 s.setTimeOffsetMs(2000);
             }
 

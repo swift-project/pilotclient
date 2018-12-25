@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 
+#include <QRandomGenerator>
 #include <QtCore/qmath.h>
 #include <QPair>
 #include <cmath>
@@ -115,11 +116,17 @@ namespace BlackMisc
             //! Normalize: 0≤ degrees <360
             static double normalizeDegrees360(double degrees);
 
+            //! Thread-local random generator
+            static QRandomGenerator &randomGenerator();
+
             //! Random number between low and high
             static int randomInteger(int low, int high);
 
             //! Random double 0-max
             static double randomDouble(double max = 1);
+
+            //! Random boolean
+            static bool randomBool();
 
             //! Round numToRound to the nearest multiple of divisor
             static int roundToMultipleOf(int value, int divisor);

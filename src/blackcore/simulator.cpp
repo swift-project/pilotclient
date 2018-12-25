@@ -14,6 +14,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/math/mathutils.h"
 
 #include <QFlag>
 #include <Qt>
@@ -32,6 +33,7 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::PhysicalQuantities;
@@ -1104,7 +1106,7 @@ namespace BlackCore
             emit this->requestUiConsoleMessage(dm, true);
         }
 
-        const int t = 4500 + (qrand() % 1000); // makes sure not always using the same time difference
+        const int t = CMathUtils::randomInteger(4500, 5500); // makes sure not always using the same time difference
         const QPointer<ISimulator> myself(this);
         QTimer::singleShot(t, this, [ = ]
         {

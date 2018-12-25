@@ -16,9 +16,11 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/variantlist.h"
+#include "blackmisc/math/mathutils.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
@@ -30,7 +32,7 @@ namespace BlackMisc
     {
         int randomIndex(int size)
         {
-            return qrand() % size;
+            return CMathUtils::randomInteger(0, size - 1);
         }
 
         const CServer &CTestData::getTrafficServer()

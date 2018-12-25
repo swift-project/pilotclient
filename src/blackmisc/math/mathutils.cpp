@@ -99,30 +99,28 @@ namespace BlackMisc
             return (result >= 0.0) ? result : result + 360.0;
         }
 
+        QRandomGenerator &CMathUtils::randomGenerator()
+        {
+            thread_local QRandomGenerator rng(QRandomGenerator::global()->generate());
+            return rng;
+        }
+
         int CMathUtils::randomInteger(int low, int high)
         {
-            static QThreadStorage<uint> seeds;
             Q_ASSERT_X(high < INT_MAX, Q_FUNC_INFO, "Cannot add 1");
-            Q_ASSERT_X(low >= 0 && high >= 0, Q_FUNC_INFO, "Only valid for positive values");
-            if (!seeds.hasLocalData())
-            {
-                // seed is per thread!
-                const uint seed = static_cast<uint>(QTime::currentTime().msec());
-                qsrand(seed);
-                seeds.setLocalData(seed);
-            }
-            const int r(qrand());
-            const int mod = (high + 1) - low;
-            Q_ASSERT_X(mod <= RAND_MAX, Q_FUNC_INFO, "RAND_MAX exceeded");
-            return (r % mod) + low;
+            return randomGenerator().bounded(low, high + 1);
         }
 
         double CMathUtils::randomDouble(double max)
         {
-            // on Win system, RAND_MAX is only 16bit, on other systems higher
-            static const int MAX(RAND_MAX < INT_MAX ? RAND_MAX - 1 : INT_MAX - 1);
+            constexpr int MAX(std::min(RAND_MAX - 1, INT_MAX - 1));
             const double r = randomInteger(0, MAX);
             return (r / MAX) * max;
+        }
+
+        bool CMathUtils::randomBool()
+        {
+            return randomInteger(0, 1);
         }
 
         int CMathUtils::roundToMultipleOf(int value, int divisor)

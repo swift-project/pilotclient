@@ -23,6 +23,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/test/testing.h"
 #include "blackmisc/directoryutils.h"
@@ -47,6 +48,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -149,7 +151,7 @@ namespace BlackSample
         out << "Copied 10k stations " << number << " times in " << ms << "ms" << endl;
 
         // Regex pattern matching with lists of 10000 strings containing random hex numbers
-        auto generator = []() { return QString::number(qrand() | (qrand() << 16), 16); };
+        auto generator = []() { return QString::number(CMathUtils::randomGenerator().generate(), 16); };
         QStringList strList1, strList2, strList3, strList4;
         std::generate_n(std::back_inserter(strList1), 100000, generator);
         std::generate_n(std::back_inserter(strList2), 100000, generator);
@@ -350,7 +352,7 @@ namespace BlackSample
         std::generate_n(std::back_inserter(strings), 100000, []
         {
             QString s;
-            std::generate_n(std::back_inserter(s), 10, [] { return chars[qrand() % chars.size()]; });
+            std::generate_n(std::back_inserter(s), 10, [] { return chars[CMathUtils::randomInteger(0, chars.size() - 1)]; });
             return s;
         });
         QString bigString = strings.join("\n");
@@ -698,9 +700,9 @@ namespace BlackSample
         CAircraftModelList models;
         for (int i = 0; i < numberOfModels; ++i)
         {
-            const auto &aircraftIcao = aircraftIcaos[qrand() % numberOfMemoParts];
-            const auto &livery = liveries[qrand() % numberOfMemoParts];
-            const auto &distributor = distributors[qrand() % numberOfMemoParts];
+            const auto &aircraftIcao = aircraftIcaos[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
+            const auto &livery = liveries[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
+            const auto &distributor = distributors[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
             models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::FSX, QString::number(i), QString::number(i), aircraftIcao, livery));
             models.back().setDistributor(distributor);
         }
