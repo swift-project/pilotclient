@@ -44,6 +44,7 @@ namespace BlackMisc
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
         const CStatusMessage statusMessage(type, context, message);
+        const auto invokee = [statusMessage] { CLogHandler::instance()->logLocalMessage(statusMessage); };
 #if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
         if (type == QtFatalMsg) { MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); }
 #endif
@@ -51,10 +52,10 @@ namespace BlackMisc
         {
             // Fatal message means this thread is about to crash the application. A queued connection would be useless.
             // Blocking queued connection means we pause this thread just long enough to let the main thread handle the message.
-            QMetaObject::invokeMethod(CLogHandler::instance(), "logLocalMessage", Qt::BlockingQueuedConnection, Q_ARG(BlackMisc::CStatusMessage, statusMessage));
+            QMetaObject::invokeMethod(CLogHandler::instance(), invokee, Qt::BlockingQueuedConnection);
             return;
         }
-        QMetaObject::invokeMethod(CLogHandler::instance(), "logLocalMessage", Q_ARG(BlackMisc::CStatusMessage, statusMessage));
+        QMetaObject::invokeMethod(CLogHandler::instance(), invokee);
     }
 
     void CLogHandler::install(bool skipIfAlreadyInstalled)

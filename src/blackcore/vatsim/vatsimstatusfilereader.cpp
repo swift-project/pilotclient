@@ -47,7 +47,7 @@ namespace BlackCore
 
         void CVatsimStatusFileReader::readInBackgroundThread()
         {
-            const bool s = QMetaObject::invokeMethod(this, "ps_read");
+            const bool s = QMetaObject::invokeMethod(this, &CVatsimStatusFileReader::ps_read);
             Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
             Q_UNUSED(s);
         }

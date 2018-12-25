@@ -212,13 +212,13 @@ namespace BlackMiscTest
         CValueCache otherCache(1);
         connect(&thisCache, &CValueCache::valuesChangedByLocal, &thisCache, [ & ](const CValueCachePacket &values)
         {
-            QMetaObject::invokeMethod(&thisCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, thisProcess));
-            QMetaObject::invokeMethod(&otherCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, otherProcess));
+            QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, thisProcess); });
+            QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, otherProcess); });
         });
         connect(&otherCache, &CValueCache::valuesChangedByLocal, &thisCache, [ & ](const CValueCachePacket &values)
         {
-            QMetaObject::invokeMethod(&thisCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, otherProcess));
-            QMetaObject::invokeMethod(&otherCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, thisProcess));
+            QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, otherProcess); });
+            QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, thisProcess); });
         });
 
         for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }

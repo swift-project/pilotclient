@@ -220,6 +220,7 @@ namespace BlackCore
             if (entities == CEntityFlags::NoEntity) { return; }
             if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
+            //! \todo MS 2018-12 Error: CDatabaseReader has no ps_read method
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
                            Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
                            Q_ARG(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag, mode),

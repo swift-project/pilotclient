@@ -129,7 +129,7 @@ namespace BlackCore
 
             ISimulatorListener *listener = m_plugins->getListener(simulatorInfo.getIdentifier());
             Q_ASSERT(listener);
-            QMetaObject::invokeMethod(listener, "stop", Qt::QueuedConnection);
+            QMetaObject::invokeMethod(listener, &ISimulatorListener::stop, Qt::QueuedConnection);
         }
 
         int CContextSimulator::checkListeners()
@@ -480,7 +480,7 @@ namespace BlackCore
             // start if not already running
             if (!listener->isRunning())
             {
-                const bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
+                const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::start, Qt::QueuedConnection);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
                 Q_UNUSED(s);
             }
@@ -993,7 +993,7 @@ namespace BlackCore
                 ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
                 if (listener)
                 {
-                    const bool s = QMetaObject::invokeMethod(listener, "stop");
+                    const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::stop);
                     Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke stop");
                     Q_UNUSED(s);
                 }
