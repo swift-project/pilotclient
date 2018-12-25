@@ -76,6 +76,6 @@ namespace BlackSimPluginFsxP3D
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackSimPluginFsxP3D::CSimPluginFsxP3d);
+BLACKTEST_MAIN(BlackSimPluginFsxP3D::CSimPluginFsxP3d);
 
 //! \endcond
