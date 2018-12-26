@@ -1318,10 +1318,11 @@ namespace BlackCore
         // individual signals
         if (CEntityFlags::isFinishedReadState(state))
         {
+            // emit one time only
             if (entities.testFlag(CEntityFlags::AirportEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirportEntity)) { emit swiftDbAirportsRead(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity)) { emit swiftDbAirlineIcaoRead(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity))   { emit swiftDbAirlineIcaoRead(); }
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AircraftIcaoEntity)) { emit swiftDbAircraftIcaoRead(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity)) { emit swiftDbModelsRead(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity))               { emit swiftDbModelsRead(); }
             if (entities.testFlag(CEntityFlags::SharedInfoObjectEntity)) { emit sharedInfoObjectsRead(); }
 
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))

@@ -73,7 +73,7 @@ namespace BlackGui
                 QPointer<CDbLoadOverviewComponent> myself(this);
                 QTimer::singleShot(10 * 1000, this, [ = ]
                 {
-                    if (!myself) { return; }
+                    if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                     this->loadInfoObjects();
                     this->adjustTextWidth();
                 });
