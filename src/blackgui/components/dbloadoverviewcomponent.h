@@ -70,7 +70,10 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
             BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
-            bool m_setValuesInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
+            qint64 m_sharedLastCheck = -1; //!< when shared URLs were last checked
+            bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
+            const QString m_imgOk = ":/diagona/icons/diagona/icons/tick.png";
+            const QString m_imgFailed = ":/diagona/icons/diagona/icons/cross-script.png";
 
             //! Trigger loading from DB
             void triggerLoadingFromDb(BlackMisc::Network::CEntityFlags::Entity entities);
@@ -89,6 +92,9 @@ namespace BlackGui
 
             //! Init the value panel
             void setGuiValues();
+
+            //! Shared URL values
+            void setSharedUrlValues();
 
             //! Data have been loaded
             void dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);

@@ -155,8 +155,6 @@ namespace BlackGui
         {
             if (!sGui) { return; }
             if (!sGui->hasWebDataServices()) { return; }
-            if (m_setValuesInProgress) { return; }
-            m_setValuesInProgress = true; // avoid processEvent (canConnect) calling this again before done
 
             ui->le_AircraftIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -207,15 +205,26 @@ namespace BlackGui
             ui->le_DistributorsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::DistributorEntity));
 
             // DB URL
-            static const QString imgOk(":/diagona/icons/diagona/icons/tick.png");
-            static const QString imgFailed(":/diagona/icons/diagona/icons/cross-script.png");
             const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
             const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
             bool canConnect = sGui->isSwiftDbAccessible();
-            ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? imgOk : imgFailed, url, url));
+            ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? m_imgOk : m_imgFailed, url, url));
             ui->lbl_DatabaseUrl->setToolTip(url);
 
             // Shared URLs
+            this->setSharedUrlValues();
+
+            // Indicator
+            this->hideLoading();
+        }
+
+        void CDbLoadOverviewComponent::setSharedUrlValues()
+        {
+            if (m_sharedValueCheckInProgress) { return; }
+            if ((QDateTime::currentMSecsSinceEpoch() - m_sharedLastCheck) < 5000) { return; } // do not check too often
+
+            m_sharedValueCheckInProgress = true; // avoid processEvent (canConnect) calling this again before done
+
             const CUrlList sharedUrls(sGui->getGlobalSetup().getSwiftSharedUrls());
             const QString valueHtml("<img src=\"%1\">&nbsp;%2");
             const QString urlLinkHtml("<a href=\"%1\">%2</a>");
@@ -226,12 +235,12 @@ namespace BlackGui
                 if (!sGui || sGui->isShuttingDown())
                 {
                     // shutdown during connect test
-                    m_setValuesInProgress = false;
+                    m_sharedValueCheckInProgress = false;
                     return;
                 }
-                canConnect = CNetworkUtils::canConnect(sharedUrl);
+                const bool canConnect = CNetworkUtils::canConnect(sharedUrl);
                 values.push_back(
-                    valueHtml.arg(canConnect ? imgOk : imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()))
+                    valueHtml.arg(canConnect ? m_imgOk : m_imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()))
                 );
             }
 
@@ -243,9 +252,8 @@ namespace BlackGui
                 currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl
             );
 
-            // Indicator
-            this->hideLoading();
-            m_setValuesInProgress = false;
+            m_sharedLastCheck = QDateTime::currentMSecsSinceEpoch();
+            m_sharedValueCheckInProgress = false;
         }
 
         bool CDbLoadOverviewComponent::isInitialized() const
