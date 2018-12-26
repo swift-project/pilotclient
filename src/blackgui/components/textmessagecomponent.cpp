@@ -345,9 +345,8 @@ namespace BlackGui
                 f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2, spacing);
             }
 
-            QString f1n, f2n;
-            f1n.sprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
-            f2n.sprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
+            QString f1n = QString::asprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
+            QString f2n = QString::asprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
             QString f1 = QStringLiteral("COM1: %1").arg(f1n);
             QString f2 = QStringLiteral("COM2: %1").arg(f2n);
             if (f1Stations.size() == 1)

@@ -399,8 +399,7 @@ namespace BlackSimPlugin
                 read = true;
 
                 // time, basically as a heartbeat
-                QString fsTime;
-                fsTime.sprintf("%02d:%02d:%02d", localFsTimeRaw[0], localFsTimeRaw[1], localFsTimeRaw[2]);
+                QString fsTime = QString::asprintf("%02d:%02d:%02d", localFsTimeRaw[0], localFsTimeRaw[1], localFsTimeRaw[2]);
 
                 if (cockpit)
                 {

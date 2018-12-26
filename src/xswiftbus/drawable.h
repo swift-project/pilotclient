@@ -30,13 +30,13 @@ namespace XSwiftBus
         virtual ~CDrawable() { hide(); }
 
         //! Register the draw callback.
-        virtual void show()
+        void show()
         {
             XPLMRegisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
         }
 
         //! Unregister the draw callback.
-        virtual void hide()
+        void hide()
         {
             XPLMUnregisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
         }

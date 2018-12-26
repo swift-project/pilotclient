@@ -25,9 +25,10 @@ namespace XSwiftBus
     {
     public:
         //! Constructor.
-        CCommand(const char *name, const char *description, std::function<void()> handler) : m_handler(handler)
+        CCommand(const char *name, const char *description, std::function<void()> handler) :
+            m_handler(handler),
+            m_command(XPLMCreateCommand(name, description))
         {
-            m_command = XPLMCreateCommand(name, description);
             XPLMRegisterCommandHandler(m_command, callback, false, static_cast<void*>(this));
         }
 

@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             bool canLobbyConnect();
 
             //! Connect FS9 simulator to our host
-            HRESULT connectFs9ToHost(const QString address);
+            HRESULT connectFs9ToHost(const QString &address);
 
         private:
             //! Alloc and fill up a DPL_CONNECTION_SETTINGS. Call FreeConnectSettings later to free it.

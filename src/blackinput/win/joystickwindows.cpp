@@ -20,15 +20,14 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent)
-        : QObject(parent),
-          m_directInput(directInputPtr)
-    {
-        m_deviceName = QString::fromWCharArray(pdidInstance->tszInstanceName);
-        m_productName = QString::fromWCharArray(pdidInstance->tszProductName);
-        m_guidDevice = pdidInstance->guidInstance;
-        m_guidProduct = pdidInstance->guidProduct;
-    }
+    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent) :
+        QObject(parent),
+        m_guidDevice(pdidInstance->guidInstance),
+        m_guidProduct(pdidInstance->guidProduct),
+        m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName)),
+        m_productName(QString::fromWCharArray(pdidInstance->tszProductName)),
+        m_directInput(directInputPtr)
+    {}
 
     bool CJoystickDevice::init(HWND helperWindow)
     {

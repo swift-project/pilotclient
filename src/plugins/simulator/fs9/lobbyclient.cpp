@@ -118,7 +118,7 @@ namespace BlackSimPlugin
             }
         }
 
-        HRESULT CLobbyClient::connectFs9ToHost(const QString address)
+        HRESULT CLobbyClient::connectFs9ToHost(const QString &address)
         {
             HRESULT hr = S_OK;
 

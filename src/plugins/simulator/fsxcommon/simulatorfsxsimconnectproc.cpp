@@ -114,8 +114,7 @@ namespace BlackSimPlugin
                     // generic exception warning
                     if (logGenericExceptionInfo)
                     {
-                        QString ex;
-                        ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
+                        QString ex = QString::asprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                         const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
                         const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
                         CLogMessage(simulatorFsxP3D).warning(u"Caught simConnect exception: '%1' '%2' | send details: '%3'")
