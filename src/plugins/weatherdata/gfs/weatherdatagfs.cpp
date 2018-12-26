@@ -729,10 +729,20 @@ namespace BlackWxPlugin
 
         CTemperature CWeatherDataGfs::calculateDewPoint(const CTemperature &temperature, double relativeHumidity)
         {
+            // https://en.wikipedia.org/wiki/Dew_point#Calculating_the_dew_point
+            const double a =  6.112;
+            const double b = 17.67;
+            const double c = 243.5;
+
             double temperatureInCelsius = temperature.value(CTemperatureUnit::C());
-            double saturationVaporPressure = 6.112 * std::exp((17.67 * temperatureInCelsius) / (temperatureInCelsius + 243.5));
-            double vaporPressure = saturationVaporPressure * (relativeHumidity / 100.0);
-            double dewPointInCelsius = std::log(vaporPressure / 6.112) * 243.5 / (17.67 - std::log(vaporPressure / 6.112));
+            double saturationVaporPressure = a * std::exp((b * temperatureInCelsius) / (c + temperatureInCelsius));
+
+            double vaporPressure = (relativeHumidity / 100.0) * saturationVaporPressure;
+            // std::log(0.0) is not defined. Hence we use the smallest value possible close to 0.0, if RH is 0.0.
+            // In real weather, RH 0.0 % will never exist.
+            vaporPressure = qMax(vaporPressure, std::numeric_limits<double>::min());
+
+            double dewPointInCelsius = c * std::log(vaporPressure / a) / (b - std::log(vaporPressure / a));
             return { dewPointInCelsius, CTemperatureUnit::C() };
         }
 
