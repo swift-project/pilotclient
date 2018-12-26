@@ -53,9 +53,9 @@ namespace BlackGui
         CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent()
         { }
 
-        void CCopySettingsAndCachesComponent::reloadOtherVersions()
+        void CCopySettingsAndCachesComponent::reloadOtherVersions(int deferMs)
         {
-            ui->comp_OtherSwiftVersions->reloadOtherVersions();
+            ui->comp_OtherSwiftVersions->reloadOtherVersionsDeferred(deferMs);
         }
 
         void CCopySettingsAndCachesComponent::onOtherVersionChanged(const CApplicationInfo &info)
@@ -475,7 +475,7 @@ namespace BlackGui
         void CCopySettingsAndCachesWizardPage::initializePage()
         {
             // re-init other versions
-            if (m_copyCachesAndSettings) { m_copyCachesAndSettings->reloadOtherVersions(); }
+            if (m_copyCachesAndSettings) { m_copyCachesAndSettings->reloadOtherVersions(1000); }
         }
 
         bool CCopySettingsAndCachesWizardPage::validatePage()

@@ -58,7 +58,7 @@ namespace BlackGui
             virtual ~CCopySettingsAndCachesComponent();
 
             //! Reload other versions
-            void reloadOtherVersions();
+            void reloadOtherVersions(int deferMs = -1);
 
         private:
             //! Other version has been changed

@@ -29,8 +29,8 @@ namespace BlackGui
 
             ui->tvp_ApplicationInfo->menuRemoveItems(CApplicationInfoView::MenuClear);
             ui->tvp_ApplicationInfo->menuAddItems(CApplicationInfoView::MenuRefresh);
-
             ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDirectories();
+
             ui->le_ThisVersion->setText(sGui->getApplicationInfo().asOtherSwiftVersionString());
             ui->le_ThisVersion->home(false);
 
@@ -47,15 +47,26 @@ namespace BlackGui
             return (ui->tvp_ApplicationInfo->hasSelection());
         }
 
-        BlackMisc::CApplicationInfo COtherSwiftVersionsComponent::selectedOtherVersion() const
+        CApplicationInfo COtherSwiftVersionsComponent::selectedOtherVersion() const
         {
             if (!this->hasSelection()) { return CApplicationInfo::null(); }
             return ui->tvp_ApplicationInfo->selectedObject();
         }
 
-        void COtherSwiftVersionsComponent::reloadOtherVersions()
+        void COtherSwiftVersionsComponent::reloadOtherVersionsDeferred(int deferMs)
         {
-            ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDirectories(true);
+            if (deferMs <= 0)
+            {
+                ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDiretoriesAndResize(true);
+            }
+            else
+            {
+                QPointer<COtherSwiftVersionsComponent> myself(this);
+                QTimer::singleShot(deferMs, this, [ = ]
+                {
+                    if (myself) { myself->reloadOtherVersionsDeferred(-1); }
+                });
+            }
         }
 
         void COtherSwiftVersionsComponent::openDataDirectory()

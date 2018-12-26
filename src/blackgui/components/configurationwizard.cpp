@@ -30,6 +30,7 @@ namespace BlackGui
             this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 
             ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
+            ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
             ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_InstallXSwiftBus, ui->comp_InstallFsxTerrainProbe);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);

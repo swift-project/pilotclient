@@ -16,6 +16,7 @@
 #include "blackmisc/directoryutils.h"
 
 #include <QSet>
+#include <QPointer>
 #include <QFileInfo>
 #include <QMessageBox>
 
@@ -182,15 +183,15 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setValue(setSims);
         }
 
-        void CCopyModelsFromOtherSwiftVersionsComponent::reloadOtherVersions()
+        void CCopyModelsFromOtherSwiftVersionsComponent::reloadOtherVersions(int deferMs)
         {
-            ui->comp_OtherSwiftVersions->reloadOtherVersions();
+            ui->comp_OtherSwiftVersions->reloadOtherVersionsDeferred(deferMs);
         }
 
         void CCopyModelsFromOtherSwiftVersionsWizardPage::initializePage()
         {
             // force reload as the other version could be changed
-            if (m_copyModels) { m_copyModels->reloadOtherVersions(); }
+            if (m_copyModels) { m_copyModels->reloadOtherVersions(1000); }
         }
 
         bool CCopyModelsFromOtherSwiftVersionsWizardPage::validatePage()

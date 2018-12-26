@@ -41,8 +41,11 @@ namespace BlackGui
             //! Get the selected other version
             BlackMisc::CApplicationInfo selectedOtherVersion() const;
 
+            //! Reload other versions
+            void reloadOtherVersions() { this->reloadOtherVersionsDeferred(0); }
+
             //! Reload versions
-            void reloadOtherVersions();
+            void reloadOtherVersionsDeferred(int deferMs);
 
         signals:
             //! Selection changed

@@ -39,7 +39,7 @@ namespace BlackGui
             virtual ~CCopyModelsFromOtherSwiftVersionsComponent();
 
             //! Reload other versions
-            void reloadOtherVersions();
+            void reloadOtherVersions(int deferMs = -1);
 
         private:
             //! Copy as per UI settings

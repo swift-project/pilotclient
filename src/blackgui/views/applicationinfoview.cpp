@@ -27,12 +27,21 @@ namespace BlackGui
             this->setCustomMenu(new CApplicationInfoMenu(this));
         }
 
-        int CApplicationInfoView::otherSwiftVersionsFromDataDirectories(bool reInit)
+        int CApplicationInfoView::otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions)
         {
-            const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reInit);
-            this->updateContainer(others);
+            const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinitOtherVersions);
             m_acceptRowSelection = (others.size() > 0);
+
+            this->updateContainer(others);
             return others.size();
+        }
+
+        int CApplicationInfoView::otherSwiftVersionsFromDataDiretoriesAndResize(bool reinitOtherVersion)
+        {
+            const int r = this->otherSwiftVersionsFromDataDirectories(reinitOtherVersion);
+            this->setPercentageColumnWidths();
+            this->resizeRowsToContents();
+            return r;
         }
 
         void CApplicationInfoView::deleteSelectedDataDirectories()
