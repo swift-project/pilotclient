@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>740</width>
-    <height>144</height>
+    <width>976</width>
+    <height>162</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
@@ -325,7 +331,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_NS"/>
   <buttongroup name="bg_EW"/>
+  <buttongroup name="bg_NS"/>
  </buttongroups>
 </ui>

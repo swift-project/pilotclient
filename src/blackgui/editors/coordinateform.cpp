@@ -140,6 +140,11 @@ namespace BlackGui
             ui->le_LngSecFrag->setReadOnly(readonly);
             ui->le_Longitude->setReadOnly(readonly);
 
+            ui->rb_E->setEnabled(!readonly);
+            ui->rb_N->setEnabled(!readonly);
+            ui->rb_S->setEnabled(!readonly);
+            ui->rb_W->setEnabled(!readonly);
+
             ui->le_Location->setReadOnly(readonly);
             ui->le_Location->setVisible(!readonly); // does not make sense to show it in ro, no reverse lookup
             ui->lbl_Location->setVisible(!readonly);

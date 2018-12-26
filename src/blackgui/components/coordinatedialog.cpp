@@ -27,7 +27,7 @@ namespace BlackGui
             ui->editor_Coordinate->showSetButton(false);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->noDefaultButtons();
-            connect(ui->editor_Coordinate, &CCoordinateForm::changedCoordinate, this, &CCoordinateDialog::changedCoordinate);
+            connect(this, &QDialog::accepted, this, &CCoordinateDialog::changedCoordinate);
         }
 
         CCoordinateDialog::~CCoordinateDialog()

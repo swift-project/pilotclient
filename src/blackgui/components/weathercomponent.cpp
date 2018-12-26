@@ -46,7 +46,7 @@ namespace BlackGui
             ui->setupUi(this);
             m_coordinateDialog->showElevation(false);
             m_coordinateDialog->setReadOnly(ui->cb_UseOwnAcftPosition->isChecked());
-            connect(ui->pb_Coordinate, &QPushButton::clicked, this, &CWeatherComponent::showCoordinateDialog);
+            connect(ui->pb_SetPosition, &QPushButton::clicked, this, &CWeatherComponent::showCoordinateDialog);
 
             m_weatherScenarios = CWeatherGrid::getAllScenarios();
             for (const auto &scenario : as_const(m_weatherScenarios))
@@ -103,10 +103,14 @@ namespace BlackGui
             if (useOwnAircraftPosition)
             {
                 m_weatherUpdateTimer.start();
+                ui->pb_SetPosition->setText("Show Position");
             }
             else
             {
                 m_weatherUpdateTimer.stop();
+                const CCoordinateGeodetic c;
+                m_coordinateDialog->setCoordinate(c);
+                ui->pb_SetPosition->setText("Select Position");
             }
             updateWeatherInformation();
         }
@@ -157,6 +161,7 @@ namespace BlackGui
         void CWeatherComponent::updateWeatherInformation()
         {
             setWeatherGrid({});
+            ui->lbl_Status->setText({});
             const bool useOwnAcftPosition = ui->cb_UseOwnAcftPosition->isChecked();
             BlackMisc::Geo::CCoordinateGeodetic position;
             Q_ASSERT(ui->cb_weatherScenario->currentData().canConvert<CWeatherScenario>());
@@ -166,10 +171,16 @@ namespace BlackGui
             {
                 Q_ASSERT(sGui->getIContextOwnAircraft());
                 position = sGui->getIContextOwnAircraft()->getOwnAircraft().getPosition();
+                m_coordinateDialog->setCoordinate(position);
             }
             else
             {
                 position = m_coordinateDialog->getCoordinate();
+                if (position.isNull())
+                {
+                    ui->lbl_Status->setText("No position selected.");
+                    return;
+                }
             }
 
             if (CWeatherScenario::isRealWeatherScenario(scenario))
@@ -218,7 +229,7 @@ namespace BlackGui
 
         void CWeatherComponent::requestWeatherGrid(const CCoordinateGeodetic &position)
         {
-            ui->lbl_Status->setText("Loading...");
+            ui->lbl_Status->setText(QStringLiteral("Loading around %1 %2").arg(position.latitude().toWgs84(), position.longitude().toWgs84()));
             CWeatherGrid weatherGrid { { {}, position } };
             auto ident = identifier();
             sGui->getIContextSimulator()->requestWeatherGrid(weatherGrid, ident);
