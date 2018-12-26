@@ -23,10 +23,11 @@ namespace BlackMisc
             html += QStringLiteral("<tr>");
             for (int c = 0; c < columns; c++)
             {
-                html += (i < size) ?
+                const bool stillElements = (i < size);
+                html += stillElements ?
                         u"<td>" % values.at(i) % u"</td>" :
                         QStringLiteral("<td></td>");
-                i++;
+                if (c + 1 < columns) i++;
             }
             html += QStringLiteral("</tr>");
         }
