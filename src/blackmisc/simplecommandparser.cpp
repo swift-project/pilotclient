@@ -87,6 +87,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         if (p.isEmpty()) { return false; }
         bool ok = false;
+        // cppcheck-suppress ignoredReturnValue
         p.toInt(&ok);
         return ok;
     }

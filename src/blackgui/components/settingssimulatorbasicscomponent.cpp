@@ -318,6 +318,7 @@ namespace BlackGui
             ui->le_SimulatorDirectory->setPlaceholderText(simDir.isEmpty() ? "Simulator directory" : simDir);
 
             //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
+            // cppcheck-suppress knownConditionTrueFalse
             constexpr bool BrokenMultilinePlaceholder = true; // last checked with Qt 5.10
 
             // we take the settings and update to latest sim.directory
@@ -332,6 +333,7 @@ namespace BlackGui
             else
             {
                 const QString ms = m.join("<br>");
+                // cppcheck-suppress knownConditionTrueFalse
                 if (BrokenMultilinePlaceholder && m.size() > 1)
                 {
                     ui->pte_ModelDirectories->setToolTip(unwrappedTooltip(ms));

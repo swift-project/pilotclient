@@ -26,7 +26,7 @@ builders['Build swift Linux'] = {
             }
 
             stage('Linux Checks') {
-                sh 'cppcheck --xml --xml-version=2 --inline-suppr --std=c++11 -ibuild --enable=style,unusedFunction -i externals ' +
+                sh 'cppcheck --xml --xml-version=2 --inline-suppr --std=c++14 -ibuild --enable=style,unusedFunction -i externals ' +
                         '--suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> cppcheck.xml'
 
                 publishCppcheck allowNoReport: true, pattern: 'cppcheck.xml'

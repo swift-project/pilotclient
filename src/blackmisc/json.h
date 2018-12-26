@@ -431,6 +431,7 @@ namespace BlackMisc
                     if (value.isUndefined())
                     {
                         constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
+                        // cppcheck-suppress knownConditionTrueFalse
                         if (required) { throw CJsonException(QStringLiteral("Missing required member '%1'").arg(member.latin1Name())); }
                     }
                     else

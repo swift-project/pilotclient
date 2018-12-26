@@ -367,6 +367,7 @@ namespace BlackMisc
         QString p = port.toLower().trimmed();
         if (!p.isEmpty())
         {
+            // cppcheck-suppress ignoredReturnValue
             p.toShort(&ok);
             if (!ok)
             {

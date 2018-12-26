@@ -2391,6 +2391,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details, bool forceTrace)
         {
             if (!forceTrace && !this->isTracingSendId()) { return; }
+            // cppcheck-suppress knownConditionTrueFalse
             if (MaxSendIdTraces < 1) { return; }
             DWORD dwLastId = 0;
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);

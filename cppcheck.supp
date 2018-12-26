@@ -5,33 +5,17 @@
 // [error id]:[filename2]
 // [error id]
 
-// False positive caused by missing support for C++11 feature
-unusedPrivateFunction:src/blackmisc/lockfree.h
-
 // Ignore noExplicitConstructor for now.
 noExplicitConstructor
+
+// Ignore useStlAlgorithm for now (consider designing our own useBlackMiscAlgorithm checks)
+useStlAlgorithm
+
+// Internal errors
+cppcheckError
 
 // Ignore style issues in g2clib
 variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
 
-// Shared pointers should be passed by value
-passedByValue:src/blackmisc/lockfree.h
-
-// Passing std::function by value is acceptable
-passedByValue:src/xswiftbus/libxplanemp/src/ResourceManager.h
-passedByValue:tests/blackcore/vatsim/testnetwork/expect.h
-passedByValue:src/xswiftbus/command.h
-
-// Unique pointers should be passed by value
-passedByValue:src/xswiftbus/menus.h
-passedByValue:src/xswiftbus/menus.cpp
-
-// cppcheck cannot handle the advanced workaround in use
-operatorEqRetRefThis:src/blackmisc/iterator.h
-
 // Ignore unusedFunction as it has too many false positives (especially in tests)
 unusedFunction
-
-// Return value of those functions is not required.
-ignoredReturnValue:src/blackmisc/dbusserver.cpp
-ignoredReturnValue:src/blackmisc/simplecommandparser.cpp

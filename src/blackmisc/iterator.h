@@ -55,7 +55,8 @@ namespace BlackMisc
             {
                 // Work around lambda's deleted copy assignment operator
                 this->~OutputIterator();
-                return *new (this) OutputIterator(other);
+                new (this) OutputIterator(other);
+                return *this;
             }
 
             //! Destructor.

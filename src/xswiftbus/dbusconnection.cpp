@@ -36,7 +36,7 @@ namespace XSwiftBus
     CDBusConnection::~CDBusConnection()
     {
         close();
-        if (m_connection) { dispatch(); }
+        if (m_connection) { dispatch(); } // dispatch is virtual, but safe to call in dtor, as it's declared final
         if (m_dispatcher) { m_dispatcher->remove(this); }
     }
 
