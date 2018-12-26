@@ -258,13 +258,13 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
-        static const QString s(m_applicationName % QStringLiteral(" ") % CBuildConfig::getVersionString());
+        static const QString s(m_applicationName % u" " % CBuildConfig::getVersionString());
         return s;
     }
 
     const QString &CApplication::getApplicationNameVersionDetailed() const
     {
-        static const QString s(m_applicationName % QStringLiteral(" ") % this->versionStringDetailed());
+        static const QString s(m_applicationName % u" " % this->versionStringDetailed());
         return s;
     }
 
@@ -487,17 +487,17 @@ namespace BlackCore
     {
         if (this->isDeveloperFlagSet() && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionStringPlatform() + " [dev,DEVDBG]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() % u" [dev,DEVDBG]");
             return s;
         }
         if (isDeveloperFlagSet())
         {
-            static const QString s(CBuildConfig::getVersionStringPlatform() + " [dev]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() % u" [dev]");
             return s;
         }
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionStringPlatform() + " [DEVDBG]");
+            static const QString s(CBuildConfig::getVersionStringPlatform() % u" [DEVDBG]");
             return s;
         }
         return CBuildConfig::getVersionStringPlatform();
@@ -591,41 +591,41 @@ namespace BlackCore
     {
         QString str =
             CBuildConfig::getVersionString() %
-            QStringLiteral(" ") % (CBuildConfig::isReleaseBuild() ? QStringLiteral("Release build") : QStringLiteral("Debug build")) %
+            u" " % (CBuildConfig::isReleaseBuild() ? u"Release build" : u"Debug build") %
             separator %
-            QStringLiteral("Local dev.dbg.: ") %
+            u"Local dev.dbg.: " %
             boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) %
             separator %
-            QStringLiteral("dev.env.: ") %
+            u"dev.env.: " %
             boolToYesNo(this->isDeveloperFlagSet()) %
             separator %
-            QStringLiteral("distribution: ") %
+            u"distribution: " %
             this->getOwnDistribution().toQString(true) %
             separator %
-            QStringLiteral("Windows NT: ") %
+            u"Windows NT: " %
             boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
-            QStringLiteral(" Windows 10: ") %
+            u" Windows 10: " %
             boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
             separator %
-            QStringLiteral("Linux: ") %
+            u"Linux: " %
             boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
-            QStringLiteral(" Unix: ") %
+            " Unix: " %
             boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
             separator %
-            QStringLiteral("MacOS: ") %
+            u"MacOS: " %
             boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) %
             separator %
-            QStringLiteral("Build Abi: ") %
+            "Build Abi: " %
             QSysInfo::buildAbi() %
             separator %
-            QStringLiteral("Build CPU: ") %
+            u"Build CPU: " %
             QSysInfo::buildCpuArchitecture() %
             separator %
             CBuildConfig::compiledWithInfo(false);
 
         if (this->supportsContexts())
         {
-            str += (separator % QStringLiteral("Supporting contexts"));
+            str += (separator % u"Supporting contexts");
             if (this->getIContextNetwork())
             {
                 str += (separator % this->getIContextNetwork()->getLibraryInfo(true));
@@ -1651,7 +1651,7 @@ namespace BlackCore
                                        qstringToFilePath(metrics),
                                        serverUrl.getFullUrl().toStdString(),
                                        annotations,
-                                        {},
+                                       {},
                                        false, true);
         return CStatusMessage(this).info(u"Using crash handler");
 #else
