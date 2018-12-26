@@ -367,12 +367,13 @@ namespace BlackMisc
 
     QString CStatusMessage::severitiesToString(const QSet<CStatusMessage::StatusSeverity> &severities)
     {
+        if (severities.isEmpty()) { return {}; }
         auto minmax = std::minmax_element(severities.begin(), severities.end());
         auto min = *minmax.first;
         auto max = *minmax.second;
         if (min == SeverityDebug && max == SeverityError) { static const QString all("all severities"); return all; }
-        if (min == SeverityDebug) { u"at or below " % severityToString(max); }
-        if (max == SeverityError) { u"at or above " % severityToString(min); }
+        if (min == SeverityDebug) { return u"at or below " % severityToString(max); }
+        if (max == SeverityError) { return u"at or above " % severityToString(min); }
         auto list = severities.toList();
         std::sort(list.begin(), list.end());
         QStringList ret;
