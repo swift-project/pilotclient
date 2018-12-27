@@ -27,6 +27,7 @@
 #include <QMessageBox>
 #include <QObject>
 #include <QSize>
+#include <QUrl>
 #include <QString>
 #include <functional>
 
@@ -164,10 +165,26 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
+        void showOverlayHTMLMessage(const QString &htmlMessage, int timeOutMs = -1)
+        {
+            this->initMinimalFrame();
+            m_overlayMessages->showHTMLMessage(htmlMessage, timeOutMs);
+            WIDGET::repaint();
+        }
+
+        //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
         void showOverlayHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
         {
             this->initMinimalFrame();
             m_overlayMessages->showHTMLMessage(message, timeOutMs);
+            WIDGET::repaint();
+        }
+
+        //! \copydoc BlackGui::COverlayMessages::showDownloadProgress
+        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs = -1)
+        {
+            this->initMinimalFrame();
+            m_overlayMessages->showDownloadProgress(progress, current, max, url, timeOutMs);
             WIDGET::repaint();
         }
 

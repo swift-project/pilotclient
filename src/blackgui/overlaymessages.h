@@ -119,6 +119,12 @@ namespace BlackGui
         //! HTML message
         void showHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
+        //! HTML message
+        void showHTMLMessage(const QString &htmlMessage, int timeOutMs = -1);
+
+        //! Download progress
+        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs = -1);
+
         //! Progress bar
         void showProgressBar(int percentage, const QString &message, int timeOutMs = -1);
 

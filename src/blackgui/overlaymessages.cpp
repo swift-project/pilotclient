@@ -333,6 +333,13 @@ namespace BlackGui
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
+        this->showHTMLMessage(message.toHtml(true, true), timeOutMs);
+    }
+
+    void COverlayMessages::showHTMLMessage(const QString &htmlMessage, int timeOutMs)
+    {
+        if (htmlMessage.isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
 
         if (this->hasPendingConfirmation())
         {
@@ -341,14 +348,28 @@ namespace BlackGui
             m_pendingMessageCalls.push_back([ = ]()
             {
                 if (!myself) { return; }
-                myself->showHTMLMessage(message, timeOutMs);
+                myself->showHTMLMessage(htmlMessage, timeOutMs);
             });
             return;
         }
 
         this->setModeToHTMLMessage();
-        ui->te_HTMLMessage->setText(message.toHtml(true, true));
+        ui->te_HTMLMessage->setText(htmlMessage);
         this->display(timeOutMs);
+    }
+
+    void COverlayMessages::showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs)
+    {
+        if (progress >= 0 && max >= 0)
+        {
+            static const QString m("%1 of %2 from %3");
+            this->showProgressBar(progress, m.arg(current).arg(max).arg(url.toString()), timeOutMs);
+        }
+        else
+        {
+            static const QString m("%1 from %2");
+            this->showHTMLMessage(m.arg(current).arg(url.toString()), timeOutMs);
+        }
     }
 
     void COverlayMessages::showProgressBar(int percentage, const QString &message, int timeOutMs)
