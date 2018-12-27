@@ -37,8 +37,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        CDbAirlineIcaoSelectorBase::CDbAirlineIcaoSelectorBase(QWidget *parent) :
-            QFrame(parent)
+        CDbAirlineIcaoSelectorBase::CDbAirlineIcaoSelectorBase(QWidget *parent) : QFrame(parent)
         {
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});

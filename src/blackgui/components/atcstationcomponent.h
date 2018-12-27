@@ -34,8 +34,8 @@
 #include <QTimer>
 #include <QList>
 
-namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace Ui { class CAtcStationComponent; }
+namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;

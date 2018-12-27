@@ -35,13 +35,13 @@ namespace BlackGui
 
     protected:
         //! Constructor
-        CEnableForViewBasedIndicator(BlackGui::Views::CViewBaseNonTemplate *viewWithIndicator = nullptr);
+        CEnableForViewBasedIndicator(Views::CViewBaseNonTemplate *viewWithIndicator = nullptr);
 
         //! Set the corresponding view
         void setViewWithIndicator(BlackGui::Views::CViewBaseNonTemplate *viewWithIndicator);
 
     private:
-        BlackGui::Views::CViewBaseNonTemplate *m_viewWithIndicator = nullptr;
+        Views::CViewBaseNonTemplate *m_viewWithIndicator = nullptr;
     };
 
 } // namespace
