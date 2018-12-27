@@ -344,6 +344,9 @@ namespace BlackGui
         //! Set current font values
         void setCurrentFontValues();
 
+        //! Web data services started
+        void onWebDataServicesStarted(bool success);
+
         //! \copydoc BlackGui::CGuiUtility::superviseMainWindowMinSizes
         void superviseWindowMinSizes();
     };

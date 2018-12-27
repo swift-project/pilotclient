@@ -250,6 +250,7 @@ namespace BlackCore
             m1 = CStatusMessage(this, CStatusMessage::SeverityError, "First bootstrap URL is empty");
         }
 
+        emit this->setupLoadingMessages(m1);
 
         url = randomUrls.back();
         if (!url.isEmpty())

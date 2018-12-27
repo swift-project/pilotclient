@@ -96,6 +96,9 @@ namespace BlackGui
         // notify when app goes down
         connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, &CGuiApplication::gracefulShutdown);
 
+        // follow up on web data services
+        connect(this, &CApplication::webDataServicesStarted, this, &CGuiApplication::onWebDataServicesStarted);
+
         if (!sGui)
         {
             CGuiApplication::registerMetadata();
@@ -109,6 +112,8 @@ namespace BlackGui
 
             connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
             connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes, Qt::QueuedConnection);
+
+            // splash screen
             connect(this->getSetupReader(), &CSetupReader::setupLoadingMessages, this, &CGuiApplication::displaySplashMessages, Qt::QueuedConnection);
         }
     }
@@ -1110,6 +1115,14 @@ namespace BlackGui
         const QFont font = CGuiUtility::currentFont();
         m_fontFamily = font.family();
         m_fontPointSize = font.pointSize();
+    }
+
+    void CGuiApplication::onWebDataServicesStarted(bool success)
+    {
+        if (success)
+        {
+            connect(this->getWebDataServices(), &CWebDataServices::databaseReaderMessages, this, &CGuiApplication::displaySplashMessages, Qt::QueuedConnection);
+        }
     }
 
     void CGuiApplication::superviseWindowMinSizes()

@@ -1430,10 +1430,11 @@ namespace BlackCore
         if (timeOut.isValid() && QDateTime::currentDateTimeUtc() > timeOut)
         {
             const QString timeOutString = timeOut.toString();
-            CLogMessage(this).warning(u"Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
-                    << info << CEntityFlags::flagToString(entities)
-                    << infoReader->getInfoObjectsUrl().toQString() << timeOutString
-                    << infoReader->getName();
+            const CStatusMessage m = CLogMessage(this).warning(u"Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
+                                     << info << CEntityFlags::flagToString(entities)
+                                     << infoReader->getInfoObjectsUrl().toQString() << timeOutString
+                                     << infoReader->getName();
+            emit this->databaseReaderMessages(m);
 
             // continue here and read data without info objects
             infoReader->setMarkedAsFailed(true);
@@ -1448,15 +1449,17 @@ namespace BlackCore
             {
                 // ok, this means we are parsing
                 this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                const CStatusMessage m = CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                emit this->databaseReaderMessages(m);
                 return false; // wait
             }
             else
             {
                 // we have a response, but a failure, means server is alive, but responded with error
                 // such an error (access, ...) normally will not go away
-                CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
+                const CStatusMessage m = CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
                 infoReader->setMarkedAsFailed(true);
+                emit this->databaseReaderMessages(m);
                 return true; // carry on, regardless of situation
             }
         }
