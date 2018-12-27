@@ -425,6 +425,9 @@ namespace BlackCore
         //! The network reply callback when request is completed
         using CallbackSlot = BlackMisc::CSlot<void(QNetworkReply *)>;
 
+        //! The progress slot
+        using ProgressSlot = BlackMisc::CSlot<void(int, qint64, qint64, const QUrl &)>;
+
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
 
@@ -475,20 +478,29 @@ namespace BlackCore
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
                                       const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
+        //! Request to get network reply
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
+                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+
         //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url, int logId,
-                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+
+        //! Request to get network reply
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
-                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
+                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Post to network
         //! \threadsafe
@@ -645,15 +657,22 @@ namespace BlackCore
 
         using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
 
+
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
                                        int logId, const CallbackSlot &callback,
                                        int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
 
+        //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
+        //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
+        QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
+                                       int logId, const CallbackSlot &callback, const ProgressSlot &progress,
+                                       int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
+
         //! Call httpRequestImpl in correct thread
         void httpRequestImplInQAMThread(const QNetworkRequest &request,
-                                        int logId, const CallbackSlot &callback,
+                                        int logId, const CallbackSlot &callback, const ProgressSlot &progress,
                                         int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
 
         //! Triggers a check of the network accessibility

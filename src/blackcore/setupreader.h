@@ -219,6 +219,9 @@ namespace BlackCore
         //! Set last setup parsing messages
         void setLastSetupReadErrorMessages(const BlackMisc::CStatusMessageList &messages);
 
+        //! Progress
+        void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url);
+
         //! Convert string to bootstrap mode
         static BootstrapMode stringToEnum(const QString &s);
 

@@ -243,7 +243,7 @@ namespace BlackCore
         if (!url.isEmpty())
         {
             m1 = CStatusMessage(this, CStatusMessage::SeverityInfo, "Start reading bootstrap 1st URL: " + url.toQString());
-            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile }, { this, &CSetupReader::networkReplyProgress });
         }
         else
         {
@@ -265,7 +265,7 @@ namespace BlackCore
                     CLogMessage(this).info(u"Cancel second bootstrap read ('%1'), as there was a 1st read: '%2'") << url.toQString() << m_lastSuccessfulSetupUrl;
                     return;
                 }
-                sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
+                sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile }, { this, &CSetupReader::networkReplyProgress });
             });
         }
         else
@@ -297,7 +297,7 @@ namespace BlackCore
         if (!sApp || m_shutdown) { return; }
         CUrl url = randomUrls.front();
         const CStatusMessage m1(this, CStatusMessage::SeverityInfo, "Start reading update info 1st URL: " + url.toQString());
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile }, { this, &CSetupReader::networkReplyProgress });
 
         url = randomUrls.back();
         const CStatusMessage m2(this, CStatusMessage::SeverityInfo, "Will also trigger deferred update info reading 2nd URL: " + url.toQString());
@@ -311,7 +311,7 @@ namespace BlackCore
                 CLogMessage(this).info(u"Cancel second update info read ('%1'), as there was a 1st read '%2'") << url.toQString() << m_lastSuccessfulUpdateInfoUrl;
                 return;
             }
-            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile });
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile }, { this, &CSetupReader::networkReplyProgress });
         });
     }
 
@@ -649,6 +649,14 @@ namespace BlackCore
     {
         QWriteLocker l(&m_lockSetup);
         m_setupReadErrorMsgs = messages.getErrorMessages();
+    }
+
+    void CSetupReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
+    {
+        Q_UNUSED(url);
+        Q_UNUSED(logId);
+        Q_UNUSED(current);
+        Q_UNUSED(max);
     }
 
     CStatusMessageList CSetupReader::manageSetupAvailability(bool webRead, bool localRead)

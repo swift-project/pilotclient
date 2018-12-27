@@ -1026,7 +1026,8 @@ namespace BlackCore
             const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(100, this, [ = ]()
             {
-                if (!myself) { return; }
+                if (!myself || m_shuttingDown) { return; }
+                if (!sApp || sApp->isShuttingDown()) { return; }
                 m_vatsimStatusReader->readInBackgroundThread();
             });
         }
@@ -1082,6 +1083,8 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
             c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_icaoDataReader->start(QThread::LowPriority);
         }
 
@@ -1095,6 +1098,8 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_modelDataReader->start(QThread::LowPriority);
         }
 
@@ -1107,6 +1112,8 @@ namespace BlackCore
             c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }
@@ -1133,7 +1140,8 @@ namespace BlackCore
             const QPointer<CWebDataServices> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
-                if (!myself) { return; }
+                if (!myself || m_shuttingDown) { return; }
+                if (!sApp || sApp->isShuttingDown()) { return; }
                 this->initDbInfoObjectReaderAndTriggerRead();
             });
             return;
@@ -1149,6 +1157,7 @@ namespace BlackCore
             // relay signal
             c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
+            c = connect(m_dbInfoDataReader, &CInfoDataReader::databaseReaderMessages, this, &CWebDataServices::databaseReaderMessages);
             Q_UNUSED(c);
 
             // start in own thread
@@ -1158,6 +1167,7 @@ namespace BlackCore
             QTimer::singleShot(25, m_dbInfoDataReader, [ = ]()
             {
                 if (!myself || m_shuttingDown) { return; }
+                if (!sApp || sApp->isShuttingDown()) { return; }
                 m_dbInfoDataReader->read(); // trigger read of info objects
             });
         }
@@ -1384,7 +1394,7 @@ namespace BlackCore
 
         Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
         if (m_dbInfoDataReader->areAllInfoObjectsRead()) { return true; }
-        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
+        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(15 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
         return read;
     }
@@ -1395,7 +1405,7 @@ namespace BlackCore
 
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "need reader");
         if (m_sharedInfoDataReader->areAllInfoObjectsRead()) { return true; }
-        if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
+        if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(15 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
         return read;
     }

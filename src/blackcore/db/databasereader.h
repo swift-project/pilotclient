@@ -301,6 +301,13 @@ namespace BlackCore
             //! Header of shared file read
             void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
+            //! Database reader messages
+            //! \remark used with splash screen
+            void databaseReaderMessages(const BlackMisc::CStatusMessageList &messages);
+
+            //! Download progress for an entity
+            void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+
         protected:
             CDatabaseReaderConfigList   m_config;                   //!< DB reder configuration
             QString                     m_statusMessage;            //!< Returned status message from watchdog
@@ -421,6 +428,9 @@ namespace BlackCore
 
             //! Parsing info message
             void logParseMessage(const QString &entity, int size, int msElapsed, const JsonDatastoreResponse &response) const;
+
+            //! Network request progress
+            virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url) override;
         };
     } // ns
 } // ns

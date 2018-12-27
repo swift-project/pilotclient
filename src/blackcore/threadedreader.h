@@ -23,6 +23,7 @@
 #include <QReadWriteLock>
 #include <QString>
 #include <QtGlobal>
+#include <QPair>
 #include <atomic>
 
 class QNetworkReply;
@@ -93,8 +94,18 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CUrlLogList getUrlLogList() const;
 
+        //! Progress 0..100
+        //! \threadsafe
+        int getNetworkReplyProgress() const { return m_networkReplyProgress; }
+
+        //! Max./current bytes
+        QPair<qint64, qint64> getNetworkReplyBytes() const;
+
     protected:
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive }; //!< lock which can be used from the derived classes
+        std::atomic_int             m_networkReplyProgress;     //!< Progress percentage 0...100
+        std::atomic_llong           m_networkReplyCurrent;      //!< current bytes
+        std::atomic_llong           m_networkReplyNax;          //!< max bytes
 
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
@@ -122,6 +133,9 @@ namespace BlackCore
         //! Get request from network, and log with m_urlReadLog
         //! \threadsafe read log access is thread safe
         QNetworkReply *getFromNetworkAndLog(const BlackMisc::Network::CUrl &url, const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Network request progress
+        virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url);
 
         //! Network reply received, mark in m_urlReadLog
         //! \threadsafe

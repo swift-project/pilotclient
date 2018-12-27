@@ -492,6 +492,13 @@ namespace BlackCore
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+        //! Download progress for an entity
+        void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+
+        //! Database reader messages
+        //! \remark used with splash screen
+        void databaseReaderMessages(const BlackMisc::CStatusMessageList &messages);
+
         //! DB data read
         void swiftDbDataRead(bool success);
 

@@ -201,6 +201,7 @@ namespace BlackCore
                         QTimer::singleShot(0, this, [ = ]
                         {
                             if (!myself) { return; }
+                            if (!sApp || sApp->isShuttingDown()) { return; }
                             emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0);
                         });
                     }
@@ -220,7 +221,8 @@ namespace BlackCore
             if (entities == CEntityFlags::NoEntity) { return; }
             if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
-            //! \todo MS 2018-12 Error: CDatabaseReader has no ps_read method
+            //! \todo MS 2018-12 Error: CDatabaseReader has no ps_read method -> T490
+            //! \todo KB 2018-12 https://dev.swift-project.org/T490
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
                            Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
                            Q_ARG(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag, mode),
@@ -672,6 +674,17 @@ namespace BlackCore
             CLogMessage(this).info(u"Parsed %1 %2 in %3ms, thread %4 | '%5'")
                     << size << entity << msElapsed
                     << CThreadUtils::currentThreadInfo() << response.toQString();
+        }
+
+        void CDatabaseReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
+        {
+            CThreadedReader::networkReplyProgress(logId, current, max, url);
+            const QString fileName = url.fileName();
+            const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
+            if (CEntityFlags::isSingleEntity(entity))
+            {
+                emit this->entityDownloadProgress(entity, logId, m_networkReplyProgress, m_networkReplyCurrent, m_networkReplyNax, url);
+            }
         }
 
         QString CDatabaseReader::fileNameForMode(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode)

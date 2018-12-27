@@ -171,7 +171,7 @@ namespace BlackCore
         return true;
     }
 
-    QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback)
     {
         QWriteLocker wl(&m_lock);
         const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);
@@ -185,7 +185,24 @@ namespace BlackCore
         wl.unlock();
 
         // returned QNetworkReply normally nullptr since QAM is in different thread
-        return sApp->getFromNetwork(url, id, callback);
+        QNetworkReply *nr = sApp->getFromNetwork(url, id, callback, { this, &CThreadedReader::networkReplyProgress });
+        return nr;
+    }
+
+    QPair<qint64, qint64> CThreadedReader::getNetworkReplyBytes() const
+    {
+        return QPair<qint64, qint64>(m_networkReplyCurrent, m_networkReplyNax);
+    }
+
+    void CThreadedReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
+    {
+        // max can be -1 if file size is not available
+        m_networkReplyProgress = (current > 0 && max > 0) ? static_cast<int>((current * 100) / max) : -1;
+        m_networkReplyCurrent = current;
+        m_networkReplyNax = max;
+
+        Q_UNUSED(url);
+        Q_UNUSED(logId);
     }
 
     void CThreadedReader::logNetworkReplyReceived(QNetworkReply *reply)
