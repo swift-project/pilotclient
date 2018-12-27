@@ -27,7 +27,7 @@ namespace BlackMisc
 
     namespace Private
     {
-        //! Like QString::arg() but accepts a QVector of args.
+        //! Like QString::arg() but for QStringView.
         BLACKMISC_EXPORT QString arg(QStringView format, const QStringList &args);
     }
 
@@ -53,7 +53,8 @@ namespace BlackMisc
         public Mixin::EqualsByCompare<CStrongStringView>,
         public Mixin::LessThanByCompare<CStrongStringView>,
         public Mixin::DBusOperators<CStrongStringView>,
-        public Mixin::JsonOperators<CStrongStringView>
+        public Mixin::JsonOperators<CStrongStringView>,
+        public Mixin::String<CStrongStringView>
     {
     public:
         //! Default constructor.
@@ -92,7 +93,7 @@ namespace BlackMisc
         QStringView view() const { return m_view; }
 
         //! Return a copy as a QString.
-        QString toQString(bool i18n) const { Q_UNUSED(i18n); return isOwning() ? m_string : m_view.toString(); }
+        QString convertToQString(bool i18n = false) const { Q_UNUSED(i18n); return isOwning() ? m_string : m_view.toString(); }
 
         //! Compare two strings.
         friend int compare(const CStrongStringView &a, const CStrongStringView &b) { return a.m_view.compare(b.m_view); }
@@ -102,13 +103,13 @@ namespace BlackMisc
 
         //! DBus marshalling.
         //! @{
-        void marshallToDbus(QDBusArgument &arg) const { if (isOwning()) { arg << m_string; } else { arg << m_view.toString(); } }
-        void unmarshallFromDbus(const QDBusArgument &arg) { QString s; arg >> s; *this = s; }
+        void marshallToDbus(QDBusArgument &arg) const { arg << toQString(); }
+        void unmarshallFromDbus(const QDBusArgument &arg) { arg >> m_string; m_view = m_string; }
         //! @}
 
         //! JSON conversion.
         //! @{
-        QJsonObject toJson() const { QJsonObject json; json.insert(QStringLiteral("value"), m_view.toString()); return json; }
+        QJsonObject toJson() const { QJsonObject json; json.insert(QStringLiteral("value"), toQString()); return json; }
         void convertFromJson(const QJsonObject &json) { *this = json.value(QLatin1String("value")).toString(); }
         //! @}
 
