@@ -74,9 +74,6 @@ namespace BlackGui
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
-    COverlayMessages::~COverlayMessages()
-    {}
-
     COverlayMessages::COverlayMessages(const QString &headerText, int w, int h, QWidget *parent) :
         QFrame(parent),
         ui(new Ui::COverlayMessages),
@@ -85,12 +82,15 @@ namespace BlackGui
         this->init(w, h);
     }
 
+    COverlayMessages::~COverlayMessages()
+    {}
+
     void COverlayMessages::init(int w, int h)
     {
         ui->setupUi(this);
         this->resize(w, h);
         this->setAutoFillBackground(true);
-        m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
+        m_autoCloseTimer.setObjectName(objectName() % ":autoCloseTimer");
         ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
         connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
@@ -123,7 +123,7 @@ namespace BlackGui
     {
         QMessageBox msgBox;
         msgBox.setText("Shutdown the application.");
-        msgBox.setInformativeText("Do you want to terminate " + sGui->getApplicationNameAndVersion() + "?");
+        msgBox.setInformativeText(u"Do you want to terminate " % sGui->getApplicationNameAndVersion() % u"?");
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Save);
         if (QMessageBox::Ok == msgBox.exec() && sGui)
@@ -362,12 +362,12 @@ namespace BlackGui
     {
         if (progress >= 0 && max >= 0)
         {
-            static const QString m("%1 of %2 from %3");
+            static const QString m("%1 of %2 from '%3'");
             this->showProgressBar(progress, m.arg(current).arg(max).arg(url.toString()), timeOutMs);
         }
         else
         {
-            static const QString m("%1 from %2");
+            static const QString m("%1 from '%2'");
             this->showHTMLMessage(m.arg(current).arg(url.toString()), timeOutMs);
         }
     }

@@ -232,13 +232,13 @@ namespace BlackGui
         }
 
         //! Init a minimal frame (smaller as the normal one)
-        void initMinimalFrame()
+        void initMinimalFrame(int lines = 4)
         {
             this->initInnerFrame();
 
             // get logical resolution
             constexpr int MinHeight = 100;
-            QSizeF s = CGuiUtility::fontMetricsEstimateSize(100, 5); // 2 lines for header
+            QSizeF s = CGuiUtility::fontMetricsEstimateSize(100, lines, true); // 2 lines for header
             if (s.height() < MinHeight) { s.setHeight(MinHeight); }
 
             const QSize inner(innerFrameSize());
