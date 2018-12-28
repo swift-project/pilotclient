@@ -22,22 +22,22 @@ namespace BlackMisc
         {
             switch (flag)
             {
-            case AircraftIcaoEntity: return "Aircraft ICAO";
-            case AirlineIcaoEntity: return "Airline ICAO";
-            case AirportEntity: return "Airport";
-            case AllEntities: return "All";
-            case AllIcaoAndCountries: return "All ICAO + country";
-            case AllIcaoEntities: return "All ICAO";
-            case BookingEntity: return "VATSIM bookings";
-            case CountryEntity: return "Country";
-            case DistributorEntity: return "Distributor";
-            case DbInfoObjectEntity: return "Info objects (DB)";
-            case SharedInfoObjectEntity: return "Info objects (shared)";
-            case LiveryEntity: return "Livery";
-            case ModelEntity: return "Model";
-            case NoEntity: return "no data";
-            case VatsimDataFile: return "VATSIM data file";
-            case VatsimStatusFile: return "VATSIM status file";
+            case AircraftIcaoEntity:     return QStringLiteral("Aircraft ICAO");
+            case AirlineIcaoEntity:      return QStringLiteral("Airline ICAO");
+            case AirportEntity:          return QStringLiteral("Airport");
+            case AllEntities:            return QStringLiteral("All");
+            case AllIcaoAndCountries:    return QStringLiteral("All ICAO + country");
+            case AllIcaoEntities:        return QStringLiteral("All ICAO");
+            case BookingEntity:          return QStringLiteral("VATSIM bookings");
+            case CountryEntity:          return QStringLiteral("Country");
+            case DistributorEntity:      return QStringLiteral("Distributor");
+            case DbInfoObjectEntity:     return QStringLiteral("Info objects (DB)");
+            case SharedInfoObjectEntity: return QStringLiteral("Info objects (shared)");
+            case LiveryEntity:           return QStringLiteral("Livery");
+            case ModelEntity:            return QStringLiteral("Model");
+            case NoEntity:               return QStringLiteral("no data");
+            case VatsimDataFile:         return QStringLiteral("VATSIM data file");
+            case VatsimStatusFile:       return QStringLiteral("VATSIM status file");
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
@@ -52,19 +52,19 @@ namespace BlackMisc
         QStringList CEntityFlags::entitiesToStringList(CEntityFlags::Entity entities)
         {
             QStringList list;
-            if (entities.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
-            if (entities.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
-            if (entities.testFlag(AirportEntity)) list << "Airport";
-            if (entities.testFlag(BookingEntity)) list << "VATSIM bookings";
-            if (entities.testFlag(CountryEntity)) list << "Country";
-            if (entities.testFlag(DistributorEntity)) list << "Distributor";
-            if (entities.testFlag(DbInfoObjectEntity)) list << "Info objects (DB)";
-            if (entities.testFlag(SharedInfoObjectEntity)) list << "Info objects (shared)";
-            if (entities.testFlag(LiveryEntity)) list << "Livery";
-            if (entities.testFlag(ModelEntity)) list << "Model";
-            if (entities.testFlag(NoEntity)) list << "no data";
-            if (entities.testFlag(VatsimDataFile)) list << "VATSIM data file";
-            if (entities.testFlag(VatsimStatusFile)) list << "VATSIM status file";
+            if (entities.testFlag(AircraftIcaoEntity))     list << QStringLiteral("Aircraft ICAO");
+            if (entities.testFlag(AirlineIcaoEntity))      list << QStringLiteral("Airline ICAO");
+            if (entities.testFlag(AirportEntity))          list << QStringLiteral("Airport");
+            if (entities.testFlag(BookingEntity))          list << QStringLiteral("VATSIM bookings");
+            if (entities.testFlag(CountryEntity))          list << QStringLiteral("Country");
+            if (entities.testFlag(DistributorEntity))      list << QStringLiteral("Distributor");
+            if (entities.testFlag(DbInfoObjectEntity))     list << QStringLiteral("Info objects (DB)");
+            if (entities.testFlag(SharedInfoObjectEntity)) list << QStringLiteral("Info objects (shared)");
+            if (entities.testFlag(LiveryEntity))           list << QStringLiteral("Livery");
+            if (entities.testFlag(ModelEntity))            list << QStringLiteral("Model");
+            if (entities.testFlag(NoEntity))               list << QStringLiteral("no data");
+            if (entities.testFlag(VatsimDataFile))         list << QStringLiteral("VATSIM data file");
+            if (entities.testFlag(VatsimStatusFile))       list << QStringLiteral("VATSIM status file");
             return list;
         }
 
@@ -89,19 +89,27 @@ namespace BlackMisc
             return c;
         }
 
-        QString CEntityFlags::flagToString(CEntityFlags::ReadState flag)
+        const QString &CEntityFlags::stateToString(CEntityFlags::ReadState flag)
         {
+            static const QString f("finised");
+            static const QString fr("finished (restricted)");
+            static const QString p("parsing");
+            static const QString fa("failed");
+            static const QString s("skipped");
+            static const QString st("read started");
+            static const QString x("wrong flags");
+
             switch (flag)
             {
-            case ReadFinished: return "finished";
-            case ReadFinishedRestricted: return "finished (restricted)";
-            case ReadParsing: return  "parsing";
-            case ReadFailed: return "failed";
-            case ReadSkipped: return "skipped";
-            case ReadStarted: return "read started";
+            case ReadFinished: return f;
+            case ReadFinishedRestricted: return fr;
+            case ReadParsing: return  p;
+            case ReadFailed:  return fa;
+            case ReadSkipped: return s;
+            case ReadStarted: return st;
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
-                return "wrong flags";
+                return x;
             }
         }
 
@@ -114,7 +122,7 @@ namespace BlackMisc
             case ReadParsing:
             case ReadStarted: return CStatusMessage::SeverityInfo;
             case ReadSkipped: return CStatusMessage::SeverityWarning;
-            case ReadFailed: return CStatusMessage::SeverityError;
+            case ReadFailed:  return CStatusMessage::SeverityError;
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
                 return CStatusMessage::SeverityInfo;

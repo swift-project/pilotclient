@@ -98,7 +98,7 @@ namespace BlackGui
             }
             else
             {
-                this->showOverlayHTMLMessage(u"Currently " % CEntityFlags::flagToString(readState));
+                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::stateToString(readState), 25000);
             }
         }
 

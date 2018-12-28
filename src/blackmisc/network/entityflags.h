@@ -94,7 +94,7 @@ namespace BlackMisc
             static int numberOfEntities(CEntityFlags::Entity entities);
 
             //! Convert to string
-            static QString flagToString(ReadState flag);
+            static const QString &stateToString(ReadState flag);
 
             //! Flag to severity
             static CStatusMessage::StatusSeverity flagToSeverity(ReadState state);

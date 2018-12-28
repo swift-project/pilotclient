@@ -1306,16 +1306,16 @@ namespace BlackCore
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(cats).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
             }
             else
             {
-                CLogMessage(cats).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
             }
         }
         else
         {
-            CLogMessage(cats).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+            CLogMessage(cats).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
         }
 
         m_swiftDbEntitiesRead |= entities;
