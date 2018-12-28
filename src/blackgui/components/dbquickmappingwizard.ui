@@ -66,28 +66,30 @@
      </widget>
     </item>
     <item>
-     <layout class="QFormLayout" name="fl_IntroData">
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_ModelString">
-        <property name="text">
+     <layout class="QVBoxLayout" name="vl_Intro">
+      <item>
+       <widget class="QGroupBox" name="gb_Model">
+        <property name="title">
          <string>Model</string>
         </property>
+        <layout class="QVBoxLayout" name="vl_Model">
+         <item>
+          <widget class="QLineEdit" name="le_ModelString">
+           <property name="whatsThis">
+            <string>the unique key identifies each aircraft model</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>model`s unique key</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="le_ModelString">
-        <property name="whatsThis">
-         <string>the unique key identifies each aircraft model</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>model`s unique key</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
+      <item>
        <widget class="QWidget" name="wi_Empty" native="true">
         <property name="minimumSize">
          <size>
@@ -97,92 +99,103 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_AircraftIcaoCode">
-        <property name="text">
+      <item>
+       <widget class="QGroupBox" name="gb_AircraftIcao">
+        <property name="title">
          <string>Aircraft ICAO code</string>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcaoCode">
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QWidget" name="wi_AircraftIcaoHints" native="true">
-        <layout class="QHBoxLayout" name="hl_AircraftIcaoHints">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>30</number>
-         </property>
+        <layout class="QVBoxLayout" name="vl_AircraftIcao">
          <item>
-          <widget class="QLabel" name="lbl_HintAircraftIcaoIcon">
-           <property name="maximumSize">
-            <size>
-             <width>20</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+          <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcaoCode">
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="lbl_HintAircraftIcao">
-           <property name="text">
-            <string>Hint: You can also search for the aircraft ICAO on the next page.</string>
-           </property>
+          <widget class="QWidget" name="wi_AircraftIcaoHints" native="true">
+           <layout class="QHBoxLayout" name="hl_AircraftIcaoHints">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>30</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="lbl_HintAircraftIcaoIcon">
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_HintAircraftIcao">
+              <property name="text">
+               <string>Hint: You can also search for the aircraft ICAO on the next page.</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_AirlineOrNoAirline">
-        <property name="text">
-         <string>Does the aircraft belong to an airline?</string>
+      <item>
+       <widget class="QGroupBox" name="gb_AirlineIcao">
+        <property name="title">
+         <string>Airline</string>
         </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QWidget" name="wi_AirlineOrNoAirline" native="true">
-        <layout class="QVBoxLayout" name="vl_AirlineOrNoAirline">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
+        <layout class="QVBoxLayout" name="vl_AirlineIcao">
          <item>
-          <widget class="QRadioButton" name="rb_ColorLivery">
+          <widget class="QLabel" name="lbl_AirlineOrNoAirline">
            <property name="text">
-            <string>no, this is a (small) aircraft without airline livery. Use a color livery instead.</string>
+            <string>Does the aircraft belong to an airline?</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="rb_AirlineLivery">
-           <property name="text">
-            <string>yes, it belongs to an airline or Air Force</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
+          <widget class="QWidget" name="wi_AirlineOrNoAirline" native="true">
+           <layout class="QVBoxLayout" name="vl_AirlineOrNoAirline">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="rb_ColorLivery">
+              <property name="text">
+               <string>no, this is a (small) aircraft without airline livery. Use a color livery instead.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rb_AirlineLivery">
+              <property name="text">
+               <string>yes, it belongs to an airline or Air Force</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
@@ -198,46 +211,6 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="lbl_AirlineName">
-              <property name="text">
-               <string>Airline name</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="BlackGui::Components::CDbAirlineNameSelectorComponent" name="selector_AirlineName">
-              <property name="maximumSize">
-               <size>
-                <width>225</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="focusPolicy">
-               <enum>Qt::StrongFocus</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="lbl_VirtualAirline">
-              <property name="text">
-               <string>Virtual airline?</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QCheckBox" name="cb_VirtualAirline"/>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="lbl_Military">
-              <property name="text">
-               <string>Military?</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QCheckBox" name="cb_Military"/>
-            </item>
             <item row="2" column="1">
              <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineIcaoCode">
               <property name="maximumSize">
@@ -251,45 +224,85 @@
               </property>
              </widget>
             </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="lbl_AirlineName">
+              <property name="text">
+               <string>Airline name</string>
+              </property>
+             </widget>
+            </item>
             <item row="3" column="1">
-             <widget class="QWidget" name="wi_HintAirlineIcao" native="true">
-              <layout class="QHBoxLayout" name="hl_HintAirlineIcao">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="lbl_HintIconAirlineIcao">
-                 <property name="maximumSize">
-                  <size>
-                   <width>20</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="pixmap">
-                  <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_HintAirlineIcao">
-                 <property name="text">
-                  <string>Hint: Start virtual airlines with &quot;V&quot;, e.g. &quot;VLHA&quot;</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+             <widget class="BlackGui::Components::CDbAirlineNameSelectorComponent" name="selector_AirlineName">
+              <property name="maximumSize">
+               <size>
+                <width>225</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::StrongFocus</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="lbl_VirtualAirline">
+              <property name="text">
+               <string>Virtual airline?</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QCheckBox" name="cb_VirtualAirline"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="lbl_Military">
+              <property name="text">
+               <string>Military?</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QCheckBox" name="cb_Military"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="wi_HintAirlineIcao" native="true">
+           <layout class="QHBoxLayout" name="hl_HintAirlineIcao">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="lbl_HintIconAirlineIcao">
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_HintAirlineIcao">
+              <property name="text">
+               <string>Hint: Start virtual airlines with &quot;V&quot;, e.g. &quot;VLHA&quot;</string>
+              </property>
              </widget>
             </item>
            </layout>
