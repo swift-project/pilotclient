@@ -273,6 +273,12 @@ class MSVCBuilder(Builder):
 
         os.environ.update(vs_env)
 
+        # On Windows, the default Qt logger doesn't write to stderr, but uses
+        # the Win32 API OutputDebugString instead, which Jenkins can't see.
+        # This environment variable forces it to use stderr. It also forces
+        # QPlainTestLogger::outputMessage to print to stdout.
+        os.environ['QT_FORCE_STDERR_LOGGING'] = '1'
+
     def _get_qmake_spec(self):
         return 'win32-msvc'
 
@@ -293,6 +299,9 @@ class MinGWBuilder(Builder):
         gcc_path = path.abspath(self._get_config().get(platform.system(), 'mingw_path'))
         os.environ['PATH'] += os.pathsep + gcc_path
         os.environ['PATH'] += os.pathsep + path.abspath(path.join('c:', os.sep, 'Program Files', '7-Zip'))
+
+        # See comment in MSVCBuilder.
+        os.environ['QT_FORCE_STDERR_LOGGING'] = '1'
 
     def _get_qmake_spec(self):
         return 'win32-g++'
