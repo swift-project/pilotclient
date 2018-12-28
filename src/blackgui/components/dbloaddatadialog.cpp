@@ -101,7 +101,7 @@ namespace BlackGui
         void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
             if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // no triggered from here
-            if (state == CEntityFlags::StartRead) { return; }
+            if (state == CEntityFlags::ReadStarted) { return; }
             if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity))) { return; }
 
             m_pendingEntities &= ~entity;

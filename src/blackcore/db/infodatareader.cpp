@@ -152,7 +152,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});
-                emit this->dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
+                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0);
             }
             else
             {

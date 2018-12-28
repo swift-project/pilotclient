@@ -63,7 +63,8 @@ namespace BlackMisc
             //! State of operation
             enum ReadState
             {
-                StartRead,               //!< reading has been started
+                ReadStarted,             //!< reading has been started
+                ReadParsing,             //!< parsing data
                 ReadFinished,            //!< reading done
                 ReadFinishedRestricted,  //!< finished a timestamp restricted read
                 ReadFailed,              //!< reading failed

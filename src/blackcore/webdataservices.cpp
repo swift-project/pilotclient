@@ -1300,7 +1300,7 @@ namespace BlackCore
     {
         static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
 
-        if (state == CEntityFlags::StartRead) { return; } // just started
+        if (state == CEntityFlags::ReadStarted) { return; } // just started
         if (CEntityFlags::isWarningOrAbove(state))
         {
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);

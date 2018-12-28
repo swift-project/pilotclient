@@ -83,7 +83,7 @@ namespace BlackMisc
             return state == ReadFinished || state == ReadFinishedRestricted;
         }
 
-        int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity entities)
+        int CEntityFlags::numberOfEntities(CEntityFlags::Entity entities)
         {
             const int c = static_cast<int>(std::bitset<(sizeof(entities) * 8)>(entities).count());
             return c;
@@ -95,9 +95,10 @@ namespace BlackMisc
             {
             case ReadFinished: return "finished";
             case ReadFinishedRestricted: return "finished (restricted)";
+            case ReadParsing: return  "parsing";
             case ReadFailed: return "failed";
             case ReadSkipped: return "skipped";
-            case StartRead: return "read started";
+            case ReadStarted: return "read started";
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
@@ -110,7 +111,8 @@ namespace BlackMisc
             {
             case ReadFinished:
             case ReadFinishedRestricted:
-            case StartRead: return CStatusMessage::SeverityInfo;
+            case ReadParsing:
+            case ReadStarted: return CStatusMessage::SeverityInfo;
             case ReadSkipped: return CStatusMessage::SeverityWarning;
             case ReadFailed: return CStatusMessage::SeverityError;
             default:

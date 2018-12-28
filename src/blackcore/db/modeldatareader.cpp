@@ -238,7 +238,7 @@ namespace BlackCore
 
             if (triggeredRead != CEntityFlags::NoEntity)
             {
-                emit dataRead(triggeredRead, CEntityFlags::StartRead, 0);
+                emit dataRead(triggeredRead, CEntityFlags::ReadStarted, 0);
             }
         }
 
@@ -288,6 +288,7 @@ namespace BlackCore
             }
 
             // get all or incremental set of distributor
+            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadParsing, 0);
             CLiveryList liveries;
             if (res.isRestricted())
             {
@@ -335,6 +336,7 @@ namespace BlackCore
             }
 
             // get all or incremental set of distributors
+            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadParsing, 0);
             CDistributorList distributors;
             if (res.isRestricted())
             {
@@ -383,6 +385,7 @@ namespace BlackCore
             }
 
             // get all or incremental set of models
+            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadParsing, 0);
             CAircraftModelList models;
             if (res.isRestricted())
             {

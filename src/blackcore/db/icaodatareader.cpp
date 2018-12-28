@@ -219,7 +219,7 @@ namespace BlackCore
 
             if (entitiesTriggered != CEntityFlags::NoEntity)
             {
-                emit this->dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
+                emit this->dataRead(entitiesTriggered, CEntityFlags::ReadStarted, 0);
             }
         }
 
@@ -269,6 +269,7 @@ namespace BlackCore
                 return;
             }
 
+            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0);
             CAircraftIcaoCodeList codes;
             CAircraftIcaoCodeList inconsistent;
             if (res.isRestricted())
@@ -323,6 +324,7 @@ namespace BlackCore
                 return;
             }
 
+            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadParsing, 0);
             CAirlineIcaoCodeList codes;
             CAirlineIcaoCodeList inconsistent;
             if (res.isRestricted())
@@ -375,6 +377,7 @@ namespace BlackCore
                 return;
             }
 
+            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadParsing, 0);
             CCountryList countries;
             if (res.isRestricted())
             {

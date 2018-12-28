@@ -198,6 +198,8 @@ namespace BlackCore
                 return;
             }
 
+            // parsing
+            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0);
             CAirportList airports;
             CAirportList inconsistent;
             if (res.isRestricted())
@@ -255,7 +257,7 @@ namespace BlackCore
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
                     this->getFromNetworkAndLog(url, { this, &CAirportDataReader::parseAirportData });
-                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::StartRead, 0);
+                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadStarted, 0);
                 }
                 else
                 {
