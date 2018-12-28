@@ -282,16 +282,21 @@ def isUserAborted(error) {
 }
 
 def abortPreviousRunningBuilds() {
-    def pname = env.JOB_NAME.split('/')[0]
+    Jenkins.instance.getItemByFullName(env.JOB_NAME).getBuilds().each{ build ->
+        if (params.REVISION_ID == null || isAbortableDifferentialBuild(build)) {
+            def exec = build.getExecutor()
 
-    Jenkins.instance.getItem(pname).getItem(env.JOB_BASE_NAME).getBuilds().each{ build ->
-        def exec = build.getExecutor()
-
-        if (build.number < currentBuild.number && exec != null) {
-            exec.interrupt(Result.ABORTED, new CauseOfInterruption.UserInterruption("Aborted by #${currentBuild.number}"))
-            println("Aborted previous running build #${build.number}")
+            if (build.number < currentBuild.number && exec != null) {
+                exec.interrupt(Result.ABORTED, new CauseOfInterruption.UserInterruption("Aborted by #${currentBuild.number}"))
+                println("Aborted previous running build #${build.number}")
+            }
         }
     }
+}
+
+def isAbortableDifferentialBuild(build) {
+    def buildEnv = build.getEnvironment(TaskListener.NULL)
+    return buildEnv.containsKey('ABORT_ON_REVISION_ID') && buildEnv.get('ABORT_ON_REVISION_ID') == params.REVISION_ID
 }
 
 def notifySlack(nodeName, buildStatus = 'STARTED') {
