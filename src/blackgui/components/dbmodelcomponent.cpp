@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QWidget>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -48,15 +49,15 @@ namespace BlackGui
             ui->tvp_AircraftModel->menuAddItems(CViewBaseNonTemplate::MenuCopy);
             ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
 
-            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::onReload);
-            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged, Qt::QueuedConnection);
 
             // configure view
             ui->tvp_AircraftModel->setFilterWidget(ui->filter_AircraftModelFilter);
             ui->tvp_AircraftModel->allowDragDrop(true, false);
 
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::onModelsRead);
+            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::onReload);
+            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::onModelsRead);
             connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbModelComponent::onEntityDownloadProgress, Qt::QueuedConnection);
             this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
         }
@@ -73,6 +74,8 @@ namespace BlackGui
 
         void CDbModelComponent::requestUpdatedData()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+
             QDateTime ts;
             if (!ui->tvp_AircraftModel->isEmpty())
             {
@@ -86,12 +89,16 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::ModelEntity))
+            if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
+
+            if (CEntityFlags::isFinishedReadState(readState))
             {
-                if (CEntityFlags::isFinishedReadState(readState))
-                {
-                    ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
-                }
+                this->showOverlayHTMLMessage(QStringLiteral("Updating"), 2000);
+                ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
+            }
+            else
+            {
+                this->showOverlayHTMLMessage(u"Currently " % CEntityFlags::flagToString(readState));
             }
         }
 
