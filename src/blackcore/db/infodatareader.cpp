@@ -137,7 +137,7 @@ namespace BlackCore
             return sApp->getGlobalSetup().getDbInfoReaderUrl();
         }
 
-        void CInfoDataReader::read()
+        void CInfoDataReader::readInfoData()
         {
             if (!this->doWorkCheck()) { return; }
 
@@ -206,9 +206,17 @@ namespace BlackCore
         CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
         {
             if (m_mode == CDbFlags::DbReading) return CEntityFlags::DbInfoObjectEntity;
-            if (m_mode == CDbFlags::Shared) return CEntityFlags::SharedInfoObjectEntity;
+            if (m_mode == CDbFlags::Shared)    return CEntityFlags::SharedInfoObjectEntity;
             qFatal("Wrong mode");
             return CEntityFlags::NoEntity;
+        }
+
+        void CInfoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        {
+            Q_UNUSED(entities);
+            Q_UNUSED(mode);
+            Q_UNUSED(newerThan);
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Not implemented for CInfoDataReader");
         }
 
         CUrl CInfoDataReader::getInfoObjectsUrl() const
@@ -216,7 +224,7 @@ namespace BlackCore
             switch (m_mode)
             {
             case CDbFlags::DbReading: return getDbInfoObjectsUrl();
-            case CDbFlags::Shared: return getSharedInfoObjectsUrl();
+            case CDbFlags::Shared:    return getSharedInfoObjectsUrl();
             default: qFatal("Wrong mode");
             }
             return CUrl();

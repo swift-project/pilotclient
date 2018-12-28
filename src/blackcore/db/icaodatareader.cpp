@@ -160,7 +160,7 @@ namespace BlackCore
             return this->getCountries().size();
         }
 
-        void CIcaoDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        void CIcaoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck(); // runs in background thread
             if (!this->doWorkCheck()) { return; }

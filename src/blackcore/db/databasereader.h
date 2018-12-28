@@ -431,6 +431,10 @@ namespace BlackCore
 
             //! Network request progress
             virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url) override;
+
+        private:
+            //! Read / re-read data file
+            virtual void read(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
         };
     } // ns
 } // ns

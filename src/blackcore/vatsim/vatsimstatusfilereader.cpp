@@ -47,7 +47,7 @@ namespace BlackCore
 
         void CVatsimStatusFileReader::readInBackgroundThread()
         {
-            const bool s = QMetaObject::invokeMethod(this, &CVatsimStatusFileReader::ps_read);
+            const bool s = QMetaObject::invokeMethod(this, &CVatsimStatusFileReader::read);
             Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
             Q_UNUSED(s);
         }
@@ -62,7 +62,7 @@ namespace BlackCore
             return m_lastGoodSetup.get().getDataFileUrls();
         }
 
-        void CVatsimStatusFileReader::ps_read()
+        void CVatsimStatusFileReader::read()
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }

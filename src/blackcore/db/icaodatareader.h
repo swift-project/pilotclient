@@ -154,11 +154,6 @@ namespace BlackCore
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CUrl &oldUrlInfo, BlackMisc::Network::CUrl &newUrlInfo) const override;
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
-        private slots:
-            //! Read / re-read data
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities,
-                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan);
-
         private:
             BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
             BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>  m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
@@ -166,6 +161,10 @@ namespace BlackCore
             std::atomic_bool m_syncedAircraftIcaoCache { false }; //!< already synchronized?
             std::atomic_bool m_syncedAirlineIcaoCache  { false }; //!< already synchronized?
             std::atomic_bool m_syncedCountryCache      { false }; //!< already synchronized?
+
+            //! \copydoc CDatabaseReader::read
+            virtual void read(BlackMisc::Network::CEntityFlags::Entity entities,
+                              BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::baseUrlCacheChanged };

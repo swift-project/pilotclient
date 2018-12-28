@@ -48,7 +48,7 @@ namespace BlackCore
             bool areAllInfoObjectsRead() const;
 
             //! Allow to call directly, special for info objects reader
-            void read();
+            void readInfoData();
 
             //! URL depending on mode, i.e. shared/DB
             BlackMisc::Network::CUrl getInfoObjectsUrl() const;
@@ -85,6 +85,9 @@ namespace BlackCore
             //! Info object entity for mode
             //! \remark CEntityFlags::DbInfoObjectEntity or CEntityFlags::SharedInfoObjectEntity
             BlackMisc::Network::CEntityFlags::EntityFlag getEntityForMode() const;
+
+            //! \copydoc CDatabaseReader::read
+            virtual void read(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
 
             BlackMisc::Db::CDbFlags::DataRetrievalModeFlag m_mode; //!< shared or DB web service?
             BlackMisc::Db::CDbInfoList m_infoObjects;

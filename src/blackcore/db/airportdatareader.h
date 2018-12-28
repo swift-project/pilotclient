@@ -69,17 +69,15 @@ namespace BlackCore
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CUrl &oldUrlInfo, BlackMisc::Network::CUrl &newUrlInfo) const override;
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
-        private slots:
-            //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
-                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
-
         private:
             BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::airportCacheChanged}; //!< cache file
             std::atomic_bool m_syncedAirportCache { false }; //!< already synchronized?
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::baseUrlCacheChanged };
+
+            //! \copydoc CDatabaseReader::read
+            void read(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
 
             //! Parse downloaded JSON file
             void parseAirportData(QNetworkReply *nwReplyPtr);

@@ -45,7 +45,6 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Network::CUrlList getDataFileUrls() const;
 
-        public slots:
             //! Start reading in own thread
             void readInBackgroundThread();
 
@@ -56,11 +55,10 @@ namespace BlackCore
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        private slots:
-            //! Read / re-read data file
-            void ps_read();
-
         private:
+            //! Read / re-read data file
+            void read();
+
             //! Data have been read, parse VATSIM file
             void parseVatsimFile(QNetworkReply *nwReply);
 

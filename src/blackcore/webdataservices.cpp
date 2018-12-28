@@ -1168,7 +1168,7 @@ namespace BlackCore
             {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
-                m_dbInfoDataReader->read(); // trigger read of info objects
+                m_dbInfoDataReader->readInfoData(); // trigger read of info objects
             });
         }
     }
@@ -1209,7 +1209,7 @@ namespace BlackCore
         QTimer::singleShot(25, m_sharedInfoDataReader, [ = ]()
         {
             if (!myself || m_shuttingDown) { return; }
-            m_sharedInfoDataReader->read();
+            m_sharedInfoDataReader->readInfoData();
         });
     }
 

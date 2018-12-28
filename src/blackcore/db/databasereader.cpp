@@ -221,14 +221,13 @@ namespace BlackCore
             if (entities == CEntityFlags::NoEntity) { return; }
             if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
-            //! \todo MS 2018-12 Error: CDatabaseReader has no ps_read method -> T490
-            //! \todo KB 2018-12 https://dev.swift-project.org/T490
-            const bool s = QMetaObject::invokeMethod(this, "ps_read",
-                           Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
-                           Q_ARG(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag, mode),
-                           Q_ARG(QDateTime, newerThan));
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
-            Q_UNUSED(s);
+            //! https://dev.swift-project.org/T490
+            QPointer<CDatabaseReader> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                this->read(entities, mode, newerThan);
+            });
         }
 
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const

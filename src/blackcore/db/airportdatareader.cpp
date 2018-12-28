@@ -239,7 +239,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::AirportEntity, size, res);
         }
 
-        void CAirportDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        void CAirportDataReader::read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }

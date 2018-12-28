@@ -179,7 +179,7 @@ namespace BlackCore
                 this->getDistributorsCount() > 0;
         }
 
-        void CModelDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        void CModelDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
