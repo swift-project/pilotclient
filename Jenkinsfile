@@ -43,14 +43,16 @@ builders['Build swift Linux'] = {
                 stash name: 'swift-linux-64', includes: 'swiftinstaller-linux-64-*.run,swiftsymbols-linux-64-*.tar.gz'
                 stash name: 'xswiftbus-linux-64', includes: 'xswiftbus-linux-64-*.7z'
             }
+            buildResults['swift-linux'] = 'SUCCESS'
         } catch (error) {
             if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-linux'] = 'ABORTED'
             } else {
+                echo error.getMessage()
                 buildResults['swift-linux'] = 'FAILURE'
-                throw error
             }
+            throw error
         } finally {
             notifySlack('Linux', buildResults['swift-linux'])
             cleanWs deleteDirs: true, notFailBuild: true
@@ -89,14 +91,16 @@ builders['Build swift MacOS'] = {
                 stash name: 'swift-macos-64', includes: 'swiftinstaller-macos-64-*.dmg,swiftsymbols-macos-64-*.tar.gz'
                 stash name: 'xswiftbus-macos-64', includes: 'xswiftbus-macos-64-*.7z'
             }
+            buildResults['swift-macos'] = 'SUCCESS'
         } catch (error) {
             if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-macos'] = 'ABORTED'
             } else {
+                echo error.getMessage()
                 buildResults['swift-macos'] = 'FAILURE'
-                throw error
             }
+            throw error
         } finally {
             notifySlack('MacOS', buildResults['swift-macos'])
             cleanWs deleteDirs: true, notFailBuild: true
@@ -131,14 +135,16 @@ builders['Build swift Win32'] = {
                 stash name: 'swift-windows-32', includes: 'swiftinstaller-windows-32-*.exe,swiftsymbols-windows-32-*.tar.gz'
                 stash name: 'xswiftbus-windows-32', includes: 'xswiftbus-windows-32-*.7z'
             }
+            buildResults['swift-win32'] = 'SUCCESS'
         } catch (error) {
             if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-win32'] = 'ABORTED'
             } else {
+                echo error.getMessage()
                 buildResults['swift-win32'] = 'FAILURE'
-                throw error
             }
+            throw error
         } finally {
             notifySlack('Win32', buildResults['swift-win32'])
             killDBusDaemon()
@@ -174,14 +180,16 @@ builders['Build swift Win64'] = {
                 stash name: 'swift-windows-64', includes: 'swiftinstaller-windows-64-*.exe,swiftsymbols-windows-64-*.tar.gz'
                 stash name: 'xswiftbus-windows-64', includes: 'xswiftbus-windows-64-*.7z'
             }
+            buildResults['swift-win64'] = 'SUCCESS'
         } catch (error) {
             if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-win64'] = 'ABORTED'
             } else {
+                echo error.getMessage()
                 buildResults['swift-win64'] = 'FAILURE'
-                throw error
             }
+            throw error
         } finally {
             notifySlack('Win64', buildResults['swift-win64'])
             killDBusDaemon()
@@ -190,7 +198,22 @@ builders['Build swift Win64'] = {
     }
 }
 
-parallel builders
+try {
+    try {
+        parallel builders
+    } finally {
+        def r = Result.fromString(buildResults.isEmpty() ? 'ABORTED' : currentBuild.currentResult)
+        buildResults.each{ r = r.combine(Result.fromString(it.value)) }
+        if (r.isWorseThan(Result.SUCCESS)) {
+            currentBuild.result = r.toString()
+        }
+    }
+} catch (error) {
+    node('linux') {
+        notifyHarbormaster()
+    }
+    throw error
+}
 
 node('linux') {
     try {
@@ -214,11 +237,12 @@ node('linux') {
     } catch (error) {
         if (isUserAborted(error)) {
             echo 'User abort. No error!'
+            currentBuild.result = 'ABORTED'
+        } else {
+            currentBuild.result = 'FAILURE'
         }
-        else
-        {
-            throw error
-        }
+        notifyHarbormaster()
+        throw error
     } finally {
         cleanWs deleteDirs: true, notFailBuild: true
     }
@@ -262,14 +286,19 @@ node('linux') {
     } catch (error) {
         if (isUserAborted(error)) {
             echo 'User abort. No error!'
+            currentBuild.result = 'ABORTED'
+        } else {
+            currentBuild.result = 'FAILURE'
         }
-        else
-        {
-            throw error
-        }
+        notifyHarbormaster()
+        throw error
     } finally {
         cleanWs deleteDirs: true, notFailBuild: true
     }
+}
+
+node('linux') {
+    notifyHarbormaster()
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -297,6 +326,15 @@ def abortPreviousRunningBuilds() {
 def isAbortableDifferentialBuild(build) {
     def buildEnv = build.getEnvironment(TaskListener.NULL)
     return buildEnv.containsKey('ABORT_ON_REVISION_ID') && buildEnv.get('ABORT_ON_REVISION_ID') == params.REVISION_ID
+}
+
+def notifyHarbormaster() {
+    if (params.PHID != null) {
+        def arcCmd = '/opt/arc/arcanist/bin/arc call-conduit --conduit-uri https://dev.swift-project.org/'
+        def type = currentBuild.resultIsBetterOrEqualTo('SUCCESS') ? 'pass' : 'fail'
+        def json = """{ "buildTargetPHID": "${params.PHID}", "type": "${type}" }"""
+        sh "echo '${json}' | ${arcCmd} harbormaster.sendmessage"
+    }
 }
 
 def notifySlack(nodeName, buildStatus = 'STARTED') {
