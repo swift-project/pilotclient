@@ -12,15 +12,15 @@
 #ifndef BLACKUI_COMPONENTS_DBMODELCOMPONENT_H
 #define BLACKUI_COMPONENTS_DBMODELCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
-#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 
@@ -33,10 +33,10 @@ namespace BlackGui
          * Database models. Those are the models loaaded from the DB.
          */
         class BLACKGUI_EXPORT CDbModelComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public CDbMappingComponentAware,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
+            public CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -53,13 +53,12 @@ namespace BlackGui
             //! Models loaded?
             bool hasModels() const;
 
+            //! Load new data
+            void requestUpdatedData();
+
         signals:
             //! Request to stash the selected models
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
-
-        public:
-            //! Load new data
-            void requestUpdatedData();
 
         private:
             //! Models have been read
@@ -70,6 +69,9 @@ namespace BlackGui
 
             //! Style sheet changed
             void onStyleSheetChanged();
+
+            //! Download progress for an entity
+            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
         private:
             QScopedPointer<Ui::CDbModelComponent> ui;
