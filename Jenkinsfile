@@ -1,3 +1,5 @@
+import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
+
 abortPreviousRunningBuilds()
 
 def builders = [:]
@@ -12,17 +14,19 @@ builders['Build swift Linux'] = {
             }
 
             stage('Linux Build') {
-                def eolInMonth = 6
-                withEnv(['BITROCK_BUILDER=/opt/installbuilder/bin/builder', 'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
-                    sh '''
+                withEnv(['BITROCK_BUILDER=/opt/installbuilder/bin/builder',
+                         'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
+                    sh """
                         cp ~/vatsim.json .
-                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
-                    '''
+                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                    """
                 }
 
                 warnings consoleParsers: [[parserName: 'GNU C Compiler 4 (gcc)']], unstableTotalAll: '0'
 
-                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
+                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
+                    tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
+                                   skipNoTestFiles: true, stopProcessingIfError: false)]
             }
 
             stage('Linux Checks') {
@@ -37,8 +41,7 @@ builders['Build swift Linux'] = {
                 stash name: 'xswiftbus-linux-64', includes: 'xswiftbus-linux-64-*.7z'
             }
         } catch (error) {
-            if (manager.build.getAction(InterruptedBuildAction.class) ||
-                    (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+            if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-linux'] = 'ABORTED'
             } else {
@@ -60,16 +63,20 @@ builders['Build swift MacOS'] = {
             }
 
             stage('MacOS Build') {
-                withEnv(['PATH+LOCAL=/usr/local/bin', 'BITROCK_BUILDER=/Applications/BitRockInstallBuilderQt/bin/builder', 'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
-                    sh '''
+                withEnv(['PATH+LOCAL=/usr/local/bin',
+                         'BITROCK_BUILDER=/Applications/BitRockInstallBuilderQt/bin/builder',
+                         'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
+                    sh """
                         cp ~/vatsim.json .
-                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
-                    '''
+                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                    """
                 }
 
                 warnings consoleParsers: [[parserName: 'Clang (LLVM based)']], unstableTotalAll: '0'
 
-                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
+                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
+                    tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
+                                   skipNoTestFiles: true, stopProcessingIfError: false)]
             }
 
             stage('MacOS Archive') {
@@ -77,8 +84,7 @@ builders['Build swift MacOS'] = {
                 stash name: 'xswiftbus-macos-64', includes: 'xswiftbus-macos-64-*.7z'
             }
         } catch (error) {
-            if (manager.build.getAction(InterruptedBuildAction.class) ||
-                    (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+            if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-macos'] = 'ABORTED'
             } else {
@@ -100,14 +106,16 @@ builders['Build swift Win32'] = {
             }
 
             stage('Win32 Build') {
-                bat '''
+                bat """
                     copy c:\\var\\vatsim.json .
-                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
-                '''
+                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                """
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
 
-                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
+                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
+                    tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
+                                   skipNoTestFiles: true, stopProcessingIfError: false)]
             }
 
             stage('Win32 Archive') {
@@ -115,8 +123,7 @@ builders['Build swift Win32'] = {
                 stash name: 'xswiftbus-windows-32', includes: 'xswiftbus-windows-32-*.7z'
             }
         } catch (error) {
-            if (manager.build.getAction(InterruptedBuildAction.class) ||
-                    (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+            if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-win32'] = 'ABORTED'
             } else {
@@ -139,14 +146,16 @@ builders['Build swift Win64'] = {
             }
 
             stage('Win64 Build') {
-                bat '''
+                bat """
                     copy c:\\var\\vatsim.json .
-                    python -u scripts/jenkins.py -w 64 -t msvc -d  -e ''' + getEolInMonth() + ''' -q SWIFT_CONFIG_JSON+=vatsim.json
-                '''
+                    python -u scripts/jenkins.py -w 64 -t msvc -d -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                """
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
 
-                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
+                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
+                    tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
+                                   skipNoTestFiles: true, stopProcessingIfError: false)]
             }
 
             stage('Win64 Archive') {
@@ -154,8 +163,7 @@ builders['Build swift Win64'] = {
                 stash name: 'xswiftbus-windows-64', includes: 'xswiftbus-windows-64-*.7z'
             }
         } catch (error) {
-            if (manager.build.getAction(InterruptedBuildAction.class) ||
-                    (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+            if (isUserAborted(error)) {
                 echo 'User abort. No error!'
                 buildResults['swift-win64'] = 'ABORTED'
             } else {
@@ -185,14 +193,14 @@ node('linux') {
                 7z x -y xswiftbus-linux-64-*.7z
                 7z x -y xswiftbus-macos-64-*.7z
             '''
-            version = sh(returnStdout: true, script: 'ls xswiftbus-windows-32-*.7z | grep -Po \'(?<=xswiftbus-windows-32-)\\d.\\d.\\d.\\d+(?=.7z)\'').trim()
-            sh '7z a -y -mx=9 xswiftbus-allos-' + version + '.7z xswiftbus'
+            def regex = /(?<=xswiftbus-windows-32-)\d.\d.\d.\d+(?=.7z)/
+            def version = sh(returnStdout: true, script: "ls xswiftbus-windows-32-*.7z | grep -Po '${regex}'").trim()
+            sh "7z a -y -mx=9 xswiftbus-allos-${version}.7z xswiftbus"
 
             stash name: 'xswiftbus-allos', includes: 'xswiftbus-allos-*.7z'
         }
     } catch (error) {
-        if (manager.build.getAction(InterruptedBuildAction.class) ||
-                (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+        if (isUserAborted(error)) {
             echo 'User abort. No error!'
         }
         else
@@ -206,8 +214,8 @@ node('linux') {
 
 node('linux') {
     try {
-        def regexDevBranch = /develop\/\d.\d.\d/
-        if (BRANCH_NAME ==~ regexDevBranch) {
+        def regexDevBranch = /develop\/\d+\.\d+\.\d+/
+        if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
             stage('Publish') {
                 unstash name: 'swift-linux-64'
                 unstash name: 'swift-macos-64'
@@ -216,12 +224,13 @@ node('linux') {
                 unstash name: 'xswiftbus-allos'
 
                 sh 'chmod 664 *'
-                sh '#!/bin/bash \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.run" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.dmg" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.tar.gz" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.exe" \n' +
-                        'sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.7z" \n'
+                sh '''
+                    sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.run"
+                    sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.dmg"
+                    sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.tar.gz"
+                    sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.exe"
+                    sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.7z"
+                '''
 
                 archiveArtifacts artifacts: 'swiftinstaller-*,swiftsymbols-*.tar.gz', onlyIfSuccessful: true
                 archiveArtifacts artifacts: 'xswiftbus-allos-*.7z', onlyIfSuccessful: true
@@ -239,8 +248,7 @@ node('linux') {
             }
         }
     } catch (error) {
-        if (manager.build.getAction(InterruptedBuildAction.class) ||
-                (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
+        if (isUserAborted(error)) {
             echo 'User abort. No error!'
         }
         else
@@ -250,6 +258,15 @@ node('linux') {
     } finally {
         cleanWs deleteDirs: true, notFailBuild: true
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////// Utility function definitions ////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+def isUserAborted(error) {
+    return manager.build.getAction(InterruptedBuildAction.class) ||
+           (error instanceof FlowInterruptedException && error.causes.size() == 0)
 }
 
 def abortPreviousRunningBuilds() {
@@ -267,7 +284,7 @@ def abortPreviousRunningBuilds() {
 
 def notifySlack(nodeName, buildStatus = 'STARTED') {
     // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESS'
+    buildStatus = buildStatus ?: 'SUCCESS'
 
     // Ignore ABORTED status
     if (buildStatus == 'ABORTED') {
@@ -277,7 +294,7 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
     // Default values
     def colorCode = '#FF0000'
     def duration = currentBuild.durationString.replace(' and counting', '')
-    def subject = "${nodeName}: ${JOB_NAME}/${BRANCH_NAME} - #${BUILD_NUMBER} ${buildStatus} after ${duration}"
+    def subject = "${nodeName}: ${java.net.URLDecoder.decode(JOB_NAME)} (${BRANCH_NAME}) - #${BUILD_NUMBER} ${buildStatus} after ${duration}"
     def summary = "${subject} (<${env.BUILD_URL}|Open>)"
 
     // Override default values based on build status
@@ -300,12 +317,12 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
 }
 
 def getEolInMonth() {
-    def regexDevBranch = /develop\/\d.\d.\d/
-    def regexReleaseBranch = /^release\/\d.\d/
-    if (BRANCH_NAME ==~ regexDevBranch) {
+    def regexDevBranch = /develop\/\d+\.\d+\.\d+/
+    def regexReleaseBranch = /release\/\d+\.\d+/
+    if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         // 6 month for dev builds
         return 6
-    } else if(BRANCH_NAME ==~ regexReleaseBranch) {
+    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexReleaseBranch) {
         // 12 month currently for release builds. That will be removed in future.
         return 12
     } else {
