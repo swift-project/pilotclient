@@ -361,7 +361,11 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
     // Default values
     def colorCode = '#FF0000'
     def duration = currentBuild.durationString.replace(' and counting', '')
-    def subject = "${nodeName}: ${java.net.URLDecoder.decode(JOB_NAME)} (${BRANCH_NAME}) - #${BUILD_NUMBER} ${buildStatus} after ${duration}"
+    def title = "${java.net.URLDecoder.decode(JOB_NAME)} (`${BRANCH_NAME}`)"
+    if (params.REVISION_ID != null) {
+        title += " - D${params.REVISION_ID} (Build ${params.BUILD_ID})"
+    }
+    def subject = "${nodeName}: ${title} - #${BUILD_NUMBER} ${buildStatus} after ${duration}"
     def summary = "${subject} (<${env.BUILD_URL}|Open>)"
 
     // Override default values based on build status
