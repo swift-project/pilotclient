@@ -117,6 +117,9 @@ namespace BlackGui
             //! Select given tab
             void selectTabWidget(TextMessageTab tab);
 
+            //! Is that a closeable tab (one the user can close)
+            bool isCloseableTab(const QWidget *tabWidget) const;
+
             //! New message tab for given callsign
             QWidget *addNewTextMessageTab(const BlackMisc::Aviation::CCallsign &callsign);
 

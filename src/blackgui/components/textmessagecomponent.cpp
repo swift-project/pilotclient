@@ -152,6 +152,13 @@ namespace BlackGui
             }
         }
 
+        bool CTextMessageComponent::isCloseableTab(const QWidget *tabWidget) const
+        {
+            if (!tabWidget) { return false; }
+            return (tabWidget != ui->tb_TextMessagesAll && tabWidget != ui->tb_TextMessagesCOM1 &&
+                    tabWidget != ui->tb_TextMessagesCOM2 && tabWidget != ui->tb_TextMessagesUnicom);
+        }
+
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
@@ -303,7 +310,7 @@ namespace BlackGui
                 // private message
                 const CCallsign cs = textMessage.getSenderCallsign();
                 if (cs.isEmpty()) { return false; }
-                const QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
+                const QWidget *tab = this->findTextMessageTabByCallsign(cs, false);
                 if (!tab) { return false; }
                 return ui->tw_TextMessages->currentWidget() == tab;
             }
@@ -345,8 +352,8 @@ namespace BlackGui
                 f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2, spacing);
             }
 
-            QString f1n = QString::asprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
-            QString f2n = QString::asprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
+            const QString f1n = QString::asprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
+            const QString f2n = QString::asprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
             QString f1 = QStringLiteral("COM1: %1").arg(f1n);
             QString f2 = QStringLiteral("COM2: %1").arg(f2n);
             if (f1Stations.size() == 1)
@@ -395,6 +402,8 @@ namespace BlackGui
             ui->tw_TextMessages->setCurrentIndex(index);
             closeButton->setProperty("tabName", tabName);
             closeButtonInTab->setProperty("tabName", tabName);
+            // closeButton->setProperty("index", index);
+            // closeButtonInTab->setProperty("index", index);
 
             connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
@@ -461,10 +470,12 @@ namespace BlackGui
         {
             if (name.isEmpty()) { return nullptr; }
             const QString n = name.trimmed();
-            for (int index = 0; index < ui->tw_TextMessages->count(); index++)
+
+            // search the private message tabs first
+            for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
             {
-                QString tabName = ui->tw_TextMessages->tabText(index);
-                if (tabName.indexOf(n, 0, Qt::CaseInsensitive) < 0) { continue; }
+                const QString tabName = ui->tw_TextMessages->tabText(index);
+                if (!tabName.startsWith(name, Qt::CaseInsensitive)) { continue; }
                 QWidget *tab = ui->tw_TextMessages->widget(index);
                 return tab;
             }
@@ -473,15 +484,12 @@ namespace BlackGui
 
         void CTextMessageComponent::closeTextMessageTab()
         {
-            QObject *sender = QObject::sender();
-            QWidget *parentWidget = qobject_cast<QWidget *>(sender->parent());
-            int index =  ui->tw_TextMessages->indexOf(parentWidget);
-            if (index < 0)
-            {
-                const QString tabName = sender->property("tabName").toString();
-                QWidget *tw =  this->findTextMessageTabByName(tabName);
-                if (tw) { index = ui->tw_TextMessages->indexOf(tw); }
-            }
+            int index = -1;
+            const QObject *sender = QObject::sender(); // the button
+            const QString tabName = sender->property("tabName").toString();
+            QWidget *tw = this->findTextMessageTabByName(tabName);
+            if (!this->isCloseableTab(tw)) { return; }
+            if (tw) { index = ui->tw_TextMessages->indexOf(tw); }
             if (index >= 0) { ui->tw_TextMessages->removeTab(index); }
         }
 
