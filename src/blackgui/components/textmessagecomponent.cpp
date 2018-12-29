@@ -355,7 +355,7 @@ namespace BlackGui
             }
             if (f2Stations.size() == 1)
             {
-                f1 += u' ' % f2Stations.front().getCallsignAndControllerRealName();
+                f2 += u' ' % f2Stations.front().getCallsignAndControllerRealName();
             }
 
             ui->tb_TextMessagesCOM1->setToolTip(f1);
