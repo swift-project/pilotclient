@@ -533,6 +533,9 @@ namespace BlackMisc
             return separateBy([k](const T &v) { return v.*k; });
         }
 
+        //! \private Calls detach on the internal QVector.
+        void detach() { m_impl.detach(); }
+
         //! Equals operator.
         friend bool operator ==(const CSequence &a, const CSequence &b) { return a.m_impl == b.m_impl; }
 

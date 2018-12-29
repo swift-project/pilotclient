@@ -229,7 +229,7 @@ namespace BlackMiscTest
 
     void CTestAircraftSituation::sortHint()
     {
-        constexpr int Max = 500000;
+        constexpr int Max = 50000;
         CAircraftSituationList situations = testSituations();
         situations.sortAdjustedLatestFirst();
         CSequence<CAircraftSituationList> listOfLists1;
@@ -238,6 +238,8 @@ namespace BlackMiscTest
         {
             listOfLists1.push_back(situations);
             listOfLists2.push_back(situations);
+            listOfLists1.back().detach();
+            listOfLists2.back().detach();
             listOfLists2.back().setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
         }
 
@@ -261,11 +263,12 @@ namespace BlackMiscTest
         const int hint = time.elapsed();
         const double ratio = static_cast<double>(hint) / static_cast<double>(noHint); // expected <1.0
 
-        qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
+        //qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
         qDebug() << "Access without hint" << noHint << "ms";
         qDebug() << "Access with hint" << hint << "ms";
         qDebug() << "Access ratio" << ratio;
 
+#if 0
         // remark On Win/Linux access with hint is faster
         // on MacOS the times are the same, maybe with hint it is even slightly slower
         if (noHint >= hint)
@@ -281,6 +284,7 @@ namespace BlackMiscTest
                 return;
             }
         }
+#endif
 
         QVERIFY2(hint <= noHint, "Expected hinted sort being faster");
     }

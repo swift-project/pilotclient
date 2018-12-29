@@ -262,6 +262,9 @@ namespace BlackMisc
             return this->to(QList<T>());
         }
 
+        //! \private Calls detach on the internal QMap.
+        void detach() { m_impl.detach(); }
+
         //! Test for equality.
         bool operator ==(const CCollection &other) const { return m_impl == other.m_impl; }
 
