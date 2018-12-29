@@ -16,6 +16,7 @@
 #include "ui_dbliverycomponent.h"
 
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackGui::Views;
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Components
     {
         CDbLiveryComponent::CDbLiveryComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CDbLiveryComponent)
         {
             ui->setupUi(this);
@@ -39,6 +40,7 @@ namespace BlackGui
             ui->tvp_Liveries->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::onLiveriesRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbLiveryComponent::onEntityDownloadProgress, Qt::QueuedConnection);
             this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 
@@ -64,10 +66,24 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState))
+            if (!entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+
+            if (CEntityFlags::isFinishedReadState(readState))
             {
+                this->showOverlayHTMLMessage(QStringLiteral("Updating"), 2000);
                 ui->tvp_Liveries->updateContainerMaybeAsync(sGui->getWebDataServices()->getLiveries());
             }
+            else
+            {
+                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::stateToString(readState), 10000);
+            }
+        }
+
+        void CDbLiveryComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+        {
+            if (CEntityFlags::LiveryEntity != entity) { return; }
+            this->showDownloadProgress(progress, current, max, url, 5000);
+            Q_UNUSED(logId);
         }
 
         void CDbLiveryComponent::onReload()

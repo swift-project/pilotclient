@@ -12,9 +12,10 @@
 #ifndef BLACKGUI_COMPONENTS_DBAIRLINEICAOCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBAIRLINEICAOCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enableforviewbasedindicator.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"
 
 #include <QFrame>
@@ -31,7 +32,7 @@ namespace BlackGui
          * Airline ICAO code
          */
         class BLACKGUI_EXPORT CDbAirlineIcaoComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
             public CEnableForViewBasedIndicator
         {
@@ -50,6 +51,9 @@ namespace BlackGui
         private:
             //! ICAO codes have been read
             void onIcaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Download progress for an entity
+            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
             //! Reload models
             void onReload();

@@ -12,17 +12,16 @@
 #ifndef BLACKGUI_COMPONENTS_DBLIVERYCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBLIVERYCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enableforviewbasedindicator.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/network/entityflags.h"
 
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CLivery; } }
 namespace Ui { class CDbLiveryComponent; }
@@ -35,7 +34,7 @@ namespace BlackGui
          * Liveries from DB
          */
         class BLACKGUI_EXPORT CDbLiveryComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
             public BlackGui::CEnableForViewBasedIndicator
         {
@@ -51,7 +50,6 @@ namespace BlackGui
             //! The livery view
             BlackGui::Views::CLiveryView *view();
 
-        public slots:
             //! Filter by livery
             void filter(const BlackMisc::Aviation::CLivery &livery);
 
@@ -61,6 +59,9 @@ namespace BlackGui
         private:
             //! Liveries codes have been read
             void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Download progress for an entity
+            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
             //! Reload models
             void onReload();

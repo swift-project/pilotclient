@@ -18,6 +18,7 @@
 
 #include <QDateTime>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;
@@ -30,19 +31,20 @@ namespace BlackGui
     namespace Components
     {
         CDbAircraftIcaoComponent::CDbAircraftIcaoComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CDbAircraftIcaoComponent)
         {
             ui->setupUi(this);
             this->setViewWithIndicator(ui->tvp_AircraftIcao);
             ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
-            connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::onReload);
 
             ui->tvp_AircraftIcao->allowDragDrop(true, false);
             ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
             ui->tvp_AircraftIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
+            connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::onReload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAircraftIcaoComponent::onEntityDownloadProgress, Qt::QueuedConnection);
             this->onIcaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 
@@ -63,10 +65,24 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
+            if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+
+            if (CEntityFlags::isFinishedReadState(readState))
             {
+                this->showOverlayHTMLMessage(QStringLiteral("Updating"), 2000);
                 ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
             }
+            else
+            {
+                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::stateToString(readState), 10000);
+            }
+        }
+
+        void CDbAircraftIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+        {
+            if (CEntityFlags::AircraftIcaoEntity != entity) { return; }
+            this->showDownloadProgress(progress, current, max, url, 5000);
+            Q_UNUSED(logId);
         }
 
         void CDbAircraftIcaoComponent::onReload()

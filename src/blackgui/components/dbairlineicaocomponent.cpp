@@ -17,6 +17,7 @@
 
 #include <QDateTime>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;
@@ -28,7 +29,7 @@ namespace BlackGui
     namespace Components
     {
         CDbAirlineIcaoComponent::CDbAirlineIcaoComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CDbAirlineIcaoComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
@@ -43,6 +44,7 @@ namespace BlackGui
 
             connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::onReload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::onIcaoRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAirlineIcaoComponent::onEntityDownloadProgress, Qt::QueuedConnection);
             this->onIcaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
         }
 
@@ -58,10 +60,24 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
-            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
+            if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+
+            if (CEntityFlags::isFinishedReadState(readState))
             {
+                this->showOverlayHTMLMessage(QStringLiteral("Updating"), 2000);
                 ui->tvp_AirlineIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAirlineIcaoCodes());
             }
+            else
+            {
+                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::stateToString(readState), 10000);
+            }
+        }
+
+        void CDbAirlineIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+        {
+            if (CEntityFlags::AirlineIcaoEntity != entity) { return; }
+            this->showDownloadProgress(progress, current, max, url, 5000);
+            Q_UNUSED(logId);
         }
 
         void CDbAirlineIcaoComponent::onReload()
