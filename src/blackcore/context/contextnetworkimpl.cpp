@@ -415,7 +415,7 @@ namespace BlackCore
                 if (parser.countParts() < 2) { return false; }
                 if (!m_network) { return false; }
                 if (!this->isConnected()) { return false; }
-                const QString wallopMsg = simplifyAccents(parser.part(1).simplified().trimmed());
+                const QString wallopMsg = parser.part(1).simplified().trimmed();
                 m_network->sendWallopMessage(wallopMsg);
                 return true;
             }

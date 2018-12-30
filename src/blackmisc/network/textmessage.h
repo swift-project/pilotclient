@@ -85,6 +85,9 @@ namespace BlackMisc
             //! Get message
             const QString &getMessage() const { return m_message; }
 
+            //! Get ASCII only message
+            QString getAsciiOnlyMessage() const;
+
             //! Empty message
             bool isEmpty() const { return m_message.isEmpty(); }
 

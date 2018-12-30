@@ -27,14 +27,17 @@ namespace BlackMisc
     namespace Network
     {
         CTextMessage::CTextMessage(const QString &message, const CFrequency &frequency, const CCallsign &senderCallsign)
-            : m_message(message.trimmed().simplified()), m_senderCallsign(senderCallsign), m_frequency(frequency)
+            : m_senderCallsign(senderCallsign), m_frequency(frequency)
         {
+            this->setMessage(message); // single place to modify message
             m_frequency.switchUnit(PhysicalQuantities::CFrequencyUnit::MHz());
         }
 
         CTextMessage::CTextMessage(const QString &message, const CCallsign &senderCallsign, const CCallsign &recipientCallsign)
-            : m_message(message.trimmed().simplified()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
-        {}
+            : m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
+        {
+            this->setMessage(message); // single place to modify message
+        }
 
         QString CTextMessage::convertToQString(bool i18n) const
         {
@@ -115,9 +118,15 @@ namespace BlackMisc
             return CComSystem::isValidCivilAviationFrequency(m_frequency);
         }
 
+        QString CTextMessage::getAsciiOnlyMessage() const
+        {
+            if (m_message.isEmpty()) { return {}; }
+            return asciiOnlyString(simplifyAccents(m_message));
+        }
+
         void CTextMessage::setMessage(const QString &message)
         {
-            m_message = asciiOnlyString(simplifyAccents(message.simplified().trimmed()));
+            m_message = message.simplified().trimmed();
         }
 
         bool CTextMessage::isRadioMessage() const

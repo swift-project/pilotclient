@@ -574,7 +574,7 @@ namespace BlackCore
             if (message.isEmpty()) {return; }
             BLACK_VERIFY_X(this->isConnected(), Q_FUNC_INFO, "Sending wallop, but not connected");
             if (!this->isConnected()) { return; }
-            Vat_SendWallop(m_net.data(), toFSDnoColon(simplifyAccents(message)));
+            Vat_SendWallop(m_net.data(), toFSDnoColon(simplifyTextMessage(message)));
         }
 
         void CNetworkVatlib::sendCustomPacket(const CCallsign &callsign, const QString &packetId, const QStringList &data)
@@ -1526,6 +1526,12 @@ namespace BlackCore
         {
             const QString errorMessage = QStringLiteral("vatlib ") % context % QStringLiteral(": ") % message;
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(errorMessage);
+        }
+
+        QString CNetworkVatlib::simplifyTextMessage(const QString &msg)
+        {
+            if (msg.isEmpty()) { return {}; }
+            return asciiOnlyString(simplifyAccents(msg.simplified().trimmed()));
         }
 
         const QJsonObject &CNetworkVatlib::JsonPackets::aircraftConfigRequest()

@@ -190,6 +190,7 @@ namespace BlackCore
             static QString convertToUnicodeEscaped(const QString &str);
             static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             static void networkLogHandler(VatSeverityLevel severity, const char *context, const char *message);
+            static QString simplifyTextMessage(const QString &msg);
             void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
             //! Default model string
