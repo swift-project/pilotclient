@@ -219,6 +219,8 @@ namespace BlackMisc
     }
 
     // http://www.codegur.online/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
+    // https://stackoverflow.com/questions/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
+    // https://german.stackexchange.com/questions/4992/conversion-table-for-diacritics-e-g-%C3%BC-%E2%86%92-ue
     QString simplifyAccents(const QString &candidate)
     {
         static const QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
