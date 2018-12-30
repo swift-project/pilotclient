@@ -447,6 +447,7 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notific
 {
     if (!m_contextAudioAvailable) { return; }
     if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
+    if (!sGui || sGui->isShuttingDown()) { return; }
     sGui->getIContextAudio()->playNotification(notification, true);
 }
 

@@ -106,7 +106,7 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
-            bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts
+            bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
 
             //! Enum to widget
             QWidget *getTabWidget(TextMessageTab tab) const;

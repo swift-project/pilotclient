@@ -430,7 +430,7 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (!m_usedAsOverlayWidget && sGui && sGui->getIContextAudio())
+            if (!m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
             {
                 sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
