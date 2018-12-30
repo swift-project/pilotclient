@@ -229,12 +229,13 @@ namespace BlackMiscTest
 
     void CTestAircraftSituation::sortHint()
     {
-        constexpr int Max = 50000;
+        constexpr int Lists = 50000;
+        constexpr int Loops = 20;
         CAircraftSituationList situations = testSituations();
         situations.sortAdjustedLatestFirst();
         CSequence<CAircraftSituationList> listOfLists1;
         CSequence<CAircraftSituationList> listOfLists2;
-        for (int i = 0; i < Max; ++i)
+        for (int i = 0; i < Lists; ++i)
         {
             listOfLists1.push_back(situations);
             listOfLists2.push_back(situations);
@@ -245,20 +246,26 @@ namespace BlackMiscTest
 
         QTime time;
         time.start();
-        for (const CAircraftSituationList &s : as_const(listOfLists1))
+        for (int i = 0; i < Loops; ++i)
         {
-            const CAircraftSituation s1 = s.oldestAdjustedObject();
-            const CAircraftSituation s2 = s.latestAdjustedObject();
-            QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+            for (const CAircraftSituationList &s : as_const(listOfLists1))
+            {
+                const CAircraftSituation s1 = s.oldestAdjustedObject();
+                const CAircraftSituation s2 = s.latestAdjustedObject();
+                QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+            }
         }
         const int noHint = time.elapsed();
 
         time.start();
-        for (const CAircraftSituationList &s : as_const(listOfLists2))
+        for (int i = 0; i < Loops; ++i)
         {
-            const CAircraftSituation s1 = s.oldestAdjustedObject();
-            const CAircraftSituation s2 = s.latestAdjustedObject();
-            QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+            for (const CAircraftSituationList &s : as_const(listOfLists2))
+            {
+                const CAircraftSituation s1 = s.oldestAdjustedObject();
+                const CAircraftSituation s2 = s.latestAdjustedObject();
+                QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+            }
         }
         const int hint = time.elapsed();
         const double ratio = static_cast<double>(hint) / static_cast<double>(noHint); // expected <1.0
