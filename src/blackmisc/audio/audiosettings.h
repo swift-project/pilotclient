@@ -34,13 +34,19 @@ namespace BlackMisc
             CSettings();
 
             //! Notification flag (play notification?)
-            bool getNotificationFlag(BlackMisc::Audio::CNotificationSounds::Notification notification) const;
+            bool isNotificationFlagSet(CNotificationSounds::NotificationFlag notification) const;
 
             //! Notification flag (play notification?)
-            void setNotificationFlag(BlackMisc::Audio::CNotificationSounds::Notification notification, bool value);
+            void setNotificationFlag(CNotificationSounds::NotificationFlag notification, bool value);
+
+            //! Get notification
+            CNotificationSounds::Notification getNotification() const { return static_cast<CNotificationSounds::Notification>(m_notification); }
+
+            //! Set notification
+            void setNotification(CNotificationSounds::Notification notification) { m_notification = static_cast<int>(notification); }
 
             //! Settings value
-            BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
+            CStatusMessage value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
 
             //! Init with meaningful default values
             void initDefaultValues();
@@ -49,12 +55,12 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            QString m_notificationFlags;  //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
+            int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
             void initNotificationFlags(); //!< init flags
 
             BLACK_METACLASS(
                 CSettings,
-                BLACK_METAMEMBER(notificationFlags)
+                BLACK_METAMEMBER(notification)
             );
         };
     } // namespace

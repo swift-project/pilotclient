@@ -118,7 +118,7 @@ namespace BlackGui
                 // notify
                 if (sGui->getIContextAudio())
                 {
-                    CNotificationSounds::Notification sound = connected ?
+                    CNotificationSounds::NotificationFlag sound = connected ?
                             CNotificationSounds::NotificationVoiceRoomJoined :
                             CNotificationSounds::NotificationVoiceRoomLeft;
                     sGui->getIContextAudio()->playNotification(sound, true);

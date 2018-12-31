@@ -11,6 +11,7 @@
 
 #include <QChar>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc::Audio;
 
@@ -23,37 +24,32 @@ namespace BlackMisc
             this->initDefaultValues();
         }
 
-        bool CSettings::getNotificationFlag(CNotificationSounds::Notification notification) const
+        bool CSettings::isNotificationFlagSet(CNotificationSounds::NotificationFlag notification) const
         {
-            const int i = static_cast<int>(notification);
-            if (i >= m_notificationFlags.length()) return true; // default
-            QChar f = m_notificationFlags.at(i);
-            return '1' == f;
+            return this->getNotification().testFlag(notification);
+        }
+
+        void CSettings::setNotificationFlag(CNotificationSounds::NotificationFlag notification, bool value)
+        {
+            if (value)
+            {
+                m_notification |= notification;
+            }
+            else
+            {
+                m_notification &= ~notification;
+            }
         }
 
         QString CSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s("Notification flags:");
-            s.append(" ").append(m_notificationFlags);
-            return s;
+            return u"Notification flags: " % CNotificationSounds::toString(this->getNotification());
         }
 
         void CSettings::initDefaultValues()
         {
-            this->initNotificationFlags();
+            this->setNotification(CNotificationSounds::AllNotifications);
         }
-
-        void CSettings::initNotificationFlags()
-        {
-            // if we add flags in the future, we automatically extend ...
-            constexpr int l = 1 + static_cast<int>(CNotificationSounds::Notification::NotificationsLoadSounds);
-            if (this->m_notificationFlags.length() < l)
-            {
-                int cl = m_notificationFlags.length();
-                this->m_notificationFlags.append(QString(l - cl, '1'));
-            }
-        }
-
     } // namespace
 } // namespace

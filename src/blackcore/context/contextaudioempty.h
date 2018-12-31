@@ -150,7 +150,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextAudio::playNotification()
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override
+            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings) const override
             {
                 Q_UNUSED(notification);
                 Q_UNUSED(considerSettings);

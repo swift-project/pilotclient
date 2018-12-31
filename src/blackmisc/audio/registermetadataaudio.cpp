@@ -25,9 +25,9 @@ namespace BlackMisc
             CSettings::registerMetadata();
             CVoiceSetup::registerMetadata();
 
-            // struct
-            qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::PlayMode>();
-            qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::Notification>();
+            // ENUMs
+            qDBusRegisterMetaType<CNotificationSounds::PlayMode>();
+            qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
         }
     } // ns
 } // ns

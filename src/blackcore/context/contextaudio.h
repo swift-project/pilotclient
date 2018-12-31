@@ -166,7 +166,7 @@ namespace BlackCore
             //! Play notification sound
             //! \param notification CSoundGenerator::Notification
             //! \param considerSettings consider settings (notification on/off), false means settings ignored
-            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const = 0;
+            virtual void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings) const = 0;
 
             //! Enable audio loopback
             virtual void enableAudioLoopback(bool enable = true) = 0;

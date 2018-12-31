@@ -430,22 +430,19 @@ namespace BlackCore
             m_selcalPlayer->play(90, selcal);
         }
 
-        void CContextAudio::playNotification(CNotificationSounds::Notification notification, bool considerSettings) const
+        void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings) const
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
-            bool play = !considerSettings || m_audioSettings.getThreadLocal().getNotificationFlag(notification);
-            if (play)
-            {
-                CSoundGenerator::playNotificationSound(90, notification);
-            }
+            const bool play = !considerSettings || m_audioSettings.getThreadLocal().isNotificationFlagSet(notification);
+            if (play) { CSoundGenerator::playNotificationSound(90, notification); }
         }
 
         void CContextAudio::initNotificationSounds()
         {
             // not possible in own thread
-            CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
+            CSoundGenerator::playNotificationSound(0, CNotificationSounds::LoadSounds);
         }
 
         void CContextAudio::enableAudioLoopback(bool enable)
@@ -544,10 +541,8 @@ namespace BlackCore
             case IVoiceChannel::Connected:
                 emit this->changedVoiceRooms(getComVoiceRooms(), true);
                 break;
-            case IVoiceChannel::Disconnecting:
-                break;
-            case IVoiceChannel::Connecting:
-                break;
+            case IVoiceChannel::Disconnecting: break;
+            case IVoiceChannel::Connecting: break;
             case IVoiceChannel::ConnectingFailed:
             case IVoiceChannel::DisconnectedError:
                 CLogMessage(this).warning(u"Voice channel disconnecting error");

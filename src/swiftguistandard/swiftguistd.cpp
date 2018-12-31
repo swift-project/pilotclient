@@ -443,7 +443,7 @@ void SwiftGuiStd::checkDbDataLoaded()
     m_dbLoadDialog->newerOrEmptyEntitiesDetected(loadEntities);
 }
 
-void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
+void SwiftGuiStd::playNotifcationSound(CNotificationSounds::NotificationFlag notification) const
 {
     if (!m_contextAudioAvailable) { return; }
     if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
