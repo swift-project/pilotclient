@@ -16,6 +16,7 @@
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/identifier.h"
@@ -106,6 +107,7 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
 
             //! Enum to widget
@@ -207,4 +209,5 @@ namespace BlackGui
         };
     } // ns
 } // ns
+
 #endif // guard

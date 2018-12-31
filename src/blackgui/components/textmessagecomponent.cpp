@@ -104,7 +104,7 @@ namespace BlackGui
             QTimer::singleShot(2000, this, [ = ]
             {
                 // init decoupled when sub components are fully init
-                if (!myself) { return; }
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->onSettingsChanged();
                 this->onChangedAircraftCockpit();
             });
@@ -155,15 +155,18 @@ namespace BlackGui
         bool CTextMessageComponent::isCloseableTab(const QWidget *tabWidget) const
         {
             if (!tabWidget) { return false; }
-            return (tabWidget != ui->tb_TextMessagesAll && tabWidget != ui->tb_TextMessagesCOM1 &&
+            return (tabWidget != ui->tb_TextMessagesAll  && tabWidget != ui->tb_TextMessagesCOM1 &&
                     tabWidget != ui->tb_TextMessagesCOM2 && tabWidget != ui->tb_TextMessagesUnicom);
         }
 
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
             const CTextMessageSettings msgSettings(m_messageSettings.getThreadLocal());
+            const bool playNotification = sGui && sGui->getIContextAudio();
+            const bool audioCsMentioned = playNotification && m_audioSettings.get().textCallsignMentioned();
 
             for (const CTextMessage &message : messages)
             {
@@ -173,7 +176,7 @@ namespace BlackGui
                 if (!m_usedAsOverlayWidget && message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
                 {
                     // this is SELCAL for me
-                    if (sGui && sGui->getIContextAudio())
+                    if (playNotification)
                     {
                         sGui->getIContextAudio()->playSelcalTone(message.getSelcalCode());
                     }
@@ -206,6 +209,12 @@ namespace BlackGui
                         ui->tep_TextMessagesCOM2->insertTextMessage(message);
                         relevantForMe = true;
                     }
+
+                    // callsign mentioned notification
+                    if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() && message.mentionsCallsign(ownAircraft.getCallsign()))
+                    {
+                        sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
+                    }
                 }
                 else if (message.isPrivateMessage() && !message.isServerMessage())
                 {
@@ -219,7 +228,7 @@ namespace BlackGui
                 {
                     ui->tvp_TextMessagesAll->insert(message);
                 }
-                if (!relevantForMe) { return; }
+                if (!relevantForMe) { continue; }
 
                 // overlay message if this channel is not selected
                 if (!message.wasSent() && !message.isSendToUnicom() && !message.isServerMessage())
@@ -408,7 +417,7 @@ namespace BlackGui
             connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
 
-            if (sGui && sGui->getIContextNetwork())
+            if (sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
             {
                 const QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
                 if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(index, realName); }
@@ -430,7 +439,7 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (!m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio())
+            if (!m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio() && m_audioSettings.get().textMessagePrivate())
             {
                 sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
