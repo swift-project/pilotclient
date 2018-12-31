@@ -80,19 +80,20 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::updateAudioVoiceRoomsFromContext(const CVoiceRoomList &selectedVoiceRooms, bool connected)
         {
-            Q_ASSERT(selectedVoiceRooms.size() == 2);
-            CVoiceRoom room1 = selectedVoiceRooms[0];
-            CVoiceRoom room2 = selectedVoiceRooms[1];
+            if (!sGui || sGui->isShuttingDown()) { return; }
 
-            // remark
+            Q_ASSERT(selectedVoiceRooms.size() == 2);
+            const CVoiceRoom room1 = selectedVoiceRooms[0];
+            const CVoiceRoom room2 = selectedVoiceRooms[1];
+
+            // remark:
             // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
 
-            bool changedUrl1 = (room1.getVoiceRoomUrl() == ui->le_CockpitVoiceRoomCom1->text());
+            const bool changedUrl1 = (room1.getVoiceRoomUrl() != ui->le_CockpitVoiceRoomCom1->text());
             ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
             if (room1.isConnected())
             {
                 ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
-                if (sGui->getIContextAudio()) ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
@@ -100,7 +101,7 @@ namespace BlackGui
                 ui->tvp_CockpitVoiceRoom1->clear();
             }
 
-            bool changedUrl2 = (room2.getVoiceRoomUrl() == ui->le_CockpitVoiceRoomCom2->text());
+            const bool changedUrl2 = (room2.getVoiceRoomUrl() != ui->le_CockpitVoiceRoomCom2->text());
             ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
             if (room2.isConnected())
             {
@@ -111,16 +112,16 @@ namespace BlackGui
                 ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
                 ui->tvp_CockpitVoiceRoom2->clear();
             }
+
+            // for unconnected we already
+            if (connected) { this->updateVoiceRoomMembers(); }
+
             if (changedUrl1 || changedUrl2)
             {
-                this->updateVoiceRoomMembers();
-
                 // notify
                 if (sGui->getIContextAudio())
                 {
-                    CNotificationSounds::NotificationFlag sound = connected ?
-                            CNotificationSounds::NotificationVoiceRoomJoined :
-                            CNotificationSounds::NotificationVoiceRoomLeft;
+                    const CNotificationSounds::NotificationFlag sound = connected ? CNotificationSounds::NotificationVoiceRoomJoined : CNotificationSounds::NotificationVoiceRoomLeft;
                     sGui->getIContextAudio()->playNotification(sound, true);
                 }
             }
@@ -128,10 +129,10 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::updateVoiceRoomMembers()
         {
-            if (!sGui->getIContextAudio()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (!ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
+                ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com1));
             }
             else
             {
@@ -140,7 +141,7 @@ namespace BlackGui
 
             if (!ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
+                ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(CComSystem::Com2));
             }
             else
             {
