@@ -360,6 +360,7 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
 
     // Default values
     def colorCode = '#FF0000'
+    def emoji = ':question:'
     def duration = currentBuild.durationString.replace(' and counting', '')
     def title = "${java.net.URLDecoder.decode(JOB_NAME)} (`${BRANCH_NAME}`)"
     if (params.REVISION_ID != null) {
@@ -372,19 +373,23 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
     if (buildStatus == 'STARTED') {
         // yellow
         colorCode = '#FFFF00'
+        emoji = ':heavy_plus_sign:'
     } else if (buildStatus == 'SUCCESS') {
         // green
         colorCode = '#008000'
+        emoji = ':heavy_check_mark:'
     } else if (buildStatus == 'ABORTED') {
         // grey
         colorCode = '#808080'
+        emoji = ':grey_question:'
     } else {
         // darkred
         colorCode = '#8B0000'
+        emoji = ':x:'
     }
 
     // Send notifications - disable during testing
-    slackSend (color: colorCode, message: summary)
+    slackSend (color: colorCode, message: "${emoji} ${summary}")
 }
 
 def getEolInMonth() {
