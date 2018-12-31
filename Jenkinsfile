@@ -362,7 +362,7 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
     def colorCode = '#FF0000'
     def emoji = ':question:'
     def duration = currentBuild.durationString.replace(' and counting', '')
-    def title = "${java.net.URLDecoder.decode(JOB_NAME)} (`${BRANCH_NAME}`)"
+    def title = "${java.net.URLDecoder.decode(JOB_NAME)}: `${scm.branches.first().name}`"
     if (params.REVISION_ID != null) {
         title += " - D${params.REVISION_ID} (Build ${params.BUILD_ID})"
     }
