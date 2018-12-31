@@ -334,6 +334,18 @@ def notifyHarbormaster() {
         def type = currentBuild.resultIsBetterOrEqualTo('SUCCESS') ? 'pass' : 'fail'
         def json = """{ "buildTargetPHID": "${params.PHID}", "type": "${type}" }"""
         sh "echo '${json}' | ${arcCmd} harbormaster.sendmessage"
+
+        def icon = '{icon question-circle color=orange}'
+        if (currentBuild.result == 'SUCCESS') {
+            icon = '{icon check color=green}'
+        } else if (currentBuild.result == 'FAILURE') {
+            icon = '{icon times color=red}'
+        } else if (currentBuild.result == 'UNSTABLE') {
+            icon = '{icon exclamation-triangle color=orange}'
+        }
+        def comment = "${icon} {${params.PHID}} ${currentBuild.currentResult}: ${env.BUILD_URL}"
+        json = """{ "objectIdentifier": "D${params.REVISION_ID}", "transactions": [{ "type": "comment", "value": "${comment}" }] }"""
+        sh "echo '${json}' | ${arcCmd} differential.revision.edit"
     }
 }
 
