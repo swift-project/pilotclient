@@ -13,6 +13,7 @@
 #define BLACKMISC_AUDIO_SETTINGS_H
 
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/statusmessage.h"
@@ -45,6 +46,12 @@ namespace BlackMisc
             //! Set notification
             void setNotification(CNotificationSounds::Notification notification) { m_notification = static_cast<int>(notification); }
 
+            //! Simplified functions @{
+            bool textMessagePrivate() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
+            bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
+            bool pttClick() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClick); }
+            //! @}
+
             //! Settings value
             CStatusMessage value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
 
@@ -62,6 +69,19 @@ namespace BlackMisc
                 CSettings,
                 BLACK_METAMEMBER(notification)
             );
+        };
+
+        //! Audio related settings
+        struct TSettings : public TSettingTrait<CSettings>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "audio/setup"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Audio"); return name; }
+
+            //! \copydoc BlackMisc::TSettingTrait::isValid
+            static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
         };
     } // namespace
 } // namespace

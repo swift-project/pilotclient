@@ -19,9 +19,9 @@
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/audiomixer.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -161,8 +161,8 @@ namespace BlackCore
             BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
 
             // settings
-            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this };
-            BlackMisc::CSetting<BlackCore::Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings>     m_audioSettings { this };
+            BlackMisc::CSetting<BlackCore::Audio::TInputDevice>  m_inputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
             BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
         };
     } // namespace

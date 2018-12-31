@@ -13,26 +13,12 @@
 #define BLACKCORE_AUDIO_SETTINGS_H
 
 #include "blackmisc/settingscache.h"
-#include "blackmisc/audio/audiosettings.h"
 #include <QString>
 
 namespace BlackCore
 {
     namespace Audio
     {
-        //! Audio related settings
-        struct TSettings : public BlackMisc::TSettingTrait<BlackMisc::Audio::CSettings>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "audio/setup"; }
-
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Audio"); return name; }
-
-            //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
-        };
-
         //! Audio input device settings
         struct TInputDevice : public BlackMisc::TSettingTrait<QString>
         {

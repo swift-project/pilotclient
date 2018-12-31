@@ -30,6 +30,7 @@
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/settings/serversettings.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/applicationinfo.h"
 
@@ -124,7 +125,7 @@ namespace BlackGui
             BlackMisc::CSetting<Settings::TextMessageSettings>  m_settingsTextMessage { this };
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
-            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_settingsAudio { this };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_settingsAudio { this };
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_settingsDirectories { this };
             BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_settingsNetworkServers { this };
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings

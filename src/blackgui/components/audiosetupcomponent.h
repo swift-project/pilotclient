@@ -13,7 +13,7 @@
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/audio/audiosettings.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/settingscache.h"
 
@@ -72,7 +72,7 @@ namespace BlackGui
             BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
-            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::reloadSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::reloadSettings };
         };
     } // namespace
 } // namespace
