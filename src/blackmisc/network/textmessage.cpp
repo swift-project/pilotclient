@@ -118,6 +118,13 @@ namespace BlackMisc
             return CComSystem::isValidCivilAviationFrequency(m_frequency);
         }
 
+        bool CTextMessage::mentionsCallsign(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return false; }
+            if (m_message.length() < callsign.asString().length()) { return false; }
+            return m_message.contains(callsign.asString(), Qt::CaseInsensitive);
+        }
+
         QString CTextMessage::getAsciiOnlyMessage() const
         {
             if (m_message.isEmpty()) { return {}; }

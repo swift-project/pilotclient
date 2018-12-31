@@ -85,6 +85,9 @@ namespace BlackMisc
             //! Get message
             const QString &getMessage() const { return m_message; }
 
+            //! Is the callsign given mentioned in that message
+            bool mentionsCallsign(const Aviation::CCallsign &callsign) const;
+
             //! Get ASCII only message
             QString getAsciiOnlyMessage() const;
 
