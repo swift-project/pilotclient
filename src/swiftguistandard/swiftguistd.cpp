@@ -461,6 +461,12 @@ void SwiftGuiStd::displayLog()
     ui->comp_MainInfoArea->displayLog();
 }
 
+void SwiftGuiStd::onPttChanged(bool enabled)
+{
+    if (!enabled) { return; }
+    sGui->getIContextAudio()->playNotification(CNotificationSounds::PTTClick, true);
+}
+
 void SwiftGuiStd::displayDBusReconnectDialog()
 {
     if (m_displayingDBusReconnect) { return; }
