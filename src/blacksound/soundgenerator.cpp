@@ -486,7 +486,7 @@ namespace BlackSound
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
-    void CSoundGenerator::playNotificationSound(int volume, CNotificationSounds::Notification notification)
+    void CSoundGenerator::playNotificationSound(int volume, CNotificationSounds::NotificationFlag notification)
     {
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
@@ -500,15 +500,19 @@ namespace BlackSound
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/login.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/logoff.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/privatemessage.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/callsignmentioned.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomjoined.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomleft.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav")) && success;
 
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
             mediaPlayer->setPlaylist(playlist);
         }
-        if (notification == CNotificationSounds::NotificationsLoadSounds) return;
-        int index = static_cast<int>(notification);
+        if (notification == CNotificationSounds::LoadSounds) { return; }
+        if (notification == CNotificationSounds::NoNotifications) { return; }
+
+        const int index = qRound(std::log2(static_cast<double>(notification)));
         playlist->setCurrentIndex(index);
         mediaPlayer->setVolume(volume); // 0-100
         mediaPlayer->play();
