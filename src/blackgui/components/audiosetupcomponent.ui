@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
+    <width>216</width>
     <height>322</height>
    </rect>
   </property>
@@ -128,26 +128,37 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioPlayNotificationSounds">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessagePrivate">
        <property name="text">
-        <string>play notification sounds</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
+        <string>notification for private text messages</string>
        </property>
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessage">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
        <property name="text">
-        <string>notification for text messages</string>
+        <string>notfication for text msg. with my callsign</string>
        </property>
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoom">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomJoined">
        <property name="text">
-        <string>notification for join/leave voice room</string>
+        <string>notification joining a voice room</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioPTTClick">
+       <property name="text">
+        <string>PTT click</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomLeft">
+       <property name="text">
+        <string>notification leaving a voice room</string>
        </property>
       </widget>
      </item>
@@ -168,6 +179,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>le_ExtraInfo</tabstop>
+  <tabstop>cb_SetupAudioInputDevice</tabstop>
+  <tabstop>cb_SetupAudioOutputDevice</tabstop>
+  <tabstop>cb_SetupAudioLoopback</tabstop>
+  <tabstop>cb_SetupAudioNotificationTextMessagePrivate</tabstop>
+  <tabstop>cb_SetupAudioNotificationTextCallsignMentioned</tabstop>
+  <tabstop>cb_SetupAudioNotificationVoiceRoomJoined</tabstop>
+  <tabstop>cb_SetupAudioNotificationVoiceRoomLeft</tabstop>
+  <tabstop>cb_SetupAudioPTTClick</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

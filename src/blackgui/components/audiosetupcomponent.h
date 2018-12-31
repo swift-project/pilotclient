@@ -12,16 +12,15 @@
 #ifndef BLACKGUI_AUDIOSETUPCOMPONENT_H
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
-#include "blackcore/audio/audiosettings.h"
 #include "blackgui/blackguiexport.h"
+#include "blackcore/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/settingscache.h"
 
 #include <QFrame>
+#include <QCheckBox>
 #include <QObject>
 #include <QScopedPointer>
-
-class QWidget;
 
 namespace Ui { class CAudioSetupComponent; }
 namespace BlackGui
@@ -40,7 +39,7 @@ namespace BlackGui
             //! Destructor
             virtual ~CAudioSetupComponent();
 
-            //! Play notification sounds (at all)
+            //! Play any sounds?
             bool playNotificationSounds() const;
 
         private:
@@ -60,11 +59,17 @@ namespace BlackGui
             //! Loopback toggled
             void onLoopbackToggled(bool loopback);
 
+            //! Notification flags toggled
+            void onNotificationsToggled(bool checked);
+
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
             //! Audio is optional, check if available
             bool hasAudio() const;
+
+            //! CheckBox to flag
+            BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::reloadSettings };
