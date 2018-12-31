@@ -67,7 +67,7 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="vl_Intro">
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="QGroupBox" name="gb_Model">
         <property name="title">
          <string>Model</string>
@@ -87,16 +87,6 @@
           </widget>
          </item>
         </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="wi_Empty" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
        </widget>
       </item>
       <item>
@@ -489,18 +479,53 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="BlackGui::Components::CDbLoginComponent" name="comp_DbLogin">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+     <widget class="QGroupBox" name="gb_Credentials">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>125</height>
+       </size>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+      <property name="title">
+       <string>User data</string>
+      </property>
+      <layout class="QVBoxLayout" name="vl_Credentials">
+       <item>
+        <widget class="BlackGui::Components::CDbLoginComponent" name="comp_DbLogin">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="wp8_LastConfirmation">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QLabel" name="lbl_Info">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;By pressing &amp;quot;NEXT&amp;quot; you will send the changed data!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp8_SendStatus">
+  <widget class="QWizardPage" name="wp9_SendStatus">
    <property name="title">
     <string>Status</string>
    </property>
@@ -509,13 +534,28 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+     <widget class="QGroupBox" name="gb_SendStatus">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>125</height>
+       </size>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+      <property name="title">
+       <string>Send status</string>
       </property>
+      <layout class="QVBoxLayout" name="vl_SendStatus">
+       <item>
+        <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
