@@ -167,7 +167,7 @@ namespace BlackSound
         const int bytesForAllChannels = m_audioFormat.channelCount() * bytesPerSample;
 
         qint64 totalLength = 0;
-        foreach(Tone t, m_tones)
+        for (const Tone &t : m_tones)
         {
             totalLength += m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
         }
@@ -175,10 +175,10 @@ namespace BlackSound
         Q_ASSERT(totalLength % bytesForAllChannels == 0);
         Q_UNUSED(bytesForAllChannels) // suppress warning in release builds
 
-        m_buffer.resize(totalLength);
+        m_buffer.resize(static_cast<int>(totalLength)); // potentially dangerous cast, but I see no use case where the int range on any of our platforms is exceeded
         unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(m_buffer.data()); // clazy:exclude=detaching-member
 
-        foreach(Tone t, m_tones)
+        for (const Tone &t : m_tones)
         {
             qint64 bytesPerTone = m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
             qint64 last0AmplitudeSample = bytesPerTone; // last sample when amplitude was 0
@@ -296,35 +296,31 @@ namespace BlackSound
 
         // RIFF header
         if (m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+        {
             memcpy(&header.riff.descriptor.id[0], "RIFF", 4);
+        }
         else
+        {
             memcpy(&header.riff.descriptor.id[0], "RIFX", 4);
+        }
 
-        qToLittleEndian<quint32>(quint32(m_buffer.size() + headerLength - 8),
+        qToLittleEndian<quint32>(quint32(static_cast<uint>(m_buffer.size()) + headerLength - 8),
                                  reinterpret_cast<unsigned char *>(&header.riff.descriptor.size));
         memcpy(&header.riff.type[0], "WAVE", 4);
 
         // WAVE header
         memcpy(&header.wave.descriptor.id[0], "fmt ", 4);
-        qToLittleEndian<quint32>(quint32(16),
-                                 reinterpret_cast<unsigned char *>(&header.wave.descriptor.size));
-        qToLittleEndian<quint16>(quint16(1),
-                                 reinterpret_cast<unsigned char *>(&header.wave.audioFormat));
-        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount()),
-                                 reinterpret_cast<unsigned char *>(&header.wave.numChannels));
-        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate()),
-                                 reinterpret_cast<unsigned char *>(&header.wave.sampleRate));
-        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate() * m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8),
-                                 reinterpret_cast<unsigned char *>(&header.wave.byteRate));
-        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8),
-                                 reinterpret_cast<unsigned char *>(&header.wave.blockAlign));
-        qToLittleEndian<quint16>(quint16(m_audioFormat.sampleSize()),
-                                 reinterpret_cast<unsigned char *>(&header.wave.bitsPerSample));
+        qToLittleEndian<quint32>(quint32(16), reinterpret_cast<unsigned char *>(&header.wave.descriptor.size));
+        qToLittleEndian<quint16>(quint16(1),  reinterpret_cast<unsigned char *>(&header.wave.audioFormat));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount()), reinterpret_cast<unsigned char *>(&header.wave.numChannels));
+        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate()), reinterpret_cast<unsigned char *>(&header.wave.sampleRate));
+        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate() * m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8), reinterpret_cast<unsigned char *>(&header.wave.byteRate));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8), reinterpret_cast<unsigned char *>(&header.wave.blockAlign));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.sampleSize()), reinterpret_cast<unsigned char *>(&header.wave.bitsPerSample));
 
         // DATA header
         memcpy(&header.data.descriptor.id[0], "data", 4);
-        qToLittleEndian<quint32>(quint32(m_buffer.size()),
-                                 reinterpret_cast<unsigned char *>(&header.data.descriptor.size));
+        qToLittleEndian<quint32>(quint32(m_buffer.size()), reinterpret_cast<unsigned char *>(&header.data.descriptor.size));
 
         success = file.write(reinterpret_cast<const char *>(&header), headerLength) == headerLength;
         success = success && file.write(m_buffer) == m_buffer.size();
@@ -336,7 +332,7 @@ namespace BlackSound
     {
         if (tones.isEmpty()) { return 0; }
         qint64 d = 0;
-        foreach(Tone t, tones)
+        for (const Tone &t : tones)
         {
             d += t.m_durationMs;
         }
@@ -356,7 +352,7 @@ namespace BlackSound
         while (len - total > 0)
         {
             const qint64 chunkSize = qMin((m_buffer.size() - m_position), (len - total));
-            memcpy(data + total, m_buffer.constData() + m_position, chunkSize);
+            memcpy(data + total, m_buffer.constData() + m_position, static_cast<size_t>(chunkSize));
             m_position = (m_position + chunkSize) % m_buffer.size();
             total += chunkSize;
             if (m_position == 0 &&

@@ -28,6 +28,7 @@
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Aviation;
 
 namespace BlackGui
 {
@@ -60,7 +61,7 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::onVoiceRoomUrlsReturnPressed()
         {
-            Q_ASSERT(sGui->getIContextOwnAircraft()); // voice room resolution is part of own aircraft
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
             QString url1;
             QString url2;
             if (ui->cb_CockpitVoiceRoom1Override->isChecked()) { url1 = ui->le_CockpitVoiceRoomCom1->text().trimmed(); }
@@ -70,8 +71,8 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::setVoiceRoomUrlFieldsReadOnlyState()
         {
-            bool c1 = ui->cb_CockpitVoiceRoom1Override->isChecked();
-            bool c2 = ui->cb_CockpitVoiceRoom2Override->isChecked();
+            const bool c1 = ui->cb_CockpitVoiceRoom1Override->isChecked();
+            const bool c2 = ui->cb_CockpitVoiceRoom2Override->isChecked();
             ui->le_CockpitVoiceRoomCom1->setReadOnly(!c1);
             ui->le_CockpitVoiceRoomCom2->setReadOnly(!c2);
             CGuiUtility::forceStyleSheetUpdate(this);
