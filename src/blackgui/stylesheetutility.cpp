@@ -156,7 +156,7 @@ namespace BlackGui
                 const QString f = fileInfo.fileName().toLower();
 
                 // keep even empty files as placeholders
-                newStyleSheets.insert(f, c);
+                newStyleSheets.insert(f, c); // set an empty string here to disable all stylesheet
             }
             file.close();
         }

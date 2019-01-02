@@ -258,12 +258,15 @@ namespace BlackGui
         BLACK_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
         if (!checkBox) { return; }
 
-        static const QString background("background: rgba(40,40,40)"); //! \todo hardcoded, should come from stylesheet
+        static const QString background("background: rgba(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet
         if (readOnly)
         {
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
             checkBox->setFocusPolicy(Qt::NoFocus);
-            checkBox->setStyleSheet(background);
+
+            // without that, the checkboxes appear not readonly
+            // obviously style sheet only does not work
+            checkBox->setStyleSheet(background); //! fixme hardcoded stylesheet setting
         }
         else
         {

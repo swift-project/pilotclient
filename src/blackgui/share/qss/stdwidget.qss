@@ -24,6 +24,7 @@ QCheckBox {
 
 /* CGuiUtility::checkBoxReadOnly */
 /* used for read-only checkboxes */
+/* QCheckBox[readOnly="true"] { background: rgba(40,40,40); } */
 
 QCheckBox::indicator {
   color: #b1b1b1;
@@ -194,6 +195,8 @@ BlackGui--Components--CRawFsdMessagesDialog,
 BlackGui--Components--CDbOwnModelsDialog,
 BlackGui--Components--CDbOwnModelSetDialog,
 BlackGui--Components--CFirstModelSetComponent,
+BlackGui--Components--CDbAircraftIcaoComponent,
+BlackGui--Components--CDbLiveryComponent,
 BlackGui--Components--CDbDistributorComponent,
 BlackGui--Components--CLegalInfoComponent
 {
@@ -473,9 +476,9 @@ QMenu {
   padding: 5px;
 }
 
-QMenu::item {
-  padding: 4px 25px 4px 20px;
-}
+/* until Qt 5.12 needed, now since Qt 5.12 causing issue
+QMenu::item { padding: 4px 25px 4px 20px; }
+**/
 
 /* fix margin style */
 QMenu > QFrame {
