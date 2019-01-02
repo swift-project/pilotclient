@@ -32,10 +32,10 @@ namespace BlackGui
             this->setFrameStyle(QFrame::StyledPanel);
             this->setFrameShadow(QFrame::Raised);
             this->setAutoFillBackground(true);
-            this->m_originalStyleSheet = this->styleSheet();
-            connect(&this->m_resetTimer, &QTimer::timeout, this, &CValidationIndicator::clear);
-            this->m_resetTimer.setObjectName(this->objectName().append(":").append("resetTimer"));
-            this->m_resetTimer.start(ResetInterval);
+            m_originalStyleSheet = this->styleSheet();
+            connect(&m_resetTimer, &QTimer::timeout, this, &CValidationIndicator::clear);
+            m_resetTimer.setObjectName(this->objectName().append(":").append("resetTimer"));
+            m_resetTimer.start(ResetInterval);
         }
 
         CValidationIndicator::~CValidationIndicator()
@@ -44,27 +44,27 @@ namespace BlackGui
         void CValidationIndicator::passed()
         {
             this->show();
-            setBackgroundColor("green");
+            this->setBackgroundColor("green");
             ui->lbl_Icon->setPixmap(CIcons::tick16());
         }
 
         void CValidationIndicator::failed()
         {
             this->show();
-            setBackgroundColor("red");
+            this->setBackgroundColor("red");
             ui->lbl_Icon->setPixmap(CStatusMessage::convertToIcon(CStatusMessage::SeverityError));
         }
 
         void CValidationIndicator::warnings()
         {
             this->show();
-            setBackgroundColor("yellow");
+            this->setBackgroundColor("yellow");
             ui->lbl_Icon->setPixmap(CStatusMessage::convertToIcon(CStatusMessage::SeverityWarning));
         }
 
         void CValidationIndicator::clear()
         {
-            setBackgroundColor("");
+            this->setBackgroundColor("");
             ui->lbl_Icon->clear();
             this->hide();
         }
@@ -107,7 +107,7 @@ namespace BlackGui
         {
             if (colorName.isEmpty())
             {
-                this->setStyleSheet(this->m_originalStyleSheet);
+                this->setStyleSheet(m_originalStyleSheet);
             }
             else
             {

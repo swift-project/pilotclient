@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CColorSelector</class>
  <widget class="QFrame" name="CColorSelector">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>136</width>
-    <height>24</height>
-   </rect>
-  </property>
   <property name="maximumSize">
    <size>
     <width>140</width>
@@ -21,12 +13,6 @@
   </property>
   <property name="whatsThis">
    <string>select a color</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QHBoxLayout" name="hl_ColorSelector">
    <property name="leftMargin">
@@ -76,19 +62,6 @@
       <string/>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="hs_ColorSelector">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

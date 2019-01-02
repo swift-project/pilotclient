@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CDbAircraftIcaoComponent</class>
  <widget class="QFrame" name="CDbAircraftIcaoComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Search and find aircraft ICAO codes</string>
   </property>
@@ -46,11 +38,8 @@
        <height>100</height>
       </size>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Plain</enum>
      </property>
     </widget>
    </item>

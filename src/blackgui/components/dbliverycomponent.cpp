@@ -20,6 +20,7 @@
 
 using namespace BlackCore;
 using namespace BlackGui::Views;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -57,7 +58,7 @@ namespace BlackGui
             ui->filter_Livery->filter(livery);
         }
 
-        void CDbLiveryComponent::filterByAirline(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
+        void CDbLiveryComponent::filterByAirline(const CAirlineIcaoCode &icao)
         {
             ui->filter_Livery->filter(icao);
         }

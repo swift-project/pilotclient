@@ -278,10 +278,7 @@ namespace BlackGui
         const QString c = combinedStyleAndWeight.toLower();
         for (const QString &w : fontWeights())
         {
-            if (c.contains(w))
-            {
-                return w;
-            }
+            if (c.contains(w)) { return w; }
         }
         return n;
     }

@@ -189,6 +189,47 @@
           </widget>
          </item>
          <item>
+          <widget class="QWidget" name="wi_HintAirlineIcao" native="true">
+           <layout class="QHBoxLayout" name="hl_HintAirlineIcao">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="lbl_HintIconAirlineIcao">
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_HintAirlineIcao">
+              <property name="text">
+               <string>Hint: Start virtual airlines with &quot;V&quot;, e.g. &quot;VLHA&quot;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
           <widget class="QFrame" name="fr_IntroAirlineSelection">
            <layout class="QFormLayout" name="fl_AircraftIcaoIntro">
             <property name="horizontalSpacing">
@@ -242,7 +283,14 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QCheckBox" name="cb_VirtualAirline"/>
+             <widget class="QCheckBox" name="cb_VirtualAirline">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item row="5" column="0">
              <widget class="QLabel" name="lbl_Military">
@@ -252,46 +300,12 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QCheckBox" name="cb_Military"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QWidget" name="wi_HintAirlineIcao" native="true">
-           <layout class="QHBoxLayout" name="hl_HintAirlineIcao">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="lbl_HintIconAirlineIcao">
+             <widget class="QCheckBox" name="cb_Military">
               <property name="maximumSize">
                <size>
-                <width>20</width>
+                <width>50</width>
                 <height>16777215</height>
                </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="lbl_HintAirlineIcao">
-              <property name="text">
-               <string>Hint: Start virtual airlines with &quot;V&quot;, e.g. &quot;VLHA&quot;</string>
               </property>
              </widget>
             </item>
@@ -356,25 +370,34 @@
      </widget>
     </item>
     <item>
-     <widget class="BlackGui::Components::CDbLiveryColorSearch" name="comp_ColorSearch">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>60</height>
-       </size>
+     <widget class="QGroupBox" name="gb_ColorSearch">
+      <property name="title">
+       <string>Select color</string>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
+      <layout class="QVBoxLayout" name="vl_ColorSearch">
+       <item>
+        <widget class="BlackGui::Components::CDbLiveryColorSearch" name="comp_ColorSearch">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -408,7 +431,14 @@
    </property>
    <layout class="QVBoxLayout" name="vl_DistributorPage">
     <item>
-     <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributor"/>
+     <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributor">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>250</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

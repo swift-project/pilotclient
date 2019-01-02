@@ -38,8 +38,9 @@ namespace BlackGui
                 PageColor,
                 PageLiverySelect,
                 PageDistributorSelect,
-                PageConfirmation,
+                PageConfirmation,     //!< model from and validation
                 PageCredentials,
+                PageLastConfirmation, //!< just info to say data will be send
                 PageSendStatus
             };
 
@@ -102,9 +103,9 @@ namespace BlackGui
 
             //! Models published
             void onPublishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
-                                    const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
-                                    const BlackMisc::CStatusMessageList &messages,
-                                    bool requestSuccessful, bool directWrite);
+                                   const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
+                                   const BlackMisc::CStatusMessageList &messages,
+                                   bool requestSuccessful, bool directWrite);
 
             //! Web data have been read
             void onWebDataRead();

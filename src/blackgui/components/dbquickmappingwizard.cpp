@@ -16,6 +16,7 @@
 #include "blackgui/views/distributorview.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databasewriter.h"
 
@@ -44,6 +45,8 @@ namespace BlackGui
             ui->selector_AirlineIcaoCode->displayWithIcaoDescription(false);
             ui->editor_AircraftModel->allowDrop(false);
             ui->editor_AircraftModel->setReadOnly(true);
+            CGuiUtility::checkBoxReadOnly(ui->cb_Military, true);
+            CGuiUtility::checkBoxReadOnly(ui->cb_VirtualAirline, true);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CDbQuickMappingWizard::onWebDataRead, Qt::QueuedConnection);
             connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::onPublishedModels, Qt::QueuedConnection);
@@ -118,12 +121,12 @@ namespace BlackGui
                 ui->rb_ColorLivery->setChecked(true);
             }
 
-            this->m_model = model;
+            m_model = model;
         }
 
         void CDbQuickMappingWizard::clear()
         {
-            this->m_lastId = 0;
+            m_lastId = 0;
             ui->editor_AircraftModel->clear();
             ui->comp_Log->clear();
             this->restart();
@@ -201,9 +204,9 @@ namespace BlackGui
 
         void CDbQuickMappingWizard::currentWizardPageChanged(int id)
         {
-            const bool forward = id > this->m_lastId;
+            const bool forward = id > m_lastId;
             const bool colorMode = ui->rb_ColorLivery->isChecked();
-            this->m_lastId = id;
+            m_lastId = id;
 
             const Pages page = static_cast<Pages>(id);
             switch (page)
@@ -251,9 +254,15 @@ namespace BlackGui
                     ui->comp_Log->clear();
                 }
                 break;
+            case PageLastConfirmation:
+                {
+                    // void
+                }
+                break;
             case PageSendStatus:
                 {
                     this->writeModelToDb();
+                    this->button(BackButton)->hide();
                 }
                 break;
             default:
@@ -301,17 +310,17 @@ namespace BlackGui
 
         void CDbQuickMappingWizard::consolidateModel()
         {
-            CAircraftModel model = this->m_model;
+            CAircraftModel model = m_model;
             model.setAircraftIcaoCode(ui->editor_AircraftModel->getAircraftIcao());
             model.setDistributor(ui->editor_AircraftModel->getDistributor());
             model.setLivery(ui->editor_AircraftModel->getLivery());
-            this->m_model = model;
+            m_model = model;
         }
 
         void CDbQuickMappingWizard::writeModelToDb()
         {
             this->consolidateModel();
-            const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(this->m_model);
+            const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model);
             ui->comp_Log->appendStatusMessagesToList(msgs);
         }
 
