@@ -224,14 +224,20 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
-        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::countWithValidDbKey() const
+        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::countWithValidDbKey(bool withKey) const
         {
             int count = 0;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (obj.hasValidDbKey()) { count++; }
+                if (obj.hasValidDbKey() && withKey) { count++; }
             }
             return count;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::countWithValidDbKey() const
+        {
+            return this->countWithValidDbKey(true);
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>

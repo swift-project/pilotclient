@@ -72,6 +72,9 @@ namespace BlackMisc
             //! Latest DB timestamp (means objects with DB key)
             QDateTime oldestDbTimestamp() const;
 
+            //! Number of objects with/without key
+            int countWithValidDbKey(bool withKey) const;
+
             //! Number of entries with valid DB key
             int countWithValidDbKey() const;
 

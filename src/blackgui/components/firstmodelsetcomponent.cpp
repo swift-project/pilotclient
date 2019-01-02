@@ -89,7 +89,19 @@ namespace BlackGui
             // avoid to fully init a loader logic here
             static const QString modelsNo("No models so far");
             const int modelsCount = this->modelLoader()->getCachedModelsCount(simulator);
-            ui->le_ModelsInfo->setText(modelsCount > 0 ? this->modelLoader()->getCacheCountAndTimestamp(simulator) : modelsNo);
+            if (modelsCount > 0)
+            {
+                static const QString modelsInfo("%1 included %2 DB key %3");
+                const CAircraftModelList modelsInCache = this->modelLoader()->getCachedModels(simulator);
+                const int modelsIncluded = modelsInCache.countByMode(CAircraftModel::Include);
+                const int modelsDbKey = modelsInCache.countWithValidDbKey(true);
+                ui->le_ModelsInfo->setText(modelsInfo.arg(this->modelLoader()->getCacheCountAndTimestamp(simulator)).arg(modelsIncluded).arg(modelsDbKey));
+            }
+            else
+            {
+                ui->le_ModelsInfo->setText(modelsNo);
+            }
+
             ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
             static const QString modelsSetNo("Model set is empty");

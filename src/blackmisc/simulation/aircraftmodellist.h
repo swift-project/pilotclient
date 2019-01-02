@@ -308,6 +308,9 @@ namespace BlackMisc
             //! Count VTOL aircraft
             int countVtolAircraft() const;
 
+            //! Count by mode
+            int countByMode(CAircraftModel::ModelMode mode) const;
+
             //! Count military aircraft
             int countMilitaryAircraft() const;
 

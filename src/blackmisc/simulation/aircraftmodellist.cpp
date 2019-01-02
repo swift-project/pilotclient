@@ -777,6 +777,16 @@ namespace BlackMisc
             return count;
         }
 
+        int CAircraftModelList::countByMode(CAircraftModel::ModelMode mode) const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.matchesMode(mode)) { count++; }
+            }
+            return count;
+        }
+
         int CAircraftModelList::countMilitaryAircraft() const
         {
             int count = 0;
