@@ -40,11 +40,11 @@ namespace BlackGui
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->color_Fuselage, &CColorSelector::colorChanged, this, &CLiveryFilterBar::ps_colorChanged);
-            connect(ui->color_Tail, &CColorSelector::colorChanged, this, &CLiveryFilterBar::ps_colorChanged);
+            connect(ui->color_Fuselage, &CColorSelector::colorChanged, this, &CLiveryFilterBar::onColorChanged);
+            connect(ui->color_Tail, &CColorSelector::colorChanged, this, &CLiveryFilterBar::onColorChanged);
             connect(ui->cb_Airlines, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
             connect(ui->cb_Colors, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
-            connect(ui->hs_ColorDistance, &QSlider::valueChanged, this, &CLiveryFilterBar::ps_colorDistanceChanged);
+            connect(ui->hs_ColorDistance, &QSlider::valueChanged, this, &CLiveryFilterBar::onColorDistanceChanged);
 
             ui->le_AirlineIcaoCode->setValidator(new CUpperCaseValidator(ui->le_AirlineIcaoCode));
             ui->le_LiveryCode->setValidator(new CUpperCaseValidator(ui->le_LiveryCode));
@@ -57,7 +57,7 @@ namespace BlackGui
         CLiveryFilterBar::~CLiveryFilterBar()
         { }
 
-        std::unique_ptr<BlackGui::Models::IModelFilter<CLiveryList> > CLiveryFilterBar::createModelFilter() const
+        std::unique_ptr<Models::IModelFilter<CLiveryList> > CLiveryFilterBar::createModelFilter() const
         {
             const double maxColorDistance = ui->hs_ColorDistance->value() / 100.0;
             return std::make_unique<CLiveryFilter>(
@@ -106,7 +106,7 @@ namespace BlackGui
         void CLiveryFilterBar::filter(const CAirlineIcaoCode &airlineIcao)
         {
             if (!airlineIcao.hasValidDesignator()) { return; }
-            ui->le_AirlineIcaoCode->setText(airlineIcao.getDesignator());
+            ui->le_AirlineIcaoCode->setText(airlineIcao.getVDesignator());
             ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
         }
 
@@ -123,18 +123,18 @@ namespace BlackGui
             ui->le_Description->clear();
             ui->color_Fuselage->clear();
             ui->color_Tail->clear();
-            ui->hs_ColorDistance->setValue(0.25 *  100.0);
+            ui->hs_ColorDistance->setValue(qRound(0.25 *  100.0));
             ui->cb_Airlines->setChecked(true);
             ui->cb_Colors->setChecked(true);
         }
 
-        void CLiveryFilterBar::ps_colorChanged(const BlackMisc::CRgbColor &color)
+        void CLiveryFilterBar::onColorChanged(const BlackMisc::CRgbColor &color)
         {
             this->triggerFilter();
             Q_UNUSED(color);
         }
 
-        void CLiveryFilterBar::ps_colorDistanceChanged(int distance)
+        void CLiveryFilterBar::onColorDistanceChanged(int distance)
         {
             this->triggerFilter();
             Q_UNUSED(distance);

@@ -21,8 +21,7 @@
 #include <QScopedPointer>
 #include <memory>
 
-class QWidget;
-
+namespace Ui { class CLiveryFilterBar; }
 namespace BlackMisc
 {
     namespace Aviation
@@ -31,7 +30,6 @@ namespace BlackMisc
         class CLiveryList;
     }
 }
-namespace Ui { class CLiveryFilterBar; }
 namespace BlackGui
 {
     namespace Filters
@@ -41,7 +39,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CLiveryFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
+            public Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
         {
             Q_OBJECT
 
@@ -69,14 +67,13 @@ namespace BlackGui
             //! Clear form
             virtual void clearForm() override;
 
-        private slots:
+        private:
             //! Color changed
-            void ps_colorChanged(const BlackMisc::CRgbColor &color);
+            void onColorChanged(const BlackMisc::CRgbColor &color);
 
             //! Color distance changed
-            void ps_colorDistanceChanged(int distance);
+            void onColorDistanceChanged(int distance);
 
-        private:
             QScopedPointer<Ui::CLiveryFilterBar> ui;
         };
     } // ns
