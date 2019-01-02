@@ -233,12 +233,12 @@ namespace BlackSimPlugin
                 NewCloud cloud;
                 switch (cloudLayer.getCoverage())
                 {
-                case CCloudLayer::None: cloud.Coverage = 0; break;
-                case CCloudLayer::Few: cloud.Coverage = 2; break;
+                case CCloudLayer::None:      cloud.Coverage = 0; break;
+                case CCloudLayer::Few:       cloud.Coverage = 2; break;
                 case CCloudLayer::Scattered: cloud.Coverage = 4; break;
-                case CCloudLayer::Broken: cloud.Coverage = 6; break;
-                case CCloudLayer::Overcast: cloud.Coverage = 8; break;
-                default: cloud.Coverage = 0;
+                case CCloudLayer::Broken:    cloud.Coverage = 6; break;
+                case CCloudLayer::Overcast:  cloud.Coverage = 8; break;
+                default:                     cloud.Coverage = 0; break;
                 }
 
                 cloud.Deviation = 0;
@@ -337,6 +337,10 @@ namespace BlackSimPlugin
             bool aircraftPartsN = !aircraftParts;
 
             //! \todo KB 2018-11 BUG fix for broken connection, needs to go as soon as issue is fixed
+            //! Seems to be fixed with
+            //! a) https://dev.swift-project.org/T471
+            //! b) https://dev.swift-project.org/T444
+            //! Remove after 2019-03 if issue is resolved
             if (!(FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult)))
             {
                 FSUIPC_Close();

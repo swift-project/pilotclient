@@ -34,7 +34,7 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *renderedAircraftProvider,
             IWeatherGridProvider    *weatherGridProvider,
             IClientProvider         *clientProvider,
-            QObject *parent) :
+            QObject                 *parent) :
             CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
             m_fsuipc(new CFsuipc(this))
         {
