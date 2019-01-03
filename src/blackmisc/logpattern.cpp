@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/fallthrough.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logpattern.h"
@@ -153,14 +152,13 @@ namespace BlackMisc
         result.m_severities.clear();
         switch (minimumSeverity)
         {
-        // there are deliberately no break statements in this switch block
         default:
         case CStatusMessage::SeverityDebug:     result.m_severities.insert(CStatusMessage::SeverityDebug);
-        BLACK_FALLTHROUGH;
+        Q_FALLTHROUGH();
         case CStatusMessage::SeverityInfo:      result.m_severities.insert(CStatusMessage::SeverityInfo);
-        BLACK_FALLTHROUGH;
+        Q_FALLTHROUGH();
         case CStatusMessage::SeverityWarning:   result.m_severities.insert(CStatusMessage::SeverityWarning);
-        BLACK_FALLTHROUGH;
+        Q_FALLTHROUGH();
         case CStatusMessage::SeverityError:     result.m_severities.insert(CStatusMessage::SeverityError);
         }
         return result;

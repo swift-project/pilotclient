@@ -30,7 +30,6 @@
 #include "blackgui/shortcut.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/fallthrough.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
@@ -614,8 +613,8 @@ namespace BlackGui
                 {
                     // fall thru intended
                     this->formatVPilotView();
-                    BLACK_FALLTHROUGH;
                 }
+                Q_FALLTHROUGH();
             default:
                 {
                     ui->frp_Editors->setVisible(true);

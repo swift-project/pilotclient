@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/fallthrough.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
@@ -416,9 +415,8 @@ namespace BlackMisc
                 {
                     const int c =  Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
                     if (c != 0) { return c; }
-                    // fall through, compare flag
-                    BLACK_FALLTHROUGH;
                 }
+                Q_FALLTHROUGH();
             case IndexGroundElevationInfoTransferred: return Compare::compare(m_isElvInfoTransferred, compareValue.m_isElvInfoTransferred);
             case IndexCanLikelySkipNearGroundInterpolation: return Compare::compare(this->canLikelySkipNearGroundInterpolation(), compareValue.canLikelySkipNearGroundInterpolation());
             default: break;

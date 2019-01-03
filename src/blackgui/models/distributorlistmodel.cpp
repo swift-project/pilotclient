@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/fallthrough.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackmisc/db/datastore.h"
@@ -47,7 +46,7 @@ namespace BlackGui
             {
             case NormalWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                BLACK_FALLTHROUGH;
+                Q_FALLTHROUGH();
             case NotSet:
             case Normal:
                 {
@@ -66,7 +65,7 @@ namespace BlackGui
 
             case MinimalWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                BLACK_FALLTHROUGH;
+                Q_FALLTHROUGH();
             case Minimal:
                 {
                     m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
