@@ -15,10 +15,6 @@
 #include <type_traits>
 #include <utility> // for std::swap
 
-#if defined(Q_CC_CLANG) || (defined(Q_CC_GNU) && __GNUC__ >= 5)
-#define BLACK_HAS_FIXED_CWG1558
-#endif
-
 class QDBusArgument;
 
 namespace BlackMisc
@@ -27,20 +23,10 @@ namespace BlackMisc
     class CPropertyIndex;
 
     //! \cond PRIVATE
-#ifdef BLACK_HAS_FIXED_CWG1558
     // Own implementation of C++17 std::void_t, simple variadic alias
     // template which is always void. Useful for expression SFINAE.
     template <typename...>
     using void_t = void;
-#else // Work around defect in the C++ standard
-    namespace Private
-    {
-        template <typename...>
-        struct make_void { using type = void; };
-    }
-    template <typename... Ts>
-    using void_t = typename Private::make_void<Ts...>::type;
-#endif
     //! \endcond
 
     namespace Private
@@ -77,21 +63,6 @@ namespace BlackMisc
     struct THasToQString<T, void_t<decltype(std::declval<T>().toQString())>> : public std::true_type {};
     //! \endcond
 
-#ifdef Q_CC_MSVC // work around what seems to be an expression SFINAE bug in MSVC
-    namespace Private
-    {
-        struct THasPushBackHelper
-        {
-            struct Base { int push_back; };
-            template <typename T> struct Derived : public T, public Base {};
-            template <typename T, T> struct TypeCheck {};
-            template <typename T> static std::false_type test(TypeCheck<decltype(&Base::push_back), &Derived<T>::push_back> *);
-            template <typename T> static std::true_type test(...);
-        };
-    }
-    template <typename T>
-    using THasPushBack = decltype(Private::THasPushBackHelper::test<T>(nullptr));
-#else
     /*!
      * Trait which is true if the expression a.push_back(v) is valid when a and v are instances of T and T::value_type.
      */
@@ -101,23 +72,7 @@ namespace BlackMisc
     template <typename T>
     struct THasPushBack<T, void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> : public std::true_type {};
     //! \endcond
-#endif
 
-#ifdef Q_CC_MSVC
-    namespace Private
-    {
-        struct THasGetLogCategoriesHelper
-        {
-            struct Base { int getLogCategories; };
-            template <typename T> struct Derived : public T, public Base {};
-            template <typename T, T> struct TypeCheck {};
-            template <typename T> static std::false_type test(TypeCheck<decltype(&Base::getLogCategories), &Derived<T>::getLogCategories> *);
-            template <typename T> static std::true_type test(...);
-        };
-    }
-    template <typename T>
-    using THasGetLogCategories = decltype(Private::THasGetLogCategoriesHelper::test<T>(nullptr));
-#else
     /*!
      * Trait to detect whether a class T has a static member function named getLogCategories.
      */
@@ -127,7 +82,6 @@ namespace BlackMisc
     template <typename T>
     struct THasGetLogCategories<T, void_t<decltype(T::getLogCategories())>> : public std::true_type {};
     //! \endcond
-#endif
 
     /*!
      * Trait to detect whether a class T can be used as a key in a QHash.

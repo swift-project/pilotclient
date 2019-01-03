@@ -100,22 +100,10 @@ namespace BlackMisc
      * \ingroup MetaClass
      */
     template <quint64 F>
-    struct MetaFlags /* : public std::integral_constant<quint64, F> */
+    struct MetaFlags : public std::integral_constant<quint64, F>
     {
         //! Implicit conversion to std::false_type (if F is zero) or std::true_type (if F is non-zero).
         constexpr operator std::integral_constant<bool, static_cast<bool>(F)>() const { return {}; }
-
-#if defined(Q_CC_MSVC) && ! defined(Q_CC_CLANG) // gymnastics to workaround an MSVC 2017 precompiled header ICE
-        int m_dummy = 0;
-#if _MSC_FULL_VER < 191000000
-        constexpr MetaFlags() {}
-#endif
-#endif
-        constexpr operator quint64() const { return F; } //!< Implicit conversion to integer.
-        constexpr quint64 operator ()() const { return F; } //!< Call operator.
-        constexpr static quint64 value = F; //!< Value.
-        using value_type = quint64; //!< Value type.
-        using type = MetaFlags; //!< Own type.
     };
 
     /*!
