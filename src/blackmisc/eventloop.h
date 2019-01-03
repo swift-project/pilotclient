@@ -49,9 +49,6 @@ namespace BlackMisc
         //! If the function's return type is convertible to bool, and it evaluates to true,
         //! then the waiting will immediately time out and return true.
         template <typename T, typename F1, typename F2>
-        #ifdef Q_CC_MINGW
-        __attribute__((noinline)) // work around an apparent GCC 5.3 PE/COFF codegen bug
-        #endif
         static bool processEventsUntil(const T *sender, F1 signal, int timeoutMs, F2 init)
         {
             QEventLoop eventLoop;
