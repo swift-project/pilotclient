@@ -209,13 +209,13 @@ try {
         }
     }
 } catch (error) {
-    node('linux') {
+    node('master') {
         notifyHarbormaster()
     }
     throw error
 }
 
-node('linux') {
+node('master') {
     try {
         stage('Package XSwiftBus') {
             unstash name: 'xswiftbus-linux-64'
@@ -248,7 +248,7 @@ node('linux') {
     }
 }
 
-node('linux') {
+node('master') {
     try {
         def regexDevBranch = /develop\/\d+\.\d+\.\d+/
         if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
@@ -297,7 +297,7 @@ node('linux') {
     }
 }
 
-node('linux') {
+node('master') {
     notifyHarbormaster()
 }
 
