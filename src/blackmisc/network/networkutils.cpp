@@ -113,10 +113,10 @@ namespace BlackMisc
             if (timeoutMs < 0) { timeoutMs = getTimeoutMs(); } // external functions might call with -1
             QTcpSocket socket;
             QSignalMapper mapper;
-            QObject::connect(&socket, &QTcpSocket::connected, &mapper, QOverload<>::of(&QSignalMapper::map));
-            QObject::connect(&socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), &mapper, QOverload<>::of(&QSignalMapper::map));
+            QObject::connect(&socket, &QTcpSocket::connected, &mapper, qOverload<>(&QSignalMapper::map));
+            QObject::connect(&socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), &mapper, qOverload<>(&QSignalMapper::map));
             mapper.setMapping(&socket, 0);
-            const bool timedOut = !CEventLoop::processEventsUntil(&mapper, QOverload<int>::of(&QSignalMapper::mapped), timeoutMs, [&]
+            const bool timedOut = !CEventLoop::processEventsUntil(&mapper, qOverload<int>(&QSignalMapper::mapped), timeoutMs, [&]
             {
                 socket.connectToHost(hostAddress, static_cast<quint16>(port));
             });

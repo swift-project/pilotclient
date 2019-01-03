@@ -45,7 +45,7 @@ namespace BlackMisc
                 if (old->state() == QProcess::Running)
                 {
                     // if still running, terminate and then delete
-                    QObject::connect(old, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), old, &QObject::deleteLater);
+                    QObject::connect(old, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), old, &QObject::deleteLater);
                     old->terminate();
                 }
                 else

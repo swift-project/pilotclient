@@ -77,7 +77,7 @@ namespace BlackGui
 
             readSettings();
             // Connect them after settings are read. Otherwise they get called.
-            connect(ui->cb_FileWritingMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CRawFsdMessagesComponent::changeFileWritingMode);
+            connect(ui->cb_FileWritingMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRawFsdMessagesComponent::changeFileWritingMode);
         }
 
         void CRawFsdMessagesComponent::enableDisableRawFsdMessages()

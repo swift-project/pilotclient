@@ -367,7 +367,7 @@ namespace BlackGui
             contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
             contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop);
             contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
-            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, QOverload<>::of(&CDockWidget::update));
+            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update));
         }
         else
         {
