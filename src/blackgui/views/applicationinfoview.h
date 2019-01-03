@@ -53,7 +53,7 @@ namespace BlackGui
             {}
 
             //! \copydoc Menus::IMenuDelegate::customMenu
-            virtual void customMenu(Menus::CMenuActions &menuActions);
+            virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
         private:
             //! Model view
