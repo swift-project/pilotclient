@@ -18,11 +18,14 @@
 
 #include <QMetaEnum>
 #include <QStringBuilder>
+#include <QThreadStorage>
 
 namespace BlackMisc
 {
     namespace Private
     {
+        QThreadStorage<QString> t_tempBuffer; // thread_local would be destroyed before function-scope statics, see T495
+
         QString arg(QStringView format, const QStringList &args)
         {
             if (format.isEmpty())
@@ -30,7 +33,7 @@ namespace BlackMisc
                 return args.join(u' ');
             }
 
-            thread_local QString temp;
+            QString &temp = t_tempBuffer.localData();
             temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
 
             for (auto it = format.begin(); ; )
