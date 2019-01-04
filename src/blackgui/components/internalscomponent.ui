@@ -185,7 +185,7 @@
           <property name="bottomMargin">
            <number>4</number>
           </property>
-          <item row="1" column="2">
+          <item row="1" column="2" alignment="Qt::AlignLeft">
            <widget class="QPushButton" name="pb_SendTextMessage">
             <property name="text">
              <string>send</string>
@@ -274,38 +274,60 @@
       <attribute name="title">
        <string>Statistics / Logs</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QFormLayout" name="fl_Statistics">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_LatestInterpolationLog">
-           <property name="text">
-            <string>Latest interpolation log</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="pb_LatestInterpolationLog">
-           <property name="text">
-            <string>show</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbl_LatestPartsLog">
-           <property name="text">
-            <string>Latest parts log</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="pb_LatestPartsLog">
-           <property name="text">
-            <string>show</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      <layout class="QGridLayout" name="gl_Statistics" columnstretch="0,0,0">
+       <item row="0" column="1">
+        <widget class="QPushButton" name="pb_LatestInterpolationLog">
+         <property name="text">
+          <string>show</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="pb_LatestPartsLog">
+         <property name="text">
+          <string>show</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_LatestPartsLog">
+         <property name="text">
+          <string>Latest parts log</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_LatestInterpolationLog">
+         <property name="text">
+          <string>Latest interpolation log</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0">
+        <spacer name="vs_Statistics">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -634,8 +656,6 @@
   <tabstop>le_AtisCallsign</tabstop>
   <tabstop>pb_SendAtis</tabstop>
   <tabstop>pte_Atis</tabstop>
-  <tabstop>pb_LatestInterpolationLog</tabstop>
-  <tabstop>pb_LatestPartsLog</tabstop>
   <tabstop>pb_DisplayLog</tabstop>
   <tabstop>pb_RequestFromNetwork</tabstop>
   <tabstop>tb_History</tabstop>
