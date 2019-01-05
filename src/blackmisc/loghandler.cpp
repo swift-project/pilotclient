@@ -40,7 +40,6 @@ namespace BlackMisc
     }
 
     //! Qt message handler
-    //! \todo Qt 5.10: Use invokeMethod() overload taking pointer-to-member-function.
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
         const CStatusMessage statusMessage(type, context, message);

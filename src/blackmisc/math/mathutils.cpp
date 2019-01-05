@@ -10,7 +10,6 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/verify.h"
 
-#include <QThreadStorage>
 #include <QTime>
 #include <QtGlobal>
 #include <algorithm>

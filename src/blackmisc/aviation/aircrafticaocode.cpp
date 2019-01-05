@@ -22,7 +22,6 @@
 #include <QMultiMap>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QThreadStorage>
 #include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>

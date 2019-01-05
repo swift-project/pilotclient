@@ -22,7 +22,6 @@
 
 #include <QLocale>
 #include <QRegularExpression>
-#include <QThreadStorage>
 #include <QtDebug>
 
 namespace BlackMisc

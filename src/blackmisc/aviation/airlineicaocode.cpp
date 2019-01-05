@@ -25,7 +25,6 @@
 #include <QJsonValue>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QThreadStorage>
 #include <QStringBuilder>
 #include <QDir>
 #include <Qt>

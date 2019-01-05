@@ -17,7 +17,6 @@
 #include <QChar>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QThreadStorage>
 #include <Qt>
 #include <QtGlobal>
 #include <QStringBuilder>

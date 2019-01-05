@@ -13,7 +13,6 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QStringList>
-#include <QThreadStorage>
 #include <Qt>
 #include <QtGlobal>
 
