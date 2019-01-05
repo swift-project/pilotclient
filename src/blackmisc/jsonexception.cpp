@@ -17,11 +17,12 @@
 
 namespace BlackMisc
 {
+    static QThreadStorage<std::vector<const CJsonScope *>> g_stack;
+
     //! \private
     auto &jsonStack() noexcept
     {
-        static QThreadStorage<std::vector<const CJsonScope *>> stack;
-        return stack.localData();
+        return g_stack.localData();
     }
 
     // pin vtables to this file

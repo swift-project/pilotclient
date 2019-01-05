@@ -114,7 +114,7 @@ namespace BlackMisc
         static const CLogCategoryList &fromClass()
         {
             static_assert(sizeof(T) > 0, "T must be a complete type, not forward declared");
-            static QThreadStorage<CLogCategoryList> list;
+            static QThreadStorage<CLogCategoryList> list; //! \todo C++17: make list an inline static member variable template
             if (! list.hasLocalData())
             {
                 list.localData().appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());

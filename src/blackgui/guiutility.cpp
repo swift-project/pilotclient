@@ -116,6 +116,8 @@ namespace BlackGui
         return (mw && mw->isFrameless());
     }
 
+    static QThreadStorage<QRegularExpression> tsRegex;
+
     bool CGuiUtility::lenientTitleComparison(const QString &title, const QString &comparison)
     {
         if (title == comparison) { return true; }
@@ -127,7 +129,6 @@ namespace BlackGui
         if (t == c) { return true; }
 
         // further unify
-        static QThreadStorage<QRegularExpression> tsRegex;
         if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-z0-9\\s]")); }
         const QRegularExpression &regexp = tsRegex.localData();
         t = t.remove(regexp);
