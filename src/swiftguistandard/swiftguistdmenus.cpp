@@ -164,8 +164,8 @@ void SwiftGuiStd::initMenus()
 void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
 {
     const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
-    const QDir xpDir(xPlaneRootDir);
-    if (!xpDir.exists())
+    const bool xpDirExists = !xPlaneRootDir.isEmpty() && QDir().exists(xPlaneRootDir);
+    if (!xpDirExists)
     {
         if (checkFileTimestamp) { return; }
         QMessageBox::warning(this, tr("Copy XSwiftBus"), tr("XPlane directory does not exists!"), QMessageBox::Close);
