@@ -27,16 +27,14 @@ namespace BlackGui
 
     const CInfoArea *CDockWidgetInfoArea::getParentInfoArea() const
     {
-        //! \fixme MS 2018-12 use qobject_cast
-        const CInfoArea *ia = dynamic_cast<const CInfoArea *>(this->parent());
+        const CInfoArea *ia = qobject_cast<const CInfoArea *>(this->parent());
         Q_ASSERT(ia);
         return ia;
     }
 
     CInfoArea *CDockWidgetInfoArea::getParentInfoArea()
     {
-        //! \fixme MS 2018-12 use qobject_cast
-        CInfoArea *ia = dynamic_cast<CInfoArea *>(this->parent());
+        CInfoArea *ia = qobject_cast<CInfoArea *>(this->parent());
         Q_ASSERT(ia);
         return ia;
     }
