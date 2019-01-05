@@ -66,7 +66,7 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             const QString s =
-                (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QString()) %
+                (this->hasAnyModelString() ? inApostrophes(this->getAllModelStringsAndAliases(), true) % QStringLiteral(" ") : QString()) %
                 u" type: '" % this->getModelTypeAsString() %
                 u"' ICAO: '" % this->getAircraftIcaoCode().toQString(i18n) %
                 u" CG: " % this->getCG().valueRoundedWithUnit(1) %
@@ -207,6 +207,13 @@ namespace BlackMisc
             }
         }
 
+        QString CAircraftModel::getAllModelStringsAndAliases() const
+        {
+            if (!this->hasModelStringAlias()) { return m_modelString; }
+            if (!this->hasModelString()) { return m_modelStringAlias; }
+            return m_modelString % u", " % m_modelStringAlias;
+        }
+
         bool CAircraftModel::isVtol() const
         {
             return this->getAircraftIcaoCode().isVtol();
@@ -221,29 +228,31 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexModelString: return CVariant(m_modelString);
+            case IndexModelString:           return CVariant(m_modelString);
+            case IndexModelStringAlias:      return CVariant(m_modelStringAlias);
+            case IndexAllModelStrings:       return this->getAllModelStringsAndAliases();
             case IndexHasQueriedModelString: return CVariant::fromValue(this->hasQueriedModelString());
-            case IndexModelType: return CVariant::fromValue(m_modelType);
-            case IndexModelTypeAsString: return CVariant(this->getModelTypeAsString());
-            case IndexModelMode: return CVariant::fromValue(m_modelMode);
-            case IndexModelModeAsString: return CVariant::fromValue(this->getModelModeAsString());
-            case IndexModelModeAsIcon: return CVariant::fromValue(this->getModelModeAsIcon());
-            case IndexDistributor: return m_distributor.propertyByIndex(index.copyFrontRemoved());
-            case IndexSimulatorInfo: return m_simulator.propertyByIndex(index.copyFrontRemoved());
+            case IndexModelType:             return CVariant::fromValue(m_modelType);
+            case IndexModelTypeAsString:     return CVariant(this->getModelTypeAsString());
+            case IndexModelMode:             return CVariant::fromValue(m_modelMode);
+            case IndexModelModeAsString:     return CVariant::fromValue(this->getModelModeAsString());
+            case IndexModelModeAsIcon:       return CVariant::fromValue(this->getModelModeAsIcon());
+            case IndexDistributor:           return m_distributor.propertyByIndex(index.copyFrontRemoved());
+            case IndexSimulatorInfo:         return m_simulator.propertyByIndex(index.copyFrontRemoved());
             case IndexSimulatorInfoAsString: return CVariant(m_simulator.toQString());
-            case IndexDescription: return CVariant(m_description);
-            case IndexName: return CVariant(m_name);
-            case IndexFileName: return CVariant(m_fileName);
-            case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
-            case IndexSupportedParts: return CVariant(m_supportedParts);
-            case IndexFileTimestamp: return CVariant::fromValue(this->getFileTimestamp());
+            case IndexDescription:           return CVariant(m_description);
+            case IndexName:                  return CVariant(m_name);
+            case IndexFileName:              return CVariant(m_fileName);
+            case IndexCG:                    return m_cg.propertyByIndex(index.copyFrontRemoved());
+            case IndexSupportedParts:        return CVariant(m_supportedParts);
+            case IndexFileTimestamp:         return CVariant::fromValue(this->getFileTimestamp());
             case IndexFileTimestampFormattedYmdhms: return CVariant::fromValue(this->getFormattedFileTimestampYmdhms());
-            case IndexIconPath: return CVariant(m_iconPath);
-            case IndexAircraftIcaoCode: return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
-            case IndexLivery: return m_livery.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexMembersDbStatus: return this->getMembersDbStatus();
-            default: return CValueObject::propertyByIndex(index);
+            case IndexIconPath:              return CVariant(m_iconPath);
+            case IndexAircraftIcaoCode:      return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
+            case IndexLivery:                return m_livery.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign:              return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexMembersDbStatus:       return this->getMembersDbStatus();
+            default:                         return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -256,18 +265,19 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexModelString: m_modelString = variant.toQString(); break;
+            case IndexModelString:      m_modelString = variant.toQString(); break;
+            case IndexModelStringAlias: m_modelStringAlias = variant.toQString(); break;
             case IndexAircraftIcaoCode: m_aircraftIcao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexLivery: m_livery.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexDistributor: m_distributor.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexDescription: m_description = variant.toQString(); break;
-            case IndexSimulatorInfo: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexName: m_name = variant.toQString(); break;
-            case IndexIconPath: m_iconPath = variant.toQString(); break;
-            case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexSupportedParts: this->setSupportedParts(variant.toQString()); break;
-            case IndexModelType: m_modelType = variant.value<ModelType>(); break;
-            case IndexFileName: m_fileName = variant.toQString(); break;
+            case IndexLivery:           m_livery.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexDistributor:      m_distributor.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexDescription:      m_description = variant.toQString(); break;
+            case IndexSimulatorInfo:    m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexName:             m_name = variant.toQString(); break;
+            case IndexIconPath:         m_iconPath = variant.toQString(); break;
+            case IndexCG:               m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSupportedParts:   this->setSupportedParts(variant.toQString()); break;
+            case IndexModelType:        m_modelType = variant.value<ModelType>(); break;
+            case IndexFileName:         m_fileName = variant.toQString(); break;
             case IndexCallsign:
                 m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 m_callsign.setTypeHint(CCallsign::Aircraft);
@@ -294,12 +304,12 @@ namespace BlackMisc
                 break;
             // no setter indexes ignored
             case IndexHasQueriedModelString: break;
-            case IndexModelTypeAsString: break;
-            case IndexModelModeAsString: break;
-            case IndexModelModeAsIcon: break;
+            case IndexModelTypeAsString:     break;
+            case IndexModelModeAsString:     break;
+            case IndexModelModeAsIcon:       break;
             case IndexFileTimestampFormattedYmdhms: break;
             case IndexSimulatorInfoAsString: break;
-            case IndexMembersDbStatus: break;
+            case IndexMembersDbStatus:       break;
 
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
@@ -313,18 +323,20 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexModelString: return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
+            case IndexModelString:      return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
+            case IndexModelStringAlias: return m_modelStringAlias.compare(compareValue.getModelStringAlias(), Qt::CaseInsensitive);
+            case IndexAllModelStrings:  return this->getAllModelStringsAndAliases().compare(compareValue.getAllModelStringsAndAliases(), Qt::CaseInsensitive);
             case IndexHasQueriedModelString: return Compare::compare(this->hasQueriedModelString(), compareValue.hasQueriedModelString());
             case IndexAircraftIcaoCode: return m_aircraftIcao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAircraftIcaoCode());
-            case IndexLivery: return m_livery.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
-            case IndexDistributor: return m_distributor.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistributor());
-            case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexName: return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-            case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-            case IndexFileName: return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
-            case IndexIconPath: return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
-            case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
-            case IndexSupportedParts: return m_supportedParts.compare(compareValue.getSupportedParts());
+            case IndexLivery:           return m_livery.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
+            case IndexDistributor:      return m_distributor.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistributor());
+            case IndexDescription:      return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexName:             return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexCallsign:         return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexFileName:         return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
+            case IndexIconPath:         return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
+            case IndexCG:               return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
+            case IndexSupportedParts:   return m_supportedParts.compare(compareValue.getSupportedParts());
             case IndexModelTypeAsString:
             case IndexModelType: return Compare::compare(m_modelType, compareValue.getModelType());
             case IndexSimulatorInfoAsString:
@@ -719,8 +731,15 @@ namespace BlackMisc
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            return m_modelString.length() == modelString.length() &&
-                   m_modelString.startsWith(modelString, sensitivity);
+            if (sensitivity == Qt::CaseInsensitive) { return caseInsensitiveStringCompare(modelString, m_modelString); }
+            return m_modelString == modelString;
+        }
+
+        bool CAircraftModel::matchesModelStringOrAlias(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+        {
+            if (this->matchesModelString(modelString, sensitivity)) { return true; }
+            if (sensitivity == Qt::CaseInsensitive) { return caseInsensitiveStringCompare(modelString, m_modelStringAlias); }
+            return m_modelStringAlias == modelString;
         }
 
         int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log) const
@@ -882,6 +901,7 @@ namespace BlackMisc
         CAircraftModel CAircraftModel::fromDatabaseJsonBaseImpl(const QJsonObject &json, const QString &prefix, const CAircraftIcaoCode &aircraftIcao, const CLivery &livery, const CDistributor &distributor)
         {
             const QString modelString(json.value(prefix % u"modelstring").toString());
+            const QString modelStringAlias(json.value(prefix % u"modelstringalias").toString());
             const QString modelDescription(json.value(prefix % u"description").toString());
             const QString modelName(json.value(prefix % u"name").toString());
             const QString modelMode(json.value(prefix % u"mode").toString());
@@ -891,6 +911,7 @@ namespace BlackMisc
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
             CAircraftModel model(modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription);
+            model.setModelStringAlias(modelStringAlias);
             model.setModelModeAsString(modelMode);
             model.setSupportedParts(parts);
             model.setCG(cg);
