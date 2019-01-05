@@ -113,6 +113,9 @@ namespace BlackMisc
             //! Find first by model string
             CAircraftModel findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
+            //! Find first by model string
+            CAircraftModel findFirstByModelStringAliasOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+
             //! Find first by callsign
             CAircraftModel findFirstByCallsignOrDefault(const Aviation::CCallsign &callsign) const;
 
@@ -322,6 +325,9 @@ namespace BlackMisc
 
             //! Count different combined types
             int countCombinedTypes() const;
+
+            //! Models with aliases
+            int countAliases() const;
 
             //! Update distributor, all models in list are set to given distributor
             void updateDistributor(const CDistributor &distributor);

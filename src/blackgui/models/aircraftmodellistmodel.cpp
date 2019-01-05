@@ -112,7 +112,7 @@ namespace BlackGui
 
             case Database:
                 m_columns.addColumn(CColumn::standardString("id", CAircraftModel::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
-                m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
+                m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexAllModelStrings));
                 m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
 
                 m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));

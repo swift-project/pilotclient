@@ -186,7 +186,7 @@ namespace BlackCore
                     removedModelStrings.push_back(ms);
                     continue;
                 }
-                CAircraftModel consolidated = simulatorModels.findFirstByModelStringOrDefault(ms);
+                CAircraftModel consolidated = simulatorModels.findFirstByModelStringAliasOrDefault(ms);
                 if (consolidated.hasModelString())
                 {
                     CDatabaseUtils::consolidateModelWithDbData(consolidated, true);
@@ -237,7 +237,7 @@ namespace BlackCore
                 if (ms.isEmpty()) { continue; }
                 if (!dbModelsModelStrings.contains(ms)) { continue; }
                 bool modified = false;
-                const CAircraftModel consolidated = CDatabaseUtils::consolidateModelWithDbData(model, dbModels.findFirstByModelStringOrDefault(ms), force, &modified);
+                const CAircraftModel consolidated = CDatabaseUtils::consolidateModelWithDbData(model, dbModels.findFirstByModelStringAliasOrDefault(ms), force, &modified);
                 if (!modified) { continue; }
                 model = consolidated;
                 c++;
@@ -327,7 +327,7 @@ namespace BlackCore
                 if (ownModel.matchesSimulatorFlag(CSimulatorInfo::XPLANE)) { continue; }
 
                 // in DB
-                CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringOrDefault(ownModel.getModelString());
+                CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringAliasOrDefault(ownModel.getModelString());
                 if (!dbModel.isLoadedFromDb()) { continue; }
 
                 // update simulator and add

@@ -114,6 +114,15 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModel CAircraftModelList::findFirstByModelStringAliasOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+        {
+            if (modelString.isEmpty()) { return CAircraftModel(); }
+            return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
+            {
+                return model.matchesModelStringOrAlias(modelString, sensitivity);
+            });
+        }
+
         CAircraftModel CAircraftModelList::findFirstByCallsignOrDefault(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CAircraftModel(); }
@@ -815,6 +824,16 @@ namespace BlackMisc
         int CAircraftModelList::countCombinedTypes() const
         {
             return this->getCombinedTypes().size();
+        }
+
+        int CAircraftModelList::countAliases() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.hasModelStringAlias()) { count++; }
+            }
+            return count;
         }
 
         void CAircraftModelList::updateDistributor(const CDistributor &distributor)

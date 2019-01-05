@@ -748,7 +748,7 @@ namespace BlackCore
 
             // load from file
             CStatusMessage msg;
-            const CAircraftModel model(this->getModelSet().findFirstByModelStringOrDefault(modelString));
+            const CAircraftModel model(this->getModelSet().findFirstByModelStringAliasOrDefault(modelString));
             const CPixmap pm(model.loadIcon(msg));
             if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;

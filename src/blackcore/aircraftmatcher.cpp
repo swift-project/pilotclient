@@ -991,7 +991,7 @@ namespace BlackCore
             return CAircraftModel();
         }
 
-        CAircraftModel model = models.findFirstByModelStringOrDefault(remoteAircraft.getModelString());
+        CAircraftModel model = models.findFirstByModelStringAliasOrDefault(remoteAircraft.getModelString());
         if (log)
         {
             if (model.hasModelString())
