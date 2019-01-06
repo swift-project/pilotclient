@@ -152,6 +152,14 @@ namespace BlackGui
             }
         }
 
+        void CTextMessageComponent::selectTabWidget(const CCallsign &callsign, bool addIfNotExisting)
+        {
+            QWidget *tab = this->findTextMessageTabByCallsign(callsign);
+            if (!tab && addIfNotExisting) { tab = this->addNewTextMessageTab(callsign); }
+            if (!tab) { return; }
+            ui->tw_TextMessages->setCurrentWidget(tab);
+        }
+
         bool CTextMessageComponent::isCloseableTab(const QWidget *tabWidget) const
         {
             if (!tabWidget) { return false; }
@@ -601,11 +609,13 @@ namespace BlackGui
 
         void CTextMessageComponent::onTextMessageReceived(const CTextMessageList &messages)
         {
+            if (!m_activeReceive) { return; }
             this->displayTextMessage(messages);
         }
 
         void CTextMessageComponent::onTextMessageSent(const CTextMessage &sentMessage)
         {
+            if (!m_activeSend) { return; }
             this->displayTextMessage(sentMessage);
         }
 
@@ -644,7 +654,9 @@ namespace BlackGui
             }
             if (!w) { return; }
             ui->tw_TextMessages->setCurrentWidget(w);
-            this->displayMyself();
+
+            // force display
+            if (!m_usedAsOverlayWidget) { this->displayMyself(); }
         }
 
         void CTextMessageComponent::fontSizeMinus()

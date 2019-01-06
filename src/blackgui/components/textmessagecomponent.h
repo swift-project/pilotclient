@@ -87,6 +87,12 @@ namespace BlackGui
             //! Used as overlay and not dock widget
             void setAsUsedInOverlayMode() { m_usedAsOverlayWidget = true; }
 
+            //! Ignore incoming send/receive signals
+            void activate(bool send, bool receive) { m_activeSend = send; m_activeReceive = receive; }
+
+            //! Text activated
+            bool isActivated() const { return m_activeSend && m_activeReceive; }
+
             //! Rows/columns
             void setAtcButtonsRowsColumns(int rows, int cols, bool setMaxElements);
 
@@ -107,8 +113,10 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings   { this };
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
+            bool m_activeSend          = true;  //!< ignore sent callback
+            bool m_activeReceive       = true;  //!< ignore received messages
 
             //! Enum to widget
             QWidget *getTabWidget(TextMessageTab tab) const;
@@ -118,6 +126,9 @@ namespace BlackGui
 
             //! Select given tab
             void selectTabWidget(TextMessageTab tab);
+
+            //! Select tab by callsign (for private messages)
+            void selectTabWidget(const BlackMisc::Aviation::CCallsign &callsign, bool addIfNotExisting);
 
             //! Is that a closeable tab (one the user can close)
             bool isCloseableTab(const QWidget *tabWidget) const;

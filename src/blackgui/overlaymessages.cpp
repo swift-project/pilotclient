@@ -38,6 +38,7 @@
 #include <QPointer>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
@@ -67,6 +68,7 @@ namespace BlackGui
         ui->comp_OverlayTextMessage->showSettings(false);
         ui->comp_OverlayTextMessage->showTextMessageEntry(true);
         ui->comp_OverlayTextMessage->setAsUsedInOverlayMode();
+        ui->comp_OverlayTextMessage->activate(false, false); // per default ignore incoming/outgoing text messages
         ui->comp_OverlayTextMessage->removeAllMessagesTab();
         ui->comp_OverlayTextMessage->setAtcButtonsRowsColumns(2, 3, true);
         ui->comp_OverlayTextMessage->setAtcButtonsBackgroundUpdates(false);
@@ -88,9 +90,15 @@ namespace BlackGui
     void COverlayMessages::init(int w, int h)
     {
         ui->setupUi(this);
+        if (this->parent() && !this->parent()->objectName().isEmpty())
+        {
+            const QString n("Overlay messages for " + this->parent()->objectName());
+            this->setObjectName(n);
+        }
+
         this->resize(w, h);
         this->setAutoFillBackground(true);
-        m_autoCloseTimer.setObjectName(objectName() % ":autoCloseTimer");
+        m_autoCloseTimer.setObjectName(this->objectName() % ":autoCloseTimer");
         ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
         connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
@@ -188,7 +196,7 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
+    void COverlayMessages::showOverlayMessage(const CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -257,6 +265,12 @@ namespace BlackGui
         this->showKill(false);
         this->display();
         ui->comp_OverlayTextMessage->focusTextEntry();
+    }
+
+    void COverlayMessages::showOverlayInlineTextMessage(const CCallsign &callsign)
+    {
+        this->showOverlayInlineTextMessage(Components::TextMessagesUnicom);
+        ui->comp_OverlayTextMessage->showCorrespondingTab(callsign);
     }
 
     void COverlayMessages::showOverlayImage(const CPixmap &image, int timeOutMs)
@@ -440,6 +454,18 @@ namespace BlackGui
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_TextMessage);
         this->setHeader("Text message");
         this->showKill(false);
+    }
+
+    void COverlayMessages::setModeToOverlayTextMessage()
+    {
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
+        this->setHeader("Text message");
+        this->showKill(false);
+    }
+
+    void COverlayMessages::activateTextMessages(bool activate)
+    {
+        ui->comp_OverlayTextMessage->activate(activate, activate);
     }
 
     void COverlayMessages::setModeToImage()

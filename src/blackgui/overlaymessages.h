@@ -15,9 +15,10 @@
 #include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/pixmap.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>
@@ -32,8 +33,8 @@ class QKeyEvent;
 class QPaintEvent;
 class QPixmap;
 
-namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace Ui { class COverlayMessages; }
+namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace BlackGui
 {
     /*!
@@ -68,8 +69,14 @@ namespace BlackGui
         //! Progress bar
         void setModeToProgressBar(bool withKillButton = false);
 
-        //! Single Text message mode
+        //! Single text message mode
         void setModeToTextMessage();
+
+        //! Inline text message
+        void setModeToOverlayTextMessage();
+
+        //! Active send/receive of text messages
+        void activateTextMessages(bool activate);
 
         //! Display image
         void setModeToImage();
@@ -105,7 +112,10 @@ namespace BlackGui
         void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
 
         //! Inline text message
-        void showOverlayInlineTextMessage(BlackGui::Components::TextMessageTab tab);
+        void showOverlayInlineTextMessage(Components::TextMessageTab tab);
+
+        //! Inline text message
+        void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Image
         void showOverlayImage(const BlackMisc::CPixmap &image, int timeOutMs = -1);
@@ -161,10 +171,10 @@ namespace BlackGui
         QScopedPointer<Ui::COverlayMessages> ui;
         BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
         QString m_header;
-        int     m_lastConfirmation = QMessageBox::Cancel;
+        int     m_lastConfirmation     = QMessageBox::Cancel;
         bool    m_awaitingConfirmation = false;
-        bool    m_hasKillButton = false;
-        bool    m_forceSmall = false;
+        bool    m_hasKillButton        = false;
+        bool    m_forceSmall           = false;
         QTimer  m_autoCloseTimer { this };
         std::function<void()> m_okLambda; //!< called when confirmed as "OK"
         QList<std::function<void()>> m_pendingMessageCalls;

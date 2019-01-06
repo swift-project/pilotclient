@@ -47,6 +47,27 @@ namespace BlackGui
         //! Destructor
         virtual ~COverlayMessagesBase() override { }
 
+        //! Init, normally we use lazy init, but by calling init explicitly we can force initalization
+        //! \remark usefule for text messages, as history will be already available
+        void initOverlayMessages(QSize inner = {})
+        {
+            if (m_overlayMessages) { return; }
+            if (inner.isNull()) { inner = this->innerFrameSize(); }
+
+            m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
+            m_overlayMessages->hide();
+            m_overlayMessages->showKillButton(m_showKillButton);
+            m_overlayMessages->setForceSmall(m_forceSmallMsgs);
+            m_overlayMessages->setReducedInfo(m_reducedInfo);
+        }
+
+        //! \copydoc BlackGui::COverlayMessages::activateTextMessages
+        void activateTextMessages(bool activate)
+        {
+            this->initOverlayMessages();
+            m_overlayMessages->activateTextMessages(activate);
+        }
+
         //! Show the inner frame
         void showStatusMessagesFrame()
         {
@@ -196,6 +217,14 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
+        //! \copydoc BlackGui::COverlayMessages::showOverlayImage
+        void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign)
+        {
+            this->initInnerFrame(0.75, 0.75);
+            m_overlayMessages->showOverlayInlineTextMessage(callsign);
+            WIDGET::repaint();
+        }
+
     protected:
         COverlayMessages *m_overlayMessages = nullptr; //!< embedded QFrame with status messages
 
@@ -214,11 +243,7 @@ namespace BlackGui
             if (!m_overlayMessages)
             {
                 // lazy init
-                m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
-                // m_overlayMessages->addShadow();
-                m_overlayMessages->showKillButton(m_showKillButton);
-                m_overlayMessages->setForceSmall(m_forceSmallMsgs);
-                m_overlayMessages->setReducedInfo(m_reducedInfo);
+                this->initOverlayMessages(inner);
             }
 
             Q_ASSERT(m_overlayMessages);
@@ -229,6 +254,7 @@ namespace BlackGui
             const int x = middle.x() - w / 2;
             const int y = qRound(middle.y() - h / m_middleFactor);
             m_overlayMessages->setGeometry(x, y, w, h);
+            m_overlayMessages->setVisible(true);
         }
 
         //! Init a minimal frame (smaller as the normal one)
