@@ -31,14 +31,14 @@ namespace BlackGui
         {
         public:
             //! Corresponding dockable widget in info area
-            BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
+            CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
 
             //! Has dock area?
             bool hasDockWidgetArea() const { return m_parentDockableInfoArea; }
 
             //! Corresponding dockable widget in info area
             //! \remarks Usually set from CDockWidgetInfoArea when it is fully initialized
-            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
+            virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget);
 
             //! The parent info area
             CInfoArea *getParentInfoArea() const;
@@ -67,7 +67,7 @@ namespace BlackGui
             virtual ~CEnableForDockWidgetInfoArea() {}
 
         private:
-            BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
+            CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
             BlackMisc::CConnectionGuard    m_connections;
         };
     }

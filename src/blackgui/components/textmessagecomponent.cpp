@@ -643,12 +643,12 @@ namespace BlackGui
             {
                 if (!callsign.isAtcCallsign() && sGui->getIContextNetwork()->isAircraftInRange(callsign))
                 {
-                    // we assume a private message
+                    // we assume a private message from a pilot
                     w = this->addNewTextMessageTab(callsign);
                 }
                 else if (sGui->getIContextNetwork()->isOnlineStation(callsign))
                 {
-                    // we assume a private message
+                    // we assume a private message of ATC
                     w = this->addNewTextMessageTab(callsign);
                 }
             }

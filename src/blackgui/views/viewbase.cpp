@@ -859,7 +859,7 @@ namespace BlackGui
         template <class T>
         bool CViewBase<T>::filterDialogFinished(int status)
         {
-            QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
+            const QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
             return filterWidgetChangedFilter(statusCode == QDialog::Accepted);
         }
 

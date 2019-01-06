@@ -91,9 +91,9 @@ namespace BlackGui
             if (this->isVisibleWidget()) { return; }
 
             // select myself
-            if (getParentInfoArea())
+            if (this->getParentInfoArea())
             {
-                getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
+                this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
             }
         }
 

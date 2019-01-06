@@ -83,7 +83,7 @@ namespace BlackGui
                 const bool hasContexts = sGui && sGui->supportsContexts();
                 if (hasContexts)
                 {
-                    CSimulatedAircraft aircraft(this->selectedObject());
+                    const CSimulatedAircraft aircraft(this->selectedObject());
                     Q_ASSERT(!aircraft.getCallsign().isEmpty());
                     menuActions.addMenuCom();
                     menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::requestTextMessage });
