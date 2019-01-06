@@ -60,7 +60,7 @@
       <item>
        <widget class="QCheckBox" name="cb_CrashDumps">
         <property name="text">
-         <string>Allow sending crash dumps, by sending we can see what went wrong</string>
+         <string>Enable sending crash reports to help improve the software</string>
         </property>
        </widget>
       </item>
