@@ -260,7 +260,7 @@ node('master') {
                 unstash name: 'xswiftbus-allos'
 
                 sh 'chmod 664 *'
-                sh '''
+                sh '''#!/bin/bash
                     sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.run"
                     sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.dmg"
                     sftp datastore@datastore.swift-project.org:/datastore.swift-project.org/artifacts <<< "mput *.tar.gz"
