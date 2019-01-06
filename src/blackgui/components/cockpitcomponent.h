@@ -29,8 +29,7 @@ namespace BlackGui
     {
         //! Cockpit component: COM unit, show / hide bar, voice rooms
         class BLACKGUI_EXPORT CCockpitComponent :
-            // making a widget overlay and dock widget is semi-optimal but a special case here because of text messages
-            public COverlayMessagesFrame,
+            public QFrame,
             public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT

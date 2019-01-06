@@ -22,12 +22,13 @@ namespace BlackGui
     namespace Components
     {
         CCockpitComponent::CCockpitComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
+            QFrame(parent),
             CEnableForDockWidgetInfoArea(),
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
-            this->m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
+            m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
+            this->deferredActivate(this);
 
             connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
             connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1);
@@ -89,32 +90,32 @@ namespace BlackGui
             if (show)
             {
                 ui->comp_CockpitInfoArea->setMinimumHeight(m_minHeightInfoArea);
-                if (this->m_sizeFloatingShown.isValid())
+                if (m_sizeFloatingShown.isValid())
                 {
                     this->window()->resize(m_sizeFloatingShown);
-                    if (considerCurrentSize) { this->m_sizeFloatingHidden = manuallySetSize;  } // for next time
+                    if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize;  } // for next time
                 }
                 else
                 {
                     // manually setting size, all other approaches failed
                     this->window()->resize(defaultSizeShown);
-                    this->m_sizeFloatingShown = this->window()->size();
+                    m_sizeFloatingShown = this->window()->size();
                 }
             }
             else
             {
                 ui->comp_CockpitInfoArea->setMinimumHeight(0);
                 this->window()->setMinimumSize(defaultSizeHidden);
-                if (this->m_sizeFloatingHidden.isValid())
+                if (m_sizeFloatingHidden.isValid())
                 {
                     this->window()->resize(m_sizeFloatingHidden);
-                    if (considerCurrentSize) { this->m_sizeFloatingShown = manuallySetSize; }
+                    if (considerCurrentSize) { m_sizeFloatingShown = manuallySetSize; }
                 }
                 else
                 {
                     // manually setting size, all other approaches failed
                     this->window()->resize(defaultSizeHidden);
-                    this->m_sizeFloatingHidden = this->window()->size();
+                    m_sizeFloatingHidden = this->window()->size();
                 }
             }
         }

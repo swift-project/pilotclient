@@ -69,6 +69,8 @@ namespace BlackGui
             CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
             ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
+            this->deferredActivate(this);
+
             // some icons
             ui->tb_AtcStationsAtisReload->setIcon(CIcons::atis());
             ui->tb_AtcStationsAtisReload->setText("ATIS");
