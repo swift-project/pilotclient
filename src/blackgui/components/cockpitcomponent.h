@@ -13,9 +13,9 @@
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 
+#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>

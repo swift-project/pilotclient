@@ -15,7 +15,6 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/atcstationssettings.h"
-#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -29,6 +28,7 @@
 #include <QScopedPointer>
 #include <QString>
 #include <QTabWidget>
+#include <QFrame>
 #include <QtGlobal>
 #include <QVBoxLayout>
 #include <QTimer>
@@ -39,11 +39,12 @@ namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
-            public COverlayMessagesFrame,
+            public QFrame,
             public CEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {

@@ -12,7 +12,9 @@
 #ifndef BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 #define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
+#include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/connectionguard.h"
 
 class QWidget;
@@ -50,7 +52,7 @@ namespace BlackGui
             bool isVisibleWidget() const;
 
             //! Main application window if any
-            BlackGui::CEnableForFramelessWindow *mainApplicationWindow() const;
+            CEnableForFramelessWindow *mainApplicationWindow() const;
 
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
@@ -63,12 +65,27 @@ namespace BlackGui
             //! \remarks Normally the info area will be provided later \sa setParentDockWidgetInfoArea
             CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea = nullptr);
 
-            // Destructor
+            //! Destructor
             virtual ~CEnableForDockWidgetInfoArea() {}
+
+            //! Deferred activation, as dockwidget is not directly initalized
+            void deferredActivate(QObject *relatedObject, int delayMs = 2500);
+
+            //! \copydoc BlackGui::COverlayMessages::initOverlayMessages
+            void initOverlayMessages(QSize inner = {});
+
+            //! \copydoc BlackGui::COverlayMessages::showKillButton
+            void activateTextMessages(bool activate);
+
+            //! \copydoc BlackGui::COverlayMessages::showOverlayImage
+            void showOverlayInlineTextMessage(Components::TextMessageTab tab);
+
+            //! \copydoc BlackGui::COverlayMessages::showOverlayImage
+            void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:
             CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
-            BlackMisc::CConnectionGuard    m_connections;
+            BlackMisc::CConnectionGuard m_connections;
         };
     }
 } // namespace

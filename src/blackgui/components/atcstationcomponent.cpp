@@ -7,24 +7,25 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/atcstationcomponent.h"
+#include "blackgui/views/atcstationview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/atcstationtreemodel.h"
+#include "blackgui/uppercasevalidator.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/infoarea.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/webdataservices.h"
-#include "blackgui/components/atcstationcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/infoarea.h"
-#include "blackgui/uppercasevalidator.h"
-#include "blackgui/models/atcstationlistmodel.h"
-#include "blackgui/models/atcstationtreemodel.h"
-#include "blackgui/views/atcstationview.h"
-#include "blackgui/views/viewbase.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/informationmessage.h"
+#include "blackmisc/weather/metar.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/weather/metar.h"
 #include "ui_atcstationcomponent.h"
 
 #include <QAbstractItemModel>
@@ -57,7 +58,7 @@ namespace BlackGui
     namespace Components
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
+            QFrame(parent),
             CIdentifiable(this),
             ui(new Ui::CAtcStationComponent)
         {
@@ -124,10 +125,13 @@ namespace BlackGui
             connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled);
 
             // runtime based connects
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::changedAtcStationsBooked, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
+            if (sGui)
+            {
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::changedAtcStationsBooked, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
+            }
 
             // selection
             ui->tvp_AtcStationsOnline->acceptClickSelection(true);
@@ -138,7 +142,7 @@ namespace BlackGui
             m_stretch.push_back(layout->stretch(1));
 
             // web readers
-            if (sGui->hasWebDataServices())
+            if (sGui && sGui->hasWebDataServices())
             {
                 connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CAtcStationComponent::airportsRead);
                 this->airportsRead();
@@ -465,7 +469,7 @@ namespace BlackGui
 
         void CAtcStationComponent::showOverlayInlineTextMessage()
         {
-            COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
+            CEnableForDockWidgetInfoArea::showOverlayInlineTextMessage(TextMessagesCom1);
         }
 
         void CAtcStationComponent::onDetailsToggled(bool checked)

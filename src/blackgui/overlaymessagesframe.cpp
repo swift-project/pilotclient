@@ -34,6 +34,10 @@ namespace BlackGui
 
     COverlayMessagesWizardPage::COverlayMessagesWizardPage(QWidget *parent) : COverlayMessagesBase(parent)
     { }
+
+    COverlayMessagesDockWidget::COverlayMessagesDockWidget(QWidget *parent) : COverlayMessagesBase(parent)
+    { }
+
 } // ns
 
 

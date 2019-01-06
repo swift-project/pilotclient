@@ -24,6 +24,7 @@
 #include <QFrame>
 #include <QTabWidget>
 #include <QWizardPage>
+#include <QDockWidget>
 #include <QMessageBox>
 #include <QObject>
 #include <QSize>
@@ -360,6 +361,18 @@ namespace BlackGui
     public:
         //! Constructor
         explicit COverlayMessagesWizardPage(QWidget *parent = nullptr);
+    };
+
+    /*!
+     * Using this class provides a QDockWidget with the overlay functionality already integrated.
+     */
+    class BLACKGUI_EXPORT COverlayMessagesDockWidget : public COverlayMessagesBase<QDockWidget>
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit COverlayMessagesDockWidget(QWidget *parent = nullptr);
     };
 
 } // ns

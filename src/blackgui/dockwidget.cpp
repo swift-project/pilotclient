@@ -43,7 +43,7 @@ using namespace BlackGui::Menus;
 namespace BlackGui
 {
     CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) :
-        QDockWidget(parent),
+        COverlayMessagesDockWidget(parent),
         CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
         m_allowStatusBar(allowStatusBar)
     {
@@ -88,7 +88,7 @@ namespace BlackGui
     void CDockWidget::setOriginalTitleBar()
     {
         if (!m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == m_titleBarWidgetOriginal) return; // on purpose, as I do not know what happens when I call setTitleBar
+        if (this->titleBarWidget() == m_titleBarWidgetOriginal) { return; } // on purpose, as I do not know what happens when I call setTitleBar
         this->setTitleBarWidget(m_titleBarWidgetOriginal);
     }
 

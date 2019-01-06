@@ -12,12 +12,13 @@
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
 
-#include "blackgui/blackguiexport.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/settings/dockwidgetsettings.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/statusmessage.h"
 
 #include <QDockWidget>
 #include <QMargins>
@@ -47,7 +48,7 @@ namespace BlackGui
     //! \sa CDockWidgetInfoArea
     //! \sa CDockWidgetInfoBar
     class BLACKGUI_EXPORT CDockWidget :
-        public QDockWidget,
+        public COverlayMessagesDockWidget,
         public CEnableForFramelessWindow
     {
         Q_OBJECT
