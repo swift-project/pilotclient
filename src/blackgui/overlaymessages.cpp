@@ -76,14 +76,6 @@ namespace BlackGui
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
-    COverlayMessages::COverlayMessages(const QString &headerText, int w, int h, QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::COverlayMessages),
-        m_header(headerText)
-    {
-        this->init(w, h);
-    }
-
     COverlayMessages::~COverlayMessages()
     {}
 

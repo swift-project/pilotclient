@@ -48,9 +48,6 @@ namespace BlackGui
         //! Constructor
         explicit COverlayMessages(int w, int h, QWidget *parent);
 
-        //! Constructor
-        explicit COverlayMessages(const QString &headerText, int w, int h, QWidget *parent);
-
         //! Destructor
         virtual ~COverlayMessages() override;
 
