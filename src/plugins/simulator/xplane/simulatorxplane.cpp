@@ -791,15 +791,13 @@ namespace BlackSimPlugin
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
 
             // interpolation for all remote aircraft
-            const QList<CXPlaneMPAircraft> xplaneAircraftList(m_xplaneAircraftObjects.values());
-
             PlanesPositions planesPositions;
             PlanesSurfaces planesSurfaces;
             PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
             const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
-            for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
+            for (const CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
