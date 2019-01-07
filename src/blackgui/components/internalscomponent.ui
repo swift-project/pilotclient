@@ -185,21 +185,28 @@
           <property name="bottomMargin">
            <number>4</number>
           </property>
-          <item row="1" column="2" alignment="Qt::AlignLeft">
-           <widget class="QPushButton" name="pb_SendTextMessage">
-            <property name="text">
-             <string>send</string>
+          <item row="2" column="0" colspan="3">
+           <widget class="QPlainTextEdit" name="pte_TxtMsg">
+            <property name="placeholderText">
+             <string>Text message</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="0">
            <widget class="QLineEdit" name="le_TxtMsgFrom">
             <property name="placeholderText">
              <string>from</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_TxtMsgTo">
+            <property name="placeholderText">
+             <string>to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
            <widget class="QDoubleSpinBox" name="dsb_TxtMsgFrequency">
             <property name="suffix">
              <string>MHz</string>
@@ -221,18 +228,36 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="le_TxtMsgTo">
-            <property name="placeholderText">
-             <string>to</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" colspan="3">
-           <widget class="QPlainTextEdit" name="pte_TxtMsg">
-            <property name="placeholderText">
-             <string>Text message</string>
-            </property>
+          <item row="1" column="1">
+           <widget class="QWidget" name="wi_SendTextMessageButtons" native="true">
+            <layout class="QHBoxLayout" name="wi_SendButtons">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pb_SendTextMessageDirectly">
+               <property name="text">
+                <string>send</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_SendTextMessageDeferred">
+               <property name="text">
+                <string>send deferred</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -651,18 +676,21 @@
   <tabstop>le_TxtMsgFrom</tabstop>
   <tabstop>le_TxtMsgTo</tabstop>
   <tabstop>dsb_TxtMsgFrequency</tabstop>
-  <tabstop>pb_SendTextMessage</tabstop>
+  <tabstop>pb_SendTextMessageDirectly</tabstop>
+  <tabstop>pb_SendTextMessageDeferred</tabstop>
   <tabstop>pte_TxtMsg</tabstop>
   <tabstop>le_AtisCallsign</tabstop>
   <tabstop>pb_SendAtis</tabstop>
   <tabstop>pte_Atis</tabstop>
+  <tabstop>pb_LatestInterpolationLog</tabstop>
+  <tabstop>pb_LatestPartsLog</tabstop>
   <tabstop>pb_DisplayLog</tabstop>
   <tabstop>pb_RequestFromNetwork</tabstop>
   <tabstop>tb_History</tabstop>
+  <tabstop>pb_CurrentParts</tabstop>
+  <tabstop>pb_SendAircraftPartsJson</tabstop>
   <tabstop>pb_SendAircraftPartsGui</tabstop>
   <tabstop>cb_AircraftPartsIncremental</tabstop>
-  <tabstop>pb_SendAircraftPartsJson</tabstop>
-  <tabstop>pb_CurrentParts</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

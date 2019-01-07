@@ -65,9 +65,9 @@ namespace BlackGui
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_AtisCallsign->setValidator(new CUpperCaseValidator(ui->le_AtisCallsign));
 
-            connect(ui->pb_SendAircraftPartsGui, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
-            connect(ui->pb_SendAircraftPartsJson, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
-            connect(ui->pb_CurrentParts, &QPushButton::pressed, this, &CInternalsComponent::setCurrentParts);
+            connect(ui->pb_SendAircraftPartsGui, &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
+            connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this, &CInternalsComponent::sendAircraftParts);
+            connect(ui->pb_CurrentParts, &QPushButton::released, this, &CInternalsComponent::setCurrentParts);
 
             connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
@@ -75,16 +75,18 @@ namespace BlackGui
             connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
-            connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::sendTextMessage);
-            connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::logStatusMessage);
+            connect(ui->pb_SendTextMessageDirectly, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
+            connect(ui->pb_SendTextMessageDeferred, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
+
+            connect(ui->tb_LogStatusMessage, &QPushButton::released, this, &CInternalsComponent::logStatusMessage);
             connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
 
-            connect(ui->pb_LatestInterpolationLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
-            connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
-            connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
-            connect(ui->pb_DisplayLog, &QPushButton::pressed, this, &CInternalsComponent::displayLogInSimulator);
+            connect(ui->pb_LatestInterpolationLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
+            connect(ui->pb_LatestPartsLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
+            connect(ui->pb_RequestFromNetwork, &QPushButton::released, this, &CInternalsComponent::requestPartsFromNetwork);
+            connect(ui->pb_DisplayLog, &QPushButton::released, this, &CInternalsComponent::displayLogInSimulator);
 
-            connect(ui->pb_SendAtis, &QPushButton::pressed, this, &CInternalsComponent::sendAtis);
+            connect(ui->pb_SendAtis, &QPushButton::released, this, &CInternalsComponent::sendAtis);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
             this->contextFlagsToGui();
@@ -186,6 +188,14 @@ namespace BlackGui
             if (ui->le_TxtMsgFrom->text().isEmpty())  { return; }
             if (ui->pte_TxtMsg->toPlainText().isEmpty()) { return; }
             if (ui->le_TxtMsgTo->text().isEmpty() && ui->dsb_TxtMsgFrequency->text().isEmpty()) { return; }
+
+            // send in some time
+            const QObject *senderObj = QObject::sender();
+            if (senderObj == ui->pb_SendTextMessageDeferred)
+            {
+                QTimer::singleShot(5000, this, &CInternalsComponent::sendTextMessage);
+                return;
+            }
 
             const CCallsign sender(ui->le_TxtMsgFrom->text().trimmed());
             const CCallsign recipient(ui->le_TxtMsgTo->text().trimmed());
