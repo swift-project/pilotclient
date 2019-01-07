@@ -54,7 +54,8 @@ namespace BlackInput
                                      void *refcon);
 
         BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
-        CFMachPortRef m_eventTap;
+        CFMachPortRef m_eventTap = nullptr;
+        CFRunLoopSourceRef m_sourceRef = nullptr;
     };
 } // ns
 

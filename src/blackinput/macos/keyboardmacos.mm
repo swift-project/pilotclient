@@ -87,6 +87,13 @@ namespace BlackInput
 
     CKeyboardMacOS::~CKeyboardMacOS()
     {
+        if (m_eventTap) { CGEventTapEnable(m_eventTap, false); }
+        if (m_sourceRef)
+        {
+            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_sourceRef, kCFRunLoopCommonModes);
+            CFRelease(m_sourceRef);
+        }
+        if (m_eventTap) { CFRelease(m_eventTap); }
     }
 
     bool CKeyboardMacOS::init()
@@ -104,30 +111,28 @@ namespace BlackInput
                                       &kCFTypeDictionaryValueCallBacks);
 
         bool accessibilityEnabled = AXIsProcessTrustedWithOptions(options);
-
+        CFRelease(options);
         if (!accessibilityEnabled)
         {
             QMessageBox msgBox;
-            msgBox.setText("In order to enable hotkeys first add Swift to the list of apps allowed to "
+            msgBox.setText("In order to enable hotkeys first add swift to the list of apps allowed to "
                            "control your computer in System Preferences / Security & Privacy / Privacy / Accessiblity and then restart Swift.");
             msgBox.exec();
-
             return false;
         }
-
 
         CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 << kCGEventFlagsChanged));
 
         // try creating an event tap just for keypresses. if it fails, we need Universal Access.
         m_eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
                                  eventMask, myCGEventCallback, this);
+        if (! m_eventTap) { return false; }
 
-        CFRunLoopSourceRef source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,
-                                    m_eventTap, 0);
+        m_sourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTap, 0);
+        if (! m_sourceRef) { return false; }
 
-        CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), m_sourceRef, kCFRunLoopCommonModes);
         CGEventTapEnable(m_eventTap, true);
-
         return true;
     }
 
@@ -218,6 +223,8 @@ namespace BlackInput
             CGEventRef event,
             void *refcon)
     {
+        // If disabled on purpose, don't do anything further.
+        if (type == kCGEventTapDisabledByUserInput) { return event; }
 
         CKeyboardMacOS *keyboardMac = static_cast<CKeyboardMacOS*>(refcon);
         if (type == kCGEventTapDisabledByTimeout)
