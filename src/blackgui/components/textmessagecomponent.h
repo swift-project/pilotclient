@@ -103,7 +103,8 @@ namespace BlackGui
             void updateAtcStationsButtons();
 
         signals:
-            //! Message to be displayed in info window
+            //! Message to be displayed in central info window
+            //! \remark do not emit in overlay messages
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs);
 
             //! Command line was entered
@@ -213,6 +214,9 @@ namespace BlackGui
 
             //! Visible widget hack
             bool isVisibleWidgetHack() const;
+
+            //! Emit the display in info window signal
+            void emitDisplayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs);
         };
     } // ns
 } // ns

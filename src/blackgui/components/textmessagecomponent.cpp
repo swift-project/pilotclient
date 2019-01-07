@@ -191,7 +191,7 @@ namespace BlackGui
 
                     if (msgSettings.popupSelcalMessages())
                     {
-                        emit this->displayInInfoWindow(CLogMessage(this).info(u"SELCAL received"), 3 * 1000);
+                        this->emitDisplayInInfoWindow(CLogMessage(this).info(u"SELCAL received"), 3 * 1000);
                     }
                     continue;
                 }
@@ -246,7 +246,7 @@ namespace BlackGui
                     {
                         if (msgSettings.popup(message, ownAircraft))
                         {
-                            emit this->displayInInfoWindow(CVariant::from(message), 5 * 1000);
+                            this->emitDisplayInInfoWindow(CVariant::from(message), 15 * 1000);
                         }
                     }
                 } // message
@@ -535,6 +535,12 @@ namespace BlackGui
         bool CTextMessageComponent::isVisibleWidgetHack() const
         {
             return m_usedAsOverlayWidget ? true : this->isVisibleWidget();
+        }
+
+        void CTextMessageComponent::emitDisplayInInfoWindow(const CVariant &message, int displayDurationMs)
+        {
+            if (m_usedAsOverlayWidget) { return; }
+            emit this->displayInInfoWindow(message, displayDurationMs);
         }
 
         void CTextMessageComponent::handleEnteredTextMessage(const QString &textMessage)

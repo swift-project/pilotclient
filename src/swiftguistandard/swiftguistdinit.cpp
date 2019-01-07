@@ -232,6 +232,8 @@ void SwiftGuiStd::initGuiSignals()
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed);
 
     // command line / text messages
+    // here we display SUP messages and such in a central window
+    ui->fr_CentralFrameInside->activateTextMessages(true);
     connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
 
     // settings (GUI component), styles
