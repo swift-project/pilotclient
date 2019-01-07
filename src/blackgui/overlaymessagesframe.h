@@ -17,8 +17,9 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/pixmap.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>
@@ -125,6 +126,7 @@ namespace BlackGui
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
+            if (!this->hasMinimumSize(150, 150)) { return; }
             m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
             WIDGET::repaint();
         }
@@ -214,6 +216,7 @@ namespace BlackGui
         void showOverlayInlineTextMessage(Components::TextMessageTab tab)
         {
             this->initInnerFrame(0.75, 0.75);
+            if (!this->hasMinimumSize(150, 150)) { return; }
             m_overlayMessages->showOverlayInlineTextMessage(tab);
             WIDGET::repaint();
         }
@@ -222,6 +225,7 @@ namespace BlackGui
         void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign)
         {
             this->initInnerFrame(0.75, 0.75);
+            if (!this->hasMinimumSize(150, 150)) { return; }
             m_overlayMessages->showOverlayInlineTextMessage(callsign);
             WIDGET::repaint();
         }
@@ -254,6 +258,7 @@ namespace BlackGui
             const int h = inner.height();
             const int x = middle.x() - w / 2;
             const int y = qRound(middle.y() - h / m_middleFactor);
+
             m_overlayMessages->setGeometry(x, y, w, h);
             m_overlayMessages->setVisible(true);
         }
@@ -275,6 +280,23 @@ namespace BlackGui
             const int x = middle.x() - w / 2;
             const int y = qRound(middle.y() - h / m_middleFactor);
             m_overlayMessages->setGeometry(x, y, w, h);
+        }
+
+        //! Check minimum height/width
+        bool hasMinimumSize(int w, int h) const
+        {
+            if (w > 0 && m_overlayMessages->width() < w)
+            {
+                BlackMisc::CLogMessage(this).info(u"Overlay widget too small (w)");
+                return false;
+            }
+
+            if (h > 0 && m_overlayMessages->height() < h)
+            {
+                BlackMisc::CLogMessage(this).info(u"Overlay widget too small (h)");
+                return false;
+            }
+            return true;
         }
 
         //! \copydoc QFrame::keyPressEvent
