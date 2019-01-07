@@ -93,9 +93,9 @@ class JobPool(object):
 
 class Dumper:
     """This class can dump symbols from a file with debug info, and
-    store the output in a directory structure that is valid for use as
-    a Breakpad symbol server.  Requires a path to a dump_syms binary--
-    |dump_syms| and a directory to store symbols in--|symbol_path|.
+    store the output in a flat directory structure.
+    Requires a path to a dump_syms binary--|dump_syms| and a directory
+    to store symbols in--|symbol_path|.
 
     You don't want to use this directly if you intend to process files.
     Instead, call GetPlatformSpecificDumper to get an instance of a
@@ -203,7 +203,7 @@ class Dumper:
             symbol_full_path = os.path.normpath(os.path.join(self.symbol_path, ".."))
             tar_path = os.path.join(symbol_full_path, 'symbols.tar.gz')
         tar = tarfile.open(tar_path, "w:gz")
-        tar.add(self.symbol_path, arcname="symbols")
+        tar.add(self.symbol_path, arcname='.')
 
     def process(self, *args):
         """Process files recursively in args."""
@@ -256,8 +256,8 @@ class Dumper:
 
     def process_files(self, files, after=None, after_arg=None):
         """Dump symbols from these files into a symbol file, stored
-        in the proper directory structure in  |symbol_path|; processing is performed
-        asynchronously, and Finish must be called to wait for it complete and cleanup.
+        |symbol_path|; processing is performed asynchronously, and Finish must be
+        called to wait for it complete and cleanup.
         All files after the first are fallbacks in case the first file does not process
         successfully; if it does, no other files will be touched."""
         self.output_pid(sys.stderr, "Submitting jobs for files: %s" % str(files))
@@ -294,12 +294,8 @@ class Dumper:
                     (guid, debug_file) = (module_line.split())[3:5]
                     # strip off .pdb extensions, and append .sym
                     sym_file = re.sub("\.pdb$", "", debug_file) + ".sym"
-                    # we do want forward slashes here
-                    rel_path = os.path.join(debug_file,
-                                            guid,
-                                            sym_file).replace("\\", "/")
                     full_path = os.path.normpath(os.path.join(self.symbol_path,
-                                                              rel_path))
+                                                              sym_file))
                     try:
                         os.makedirs(os.path.dirname(full_path))
                     except OSError:  # already exists
