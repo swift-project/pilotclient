@@ -47,7 +47,6 @@ namespace BlackGui
             //! Is the info area shown?
             bool isInfoAreaShown() const;
 
-        public slots:
             //! \copydoc BlackGui::Components::CTransponderModeSelector::setSelectedTransponderModeStateIdent
             void setSelectedTransponderModeStateIdent();
 
