@@ -55,6 +55,7 @@ namespace BlackGui
     {
         this->init(w, h);
         this->showKillButton(false);
+
         if (sGui) { connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged, Qt::QueuedConnection); }
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
@@ -235,26 +236,33 @@ namespace BlackGui
             return;
         }
 
-        this->setModeToTextMessage();
+        // do we support inline text messages, we use this one
+        const bool activatedText = ui->comp_OverlayTextMessage->isActivated();
+        if (activatedText)
+        {
+            this->setModeToOverlayTextMessage();
+            timeOutMs = -1; // cancel timeout
+        }
+        else
+        {
+            // message and display
+            ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
+            ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
+            ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
+            ui->te_TmText->setText(textMessage.getMessage());
+            ui->wi_TmSupervisor->setVisible(textMessage.isSupervisorMessage());
+            ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
 
-        // message and display
-        ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
-        ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
-        ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
-        ui->te_TmText->setText(textMessage.getMessage());
-        ui->wi_TmSupervisor->setVisible(textMessage.isSupervisorMessage());
-        ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
-
+            this->setModeToTextMessage();
+        }
         this->display(timeOutMs);
     }
 
     void COverlayMessages::showOverlayInlineTextMessage(Components::TextMessageTab tab)
     {
-        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
         ui->comp_OverlayTextMessage->setTab(tab);
         ui->comp_OverlayTextMessage->updateAtcStationsButtons();
-        this->setHeader("Text message");
-        this->showKill(false);
+        this->setModeToOverlayTextMessage();
         this->display();
         ui->comp_OverlayTextMessage->focusTextEntry();
     }
@@ -596,6 +604,7 @@ namespace BlackGui
     void COverlayMessages::display(int timeOutMs)
     {
         this->show();
+        this->raise();
         this->setEnabled(true);
         if (timeOutMs > 250)
         {
