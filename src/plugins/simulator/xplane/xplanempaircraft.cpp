@@ -32,6 +32,11 @@ namespace BlackSimPlugin
             m_interpolator->initCorrespondingModel(aircraft.getModel());
         }
 
+        void CXPlaneMPAircraft::setSimulatedAircraft(const CSimulatedAircraft &simulatedAircraft)
+        {
+            m_aircraft = simulatedAircraft;
+        }
+
         QString CXPlaneMPAircraft::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             Q_ASSERT(m_interpolator);

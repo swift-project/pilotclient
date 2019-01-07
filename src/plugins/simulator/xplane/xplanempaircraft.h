@@ -37,6 +37,9 @@ namespace BlackSimPlugin
             //! Destructor
             ~CXPlaneMPAircraft() {}
 
+            //! Set simulated aircraft
+            void setSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &simulatedAircraft);
+
             //! Get callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 

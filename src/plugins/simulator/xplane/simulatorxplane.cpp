@@ -308,6 +308,13 @@ namespace BlackSimPlugin
 
                 this->updateOwnParts(parts);
                 this->requestRemoteAircraftDataFromXPlane();
+
+                for (CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
+                {
+                    // Update remote aircraft to have the latest transponder modes, codes etc.
+                    CSimulatedAircraft simulatedAircraft = this->getAircraftInRangeForCallsign(xplaneAircraft.getCallsign());
+                    xplaneAircraft.setSimulatedAircraft(simulatedAircraft);
+                }
             }
         }
 
