@@ -40,7 +40,7 @@ namespace XSwiftBus
         {
             m_service->toggleMessageBoxVisibility();
         });
-        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Nessage", true, [this] (bool checked)
+        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this] (bool checked)
         {
             m_popupMessageWindowMenuItem.setChecked(!checked);
             m_service->setPopupMessageWindow(!checked);
