@@ -136,10 +136,6 @@ namespace BlackGui
             //! New message tab for given callsign
             QWidget *addNewTextMessageTab(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Add new text message tab
-            //! \param tabName name of the new tab, usually the channel name
-            QWidget *addNewTextMessageTab(const QString &tabName);
-
             //! Find text message tab by callsign
             QWidget *findTextMessageTabByCallsign(const BlackMisc::Aviation::CCallsign &callsign, bool callsignResolution = false) const;
 

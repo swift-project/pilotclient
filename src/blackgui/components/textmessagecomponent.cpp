@@ -394,33 +394,36 @@ namespace BlackGui
             if (callsign.isEmpty()) { return nullptr; }
             QWidget *w = this->findTextMessageTabByCallsign(callsign, false);
             if (w) { return w; }
-            return this->addNewTextMessageTab(callsign.asString());
-        }
 
-        QWidget *CTextMessageComponent::addNewTextMessageTab(const QString &tabName)
-        {
-            QWidget *newTab = new QWidget(this);
-            newTab->setObjectName("Tab widget " + tabName);
-            QPushButton *closeButton = new QPushButton("Close", newTab);
-            QVBoxLayout *layout = new QVBoxLayout(newTab);
-            CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTab);
+            const QString tabName = callsign.asString();
+            QWidget *newTabWidget = new QWidget(this);
+            newTabWidget->setObjectName("Tab widget " + tabName);
+            QPushButton *closeButton = new QPushButton("Close", newTabWidget);
+            QVBoxLayout *layout = new QVBoxLayout(newTabWidget);
+            CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTabWidget);
             textEdit->setObjectName("tep_" + tabName);
             int marginLeft, marginRight, marginTop, marginBottom;
             ui->tb_TextMessagesAll->layout()->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
-            newTab->layout()->setContentsMargins(marginLeft, marginTop, marginRight, 2);
+            newTabWidget->layout()->setContentsMargins(marginLeft, marginTop, marginRight, 2);
             layout->addWidget(textEdit);
             layout->addWidget(closeButton);
-            newTab->setLayout(layout);
+            newTabWidget->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-            const int index = ui->tw_TextMessages->addTab(newTab, tabName);
-            QToolButton *closeButtonInTab = new QToolButton(newTab);
+            const int index = ui->tw_TextMessages->addTab(newTabWidget, tabName);
+            QToolButton *closeButtonInTab = new QToolButton(newTabWidget);
             closeButtonInTab->setText("[X]");
-            ui->tw_TextMessages->tabBar()->setTabButton(index, QTabBar::RightSide, closeButtonInTab); // changes parent
+            QTabBar *bar = ui->tw_TextMessages->tabBar();
+            bar->setTabButton(index, QTabBar::RightSide, closeButtonInTab); // changes parent
+            if (callsign.isSupervisorCallsign())
+            {
+                //! \fixme hardcoded stylesheet color
+                closeButtonInTab->setStyleSheet("background-color: red;");
+                bar->setTabIcon(index, callsign.toPixmap());
+                bar->setTabTextColor(index, QColor(Qt::yellow));
+            }
             ui->tw_TextMessages->setCurrentIndex(index);
-            closeButton->setProperty("tabName", tabName);
             closeButtonInTab->setProperty("tabName", tabName);
-            // closeButton->setProperty("index", index);
-            // closeButtonInTab->setProperty("index", index);
+            closeButton->setProperty("tabName", tabName);
 
             connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
@@ -430,7 +433,7 @@ namespace BlackGui
                 const QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
                 if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(index, realName); }
             }
-            return newTab;
+            return newTabWidget;
         }
 
         void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
