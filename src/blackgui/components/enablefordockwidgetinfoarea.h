@@ -68,21 +68,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CEnableForDockWidgetInfoArea() {}
 
-            //! Deferred activation, as dockwidget is not directly initalized
-            void deferredActivate(QObject *relatedObject, int delayMs = 2500);
-
-            //! \copydoc BlackGui::COverlayMessages::initOverlayMessages
-            void initOverlayMessages(QSize inner = {});
-
-            //! \copydoc BlackGui::COverlayMessages::showKillButton
-            void activateTextMessages(bool activate);
-
-            //! \copydoc BlackGui::COverlayMessages::showOverlayImage
-            void showOverlayInlineTextMessage(Components::TextMessageTab tab);
-
-            //! \copydoc BlackGui::COverlayMessages::showOverlayImage
-            void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
-
         private:
             CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
             BlackMisc::CConnectionGuard m_connections;

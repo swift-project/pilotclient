@@ -34,36 +34,6 @@ namespace BlackGui
             m_parentDockableInfoArea = parentInfoArea;
         }
 
-        void CEnableForDockWidgetInfoArea::deferredActivate(QObject *relatedObject, int delayMs)
-        {
-            if (!relatedObject) { return; }
-            QPointer<QObject> myself(relatedObject);
-            QTimer::singleShot(delayMs, relatedObject, [ = ]
-            {
-                if (myself) { this->activateTextMessages(true); }
-            });
-        }
-
-        void CEnableForDockWidgetInfoArea::initOverlayMessages(QSize inner)
-        {
-            if (m_parentDockableInfoArea) { m_parentDockableInfoArea->initOverlayMessages(inner); }
-        }
-
-        void CEnableForDockWidgetInfoArea::activateTextMessages(bool activate)
-        {
-            if (m_parentDockableInfoArea) { m_parentDockableInfoArea->activateTextMessages(activate); }
-        }
-
-        void CEnableForDockWidgetInfoArea::showOverlayInlineTextMessage(TextMessageTab tab)
-        {
-            if (m_parentDockableInfoArea) { m_parentDockableInfoArea->showOverlayInlineTextMessage(tab); }
-        }
-
-        void CEnableForDockWidgetInfoArea::showOverlayInlineTextMessage(const CCallsign &callsign)
-        {
-            if (m_parentDockableInfoArea) { m_parentDockableInfoArea->showOverlayInlineTextMessage(callsign); }
-        }
-
         bool CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             // sanity check

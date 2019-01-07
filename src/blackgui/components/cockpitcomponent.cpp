@@ -22,13 +22,13 @@ namespace BlackGui
     namespace Components
     {
         CCockpitComponent::CCockpitComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             CEnableForDockWidgetInfoArea(),
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
             m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
-            this->deferredActivate(this);
+            this->activateTextMessages(true);
 
             connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
             connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1);
@@ -123,7 +123,7 @@ namespace BlackGui
         void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
         {
             if (event) { this->showOverlayInlineTextMessage(TextMessagesAll); }
-            QWidget::mouseDoubleClickEvent(event);
+            COverlayMessagesFrame::mouseDoubleClickEvent(event);
         }
 
         void CCockpitComponent::onRequestTextMessageCom1()

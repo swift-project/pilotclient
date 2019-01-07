@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 
 #include <QFrame>
@@ -29,7 +30,7 @@ namespace BlackGui
     {
         //! Cockpit component: COM unit, show / hide bar, voice rooms
         class BLACKGUI_EXPORT CCockpitComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT

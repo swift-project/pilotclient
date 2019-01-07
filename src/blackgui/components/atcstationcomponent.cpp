@@ -58,7 +58,7 @@ namespace BlackGui
     namespace Components
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             CIdentifiable(this),
             ui(new Ui::CAtcStationComponent)
         {
@@ -70,7 +70,7 @@ namespace BlackGui
             CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
             ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
-            this->deferredActivate(this);
+            this->activateTextMessages(true);
 
             // some icons
             ui->tb_AtcStationsAtisReload->setIcon(CIcons::atis());
@@ -469,7 +469,7 @@ namespace BlackGui
 
         void CAtcStationComponent::showOverlayInlineTextMessage()
         {
-            CEnableForDockWidgetInfoArea::showOverlayInlineTextMessage(TextMessagesCom1);
+            COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
         }
 
         void CAtcStationComponent::onDetailsToggled(bool checked)
