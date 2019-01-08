@@ -48,9 +48,12 @@ namespace BlackGui
             //! Number of users
             int countUsers() const;
 
-        public slots:
             //! Update users
             void update();
+
+        signals:
+            //! Request a text message
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:
             //! Number of elements changed

@@ -33,6 +33,18 @@ namespace BlackGui
 
             //! Set user mode
             void setUserMode(Models::CUserListModel::UserMode userMode);
+
+        signals:
+            //! Request a text message
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+
+        protected:
+            //! \copydoc CViewBase::customMenu
+            virtual void customMenu(Menus::CMenuActions &menuActions) override;
+
+        private:
+            //! Request text message for selected aircraft
+            void requestTextMessage();
         };
     }
 }
