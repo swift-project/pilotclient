@@ -327,7 +327,7 @@ namespace BlackGui
             if (this->isEmpty()) { return 0; }
 
             const int currentRows = this->rowCount();
-            const ContainerType selected(selectedObjects());
+            const ContainerType selected(this->selectedObjects());
             const CVariant deletedObjsVariant = CVariant::from(selected);
             int delta = 0;
 
@@ -339,7 +339,7 @@ namespace BlackGui
             }
             else
             {
-                ContainerType unselectedObjects(container());
+                ContainerType unselectedObjects(this->container());
                 unselectedObjects.removeIfInSubset(selected);
                 this->updateContainerMaybeAsync(unselectedObjects);
                 delta = currentRows - unselectedObjects.size();

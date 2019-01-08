@@ -466,12 +466,17 @@ namespace BlackGui
 
         QModelIndexList CViewBaseNonTemplate::selectedRows() const
         {
-            return this->selectionModel()->selectedRows();
+            // make sure this is ordered by row and wee keep the same order as in unselectedRows
+            // if we'd know for sure the indexes are always sorted we can remove the sorting here
+            // Qt docu selectedIndexes: Returns a list of all selected model item indexes. The list contains no duplicates, and is not sorted.
+            QModelIndexList indexes = this->selectionModel()->selectedRows();
+            qSort(indexes);
+            return indexes;
         }
 
         QModelIndexList CViewBaseNonTemplate::unselectedRows() const
         {
-            QModelIndexList selected = this->selectedRows();
+            const QModelIndexList selected = this->selectedRows();
             QModelIndexList unselected;
             const int rows = this->rowCount();
             for (int r = 0; r < rows; r++)
