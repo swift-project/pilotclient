@@ -398,7 +398,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
         {
-            if (m_simulator == simulator) { return; } // avoid unnecessary signals
+            if (m_simulator == simulator)  { return; } // avoid unnecessary signals
             if (simulator.isNoSimulator()) { return; }
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 

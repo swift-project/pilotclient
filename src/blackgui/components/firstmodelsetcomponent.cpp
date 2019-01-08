@@ -8,21 +8,25 @@
  */
 
 #include "firstmodelsetcomponent.h"
-#include "ui_firstmodelsetcomponent.h"
-#include "blackgui/views/distributorview.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
-#include "blackmisc/directoryutils.h"
 #include "dbownmodelsdialog.h"
 #include "dbownmodelscomponent.h"
 #include "dbownmodelsetdialog.h"
 #include "dbownmodelsetcomponent.h"
+#include "ui_firstmodelsetcomponent.h"
+
+#include "blackgui/views/distributorview.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QStringList>
 #include <QFileDialog>
 #include <QPointer>
 #include <QMessageBox>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
@@ -72,6 +76,14 @@ namespace BlackGui
 
         void CFirstModelSetComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
+            if (!simulator.isSingleSimulator())
+            {
+                //! \fixme KB 2019-01 reported by RR/crash dump sometimes happening and leading to ASSERT/CTD avoiding the "crash" to better undes
+                if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(false, Q_FUNC_INFO, "Need single simulator"); }
+                CLogMessage(this).error(u"Changing to non-single simulator %1 ignored") << simulator.toQString();
+                return;
+            }
+
             Q_ASSERT_X(m_modelsDialog, Q_FUNC_INFO, "No models dialog");
             m_modelsDialog->setSimulator(simulator);
 
