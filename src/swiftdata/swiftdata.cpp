@@ -8,13 +8,13 @@
  */
 
 #include "swiftdata.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/datasettingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"

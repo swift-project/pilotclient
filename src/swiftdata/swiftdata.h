@@ -44,7 +44,7 @@ public:
     CSwiftData(QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftData();
+    virtual ~CSwiftData() override;
 
 protected:
     //! \name QMainWindow events
