@@ -451,20 +451,10 @@ class DumperMac(Dumper):
             return True
         return False
 
-    @staticmethod
-    def fix_library_name(file_name):
-        basename = os.path.basename(file_name)
-        dirname = os.path.dirname(file_name)
-        match = re.match('lib(\w+).(\d).(\d).(\d).dylib', basename)
-        if match:
-            modified_file_name = 'lib' + match.group(1) + '.' + match.group(2) + '.dylib'
-            return os.path.join(dirname, modified_file_name)
-        return file_name
-
     def process_files(self, files, after=None, after_arg=None):
         # also note, files must be len 1 here, since we're the only ones
         # that ever add more than one file to the list
-        file_name = self.fix_library_name(files[0])
+        file_name = files[0]
         self.output_pid(sys.stderr, "Submitting job for Mac pre-processing on file: %s" % file_name)
         self.submit_job('process_files_work_mac', args=(file_name,), callback=self.process_files_mac_finished)
 
