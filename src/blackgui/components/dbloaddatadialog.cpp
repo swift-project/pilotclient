@@ -13,10 +13,14 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/logmessage.h"
+
 #include <QDialogButtonBox>
 #include <QModelIndexList>
 #include <QPointer>
+#include <QStringBuilder>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
@@ -42,6 +46,7 @@ namespace BlackGui
             ui->wi_Consolidate->setVisible(false);
             ui->comp_SimulatorSelector->setRememberSelection(true);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadDataDialog::onDataRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbLoadDataDialog::onEntityDownloadProgress, Qt::QueuedConnection);
             connect(ui->bb_loadDataDialog, &QDialogButtonBox::clicked, this, &CDbLoadDataDialog::onButtonClicked);
             connect(ui->pb_Consolidate, &QPushButton::clicked, this, &CDbLoadDataDialog::consolidate);
             connect(this, &CDbLoadDataDialog::rejected, this, &CDbLoadDataDialog::onRejected);
@@ -70,8 +75,8 @@ namespace BlackGui
 
         QStringList CDbLoadDataDialog::selectedEntities() const
         {
-            const QModelIndexList indexes = ui->lv_Entities->selectionModel()->selectedIndexes();
             QStringList entities;
+            const QModelIndexList indexes = ui->lv_Entities->selectionModel()->selectedIndexes();
             for (const QModelIndex &index : indexes)
             {
                 entities.append(index.data(Qt::DisplayRole).toString());
@@ -100,9 +105,18 @@ namespace BlackGui
 
         void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
-            if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // no triggered from here
-            if (state == CEntityFlags::ReadStarted) { return; }
+            if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // not triggered from here
             if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity))) { return; }
+
+            const QString e = CEntityFlags::entitiesToString(entity);
+            const QString s = CEntityFlags::stateToString(state);
+
+            ui->le_Info->setText(e % u" " % s);
+            if (!CEntityFlags::isFinishedReadStateOrFailure(state)) { return; }
+            if (state == CEntityFlags::ReadFailed)
+            {
+                CLogMessage(this).warning(u"Read failed for %1") << e;
+            }
 
             m_pendingEntities &= ~entity;
             const int pending = CEntityFlags::numberOfEntities(m_pendingEntities);
@@ -116,8 +130,6 @@ namespace BlackGui
                 m_pendingEntitiesCount -= number;
                 ui->pb_Loading->setValue(max - m_pendingEntitiesCount);
             }
-            const QString e = CEntityFlags::entitiesToString(entity);
-            ui->le_Info->setText(e);
             if (pending < 1)
             {
                 m_pendingEntitiesCount = -1;
@@ -132,10 +144,25 @@ namespace BlackGui
                     if (defaultConsolidate)
                     {
                         m_autoConsolidate = true;
-                        QTimer::singleShot(1000, this, &CDbLoadDataDialog::consolidate);
+                        QPointer<CDbLoadDataDialog> self(this); // 2nd "self"/"myself" for cppcheck identicalConditionAfterEarlyExit
+                        QTimer::singleShot(1000, this, [ = ]
+                        {
+                            if (!self) { return; }
+                            self->consolidate();
+                        });
                     }
                 });
             }
+        }
+
+        void CDbLoadDataDialog::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+        {
+            Q_UNUSED(entity);
+            Q_UNUSED(logId);
+            Q_UNUSED(progress);
+            Q_UNUSED(current);
+            Q_UNUSED(max);
+            Q_UNUSED(url);
         }
 
         void CDbLoadDataDialog::onRejected()

@@ -83,6 +83,12 @@ namespace BlackMisc
             return state == ReadFinished || state == ReadFinishedRestricted;
         }
 
+        bool CEntityFlags::isFinishedReadStateOrFailure(CEntityFlags::ReadState state)
+        {
+            if (isFinishedReadState(state)) { return true; }
+            return state == ReadFailed || state == ReadSkipped;
+        }
+
         int CEntityFlags::numberOfEntities(CEntityFlags::Entity entities)
         {
             const int c = static_cast<int>(std::bitset<(sizeof(entities) * 8)>(entities).count());
@@ -91,7 +97,7 @@ namespace BlackMisc
 
         const QString &CEntityFlags::stateToString(CEntityFlags::ReadState flag)
         {
-            static const QString f("finised");
+            static const QString f("finished");
             static const QString fr("finished (restricted)");
             static const QString p("parsing");
             static const QString fa("failed");
@@ -101,12 +107,12 @@ namespace BlackMisc
 
             switch (flag)
             {
-            case ReadFinished: return f;
             case ReadFinishedRestricted: return fr;
-            case ReadParsing: return  p;
-            case ReadFailed:  return fa;
-            case ReadSkipped: return s;
-            case ReadStarted: return st;
+            case ReadFinished: return f;
+            case ReadParsing:  return  p;
+            case ReadFailed:   return fa;
+            case ReadSkipped:  return s;
+            case ReadStarted:  return st;
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return x;

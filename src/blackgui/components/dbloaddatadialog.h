@@ -18,6 +18,7 @@
 #include <QDialog>
 #include <QScopedPointer>
 #include <QStringListModel>
+#include <QUrl>
 #include <QAbstractButton>
 
 namespace Ui { class CDbLoadDataDialog; }
@@ -52,8 +53,11 @@ namespace BlackGui
             //! Button clicked
             void onButtonClicked(QAbstractButton *button);
 
-            //! Data have been read
+            //! Data are/have been read
             void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
+            //! Download progress
+            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
             //! Dialog rejected
             void onRejected();
@@ -66,7 +70,7 @@ namespace BlackGui
             BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
             BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
             int m_pendingEntitiesCount = -1;
-            bool m_consolidating = false; //! currently consolidating
+            bool m_consolidating   = false; //! currently consolidating
             bool m_autoConsolidate = false;
         };
     } // ns

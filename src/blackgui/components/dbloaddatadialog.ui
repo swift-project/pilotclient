@@ -51,7 +51,7 @@
    </item>
    <item>
     <widget class="QWidget" name="wi_WorkStatus" native="true">
-     <layout class="QHBoxLayout" name="hl_LoadStatus" stretch="1,3">
+     <layout class="QHBoxLayout" name="hl_LoadStatus">
       <item>
        <widget class="QLineEdit" name="le_Info">
         <property name="readOnly">

@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Any finished state
             static bool isFinishedReadState(ReadState state);
 
+            //! Any finished state
+            static bool isFinishedReadStateOrFailure(ReadState state);
+
             //! Represented number of entities
             static int numberOfEntities(CEntityFlags::Entity entities);
 
