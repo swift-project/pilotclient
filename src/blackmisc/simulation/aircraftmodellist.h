@@ -299,6 +299,9 @@ namespace BlackMisc
             //! Model strings plus count
             QMap<QString, int> countPerModelString() const;
 
+            //! Distributor plus count
+            QMap<BlackMisc::Simulation::CDistributor, int> countPerDistributor() const;
+
             //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;
 

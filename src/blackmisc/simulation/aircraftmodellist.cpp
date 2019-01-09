@@ -388,6 +388,24 @@ namespace BlackMisc
             return modelStrings;
         }
 
+        QMap<CDistributor, int> CAircraftModelList::countPerDistributor() const
+        {
+            QMap<CDistributor, int> distributors;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasDistributor()) { continue; }
+                if (distributors.contains(model.getDistributor()))
+                {
+                    distributors[model.getDistributor()]++;
+                }
+                else
+                {
+                    distributors[model.getDistributor()] = 1;
+                }
+            }
+            return distributors;
+        }
+
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return {}; }
