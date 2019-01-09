@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui network svg widgets
+QT       += core dbus gui network svg widgets charts
 
 TARGET = blackgui
 TEMPLATE = lib

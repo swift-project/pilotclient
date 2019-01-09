@@ -40,6 +40,21 @@ namespace BlackGui
             //! Display the HTML matrix
             void displayHTMLMatrix();
 
+            //! Zoom in/out
+            void zoom();
+
+            //! Init chart
+            void initChart();
+
+            //! Reset chart
+            void resetChart();
+
+            //! Chart
+            void showChart();
+
+            //! Chart for distributors
+            void chartDistributors();
+
             QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;
         };

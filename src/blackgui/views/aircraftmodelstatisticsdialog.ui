@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>300</width>
+    <height>298</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -42,6 +42,96 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tb_Charts">
+      <attribute name="title">
+       <string>Charts</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Charts" stretch="0,0">
+       <item>
+        <widget class="QFrame" name="fr_ChartType">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
+         <layout class="QHBoxLayout" name="hl_ChartType">
+          <property name="leftMargin">
+           <number>1</number>
+          </property>
+          <property name="topMargin">
+           <number>1</number>
+          </property>
+          <property name="rightMargin">
+           <number>1</number>
+          </property>
+          <property name="bottomMargin">
+           <number>1</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="rb_Distributors">
+            <property name="text">
+             <string>distributors</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="hs_ChartType">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="tb_ZoomIn">
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="tb_ZoomOut">
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignRight">
+           <widget class="QPushButton" name="pb_ShowChart">
+            <property name="text">
+             <string>show</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QChartView" name="qv_Chart">
+         <property name="sceneRect">
+          <rectf>
+           <x>0.000000000000000</x>
+           <y>0.000000000000000</y>
+           <width>400.000000000000000</width>
+           <height>300.000000000000000</height>
+          </rectf>
+         </property>
+         <property name="dragMode">
+          <enum>QGraphicsView::ScrollHandDrag</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tb_Matrix">
       <attribute name="title">
        <string>Matrix</string>
@@ -54,7 +144,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="0" column="1" alignment="Qt::AlignLeft">
         <widget class="QPushButton" name="pb_GenerateMatrix">
          <property name="text">
           <string>generate matix</string>
@@ -77,6 +167,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header>QtCharts</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
