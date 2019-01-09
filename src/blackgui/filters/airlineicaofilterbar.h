@@ -21,15 +21,12 @@
 #include <QScopedPointer>
 #include <memory>
 
-class QWidget;
-
+namespace Ui { class CAirlineIcaoFilterBar; }
 namespace BlackMisc
 {
     class CCountry;
     namespace Aviation { class CAirlineIcaoCodeList; }
 }
-namespace Ui { class CAirlineIcaoFilterBar; }
-
 namespace BlackGui
 {
     namespace Filters
@@ -39,7 +36,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CAirlineIcaoFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CAirlineIcaoCodeList>
+            public Models::IModelFilterProvider<BlackMisc::Aviation::CAirlineIcaoCodeList>
         {
             Q_OBJECT
 

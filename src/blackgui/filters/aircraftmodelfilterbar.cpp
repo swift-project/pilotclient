@@ -76,7 +76,7 @@ namespace BlackGui
             ui->filter_Buttons->displayCount(show);
         }
 
-        std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
+        std::unique_ptr<IModelFilter<CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
         {
             CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
             if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)

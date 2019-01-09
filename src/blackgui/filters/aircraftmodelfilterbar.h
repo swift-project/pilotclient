@@ -22,11 +22,8 @@
 #include <QScopedPointer>
 #include <memory>
 
-class QWidget;
-
-namespace BlackMisc { namespace Simulation { class CAircraftModelList; } }
 namespace Ui { class CAircraftModelFilterBar; }
-
+namespace BlackMisc { namespace Simulation { class CAircraftModelList; } }
 namespace BlackGui
 {
     namespace Filters
