@@ -39,6 +39,10 @@ namespace BlackInput
     signals:
         //! Joystick button combination has changed
         void buttonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);
+
+    protected:
+        //! Initializes the platform joystick devices
+        virtual bool init() { return false; }
     };
 }
 

@@ -35,7 +35,6 @@ unix:!macx {
 
 macx {
     HEADERS += $$PWD/macos/*.h
-    SOURCES += $$PWD/macos/*.cpp
     OBJECTIVE_SOURCES += $$PWD/macos/*.mm
     LIBS += -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
 }

@@ -35,7 +35,7 @@ namespace BlackInput
 #elif defined(Q_OS_MACOS)
         std::unique_ptr<IJoystick> ptr(new CJoystickMacOS(parent));
 #endif
-
+        ptr->init();
         return ptr;
     }
 
