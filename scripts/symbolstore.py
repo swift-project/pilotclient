@@ -333,7 +333,7 @@ class Dumper:
                     proc.wait()
                     # we output relative paths so callers can get a list of what
                     # was generated
-                    self.output(sys.stdout, rel_path)
+                    self.output(sys.stdout, sym_file)
             except StopIteration:
                 pass
             except Exception as e:
