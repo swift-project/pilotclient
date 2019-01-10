@@ -17,6 +17,11 @@
 #include <QScopedPointer>
 
 namespace Ui { class CAircraftModelStatisticsDialog; }
+namespace QtCharts
+{
+    class QBarSeries;
+    class QHorizontalBarSeries;
+}
 namespace BlackGui
 {
     namespace Views
@@ -54,6 +59,15 @@ namespace BlackGui
 
             //! Chart for distributors
             void chartDistributors();
+
+            //! Chart for aircraft ICAO
+            void chartAircraftIcao();
+
+            //! Display as horizontal bar chart
+            void horizontalBarChart(const QStringList &categories, QtCharts::QHorizontalBarSeries *series);
+
+            //! Display as vertical bar chart
+            void verticalBarChart(const QStringList &categories, QtCharts::QBarSeries *series);
 
             QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;

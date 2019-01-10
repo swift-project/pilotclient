@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>333</width>
     <height>298</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tw_ModelStatistics">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tb_GeneralStatistics">
       <attribute name="title">
@@ -79,6 +79,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QRadioButton" name="rb_AircraftIcao">
+            <property name="text">
+             <string>aircraft</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="hs_ChartType">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -116,18 +123,29 @@
         </widget>
        </item>
        <item>
-        <widget class="QChartView" name="qv_Chart">
-         <property name="sceneRect">
-          <rectf>
-           <x>0.000000000000000</x>
-           <y>0.000000000000000</y>
-           <width>400.000000000000000</width>
-           <height>300.000000000000000</height>
-          </rectf>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="dragMode">
-          <enum>QGraphicsView::ScrollHandDrag</enum>
-         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>299</width>
+            <height>191</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QChartView" name="qv_Chart">
+             <property name="dragMode">
+              <enum>QGraphicsView::NoDrag</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>

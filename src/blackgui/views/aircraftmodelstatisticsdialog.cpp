@@ -10,6 +10,7 @@
 #include "aircraftmodelstatisticsdialog.h"
 #include "ui_aircraftmodelstatisticsdialog.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 
 #include <QPushButton>
@@ -19,6 +20,7 @@
 #include <QtCharts>
 
 using namespace QtCharts;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
 namespace BlackGui
@@ -74,6 +76,10 @@ namespace BlackGui
             chart->setTheme(QChart::ChartThemeBlueIcy);
             ui->qv_Chart->setChart(chart);
             ui->qv_Chart->setRenderHint(QPainter::Antialiasing);
+
+            // const QRectF rect(0, 0, 2048, 1526);
+            // ui->qv_Chart->setSceneRect(rect);
+            // chart->setPlotArea(rect);
         }
 
         void CAircraftModelStatisticsDialog::resetChart()
@@ -90,12 +96,11 @@ namespace BlackGui
         void CAircraftModelStatisticsDialog::showChart()
         {
             if (ui->rb_Distributors->isChecked()) { this->chartDistributors(); return; }
+            if (ui->rb_AircraftIcao->isChecked()) { this->chartAircraftIcao(); return; }
         }
 
         void CAircraftModelStatisticsDialog::chartDistributors()
         {
-            QChart *chart = ui->qv_Chart->chart();
-            this->resetChart();
             const QMap<CDistributor, int> distributors = m_models.countPerDistributor();
             QStringList distributorsForAxis;
             QBarSet *setDistributors = new QBarSet("Distributors");
@@ -110,17 +115,45 @@ namespace BlackGui
                 distributorsForAxis << QString::number(n) % u": " % distributor.getDbKey() % u" " % QString::number(c);
                 *setDistributors << c;
                 n++;
-                // QString s += distributor.getDbKey() % u" " % QString::number(c) % "\n";
             }
 
             QHorizontalBarSeries *series = new QHorizontalBarSeries(this);
             series->append(setDistributors);
+            this->horizontalBarChart(distributorsForAxis, series);
+        }
+
+        void CAircraftModelStatisticsDialog::chartAircraftIcao()
+        {
+            const QMap<CAircraftIcaoCode, int> icaos = m_models.countPerAircraftIcao();
+            QStringList icaosForAxis;
+            QBarSet *setIcaos = new QBarSet("Aircraft ICAO");
+
+            // using number as uique key as it can happen there a identical distributor keys
+            // and QChart requires uniques values
+            int n = 1;
+            for (const CAircraftIcaoCode &icao : icaos.keys())
+            {
+                const int c = icaos[icao];
+                if (c < 1) { continue; }
+                icaosForAxis << QString::number(n) % u": " % icao.getDesignatorDbKey() % u" " % QString::number(c);
+                *setIcaos << c;
+                n++;
+            }
+
+            QBarSeries *series = new QBarSeries(this);
+            series->append(setIcaos);
+            this->verticalBarChart(icaosForAxis, series);
+        }
+
+        void CAircraftModelStatisticsDialog::horizontalBarChart(const QStringList &categories, QHorizontalBarSeries *series)
+        {
+            QChart *chart = ui->qv_Chart->chart();
+            this->resetChart();
             chart->addSeries(series);
-            // chart->setTitle("Distributors");
 
             // Y
             QBarCategoryAxis *axisY = new QBarCategoryAxis();
-            axisY->append(distributorsForAxis);
+            axisY->append(categories);
             chart->addAxis(axisY, Qt::AlignLeft);
             series->attachAxis(axisY);
 
@@ -129,6 +162,24 @@ namespace BlackGui
             chart->addAxis(axisX, Qt::AlignBottom);
             series->attachAxis(axisX);
             axisX->applyNiceNumbers();
+        }
+
+        void CAircraftModelStatisticsDialog::verticalBarChart(const QStringList &categories, QBarSeries *series)
+        {
+            QChart *chart = ui->qv_Chart->chart();
+            this->resetChart();
+            chart->addSeries(series);
+
+            // X
+            QBarCategoryAxis *axisX = new QBarCategoryAxis();
+            axisX->append(categories);
+            chart->addAxis(axisX, Qt::AlignBottom);
+            series->attachAxis(axisX);
+
+            // Y
+            QValueAxis *axisY = new QValueAxis();
+            chart->addAxis(axisY, Qt::AlignLeft);
+            series->attachAxis(axisY);
         }
     } // ns
 } // ns
