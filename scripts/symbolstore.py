@@ -200,10 +200,13 @@ class Dumper:
 
     def pack(self, tar_path=None):
         if tar_path is None:
-            symbol_full_path = os.path.normpath(os.path.join(self.symbol_path, ".."))
-            tar_path = os.path.join(symbol_full_path, 'symbols.tar.gz')
+            tar_path = os.path.normpath(os.path.join(self.symbol_path, ".."))
+            tar_path = os.path.join(tar_path, 'symbols.tar.gz')
         tar = tarfile.open(tar_path, "w:gz")
-        tar.add(self.symbol_path, arcname='.')
+        for dirname, subdirs, files in os.walk(self.symbol_path):
+            for filename in files:
+                tar.add(os.path.join(dirname, filename), filename)
+        tar.close()
 
     def process(self, *args):
         """Process files recursively in args."""
