@@ -299,8 +299,11 @@ namespace BlackMisc
             //! Model strings plus count
             QMap<QString, int> countPerModelString() const;
 
-            //! Distributor plus count
+            //! Distributors plus count
             QMap<BlackMisc::Simulation::CDistributor, int> countPerDistributor() const;
+
+            //! Aircraft ICAO plus count
+            QMap<BlackMisc::Aviation::CAircraftIcaoCode, int> countPerAircraftIcao() const;
 
             //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;

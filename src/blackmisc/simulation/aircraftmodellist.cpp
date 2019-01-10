@@ -406,6 +406,24 @@ namespace BlackMisc
             return distributors;
         }
 
+        QMap<CAircraftIcaoCode, int> CAircraftModelList::countPerAircraftIcao() const
+        {
+            QMap<CAircraftIcaoCode, int> icaos;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasAircraftDesignator()) { continue; }
+                if (icaos.contains(model.getAircraftIcaoCode()))
+                {
+                    icaos[model.getAircraftIcaoCode()]++;
+                }
+                else
+                {
+                    icaos[model.getAircraftIcaoCode()] = 1;
+                }
+            }
+            return icaos;
+        }
+
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return {}; }
