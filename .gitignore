@@ -1,89 +1,14 @@
-# In repository we don't need to have:
-# Compiled object files
-*.o
-
-# Generated MOC, resource and UI files
-moc_*.cpp
-qrc_*.cpp
-ui_*.h
-
-# MSVC generated precompiled source
+# MSVC generated precompiled sources
 pch.h.cpp
 
 # QtCreator project files
-*.pro.user*
+/swift.pro.user
 
-# Debug and Release directories (created under Windows, not Linux)
-# Additional the CMake build folder
-bin/
-obj/
-Debug/
-Release/
-ReleaseDebug/
-DebugFast/
-ReleaseDebugStatic/
-DebugFastStatic/
-build/
-Makefile
-
-# .log files (usually created by QtTest - thanks to VestniK)
-*.log
-
-# Windows compile
-*.exe
-*.dll
-*.lib
-*.obj
-
-# Exception for XPlane object files
-!src/xswiftbus/LegacyData/**/*.obj
-
-# Linux compile
-*.a
-*.la
-*.lo
-*.Po
-*.Plo
-*.o
-*.so
-*.so.*
-*_debug
-core
-*.pc
-*.gch
-
-# Mac OS X compile
-*.dylib
-
-# CMake stuff
-CMakeCache.txt
-cmake_install.cmake
-CTestTestfile.cmake
-CPackConfig.cmake
-CPackSourceConfig.cmake
-.libs
+# Out-of-source build tree
+/build*/
 
 # Visual Studio stuff
-*.opensdf
-UpgradeLog*.XML
-_UpgradeReport_Files
-BuildLog.htm
-mt.dep
-ipch
-*.suo
-*.ncb
-*.user
-*.ilk
-*.pdb
-*.aps
-*.exp
-*.idb
-*.sdf
-*.vspx
-*.vcxproj
-*.vcxproj.filters
-*/.vs/*
-.vs/*
+/.vs/
 
 # Qt Creator
 *.autosave
@@ -91,7 +16,7 @@ ipch
 # Mac OS X stuff
 .DS_Store
 
-# Windows-specific files
+# Windows stuff
 Thumbs.db
 desktop.ini
 
@@ -99,19 +24,18 @@ desktop.ini
 *~
 
 # qmake
-.qmake.stash
-.qmake.cache
+/.qmake.stash
 
-# Qt Creator
-/client.pro.user.2.7pre1
-/client.pro.user.3.0-pre1
-/client.pro.user.15
-/client.pro.user.3.2-pre1
-/client.pro.user.16
-/client.pro.user.3.3-pre1
-/client.pro.user.18
+# Generated installers
+/swiftinstaller-*.run
+/swiftinstaller-*.exe
+/swiftinstaller-*.dmg
+/swiftsymbols-*.tar.gz
+/xswiftbus-*.7z
 
-# Qt Creator Qt plugin
-plugins.sln
-weatherdata.sln
-simulator.sln
+# Python
+/scripts/**/*.pyc
+/scripts/**/__pycache__
+
+# VATSIM key
+/vatsim.json

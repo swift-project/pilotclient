@@ -27,6 +27,9 @@ builders['Build swift Linux'] = {
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
                                    skipNoTestFiles: true, stopProcessingIfError: false)]
+
+                def status = sh(script: 'git status -s | grep "^??"', returnStatus: true)
+                if (status == 0) { error 'Source tree got polluted by some untracked file(s)' }
             }
 
             stage('Linux Checks') {
@@ -79,6 +82,9 @@ builders['Build swift MacOS'] = {
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
                                    skipNoTestFiles: true, stopProcessingIfError: false)]
+
+                def status = sh(script: 'git status -s | grep "^??"', returnStatus: true)
+                if (status == 0) { error 'Source tree got polluted by some untracked file(s)' }
             }
 
             stage('MacOS Archive') {
@@ -120,6 +126,9 @@ builders['Build swift Win32'] = {
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
                                    skipNoTestFiles: true, stopProcessingIfError: false)]
+
+                def status = bat(script: 'git status -s | findstr /b "??"', returnStatus: true)
+                if (status == 0) { error 'Source tree got polluted by some untracked file(s)' }
             }
 
             stage('Win32 Archive') {
@@ -162,6 +171,9 @@ builders['Build swift Win64'] = {
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
                                    skipNoTestFiles: true, stopProcessingIfError: false)]
+
+                def status = bat(script: 'git status -s | findstr /b "??"', returnStatus: true)
+                if (status == 0) { error 'Source tree got polluted by some untracked file(s)' }
             }
 
             stage('Win64 Archive') {
