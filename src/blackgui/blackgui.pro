@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui network svg widgets charts
+QT       += core dbus gui network svg widgets
 
 TARGET = blackgui
 TEMPLATE = lib
@@ -11,11 +11,12 @@ swiftConfig(static) {
 }
 
 INCLUDEPATH += ..
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/qwt
 DEPENDPATH += . ..
 
 PRECOMPILED_HEADER = pch/pch.h
 
-DEFINES += LOG_IN_FILE BUILD_BLACKGUI_LIB
+DEFINES += LOG_IN_FILE BUILD_BLACKGUI_LIB QWT_DLL
 
 HEADERS += *.h
 SOURCES += *.cpp
@@ -42,6 +43,9 @@ HEADERS += $$PWD/editors/*.h
 SOURCES += $$PWD/editors/*.cpp
 FORMS   += $$PWD/editors/*.ui
 
+HEADERS += $$PWD/graphs/*.h
+SOURCES += $$PWD/graphs/*.cpp
+
 FORMS   += $$PWD/*.ui
 
 win32 {
@@ -49,7 +53,18 @@ win32 {
     SOURCES += $$PWD/win/*.cpp
 }
 
-RESOURCES +=
+win32 {
+    CONFIG(debug, debug|release): LIBS *= -lqwtd
+    CONFIG(release, debug|release): LIBS *= -lqwt
+}
+else:macx {
+    macx: LIBS *= -framework qwt
+}
+else:unix {
+    LIBS *= -lqwt
+}
+
+# RESOURCES +=
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin

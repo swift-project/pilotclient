@@ -127,8 +127,8 @@ win32 {
     dest_path = $$DestRoot/bin
 }
 else:macx {
-    copy_command = cp
-    source_path = $$EXTERNALS_LIB_DIR/*.dylib
+    copy_command = cp -a
+    source_path = $$EXTERNALS_LIB_DIR/*.{dylib,framework}
     dest_path = $$DestRoot/lib
 }
 else:unix {
