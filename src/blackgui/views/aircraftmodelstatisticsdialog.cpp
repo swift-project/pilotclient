@@ -75,9 +75,11 @@ namespace BlackGui
                 series << c;
             }
 
+            QwtText title("distributor");
+            title.setRenderFlags(Qt::AlignLeft);
             ui->qwt_Chart->setSymbols("distributors", "white");
-            ui->qwt_Chart->setTitle("distributors");
-            ui->qwt_Chart->setSamples1Bar(series, distributorsForAxis);
+            ui->qwt_Chart->setTitle(title);
+            ui->qwt_Chart->setSamples1Bar(series, distributorsForAxis, this->getOrientation());
         }
 
         void CAircraftModelStatisticsDialog::chartAircraftIcao()
@@ -96,9 +98,16 @@ namespace BlackGui
                 series << c;
             }
 
+            QwtText title("aircraft ICAO");
+            title.setRenderFlags(Qt::AlignLeft);
             ui->qwt_Chart->setSymbols("aircraft", "white");
-            ui->qwt_Chart->setTitle("aircraft ICAO");
-            ui->qwt_Chart->setSamples1Bar(series, icaosForAxis);
+            ui->qwt_Chart->setTitle(title);
+            ui->qwt_Chart->setSamples1Bar(series, icaosForAxis, this->getOrientation());
+        }
+
+        Qt::Orientation CAircraftModelStatisticsDialog::getOrientation() const
+        {
+            return ui->rb_Vertical->isChecked() ? Qt::Vertical : Qt::Horizontal;
         }
 
     } // ns

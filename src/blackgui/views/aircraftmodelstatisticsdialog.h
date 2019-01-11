@@ -54,6 +54,9 @@ namespace BlackGui
             //! Chart for aircraft ICAO
             void chartAircraftIcao();
 
+            //! Orientation
+            Qt::Orientation getOrientation() const;
+
             QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;
         };
