@@ -10,7 +10,7 @@
 #include "aircraftmodelstatisticsdialog.h"
 #include "ui_aircraftmodelstatisticsdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 
 #include <QPushButton>
@@ -67,7 +67,9 @@ namespace BlackGui
             QStringList distributorsForAxis;
 
             QList<double> series;
-            for (const CDistributor &distributor : distributors.keys())
+            CDistributorList distributorList(distributors.keys());
+            distributorList.sortByKey();
+            for (const CDistributor &distributor : as_const(distributorList))
             {
                 const int c = distributors[distributor];
                 if (c < 1) { continue; }
@@ -89,7 +91,10 @@ namespace BlackGui
 
             QList<double> series;
             int unknown = 0;
-            for (const CAircraftIcaoCode &icao : icaos.keys())
+            CAircraftIcaoCodeList icaoList(icaos.keys());
+            icaoList.sortByDesignatorAndRank();
+
+            for (const CAircraftIcaoCode &icao : as_const(icaoList))
             {
                 const int c = icaos[icao];
                 if (c < 1) { continue; }
