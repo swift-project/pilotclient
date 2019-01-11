@@ -45,15 +45,6 @@ namespace BlackGui
             //! Display the HTML matrix
             void displayHTMLMatrix();
 
-            //! Zoom in/out
-            void zoom();
-
-            //! Init chart
-            void initChart();
-
-            //! Reset chart
-            void resetChart();
-
             //! Chart
             void showChart();
 
@@ -62,12 +53,6 @@ namespace BlackGui
 
             //! Chart for aircraft ICAO
             void chartAircraftIcao();
-
-            //! Display as horizontal bar chart
-            void horizontalBarChart(const QStringList &categories, QtCharts::QHorizontalBarSeries *series);
-
-            //! Display as vertical bar chart
-            void verticalBarChart(const QStringList &categories, QtCharts::QBarSeries *series);
 
             QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;

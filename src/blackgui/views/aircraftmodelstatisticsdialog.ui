@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tw_ModelStatistics">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_GeneralStatistics">
       <attribute name="title">
@@ -98,20 +98,6 @@
             </property>
            </spacer>
           </item>
-          <item>
-           <widget class="QToolButton" name="tb_ZoomIn">
-            <property name="text">
-             <string>+</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="tb_ZoomOut">
-            <property name="text">
-             <string>-</string>
-            </property>
-           </widget>
-          </item>
           <item alignment="Qt::AlignRight">
            <widget class="QPushButton" name="pb_ShowChart">
             <property name="text">
@@ -123,11 +109,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QScrollArea" name="scrollArea">
+        <widget class="QScrollArea" name="sa_Chart">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
+         <widget class="QWidget" name="sa_ChartContent">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -138,9 +124,12 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QChartView" name="qv_Chart">
-             <property name="dragMode">
-              <enum>QGraphicsView::NoDrag</enum>
+            <widget class="BlackGui::Graphs::CBarChart" name="qwt_Chart">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
              </property>
             </widget>
            </item>
@@ -187,9 +176,10 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QChartView</class>
-   <extends>QGraphicsView</extends>
-   <header>QtCharts</header>
+   <class>BlackGui::Graphs::CBarChart</class>
+   <extends>QFrame</extends>
+   <header>blackgui/graphs/barchart.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
