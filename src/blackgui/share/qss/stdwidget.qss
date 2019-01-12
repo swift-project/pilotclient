@@ -282,11 +282,6 @@ QTabBar::tab {
   margin-right: 3px;
 }
 
-/** experimental T506 **/
-QTabBar::tab[supervisor=true] {
-  background-color: red;
-}
-
 QTabBar::tab::selected {
   background-color: rgba(0, 0, 255, 128);
 }
@@ -711,3 +706,8 @@ QStatusBar QLabel {
   border: none;
   padding-left: 5px;
 }
+
+/** T506 supervisor messages **/
+QTabBar::tab[supervisormsg=true] { background-color: red; }
+QTextEdit[supervisormsg=true] { border: 2px solid red; margin: 2px; }
+QTabBar QToolButton[supervisormsg=true] { background-color: red; }

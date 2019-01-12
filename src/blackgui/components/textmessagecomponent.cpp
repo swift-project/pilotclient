@@ -396,6 +396,7 @@ namespace BlackGui
             if (w) { return w; }
 
             const QString tabName = callsign.asString();
+            const bool supervisor = callsign.isSupervisorCallsign();
             QWidget *newTabWidget = new QWidget(this);
             newTabWidget->setObjectName("Tab widget " + tabName);
             QPushButton *closeButton = new QPushButton("Close", newTabWidget);
@@ -409,15 +410,17 @@ namespace BlackGui
             layout->addWidget(closeButton);
             newTabWidget->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
+            textEdit->setProperty("supervisormsg", supervisor);
+
             const int index = ui->tw_TextMessages->addTab(newTabWidget, tabName);
             QToolButton *closeButtonInTab = new QToolButton(newTabWidget);
             closeButtonInTab->setText("[X]");
+            closeButtonInTab->setProperty("supervisormsg", supervisor);
             QTabBar *bar = ui->tw_TextMessages->tabBar();
             bar->setTabButton(index, QTabBar::RightSide, closeButtonInTab); // changes parent
-            if (callsign.isSupervisorCallsign())
+            if (supervisor)
             {
                 //! \fixme hardcoded stylesheet color
-                closeButtonInTab->setStyleSheet("background-color: red;");
                 bar->setTabIcon(index, callsign.toPixmap());
                 bar->setTabTextColor(index, QColor(Qt::yellow));
             }
