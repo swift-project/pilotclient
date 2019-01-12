@@ -11,9 +11,6 @@ builders['Build swift Linux'] = {
         try {
             stage('Linux Checkout') {
                 checkout scm
-                if (params.REVISION_ID != null) {
-                    sh "/opt/arc/arcanist/bin/arc patch D${params.REVISION_ID}"
-                }
             }
 
             stage('Linux Build') {
@@ -65,9 +62,6 @@ builders['Build swift MacOS'] = {
         try {
             stage('MacOS Checkout') {
                 checkout scm
-                if (params.REVISION_ID != null) {
-                    sh "~/arc/arcanist/bin/arc patch D${params.REVISION_ID}"
-                }
             }
 
             stage('MacOS Build') {
@@ -113,9 +107,6 @@ builders['Build swift Win32'] = {
         try {
             stage('Win32 Checkout') {
                 checkout scm
-                if (params.REVISION_ID != null) {
-                    bat "arc patch D${params.REVISION_ID}"
-                }
             }
 
             stage('Win32 Build') {
@@ -158,9 +149,6 @@ builders['Build swift Win64'] = {
         try {
             stage('Win64 Checkout') {
                 checkout scm
-                if (params.REVISION_ID != null) {
-                    bat "arc patch D${params.REVISION_ID}"
-                }
             }
 
             stage('Win64 Build') {
