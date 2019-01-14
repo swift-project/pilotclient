@@ -7,11 +7,13 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_loginmodebuttons.h"
+
 #include "blackconfig/buildconfig.h"
 #include "blackgui/loginmodebuttons.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "ui_loginmodebuttons.h"
+#include "blackmisc/verify.h"
 
 #include <QRadioButton>
 
@@ -76,9 +78,9 @@ namespace BlackGui
         if (!sGui || sGui->isShuttingDown()) { return; }
 
         // we have no idea how we can get here without the context existing Ref T389
-        if (CBuildConfig::isLocalDeveloperDebugBuild() && (!sGui->getIContextSimulator()))
+        if (CBuildConfig::isLocalDeveloperDebugBuild() && !sGui->getIContextSimulator())
         {
-            // how is this possible
+            // how is this possible? In debug builds I do crosscheck
             Q_ASSERT_X(false, Q_FUNC_INFO, "No context or sGUI");
         }
 
@@ -99,5 +101,7 @@ namespace BlackGui
             ui->rb_LoginStealth->setToolTip({});
             ui->rb_LoginNormal->setChecked(true);
         }
+
+        ui->rb_LoginStealth->setVisible(false); // 2019-01 hide as based on discussion with RR
     }
 } // ns

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>285</width>
+    <width>324</width>
     <height>22</height>
    </rect>
   </property>
@@ -62,7 +62,7 @@
    <item alignment="Qt::AlignRight">
     <widget class="QRadioButton" name="rb_LoginObserver">
      <property name="text">
-      <string>Observer</string>
+      <string>Observer (co-pilot)</string>
      </property>
     </widget>
    </item>
