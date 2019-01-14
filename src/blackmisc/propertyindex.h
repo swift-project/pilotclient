@@ -104,7 +104,7 @@ namespace BlackMisc
             GlobalIndexCComSystem                       =  3000,
             GlobalIndexCModulator                       =  3100,
             GlobalIndexCTransponder                     =  3200,
-            GlobalIndexCAircraftIcaoData                =  3500,
+            GlobalIndexCAircraftCategory                =  3500,
             GlobalIndexCAircraftIcaoCode                =  3600,
             GlobalIndexCAirlineIcaoCode                 =  3700,
             GlobalIndexCAirportIcaoCode                 =  3800,

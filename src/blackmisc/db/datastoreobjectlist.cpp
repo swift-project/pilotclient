@@ -9,10 +9,10 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/aviation/airport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/db/dbinfolist.h"
@@ -346,6 +346,7 @@ namespace BlackMisc
         //! \cond PRIVATE
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAircraftCategory, BlackMisc::Aviation::CAircraftCategoryList, int>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList, int>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CArtifact, BlackMisc::Db::CArtifactList, int>;

@@ -21,6 +21,8 @@ namespace BlackMisc
             CAircraftEngineList::registerMetadata();
             CAircraftIcaoCode::registerMetadata();
             CAircraftIcaoCodeList::registerMetadata();
+            CAircraftCategory::registerMetadata();
+            CAircraftCategoryList::registerMetadata();
             CAircraftLights::registerMetadata();
             CAircraftParts::registerMetadata();
             CAircraftPartsList::registerMetadata();
