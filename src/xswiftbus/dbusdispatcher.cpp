@@ -58,7 +58,6 @@ namespace XSwiftBus
             auto *watchHandler = static_cast<WatchHandler *>(data);
 
             unsigned int flags = 0;
-            if (evutil_socket_geterror(fd) != 0) { flags |= DBUS_WATCH_ERROR; }
             if (event & EV_READ) { flags |= DBUS_WATCH_READABLE; }
             if (event & EV_WRITE) { flags |= DBUS_WATCH_WRITABLE; }
             dbus_watch_handle(watchHandler->m_watch, flags);
