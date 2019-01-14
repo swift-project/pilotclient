@@ -118,11 +118,8 @@ else:unix {
     source_path = $$EXTERNALS_BIN_DIR/*
     dest_path = $$DestRoot/bin
 }
-# Currently there is no bin folder in linux externals
-win32|macx {
-    !isEmpty(QMAKE_POST_LINK): QMAKE_POST_LINK += &&
-    QMAKE_POST_LINK += $$copy_command $$shell_path($$source_path) $$shell_path($$dest_path)
-}
+!isEmpty(QMAKE_POST_LINK): QMAKE_POST_LINK += &&
+QMAKE_POST_LINK += $$copy_command $$shell_path($$source_path) $$shell_path($$dest_path)
 
 win32 {
     copy_command = xcopy /Y
