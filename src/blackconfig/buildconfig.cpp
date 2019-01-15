@@ -123,6 +123,7 @@ namespace BlackConfig
                 if (CBuildConfig::isCompiledWithFsxSupport())    { sl << "FSX"; }
                 if (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
                 if (CBuildConfig::isCompiledWithP3DSupport())    { sl << "P3D"; }
+                if (CBuildConfig::isCompiledWithFGSupport())     { sl << "FG"; }
                 infoShort = sl.join(", ");
                 if (infoShort.isEmpty()) { infoShort = "<none>"; }
             }
@@ -142,6 +143,7 @@ namespace BlackConfig
                 infoLong = infoLong.append(" FSX: ").append(boolToYesNo(isCompiledWithFsxSupport()));
                 infoLong = infoLong.append(" P3D: ").append(boolToYesNo(isCompiledWithP3DSupport()));
                 infoLong = infoLong.append(" XPlane: ").append(boolToYesNo(isCompiledWithXPlaneSupport()));
+                infoLong = infoLong.append(" FG: ").append(boolToYesNo(isCompiledWithFGSupport()));
             }
             return infoLong;
         }
@@ -249,6 +251,13 @@ namespace BlackConfig
     {
         static const int bws = Private::buildWordSizeImpl();
         return bws;
+    }
+
+    bool CBuildConfig::supportFlightGear()
+    {
+        // for testing set to "true", never commit with TRUE before FG is completed
+        // this will be removed when FG is fully productive
+        return false; // && isLocalDeveloperDebugBuild();
     }
 } // ns
 

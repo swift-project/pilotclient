@@ -37,7 +37,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
-            const bool withFG = false; // CBuildConfig::isLocalDeveloperDebugBuild();
+            const bool withFG = CBuildConfig::supportFlightGear();
             this->enableFG(withFG);
             this->addComboxBoxValues();
 

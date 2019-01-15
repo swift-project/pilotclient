@@ -19,6 +19,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 #include "ui_dbownmodelscomponent.h"
 
 #include <QAction>
@@ -29,6 +30,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Db;
@@ -257,7 +259,7 @@ namespace BlackGui
                 QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
                 Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
 
-                if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr}); }
                 menuActions.addMenuSimulator();
                 if (sims.isFSX())
                 {
@@ -315,12 +317,26 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_loadActions[3], CMenuAction::pathSimulator());
                 }
+                if (CBuildConfig::supportFlightGear() && sims.isFG())
+                {
+                    if (!m_loadActions[4])
+                    {
+                        m_loadActions[4] = new QAction(CIcons::appModels16(), "FG models", this);
+                        connect(m_loadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked);
+                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fg());
+                        });
+                    }
+                    menuActions.addAction(m_loadActions[4], CMenuAction::pathSimulator());
+                }
 
                 // with models loaded I allow a refresh reload
                 // I need those models because I want to merge with DB data in the loader
                 if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
-                    if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
+                    if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
                     menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
                     if (sims.isFSX())
                     {
@@ -434,6 +450,33 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[7], CMenuAction::pathSimulatorModelsReload());
                     }
 
+                    if (CBuildConfig::supportFlightGear() && sims.isFG())
+                    {
+                        if (!m_reloadActions[8])
+                        {
+                            m_reloadActions[8] = new QAction(CIcons::appModels16(), "FG models", this);
+                            connect(m_reloadActions[8], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                if (!ownModelsComp) { return; }
+                                Q_UNUSED(checked);
+                                ownModelsComp->requestSimulatorModels(CSimulatorInfo::fg(), IAircraftModelLoader::InBackgroundNoCache);
+                            });
+                            m_reloadActions[9] = new QAction(CIcons::appModels16(), "FG models from directoy", this);
+                            connect(m_reloadActions[9], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                if (!ownModelsComp) { return; }
+                                Q_UNUSED(checked);
+                                const CSimulatorInfo sim(CSimulatorInfo::FG);
+                                const QString dir = ownModelsComp->directorySelector(sim);
+                                if (!dir.isEmpty())
+                                {
+                                    ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                }
+                            });
+                        }
+                        menuActions.addAction(m_reloadActions[8], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[9], CMenuAction::pathSimulatorModelsReload());
+                    }
                 }
                 else
                 {
@@ -442,7 +485,7 @@ namespace BlackGui
                     a.setActionEnabled(false); // gray out
                 }
 
-                if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr}); }
                 menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
                 if (sims.isFSX())
                 {
@@ -499,6 +542,20 @@ namespace BlackGui
                         });
                     }
                     menuActions.addAction(m_clearCacheActions[3], CMenuAction::pathSimulatorModelsClearCache());
+                }
+                if (CBuildConfig::supportFlightGear() && sims.isFG())
+                {
+                    if (!m_clearCacheActions[4])
+                    {
+                        m_clearCacheActions[4] = new QAction(CIcons::appModels16(), "Clear FG cache", this);
+                        connect(m_clearCacheActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked);
+                            ownModelsComp->clearSimulatorCache(CSimulatorInfo::fg());
+                        });
+                    }
+                    menuActions.addAction(m_clearCacheActions[4], CMenuAction::pathSimulatorModelsClearCache());
                 }
             }
             this->nestedCustomMenu(menuActions);

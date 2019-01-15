@@ -41,7 +41,10 @@ namespace BlackConfig
         //! with P3D support?
         static constexpr bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.inc.in
 
-        //! with Fsuipc support?
+        //! with FG support?
+        static constexpr bool isCompiledWithFGSupport();  // defined in buildconfig_gen.inc.in
+
+        //! with FSUIPC support?
         static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
 
         //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
@@ -146,6 +149,10 @@ namespace BlackConfig
         //! Whether this swift application is build as 32 or 64bit application
         //! \returns 32, 64 or -1 (in case no info is possible)
         static int buildWordSize();
+
+        //! Ref T430 FG preparations, will be removed later
+        //! \fixme KB 2019-01 remove after FG is fully implemented
+        static bool supportFlightGear();
 
     private:
         //! Major version
