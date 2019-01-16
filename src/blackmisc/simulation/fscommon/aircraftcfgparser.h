@@ -99,6 +99,9 @@ namespace BlackMisc
                 //! Files to be used
                 static const QStringList &fileNameFilters();
 
+                //! Exclude the sub directories not to be parsed
+                static bool isExcludedSubDirectory(const QString &excludeDirectory);
+
                 CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
                 QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
             };

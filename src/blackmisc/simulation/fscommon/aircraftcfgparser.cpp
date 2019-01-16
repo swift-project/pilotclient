@@ -31,6 +31,7 @@
 #include <QtGlobal>
 #include <atomic>
 #include <tuple>
+#include <QStringView>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -112,7 +113,7 @@ namespace BlackMisc
                     emit this->diskLoadingStarted(simulator, mode);
 
                     CStatusMessageList msgs;
-                    m_parsedCfgEntriesList = performParsing(modelDirs, excludedDirectoryPatterns, msgs);
+                    m_parsedCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
                     const CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
                     m_loadingMessages = msgs;
                     const bool hasData = !models.isEmpty();
@@ -135,7 +136,7 @@ namespace BlackMisc
                 CAircraftCfgEntriesList entries;
                 for (const QString &dir : directories)
                 {
-                    entries.push_back(performParsing(dir, excludeDirectories, messages));
+                    entries.push_back(this->performParsing(dir, excludeDirectories, messages));
                 }
                 return entries;
             }
@@ -149,7 +150,7 @@ namespace BlackMisc
                 if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
 
                 // excluded?
-                if (CFileUtils::isExcludedDirectory(directory, excludeDirectories))
+                if (CFileUtils::isExcludedDirectory(directory, excludeDirectories) || isExcludedSubDirectory(directory))
                 {
                     CLogMessage(this).debug() << "Skipping directory " << directory;
                     return CAircraftCfgEntriesList();
@@ -165,8 +166,10 @@ namespace BlackMisc
 
                 const QString currentDir = dir.absolutePath();
                 CAircraftCfgEntriesList result;
+                emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(currentDir), -1);
 
-                // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
+                // Dirs last is crucial, since I will break recursion on "aircraft.cfg" level
+                // with T514 this behavious has been changed
                 const QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
                 for (const auto &fileInfo : files)
                 {
@@ -206,7 +209,9 @@ namespace BlackMisc
                         }
 
                         result.push_back(fileResults);
-                        return result; // do not go any deeper in file tree, we found aircraft.cfg
+
+                        // With T514 we do not skip not anymore
+                        // return result; // do not go any deeper in file tree, we found aircraft.cfg
                     }
                 }
 
@@ -238,7 +243,7 @@ namespace BlackMisc
                 QString atcType;
                 QString atcModel;
                 QString fltSection("[FLTSIM.0]");
-                static const QString fltSectionStr = QString("[FLTSIM.%1]");
+                static const QString fltSectionStr("[FLTSIM.%1]");
 
                 int fltsimCounter = 0;
                 FileSection currentSection = Unknown;
@@ -427,6 +432,17 @@ namespace BlackMisc
             {
                 static const QStringList f({ "aircraft.cfg", "sim.cfg" });
                 return f;
+            }
+
+            bool CAircraftCfgParser::isExcludedSubDirectory(const QString &checkDirectory)
+            {
+                if (checkDirectory.isEmpty()) { return false; }
+                const QString dir = CFileUtils::lastPathSegment(checkDirectory).toLower();
+                if (dir == u"texture" || dir.startsWith("texture.")) { return true; }
+                if (dir == u"sound"   || dir == "soundai") { return true; }
+                if (dir == u"panel")  { return true; }
+                if (dir == u"model")  { return true; }
+                return false;
             }
         } // ns
     } // ns

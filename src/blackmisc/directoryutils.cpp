@@ -460,7 +460,7 @@ namespace BlackMisc
         QStringList dirs;
         for (const QString &dir : directories)
         {
-            if (existsUnemptyDirectory(dir)) { dirs << dir; }
+            if (CDirectoryUtils::existsUnemptyDirectory(dir)) { dirs << dir; }
         }
         return dirs;
     }
