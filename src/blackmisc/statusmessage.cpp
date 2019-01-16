@@ -113,15 +113,36 @@ namespace BlackMisc
         return *this;
     }
 
+    CStatusMessage::CStatusMessage(QStringView message) : ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {
+        m_message = CStrongStringView(message.trimmed());
+    }
+
     CStatusMessage::CStatusMessage(const QString &message) : ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {
         m_message = message.trimmed();
+    }
+
+    CStatusMessage::CStatusMessage(StatusSeverity severity, QStringView message)
+        : CStatusMessage(message)
+    {
+        m_severity = severity;
     }
 
     CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
         : CStatusMessage(message)
     {
         m_severity = severity;
+    }
+
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation)
+        : CStatusMessage(severity, message)
+    {
+        m_categories = categories;
+        if (validation)
+        {
+            this->addValidationCategory();
+        }
     }
 
     CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation)

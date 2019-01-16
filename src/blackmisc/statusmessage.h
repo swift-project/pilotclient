@@ -67,6 +67,9 @@ namespace BlackMisc
         //! Construct from a QString.
         CStrongStringView(const QString &string) : m_string(string), m_view(m_string) {}
 
+        //! Construct from a QStringView. Explicit because it could be dangerous if used without care.
+        explicit CStrongStringView(QStringView view) : m_view(view) {}
+
         //! Deleted constructor.
         CStrongStringView(const char *) = delete;
 
@@ -340,13 +343,29 @@ namespace BlackMisc
         ~CStatusMessage() = default;
 
         //! Constructor
+        //! @{
+        template <size_t N>
+        CStatusMessage(const char16_t (&message)[N]) : CStatusMessage(QStringView(message)) {}
         CStatusMessage(const QString &message);
-
-        //! Constructor
+        template <size_t N>
+        CStatusMessage(StatusSeverity severity, const char16_t (&message)[N]) : CStatusMessage(severity, QStringView(message)) {}
         CStatusMessage(StatusSeverity severity, const QString &message);
+        //! @}
 
         //! Constructor, also a validation messsage can be directly created
+        //! @{
+        template <size_t N>
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N], bool validation = false) : CStatusMessage(categories, severity, QStringView(message), validation) {}
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation = false);
+        //! @}
+
+        //! Deleted constructor, to prevent inefficient construction from byte string literal.
+        //! Explicit so as to avoid ambiguities with functions overloaded on QString and CStatusMessage.
+        //! @{
+        explicit CStatusMessage(const char *message) = delete;
+        explicit CStatusMessage(StatusSeverity severity, const char *message) = delete;
+        explicit CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char *message, bool validation = false) = delete;
+        //! @}
 
         //! Construct from a Qt logging triple
         //! \sa QtMessageHandler
@@ -491,6 +510,10 @@ namespace BlackMisc
         static void registerMetadata();
 
     private:
+        CStatusMessage(QStringView message);
+        CStatusMessage(StatusSeverity severity, QStringView message);
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation);
+
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
 
