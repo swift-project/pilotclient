@@ -275,9 +275,10 @@ namespace BlackMisc
         IAircraftModelLoader *CMultiAircraftModelLoaderProvider::initLoader(const CSimulatorInfo &simulator)
         {
             IAircraftModelLoader *loader = IAircraftModelLoader::createModelLoader(simulator, this);
-            connect(loader, &IAircraftModelLoader::loadingFinished, this, &CMultiAircraftModelLoaderProvider::loadingFinished);
+            connect(loader, &IAircraftModelLoader::loadingFinished,    this, &CMultiAircraftModelLoaderProvider::loadingFinished);
             connect(loader, &IAircraftModelLoader::diskLoadingStarted, this, &CMultiAircraftModelLoaderProvider::diskLoadingStarted);
-            connect(loader, &IAircraftModelLoader::cacheChanged, this, &CMultiAircraftModelLoaderProvider::cacheChanged);
+            connect(loader, &IAircraftModelLoader::cacheChanged,       this, &CMultiAircraftModelLoaderProvider::cacheChanged);
+            connect(loader, &IAircraftModelLoader::loadingProgress,    this, &CMultiAircraftModelLoaderProvider::loadingProgress);
             return loader;
         }
 

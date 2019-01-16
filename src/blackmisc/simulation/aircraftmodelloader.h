@@ -138,6 +138,12 @@ namespace BlackMisc
             //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
             void loadingFinished(const BlackMisc::CStatusMessageList &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
+            //! Loading progress, normally from disk
+            //! \param simulator corresponding simulator
+            //! \param message a progress message which can be sent by each individual loader implementation as needed
+            //! \param progressPercentage 0-100 or -1 if not available
+            void loadingProgress(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &message, int progressPercentage);
+
             //! Relayed from centralized caches
             //! \remark this can result from loading, the cache changed elsewhere or clearing data
             void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -223,6 +229,9 @@ namespace BlackMisc
 
             //! \copydoc IAircraftModelLoader::diskLoadingStarted
             void diskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+
+            //! \copydoc IAircraftModelLoader::loadingProgress
+            void loadingProgress(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &message, int progressPercentage);
 
             //! \copydoc IAircraftModelLoader::cacheChanged
             void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);

@@ -57,9 +57,10 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this, &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished,    this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
             connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingProgress,    this, &CDbOwnModelsComponent::onModelLoadingProgress, Qt::QueuedConnection);
+            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged,       this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
@@ -605,7 +606,14 @@ namespace BlackGui
         void CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
         {
             const CStatusMessage msg = CLogMessage(this).info(u"Started disk loading for '%1' in mode '%2'") << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
-            this->showOverlayMessage(msg, 5000);
+            this->showOverlayHTMLMessage(msg, 5000);
+        }
+
+        void CDbOwnModelsComponent::onModelLoadingProgress(const CSimulatorInfo &simulator, const QString &message, int progress)
+        {
+            CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2") << simulator.toQString(true) << message;
+            this->showOverlayHTMLMessage(loadingMsg, 5000);
+            Q_UNUSED(progress);
         }
 
         void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
@@ -628,7 +636,10 @@ namespace BlackGui
                 }
 
                 // overlay
-                if (!m.isEmpty() && info == IAircraftModelLoader::ParsedData) { this->showOverlayMessage(m, 5000); }
+                if (!m.isEmpty() && info == IAircraftModelLoader::ParsedData)
+                {
+                    this->showOverlayHTMLMessage(m, 5000);
+                }
 
                 // signal
                 emit this->successfullyLoadedModels(simulator, modelsLoaded);
