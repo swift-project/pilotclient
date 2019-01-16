@@ -27,15 +27,15 @@ namespace BlackGui
             m_description(description.trimmed()),
             m_combinedType(combinedType.trimmed().toUpper())
         {
-            this->m_valid = !(this->m_id < 0 && this->m_combinedType.isEmpty() && this->m_designator.isEmpty() &&
-                              this->m_family.isEmpty() && this->m_description.isEmpty() && this->m_manufacturer.isEmpty());
+            m_valid = !(m_id < 0 && m_combinedType.isEmpty() && m_designator.isEmpty() &&
+                              m_family.isEmpty() && m_description.isEmpty() && m_manufacturer.isEmpty());
         }
 
         CAircraftIcaoCodeList CAircraftIcaoFilter::filter(const CAircraftIcaoCodeList &inContainer) const
         {
             if (!this->isValid()) { return inContainer; }
             CAircraftIcaoCodeList outContainer;
-            const bool filterCombinedCode = !this->m_combinedType.isEmpty() && !this->m_combinedType.contains('-') && CAircraftIcaoCode::isValidCombinedType(this->m_combinedType);
+            const bool filterCombinedCode = !m_combinedType.isEmpty() && !m_combinedType.contains('-') && CAircraftIcaoCode::isValidCombinedType(m_combinedType);
 
             for (const CAircraftIcaoCode &icao : inContainer)
             {

@@ -347,6 +347,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override
             {
                 Q_UNUSED(missingOnly);
+                logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CMatchingStatistics();
             }
 
@@ -354,11 +355,13 @@ namespace BlackCore
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override
             {
                 Q_UNUSED(setup);
+                logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::setMatchingSetup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override
             {
+                logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CAircraftMatcherSetup();
             }
 
@@ -368,6 +371,7 @@ namespace BlackCore
                 Q_UNUSED(simulator);
                 return BlackMisc::CStatusMessageList();
             }
+
         };
     } // namespace
 } // namespace

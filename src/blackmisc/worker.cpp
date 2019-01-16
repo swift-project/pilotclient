@@ -195,7 +195,7 @@ namespace BlackMisc
 
     void CContinuousWorker::startUpdating(int updateTimeSecs)
     {
-        Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Worker not yet started");
+        Q_ASSERT_X(this->hasStarted(), Q_FUNC_INFO, "Worker not yet started");
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             // shift in correct thread

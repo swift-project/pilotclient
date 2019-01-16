@@ -31,7 +31,7 @@ namespace BlackCore
     {
         const CLogCategoryList &CBackgroundDataUpdater::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::worker() };
+            static const CLogCategoryList cats({ CLogCategory::worker(), CLogCategory::modelSetCache(), CLogCategory::modelCache() });
             return cats;
         }
 

@@ -61,9 +61,6 @@ namespace BlackGui
         void CSettingsMatchingComponent::showButtons(bool show)
         {
             ui->fr_Buttons->setVisible(show);
-            // ui->pb_MatchingAgain->setVisible(show);
-            // ui->pb_Reload->setVisible(show);
-            // ui->pb_Save->setVisible(show);
         }
 
         void CSettingsMatchingComponent::onSavePressed() const

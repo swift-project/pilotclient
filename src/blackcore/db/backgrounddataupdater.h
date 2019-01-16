@@ -14,8 +14,8 @@
 
 #include "blackcore/data/dbcaches.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
 
@@ -48,7 +48,7 @@ namespace BlackCore
             void consolidating(bool running);
 
         private:
-            mutable QReadWriteLock m_lockMsg;    //!< lock snapshot
+            mutable QReadWriteLock m_lockMsg;    //!< lock history messages
             std::atomic_int  m_cycle  { 0 };     //!< cycle
             std::atomic_bool m_inWork { false }; //!< indicates a running update
             std::atomic_bool m_updatePublishedModels { true };   //!< update when models have been updated

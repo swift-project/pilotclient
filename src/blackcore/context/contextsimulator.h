@@ -271,7 +271,7 @@ namespace BlackCore
             //! Repeat all matchings
             virtual int doMatchingsAgain() = 0;
 
-            //! Repeat the matching
+            //! Repeat the matching callsign
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
             //! Current matching statistics
