@@ -22,6 +22,8 @@
 #include <QJsonValue>
 #include <QList>
 #include <QMultiMap>
+#include <QFileInfo>
+#include <QDir>
 #include <tuple>
 
 using namespace BlackMisc::Network;
@@ -361,7 +363,7 @@ namespace BlackMisc
         {
             const QMap<QString, int> modelStrings = this->countPerModelString();
             CAircraftModelList duplicates;
-            for (const auto &pair : makePairsRange(modelStrings))
+            for (const auto pair : makePairsRange(modelStrings))
             {
                 if (pair.second > 1)
                 {
@@ -1150,6 +1152,88 @@ namespace BlackMisc
                     invalidModels.push_back(model);
                 }
             }
+            return msgs;
+        }
+
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, bool alreadySorted) const
+        {
+            invalidModels.clear();
+            validModels.clear();
+            stopped = false;
+
+            CStatusMessageList msgs;
+            QSet<QString> failedFiles;
+            QSet<QString> workingFiles;
+            int failedFilesCount = 0;
+
+            const bool caseSensitive = CFileUtils::isFileNameCaseSensitiv();
+            for (const CAircraftModel &model : *this)
+            {
+                bool ok = false;
+                do
+                {
+                    if (!model.hasModelString())
+                    {
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No model string");
+                        msgs.push_back(m);
+                        break;
+                    }
+
+                    if (!model.hasFileName())
+                    {
+                        if (ignoreEmpty) { continue; }
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', no file name").arg(model.getModelStringAndDbKey()), true);
+                        msgs.push_back(m);
+                        break;
+                    }
+
+                    const QString fn(caseSensitive ? model.getFileName() : model.getFileNameLowerCase());
+                    if (failedFiles.contains(fn))
+                    {
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', known failed file '%2' skipped").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
+                        msgs.push_back(m);
+                        break;
+                    }
+
+                    if (workingFiles.contains(fn) || model.hasExistingCorrespondingFile())
+                    {
+                        ok = true;
+                        workingFiles.insert(fn);
+                        // const CStatusMessage m(this, CStatusMessage::SeverityInfo, QStringLiteral("'%1', file '%2' existing").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
+                        // msgs.push_back(m);
+                        break;
+                    }
+
+                    failedFiles.insert(fn);
+                    failedFilesCount++;
+                    const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', file '%2' not existing").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
+                    msgs.push_back(m);
+                }
+                while (false);
+
+                if (ok)
+                {
+                    validModels.push_back(model);
+                }
+                else
+                {
+                    invalidModels.push_back(model);
+                }
+
+                if (stopAtFailedFiles > 0 && failedFilesCount >= stopAtFailedFiles)
+                {
+                    stopped = true;
+                    const CStatusMessage m(this, CStatusMessage::SeverityWarning, QStringLiteral("Stopping after %1 failed files").arg(failedFilesCount));
+                    msgs.push_back(m);
+                    break;
+                }
+            }
+
+            // Summary
+            const CStatusMessage m(this, CStatusMessage::SeverityInfo, QStringLiteral("Valid models: %1").arg(validModels.size()));
+            msgs.push_back(m);
+
+            // done
             return msgs;
         }
 

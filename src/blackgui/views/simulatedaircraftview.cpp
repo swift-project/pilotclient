@@ -162,7 +162,7 @@ namespace BlackGui
 
         void CSimulatedAircraftView::requestTempDisable()
         {
-            if (!m_menus.testFlag(MenuCanStashModels)) { return; }
+            if (!m_menus.testFlag(MenuDisableModelsTemp)) { return; }
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects().getModels());
             emit this->requestTempDisableModelsForMatching(models);

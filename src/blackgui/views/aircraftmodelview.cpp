@@ -35,6 +35,7 @@
 #include <QString>
 #include <QWidget>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -387,14 +388,14 @@ namespace BlackGui
 
         void CAircraftModelView::toggleHighlightStashedModels()
         {
-            bool h = derivedModel()->highlightModelStrings();
+            const bool h = derivedModel()->highlightModelStrings();
             derivedModel()->setHighlightModelStrings(!h);
             emit toggledHighlightStashedModels();
         }
 
         void CAircraftModelView::toggleHighlightInvalidModels()
         {
-            bool h = this->highlightModelStrings();
+            const bool h = this->highlightModelStrings();
             this->setHighlightModelStrings(!h);
         }
 
@@ -418,7 +419,7 @@ namespace BlackGui
 
         void CAircraftModelView::requestTempDisable()
         {
-            if (!m_menus.testFlag(MenuCanStashModels)) { return; }
+            if (!m_menus.testFlag(MenuDisableModelsTemp)) { return; }
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects());
             emit this->requestTempDisableModelsForMatching(models);

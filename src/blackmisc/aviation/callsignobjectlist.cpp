@@ -8,9 +8,9 @@
  */
 
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/flightplanlist.h"
@@ -66,6 +66,14 @@ namespace BlackMisc
         QStringList ICallsignObjectList<OBJ, CONTAINER>::getCallsignStrings(bool sorted) const
         {
             return this->getCallsigns().getCallsignStrings(sorted);
+        }
+
+        template<class OBJ, class CONTAINER>
+        QString ICallsignObjectList<OBJ, CONTAINER>::getCallsignsAsString(const QString &separator, bool sorted) const
+        {
+            if (this->container().isEmpty()) { return QString(); }
+            const QStringList callsigns = this->getCallsignStrings(sorted);
+            return callsigns.join(separator);
         }
 
         template <class OBJ, class CONTAINER>
@@ -292,6 +300,7 @@ namespace BlackMisc
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CFlightPlan, BlackMisc::Aviation::CFlightPlanList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;

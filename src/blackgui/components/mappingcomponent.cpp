@@ -423,6 +423,8 @@ namespace BlackGui
             if (sGui && sGui->getIContextSimulator())
             {
                 sGui->getIContextSimulator()->disableModelsForMatching(models, true);
+                const CStatusMessage m = CLogMessage(this).info(u"Disabled %1 model(s): %2") << models.size() << models.getCallsignsAsString(", ", true);
+                this->showOverlayHTMLMessage(m, OverlayMessageMs);
             }
         }
 

@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
@@ -53,6 +54,7 @@ namespace BlackMisc
             public CSequence<CAircraftModel>,
             public Db::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
             public IOrderableList<CAircraftModel, CAircraftModelList>,
+            public Aviation::ICallsignObjectList<CAircraftModel, CAircraftModelList>,
             public Mixin::MetaType<CAircraftModelList>
         {
         public:
@@ -396,6 +398,9 @@ namespace BlackMisc
 
             //! Validate distributors
             CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+
+            //! Validate distributors
+            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, bool alreadySorted = false) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;
