@@ -96,7 +96,7 @@ namespace BlackGui
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled);
             connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-            connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
+            connect(ui->pb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
             connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
             ui->form_FsdDetails->showEnableInfo(true);
@@ -132,7 +132,7 @@ namespace BlackGui
             connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
             connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao, Qt::QueuedConnection);
             connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao, Qt::QueuedConnection);
-            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::reverseLookupAircraftModel);
+            connect(ui->pb_SimulatorLookup, &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
             connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
             if (sGui && sGui->getIContextSimulator())
@@ -456,8 +456,8 @@ namespace BlackGui
             CGuiAircraftValues values;
             values.ownCallsign = CCallsign(ui->le_Callsign->text().trimmed().toUpper());
             values.ownAircraftIcao = ui->selector_AircraftIcao->getAircraftIcao();
-            values.ownAirlineIcao = ui->selector_AirlineIcao->getAirlineIcao();
-            values.ownAircraftCombinedType = ui->le_AircraftCombinedType->text().trimmed().toUpper();
+            values.ownAirlineIcao  = ui->selector_AirlineIcao->getAirlineIcao();
+            values.ownAircraftCombinedType   = ui->le_AircraftCombinedType->text().trimmed().toUpper();
             values.ownAircraftSimulatorModel = ui->le_SimulatorModel->text().trimmed().toUpper();
             return values;
         }
@@ -670,7 +670,7 @@ namespace BlackGui
             emit this->requestLoginPage();
         }
 
-        void CLoginComponent::reverseLookupAircraftModel()
+        void CLoginComponent::lookupOwnAircraftModel()
         {
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
@@ -682,17 +682,26 @@ namespace BlackGui
             if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown()) { return; }
             const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
             if (isNetworkConnected) { return; }
-            const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
-            if (!model.hasModelString())
+
+            // update with latest DB data
+            CAircraftModel reverseModel(model);
+            if (sGui->hasWebDataServices())
             {
-                CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << model.toQString();
+                reverseModel = sGui->getWebDataServices()->getModelForModelString(model.getModelString());
+                if (!reverseModel.isLoadedFromDb()) { reverseModel = model; } // reset if not found
+            }
+
+            const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
+            if (!reverseModel.hasModelString())
+            {
+                CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << reverseModel.toQString();
                 CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
                 return;
             }
             this->setOwnModelAndIcaoValues();
 
             // open dialog for model mapping
-            if (m_autoPopupWizard && !model.isLoadedFromDb())
+            if (m_autoPopupWizard && !reverseModel.isLoadedFromDb())
             {
                 this->mappingWizard();
             }

@@ -39,7 +39,7 @@ namespace BlackGui
             ui->lblp_Password->setToolTips("ok", "wrong");
             ui->lblp_RealName->setToolTips("ok", "wrong");
 
-            connect(ui->tb_UnhidePassword, &QToolButton::clicked, this, &CPilotForm::unhidePassword);
+            connect(ui->pb_UnhidePassword, &QPushButton::clicked, this, &CPilotForm::unhidePassword);
             connect(ui->le_Id, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
             connect(ui->comp_HomeAirport, &CAirportSmallCompleter::editingFinished, this, &CPilotForm::doValidation);
             connect(ui->le_Password, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);

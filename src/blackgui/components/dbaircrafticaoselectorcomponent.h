@@ -64,7 +64,7 @@ namespace BlackGui
             //! \return changed
             bool setAircraftIcao(int key);
 
-            //! Distributor
+            //! ICAO code
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
 
             //! Raw designator

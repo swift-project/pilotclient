@@ -30,9 +30,9 @@
     <widget class="QLineEdit" name="le_Icao"/>
    </item>
    <item>
-    <widget class="QToolButton" name="tb_Dialog">
+    <widget class="QPushButton" name="pb_Dialog">
      <property name="text">
-      <string>...</string>
+      <string/>
      </property>
      <property name="icon">
       <iconset resource="../../blackmisc/blackmisc.qrc">
@@ -44,7 +44,7 @@
  </widget>
  <tabstops>
   <tabstop>le_Icao</tabstop>
-  <tabstop>tb_Dialog</tabstop>
+  <tabstop>pb_Dialog</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

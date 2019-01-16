@@ -183,8 +183,8 @@ namespace BlackGui
             //! Auto-logoff detection
             void autoLogoffDetection();
 
-            //! Reverse lookup model
-            void reverseLookupAircraftModel();
+            //! Lookup own model
+            void lookupOwnAircraftModel();
 
             //! Simulator model has been changed
             void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);

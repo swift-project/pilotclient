@@ -42,6 +42,9 @@ namespace BlackMisc
             //! Extract key from string like "MyAircraft (33)"
             static int extractIntegerKey(const QString &stringWithKey);
 
+            //! Strip the parentheses part, e.g. "foo (123)" => "foo"
+            static QString stripKeyInParentheses(const QString &valueWithKey);
+
             //! Parse a timestamp object
             static QDateTime parseTimestamp(const QString &timestamp);
 

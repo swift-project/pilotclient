@@ -105,24 +105,24 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="6">
-    <widget class="QToolButton" name="tb_UnhidePassword">
-     <property name="toolTip">
-      <string>unhide password</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="5" colspan="2">
     <widget class="BlackGui::Components::CAirportSmallCompleter" name="comp_HomeAirport">
      <property name="focusPolicy">
       <enum>Qt::StrongFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QPushButton" name="pb_UnhidePassword">
+     <property name="toolTip">
+      <string>unhide password</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
      </property>
     </widget>
    </item>
@@ -144,7 +144,7 @@
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>le_Password</tabstop>
-  <tabstop>tb_UnhidePassword</tabstop>
+  <tabstop>pb_UnhidePassword</tabstop>
   <tabstop>le_RealName</tabstop>
  </tabstops>
  <resources>

@@ -34,7 +34,7 @@ namespace BlackGui
             connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CAirportSmallCompleter::onAirportsChanged);
             connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::onIcaoChanged);
             connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::editingFinished);
-            connect(ui->tb_Dialog, &QToolButton::clicked, this, &CAirportSmallCompleter::showAirportsDialog);
+            connect(ui->pb_Dialog, &QPushButton::clicked, this, &CAirportSmallCompleter::showAirportsDialog);
             this->onAirportsChanged();
         }
 
@@ -80,13 +80,13 @@ namespace BlackGui
         void CAirportSmallCompleter::setReadOnly(bool readOnly)
         {
             ui->le_Icao->setReadOnly(readOnly);
-            ui->tb_Dialog->setEnabled(!readOnly);
+            ui->pb_Dialog->setEnabled(!readOnly);
         }
 
         void CAirportSmallCompleter::clear()
         {
             ui->le_Icao->clear();
-            this->m_current = CAirport();
+            m_current = CAirport();
         }
 
         void CAirportSmallCompleter::onIcaoChanged()

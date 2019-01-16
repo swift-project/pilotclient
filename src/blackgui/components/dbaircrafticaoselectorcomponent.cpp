@@ -67,7 +67,7 @@ namespace BlackGui
                 setIcao = sGui->getWebDataServices()->smartAircraftIcaoSelector(icao);
             }
 
-            const QString icaoStr(this->m_display == DisplayIcaoAndId ? setIcao.getDesignatorDbKey() : setIcao.getCombinedIcaoStringWithKey());
+            const QString icaoStr(m_display == DisplayIcaoAndId ? setIcao.getDesignatorDbKey() : setIcao.getCombinedIcaoStringWithKey());
             ui->le_Aircraft->setText(icaoStr);
             ui->lbl_Description->setText(setIcao.getManufacturer());
             if (setIcao != m_currentIcao)
@@ -98,14 +98,22 @@ namespace BlackGui
 
         CAircraftIcaoCode CDbAircraftIcaoSelectorComponent::getAircraftIcao() const
         {
-            QString text(ui->le_Aircraft->text().trimmed().toUpper());
-            int key = CDatastoreUtility::extractIntegerKey(text);
+            const QString text(ui->le_Aircraft->text().trimmed().toUpper());
+            const int key = CDatastoreUtility::extractIntegerKey(text);
             if (key < 0)
             {
-                if (this->m_currentIcao.getDesignator() == text) { return this->m_currentIcao; }
-                return CAircraftIcaoCode(text);
+                const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
+                if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
+                return CAircraftIcaoCode(icaoOnly);
             }
             CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
+            if (icao.isNull())
+            {
+                // did not find by key
+                const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
+                if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
+                return CAircraftIcaoCode(icaoOnly);
+            }
             return icao;
         }
 
@@ -209,7 +217,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    this->m_completerIcaoDescription.reset(nullptr);
+                    m_completerIcaoDescription.reset(nullptr);
                 }
             }
         }

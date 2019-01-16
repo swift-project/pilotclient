@@ -61,6 +61,14 @@ namespace BlackMisc
             return ok ? key : -1;
         }
 
+        QString CDatastoreUtility::stripKeyInParentheses(const QString &valueWithKey)
+        {
+            const int i = valueWithKey.indexOf('(');
+            if (i < 0) { return valueWithKey.trimmed(); }
+            if (i < 1) { return QStringLiteral(""); }
+            return valueWithKey.left(i - 1).trimmed();
+        }
+
         QDateTime CDatastoreUtility::parseTimestamp(const QString &timestamp)
         {
             if (timestamp.isEmpty()) { return QDateTime(); }

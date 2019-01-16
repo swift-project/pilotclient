@@ -105,6 +105,12 @@ BlackGui--Components--CSetupLoadingDialog #fr_Details {
 }
 */
 
+/** dialog for airports **/
+BlackGui--Components--CAirportDialog {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
 /* core settings */
 /* needed for CCoreSettingsDialog */
 /* BlackGui::Components::CSettingsComponent */
@@ -222,10 +228,9 @@ QPushButton {
   color: yellow;  /* font color */
   padding: 0px 0.25em 0px 0.25em;
   margin-right: 5px;
-  min-width:40px;
-  min-height:20px;
+  min-width:  25px;
+  min-height: 20px;
 }
-
 
 QPushButton::disabled {
   background-color: rgba(77, 88, 99, 128); /* slated gray if a channel) */

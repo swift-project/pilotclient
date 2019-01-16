@@ -473,9 +473,15 @@
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="tb_SimulatorIcaoReverseLookup">
-              <property name="text">
-               <string>...</string>
+             <widget class="QPushButton" name="pb_SimulatorLookup">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>refresh</string>
               </property>
               <property name="icon">
                <iconset resource="../../blackmisc/blackmisc.qrc">
@@ -484,9 +490,15 @@
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="tb_MappingWizard">
-              <property name="text">
-               <string>...</string>
+             <widget class="QPushButton" name="pb_MappingWizard">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>quick mapping wizard</string>
               </property>
               <property name="icon">
                <iconset resource="../../blackmisc/blackmisc.qrc">
@@ -924,8 +936,8 @@
   <tabstop>tw_Details</tabstop>
   <tabstop>form_Pilot</tabstop>
   <tabstop>le_SimulatorModel</tabstop>
-  <tabstop>tb_SimulatorIcaoReverseLookup</tabstop>
-  <tabstop>tb_MappingWizard</tabstop>
+  <tabstop>pb_SimulatorLookup</tabstop>
+  <tabstop>pb_MappingWizard</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
