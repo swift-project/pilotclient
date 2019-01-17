@@ -337,6 +337,9 @@ namespace BlackMisc
             //! Models with aliases
             int countAliases() const;
 
+            //! Sort by file path
+            void sortByFileName();
+
             //! Update distributor, all models in list are set to given distributor
             void updateDistributor(const CDistributor &distributor);
 

@@ -249,6 +249,11 @@ namespace BlackMisc
         return CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
     }
 
+    bool CFileUtils::isFileNameCaseSensitive()
+    {
+        return CFileUtils::osFileNameCaseSensitivity() == Qt::CaseSensitive;
+    }
+
     bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs)
     {
         if (directoryPath.isEmpty() || excludePattern.isEmpty()) { return false; }

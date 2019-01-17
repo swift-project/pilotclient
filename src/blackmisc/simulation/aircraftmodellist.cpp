@@ -874,6 +874,18 @@ namespace BlackMisc
             return count;
         }
 
+        void CAircraftModelList::sortByFileName()
+        {
+            if (CFileUtils::isFileNameCaseSensitive())
+            {
+                this->sortBy(&CAircraftModel::getFileName);
+            }
+            else
+            {
+                this->sortBy(&CAircraftModel::getFileNameLowerCase);
+            }
+        }
+
         void CAircraftModelList::updateDistributor(const CDistributor &distributor)
         {
             for (CAircraftModel &model : *this)
@@ -1166,7 +1178,7 @@ namespace BlackMisc
             QSet<QString> workingFiles;
             int failedFilesCount = 0;
 
-            const bool caseSensitive = CFileUtils::isFileNameCaseSensitiv();
+            const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
             for (const CAircraftModel &model : *this)
             {
                 bool ok = false;

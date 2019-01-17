@@ -113,6 +113,9 @@ namespace BlackMisc
         //! Case sensitivity for current OS
         static Qt::CaseSensitivity osFileNameCaseSensitivity();
 
+        //! Case sensitive file names
+        static bool isFileNameCaseSensitive();
+
         //! Is directory path matching the exclude path?
         static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 

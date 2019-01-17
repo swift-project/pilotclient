@@ -729,6 +729,19 @@ namespace BlackMisc
             return (fi.exists() && fi.isReadable());
         }
 
+        QDir CAircraftModel::getFileDirectory() const
+        {
+            if (!this->hasFileName()) { return QDir(); }
+            const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
+            return fi.absoluteDir();
+        }
+
+        QString CAircraftModel::getFileDirectoryPath() const
+        {
+            if (!this->hasFileName()) { return QStringLiteral(""); }
+            return this->getFileDirectory().absolutePath();
+        }
+
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (sensitivity == Qt::CaseInsensitive) { return caseInsensitiveStringCompare(modelString, m_modelString); }

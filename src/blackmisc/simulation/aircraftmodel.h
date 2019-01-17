@@ -40,6 +40,7 @@
 #include <QStringList>
 #include <Qt>
 #include <QFileInfo>
+#include <QDir>
 #include <tuple>
 
 namespace BlackMisc
@@ -420,13 +421,23 @@ namespace BlackMisc
             // ---------------- simulator file related functions -------------------
 
             //! File name (corresponding data for simulator, only available if representing simulator model
+            //! \remark normally parh and name, like with QFile name
             const QString &getFileName() const { return m_fileName; }
+
+            //! File name as lower case
+            QString getFileNameLowerCase() const { return m_fileName.toLower(); }
 
             //! File name?
             bool hasFileName() const { return !m_fileName.isEmpty(); }
 
             //! Does the corresponding file exist?
             bool hasExistingCorrespondingFile() const;
+
+            //! Directory
+            QDir getFileDirectory() const;
+
+            //! Directory path if any
+            QString getFileDirectoryPath() const;
 
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
