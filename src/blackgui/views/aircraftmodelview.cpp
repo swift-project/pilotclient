@@ -100,7 +100,7 @@ namespace BlackGui
         int CAircraftModelView::applyToSelected(const CDistributor &distributor)
         {
             if (!hasSelection()) { return 0; }
-            int c = this->updateSelected(CVariant::from(distributor), CAircraftModel::IndexDistributor);
+            const int c = this->updateSelected(CVariant::from(distributor), CAircraftModel::IndexDistributor);
             return c;
         }
 

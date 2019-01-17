@@ -179,7 +179,7 @@ namespace BlackGui
         void CConsolidateWithDbDataMenu::customMenu(CMenuActions &menuActions)
         {
             const CAircraftModelView *mv = modelView();
-            if (mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
+            if (!mv || mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
             if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
 
             menuActions.addMenuConsolidateModels();
@@ -194,9 +194,7 @@ namespace BlackGui
 
         void CConsolidateWithDbDataMenu::consolidateData()
         {
-            BLACK_VERIFY_X(sGui, Q_FUNC_INFO, "Missing sGui");
-            if (!sGui->hasWebDataServices()) { return; }
-
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
             if (dbModels.isEmpty())
             {

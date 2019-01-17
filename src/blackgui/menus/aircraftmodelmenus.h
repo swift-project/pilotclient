@@ -81,7 +81,7 @@ namespace BlackGui
             QAction *m_modelConverterX = nullptr;
         };
 
-        //! Merge with DB data
+        //! Consolidate/merge with DB data
         class CConsolidateWithDbDataMenu : public IAircraftModelViewMenu
         {
             Q_OBJECT
