@@ -953,7 +953,7 @@ namespace BlackCore
                 resetAircraft.resetToNetworkModel();
                 this->xCtxAddedRemoteAircraftReadyForModelMatching(resetAircraft);
             });
-            return false;
+            return true;
         }
 
         void CContextSimulator::onSimulatorStarted(const CSimulatorPluginInfo &info)

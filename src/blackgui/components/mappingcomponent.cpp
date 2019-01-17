@@ -315,8 +315,8 @@ namespace BlackGui
         void CMappingComponent::doMatchingsAgain()
         {
             if (!sGui || !sGui->getIContextSimulator() || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
-            const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
-            CLogMessage(this).info(u"Triggered re-apping of %1 aircraft") << reMatchedNo;
+            const int rematchedNumber = sGui->getIContextSimulator()->doMatchingsAgain();
+            CLogMessage(this).info(u"Triggered re-matching of %1 aircraft") << rematchedNumber;
         }
 
         void CMappingComponent::onSaveAircraft()

@@ -23,6 +23,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Models;
@@ -45,12 +46,13 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
-        void CSimulatedAircraftView::configureMenu(bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag)
+        void CSimulatedAircraftView::configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag)
         {
-            m_withMenuEnableAircraft = menuEnableAircraft;
-            m_withMenuFastPosition = menuFastPositionUpdates;
+            m_withRecalculate            = menuRecalculate;
+            m_withMenuEnableAircraft     = menuEnableAircraft;
+            m_withMenuFastPosition       = menuFastPositionUpdates;
             m_withMenuHighlightAndFollow = menuHighlightAndFollow;
-            m_withMenuEnableGndFlag = menuGndFlag;
+            m_withMenuEnableGndFlag      = menuGndFlag;
         }
 
         void CSimulatedAircraftView::configureMenuFastPositionUpdates(bool menuFastPositionUpdates)
@@ -65,17 +67,26 @@ namespace BlackGui
             menuActions.addMenuDisplayModels();
             menuActions.addMenuDataTransfer();
 
-            menuActions.addAction(CIcons::appInterpolation16(), "Recalculate all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::recalculateAllAircraft });
+            if (m_menus.testFlag(MenuDisableModelsTemp) && this->hasSelection())
+            {
+                menuActions.addAction(CIcons::delete16(), "Temp.disable model from set", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestTempDisable });
+            }
+
+            if (m_withRecalculate)
+            {
+                menuActions.addAction(CIcons::appInterpolation16(), "Re-calculate all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::recalculateAllAircraft });
+                menuActions.addAction(CIcons::appInterpolation16(), "Re-matching all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::doMatchingsAgain });
+                if (this->hasSelection())
+                {
+                    menuActions.addAction(CIcons::appInterpolation16(), "Re-matching selected", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::doMatchingsAgainForSelected });
+                }
+            }
 
             if (m_withMenuEnableAircraft && !this->isEmpty())
             {
                 menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
-                menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
                 menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
-                if (m_menus.testFlag(MenuDisableModelsTemp) && this->hasSelection())
-                {
-                    menuActions.addAction(CIcons::delete16(), "Temp.disable model", CMenuAction::pathModel(), { this, &CSimulatedAircraftView::requestTempDisable });
-                }
+                menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
             }
 
             if (this->hasSelection())
@@ -239,6 +250,26 @@ namespace BlackGui
             IContextSimulator *simContext = simulatorContext();
             if (!simContext) { return; }
             simContext->recalculateAllAircraft();
+        }
+
+        void CSimulatedAircraftView::doMatchingsAgain()
+        {
+            IContextSimulator *simContext = simulatorContext();
+            if (!simContext) { return; }
+            const int rematchedNumber = simContext->doMatchingsAgain();
+            CLogMessage(this).info(u"Triggered re-matching of %1 aircraft") << rematchedNumber;
+        }
+
+        void CSimulatedAircraftView::doMatchingsAgainForSelected()
+        {
+            IContextSimulator *simContext = simulatorContext();
+            if (!simContext) { return; }
+            if (!this->hasSelection()) { return; }
+            const CCallsign cs = this->selectedObject().getCallsign();
+            if (simContext->doMatchingAgain(cs))
+            {
+                CLogMessage(this).info(u"Triggered re-matching of '%1'") << cs.asString();
+            }
         }
 
         void CSimulatedAircraftView::enableFastPositionUpdates(const CSimulatedAircraft &aircraft)

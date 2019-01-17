@@ -51,7 +51,7 @@ namespace BlackGui
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
 
             //! Configure the menu
-            void configureMenu(bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag);
+            void configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag);
 
             //! Configure fast position updates menu
             void configureMenuFastPositionUpdates(bool menuFastPositionUpdates);
@@ -113,6 +113,12 @@ namespace BlackGui
             //! Fully recalculate all aircraft
             void recalculateAllAircraft();
 
+            //! Match all aircraft again
+            void doMatchingsAgain();
+
+            //! Match all aircraft again
+            void doMatchingsAgainForSelected();
+
             //! Enable fast position updates
             void enableFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
@@ -128,6 +134,7 @@ namespace BlackGui
             //! Network context
             static BlackCore::Context::IContextNetwork *networkContext();
 
+            bool m_withRecalculate            = true;
             bool m_withMenuHighlightAndFollow = true;
             bool m_withMenuEnableAircraft     = true;
             bool m_withMenuEnableGndFlag      = true;

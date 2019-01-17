@@ -103,7 +103,7 @@ namespace BlackGui
 
         const CMenuAction &CMenuAction::subMenuDisplayModels()
         {
-            static const CMenuAction subdir(CIcons::appAircraft16(), "Display models", CMenuAction::pathClientSimulationDisplay());
+            static const CMenuAction subdir(CIcons::appAircraft16(), "Display and render models", CMenuAction::pathClientSimulationDisplay());
             return subdir;
         }
 
