@@ -43,10 +43,11 @@ namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace BlackGui
 {
     namespace Filters { class CAircraftModelFilterDialog; }
-    namespace Menus { class CMenuActions; }
+    namespace Menus   { class CMenuActions; }
     namespace Views
     {
         class CAircraftModelStatisticsDialog;
+        class CAircraftModelValidationDialog;
 
         //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView :
@@ -157,8 +158,12 @@ namespace BlackGui
             //! Dialog about model statistics
             void displayModelStatisticsDialog();
 
+            //! File validation dialog
+            void displayModelValidationDialog();
+
             bool m_stashingClearsSelection = true; //!< stashing unselects
-            CAircraftModelStatisticsDialog *m_statisticsDialog = nullptr;
+            CAircraftModelStatisticsDialog       *m_statisticsDialog = nullptr;
+            CAircraftModelValidationDialog       *m_fileValidationDialog = nullptr;
             BlackMisc::Simulation::CSimulatorInfo m_loadingRequiresSimulator; //!< simulator required when loading
         };
     } // ns

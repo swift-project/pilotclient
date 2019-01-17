@@ -92,11 +92,6 @@ BlackGui--Components--CSetupLoadingDialog {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-BlackGui--Views--CAircraftModelStatisticsDialog {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
 /* setup load dialog details frame */
 /*
 BlackGui--Components--CSetupLoadingDialog #fr_Details {
@@ -199,6 +194,10 @@ BlackGui--Components--CSimulatorSelector::disabled {
   background: rgba(4, 105, 105, 105);
 }
 
+BlackGui--Components--CAircraftModelSetValidationDialog,
+BlackGui--Components--CCoreSettingsDialog,
+BlackGui--Views--CAircraftModelValidationDialog,
+BlackGui--Views--CAircraftModelStatisticsDialog,
 BlackGui--Components--CDownloadComponent,
 BlackGui--Components--CDownloadDialog,
 BlackGui--Components--CRawFsdMessagesComponent,

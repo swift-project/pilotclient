@@ -10,6 +10,7 @@
 #include "aircraftmodelview.h"
 #include "viewbase.h"
 #include "aircraftmodelstatisticsdialog.h"
+#include "aircraftmodelvalidationdialog.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
@@ -290,10 +291,11 @@ namespace BlackGui
 
         void CAircraftModelView::customMenu(CMenuActions &menuActions)
         {
-            // Statistics
+            // Statistics and validation
             if (!this->isEmpty())
             {
                 menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
+                menuActions.addAction(CIcons::disk16(), "Model validation", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
             }
 
             // Stash menus
@@ -428,13 +430,16 @@ namespace BlackGui
 
         void CAircraftModelView::displayModelStatisticsDialog()
         {
-            if (!m_statisticsDialog)
-            {
-                m_statisticsDialog = new CAircraftModelStatisticsDialog(this);
-            }
-
+            if (!m_statisticsDialog) { m_statisticsDialog = new CAircraftModelStatisticsDialog(this); }
             m_statisticsDialog->analyzeModels(this->container());
             m_statisticsDialog->exec();
+        }
+
+        void CAircraftModelView::displayModelValidationDialog()
+        {
+            if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
+            m_fileValidationDialog->setModels(this->selectedObjects());
+            m_fileValidationDialog->exec();
         }
     } // namespace
 } // namespace
