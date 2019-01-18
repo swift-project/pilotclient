@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "fscommonutil.h"
+#include "aircraftcfgparser.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
@@ -36,6 +37,12 @@ namespace BlackMisc
         namespace FsCommon
         {
             using FsRegistryPathPair = QList<QPair<QString, QString>>;
+
+            const CLogCategoryList &CFsCommonUtil::getLogCategories()
+            {
+                static const CLogCategoryList cats({ CLogCategory::validation(), CLogCategory::driver() });
+                return cats;
+            }
 
             QString fsxDirFromRegistryImpl()
             {
@@ -362,17 +369,16 @@ namespace BlackMisc
 
             int CFsCommonUtil::copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages)
             {
-                static const CLogCategoryList cats({ CLogCategory::validation(), CLogCategory::driver() });
                 messages.clear();
                 if (!CDirectoryUtils::existsUnemptyDirectory(CDirectoryUtils::shareTerrainProbeDirectory()))
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
                     return -1;
                 }
 
                 if (simObjectDir.isEmpty())
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No simObject directory"));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "No simObject directory"));
                     return -1;
                 }
 
@@ -380,7 +386,7 @@ namespace BlackMisc
                 QDir td(targetDir);
                 if (!td.exists())
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("Cannot access target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Cannot access target directory '%1'").arg(targetDir)));
                     return -1;
                 }
 
@@ -389,12 +395,12 @@ namespace BlackMisc
                 const bool hasDir = td.mkpath(targetDir);
                 if (!hasDir)
                 {
-                    messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, QStringLiteral("Cannot create target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Cannot create target directory '%1'").arg(targetDir)));
                     return -1;
                 }
 
                 const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, QStringLiteral("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
                 return copied;
             }
 
@@ -489,7 +495,7 @@ namespace BlackMisc
                 QStringList files;
                 for (const QString &path : locations)
                 {
-                    QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/FSX/fsx.cfg");
+                    const QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/FSX/fsx.cfg");
                     const QFileInfo fi(file);
                     if (fi.exists()) { files.push_back(fi.absoluteFilePath()); }
                 }
@@ -535,6 +541,45 @@ namespace BlackMisc
                     }
                 }
                 return paths;
+            }
+
+            CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped)
+            {
+                CAircraftModelList sorted(models);
+                sorted.sortByFileName();
+                stopped = false;
+                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, true);
+                if (stopped || validModels.isEmpty()) { return msgs; }
+
+                const int d = validModels.removeIfNotFsFamily();
+                if (d > 0)
+                {
+                    const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed %1 non FS family models").arg(d), true);
+                    msgs.push_back(m);
+                }
+
+                // all those files should work
+                int removedCfgEntries = 0;
+                const QSet<QString> fileNames = validModels.getAllFileNames();
+                for (const QString &fileName : fileNames)
+                {
+                    bool ok = false;
+                    const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
+                    const CAircraftModelList removedModels = validModels.removeIfFileButNotInSet(fileName, entries.getTitleSetUpperCase());
+                    for (const CAircraftModel &removedModel : removedModels)
+                    {
+                        removedCfgEntries++;
+                        const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1', removed because no longer in '%1'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
+                        msgs.push_back(m);
+                    }
+                }
+
+                if (removedCfgEntries < 1)
+                {
+                    const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Not removed any models, all OK!"), true);
+                    msgs.push_back(m);
+                }
+                return msgs;
             }
         } // namespace
     } // namespace

@@ -12,8 +12,10 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 #define BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
+
 #include <QSet>
 #include <QStringList>
 
@@ -27,6 +29,9 @@ namespace BlackMisc
             class BLACKMISC_EXPORT CFsCommonUtil
             {
             public:
+                //! Log categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
+
                 //! Constructor
                 CFsCommonUtil() = delete;
 
@@ -121,6 +126,10 @@ namespace BlackMisc
                 //! Get all the SimObjects files from fsx.cfg
                 // SimObjectPaths.0=SimObjects\Airplanes
                 static QSet<QString> fsxSimObjectsPaths(const QString &fsxFile, bool checked);
+
+                //! Validate aircraft.cfg entries
+                //! \remark only for FSX/P3D/FS9 models
+                static CStatusMessageList validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped);
             };
         } // namespace
     } // namespace
