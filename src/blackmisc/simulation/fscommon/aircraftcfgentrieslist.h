@@ -23,6 +23,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+#include <QSet>
 #include <Qt>
 #include <tuple>
 
@@ -48,6 +49,9 @@ namespace BlackMisc
 
                 //! All titles (aka model names)
                 QStringList getTitles(bool sorted = false) const;
+
+                //! Titles as set in upper case
+                QSet<QString> getTitleSetUpperCase() const;
 
                 //! All titles as string
                 QString getTitlesAsString(bool sorted, const QString &separator = ", ") const;

@@ -688,6 +688,30 @@ namespace BlackMisc
             return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getAirlineIcaoCode, airline);
         }
 
+        int CAircraftModelList::removeIfNotFsFamily()
+        {
+            if (this->isEmpty()) { return 0; }
+            CAircraftModelList fsOnly = this->getAllFsFamilyModels();
+            if (fsOnly.size() == this->size()) { return 0; }
+            const int delta = this->size() - fsOnly.size();
+            *this = fsOnly;
+            return delta;
+        }
+
+        CAircraftModelList CAircraftModelList::removeIfFileButNotInSet(const QString &fileName, const QSet<QString> &modelStrings)
+        {
+            CAircraftModelList removed;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.matchesFileName(fileName)) { continue; }
+                if (modelStrings.contains(model.getModelString())) { continue; }
+                removed.push_back(model);
+            }
+
+            this->removeIfIn(removed);
+            return removed;
+        }
+
         bool CAircraftModelList::replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity)
         {
             bool r = false;
@@ -1013,6 +1037,18 @@ namespace BlackMisc
             return combinedCodes;
         }
 
+        QSet<QString> CAircraftModelList::getAllFileNames() const
+        {
+            const bool cs = CFileUtils::isFileNameCaseSensitive();
+            QSet<QString> files;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasFileName()) { continue; }
+                files.insert(cs ? model.getFileName() : model.getFileNameLowerCase());
+            }
+            return files;
+        }
+
         QString CAircraftModelList::getCombinedTypesAsString(const QString &separator) const
         {
             return this->getCombinedTypes().values().join(separator);
@@ -1178,15 +1214,19 @@ namespace BlackMisc
             QSet<QString> workingFiles;
             int failedFilesCount = 0;
 
+            // sorting allows to skip multiple files as once when a file fails
+            CAircraftModelList sorted(*this);
+            if (!alreadySorted) { sorted.sortByFileName(); }
+
             const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
-            for (const CAircraftModel &model : *this)
+            for (const CAircraftModel &model : as_const(sorted))
             {
                 bool ok = false;
                 do
                 {
                     if (!model.hasModelString())
                     {
-                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No model string");
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No model string", true);
                         msgs.push_back(m);
                         break;
                     }

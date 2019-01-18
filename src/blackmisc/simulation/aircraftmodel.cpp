@@ -154,6 +154,11 @@ namespace BlackMisc
                    .arg(this->getLivery().asHtmlSummary("&nbsp;")).replace(" ", "&nbsp;");
         }
 
+        bool CAircraftModel::matchesFileName(const QString &fileName) const
+        {
+            return stringCompare(fileName, m_fileName, CFileUtils::osFileNameCaseSensitivity());
+        }
+
         CStatusMessageList CAircraftModel::verifyModelData() const
         {
             CStatusMessageList msgs;
@@ -744,15 +749,13 @@ namespace BlackMisc
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            if (sensitivity == Qt::CaseInsensitive) { return caseInsensitiveStringCompare(modelString, m_modelString); }
-            return m_modelString == modelString;
+            return stringCompare(modelString, m_modelString, sensitivity);
         }
 
         bool CAircraftModel::matchesModelStringOrAlias(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (this->matchesModelString(modelString, sensitivity)) { return true; }
-            if (sensitivity == Qt::CaseInsensitive) { return caseInsensitiveStringCompare(modelString, m_modelStringAlias); }
-            return m_modelStringAlias == modelString;
+            return stringCompare(modelString, m_modelStringAlias, sensitivity);
         }
 
         int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log) const

@@ -369,6 +369,16 @@ namespace BlackMisc
             return m_counts[CSimulatorInfo::NumberOfSimulators];
         }
 
+        int CCountPerSimulator::getCountForFsFamilySimulators() const
+        {
+            return this->getCount(CSimulatorInfo::fsx()) + this->getCount(CSimulatorInfo::p3d()) + this->getCount(CSimulatorInfo::fs9());
+        }
+
+        int CCountPerSimulator::getCountForFsxFamilySimulators() const
+        {
+            return this->getCount(CSimulatorInfo::fsx()) + this->getCount(CSimulatorInfo::p3d());
+        }
+
         int CCountPerSimulator::getMaximum() const
         {
             return *std::min_element(m_counts.begin(), m_counts.end());
@@ -401,11 +411,11 @@ namespace BlackMisc
 
         QString CCountPerSimulator::toQString() const
         {
-            return u"FSX: " % QString::number(m_counts[0]) %
-                   u" P3D: " % QString::number(m_counts[1]) %
-                   u" FS9: " % QString::number(m_counts[2]) %
+            return u"FSX: "     % QString::number(m_counts[0]) %
+                   u" P3D: "    % QString::number(m_counts[1]) %
+                   u" FS9: "    % QString::number(m_counts[2]) %
                    u" XPlane: " % QString::number(m_counts[3]) %
-                   u" FG: " % QString::number(m_counts[4]);
+                   u" FG: "     % QString::number(m_counts[4]);
         }
 
         void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)

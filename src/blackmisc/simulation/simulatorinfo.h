@@ -222,8 +222,14 @@ namespace BlackMisc
             //! Object count for given simulator
             int getCount(const CSimulatorInfo &simulator) const;
 
-            //! Unkown count
+            //! Unknown count
             int getCountForUnknownSimulators() const;
+
+            //! P3D, FSX, or FS9
+            int getCountForFsFamilySimulators() const;
+
+            //! P3D or FSX
+            int getCountForFsxFamilySimulators() const;
 
             //! Set count
             void setCount(int count, const CSimulatorInfo &simulator);

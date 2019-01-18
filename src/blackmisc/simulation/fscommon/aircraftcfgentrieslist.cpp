@@ -57,6 +57,16 @@ namespace BlackMisc
                 return titles;
             }
 
+            QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
+            {
+                QSet<QString> titlesUc;
+                for (const CAircraftCfgEntries &entries : *this)
+                {
+                    titlesUc.insert(entries.getTitle().toUpper());
+                }
+                return titlesUc;
+            }
+
             QString CAircraftCfgEntriesList::getTitlesAsString(bool sorted, const QString &separator) const
             {
                 return this->getTitles(sorted).join(separator);

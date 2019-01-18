@@ -430,6 +430,9 @@ namespace BlackMisc
             //! File name?
             bool hasFileName() const { return !m_fileName.isEmpty(); }
 
+            //! Matching file name?
+            bool matchesFileName(const QString &fileName) const;
+
             //! Does the corresponding file exist?
             bool hasExistingCorrespondingFile() const;
 

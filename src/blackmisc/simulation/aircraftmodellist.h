@@ -281,6 +281,14 @@ namespace BlackMisc
             //! \return number of elements removed
             int removeByAircraftAndAirline(const Aviation::CAircraftIcaoCode &aircraftIcao, const Aviation::CAirlineIcaoCode &airline);
 
+            //! Remove if NOT FS family model, ie. FSX/P3D/FS9
+            //! \return number of elements removed
+            int removeIfNotFsFamily();
+
+            //! Remove those models of a particular file, but not in the given set
+            //! \remark mostly used for FSX/FS9/P3D consolidation
+            CAircraftModelList removeIfFileButNotInSet(const QString &fileName, const QSet<QString> &modelStrings);
+
             //! Replace or add based on model string
             //! \return element removed?
             bool replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity);
@@ -371,6 +379,9 @@ namespace BlackMisc
 
             //! All combined types
             QSet<QString> getCombinedTypes() const;
+
+            //! All file names
+            QSet<QString> getAllFileNames() const;
 
             //! All combined types as string
             QString getCombinedTypesAsString(const QString &separator = ", ") const;
