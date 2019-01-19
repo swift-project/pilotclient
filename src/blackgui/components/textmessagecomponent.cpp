@@ -269,6 +269,7 @@ namespace BlackGui
         {
             ui->comp_AtcStations->setVisible(checked);
             ui->gb_MessageTo->setFlat(!checked);
+            if (checked) { ui->comp_AtcStations->updateStations(); }
         }
 
         void CTextMessageComponent::onSettingsChanged()
@@ -706,6 +707,7 @@ namespace BlackGui
 
         void CTextMessageComponent::updateAtcStationsButtons()
         {
+            if (!ui->gb_MessageTo->isChecked()) { return; }
             ui->comp_AtcStations->updateStations();
         }
 
