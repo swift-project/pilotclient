@@ -228,7 +228,7 @@ node('master') {
                 7z x -y xswiftbus-linux-64-*.7z
                 7z x -y xswiftbus-macos-64-*.7z
             '''
-            def regex = /(?<=xswiftbus-windows-32-)\d.\d.\d.\d+(?=.7z)/
+            def regex = /(?<=xswiftbus-windows-32-)\d+\.\d+\.\d+\.\d+(?=\.7z)/
             def version = sh(returnStdout: true, script: "ls xswiftbus-windows-32-*.7z | grep -Po '${regex}'").trim()
             sh "7z a -y -mx=9 xswiftbus-allos-${version}.7z xswiftbus"
 
