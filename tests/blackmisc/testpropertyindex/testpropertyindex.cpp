@@ -78,13 +78,13 @@ namespace BlackMiscTest
         callsigns.sortByProperty(indexListCs);
         QVERIFY(callsigns.front().equalsString("DLH1000"));
 
-        CStatusMessage s1(CStatusMessage::SeverityDebug, "debug msg.");
+        CStatusMessage s1(CStatusMessage::SeverityDebug, u"debug msg.");
         s1.setMSecsSinceEpoch(4000);
-        CStatusMessage s2(CStatusMessage::SeverityInfo, "info msg.");
+        CStatusMessage s2(CStatusMessage::SeverityInfo, u"info msg.");
         s2.setMSecsSinceEpoch(3000);
-        CStatusMessage s3(CStatusMessage::SeverityWarning, "warning msg.");
+        CStatusMessage s3(CStatusMessage::SeverityWarning, u"warning msg.");
         s3.setMSecsSinceEpoch(2000);
-        CStatusMessage s4(CStatusMessage::SeverityError, "error msg.");
+        CStatusMessage s4(CStatusMessage::SeverityError, u"error msg.");
         s4.setMSecsSinceEpoch(1000);
 
         CStatusMessageList msgs;

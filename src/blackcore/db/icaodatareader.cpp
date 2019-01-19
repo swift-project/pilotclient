@@ -16,6 +16,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 
+#include <QStringBuilder>
 #include <QDateTime>
 #include <QDir>
 #include <QFlags>
@@ -292,7 +293,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent aircraft codes: " + inconsistent.dbKeysAsString(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent aircraft codes: " % inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 
@@ -347,7 +348,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airline codes: " + inconsistent.dbKeysAsString(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent airline codes: " % inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 

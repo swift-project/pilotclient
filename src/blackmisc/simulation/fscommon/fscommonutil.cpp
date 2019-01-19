@@ -372,13 +372,13 @@ namespace BlackMisc
                 messages.clear();
                 if (!CDirectoryUtils::existsUnemptyDirectory(CDirectoryUtils::shareTerrainProbeDirectory()))
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("No terrain probe source files in '%1'").arg(CDirectoryUtils::shareTerrainProbeDirectory())));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No terrain probe source files in '%1'") << CDirectoryUtils::shareTerrainProbeDirectory());
                     return -1;
                 }
 
                 if (simObjectDir.isEmpty())
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "No simObject directory"));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"No simObject directory"));
                     return -1;
                 }
 
@@ -386,7 +386,7 @@ namespace BlackMisc
                 QDir td(targetDir);
                 if (!td.exists())
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Cannot access target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Cannot access target directory '%1'") << targetDir);
                     return -1;
                 }
 
@@ -395,12 +395,12 @@ namespace BlackMisc
                 const bool hasDir = td.mkpath(targetDir);
                 if (!hasDir)
                 {
-                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Cannot create target directory '%1'").arg(targetDir)));
+                    messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Cannot create target directory '%1'") << targetDir);
                     return -1;
                 }
 
                 const int copied = CDirectoryUtils::copyDirectoryRecursively(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir, true);
-                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Copied %1 files from '%2' to '%3'").arg(copied).arg(CDirectoryUtils::shareTerrainProbeDirectory(), targetDir)));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, u"Copied %1 files from '%2' to '%3'") << copied << CDirectoryUtils::shareTerrainProbeDirectory() << targetDir);
                 return copied;
             }
 

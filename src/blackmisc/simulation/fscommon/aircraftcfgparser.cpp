@@ -63,8 +63,8 @@ namespace BlackMisc
 
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
             {
-                static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, "Aircraft config parser loaded data");
-                static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, "Aircraft config parser did not load data");
+                static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, u"Aircraft config parser loaded data");
+                static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, u"Aircraft config parser did not load data");
 
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);

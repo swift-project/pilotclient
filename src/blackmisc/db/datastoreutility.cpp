@@ -82,7 +82,7 @@ namespace BlackMisc
 
             if (jsonResponse.isEmpty())
             {
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty JSON data for published models"));
+                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Empty JSON data for published models"));
                 return false;
             }
 
@@ -149,7 +149,7 @@ namespace BlackMisc
 
             if (!hasData)
             {
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Received response, but no JSON data"));
+                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Received response, but no JSON data"));
             }
 
             return hasData;

@@ -20,6 +20,7 @@
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
 
+#include <QStringBuilder>
 #include <QByteArray>
 #include <QFile>
 #include <QPointer>
@@ -70,15 +71,15 @@ namespace BlackCore
         const CGlobalSetup cachedSetup = m_setup.get();
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Cached setup synchronized and contains data") :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Cached setup synchronized, but no data in cache"));
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, u"Cached setup synchronized and contains data") :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, u"Cached setup synchronized, but no data in cache"));
 
         if (m_bootstrapMode == CacheOnly)
         {
             m_updateInfoUrls = cachedSetup.getSwiftUpdateInfoFileUrls(); // we use the info URLs from cached setup
             msgs.push_back(cacheAvailable ?
-                           CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
-                           CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty"));
+                           CStatusMessage(this, CStatusMessage::SeverityInfo, u"Cache only setup, using it as it is") :
+                           CStatusMessage(this, CStatusMessage::SeverityError, u"Cache only setup, but cache is empty"));
             msgs.push_back(this->manageSetupAvailability(false, false)); // treat cache as local read
             return msgs;
         }
@@ -101,21 +102,21 @@ namespace BlackCore
                 const CUrlList bootstrapCacheUrls(cachedSetup.getSwiftBootstrapFileUrls());
                 m_bootstrapUrls.push_back(bootstrapCacheUrls);
                 msgs.push_back(bootstrapCacheUrls.isEmpty() ?
-                               CStatusMessage(this, CStatusMessage::SeverityWarning, "No bootstrap URLs in cache") :
-                               CStatusMessage(this, CStatusMessage::SeverityInfo, "Adding " + QString::number(bootstrapCacheUrls.size()) + " bootstrap URLs from cache"));
+                               CStatusMessage(this, CStatusMessage::SeverityWarning, u"No bootstrap URLs in cache") :
+                               CStatusMessage(this, CStatusMessage::SeverityInfo, u"Adding " % QString::number(bootstrapCacheUrls.size()) % u" bootstrap URLs from cache"));
             }
         }
         else
         {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Empty cache, will not add URLs from cache"));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Empty cache, will not add URLs from cache"));
         }
 
         m_bootstrapUrls.removeDuplicates(); // clean up
         if (m_bootstrapUrls.isEmpty())
         {
             // after all still empty
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Your log files are here: " + CDirectoryUtils::logDirectory()));
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup"));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Your log files are here: " % CDirectoryUtils::logDirectory()));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No bootstrap URLs, cannot load setup"));
         }
         else
         {
@@ -124,7 +125,7 @@ namespace BlackCore
             {
                 // error, but cache is available, we can continue
                 readMsgs.clampSeverity(CStatusMessage::SeverityWarning);
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, "Loading setup failed, but cache is available, will continue"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, u"Loading setup failed, but cache is available, will continue"));
                 msgs.push_back(readMsgs);
             }
             else
@@ -217,10 +218,10 @@ namespace BlackCore
 
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
-        if (!sApp || m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
+        if (!sApp || m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, u"shutdown"); }
         if (m_bootstrapUrls.isEmpty())
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityError, "No bootstrap URLs");
+            const CStatusMessage m(this, CStatusMessage::SeverityError, u"No bootstrap URLs");
             CStatusMessageList msgs(m);
             this->setLastSetupReadErrorMessages(msgs);
             return msgs;
@@ -230,7 +231,7 @@ namespace BlackCore
         const CGlobalSetup setup = m_setup.get();
         if (m_setup.lastUpdatedAge() < 5000 && setup.wasLoadedFromWeb()) // really loaded from web
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Update info just updated, skip read");
+            const CStatusMessage m(this, CStatusMessage::SeverityInfo, u"Update info just updated, skip read");
             CStatusMessageList msgs(m);
             this->setLastSetupReadErrorMessages(msgs);
             return msgs;
@@ -242,12 +243,12 @@ namespace BlackCore
         CUrl url = randomUrls.front();
         if (!url.isEmpty())
         {
-            m1 = CStatusMessage(this, CStatusMessage::SeverityInfo, "Start reading bootstrap 1st URL: " + url.toQString());
+            m1 = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Start reading bootstrap 1st URL: " % url.toQString());
             sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile }, { this, &CSetupReader::networkReplyProgress });
         }
         else
         {
-            m1 = CStatusMessage(this, CStatusMessage::SeverityError, "First bootstrap URL is empty");
+            m1 = CStatusMessage(this, CStatusMessage::SeverityError, u"First bootstrap URL is empty");
         }
 
         emit this->setupLoadingMessages(m1);
@@ -255,7 +256,7 @@ namespace BlackCore
         url = randomUrls.back();
         if (!url.isEmpty())
         {
-            m2 = CStatusMessage(this, CStatusMessage::SeverityInfo, "Will also trigger deferred bootstrap reading 2nd URL: " + url.toQString());
+            m2 = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Will also trigger deferred bootstrap reading 2nd URL: " % url.toQString());
             QPointer<CSetupReader> myself(this);
             QTimer::singleShot(2000, this, [ = ]
             {
@@ -271,7 +272,7 @@ namespace BlackCore
         }
         else
         {
-            m2 = CStatusMessage(this, CStatusMessage::SeverityWarning, "2nd bootstrap URL is empty");
+            m2 = CStatusMessage(this, CStatusMessage::SeverityWarning, u"2nd bootstrap URL is empty");
         }
 
         CStatusMessageList msgs({m1, m2});
@@ -297,11 +298,11 @@ namespace BlackCore
 
         if (!sApp || m_shutdown) { return; }
         CUrl url = randomUrls.front();
-        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, "Start reading update info 1st URL: " + url.toQString());
+        const CStatusMessage m1(this, CStatusMessage::SeverityInfo, u"Start reading update info 1st URL: " % url.toQString());
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile }, { this, &CSetupReader::networkReplyProgress });
 
         url = randomUrls.back();
-        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, "Will also trigger deferred update info reading 2nd URL: " + url.toQString());
+        const CStatusMessage m2(this, CStatusMessage::SeverityInfo, u"Will also trigger deferred update info reading 2nd URL: " % url.toQString());
         QPointer<CSetupReader> myself(this);
         QTimer::singleShot(2000, this, [ = ]
         {
@@ -699,14 +700,14 @@ namespace BlackCore
 
         if (available && !webRead && !localRead)
         {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Setup available, but not updated this time"));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Setup available, but not updated this time"));
         }
         else if (!available)
         {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Setup not available"));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Setup not available"));
             if (m_bootstrapMode == Explicit)
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Mode is 'explicit', likely URL '" + m_bootstrapUrlFileValue + "' is not reachable"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Mode is 'explicit', likely URL '" % m_bootstrapUrlFileValue % u"' is not reachable"));
             }
         }
         m_setupAvailable = available;

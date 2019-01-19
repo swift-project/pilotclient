@@ -404,11 +404,11 @@ namespace BlackMisc
                 const bool canConnect = CNetworkUtils::canConnect(url, msg, getTimeoutMs() * 2);
                 if (canConnect)
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, "Can connect to " + url.getFullUrl()));
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, u"Can connect to " % url.getFullUrl()));
                 }
                 else
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Cannot connect to " + url.getFullUrl() + " msg: " + msg));
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot connect to " % url.getFullUrl() % u" msg: " % msg));
                 }
             }
 

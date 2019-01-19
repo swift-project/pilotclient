@@ -92,7 +92,7 @@ namespace BlackGui
 
             if (!this->currentModelView())
             {
-                const CStatusMessage m(this, CStatusMessage::SeverityError, "No data for simulator updating");
+                const CStatusMessage m(this, CStatusMessage::SeverityError, u"No data for simulator updating");
                 this->addStatusMessage(m);
             }
             else

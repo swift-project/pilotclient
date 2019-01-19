@@ -31,6 +31,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QWidget>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
 #include <iterator>
@@ -211,7 +212,7 @@ namespace BlackGui
         {
             if (!icao.hasValidDesignator())
             {
-                static const CStatusMessage msg(CStatusMessage::SeverityError, "No valid designator");
+                static const CStatusMessage msg(CStatusMessage::SeverityError, u"No valid designator");
                 this->showOverlayMessage(msg);
                 return;
             }
@@ -220,7 +221,7 @@ namespace BlackGui
             const CLivery stdLivery(sApp->getWebDataServices()->getStdLiveryForAirlineCode(icao));
             if (!stdLivery.hasValidDbKey())
             {
-                static const CStatusMessage msg(CStatusMessage::SeverityError, "No valid standard livery for " + icao.getDesignator());
+                static const CStatusMessage msg(CStatusMessage::SeverityError, u"No valid standard livery for " % icao.getDesignator());
                 this->showOverlayMessage(msg);
                 return;
             }
@@ -283,7 +284,7 @@ namespace BlackGui
             if (validModels.size() > MaxModelPublished)
             {
                 validModels.truncate(MaxModelPublished);
-                msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QStringLiteral("More than %1 values, values skipped").arg(MaxModelPublished)));
+                msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, u"More than %1 values, values skipped") << MaxModelPublished);
             }
 
             msgs.push_back(sGui->getWebDataServices()->asyncPublishModels(validModels));
@@ -340,7 +341,7 @@ namespace BlackGui
             {
                 return CStatusMessageList(
                 {
-                    CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, QStringLiteral("No errors in %1 model(s)").arg(models.size()))
+                    CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, u"No errors in %1 model(s)") << models.size()
                 });
             }
             else

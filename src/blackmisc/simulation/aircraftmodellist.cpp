@@ -1277,24 +1277,21 @@ namespace BlackMisc
                 {
                     if (!model.hasModelString())
                     {
-                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No model string", true);
-                        msgs.push_back(m);
+                        msgs.push_back(CStatusMessage(this).validationError(u"No model string"));
                         break;
                     }
 
                     if (!model.hasFileName())
                     {
                         if (ignoreEmpty) { continue; }
-                        const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', no file name").arg(model.getModelStringAndDbKey()), true);
-                        msgs.push_back(m);
+                        msgs.push_back(CStatusMessage(this).validationError(u"'%1', no file name") << model.getModelStringAndDbKey());
                         break;
                     }
 
                     const QString fn(caseSensitive ? model.getFileName() : model.getFileNameLowerCase());
                     if (failedFiles.contains(fn))
                     {
-                        const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', known failed file '%2' skipped").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
-                        msgs.push_back(m);
+                        msgs.push_back(CStatusMessage(this).validationError(u"'%1', known failed file '%2' skipped") << model.getModelStringAndDbKey() << model.getFileName());
                         break;
                     }
 
@@ -1302,15 +1299,13 @@ namespace BlackMisc
                     {
                         ok = true;
                         workingFiles.insert(fn);
-                        // const CStatusMessage m(this, CStatusMessage::SeverityInfo, QStringLiteral("'%1', file '%2' existing").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
-                        // msgs.push_back(m);
+                        // msgs.push_back(CStatusMessage(this).validationInfo(u"'%1', file '%2' existing") << model.getModelStringAndDbKey() << model.getFileName());
                         break;
                     }
 
                     failedFiles.insert(fn);
                     failedFilesCount++;
-                    const CStatusMessage m(this, CStatusMessage::SeverityError, QStringLiteral("'%1', file '%2' not existing").arg(model.getModelStringAndDbKey(), model.getFileName()), true);
-                    msgs.push_back(m);
+                    msgs.push_back(CStatusMessage(this).validationError(u"'%1', file '%2' not existing") << model.getModelStringAndDbKey() << model.getFileName());
                 }
                 while (false);
 
@@ -1326,17 +1321,14 @@ namespace BlackMisc
                 if (stopAtFailedFiles > 0 && failedFilesCount >= stopAtFailedFiles)
                 {
                     stopped = true;
-                    const CStatusMessage m(this, CStatusMessage::SeverityWarning, QStringLiteral("Stopping after %1 failed files").arg(failedFilesCount));
-                    msgs.push_back(m);
+                    msgs.push_back(CStatusMessage(this).validationWarning(u"Stopping after %1 failed files") << failedFilesCount);
                     break;
                 }
             }
 
             // Summary
-            const CStatusMessage m1(this, CStatusMessage::SeverityInfo, QStringLiteral("File validation, valid models: %1").arg(validModels.size()));
-            const CStatusMessage m2(this, CStatusMessage::SeverityWarning, QStringLiteral("File validation, invalid models: %1").arg(invalidModels.size()));
-            msgs.push_back(m1);
-            msgs.push_back(m2);
+            msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size());
+            msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size());
 
             // done
             return msgs;

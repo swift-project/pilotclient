@@ -113,11 +113,11 @@ namespace BlackMisc
                 if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
             }
 
-            if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: unknown designator")); }
-            if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: invalid combined type")); }
-            if (!hasValidWtc()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: wrong WTC")); }
-            if (!hasManufacturer()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: missing manufacturer")); }
-            if (!hasModelDescription()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: no description")); }
+            if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: unknown designator")); }
+            if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: invalid combined type")); }
+            if (!hasValidWtc()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: wrong WTC")); }
+            if (!hasManufacturer()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: missing manufacturer")); }
+            if (!hasModelDescription()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: no description")); }
             return msg;
         }
 

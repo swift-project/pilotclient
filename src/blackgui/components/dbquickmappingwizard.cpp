@@ -195,11 +195,11 @@ namespace BlackGui
             CStatusMessageList msgs;
             if (requestSuccessful)
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Publishing request sent"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Publishing request sent"));
             }
             else
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Publishing request failed"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Publishing request failed"));
             }
             msgs.push_back(messages);
             ui->comp_Log->appendStatusMessagesToList(msgs);
@@ -305,7 +305,7 @@ namespace BlackGui
             CStatusMessageList msgs(ui->editor_AircraftModel->validate(true));
             if (ui->le_ModelString->text().isEmpty())
             {
-                const CStatusMessage error(this, CStatusMessage::SeverityError, "Missing model string", true);
+                const CStatusMessage error(this, CStatusMessage::SeverityError, u"Missing model string", true);
                 msgs.push_back(error);
             }
             return msgs;

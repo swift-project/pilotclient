@@ -17,6 +17,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/statusmessage.h"
 
+#include <QStringBuilder>
 #include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -53,7 +54,7 @@ namespace BlackCore
             CStatusMessageList msgs;
             if (m_shutdown)
             {
-                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Database writer shuts down"));
+                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Database writer shuts down"));
                 return msgs;
             }
 
@@ -62,7 +63,7 @@ namespace BlackCore
                 const bool killed = this->killPendingReply();
                 if (killed)
                 {
-                    const CStatusMessage msg(CStatusMessage::SeverityWarning, "Aborted outdated pending reply");
+                    const CStatusMessage msg(CStatusMessage::SeverityWarning, u"Aborted outdated pending reply");
                     msgs.push_back(CStatusMessage(msg));
                     // need to let a potential receiver know it has failed
                     emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msg, false, false);
@@ -71,7 +72,7 @@ namespace BlackCore
 
             if (m_pendingReply)
             {
-                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Another write operation in progress"));
+                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Another write operation in progress"));
                 return msgs;
             }
 
@@ -124,7 +125,7 @@ namespace BlackCore
                 nwReply->close(); // close asap
                 if (dataFileData.isEmpty())
                 {
-                    const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, "No response data from " + urlString)});
+                    const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"No response data from " % urlString)});
                     emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                     return;
                 }
@@ -146,7 +147,7 @@ namespace BlackCore
             {
                 const QString error = nwReply->errorString();
                 nwReply->close(); // close asap
-                const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
+                const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)});
                 emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
             }
         }

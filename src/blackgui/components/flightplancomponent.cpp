@@ -509,7 +509,7 @@ namespace BlackGui
             {
                 if (fileName.isEmpty())
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true);
+                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true);
                     break;
                 }
                 CFlightPlan fp;
@@ -521,12 +521,12 @@ namespace BlackGui
                 const bool ok = CFileUtils::writeStringToFile(json, fileName);
                 if (ok)
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Written " + fileName, true);
+                    m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Written " % fileName, true);
                     this->updateDirectorySettings(fileName);
                 }
                 else
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
+                    m = CStatusMessage(this, CStatusMessage::SeverityError, u"Writing " % fileName % u" failed", true);
                 }
             }
             while (false);

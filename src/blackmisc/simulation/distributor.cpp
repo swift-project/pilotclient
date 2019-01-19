@@ -135,8 +135,8 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
             CStatusMessageList msgs;
-            if (!hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Distributor: missing id")); }
-            if (!hasDescription()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Distributor: missing description")); }
+            if (!hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing id")); }
+            if (!hasDescription()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing description")); }
             return msgs;
         }
 

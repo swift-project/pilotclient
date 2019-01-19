@@ -154,15 +154,15 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
             CStatusMessageList msg;
-            if (!hasCombinedCode()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Livery: missing livery code")); }
-            if (!hasColorFuselage()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no fuselage color")); }
-            if (!hasColorTail()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no tail color")); }
+            if (!hasCombinedCode()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Livery: missing livery code")); }
+            if (!hasColorFuselage()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Livery: no fuselage color")); }
+            if (!hasColorTail()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Livery: no tail color")); }
             if (this->isColorLivery())
             {
                 if (!this->getAirlineIcaoCodeDesignator().isEmpty())
                 {
                     // color livery, supposed to have empty airline
-                    msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: color livery, but airline looks odd"));
+                    msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Livery: color livery, but airline looks odd"));
                 }
             }
             else

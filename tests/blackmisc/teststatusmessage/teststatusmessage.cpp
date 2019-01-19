@@ -13,6 +13,7 @@
 
 #include "blackmisc/statusmessage.h"
 #include "test.h"
+#include <QStringView>
 #include <QObject>
 #include <QTest>
 
@@ -34,13 +35,13 @@ namespace BlackMiscTest
 
     void CTestStatusMessage::statusMessage()
     {
-        CStatusMessage s1(CStatusMessage::SeverityDebug, "debug msg.");
+        CStatusMessage s1(CStatusMessage::SeverityDebug, u"debug msg.");
         s1.setMSecsSinceEpoch(4000);
-        CStatusMessage s2(CStatusMessage::SeverityInfo, "info msg.");
+        CStatusMessage s2(CStatusMessage::SeverityInfo, u"info msg.");
         s2.setMSecsSinceEpoch(3000);
-        // CStatusMessage s3(CStatusMessage::SeverityWarning, "warning msg.");
+        // CStatusMessage s3(CStatusMessage::SeverityWarning, u"warning msg.");
         // s3.setMSecsSinceEpoch(2000);
-        // CStatusMessage s4(CStatusMessage::SeverityError, "error msg.");
+        // CStatusMessage s4(CStatusMessage::SeverityError, u"error msg.");
         // s4.setMSecsSinceEpoch(1000);
 
         CStatusMessage cCopy(s1);
@@ -62,14 +63,14 @@ namespace BlackMiscTest
         auto s7 = CStatusMessage().info(u"will be expanded: %1+%2") << "foo" << "bar";
         auto s8 = CStatusMessage().info(u"will be expanded: %012") << "foo";
 
-        QVERIFY(s1.getMessage() == "literal percent: %1");
-        QVERIFY(s2.getMessage() == "literal percent: %a");
-        QVERIFY(s3.getMessage() == "literal percent: %");
-        QVERIFY(s4.getMessage() == "literal percent: %");
-        QVERIFY(s5.getMessage() == "literal percents: %%");
-        QVERIFY(s6.getMessage() == "will be expanded: foobar");
-        QVERIFY(s7.getMessage() == "will be expanded: foo+bar");
-        QVERIFY(s8.getMessage() == "will be expanded: foo2");
+        QVERIFY(s1.getMessage() == u"literal percent: %1");
+        QVERIFY(s2.getMessage() == u"literal percent: %a");
+        QVERIFY(s3.getMessage() == u"literal percent: %");
+        QVERIFY(s4.getMessage() == u"literal percent: %");
+        QVERIFY(s5.getMessage() == u"literal percents: %%");
+        QVERIFY(s6.getMessage() == u"will be expanded: foobar");
+        QVERIFY(s7.getMessage() == u"will be expanded: foo+bar");
+        QVERIFY(s8.getMessage() == u"will be expanded: foo2");
     }
 } // namespace
 

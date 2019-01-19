@@ -37,6 +37,7 @@
 #include "contextsimulatorimpl.h"
 
 #include <QMetaObject>
+#include <QStringBuilder>
 #include <QStringList>
 #include <QThread>
 #include <Qt>
@@ -880,21 +881,21 @@ namespace BlackCore
             CStatusMessageList msgs;
             if (!simulator.isFsxP3DFamily())
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Wrong simulator " + simulator.toQString()));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Wrong simulator " % simulator.toQString()));
                 return msgs;
             }
 
             const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(simulator);
             if (modelDirs.isEmpty() || modelDirs.front().isEmpty())
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No model directory"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No model directory"));
                 return msgs;
             }
 
             const int copied = CFsCommonUtil::copyFsxTerrainProbeFiles(modelDirs.front(), msgs);
             if (copied < 1 && !msgs.hasWarningOrErrorMessages())
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No files copied"));
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No files copied"));
                 return msgs;
             }
 

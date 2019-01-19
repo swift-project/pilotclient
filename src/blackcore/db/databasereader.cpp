@@ -22,6 +22,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 
+#include <QStringBuilder>
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -242,7 +243,7 @@ namespace BlackCore
                 datastoreResponse.setStringSize(dataFileData.size());
                 if (dataFileData.isEmpty())
                 {
-                    datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Empty response, no data"));
+                    datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"Empty response, no data"));
                 }
                 else
                 {
@@ -267,7 +268,7 @@ namespace BlackCore
             if (!this->doWorkCheck())
             {
                 nwReply->abort();
-                headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Terminated data parsing process"));
+                headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"Terminated data parsing process"));
                 return false; // stop, terminate straight away, ending thread
             }
 
@@ -284,7 +285,7 @@ namespace BlackCore
                 const QString url(nwReply->url().toString());
                 nwReply->abort();
                 headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
-                                          QString("Reading data failed: '" + error + "' " + url)));
+                                          u"Reading data failed: '" % error % u"' " % url));
                 return false;
             }
         }
@@ -504,7 +505,7 @@ namespace BlackCore
 
         void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
         {
-            const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, "No working URL for '%1'") << CEntityFlags::flagToString(entity);
+            const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, u"No working URL for '%1'") << CEntityFlags::flagToString(entity);
             CLogMessage::preformatted(msg);
         }
 

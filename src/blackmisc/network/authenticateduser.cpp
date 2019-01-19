@@ -87,9 +87,9 @@ namespace BlackMisc
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             CStatusMessageList msgs;
             // callsign optional
-            if (!this->hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Invalid id"));}
-            if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Invalid real name"));}
-            if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Invalid credentials"));}
+            if (!this->hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid id"));}
+            if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid real name"));}
+            if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid credentials"));}
             return msgs;
         }
 

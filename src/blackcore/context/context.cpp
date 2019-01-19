@@ -92,7 +92,7 @@ namespace BlackCore
 
         const CStatusMessage &CContext::statusMessageEmptyContext()
         {
-            static const CStatusMessage m(getLogCategories(), CStatusMessage::SeverityWarning, "empty context");
+            static const CStatusMessage m(getLogCategories(), CStatusMessage::SeverityWarning, u"empty context");
             return m;
         }
     } // ns

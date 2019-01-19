@@ -80,7 +80,7 @@ namespace BlackMisc
     {
         if (filePath.isEmpty())
         {
-            msg = CStatusMessage(CStatusMessage::SeverityError, "no file path");
+            msg = CStatusMessage(CStatusMessage::SeverityError, u"no file path");
             return CPixmap();
         }
         if (!QFile(filePath).exists())

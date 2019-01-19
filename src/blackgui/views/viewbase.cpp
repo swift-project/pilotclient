@@ -20,6 +20,7 @@
 #include <QClipboard>
 #include <QFileDialog>
 #include <QTextEdit>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -666,7 +667,7 @@ namespace BlackGui
         CStatusMessage CViewBase<T>::modifyLoadedJsonData(ContainerType &data) const
         {
             Q_UNUSED(data);
-            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no modification", true);
+            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, u"no modification", true);
             return e;
         }
 
@@ -674,7 +675,7 @@ namespace BlackGui
         CStatusMessage CViewBase<T>::validateLoadedJsonData(const ContainerType &data) const
         {
             Q_UNUSED(data);
-            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "validation passed", true);
+            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, u"validation passed", true);
             return e;
         }
 
@@ -801,15 +802,15 @@ namespace BlackGui
                                      tr("Save data file"),
                                      directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
                                      tr("swift (*.json *.txt)"));
-            if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
+            if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true); }
             const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
             // save file
             const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
             if (ok) { this->rememberLastJsonDirectory(fileName); }
             return ok ?
-                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true) :
-                   CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
+                   CStatusMessage(this, CStatusMessage::SeverityInfo, u"Writing " % fileName % u" in progress", true) :
+                   CStatusMessage(this, CStatusMessage::SeverityError, u"Writing " % fileName % u" failed", true);
         }
 
         template<class T>

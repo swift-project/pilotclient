@@ -199,7 +199,7 @@ void CSwiftData::checkMinimumVersion()
     }
     else
     {
-        const CStatusMessage sm = CStatusMessage(this, CStatusMessage::SeverityWarning, "Your are using swift version: '%1'. Creating mappings requires at least '%2'.") << CBuildConfig::getVersionString() << sApp->getGlobalSetup().getMappingMinimumVersionString();
+        const CStatusMessage sm = CStatusMessage(this, CStatusMessage::SeverityWarning, u"Your are using swift version: '%1'. Creating mappings requires at least '%2'.") << CBuildConfig::getVersionString() << sApp->getGlobalSetup().getMappingMinimumVersionString();
         CLogMessage::preformatted(sm);
         this->displayInOverlayWindow(sm);
     }

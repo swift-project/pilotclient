@@ -109,7 +109,7 @@ namespace BlackMisc
                 if (modelDirs.isEmpty())
                 {
                     this->clearCachedModels(CSimulatorInfo::xplane());
-                    emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "XPlane model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
+                    emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, u"XPlane model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
                     return;
                 }
 
@@ -146,7 +146,7 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setModelsForSimulator(models, CSimulatorInfo::xplane());
-                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "XPlane updated '%1' models") << models.size(), CSimulatorInfo::xplane(), ParsedData);
+                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models") << models.size(), CSimulatorInfo::xplane(), ParsedData);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const

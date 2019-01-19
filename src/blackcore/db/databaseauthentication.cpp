@@ -66,12 +66,12 @@ namespace BlackCore
             CStatusMessageList msgs;
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
 
-            if (m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Shutdown in progress")); return msgs; }
+            if (m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress")); return msgs; }
 
             const QString un(username.trimmed());
             const QString pw(password.trimmed());
-            if (un.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No user name/id")); }
-            if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No password")); }
+            if (un.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No user name/id")); }
+            if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No password")); }
             if (!msgs.isEmpty()) { return msgs; }
 
             const CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
@@ -146,18 +146,18 @@ namespace BlackCore
                 {
                     if (!msgs.hasErrorMessages())
                     {
-                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Cannot login, user or password wrong"));
+                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot login, user or password wrong"));
                     }
                 }
                 else
                 {
                     if (!user.isEnabled())
                     {
-                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "User is disabled"));
+                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"User is disabled"));
                     }
                     if (user.getRoles().isEmpty())
                     {
-                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "User has no roles"));
+                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"User has no roles"));
                     }
                 }
                 m_swiftDbUser.set(user);

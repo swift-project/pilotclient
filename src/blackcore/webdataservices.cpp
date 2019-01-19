@@ -900,7 +900,7 @@ namespace BlackCore
                     continue;
                 }
                 if (ignoreEqual) { equalMessages.warningToError(); }
-                msgs.push_back(CStatusMessage(this, ignoreEqual ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning, "Model: '%1', there is no change") << publishModel.getModelString());
+                msgs.push_back(CStatusMessage(this, ignoreEqual ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning, u"Model: '%1', there is no change") << publishModel.getModelString());
                 if (ignoreEqual)
                 {
                     invalidModels.push_back(publishModel);

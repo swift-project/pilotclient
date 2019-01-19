@@ -32,6 +32,7 @@
 #include <QLineEdit>
 #include <QProgressBar>
 #include <QRadioButton>
+#include <QStringBuilder>
 #include <QString>
 #include <QWidget>
 #include <Qt>
@@ -100,7 +101,7 @@ namespace BlackGui
                 {
                     if (this->getSelectedOrAllCount() < 1)
                     {
-                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No data, nothing to do");
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, u"No data, nothing to do");
                         this->addStatusMessage(m);
                         QDialog::accept();
                     }
@@ -146,7 +147,7 @@ namespace BlackGui
 
             if (!this->currentModelView())
             {
-                const CStatusMessage m(this, CStatusMessage::SeverityError, "No data for auto stashing");
+                const CStatusMessage m(this, CStatusMessage::SeverityError, u"No data for auto stashing");
                 this->addStatusMessage(m);
             }
             else
@@ -157,12 +158,12 @@ namespace BlackGui
                 QString allStr(QString::number(all));
                 if (all > CDbStashComponent::MaxModelPublished)
                 {
-                    allStr += " (Max." + QString::number(CDbStashComponent::MaxModelPublished) + ")";
+                    allStr += u" (Max." % QString::number(CDbStashComponent::MaxModelPublished) % u")";
                 }
                 ui->le_All->setText(allStr);
                 if (ui->le_MaxModelsStashed->text().isEmpty())
                 {
-                    ui->le_MaxModelsStashed->setText(all > 100 ? "100" : "");
+                    ui->le_MaxModelsStashed->setText(all > 100 ? QStringLiteral("100") : QString());
                 }
                 if (selected > 0)
                 {
@@ -304,14 +305,14 @@ namespace BlackGui
             //! Some upfront tests
             if (!model.hasModelString())
             {
-                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No model string"));
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No model string"));
                 m_noData++;
                 return false;
             }
 
             if (!model.hasAircraftDesignator())
             {
-                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No aircraft designator"), model);
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No aircraft designator"), model);
                 m_noData++;
                 return false;
             }
@@ -335,7 +336,7 @@ namespace BlackGui
                 // if there is no livery (normal) we need an airline
                 if (!fallback)
                 {
-                    this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No airline designator"), model);
+                    this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No airline designator"), model);
                     m_noData++;
                     return false;
                 }
@@ -353,7 +354,7 @@ namespace BlackGui
             }
             else
             {
-                msg = CStatusMessage(this, CStatusMessage::SeverityInfo, "Stashed succesfully");
+                msg = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Stashed succesfully");
                 stashed = true;
                 m_noStashed++;
                 model = stashModel;

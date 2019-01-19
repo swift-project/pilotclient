@@ -123,7 +123,7 @@ namespace BlackMisc
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
                 // we just just cache data
-                static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Using cached data");
+                static const CStatusMessage status(this, CStatusMessage::SeverityInfo, u"Using cached data");
                 emit this->loadingFinished(status, simulator, CacheLoaded);
                 return;
             }
@@ -141,7 +141,7 @@ namespace BlackMisc
             if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
             {
                 const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning,
-                                              "Empty or not existing '%1' directory '%2', skipping read")
+                                              u"Empty or not existing '%1' directory '%2', skipping read")
                                               << simulator.toQString() << modelDirectories.join(", ");
                 m_loadingMessages.push_back(status);
                 emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);

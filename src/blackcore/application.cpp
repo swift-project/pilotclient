@@ -725,14 +725,14 @@ namespace BlackCore
             CStatusMessage msg;
             if (reply->error() != QNetworkReply::NoError)
             {
-                msg = CStatusMessage(this, CStatusMessage::SeverityError, "Download for '%1' failed: '%2'") <<  url.getFullUrl() << nwReply->errorString();
+                msg = CStatusMessage(this, CStatusMessage::SeverityError, u"Download for '%1' failed: '%2'") << url.getFullUrl() << nwReply->errorString();
             }
             else
             {
                 const bool ok = CFileUtils::writeByteArrayToFile(reply->readAll(), saveAsFileName);
                 msg = ok ?
-                      CStatusMessage(this, CStatusMessage::SeverityInfo, "Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
-                      CStatusMessage(this, CStatusMessage::SeverityError, "Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
+                      CStatusMessage(this, CStatusMessage::SeverityInfo, u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
+                      CStatusMessage(this, CStatusMessage::SeverityError, u"Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
             }
             nwReply->close();
             QTimer::singleShot(0, callback.object(), [ = ]

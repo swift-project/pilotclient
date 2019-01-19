@@ -33,6 +33,7 @@
 #include <QDropEvent>
 #include <QMap>
 #include <QShortcut>
+#include <QStringBuilder>
 #include <QString>
 #include <QWidget>
 #include <QtGlobal>
@@ -362,12 +363,12 @@ namespace BlackGui
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
         {
             if (m_loadingRequiresSimulator.isNoSimulator()) { return {}; }
-            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Empty models", true); }
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Empty models", true); }
 
             // multiple sims with same count
             const int removed = models.removeIfNotMatchingSimulator(m_loadingRequiresSimulator);
             if (removed < 1) { return {}; }
-            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reduced by %1 model(s) to only use %2 models", true) << removed << m_loadingRequiresSimulator.toQString(true);
+            return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models", true) << removed << m_loadingRequiresSimulator.toQString(true);
         }
 
         CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
@@ -376,7 +377,7 @@ namespace BlackGui
             if (m_loadingRequiresSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
             if (models.containsNotMatchingSimulator(m_loadingRequiresSimulator))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Found entry not matching %1 in model data", true) << m_loadingRequiresSimulator.toQString();
+                return CStatusMessage(this, CStatusMessage::SeverityError, u"Found entry not matching %1 in model data", true) << m_loadingRequiresSimulator.toQString();
             }
             return COrderableViewWithDbObjects::validateLoadedJsonData(models);
         }
@@ -421,7 +422,7 @@ namespace BlackGui
             {
                 this->clearSelection();
             }
-            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStringList(true).join(" ")));
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Stashed " % models.getModelStringList(true).join(" ")));
         }
 
         void CAircraftModelView::requestTempDisable()
@@ -430,7 +431,7 @@ namespace BlackGui
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects());
             emit this->requestTempDisableModelsForMatching(models);
-            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Temp.disabled " + models.getModelStringList(true).join(" ")));
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Temp.disabled " % models.getModelStringList(true).join(" ")));
         }
 
         void CAircraftModelView::displayModelStatisticsDialog()

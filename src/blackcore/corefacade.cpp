@@ -38,6 +38,7 @@
 #include <QDBusError>
 #include <QMap>
 #include <QObject>
+#include <QStringBuilder>
 #include <QString>
 #include <QTime>
 #include <QtGlobal>
@@ -58,10 +59,10 @@ namespace BlackCore
 
     CStatusMessage CCoreFacade::tryToReconnectWithDBus()
     {
-        if (m_shuttingDown) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Shutdown"); }
-        if (!m_config.requiresDBusConnection()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Not DBus based"); }
+        if (m_shuttingDown) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Shutdown"); }
+        if (!m_config.requiresDBusConnection()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Not DBus based"); }
         const QString dBusAddress = this->getDBusAddress();
-        if (dBusAddress.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Not DBus based, no address"); }
+        if (dBusAddress.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Not DBus based, no address"); }
         QString connectMsg;
         if (!CContextApplicationProxy::isContextResponsive(dBusAddress, connectMsg))
         {
@@ -74,7 +75,7 @@ namespace BlackCore
         this->init();
 
         // success
-        return CStatusMessage(this, CStatusMessage::SeverityInfo, "Re-initialized via '%1'") << dBusAddress;
+        return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Re-initialized via '%1'") << dBusAddress;
     }
 
     void CCoreFacade::init()

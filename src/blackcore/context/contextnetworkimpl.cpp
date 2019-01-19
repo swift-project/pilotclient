@@ -40,6 +40,7 @@
 #include "contextnetworkimpl.h"
 
 #include <stdbool.h>
+#include <QStringBuilder>
 #include <QTimer>
 
 using namespace BlackConfig;
@@ -205,11 +206,11 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
-            if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials"); }
-            if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft"); }
+            if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
+            if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
             if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
-            if (m_network->isConnected()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Already connected"); }
-            if (this->isPendingConnection()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Pending connection, please wait"); }
+            if (m_network->isConnected()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
+            if (this->isPendingConnection()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, u"Pending connection, please wait"); }
 
             m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
@@ -231,7 +232,7 @@ namespace BlackCore
             const CSimulatorPluginInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo() : CSimulatorPluginInfo();
             m_network->presetSimulatorInfo(sim);
             m_network->initiateConnection();
-            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Connection pending " % server.getAddress() % u' ' % QString::number(server.getPort()));
         }
 
         CServer CContextNetwork::getConnectedServer() const
@@ -253,11 +254,11 @@ namespace BlackCore
                 m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
                 m_currentMode = INetwork::LoginNormal;
                 m_network->terminateConnection();
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
+                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, u"Connection terminating");
             }
             else
             {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityWarning, "Already disconnected");
+                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityWarning, u"Already disconnected");
             }
         }
 

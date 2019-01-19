@@ -265,9 +265,9 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
             CStatusMessageList msgs;
-            if (!hasValidDesignator()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Airline: missing designator")); }
-            if (!hasValidCountry()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Airline: missing country")); }
-            if (!hasName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Airline: no name")); }
+            if (!hasValidDesignator()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing designator")); }
+            if (!hasValidCountry()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing country")); }
+            if (!hasName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: no name")); }
             return msgs;
         }
 

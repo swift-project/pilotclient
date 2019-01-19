@@ -457,7 +457,7 @@ namespace BlackMisc
                         CStatusMessage m;
                         if (!Json::looksLikeSwiftJson(data))
                         {
-                            m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, "Reading '%1' yields no data", true) << fileName;
+                            m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, u"Reading '%1' yields no data", true) << fileName;
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }
@@ -477,7 +477,7 @@ namespace BlackMisc
                                 }
                                 else
                                 {
-                                    m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, "Wrong format for flight plan in '%1'") << fileName;
+                                    m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, u"Wrong format for flight plan in '%1'") << fileName;
                                     if (msgs) { msgs->push_back(m); }
                                 }
                             }

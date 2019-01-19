@@ -85,8 +85,8 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             CStatusMessageList msgs;
-            if (this->getTextCodec().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "No codec")); }
-            if (!textCodecNames(true, true).contains(this->getTextCodec())) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Unrecognized codec name")); }
+            if (this->getTextCodec().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"No codec")); }
+            if (!textCodecNames(true, true).contains(this->getTextCodec())) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Unrecognized codec name")); }
             msgs.addCategories(cats);
             return msgs;
         }

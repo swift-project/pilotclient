@@ -256,7 +256,7 @@ void SwiftGuiStd::displayStatusMessageInGui(const CStatusMessage &statusMessage)
 void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 {
     this->updateGuiStatusInformation();
-    this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, kickMessage.isEmpty() ? "You have been kicked from the network" : kickMessage));
+    this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, kickMessage.isEmpty() ? QStringLiteral("You have been kicked from the network") : kickMessage));
 }
 
 void SwiftGuiStd::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)

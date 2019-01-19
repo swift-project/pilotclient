@@ -30,6 +30,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
 
+#include <QStringBuilder>
 #include <QByteArray>
 #include <QDateTime>
 #include <QMetaObject>
@@ -415,7 +416,7 @@ namespace BlackCore
                 if (!illegalEquipmentCodes.isEmpty())
                 {
                     CVatsimDataFileReader::logInconsistentData(
-                        CStatusMessage(this, CStatusMessage::SeverityInfo, "Illegal / ignored equipment code(s) in VATSIM data file: " + illegalEquipmentCodes.join(", "))
+                        CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: " % illegalEquipmentCodes.join(", "))
                     );
                 }
 
@@ -449,8 +450,7 @@ namespace BlackCore
             if (clientParts.size() != clientSectionAttributes.size())
             {
                 logInconsistentData(
-                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, QStringLiteral("VATSIM data file client parts: %1 attributes: %2 line: '%3'").arg(clientParts.size()).arg(clientSectionAttributes.size()).arg(currentLine))
-                );
+                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, u"VATSIM data file client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine);
                 return parts;
             }
 

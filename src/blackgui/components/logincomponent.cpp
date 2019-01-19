@@ -662,7 +662,7 @@ namespace BlackGui
             if (!this->hasValidContexts()) { return; }
             if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
-            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Auto logoff in progress");
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress");
             const int delaySecs = 45;
             this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
             this->setLogoffCountdown(delaySecs);

@@ -838,7 +838,7 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, QStringLiteral("Empty cache value %1").arg(element.m_nameWithKey), true);
+            return CStatusMessage(this, invalidSeverity, u"Empty cache value %1", true) << element.m_nameWithKey;
         }
         else if (value.userType() != element.m_metaType)
         {

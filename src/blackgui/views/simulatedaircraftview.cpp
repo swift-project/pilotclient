@@ -18,6 +18,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/icons.h"
 
+#include <QStringBuilder>
 #include <QPointer>
 #include <QtGlobal>
 
@@ -177,7 +178,7 @@ namespace BlackGui
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects().getModels());
             emit this->requestTempDisableModelsForMatching(models);
-            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Temp.disabled " + models.getModelStringList(true).join(" ")));
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Temp.disabled " % models.getModelStringList(true).join(" ")));
         }
 
         void CSimulatedAircraftView::showPositionLogInSimulator()

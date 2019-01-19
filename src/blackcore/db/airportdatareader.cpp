@@ -13,6 +13,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 
+#include <QStringBuilder>
 #include <QNetworkReply>
 #include <QFileInfo>
 #include <QPointer>
@@ -220,7 +221,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airports: " + inconsistent.dbKeysAsString(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent airports: " % inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 

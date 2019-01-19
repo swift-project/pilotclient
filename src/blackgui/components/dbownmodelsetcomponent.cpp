@@ -36,6 +36,7 @@
 #include <QIcon>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QStringBuilder>
 #include <QString>
 #include <QWidget>
 #include <Qt>
@@ -162,7 +163,7 @@ namespace BlackGui
         CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data", true); }
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"No data", true); }
             if (!this->getModelSetSimulator().isSingleSimulator())
             {
                 // no sim yet, we set it
@@ -172,7 +173,7 @@ namespace BlackGui
             {
                 // only currently selected sim allowed
                 return CStatusMessage(this, CStatusMessage::SeverityError,
-                                      "Cannot add data for " + simulator.toQString(true) + " to " + this->getModelSetSimulator().toQString(true), true);
+                                      u"Cannot add data for " % simulator.toQString(true) % u" to " % this->getModelSetSimulator().toQString(true), true);
             }
 
             const bool allowExcludedModels = m_modelSettings.get().getAllowExcludedModels();
@@ -183,11 +184,11 @@ namespace BlackGui
                 if (!allowExcludedModels) { updateModels.removeIfExcluded(); }
                 updateModels.resetOrder();
                 ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Modified " + QString::number(d) + " entries in model set " + this->getModelSetSimulator().toQString(true), true);
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Modified " % QString::number(d) % u" entries in model set " % this->getModelSetSimulator().toQString(true), true);
             }
             else
             {
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data modified in model set", true);
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, u"No data modified in model set", true);
             }
         }
 

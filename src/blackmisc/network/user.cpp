@@ -144,9 +144,9 @@ namespace BlackMisc
         {
             CStatusMessageList msgs;
             // callsign optional
-            if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid id"));}
-            if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid real name"));}
-            if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid credentials"));}
+            if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id"));}
+            if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name"));}
+            if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid credentials"));}
             return msgs;
         }
 

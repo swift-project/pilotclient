@@ -30,7 +30,7 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             CStatusMessageList msgs;
-            if (this->getVatsimUdpVoicePort() < 1 || this->getVatsimUdpVoicePort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Invalid voice port")); }
+            if (this->getVatsimUdpVoicePort() < 1 || this->getVatsimUdpVoicePort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Invalid voice port")); }
             msgs.addCategories(cats);
             return msgs;
         }
