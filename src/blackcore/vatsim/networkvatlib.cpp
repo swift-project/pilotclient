@@ -545,7 +545,7 @@ namespace BlackCore
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
                 Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
-                emit textMessageSent(message);
+                emit this->textMessageSent(message);
             }
 
             CTextMessageList radioMessages = messages.getRadioMessages();
@@ -1531,7 +1531,10 @@ namespace BlackCore
         QString CNetworkVatlib::simplifyTextMessage(const QString &msg)
         {
             if (msg.isEmpty()) { return {}; }
-            return asciiOnlyString(simplifyAccents(msg.simplified().trimmed()));
+
+            // per discussion of T519 only simplify, do not remove accents
+            // return asciiOnlyString(simplifyAccents(msg.simplified().trimmed()));
+            return msg.simplified().trimmed();
         }
 
         const QJsonObject &CNetworkVatlib::JsonPackets::aircraftConfigRequest()
