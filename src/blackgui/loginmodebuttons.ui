@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
+    <width>363</width>
     <height>22</height>
    </rect>
   </property>
@@ -38,7 +38,7 @@
    <item>
     <widget class="QLabel" name="lbl_LognMode">
      <property name="text">
-      <string>Login mode</string>
+      <string>Mode</string>
      </property>
     </widget>
    </item>
@@ -63,6 +63,13 @@
     <widget class="QRadioButton" name="rb_LoginObserver">
      <property name="text">
       <string>Observer (co-pilot)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_NoSimulator">
+     <property name="text">
+      <string>No simulator!</string>
      </property>
     </widget>
    </item>

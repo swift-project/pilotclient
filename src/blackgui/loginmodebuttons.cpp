@@ -28,6 +28,7 @@ namespace BlackGui
         ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);
+        ui->lbl_NoSimulator->setVisible(false);
         this->configureLoginModes();
         connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginModeButtons::configureLoginModes, Qt::QueuedConnection);
     }
@@ -86,12 +87,13 @@ namespace BlackGui
 
         if (!sGui->getIContextSimulator() || (!sGui->isDeveloperFlagSet() && !sGui->getIContextSimulator()->isSimulatorSimulating()))
         {
-            // Disable pilot login modes
+            // Disable pilot login modes, only observer
             ui->rb_LoginNormal->setEnabled(false);
             ui->rb_LoginStealth->setEnabled(false);
             ui->rb_LoginNormal->setToolTip("No simulator available");
             ui->rb_LoginStealth->setToolTip("No simulator available");
             ui->rb_LoginObserver->setChecked(true);
+            ui->lbl_NoSimulator->setVisible(true);
         }
         else
         {
@@ -100,6 +102,7 @@ namespace BlackGui
             ui->rb_LoginNormal->setToolTip({});
             ui->rb_LoginStealth->setToolTip({});
             ui->rb_LoginNormal->setChecked(true);
+            ui->lbl_NoSimulator->setVisible(false);
         }
 
         ui->rb_LoginStealth->setVisible(false); // 2019-01 hide as based on discussion with RR
