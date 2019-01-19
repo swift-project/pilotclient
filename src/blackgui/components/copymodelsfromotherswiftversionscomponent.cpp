@@ -50,7 +50,7 @@ namespace BlackGui
             const QSet<CSimulatorInfo> simulators = selectedSimulators.asSingleSimulatorSet();
             if (simulators.isEmpty())
             {
-                static const CStatusMessage m = CStatusMessage(this).validationError(u"No simulators selected");
+                static const CStatusMessage m = CStatusMessage(this).validationError(u"No simulator(s) selected");
                 this->showOverlayMessage(m);
                 return;
             }
@@ -59,7 +59,7 @@ namespace BlackGui
             const bool cache = ui->cb_ModelCache->isChecked();
             if (!cache && !set)
             {
-                static const CStatusMessage m = CStatusMessage(this).validationError(u"No simulators selected");
+                static const CStatusMessage m = CStatusMessage(this).validationError(u"No models selected (cache? model set?)");
                 this->showOverlayMessage(m);
                 return;
             }
