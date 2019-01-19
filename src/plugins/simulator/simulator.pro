@@ -30,4 +30,8 @@ swiftConfig(sims.xplane) {
     SUBDIRS += xplane
     SUBDIRS += xplaneconfig
 }
+swiftConfig(sims.fg) {
+    SUBDIRS += flightgear
+    SUBDIRS += flightgearconfig
+}
 load(common_post)

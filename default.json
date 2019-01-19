@@ -23,7 +23,8 @@
         "fsx": true,
         "p3d": true,
         "fsuipc": true,
-        "xplane": true
+        "xplane": true,
+		"fg": true
     },
     "profileRelease": true,
     "assertsInRelease": true,
