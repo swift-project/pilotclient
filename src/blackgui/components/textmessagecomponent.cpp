@@ -107,6 +107,10 @@ namespace BlackGui
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->onSettingsChanged();
                 this->onChangedAircraftCockpit();
+
+                // hde for the beginning
+                ui->gb_Settings->setChecked(false);
+                ui->gb_MessageTo->setChecked(false);
             });
         }
 
@@ -397,6 +401,7 @@ namespace BlackGui
             if (w) { return w; }
 
             const QString tabName = callsign.asString();
+            const QString style = this->getStyleSheet();
             const bool supervisor = callsign.isSupervisorCallsign();
             QWidget *newTabWidget = new QWidget(this);
             newTabWidget->setObjectName("Tab widget " + tabName);
@@ -412,6 +417,7 @@ namespace BlackGui
             newTabWidget->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
             textEdit->setProperty("supervisormsg", supervisor);
+            textEdit->setStyleSheetForContent(style);
 
             const int index = ui->tw_TextMessages->addTab(newTabWidget, tabName);
             QToolButton *closeButtonInTab = new QToolButton(newTabWidget);

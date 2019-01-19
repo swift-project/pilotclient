@@ -1,3 +1,4 @@
+/** default style from testmessage.css **/
 /** style sheet for content !!!  **/
 /** does not(!) affect text edit **/
 /** http://doc.qt.io/qt-5/richtext-html-subset.html **/
@@ -6,7 +7,7 @@ table { font-size: 8pt; }
 
 tr { }
 td { vertical-align: middle; }
-td.timestamp { color: green; }
+td.timestamp { color: lightgreen; }
 td.message{ }
 
 /** recipient info normal/supervisor **/
@@ -16,5 +17,5 @@ td.recipient{ color: yellow; }
 
 /** sent info normal/supervisor **/
 td.sender{ color: yellow; }
-.sent td.sender{ color: blue; }
+.sent td.sender{ color: magenta; }
 .supervisor td.sender{ background-color: red; }

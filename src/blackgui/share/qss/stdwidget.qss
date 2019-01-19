@@ -86,12 +86,6 @@ BlackGui--Components--CCopyConfigurationComponent {
 }
 */
 
-/* setup load dialog */
-BlackGui--Components--CSetupLoadingDialog {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
 /* setup load dialog details frame */
 /*
 BlackGui--Components--CSetupLoadingDialog #fr_Details {
@@ -99,12 +93,6 @@ BlackGui--Components--CSetupLoadingDialog #fr_Details {
   background-color: darkslategray;
 }
 */
-
-/** dialog for airports **/
-BlackGui--Components--CAirportDialog {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
 
 /* core settings */
 /* needed for CCoreSettingsDialog */
@@ -198,6 +186,10 @@ BlackGui--Components--CAircraftModelSetValidationDialog,
 BlackGui--Components--CCoreSettingsDialog,
 BlackGui--Views--CAircraftModelValidationDialog,
 BlackGui--Views--CAircraftModelStatisticsDialog,
+BlackGui--Components--CSettingsFontDialog,
+BlackGui--Components--CAirportDialog,
+BlackGui--Components--CTextEditDialog,
+BlackGui--Components--CSetupLoadingDialog,
 BlackGui--Components--CDownloadComponent,
 BlackGui--Components--CDownloadDialog,
 BlackGui--Components--CRawFsdMessagesComponent,

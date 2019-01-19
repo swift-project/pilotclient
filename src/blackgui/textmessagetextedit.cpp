@@ -103,7 +103,7 @@ namespace BlackGui
         QString html("<table>");
         for (const CTextMessage &msg : messages)
         {
-            html += toHtml(msg, withFrom, withTo);
+            html += CTextMessageTextEdit::toHtml(msg, withFrom, withTo);
         }
         html += "</table>";
         return html;
@@ -111,45 +111,23 @@ namespace BlackGui
 
     QString CTextMessageTextEdit::toHtml(const CTextMessage &message, bool withFrom, bool withTo)
     {
-        QString html;
-        QString rowClass;
+        QString rowClass(message.wasSent() ? "sent" : "received");
         if (message.isSupervisorMessage()) { rowClass += " supervisor"; }
-        if (message.wasSent()) { rowClass += " sent"; }
-        else { rowClass += " received"; }
 
-        if (rowClass.isEmpty())
-        {
-            html += "<tr>";
-        }
-        else
-        {
-            html += "<tr class=\"";
-            html += rowClass.trimmed();
-            html += "\">";
-        }
-        html += "<td class=\"timestamp\">";
-        html += message.getFormattedUtcTimestampHms();
-        html += "</td>";
+        QString html(u"<tr class=\"" % rowClass.trimmed() %
+                     u"\"><td class=\"timestamp\">" % message.getFormattedUtcTimestampHms() % u"</td>");
 
         if (withFrom)
         {
-            html += "<td class=\"sender\">";
-            html += message.getSenderCallsign().asString();
-            html += "</td>";
+            html += u"<td class=\"sender\">" % message.getSenderCallsign().asString() % u"</td>";
         }
 
         if (withTo)
         {
-            html += "<td class=\"recipient\">";
-            html += message.getRecipientCallsignOrFrequency();
-            html += "</td>";
+            html += u"<td class=\"recipient\">" % message.getRecipientCallsignOrFrequency() % u"</td>";
         }
 
-        html += "<td class=\"message\">";
-        html += message.getMessage();
-        html += "</td>";
-
-        html += "</tr>";
+        html += u"<td class=\"message\">" % message.getMessage() % u"</td></tr>";
         return html;
     }
 
