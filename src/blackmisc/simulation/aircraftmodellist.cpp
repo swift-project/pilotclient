@@ -557,6 +557,34 @@ namespace BlackMisc
             return CSimulatorInfo(s);
         }
 
+        namespace Private
+        {
+            bool isLikelyImpl(double count, double total)
+            {
+                if (total < 1) { return false; }
+                const double fsRatio = count / total;
+                return fsRatio > 0.95;
+            }
+        }
+
+        bool CAircraftModelList::isLikelyFsFamilyModelList() const
+        {
+            if (this->isEmpty()) { return false; } // avoid DIV 0
+            return Private::isLikelyImpl(this->countPerSimulator().getCountForFsFamilySimulators(), this->size());
+        }
+
+        bool CAircraftModelList::isLikelyFsxFamilyModelList() const
+        {
+            if (this->isEmpty()) { return false; } // avoid DIV 0
+            return Private::isLikelyImpl(this->countPerSimulator().getCountForFsxFamilySimulators(), this->size());
+        }
+
+        bool CAircraftModelList::isLikelyXplaneModelList() const
+        {
+            if (this->isEmpty()) { return false; } // avoid DIV 0
+            return Private::isLikelyImpl(this->countPerSimulator().getCount(CSimulatorInfo::xplane()), this->size());
+        }
+
         int CAircraftModelList::setModelMode(CAircraftModel::ModelMode mode)
         {
             int c = 0;

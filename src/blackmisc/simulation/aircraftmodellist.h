@@ -229,8 +229,17 @@ namespace BlackMisc
             //! Set simulator for all elements
             int setSimulatorInfo(const CSimulatorInfo &info);
 
-            //! Which simulators are supported in that model list
+            //! Which simulators are supported in this model list
             CSimulatorInfo simulatorsSupported() const;
+
+            //! Is this here a FS family (P3D/FSX/FS9) model list?
+            bool isLikelyFsFamilyModelList() const;
+
+            //! Is this here a FS family (P3D/FSX) model list?
+            bool isLikelyFsxFamilyModelList() const;
+
+            //! Is this here a XPlane model list?
+            bool isLikelyXplaneModelList() const;
 
             //! Set mode for all elements
             int setModelMode(CAircraftModel::ModelMode mode);

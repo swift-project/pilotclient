@@ -43,12 +43,9 @@ namespace BlackGui
 
             CAircraftModelList valid;
             CAircraftModelList invalid;
-            const CCountPerSimulator counts = m_models.countPerSimulator();
-            const double fsFamilyCount = counts.getCountForFsFamilySimulators();
-            const double fsRatio = fsFamilyCount / m_models.size();
             const bool ignoreEmpty = false;
             const int maxFailedFiles = 25;
-            const CStatusMessageList msgs = fsRatio > 0.9 ?
+            const CStatusMessageList msgs = m_models.isLikelyFsFamilyModelList() ?
                                             CFsCommonUtil::validateConfigFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles) :
                                             m_models.validateFiles(valid, invalid, ignoreEmpty, maxFailedFiles);
             ui->comp_StatusMessage->clear();
