@@ -41,10 +41,6 @@
 
 namespace BlackMisc
 {
-
-    template <typename T>
-    class CWorkerPointer;
-
     /*!
      * Starts a single-shot timer which will call a task in the thread of the given object when it times out.
      *
@@ -341,9 +337,6 @@ namespace BlackMisc
         //! Called after cleanup().
         void finish();
 
-        template <typename T>
-        friend class CWorkerPointer;
-
         using CWorkerBase::hasStarted;
         using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
@@ -351,87 +344,6 @@ namespace BlackMisc
         QObject *m_owner = nullptr; //!< owner, parent of the QThread
         QString m_name; //!< worker's name
         std::atomic<bool> m_enabled { true }; //!< marker it is enabled
-    };
-
-    /*!
-     * RAII smart pointer to manage a CContinuousWorker instance.
-     *
-     * Not required if the worker is immediately started after construction.
-     * Before the worker starts, it is owned by the pointer.
-     * After the worker starts, becomes a non-owning pointer, as ownership is tied to the lifetime of the thread.
-     */
-    template <typename T>
-    class CWorkerPointer
-    {
-    public:
-        static_assert(std::is_base_of<CContinuousWorker, T>::value, "T must be a CContinuousWorker subclass");
-
-        //! Constructor. Takes ownership.
-        explicit CWorkerPointer(T *ptr) : m_weak(ptr)
-        {
-            if (!ptr || static_cast<const CContinuousWorker *>(ptr)->hasStarted()) { return; }
-            m_strong.reset(ptr);
-            connect();
-        }
-
-        //! Construct a null pointer.
-        //! @{
-        CWorkerPointer() = default;
-        CWorkerPointer(std::nullptr_t) {}
-        //! @}
-
-        //! Move constructor.
-        CWorkerPointer(CWorkerPointer &&other) : m_strong(std::move(other.m_strong)), m_weak(other.m_weak), m_guard()
-        {
-            connect();
-        }
-
-        //! Move assignment operator.
-        CWorkerPointer &operator =(CWorkerPointer &&other)
-        {
-            m_strong = std::move(other.m_strong);
-            m_weak = other.m_weak;
-            connect();
-            return *this;
-        }
-
-        //! Not copyable.
-        //! @{
-        CWorkerPointer(const CWorkerPointer &) = delete;
-        CWorkerPointer &operator =(const CWorkerPointer &) = delete;
-        //! @}
-
-        //! Factory method.
-        //! Arguments are forwarded to the constructor of T. Strictly more exception-safe than calling the constructor with new.
-        template <typename... Ts>
-        static CWorkerPointer create(Ts &&... args) { return CWorkerPointer(new T(std::forward<Ts>(args)...)); }
-
-        //! Access the raw pointer.
-        //! @{
-        T *data() const { return m_weak.data(); }
-        T &operator *() const { return *data(); }
-        T *operator ->() const { return &*data(); }
-        //! @}
-
-        //! True if it points to a valid worker.
-        //! @{
-        explicit operator bool() const { return m_weak; }
-        bool isValid() const { return m_weak; }
-        //! @}
-
-        //! True if it owns the worker it points to (i.e. worker has not yet started).
-        bool isOwner() const { return m_strong; }
-
-    private:
-        void connect()
-        {
-            if (!m_strong) { return; }
-            m_guard = QObject::connect(m_strong.get(), &CWorkerBase::aboutToStart, [this] { m_strong.release(); });
-        }
-
-        std::unique_ptr<T> m_strong;
-        QPointer<T> m_weak;
-        CConnectionGuard m_guard;
     };
 }
 

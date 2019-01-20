@@ -78,9 +78,9 @@ private:
     void displayLog();
     void checkMinimumVersion();
 
-    BlackGui::CManagedStatusBar m_statusBar;
     QScopedPointer<Ui::CSwiftData> ui;
-    BlackMisc::CWorkerPointer<BlackCore::Db::CBackgroundDataUpdater> m_updater;
+    BlackGui::CManagedStatusBar m_statusBar;
+    BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
     BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
 };
 
