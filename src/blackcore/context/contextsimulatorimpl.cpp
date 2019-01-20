@@ -90,6 +90,15 @@ namespace BlackCore
                     this->enableMatchingMessages(true);
                 }
             });
+
+            // Validation
+            m_validator = new CBackgroundValidation(this);
+            m_validator->setCurrentSimulator(this->getSimulatorPluginInfo().getSimulator());
+            connect(this, &CContextSimulator::simulatorChanged, m_validator, &CBackgroundValidation::setCurrentSimulator);
+            connect(m_validator, &CBackgroundValidation::validated, this, &CContextSimulator::validatedModelSet, Qt::QueuedConnection);
+
+            m_validator->start(QThread::LowestPriority);
+            m_validator->startUpdating(60);
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
@@ -106,6 +115,11 @@ namespace BlackCore
 
         void CContextSimulator::gracefulShutdown()
         {
+            if (m_validator)
+            {
+                disconnect(m_validator);
+                m_validator->abandonAndWait();
+            }
             this->disconnect();
             this->unloadSimulatorPlugin();
         }
@@ -343,8 +357,8 @@ namespace BlackCore
 
         bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorPluginInfo)
         {
-            Q_ASSERT(getIContextApplication());
-            Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
+            Q_ASSERT(this->getIContextApplication());
+            Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
             Q_ASSERT(!simulatorPluginInfo.isUnspecified());
             Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
 
@@ -437,7 +451,12 @@ namespace BlackCore
             QTimer::singleShot(0, this, [ = ]
             {
                 if (!myself) { return; }
-                emit this->simulatorPluginChanged(simulatorPluginInfo);
+                if (m_simulatorPlugin.second)
+                {
+                    // use the real driver as this will also work eith emulated driver
+                    emit this->simulatorPluginChanged(m_simulatorPlugin.second->getSimulatorPluginInfo());
+                    emit this->simulatorChanged(m_simulatorPlugin.second->getSimulatorInfo());
+                }
             });
 
             CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
@@ -527,6 +546,7 @@ namespace BlackCore
                     simulator->unload();
                     simulator->deleteLater();
                     emit this->simulatorPluginChanged(CSimulatorPluginInfo());
+                    emit this->simulatorChanged(CSimulatorInfo());
                 }
 
                 if (m_wasSimulating) { emit this->vitalityLost(); }
@@ -564,8 +584,8 @@ namespace BlackCore
                 CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
                 brokenAircraft.setEnabled(false);
                 brokenAircraft.setRendered(false);
-                emit this->aircraftRenderingChanged(brokenAircraft);
                 CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
+                emit this->aircraftRenderingChanged(brokenAircraft);
                 return;
             }
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);

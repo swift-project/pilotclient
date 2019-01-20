@@ -72,6 +72,9 @@ namespace BlackCore
                                    "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "vitalityLost", this, SIGNAL(vitalityLost()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
@@ -89,6 +92,9 @@ namespace BlackCore
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "requestUiConsoleMessage", this, SIGNAL(requestUiConsoleMessage(QString, bool)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
             Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
@@ -323,5 +329,6 @@ namespace BlackCore
         {
             return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("copyFsxTerrainProbe"), simulator);
         }
+
     } // namespace
 } // namespace

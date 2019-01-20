@@ -94,7 +94,10 @@ namespace BlackCore
             //! Simulator plugin loaded / unloaded (default info)
             void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-            //! A formerly vital driver is no loner vital
+            //! Same as simulatorPluginChanged, only with simulator signature
+            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! A formerly vital driver is no longer vital/responding
             void vitalityLost();
 
             //! Render restrictions have been changed
@@ -132,6 +135,11 @@ namespace BlackCore
 
             //! Request a console message (whatever the console maybe)
             void requestUiConsoleMessage(const QString &driverMessage, bool clear);
+
+            //! Validate model set
+            void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator,
+                                   const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
+                                   bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
         public slots:
             //! Simulator info, currently loaded plugin

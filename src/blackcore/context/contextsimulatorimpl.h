@@ -24,6 +24,7 @@
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/interpolationrenderingsetupsettings.h"
+#include "blackmisc/simulation/backgroundvalidation.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -262,6 +263,7 @@ namespace BlackCore
             bool m_isWeatherActivated     = false;
 
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)
+            BlackMisc::Simulation::CBackgroundValidation *m_validator = nullptr;
 
             // settings
             BlackMisc::CSettingReadOnly<Application::TEnabledSimulators>           m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
