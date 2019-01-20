@@ -35,6 +35,8 @@ namespace BlackMisc
             //! Matrix airlines/aircraft ICAOs
             static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
 
+            //! Validate aircraft.cfg entries
+            static CStatusMessageList validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped);
         };
     } //namespace
 } // namespace

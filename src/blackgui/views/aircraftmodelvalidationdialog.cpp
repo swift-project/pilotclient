@@ -45,9 +45,8 @@ namespace BlackGui
             CAircraftModelList invalid;
             const bool ignoreEmpty = false;
             const int maxFailedFiles = 25;
-            const CStatusMessageList msgs = m_models.isLikelyFsFamilyModelList() ?
-                                            CFsCommonUtil::validateConfigFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles) :
-                                            m_models.validateFiles(valid, invalid, ignoreEmpty, maxFailedFiles);
+            bool wasStopped = false;
+            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped);
             ui->comp_StatusMessage->clear();
             ui->comp_StatusMessage->appendStatusMessagesToList(msgs);
         }

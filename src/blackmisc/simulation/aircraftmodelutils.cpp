@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 
@@ -136,6 +137,14 @@ namespace BlackMisc
             const QString fn("airlineAircraftMatrix.html");
             const bool ok = CFileUtils::writeStringToFile(htmlTemplate.arg(html), dir.absoluteFilePath(fn));
             return ok ? dir.absoluteFilePath(fn) : "";
+        }
+
+        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped)
+        {
+            // specifi checks for XPlane/FG would go here
+            return models.isLikelyFsFamilyModelList() ?
+                   FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped) :
+                   models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
         }
     } // ns
 } // ns
