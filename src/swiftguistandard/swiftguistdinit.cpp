@@ -129,15 +129,7 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);
     Q_ASSERT(s);
-    s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, [ = ](const QString & logMsg, bool clear)
-    {
-        if (logMsg.isEmpty()) { return; }
-        CLogComponent *log = ui->comp_MainInfoArea->getLogComponent();
-        Q_ASSERT_X(log, Q_FUNC_INFO, "Missing log component");
-        if (clear) { log->clearConsole(); }
-        log->appendPlainTextToConsole(logMsg);
-    },
-    Qt::QueuedConnection);
+    s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, &SwiftGuiStd::onRequestedConsoleMessage, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);

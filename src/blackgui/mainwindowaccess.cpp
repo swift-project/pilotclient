@@ -53,4 +53,12 @@ namespace BlackGui
         m_mwaOverlayFrame->showOverlayMessages(messages, false, timeOutMs);
         return true;
     }
+
+    bool IMainWindowAccess::displayInOverlayWindow(const QString &html, int timeOutMs)
+    {
+        if (html.isEmpty()) { return false; }
+        if (!m_mwaOverlayFrame) { return false; }
+        m_mwaOverlayFrame->showOverlayHTMLMessage(html, timeOutMs);
+        return true;
+    }
 } // ns

@@ -108,7 +108,7 @@ private:
     bool                        m_init = false;
 
     // contexts
-    static constexpr int MaxCoreFailures  = 5; //!< Failures counted before reconnecting
+    static constexpr int MaxCoreFailures = 5;  //!< Failures counted before reconnecting
     int  m_coreFailures            = 0;        //!< failed access to core
     bool m_coreAvailable           = false;    //!< core already available?
     bool m_contextNetworkAvailable = false;    //!< network context available?
@@ -251,6 +251,9 @@ private:
 
     //! Whole main info area floating
     void onChangedMainInfoAreaFloating(bool floating);
+
+    //! UI Console message has been recevied
+    void onRequestedConsoleMessage(const QString &logMsg, bool clear);
 
     //! Show window minimized
     void showMinimized();

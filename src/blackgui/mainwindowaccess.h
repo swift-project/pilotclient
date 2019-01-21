@@ -52,6 +52,9 @@ namespace BlackGui
         //! Display in overlay window
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
+        //! Display in overlay window
+        virtual bool displayInOverlayWindow(const QString &html, int timeOutMs = -1);
+
     protected:
         Components::CLogComponent *m_mwaLogComponent = nullptr; //!< the log component if any
         CManagedStatusBar         *m_mwaStatusBar = nullptr;    //!< status bar if any

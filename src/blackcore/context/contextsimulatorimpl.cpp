@@ -222,12 +222,12 @@ namespace BlackCore
             CStatusMessageList msgs;
             if (!sApp || !sApp->isNetworkAccessible())
             {
-                msgs.push_back(CStatusMessage(this).error(u"No network interface, simulation will not work properly"));
+                msgs.push_back(CStatusMessage(this).validationError(u"No network interface, simulation will not work properly"));
             }
             const CSimulatorInfo simulators = this->simulatorsWithInitializedModelSet();
             if (simulators.isNoSimulator())
             {
-                msgs.push_back(CStatusMessage(this).error(u"No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
+                msgs.push_back(CStatusMessage(this).validationError(u"No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
             }
             return msgs;
         }

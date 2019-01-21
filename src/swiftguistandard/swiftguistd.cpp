@@ -389,6 +389,15 @@ void SwiftGuiStd::onChangedMainInfoAreaFloating(bool floating)
     Q_UNUSED(floating);
 }
 
+void SwiftGuiStd::onRequestedConsoleMessage(const QString &logMsg, bool clear)
+{
+    if (logMsg.isEmpty()) { return; }
+    CLogComponent *log = ui->comp_MainInfoArea->getLogComponent();
+    Q_ASSERT_X(log, Q_FUNC_INFO, "Missing log component");
+    if (clear) { log->clearConsole(); }
+    log->appendPlainTextToConsole(logMsg);
+}
+
 void SwiftGuiStd::showMinimized()
 {
     this->showMinimizedModeChecked();
