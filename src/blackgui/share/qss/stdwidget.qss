@@ -94,14 +94,6 @@ BlackGui--Components--CSetupLoadingDialog #fr_Details {
 }
 */
 
-/* core settings */
-/* needed for CCoreSettingsDialog */
-/* BlackGui::Components::CSettingsComponent */
-BlackGui--Components--CCoreSettingsDialog {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
 QFileDialog #sidebar {
   background: black;
 }
@@ -212,6 +204,10 @@ QToolButton {
   border: 0px;
 }
 
+#tb_AtcStationsAtisReload,
+#tb_AtcStationsLoadMetar,
+#tb_Audio,
+#tb_TextMessageOverlay,
 QPushButton {
   background-color: rgba(0, 0, 255, 128);
   border-style: 1px solid yellow;
