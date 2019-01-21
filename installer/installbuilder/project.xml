@@ -107,8 +107,8 @@ it and relaunch the installer.</text>
     </preInstallationActionList>
     <postInstallationActionList>
         <runProgram>
-            <program>${installdir}/bin/dbus-uuidgen</program>
-            <programArguments>--ensure=${installdir}/share/dbus-1/machine-id</programArguments>
+            <program>osascript</program>
+            <programArguments>-l AppleScript ${installdir}/bin/create_dbus_machineid.scpt</programArguments>
             <ruleList>
                 <platformTest>
                     <type>osx</type>

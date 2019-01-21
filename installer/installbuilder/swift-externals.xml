@@ -65,6 +65,9 @@
                 <distributionFile>
                     <origin>../../dist/bin/7za</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/create_dbus_machineid.scpt</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
