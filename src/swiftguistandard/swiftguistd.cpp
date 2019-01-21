@@ -436,6 +436,18 @@ void SwiftGuiStd::verifyPrerequisites()
     this->copyXSwiftBusDialog(true);
 }
 
+void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!m_validationDialog)
+    {
+        m_validationDialog.reset(new CAircraftModelSetValidationDialog(this));
+    }
+    m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
+    const int r = m_validationDialog->exec();
+    Q_UNUSED(r);
+}
+
 void SwiftGuiStd::checkDbDataLoaded()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }

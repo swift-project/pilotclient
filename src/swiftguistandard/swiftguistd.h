@@ -18,6 +18,7 @@
 
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
+#include "blackgui/components/aircraftmodelsetvalidationdialog.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
@@ -99,8 +100,9 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<BlackGui::Components::CNavigatorDialog>  m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
     QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
+    QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
@@ -266,6 +268,9 @@ private:
 
     //! Checks if model set is available
     void verifyPrerequisites();
+
+    //! Model set haas been verfied
+    void onValidatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
     //! Ckeck if the DB data have been loaded
     void checkDbDataLoaded();

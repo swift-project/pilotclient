@@ -131,6 +131,8 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, &SwiftGuiStd::onRequestedConsoleMessage, Qt::QueuedConnection);
     Q_ASSERT(s);
+    s = connect(sGui->getIContextSimulator(), &IContextSimulator::validatedModelSet, this, &SwiftGuiStd::onValidatedModelSet, Qt::QueuedConnection);
+    Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
     Q_UNUSED(s);
