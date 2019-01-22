@@ -28,7 +28,6 @@ namespace BlackGui
             connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-
             connect(ui->pb_Reset, &QPushButton::released, this, &CMatchingForm::clear, Qt::QueuedConnection);
         }
 
@@ -47,6 +46,8 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ScoreIgnoreZeros, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ScorePreferColorLiveries, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetRemoveFailed, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ModelFailedFailover, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetVerification, readonly);
 
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
@@ -82,6 +83,8 @@ namespace BlackGui
             ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
             ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
             ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel));
+            ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverWhenNoModelCanBeLoaded));
+            ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
@@ -118,7 +121,8 @@ namespace BlackGui
                        ui->cb_ByVtol->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
                        ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
-                       ui->cb_ModelSetRemoveFailed->isChecked()
+                       ui->cb_ModelSetVerification->isChecked(), ui->cb_ModelSetRemoveFailed->isChecked(),
+                       ui->cb_ModelFailedFailover->isChecked()
                    );
         }
 

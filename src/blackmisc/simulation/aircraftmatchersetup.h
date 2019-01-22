@@ -55,13 +55,18 @@ namespace BlackMisc
                 ExcludeNoExcluded = 1 << 14,
                 ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
                 // --- model set ---
-                ModelSetRemoveFailedModel = 1 << 15,
+                ModelSetRemoveFailedModel           = 1 << 15,
+                ModelVerificationAtStartup          = 1 << 16,
+                ModelFailoverWhenNoModelCanBeLoaded = 1 << 17,
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
+                // ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverWhenNoModelCanBeLoaded,
+                ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverWhenNoModelCanBeLoaded,
                 ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
                 ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
-                ModeDefaultReducePlusScore  = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault
+                ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault,
+                ModeDefault       = ModeDefaultReducePlusScore | ModeDefaultSet
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -101,6 +106,13 @@ namespace BlackMisc
 
             //! Matching mode
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
+
+            //! Verification at startup?
+            //! \sa ModelVerificationOnStartup
+            bool doVerificationAtStartup() const { return this->getMatchingMode().testFlag(ModelVerificationAtStartup); }
+
+            //! Set startup verification
+            void setVerificationAtStartup(bool verify);
 
             //! Matching mode as string
             QString getMatchingModeAsString() const { return modeToString(this->getMatchingMode()); }
@@ -149,13 +161,13 @@ namespace BlackMisc
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
                                              bool byVtol,
-                                             bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
-                                             bool modelSetRemoveFailedModel);
+                                             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,  bool excludeNoDbData, bool excludeNoExcluded,
+                                             bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover);
 
         private:
-            int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
-            int m_mode = static_cast<int>(ModeDefaultReducePlusScore);
-            int m_strategy = static_cast<int>(PickByOrder);
+            int m_algorithm = static_cast<int>(ModeDefault);
+            int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
+            int m_strategy  = static_cast<int>(PickByOrder);
 
             BLACK_METACLASS(
                 CAircraftMatcherSetup,

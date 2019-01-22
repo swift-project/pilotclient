@@ -45,6 +45,13 @@ namespace BlackMisc
             return true;
         }
 
+        void CAircraftMatcherSetup::setVerificationAtStartup(bool verify)
+        {
+            MatchingMode m = this->getMatchingMode();
+            m.setFlag(ModelVerificationAtStartup, verify);
+            this->setMatchingMode(m);
+        }
+
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -61,8 +68,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexMatchingAlgorithm: return CVariant::fromValue(m_algorithm);
-            case IndexMatchingMode: return CVariant::fromValue(m_mode);
-            case IndexPickStrategy: return CVariant::fromValue(m_strategy);
+            case IndexMatchingMode:      return CVariant::fromValue(m_mode);
+            case IndexPickStrategy:      return CVariant::fromValue(m_strategy);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
@@ -75,8 +82,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
-            case IndexMatchingMode: m_mode = variant.toInt(); break;
-            case IndexPickStrategy: m_strategy = variant.toInt(); break;
+            case IndexMatchingMode:      m_mode = variant.toInt(); break;
+            case IndexPickStrategy:      m_strategy = variant.toInt(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
@@ -88,12 +95,8 @@ namespace BlackMisc
             MatchingMode mode = ModeNone;
             switch (algorithm)
             {
-            case MatchingStepwiseReduce:
-                mode = ModeDefaultReduce;
-                break;
-            case MatchingScoreBased:
-                mode = ModeDefaultScore;
-                break;
+            case MatchingStepwiseReduce: mode = ModeDefaultReduce; break;
+            case MatchingScoreBased:     mode = ModeDefaultScore; break;
             case MatchingStepwiseReducePlusScoreBased:
             default:
                 mode = ModeDefaultReducePlusScore;
@@ -134,25 +137,29 @@ namespace BlackMisc
             static const QString preferColorLiveries("scoring, prefer color liveries");
             static const QString exNoDb("excl.without DB data");
             static const QString exExcl("excl.excluded");
-            static const QString remModelSet("rem.from model set");
+            static const QString removeFromModelSet("rem.from model set");
+            static const QString verification("Verify models at startup");
+            static const QString modelFailedLoad("Replace models failed to load");
 
             switch (modeFlag)
             {
-            case ByModelString:            return ms;
-            case ByIcaoData:               return icao;
-            case ByFamily:                 return family;
-            case ByLivery:                 return livery;
-            case ByCombinedType:           return combined;
-            case ByIcaoOrderAircraftFirst: return icaoAircraft;
-            case ByIcaoOrderAirlineFirst:  return icaoAirline;
-            case ByForceCivilian:          return forceCiv;
-            case ByForceMilitary:          return forceMil;
-            case ByVtol:                   return vtol;
-            case ScoreIgnoreZeros:         return noZeros;
-            case ScorePreferColorLiveries: return preferColorLiveries;
-            case ExcludeNoDbData:          return exNoDb;
-            case ExcludeNoExcluded:        return exExcl;
-            case ModelSetRemoveFailedModel: return remModelSet;
+            case ByModelString:              return ms;
+            case ByIcaoData:                 return icao;
+            case ByFamily:                   return family;
+            case ByLivery:                   return livery;
+            case ByCombinedType:             return combined;
+            case ByIcaoOrderAircraftFirst:   return icaoAircraft;
+            case ByIcaoOrderAirlineFirst:    return icaoAirline;
+            case ByForceCivilian:            return forceCiv;
+            case ByForceMilitary:            return forceMil;
+            case ByVtol:                     return vtol;
+            case ScoreIgnoreZeros:           return noZeros;
+            case ScorePreferColorLiveries:   return preferColorLiveries;
+            case ExcludeNoDbData:            return exNoDb;
+            case ExcludeNoExcluded:          return exExcl;
+            case ModelSetRemoveFailedModel:  return removeFromModelSet;
+            case ModelVerificationAtStartup: return verification;
+            case ModelFailoverWhenNoModelCanBeLoaded: return modelFailedLoad;
             default: break;
             }
 
@@ -163,19 +170,22 @@ namespace BlackMisc
         QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
         {
             QStringList modes;
-            if (mode.testFlag(ByModelString))    { modes << modeFlagToString(ByModelString); }
-            if (mode.testFlag(ByIcaoData))       { modes << modeFlagToString(ByIcaoData); }
-            if (mode.testFlag(ByIcaoOrderAircraftFirst)) { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
-            if (mode.testFlag(ByIcaoOrderAirlineFirst))  { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
-            if (mode.testFlag(ByFamily))         { modes << modeFlagToString(ByFamily); }
-            if (mode.testFlag(ByLivery))         { modes << modeFlagToString(ByLivery); }
-            if (mode.testFlag(ByCombinedType))   { modes << modeFlagToString(ByCombinedType); }
-            if (mode.testFlag(ByForceCivilian))  { modes << modeFlagToString(ByForceCivilian); }
-            if (mode.testFlag(ByForceMilitary))  { modes << modeFlagToString(ByForceMilitary); }
-            if (mode.testFlag(ByVtol))           { modes << modeFlagToString(ByVtol); }
-            if (mode.testFlag(ScoreIgnoreZeros)) { modes << modeFlagToString(ScoreIgnoreZeros); }
-            if (mode.testFlag(ScorePreferColorLiveries))  { modes << modeFlagToString(ScorePreferColorLiveries); }
-            if (mode.testFlag(ModelSetRemoveFailedModel)) { modes << modeFlagToString(ModelSetRemoveFailedModel); }
+            if (mode.testFlag(ByModelString))              { modes << modeFlagToString(ByModelString); }
+            if (mode.testFlag(ByIcaoData))                 { modes << modeFlagToString(ByIcaoData); }
+            if (mode.testFlag(ByIcaoOrderAircraftFirst))   { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
+            if (mode.testFlag(ByIcaoOrderAirlineFirst))    { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
+            if (mode.testFlag(ByFamily))                   { modes << modeFlagToString(ByFamily); }
+            if (mode.testFlag(ByLivery))                   { modes << modeFlagToString(ByLivery); }
+            if (mode.testFlag(ByCombinedType))             { modes << modeFlagToString(ByCombinedType); }
+            if (mode.testFlag(ByForceCivilian))            { modes << modeFlagToString(ByForceCivilian); }
+            if (mode.testFlag(ByForceMilitary))            { modes << modeFlagToString(ByForceMilitary); }
+            if (mode.testFlag(ByVtol))                     { modes << modeFlagToString(ByVtol); }
+            if (mode.testFlag(ScoreIgnoreZeros))           { modes << modeFlagToString(ScoreIgnoreZeros); }
+            if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
+            if (mode.testFlag(ModelSetRemoveFailedModel))  { modes << modeFlagToString(ModelSetRemoveFailedModel); }
+            if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
+            if (mode.testFlag(ModelFailoverWhenNoModelCanBeLoaded)) { modes << modeFlagToString(ModelFailoverWhenNoModelCanBeLoaded); }
+
             return modes.join(", ");
         }
 
@@ -202,22 +212,24 @@ namespace BlackMisc
                 bool byVtol,
                 bool scoreIgnoreZeros, bool scorePreferColorLiveries,
                 bool excludeNoDbData, bool excludeNoExcluded,
-                bool modelSetRemoveFailedModel)
+                bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover)
         {
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
-            if (byIcaoDataAircraft1st)    { mode |= ByIcaoOrderAircraftFirst; }
-            if (byIcaoDataAirline1st)     { mode |= ByIcaoOrderAirlineFirst; }
-            if (byFamily)                 { mode |= ByFamily; }
-            if (byLivery)                 { mode |= ByLivery; }
-            if (byCombinedType)           { mode |= ByCombinedType; }
-            if (byForceMilitary)          { mode |= ByForceMilitary; }
-            if (byForceCivilian)          { mode |= ByForceCivilian; }
-            if (byVtol)                   { mode |= ByVtol; }
-            if (scoreIgnoreZeros)         { mode |= ScoreIgnoreZeros; }
-            if (scorePreferColorLiveries) { mode |= ScorePreferColorLiveries; }
-            if (excludeNoDbData)          { mode |= ExcludeNoDbData; }
-            if (excludeNoExcluded)        { mode |= ExcludeNoExcluded; }
+            if (byIcaoDataAircraft1st)     { mode |= ByIcaoOrderAircraftFirst; }
+            if (byIcaoDataAirline1st)      { mode |= ByIcaoOrderAirlineFirst; }
+            if (byFamily)                  { mode |= ByFamily; }
+            if (byLivery)                  { mode |= ByLivery; }
+            if (byCombinedType)            { mode |= ByCombinedType; }
+            if (byForceMilitary)           { mode |= ByForceMilitary; }
+            if (byForceCivilian)           { mode |= ByForceCivilian; }
+            if (byVtol)                    { mode |= ByVtol; }
+            if (scoreIgnoreZeros)          { mode |= ScoreIgnoreZeros; }
+            if (scorePreferColorLiveries)  { mode |= ScorePreferColorLiveries; }
+            if (excludeNoDbData)           { mode |= ExcludeNoDbData; }
+            if (excludeNoExcluded)         { mode |= ExcludeNoExcluded; }
             if (modelSetRemoveFailedModel) { mode |= ModelSetRemoveFailedModel; }
+            if (modelVerification)         { mode |= ModelVerificationAtStartup; }
+            if (modelFailover)             { mode |= ModelFailoverWhenNoModelCanBeLoaded; }
             return mode;
         }
     } // namespace
