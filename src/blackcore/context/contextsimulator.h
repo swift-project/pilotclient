@@ -203,6 +203,12 @@ namespace BlackCore
             //! \copydoc CAircraftMatcher::disableModelsForMatching
             virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) = 0;
 
+            //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
+            virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const = 0;
+
+            //! Trigger model set validation
+            virtual bool triggerModelSetValidation(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
             //! \copydoc CAircraftMatcher::restoreDisabledModels
             virtual void restoreDisabledModels() = 0;
 

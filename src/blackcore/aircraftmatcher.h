@@ -193,6 +193,9 @@ namespace BlackCore
         //! \remark effective until new set is set
         void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental);
 
+        //! The disabled models for matching
+        BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const { return m_disabledModels; }
+
         //! Restore the models removed with CAircraftMatcher::disableModelForMatching
         void restoreDisabledModels();
 

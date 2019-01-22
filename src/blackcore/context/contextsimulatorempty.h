@@ -140,10 +140,25 @@ namespace BlackCore
                 Q_UNUSED(incremental);
             }
 
+            //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
+            virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::CAircraftModelList();
+            }
+
             //! \copydoc CAircraftMatcher::restoreDisabledModels
             virtual void restoreDisabledModels() override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc BlackMisc::Simulation::CBackgroundValidation::triggerValidation
+            virtual bool triggerModelSetValidation(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(simulator);
+                return false;
             }
 
             //! \copydoc IContextSimulator::isKnownModel

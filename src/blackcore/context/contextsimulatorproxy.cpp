@@ -180,6 +180,16 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1String("disableModelsForMatching"), removedModels, incremental);
         }
 
+        CAircraftModelList CContextSimulatorProxy::getDisabledModelsForMatching() const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getDisabledModelsForMatching"));
+        }
+
+        bool CContextSimulatorProxy::triggerModelSetValidation(const CSimulatorInfo &simulator)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("triggerModelSetValidation"), simulator);
+        }
+
         void CContextSimulatorProxy::restoreDisabledModels()
         {
             m_dBusInterface->callDBus(QLatin1String("restoreDisabledModels"));
