@@ -8,236 +8,164 @@
  */
 
 #include "keyboardmacos.h"
+#include "macosinpututils.h"
 #include "blackmisc/logmessage.h"
 
-#include <QHash>
-#include <QMessageBox>
 #include <CoreFoundation/CoreFoundation.h>
-#include <AppKit/NSEvent.h>
-#include <AppKit/NSAlert.h>
-#include <Foundation/NSString.h>
-#include <Carbon/Carbon.h>
+#include <array>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
 
-    static QHash<int, KeyCode> keyMapping
+    static QHash<quint32, KeyCode> keyMapping
     {
-        { kVK_ANSI_0, Key_0 },
-        { kVK_ANSI_1, Key_1 },
-        { kVK_ANSI_2, Key_2 },
-        { kVK_ANSI_3, Key_3 },
-        { kVK_ANSI_4, Key_4 },
-        { kVK_ANSI_5, Key_5 },
-        { kVK_ANSI_6, Key_6 },
-        { kVK_ANSI_7, Key_7 },
-        { kVK_ANSI_8, Key_8 },
-        { kVK_ANSI_9, Key_9 },
-        { kVK_ANSI_A, Key_A },
-        { kVK_ANSI_B, Key_B },
-        { kVK_ANSI_C, Key_C },
-        { kVK_ANSI_D, Key_D },
-        { kVK_ANSI_E, Key_E },
-        { kVK_ANSI_F, Key_F },
-        { kVK_ANSI_G, Key_G },
-        { kVK_ANSI_H, Key_H },
-        { kVK_ANSI_I, Key_I },
-        { kVK_ANSI_J, Key_J },
-        { kVK_ANSI_K, Key_K },
-        { kVK_ANSI_L, Key_L },
-        { kVK_ANSI_M, Key_M },
-        { kVK_ANSI_N, Key_N },
-        { kVK_ANSI_O, Key_O },
-        { kVK_ANSI_P, Key_P },
-        { kVK_ANSI_Q, Key_Q },
-        { kVK_ANSI_R, Key_R },
-        { kVK_ANSI_S, Key_S },
-        { kVK_ANSI_T, Key_T },
-        { kVK_ANSI_U, Key_U },
-        { kVK_ANSI_V, Key_V },
-        { kVK_ANSI_W, Key_W },
-        { kVK_ANSI_X, Key_X },
-        { kVK_ANSI_Y, Key_Y },
-        { kVK_ANSI_Z, Key_Z },
-        { kVK_ANSI_KeypadPlus, Key_Plus },
-        { kVK_ANSI_KeypadMinus, Key_Minus },
-        { kVK_ANSI_Minus, Key_Minus },
-        { kVK_ANSI_Period, Key_Period },
-        { kVK_ANSI_KeypadDivide, Key_Divide },
-        { kVK_ANSI_KeypadMultiply, Key_Multiply },
-        { kVK_ANSI_Comma, Key_Comma },
-        { kVK_ANSI_Keypad0, Key_Numpad0 },
-        { kVK_ANSI_Keypad1, Key_Numpad1 },
-        { kVK_ANSI_Keypad2, Key_Numpad2 },
-        { kVK_ANSI_Keypad3, Key_Numpad3 },
-        { kVK_ANSI_Keypad4, Key_Numpad4 },
-        { kVK_ANSI_Keypad5, Key_Numpad5 },
-        { kVK_ANSI_Keypad6, Key_Numpad6 },
-        { kVK_ANSI_Keypad7, Key_Numpad7 },
-        { kVK_ANSI_Keypad8, Key_Numpad8 },
-        { kVK_ANSI_Keypad9, Key_Numpad9 },
+        { kHIDUsage_Keyboard0, Key_0 },
+        { kHIDUsage_Keyboard0, Key_1 },
+        { kHIDUsage_Keyboard0, Key_2 },
+        { kHIDUsage_Keyboard0, Key_3 },
+        { kHIDUsage_Keyboard4, Key_4 },
+        { kHIDUsage_Keyboard5, Key_5 },
+        { kHIDUsage_Keyboard6, Key_6 },
+        { kHIDUsage_Keyboard7, Key_7 },
+        { kHIDUsage_Keyboard8, Key_8 },
+        { kHIDUsage_Keyboard9, Key_9 },
+        { kHIDUsage_KeyboardA, Key_A },
+        { kHIDUsage_KeyboardB, Key_B },
+        { kHIDUsage_KeyboardC, Key_C },
+        { kHIDUsage_KeyboardD, Key_D },
+        { kHIDUsage_KeyboardE, Key_E },
+        { kHIDUsage_KeyboardF, Key_F },
+        { kHIDUsage_KeyboardG, Key_G },
+        { kHIDUsage_KeyboardH, Key_H },
+        { kHIDUsage_KeyboardI, Key_I },
+        { kHIDUsage_KeyboardJ, Key_J },
+        { kHIDUsage_KeyboardK, Key_K },
+        { kHIDUsage_KeyboardL, Key_L },
+        { kHIDUsage_KeyboardM, Key_M },
+        { kHIDUsage_KeyboardN, Key_N },
+        { kHIDUsage_KeyboardO, Key_O },
+        { kHIDUsage_KeyboardP, Key_P },
+        { kHIDUsage_KeyboardQ, Key_Q },
+        { kHIDUsage_KeyboardR, Key_R },
+        { kHIDUsage_KeyboardS, Key_S },
+        { kHIDUsage_KeyboardT, Key_T },
+        { kHIDUsage_KeyboardU, Key_U },
+        { kHIDUsage_KeyboardV, Key_V },
+        { kHIDUsage_KeyboardW, Key_W },
+        { kHIDUsage_KeyboardX, Key_X },
+        { kHIDUsage_KeyboardY, Key_Y },
+        { kHIDUsage_KeyboardZ, Key_Z },
+        { kHIDUsage_KeypadPlus, Key_Plus },
+        { kHIDUsage_KeypadHyphen, Key_Minus },
+        { kHIDUsage_KeyboardHyphen, Key_Minus },
+        { kHIDUsage_KeyboardPeriod, Key_Period },
+        { kHIDUsage_KeypadSlash, Key_Divide },
+        { kHIDUsage_KeypadAsterisk, Key_Multiply },
+        { kHIDUsage_KeyboardComma, Key_Comma },
+        { kHIDUsage_Keypad0, Key_Numpad0 },
+        { kHIDUsage_Keypad1, Key_Numpad1 },
+        { kHIDUsage_Keypad2, Key_Numpad2 },
+        { kHIDUsage_Keypad3, Key_Numpad3 },
+        { kHIDUsage_Keypad4, Key_Numpad4 },
+        { kHIDUsage_Keypad5, Key_Numpad5 },
+        { kHIDUsage_Keypad6, Key_Numpad6 },
+        { kHIDUsage_Keypad7, Key_Numpad7 },
+        { kHIDUsage_Keypad8, Key_Numpad8 },
+        { kHIDUsage_Keypad9, Key_Numpad9 },
+        { kHIDUsage_KeyboardRightControl, Key_ControlRight },
+        { kHIDUsage_KeyboardLeftControl, Key_ControlLeft },
+        { kHIDUsage_KeyboardRightAlt, Key_AltRight },
+        { kHIDUsage_KeyboardLeftAlt, Key_AltLeft },
     };
 
-    CKeyboardMacOS::CKeyboardMacOS(QObject *parent) :
-        IKeyboard(parent)
+    CKeyboardMacOS::CKeyboardMacOS(QObject *parent) : IKeyboard(parent)
+    { }
+
+    void CKeyboardMacOS::processKeyEvent(IOHIDValueRef value)
     {
+        IOHIDElementRef element = IOHIDValueGetElement(value);
+        UInt32 usagePage = IOHIDElementGetUsagePage(element);
+        if (usagePage != kHIDPage_KeyboardOrKeypad) { return; }
+
+        quint32 scancode = IOHIDElementGetUsage(element);
+
+        KeyCode code = convertToKey(scancode);
+        if (code != Key_Unknown)
+        {
+            CHotkeyCombination oldCombination(m_keyCombination);
+            bool pressed = IOHIDValueGetIntegerValue(value) == 1;
+            if (pressed)
+            {
+                m_keyCombination.addKeyboardKey(code);
+            }
+            else
+            {
+                m_keyCombination.removeKeyboardKey(code);
+            }
+
+            if (oldCombination != m_keyCombination)
+            {
+                emit keyCombinationChanged(m_keyCombination);
+            }
+        }
     }
 
     CKeyboardMacOS::~CKeyboardMacOS()
     {
-        if (m_eventTap) { CGEventTapEnable(m_eventTap, false); }
-        if (m_sourceRef)
+        if (m_hidManager)
         {
-            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_sourceRef, kCFRunLoopCommonModes);
-            CFRelease(m_sourceRef);
+            IOHIDManagerClose(m_hidManager, kIOHIDOptionsTypeNone);
+            CFRelease(m_hidManager);
         }
-        if (m_eventTap) { CFRelease(m_eventTap); }
     }
 
     bool CKeyboardMacOS::init()
     {
-        // 10.9 and later
-        const void *keys[] = { kAXTrustedCheckOptionPrompt };
-        const void *values[] = { kCFBooleanTrue };
+        m_hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 
-        CFDictionaryRef options = CFDictionaryCreate(
-                                      kCFAllocatorDefault,
-                                      keys,
-                                      values,
-                                      sizeof(keys) / sizeof(*keys),
-                                      &kCFCopyStringDictionaryKeyCallBacks,
-                                      &kCFTypeDictionaryValueCallBacks);
-
-        bool accessibilityEnabled = AXIsProcessTrustedWithOptions(options);
-        CFRelease(options);
-        if (!accessibilityEnabled)
+        CFMutableArrayRef matchingArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+        if (!matchingArray)
         {
-            QMessageBox msgBox;
-            msgBox.setText("In order to enable hotkeys first add swift to the list of apps allowed to "
-                           "control your computer in System Preferences / Security & Privacy / Privacy / Accessiblity and then restart Swift.");
-            msgBox.exec();
+            CLogMessage(this).warning(u"Cocoa: Failed to create array");
             return false;
         }
 
-        CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 << kCGEventFlagsChanged));
+        CFDictionaryRef matchingDict = CMacOSInputUtils::createDeviceMatchingDictionary(kHIDPage_GenericDesktop, kHIDUsage_GD_Keyboard);
+        if (matchingDict)
+        {
+            CFArrayAppendValue(matchingArray, matchingDict);
+            CFRelease(matchingDict);
+        }
 
-        // try creating an event tap just for keypresses. if it fails, we need Universal Access.
-        m_eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
-                                 eventMask, myCGEventCallback, this);
-        if (! m_eventTap) { return false; }
+        matchingDict = CMacOSInputUtils::createDeviceMatchingDictionary(kHIDPage_GenericDesktop, kHIDUsage_GD_Keypad);
+        if (matchingDict)
+        {
+            CFArrayAppendValue(matchingArray, matchingDict);
+            CFRelease(matchingDict);
+        }
 
-        m_sourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTap, 0);
-        if (! m_sourceRef) { return false; }
+        IOHIDManagerSetDeviceMatchingMultiple(m_hidManager, matchingArray);
+        CFRelease(matchingArray);
 
-        CFRunLoopAddSource(CFRunLoopGetCurrent(), m_sourceRef, kCFRunLoopCommonModes);
-        CGEventTapEnable(m_eventTap, true);
+        IOHIDManagerRegisterInputValueCallback(m_hidManager, valueCallback, this);
+        IOHIDManagerScheduleWithRunLoop(m_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        IOHIDManagerOpen(m_hidManager, kIOHIDOptionsTypeNone);
         return true;
     }
 
-    void CKeyboardMacOS::processKeyEvent(CGEventType type,
-                                       CGEventRef event)
+    void CKeyboardMacOS::valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value)
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
-
-        unsigned int vkcode = static_cast<unsigned int>(CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode));
-
-        if (type == kCGEventKeyDown)
-        {
-            auto key = convertToKey(vkcode);
-            if (key == Key_Unknown) { return; }
-            m_keyCombination.addKeyboardKey(key);
-        }
-        else if (type == kCGEventKeyUp)
-        {
-            auto key = convertToKey(vkcode);
-            if (key == Key_Unknown) { return; }
-            m_keyCombination.removeKeyboardKey(key);
-        }
-        else if (type == kCGEventFlagsChanged)
-        {
-            CGEventFlags f = CGEventGetFlags(event);
-
-            if ((f & kCGEventFlagMaskShift) == kCGEventFlagMaskShift)
-            {
-                if (vkcode == 56)
-                {
-                    m_keyCombination.addKeyboardKey(Key_ShiftLeft);
-                }
-                else if (vkcode == 60)
-                {
-                    m_keyCombination.addKeyboardKey(Key_ShiftRight);
-                }
-            }
-            else
-            {
-                m_keyCombination.removeKeyboardKey(Key_ShiftLeft);
-                m_keyCombination.removeKeyboardKey(Key_ShiftRight);
-            }
-
-            if ((f & kCGEventFlagMaskControl) == kCGEventFlagMaskControl)
-            {
-                // at least on the mac wireless keyboard there is no right ctrl key
-                if (vkcode == 59)
-                {
-                    m_keyCombination.addKeyboardKey(Key_ControlLeft);
-                }
-            }
-            else
-            {
-                m_keyCombination.removeKeyboardKey(Key_ControlLeft);
-            }
-
-            if ((f & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate)
-            {
-                if (vkcode == 58)
-                {
-                    m_keyCombination.addKeyboardKey(Key_AltLeft);
-                }
-                else if (vkcode == 61)
-                {
-                    m_keyCombination.addKeyboardKey(Key_AltRight);
-                }
-            }
-            else
-            {
-                m_keyCombination.removeKeyboardKey(Key_AltLeft);
-                m_keyCombination.removeKeyboardKey(Key_AltRight);
-            }
-        }
-
-        if (oldCombination != m_keyCombination)
-        {
-            emit keyCombinationChanged(m_keyCombination);
-        }
+        Q_UNUSED(result);
+        Q_UNUSED(sender);
+        CKeyboardMacOS *obj = static_cast<CKeyboardMacOS *>(context);
+        obj->processKeyEvent(value);
     }
 
-    KeyCode CKeyboardMacOS::convertToKey(int keyCode)
+    KeyCode CKeyboardMacOS::convertToKey(quint32 keyCode)
     {
         return keyMapping.value(keyCode, Key_Unknown);
-    }
-
-    CGEventRef CKeyboardMacOS::myCGEventCallback(CGEventTapProxy,
-            CGEventType type,
-            CGEventRef event,
-            void *refcon)
-    {
-        // If disabled on purpose, don't do anything further.
-        if (type == kCGEventTapDisabledByUserInput) { return event; }
-
-        CKeyboardMacOS *keyboardMac = static_cast<CKeyboardMacOS*>(refcon);
-        if (type == kCGEventTapDisabledByTimeout)
-        {
-            BlackMisc::CLogMessage(static_cast<CKeyboardMacOS *>(nullptr)).warning(u"Event tap got disabled by timeout. Enable it again.");
-            CGEventTapEnable(keyboardMac->m_eventTap, true);
-        }
-        else
-        {
-            keyboardMac->processKeyEvent(type, event);
-        }
-
-        // send event to next application
-        return event;
     }
 }

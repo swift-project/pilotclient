@@ -14,6 +14,10 @@
 
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/input/keycodes.h"
+
+#include <IOKit/hid/IOHIDManager.h>
+
 #include <ApplicationServices/ApplicationServices.h>
 #include <QHash>
 
@@ -34,9 +38,6 @@ namespace BlackInput
         //! Destructor
         virtual ~CKeyboardMacOS() override;
 
-        //! Process key event
-        virtual void processKeyEvent(CGEventType type, CGEventRef event);
-
     protected:
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
@@ -46,16 +47,14 @@ namespace BlackInput
 
         //! Constructor
         CKeyboardMacOS(QObject *parent = nullptr);
-        BlackMisc::Input::KeyCode convertToKey(int keyCode);
 
-        static CGEventRef myCGEventCallback(CGEventTapProxy proxy,
-                                     CGEventType type,
-                                     CGEventRef event,
-                                     void *refcon);
+        void processKeyEvent(IOHIDValueRef value);
 
+        static BlackMisc::Input::KeyCode convertToKey(quint32 keyCode);
+        static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
+
+        IOHIDManagerRef m_hidManager =  nullptr;
         BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
-        CFMachPortRef m_eventTap = nullptr;
-        CFRunLoopSourceRef m_sourceRef = nullptr;
     };
 } // ns
 
