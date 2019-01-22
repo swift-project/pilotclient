@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAircraftModelValidationComponent</class>
+ <widget class="QFrame" name="CAircraftModelValidationComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Model validation</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AircraftModelValidation" stretch="0,1,0">
+   <item>
+    <widget class="QLabel" name="lbl_Summay">
+     <property name="text">
+      <string>Summary will go here</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tw_CAircraftModelValidationComponent">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_InvalidModels">
+      <attribute name="title">
+       <string>Invalid models</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="BlackGui::Views::CAircraftModelView" name="tvp_InvalidModels">
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Messages">
+      <attribute name="title">
+       <string>Messages</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="wi_Buttons" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QCheckBox" name="cb_EnableStartupCheck">
+        <property name="text">
+         <string>check at startup</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_TempDisableInvalid">
+        <property name="text">
+         <string>temp.disable invalid</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_TempDisableSelected">
+        <property name="text">
+         <string>temp.disable selected</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/aircraftmodelview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/logcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
