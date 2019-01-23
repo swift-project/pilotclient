@@ -161,6 +161,13 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc BlackMisc::Simulation::CBackgroundValidation::isValidating
+            virtual bool isValidationInProgress() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::isKnownModelInSet
             virtual bool isKnownModelInSet(const QString &modelstring) const override
             {

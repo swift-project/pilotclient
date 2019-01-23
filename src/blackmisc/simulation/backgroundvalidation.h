@@ -48,6 +48,10 @@ namespace BlackMisc
             //! \threadsafe
             bool wasAlreadyChecked(const CSimulatorInfo &simulator) const;
 
+            //! Validation in progress
+            //! \threadsafe
+            bool isValidating() const { return m_inWork; }
+
             //! Reset checked for simulator
             //! \threadsafe
             void resetAlreadyChecked(const CSimulatorInfo &simulator);

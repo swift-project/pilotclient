@@ -279,8 +279,16 @@ namespace BlackCore
             m_aircraftMatcher.restoreDisabledModels();
         }
 
+        bool CContextSimulator::isValidationInProgress() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_validator) { return false; }
+            return m_validator->isValidating();
+        }
+
         bool CContextSimulator::triggerModelSetValidation(const CSimulatorInfo &simulator)
         {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!m_validator) { return false; }
             return m_validator->triggerValidation(simulator);
         }

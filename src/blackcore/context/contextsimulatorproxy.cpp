@@ -190,6 +190,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("triggerModelSetValidation"), simulator);
         }
 
+        bool CContextSimulatorProxy::isValidationInProgress() const
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isValidationInProgress"));
+        }
+
         void CContextSimulatorProxy::restoreDisabledModels()
         {
             m_dBusInterface->callDBus(QLatin1String("restoreDisabledModels"));

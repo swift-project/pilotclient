@@ -206,6 +206,9 @@ namespace BlackCore
             //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
             virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const = 0;
 
+            //! \copydoc BlackMisc::Simulation::CBackgroundValidation::isValidating
+            virtual bool isValidationInProgress() const = 0;
+
             //! Trigger model set validation
             virtual bool triggerModelSetValidation(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
