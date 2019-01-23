@@ -73,15 +73,9 @@ namespace BlackGui
             switch (mode)
             {
             default:
-            case CheckBoxes:
-                ui->wi_CheckBoxes->setVisible(true);
-                break;
-            case RadioButtons:
-                ui->wi_RadioButtons->setVisible(true);
-                break;
-            case ComboBox:
-                ui->wi_ComboBox->setVisible(true);
-                break;
+            case CheckBoxes:   ui->wi_CheckBoxes->setVisible(true);   break;
+            case RadioButtons: ui->wi_RadioButtons->setVisible(true); break;
+            case ComboBox:     ui->wi_ComboBox->setVisible(true);     break;
             }
             this->setToLastSelection();
         }
