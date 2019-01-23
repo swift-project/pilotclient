@@ -62,6 +62,9 @@ namespace BlackGui
             //! Enable/disable startup check
             void onCheckAtStartupChanged(bool checked);
 
+            //! Trigger new validation
+            void triggerValidation();
+
             //! Button has been clicked
             void onButtonClicked();
         };

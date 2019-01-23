@@ -25,10 +25,15 @@ namespace BlackGui
             ui(new Ui::CAircraftModelValidationComponent)
         {
             ui->setupUi(this);
+            ui->comp_Simulator->setMode(CSimulatorSelector::ComboBox);
+            ui->comp_Simulator->setRememberSelection(false);
+
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
-            connect(ui->cb_EnableStartupCheck, &QCheckBox::toggled,    this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
-            connect(ui->pb_TempDisableInvalid, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
+            connect(ui->cb_EnableStartupCheck,  &QCheckBox::toggled,    this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
+            connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
+            connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
+            connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation);
         }
 
         CAircraftModelValidationComponent::~CAircraftModelValidationComponent()
@@ -39,6 +44,7 @@ namespace BlackGui
             Q_UNUSED(simulator);
             Q_UNUSED(valid);
             ui->tvp_InvalidModels->updateContainerMaybeAsync(invalid);
+            ui->comp_Simulator->setValue(simulator);
             ui->comp_Messages->clear();
             ui->comp_Messages->appendStatusMessagesToList(msgs);
 
@@ -69,6 +75,27 @@ namespace BlackGui
             setup.setVerificationAtStartup(checked);
             CStatusMessage msg = m_matchingSettings.setAndSave(setup);
             Q_UNUSED(msg);
+        }
+
+        void CAircraftModelValidationComponent::triggerValidation()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
+            if (!sGui->getIContextSimulator()) { return; }
+            if (sGui->getIContextSimulator()->isValidationInProgress())
+            {
+                this->showOverlayHTMLMessage("Validation in progress", 5000);
+                return;
+            }
+
+            const CSimulatorInfo sim = ui->comp_Simulator->getValue();
+            if (sGui->getIContextSimulator()->triggerModelSetValidation(sim))
+            {
+                this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(sim.toQString(true)), 5000);
+            }
+            else
+            {
+                this->showOverlayHTMLMessage(QStringLiteral("Cannot trigger validation for '%1'").arg(sim.toQString(true)), 5000);
+            }
         }
 
         void CAircraftModelValidationComponent::onButtonClicked()

@@ -89,6 +89,29 @@
        </spacer>
       </item>
       <item>
+       <widget class="BlackGui::Components::CSimulatorSelector" name="comp_Simulator">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_TriggerValidation">
+        <property name="text">
+         <string>trigger validation</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_TempDisableInvalid">
         <property name="text">
          <string>temp.disable invalid</string>
@@ -119,7 +142,21 @@
    <header>blackgui/components/logcomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tw_CAircraftModelValidationComponent</tabstop>
+  <tabstop>tvp_InvalidModels</tabstop>
+  <tabstop>cb_EnableStartupCheck</tabstop>
+  <tabstop>pb_TriggerValidation</tabstop>
+  <tabstop>pb_TempDisableInvalid</tabstop>
+  <tabstop>pb_TempDisableSelected</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
