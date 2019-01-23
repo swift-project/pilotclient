@@ -25,6 +25,8 @@ namespace BlackGui
             ui(new Ui::CAircraftModelValidationComponent)
         {
             ui->setupUi(this);
+            const CAircraftMatcherSetup setup = m_matchingSettings.get();
+            ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
             connect(ui->cb_EnableStartupCheck, &QCheckBox::toggled,    this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
             connect(ui->pb_TempDisableInvalid, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
         }

@@ -310,7 +310,7 @@ void SwiftGuiStd::setContextAvailability()
         this->displayDBusReconnectDialog();
     }
     m_contextNetworkAvailable = m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
-    m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
+    m_contextAudioAvailable   = m_coreAvailable && sGui->getIContextAudio()   && !sGui->getIContextAudio()->isEmptyObject();
 
     // react to a change in core's availability
     if (m_coreAvailable != corePreviouslyAvailable)
@@ -438,14 +438,22 @@ void SwiftGuiStd::verifyPrerequisites()
 
 void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
 {
+    this->displayValidationDialog();
+    m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
+
+    // modal version
+    // const int r = m_validationDialog->exec();
+    // Q_UNUSED(r);
+}
+
+void SwiftGuiStd::displayValidationDialog()
+{
     if (!sGui || sGui->isShuttingDown()) { return; }
     if (!m_validationDialog)
     {
         m_validationDialog.reset(new CAircraftModelSetValidationDialog(this));
     }
-    m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
-    const int r = m_validationDialog->exec();
-    Q_UNUSED(r);
+    m_validationDialog->show();
 }
 
 void SwiftGuiStd::checkDbDataLoaded()

@@ -102,6 +102,7 @@ namespace BlackGui
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
             connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
             connect(ui->pb_DoMatchingAgain, &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
+            connect(ui->pb_ValidateModelSet, &QPushButton::clicked, this, &CMappingComponent::requestValidationDialog);
 
             m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, m_currentMappingsViewDelegate);
@@ -411,8 +412,15 @@ namespace BlackGui
 
         void CMappingComponent::onModelsUpdateRequested()
         {
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
-            const CAircraftModelList modelSet(sGui->getIContextSimulator()->getModelSet());
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+            CAircraftModelList modelSet(sGui->getIContextSimulator()->getModelSet());
+
+            const CAircraftModelList disabledModels = sGui->getIContextSimulator()->getDisabledModelsForMatching();
+            const bool hasDisabledModels = !disabledModels.isEmpty();
+
+            ui->tvp_AircraftModels->setHighlightColor(Qt::red);
+            ui->tvp_AircraftModels->setHighlight(hasDisabledModels);
+            ui->tvp_AircraftModels->setHighlightModels(disabledModels);
             ui->tvp_AircraftModels->updateContainerMaybeAsync(modelSet);
             ui->tw_SpecializedViews->setCurrentIndex(TabAircraftModels);
         }
@@ -425,6 +433,7 @@ namespace BlackGui
                 sGui->getIContextSimulator()->disableModelsForMatching(models, true);
                 const CStatusMessage m = CLogMessage(this).info(u"Disabled %1 model(s): %2") << models.size() << models.getCallsignsAsString(", ", true);
                 this->showOverlayHTMLMessage(m, OverlayMessageMs);
+                this->onModelsUpdateRequested();
             }
         }
 

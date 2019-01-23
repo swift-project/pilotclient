@@ -272,6 +272,9 @@ private:
     //! Model set haas been verfied
     void onValidatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
+    //! Display validation dialog
+    void displayValidationDialog();
+
     //! Ckeck if the DB data have been loaded
     void checkDbDataLoaded();
 

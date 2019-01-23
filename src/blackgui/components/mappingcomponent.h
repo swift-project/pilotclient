@@ -90,6 +90,9 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Request the validation dialog
+            void requestValidationDialog();
+
         private:
             //! Aircraft models available
             void onModelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &dummy);
