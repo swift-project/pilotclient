@@ -570,10 +570,10 @@ namespace BlackGui
 
         void CDbMappingComponent::onStashedModelsChangedDigest()
         {
-            const bool highlightVPilot = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
-            const bool highlightOwnModels = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();
-            const bool highlightModelSet = ui->comp_OwnModelSet->view()->derivedModel()->highlightModelStrings();
-            const bool highlight =  highlightOwnModels || highlightModelSet || highlightVPilot;
+            const bool highlightVPilot    = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModels();
+            const bool highlightOwnModels = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModels();
+            const bool highlightModelSet  = ui->comp_OwnModelSet->view()->derivedModel()->highlightModels();
+            const bool highlight          = highlightOwnModels || highlightModelSet || highlightVPilot;
             if (!highlight) { return; }
             const QStringList stashedModels(ui->comp_StashAircraft->getStashedModelStrings());
             if (highlightVPilot)
@@ -657,7 +657,7 @@ namespace BlackGui
             QString o(ot);
             const QString sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator().toQString(true));
             if (!sim.isEmpty()) { o = o.append(" ").append(sim); }
-            QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
+            const QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnAircraftModels->view()->rowCount()) + f;
             ui->tw_ModelsToBeMapped->setTabText(i, o);
         }

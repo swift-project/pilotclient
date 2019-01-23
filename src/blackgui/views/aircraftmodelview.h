@@ -95,17 +95,20 @@ namespace BlackGui
             //! Replace models with sme model string, otherwise add
             int replaceOrAddModelsWithString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity  = Qt::CaseInsensitive);
 
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModels
+            void setHighlightModels(const BlackMisc::Simulation::CAircraftModelList &highlightModels);
+
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
             void setHighlightModelStrings(const QStringList &highlightModels);
 
-            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(bool)
-            void setHighlightModelStrings(bool highlight);
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlight
+            void setHighlight(bool highlight);
 
-            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStringsColor
-            void setHighlightModelStringsColor(const QBrush &brush);
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightColor
+            void setHighlightColor(const QBrush &brush);
 
-            //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelStrings
-            bool highlightModelStrings() const;
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModels
+            bool highlightModels() const;
 
             //! Loading data will be restricted to simulator
             void setSimulatorForLoading(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_loadingRequiresSimulator = simulator; }

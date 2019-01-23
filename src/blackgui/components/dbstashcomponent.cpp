@@ -75,8 +75,8 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
-            ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
-            ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
+            ui->tvp_StashAircraftModels->setHighlight(true);
+            ui->tvp_StashAircraftModels->setHighlightColor(Qt::red);
             ui->tvp_StashAircraftModels->setSettingsDirectoryIndex(CDirectories::IndexDirLastModelStashJsonOrDefault);
             this->enableButtonRow();
 

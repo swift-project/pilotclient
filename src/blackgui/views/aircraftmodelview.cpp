@@ -172,19 +172,24 @@ namespace BlackGui
             this->derivedModel()->setHighlightModelStrings(highlightModels);
         }
 
-        void CAircraftModelView::setHighlightModelStrings(bool highlight)
+        void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModels)
         {
-            this->derivedModel()->setHighlightModelStrings(highlight);
+            this->derivedModel()->setHighlightModels(highlightModels);
         }
 
-        void CAircraftModelView::setHighlightModelStringsColor(const QBrush &brush)
+        void CAircraftModelView::setHighlight(bool highlight)
         {
-            this->derivedModel()->setHighlightModelStringsColor(brush);
+            this->derivedModel()->setHighlight(highlight);
         }
 
-        bool CAircraftModelView::highlightModelStrings() const
+        void CAircraftModelView::setHighlightColor(const QBrush &brush)
         {
-            return this->derivedModel()->highlightModelStrings();
+            this->derivedModel()->setHighlightColor(brush);
+        }
+
+        bool CAircraftModelView::highlightModels() const
+        {
+            return this->derivedModel()->highlightModels();
         }
 
         void CAircraftModelView::dropEvent(QDropEvent *event)
@@ -332,7 +337,7 @@ namespace BlackGui
                     m_menuFlagActions.insert(MenuHighlightStashed, ma);
                 }
                 QAction *a = menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuHighlightStashed)).first();
-                a->setChecked(this->derivedModel()->highlightModelStrings());
+                a->setChecked(this->derivedModel()->highlightModels());
                 addStashMenu = true;
             }
 
@@ -390,15 +395,15 @@ namespace BlackGui
 
         void CAircraftModelView::toggleHighlightStashedModels()
         {
-            const bool h = derivedModel()->highlightModelStrings();
-            derivedModel()->setHighlightModelStrings(!h);
+            const bool h = derivedModel()->highlightModels();
+            derivedModel()->setHighlight(!h);
             emit toggledHighlightStashedModels();
         }
 
         void CAircraftModelView::toggleHighlightInvalidModels()
         {
-            const bool h = this->highlightModelStrings();
-            this->setHighlightModelStrings(!h);
+            const bool h = this->highlightModels();
+            this->setHighlight(!h);
         }
 
         void CAircraftModelView::stashingClearsSelection()

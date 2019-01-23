@@ -173,12 +173,17 @@ namespace BlackGui
             this->endResetModel();
         }
 
-        void CAircraftModelListModel::setHighlightModelStrings(bool highlightModelStrings)
+        void CAircraftModelListModel::setHighlightModels(const CAircraftModelList &highlightModels)
         {
-            if (m_highlightModelStrings == highlightModelStrings) { return; }
+            this->setHighlightModelStrings(highlightModels.getModelStringList(true));
+        }
+
+        void CAircraftModelListModel::setHighlight(bool highlightModels)
+        {
+            if (m_highlightModels == highlightModels) { return; }
 
             this->beginResetModel();
-            m_highlightModelStrings = highlightModelStrings;
+            m_highlightModels = highlightModels;
             this->endResetModel();
         }
 
@@ -201,7 +206,7 @@ namespace BlackGui
         {
             if (role == Qt::BackgroundRole)
             {
-                const bool ms = highlightModelStrings() && !m_highlightStrings.isEmpty();
+                const bool ms = highlightModels() && !m_highlightStrings.isEmpty();
                 if (!ms) { return CListModelDbObjects::data(index, role); }
 
                 // the underlying model object
@@ -226,7 +231,7 @@ namespace BlackGui
 
         void CAircraftModelListModel::clearHighlighting()
         {
-            m_highlightModelStrings = false;
+            m_highlightModels = false;
             m_highlightStrings.clear();
             COrderableListModelDbObjects::clearHighlighting();
         }

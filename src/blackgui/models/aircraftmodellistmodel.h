@@ -64,13 +64,16 @@ namespace BlackGui
             void setHighlightModelStrings(const QStringList &modelStrings = QStringList());
 
             //! Highlight models
-            bool highlightModelStrings() const { return m_highlightModelStrings; }
+            void setHighlightModels(const BlackMisc::Simulation::CAircraftModelList &highlightModels);
 
             //! Highlight models
-            void setHighlightModelStrings(bool highlightModelStrings);
+            bool highlightModels() const { return m_highlightModels; }
+
+            //! Highlight models
+            void setHighlight(bool highlightModels);
 
             //! The highlight color
-            void setHighlightModelStringsColor(const QBrush &brush) { m_highlightColor = brush; }
+            void setHighlightColor(const QBrush &brush) { m_highlightColor = brush; }
 
             //! \copydoc CListModelBaseNonTemplate::clearHighlighting
             virtual void clearHighlighting() override;
@@ -91,10 +94,10 @@ namespace BlackGui
             virtual bool isOrderable() const override { return true; }
 
         private:
-            AircraftModelMode m_mode = NotSet;                  //!< current mode
-            bool              m_highlightModelStrings = false;  //!< highlight if in m_highlightStrings
-            QStringList       m_highlightStrings;               //!< model strings to highlight
-            QBrush            m_highlightColor{Qt::yellow};     //!< how to highlight
+            AircraftModelMode m_mode = NotSet;              //!< current mode
+            bool              m_highlightModels = false;    //!< highlight if in m_highlightStrings
+            QStringList       m_highlightStrings;           //!< model strings to highlight
+            QBrush            m_highlightColor{Qt::yellow}; //!< how to highlight
         };
     } // ns
 } // ns
