@@ -150,9 +150,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getModelSetCompleterStrings"), sorted);
         }
 
-        bool CContextSimulatorProxy::isKnownModel(const QString &modelString) const
+        bool CContextSimulatorProxy::isKnownModelInSet(const QString &modelString) const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isKnownModel"), modelString);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isKnownModelInSet"), modelString);
         }
 
         CAircraftModelList CContextSimulatorProxy::getModelSetModelsStartingWith(const QString &modelString) const

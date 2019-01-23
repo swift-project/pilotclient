@@ -213,7 +213,7 @@ namespace BlackCore
             virtual void restoreDisabledModels() = 0;
 
             //! Known model?
-            virtual bool isKnownModel(const QString &modelstring) const = 0;
+            virtual bool isKnownModelInSet(const QString &modelstring) const = 0;
 
             //! Set time synchronization between simulator and user's computer time
             //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature

@@ -161,8 +161,8 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextSimulator::isKnownModel
-            virtual bool isKnownModel(const QString &modelstring) const override
+            //! \copydoc IContextSimulator::isKnownModelInSet
+            virtual bool isKnownModelInSet(const QString &modelstring) const override
             {
                 Q_UNUSED(modelstring);
                 logEmptyContextWarning(Q_FUNC_INFO);

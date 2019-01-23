@@ -90,7 +90,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override;
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
-            virtual bool isKnownModel(const QString &modelString) const override;
+            virtual bool isKnownModelInSet(const QString &modelString) const override;
             virtual int getModelSetCount() const override;
             virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override;
             virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const override;

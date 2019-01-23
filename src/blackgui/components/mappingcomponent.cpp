@@ -336,7 +336,7 @@ namespace BlackGui
             bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
             if (!hasModel && sGui && sGui->getIContextSimulator())
             {
-                hasModel = sGui->getIContextSimulator()->isKnownModel(modelString);
+                hasModel = sGui->getIContextSimulator()->isKnownModelInSet(modelString);
             }
 
             if (!hasModel)
