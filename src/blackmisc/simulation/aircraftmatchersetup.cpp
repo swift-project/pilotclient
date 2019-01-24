@@ -214,6 +214,8 @@ namespace BlackMisc
                 bool excludeNoDbData, bool excludeNoExcluded,
                 bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover)
         {
+            if (modelFailover) { modelSetRemoveFailedModel = true; } // otherwise this does not make sense
+
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
             if (byIcaoDataAircraft1st)     { mode |= ByIcaoOrderAircraftFirst; }
             if (byIcaoDataAirline1st)      { mode |= ByIcaoOrderAirlineFirst; }

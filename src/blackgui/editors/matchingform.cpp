@@ -82,7 +82,7 @@ namespace BlackGui
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
             ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
             ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
-            ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel));
+            ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel) || mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
 
