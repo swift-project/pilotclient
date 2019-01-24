@@ -71,7 +71,7 @@ namespace BlackGui
      */
     class BLACKGUI_EXPORT CGuiApplication :
         public BlackCore::CApplication,
-        public BlackGui::IMainWindowAccess
+        public IMainWindowAccess
     {
         Q_OBJECT
         Q_INTERFACES(BlackGui::IMainWindowAccess)
@@ -132,6 +132,7 @@ namespace BlackGui
         virtual bool displayTextInConsole(const QString &text) override;
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
+        virtual bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;
         //! @}
 
         // -------- Splash screen related ---------

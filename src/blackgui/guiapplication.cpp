@@ -523,18 +523,29 @@ namespace BlackGui
 
     bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message, int timeOutMs)
     {
+        if (message.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
         BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return false; }
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(message, timeOutMs); }
         return m->displayInOverlayWindow(message, timeOutMs);
     }
 
     bool CGuiApplication::displayInOverlayWindow(const CStatusMessageList &messages, int timeOutMs)
     {
+        if (messages.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
         BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return false; }
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(messages, timeOutMs); }
         return m->displayInOverlayWindow(messages, timeOutMs);
+    }
+
+    bool CGuiApplication::displayInOverlayWindow(const QString &html, int timeOutMs)
+    {
+        if (html.isEmpty()) { return false; }
+        IMainWindowAccess *m = mainWindowAccess();
+        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(html, timeOutMs); }
+        return m->displayInOverlayWindow(html, timeOutMs);
     }
 
     bool CGuiApplication::displayTextInConsole(const QString &text)
