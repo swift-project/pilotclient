@@ -170,7 +170,8 @@ namespace BlackCore
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            static constexpr int MatchingLogMaxModelSetSize = 125; //!< default value for switching matching log on
+            static constexpr int MatchingLogMaxModelSetSize  = 250; //!< default value for switching matching log on
+            static constexpr int MaxModelAddedFailoverTrials = 3;   //!< if model cannot be added, try again max <n> times
 
             //  ------------ slots connected with network or other contexts ---------
             //! \ingroup crosscontextfunction
@@ -215,7 +216,7 @@ namespace BlackCore
             void onOwnSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Failed adding remote aircraft
-            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
+            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const BlackMisc::CStatusMessage &message);
 
             //! Relay status message to simulator under consideration of settings
             void relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
@@ -255,6 +256,7 @@ namespace BlackCore
 
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;     //!< all matching log messages per callsign
+            QMap<BlackMisc::Aviation::CCallsign, int> m_failoverAddingCounts;
             CPluginManagerSimulator  *m_plugins = nullptr; //!< plugin manager
             BlackMisc::CRegularThread m_listenersThread;   //!< waiting for plugin
             CWeatherManager  m_weatherManager  { this };   //!< weather management

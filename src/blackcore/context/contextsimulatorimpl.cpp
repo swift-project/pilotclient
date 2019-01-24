@@ -451,6 +451,7 @@ namespace BlackCore
             m_initallyAddAircraft = true;
             m_wasSimulating = false;
             m_matchingMessages.clear();
+            m_failoverAddingCounts.clear();
 
             // try to connect to simulator
             const bool connected = simulator->connectTo();
@@ -623,6 +624,7 @@ namespace BlackCore
         {
             if (!this->isSimulatorAvailable()) { return; }
             m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
+            m_failoverAddingCounts.remove(callsign);
         }
 
         void CContextSimulator::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
@@ -703,6 +705,7 @@ namespace BlackCore
                 m_networkSessionId.clear();
                 m_aircraftMatcher.clearMatchingStatistics();
                 m_matchingMessages.clear();
+                m_failoverAddingCounts.clear();
 
                 if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
                 {
@@ -712,11 +715,35 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled, const CStatusMessage &message)
+        void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const CStatusMessage &message)
         {
             if (!this->isSimulatorAvailable()) { return; }
             if (disabled) { m_aircraftMatcher.addingRemoteModelFailed(remoteAircraft); }
-            emit this->addingRemoteModelFailed(remoteAircraft, disabled, message);
+
+            const CCallsign cs = remoteAircraft.getCallsign();
+            if (cs.isEmpty()) { return; }
+
+            bool failover = requestFailover;
+            if (requestFailover)
+            {
+                const CAircraftMatcherSetup setup = m_aircraftMatcher.getSetup();
+                if (setup.doModelAddFailover())
+                {
+                    const CCallsign cs = remoteAircraft.getCallsign();
+                    const int trial = m_failoverAddingCounts.value(cs, 0);
+                    if (trial < MaxModelAddedFailoverTrials)
+                    {
+                        m_failoverAddingCounts[cs] = trial + 1;
+                        this->doMatchingAgain(cs); // has its own single shot logic
+                    }
+                    else
+                    {
+                        failover = false;
+                        CLogMessage(this).warning(u"Model for '%1' failed adding, tried %2 times to resolve, giving up") << cs.toQString(true) << (trial + 1);
+                    }
+                }
+            }
+            emit this->addingRemoteModelFailed(remoteAircraft, disabled, failover, message);
         }
 
         void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
@@ -992,6 +1019,7 @@ namespace BlackCore
                 if (!aircraft.hasCallsign()) { return; } // no longer valid
                 CSimulatedAircraft resetAircraft(aircraft);
                 resetAircraft.resetToNetworkModel();
+                resetAircraft.setEnabled(true);
                 this->xCtxAddedRemoteAircraftReadyForModelMatching(resetAircraft);
             });
             return true;
