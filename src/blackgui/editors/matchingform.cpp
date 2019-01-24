@@ -83,7 +83,7 @@ namespace BlackGui
             ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
             ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
             ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel));
-            ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverWhenNoModelCanBeLoaded));
+            ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
 
             this->setMatchingAlgorithm(setup);

@@ -951,7 +951,7 @@ namespace BlackSimPlugin
             if (!msg.isEmpty() && msg.isWarningOrAbove())
             {
                 CLogMessage::preformatted(msg);
-                emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), false, msg);
+                emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), false, false, msg);
             }
 
             // trigger adding pending aircraft if there are any
@@ -972,16 +972,16 @@ namespace BlackSimPlugin
 
             CLogMessage(this).warning(u"Model failed to be added: '%1' details: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
             CStatusMessage verifyMsg;
-            const bool canBeUsed = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
+            const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
             if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
-            if (!canBeUsed || simObject.getAddingExceptions() >= ThresholdAddException)
+            if (!verifiedAircraft || simObject.getAddingExceptions() >= ThresholdAddException)
             {
-                const CStatusMessage m = !canBeUsed ?
-                                         CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString()  :
-                                         CLogMessage(this).warning(u"Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions();
+                const CStatusMessage msg = verifiedAircraft ?
+                                           CLogMessage(this).warning(u"Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions() :
+                                           CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString();
                 this->updateAircraftEnabled(simObject.getCallsign(), false); // disable
-                emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, m);
+                emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, true, msg); // verify failed
             }
             else
             {
@@ -1195,7 +1195,7 @@ namespace BlackSimPlugin
                 {
                     const CStatusMessage m = CLogMessage(this).warning(u"Aircraft removed again multiple times and will be disabled, '%1' '%2' object id '%3'") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                     this->updateAircraftEnabled(simObject.getCallsign(), false);
-                    emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, m);
+                    emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, true, m); // directly removed again
                 }
                 else
                 {
@@ -1412,7 +1412,7 @@ namespace BlackSimPlugin
                 for (const CSimConnectObject &simObjOutdated : outdatedAdded)
                 {
                     const CStatusMessage msg = CStatusMessage(this).warning(msgText.arg(simObjOutdated.getCallsign().asString(), simObjOutdated.toQString()));
-                    emit this->physicallyAddingRemoteModelFailed(simObjOutdated.getAircraft(), true, msg);
+                    emit this->physicallyAddingRemoteModelFailed(simObjOutdated.getAircraft(), true, true, msg); // outdated
                 }
 
                 // if this aircraft is also outdated, ignore
@@ -1547,7 +1547,7 @@ namespace BlackSimPlugin
             {
                 const CStatusMessage msg = CStatusMessage(this).error(u"SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
                 CLogMessage::preformatted(msg);
-                emit this->physicallyAddingRemoteModelFailed(newRemoteAircraft, true, msg);
+                emit this->physicallyAddingRemoteModelFailed(newRemoteAircraft, true, true, msg); // SimConnect error
             }
             else
             {

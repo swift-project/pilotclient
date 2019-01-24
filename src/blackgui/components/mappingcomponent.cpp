@@ -493,9 +493,10 @@ namespace BlackGui
             ui->sp_MappingComponentSplitter->setSizes(newSizes);
         }
 
-        void CMappingComponent::onAddingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, bool disabled, const CStatusMessage &message)
+        void CMappingComponent::onAddingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, bool disabled, bool failover, const CStatusMessage &message)
         {
             this->tokenBucketUpdate();
+            Q_UNUSED(failover);
             Q_UNUSED(aircraft);
             Q_UNUSED(message);
             Q_UNUSED(disabled);

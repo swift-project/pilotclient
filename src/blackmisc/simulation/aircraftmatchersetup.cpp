@@ -139,7 +139,7 @@ namespace BlackMisc
             static const QString exExcl("excl.excluded");
             static const QString removeFromModelSet("rem.from model set");
             static const QString verification("Verify models at startup");
-            static const QString modelFailedLoad("Replace models failed to load");
+            static const QString modelFailedAdded("Replace models failed to be added");
 
             switch (modeFlag)
             {
@@ -159,7 +159,7 @@ namespace BlackMisc
             case ExcludeNoExcluded:          return exExcl;
             case ModelSetRemoveFailedModel:  return removeFromModelSet;
             case ModelVerificationAtStartup: return verification;
-            case ModelFailoverWhenNoModelCanBeLoaded: return modelFailedLoad;
+            case ModelFailoverIfNoModelCanBeAdded: return modelFailedAdded;
             default: break;
             }
 
@@ -184,7 +184,7 @@ namespace BlackMisc
             if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
             if (mode.testFlag(ModelSetRemoveFailedModel))  { modes << modeFlagToString(ModelSetRemoveFailedModel); }
             if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
-            if (mode.testFlag(ModelFailoverWhenNoModelCanBeLoaded)) { modes << modeFlagToString(ModelFailoverWhenNoModelCanBeLoaded); }
+            if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
 
             return modes.join(", ");
         }
@@ -229,7 +229,7 @@ namespace BlackMisc
             if (excludeNoExcluded)         { mode |= ExcludeNoExcluded; }
             if (modelSetRemoveFailedModel) { mode |= ModelSetRemoveFailedModel; }
             if (modelVerification)         { mode |= ModelVerificationAtStartup; }
-            if (modelFailover)             { mode |= ModelFailoverWhenNoModelCanBeLoaded; }
+            if (modelFailover)             { mode |= ModelFailoverIfNoModelCanBeAdded; }
             return mode;
         }
     } // namespace

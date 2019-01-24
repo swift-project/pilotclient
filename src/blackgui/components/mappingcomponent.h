@@ -144,7 +144,7 @@ namespace BlackGui
             void showAircraftModelDetails(bool show);
 
             //! Adding a remote aircraft failed
-            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, const BlackMisc::CStatusMessage &message);
+            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
 
             //! Timer update
             void timerUpdate();

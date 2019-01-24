@@ -352,7 +352,7 @@ namespace BlackCore
         void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Adding the remote model failed
-        void physicallyAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, const BlackMisc::CStatusMessage &message);
+        void physicallyAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const BlackMisc::CStatusMessage &message);
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();

@@ -55,14 +55,14 @@ namespace BlackMisc
                 ExcludeNoExcluded = 1 << 14,
                 ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
                 // --- model set ---
-                ModelSetRemoveFailedModel           = 1 << 15,
-                ModelVerificationAtStartup          = 1 << 16,
-                ModelFailoverWhenNoModelCanBeLoaded = 1 << 17,
+                ModelSetRemoveFailedModel        = 1 << 15,
+                ModelVerificationAtStartup       = 1 << 16,
+                ModelFailoverIfNoModelCanBeAdded = 1 << 17,
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
                 // ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverWhenNoModelCanBeLoaded,
-                ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverWhenNoModelCanBeLoaded,
+                ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverIfNoModelCanBeAdded,
                 ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
                 ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
                 ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault,
@@ -110,6 +110,10 @@ namespace BlackMisc
             //! Verification at startup?
             //! \sa ModelVerificationOnStartup
             bool doVerificationAtStartup() const { return this->getMatchingMode().testFlag(ModelVerificationAtStartup); }
+
+            //! Failover if model cannot be loaded
+            //! \sa ModelFailoverIfNoModelCanBeAdded
+            bool doModelAddFailover() const { return this->getMatchingMode().testFlag(ModelFailoverIfNoModelCanBeAdded); }
 
             //! Set startup verification
             void setVerificationAtStartup(bool verify);

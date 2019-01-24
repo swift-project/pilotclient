@@ -67,7 +67,7 @@ namespace BlackGui
             void onSimulatorStatusChanged(int status);
 
             //! \copydoc ISimulator::addingRemoteModelFailed
-            void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, const BlackMisc::CStatusMessage &message);
+            void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
 
             //! \copydoc ISimulator::onSimulatorMessages
             void onSimulatorMessages(const BlackMisc::CStatusMessageList &messages);
