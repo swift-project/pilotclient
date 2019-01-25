@@ -22,6 +22,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
+#include <QMessageBox>
 #include <QPixmap>
 #include <QBitmap>
 #include <QTimer>
@@ -235,9 +236,9 @@ void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
     }
 }
 
-void CSwiftLauncher::startSwiftCore()
+bool CSwiftLauncher::setSwiftCoreExecutable()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown()) { return false; }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
     if (ui->rb_SwiftCoreAudioOnCore->isChecked())
@@ -247,13 +248,14 @@ void CSwiftLauncher::startSwiftCore()
 
     m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
-    this->startDetached();
+    return true;
 }
 
-void CSwiftLauncher::setSwiftDataExecutable()
+bool CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
     m_executableArgs = sGui->argumentsJoined({}, CNetworkVatlib::vatlibArguments());
+    return true;
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
@@ -277,8 +279,8 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         if (!CSwiftLauncher::canConnectSwiftOnDBusServer(dBus, msg))
         {
             const CStatusMessage m(this, CStatusMessage::SeverityError,
-                                   "DBus server for '" + dBus + "' can not be connected.\n\n" +
-                                   "Likely the core is not running or is not reachable.\n\n" +
+                                   "DBus server for '" + dBus + "' can not be connected.\n" +
+                                   "Likely the core is not running or is not reachable.\n" +
                                    "Details: " + msg, true);
             this->showStatusMessage(m);
             return false;
@@ -368,26 +370,55 @@ void CSwiftLauncher::startButtonPressed()
     const qreal scaleFactor = ui->comp_Scale->getScaleFactor();
     CGuiApplication::highDpiScreenSupport(scaleFactor);
 
+    const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+    const bool shift = km.testFlag(Qt::ShiftModifier);
+
     if (sender == ui->tb_SwiftGui)
     {
         if (this->setSwiftGuiExecutable())
         {
-            this->accept();
+            if (shift)
+            {
+                this->popupExecutableArgs();
+            }
+            else
+            {
+                this->accept();
+            }
         }
     }
     else if (sender == ui->tb_SwiftMappingTool)
     {
         ui->tb_SwiftMappingTool->setEnabled(false);
         m_startMappingToolWaitCycles = 2;
-        this->setSwiftDataExecutable();
-        this->accept();
+        if (this->setSwiftDataExecutable())
+        {
+            if (shift)
+            {
+                this->popupExecutableArgs();
+            }
+            else
+            {
+                this->accept();
+            }
+        }
     }
     else if (sender == ui->tb_SwiftCore)
     {
         if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreAudioOnGui->setChecked(true); }
         ui->tb_SwiftCore->setEnabled(false);
         m_startCoreWaitCycles = 2;
-        this->startSwiftCore();
+        if (this->setSwiftCoreExecutable())
+        {
+            if (shift)
+            {
+                this->popupExecutableArgs();
+            }
+            else
+            {
+                this->startDetached();
+            }
+        }
     }
     else if (sender == ui->tb_Database)
     {
@@ -406,6 +437,11 @@ void CSwiftLauncher::dbusServerModeSelected(bool selected)
 void CSwiftLauncher::showStatusMessage(const CStatusMessage &msg)
 {
     ui->fr_SwiftLauncherMain->showOverlayMessage(msg, 5000);
+}
+
+void CSwiftLauncher::showStatusMessage(const QString &htmlMsg)
+{
+    ui->fr_SwiftLauncherMain->showOverlayMessage(htmlMsg, 5000);
 }
 
 void CSwiftLauncher::appendLogMessage(const CStatusMessage &message)
@@ -485,4 +521,9 @@ void CSwiftLauncher::onDBusEditingFinished()
 void CSwiftLauncher::onCoreModeReleased()
 {
     ui->comp_DBusSelector->setEnabled(!ui->rb_SwiftStandalone->isChecked());
+}
+
+void CSwiftLauncher::popupExecutableArgs()
+{
+    QMessageBox::information(this, "Command line", this->getCmdLine());
 }

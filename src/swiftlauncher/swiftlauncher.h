@@ -58,7 +58,7 @@ public:
     explicit CSwiftLauncher(QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftLauncher();
+    virtual ~CSwiftLauncher() override;
 
     //! Executable (to be started)
     const QString &getExecutable() const { return m_executable; }
@@ -118,11 +118,11 @@ private:
     //! \sa CSwiftLauncher::displayLatestNews
     void loadLatestNews();
 
-    //! Start the core
-    void startSwiftCore();
+    //! Executaable for core
+    bool setSwiftCoreExecutable();
 
     //! Set executable for swift data
-    void setSwiftDataExecutable();
+    bool setSwiftDataExecutable();
 
     //! Set executable for swift GUI
     bool setSwiftGuiExecutable();
@@ -157,6 +157,9 @@ private:
     //! Display status message as overlay
     void showStatusMessage(const BlackMisc::CStatusMessage &msg);
 
+    //! Display status message as overlay
+    void showStatusMessage(const QString &htmlMsg);
+
     //! Append status message
     void appendLogMessage(const BlackMisc::CStatusMessage &message);
 
@@ -183,6 +186,9 @@ private:
 
     //! Core mode has been changed
     void onCoreModeReleased();
+
+    //! Display a popup with the cmd line args
+    void popupExecutableArgs();
 
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
