@@ -12,8 +12,10 @@
 #ifndef BLACKGUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 #define BLACKGUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+
 #include <QFrame>
 #include <QScopedPointer>
 #include <QCompleter>
@@ -27,7 +29,7 @@ namespace BlackGui
         /*!
          * Completer for model strings
          */
-        class CAircraftModelStringCompleter : public QFrame
+        class BLACKGUI_EXPORT CAircraftModelStringCompleter : public QFrame
         {
             Q_OBJECT
 

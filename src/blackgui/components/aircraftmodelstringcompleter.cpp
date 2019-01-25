@@ -87,8 +87,8 @@ namespace BlackGui
 
         void CAircraftModelStringCompleter::setSourceVisible(CompleterSource source, bool visible)
         {
-            if (source.testFlag(DB)) { ui->rb_Db->setVisible(visible); }
-            if (source.testFlag(ModelSet)) { ui->rb_ModelSet->setVisible(visible); }
+            if (source.testFlag(DB))        { ui->rb_Db->setVisible(visible); }
+            if (source.testFlag(ModelSet))  { ui->rb_ModelSet->setVisible(visible); }
             if (source.testFlag(OwnModels)) { ui->rb_OwnModels->setVisible(visible); }
         }
 
