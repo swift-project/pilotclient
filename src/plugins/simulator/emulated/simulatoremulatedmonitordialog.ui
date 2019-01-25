@@ -68,7 +68,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -197,52 +197,145 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="lbl_Connected">
+           <widget class="QLabel" name="lbl_Status">
             <property name="text">
-             <string>Connected:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="lbl_Simulating">
-            <property name="text">
-             <string>Simulating:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="lbl_Paused">
-            <property name="text">
-             <string>Paused:</string>
+             <string>Status</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="cb_Connected">
-            <property name="text">
-             <string>simulator connected?</string>
+           <widget class="QFrame" name="fr_Status">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="cb_Simulating">
-            <property name="text">
-             <string>simulator simulating?</string>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="cb_Paused">
-            <property name="text">
-             <string>simulator paused?</string>
-            </property>
+            <layout class="QHBoxLayout" name="hl_SimulatorStatus">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="cb_Connected">
+               <property name="text">
+                <string>simulator connected?</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cb_Simulating">
+               <property name="text">
+                <string>simulator simulating?</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cb_Paused">
+               <property name="text">
+                <string>simulator paused?</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="gb_Interpolator">
+         <property name="title">
+          <string>Interpolator</string>
+         </property>
+         <layout class="QGridLayout" name="gl_Interpolator">
+          <item row="1" column="6">
+           <widget class="QPushButton" name="pb_InterpolatorStartLog">
+            <property name="text">
+             <string> start log. </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pb_InterpolatorClearLog">
+            <property name="text">
+             <string> clear log </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pb_InterpolatorStopLog">
+            <property name="text">
+             <string> stop logging </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pb_InterpolatorWriteLog">
+            <property name="text">
+             <string> write log.file </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="pb_InterpolatorShowLogs">
+            <property name="text">
+             <string> log.files </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_LogInterpolatorCallsign">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="pb_InterpolatorFetch">
+            <property name="text">
+             <string>fetch</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLineEdit" name="le_InterpolatorTimeMs">
+            <property name="text">
+             <string>40</string>
+            </property>
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>fetch time ms</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="BlackGui::CLedWidget" name="led_Fetching" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="gb_Messages">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Messages (Text/Status messages)</string>
          </property>
@@ -289,7 +382,7 @@
      </widget>
      <widget class="QWidget" name="tb_LogMessages">
       <attribute name="title">
-       <string>Log information</string>
+       <string>API/Log information</string>
       </attribute>
       <layout class="QVBoxLayout" name="vl_LogInformation">
        <item>
@@ -393,83 +486,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="gb_Interpolator">
-         <property name="title">
-          <string>Interpolator</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="6">
-           <widget class="QPushButton" name="pb_InterpolatorStartLog">
-            <property name="text">
-             <string> start log. </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pb_InterpolatorClearLog">
-            <property name="text">
-             <string> clear log </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="pb_InterpolatorStopLog">
-            <property name="text">
-             <string> stop logging </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pb_InterpolatorWriteLog">
-            <property name="text">
-             <string> write log.file </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pb_InterpolatorShowLogs">
-            <property name="text">
-             <string> log.files </string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="5">
-           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_LogInterpolatorCallsign">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="pb_InterpolatorFetch">
-            <property name="text">
-             <string>fetch</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLineEdit" name="le_InterpolatorTimeMs">
-            <property name="text">
-             <string>40</string>
-            </property>
-            <property name="maxLength">
-             <number>10</number>
-            </property>
-            <property name="placeholderText">
-             <string>fetch time ms</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="BlackGui::CLedWidget" name="led_Fetching" native="true"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="gb_LogMessages">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
@@ -491,8 +507,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>535</width>
-               <height>339</height>
+               <width>546</width>
+               <height>369</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
@@ -596,9 +612,13 @@
   <tabstop>tw_SwiftMonitorDialog</tabstop>
   <tabstop>le_SimulatorPlugin</tabstop>
   <tabstop>le_Simulator</tabstop>
-  <tabstop>cb_Connected</tabstop>
-  <tabstop>cb_Simulating</tabstop>
-  <tabstop>cb_Paused</tabstop>
+  <tabstop>le_InterpolatorTimeMs</tabstop>
+  <tabstop>pb_InterpolatorFetch</tabstop>
+  <tabstop>pb_InterpolatorClearLog</tabstop>
+  <tabstop>pb_InterpolatorWriteLog</tabstop>
+  <tabstop>pb_InterpolatorStopLog</tabstop>
+  <tabstop>pb_InterpolatorShowLogs</tabstop>
+  <tabstop>pb_InterpolatorStartLog</tabstop>
   <tabstop>pte_TextMessages</tabstop>
   <tabstop>pte_StatusMessages</tabstop>
   <tabstop>le_PhysicallyAddedAircraft</tabstop>
@@ -608,13 +628,7 @@
   <tabstop>le_SituationAdded</tabstop>
   <tabstop>le_PartsAdded</tabstop>
   <tabstop>le_PartsEnabledAircraft</tabstop>
-  <tabstop>le_InterpolatorTimeMs</tabstop>
-  <tabstop>pb_InterpolatorFetch</tabstop>
-  <tabstop>pb_InterpolatorClearLog</tabstop>
-  <tabstop>pb_InterpolatorWriteLog</tabstop>
-  <tabstop>pb_InterpolatorStopLog</tabstop>
-  <tabstop>pb_InterpolatorShowLogs</tabstop>
-  <tabstop>pb_InterpolatorStartLog</tabstop>
+  <tabstop>sa_LogMessages</tabstop>
  </tabstops>
  <resources/>
  <connections>
