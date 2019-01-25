@@ -1192,7 +1192,7 @@ namespace BlackMisc
                 }
                 if (model.hasModelString())
                 {
-                    singleMsg.prependMessage(model.getModelString() + ": ");
+                    singleMsg.prependMessage(model.getModelString() % u": ");
                 }
                 msgs.push_back(singleMsg);
                 invalidModels.push_back(model);
@@ -1310,8 +1310,10 @@ namespace BlackMisc
             }
 
             // Summary
-            const CStatusMessage m(this, CStatusMessage::SeverityInfo, QStringLiteral("Valid models: %1").arg(validModels.size()));
-            msgs.push_back(m);
+            const CStatusMessage m1(this, CStatusMessage::SeverityInfo, QStringLiteral("File validation valid models: %1").arg(validModels.size()));
+            const CStatusMessage m2(this, CStatusMessage::SeverityWarning, QStringLiteral("File validation invalid models: %1").arg(invalidModels.size()));
+            msgs.push_back(m1);
+            msgs.push_back(m2);
 
             // done
             return msgs;
