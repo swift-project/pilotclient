@@ -12,6 +12,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 
+#include <QPointer>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
@@ -34,6 +36,14 @@ namespace BlackGui
             connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation);
+
+            // 1st init when running in distributed environment
+            QPointer<CAircraftModelValidationComponent> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                myself->requestLastResults();
+            });
         }
 
         CAircraftModelValidationComponent::~CAircraftModelValidationComponent()
@@ -87,15 +97,27 @@ namespace BlackGui
                 return;
             }
 
-            const CSimulatorInfo sim = ui->comp_Simulator->getValue();
-            if (sGui->getIContextSimulator()->triggerModelSetValidation(sim))
+            const CSimulatorInfo simulator = ui->comp_Simulator->getValue();
+            if (sGui->getIContextSimulator()->triggerModelSetValidation(simulator))
             {
-                this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(sim.toQString(true)), 5000);
+                this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(simulator.toQString(true)), 5000);
             }
             else
             {
-                this->showOverlayHTMLMessage(QStringLiteral("Cannot trigger validation for '%1'").arg(sim.toQString(true)), 5000);
+                this->showOverlayHTMLMessage(QStringLiteral("Cannot trigger validation for '%1'").arg(simulator.toQString(true)), 5000);
             }
+        }
+
+        void CAircraftModelValidationComponent::requestLastResults()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
+            if (!sGui->getIContextSimulator()) { return; }
+            if (sGui->getIContextSimulator()->isValidationInProgress())
+            {
+                this->showOverlayHTMLMessage("Validation in progress", 5000);
+                return;
+            }
+            sGui->getIContextSimulator()->triggerModelSetValidation(CSimulatorInfo());
         }
 
         void CAircraftModelValidationComponent::onButtonClicked()

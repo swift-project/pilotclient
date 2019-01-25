@@ -65,6 +65,9 @@ namespace BlackGui
             //! Trigger new validation
             void triggerValidation();
 
+            //! Last results if any
+            void requestLastResults();
+
             //! Button has been clicked
             void onButtonClicked();
         };

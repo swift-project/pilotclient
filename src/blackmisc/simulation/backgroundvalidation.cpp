@@ -62,13 +62,45 @@ namespace BlackMisc
 
         bool CBackgroundValidation::triggerValidation(const CSimulatorInfo &simulator)
         {
+            const QPointer<CBackgroundValidation> myself(this);
+            if (simulator.isNoSimulator())
+            {
+                return this->requestLastResults();
+            }
+
             {
                 QWriteLocker l(&m_lock);
                 if (m_inWork) { return false; }
                 m_simulator = simulator;
                 m_checkedSimulatorMsgs.remove(simulator);
             }
-            QTimer::singleShot(0, this, &CBackgroundValidation::doWork);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->doWork();
+            });
+            return true;
+        }
+
+        bool CBackgroundValidation::requestLastResults()
+        {
+
+            CAircraftModelList valid;
+            CAircraftModelList invalid;
+            CAircraftModelList models;
+            CStatusMessageList msgs;
+            CSimulatorInfo simulator;
+            bool wasStopped = false;
+            {
+                QReadLocker l(&m_lock);
+                simulator  = m_lastResultSimulator;
+                valid      = m_lastResultValid;
+                invalid    = m_lastResultInvalid;
+                msgs       = m_lastResultMsgs;
+                wasStopped = m_lastResultWasStopped;
+            }
+            if (m_lastResultSimulator.isUnspecified()) { return false; }
+            emit this->validated(simulator, valid, invalid, wasStopped, msgs);
             return true;
         }
 
@@ -80,7 +112,6 @@ namespace BlackMisc
 
             CAircraftModelList valid;
             CAircraftModelList invalid;
-            CAircraftModelList models;
             CStatusMessageList msgs;
             bool wasStopped = false;
             bool validated  = false;
@@ -95,7 +126,7 @@ namespace BlackMisc
                 const CAircraftMatcherSetup setup = m_matchingSettings.get();
                 if (!setup.doVerificationAtStartup()) { break; }
 
-                models = m_modelSets.getCachedModels(simulator);
+                const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
                 msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped);
 
                 const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - started;
@@ -104,6 +135,11 @@ namespace BlackMisc
                 validated = true;
 
                 QWriteLocker l(&m_lock);
+                m_lastResultValid   = valid;
+                m_lastResultInvalid = invalid;
+                m_lastResultWasStopped = wasStopped;
+                m_lastResultSimulator = simulator;
+                m_lastResultMsgs = msgs;
                 m_checkedSimulatorMsgs.insert(simulator, msgs);
             }
             while (false);

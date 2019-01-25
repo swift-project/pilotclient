@@ -64,6 +64,11 @@ namespace BlackMisc
             //! \threadsafe
             bool triggerValidation(const CSimulatorInfo &simulator);
 
+            //! Request last results (again), if there are any
+            //! \remark emits CBackgroundValidation::validated signal
+            //! \threadsafe
+            bool requestLastResults();
+
         signals:
             //! Validating
             void validating(bool running);
@@ -75,8 +80,16 @@ namespace BlackMisc
             mutable QReadWriteLock m_lock;       //!< lock snapshot
             std::atomic_bool m_inWork { false }; //!< indicates a running update
             CSimulatorInfo m_simulator;
-            QMap<CSimulatorInfo, CStatusMessageList> m_checkedSimulatorMsgs;
-            CSetting<Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+
+            // last result values, mostly needed when running in the distributed swift system and we want to get the values
+            CAircraftModelList m_lastResultValid;
+            CAircraftModelList m_lastResultInvalid;
+            CSimulatorInfo     m_lastResultSimulator;
+            CStatusMessageList m_lastResultMsgs;
+            bool               m_lastResultWasStopped = false;
+
+            QMap<CSimulatorInfo, CStatusMessageList> m_checkedSimulatorMsgs; //!< all simulators ever checked
+            CSetting<Settings::TModelMatching> m_matchingSettings { this };  //!< settings
 
             // Set/caches as member as we are in own thread, central instance will not work
             Data::CModelSetCaches m_modelSets { false, this };
