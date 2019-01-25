@@ -190,13 +190,14 @@ namespace BlackGui
 
         void CAudioSetupComponent::onLoopbackToggled(bool loopback)
         {
-            Q_ASSERT(sGui->getIContextAudio());
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
             sGui->getIContextAudio()->enableAudioLoopback(loopback);
         }
 
         void CAudioSetupComponent::onNotificationsToggled(bool checked)
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             CSettings as(m_audioSettings.getThreadLocal());
             as.setNotificationFlag(CNotificationSounds::PTTClick, ui->cb_SetupAudioPTTClick->isChecked());
             as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomLeft, ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked());

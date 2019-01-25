@@ -66,7 +66,7 @@ namespace BlackCore
         if (!CContextApplicationProxy::isContextResponsive(dBusAddress, connectMsg))
         {
             return CStatusMessage(this, CStatusMessage::SeverityError,
-                                  "Cannot connect DBus at '" + dBusAddress + "', reason: " + connectMsg);
+                                  u"Cannot connect DBus at '" % dBusAddress % u"', reason: " % connectMsg);
         }
 
         // re-init

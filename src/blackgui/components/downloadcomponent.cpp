@@ -276,7 +276,10 @@ namespace BlackGui
                     const bool shutdown = ui->cb_Shutdown->isChecked();
                     if (sGui && shutdown)
                     {
-                        QTimer::singleShot(1000, sGui, [] { CGuiApplication::exit(); });
+                        QTimer::singleShot(1000, sGui, []
+                        {
+                            CGuiApplication::exit();
+                        });
                     }
                     break;
                 }
