@@ -105,6 +105,9 @@ namespace BlackSimPlugin
             //! Enable/disable the interpolation log buttons
             void enableInterpolationLogButtons(bool enable);
 
+            //! Emit a simulator signal
+            void emitSignal();
+
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;
             QTimer m_uiUpdateTimer;

@@ -57,13 +57,14 @@ namespace BlackSimPlugin
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi, Qt::QueuedConnection);
             connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi, Qt::QueuedConnection);
 
-            connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
-            connect(ui->pb_InterpolatorStopLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_ResetStatistics,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
+            connect(ui->pb_InterpolatorStopLog,  &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_InterpolatorWriteLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_InterpolatorClearLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_InterpolatorShowLogs, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-            connect(ui->pb_InterpolatorFetch, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorFetch,    &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_EmitAddedFailed,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
 
             ui->led_Receiving->setToolTips("receiving", "idle");
             ui->led_Receiving->setShape(CLedWidget::Rounded);
@@ -277,6 +278,20 @@ namespace BlackSimPlugin
             ui->pb_InterpolatorStartLog->setEnabled(enable);
             ui->pb_InterpolatorStopLog->setEnabled(enable);
             ui->pb_InterpolatorWriteLog->setEnabled(enable);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::emitSignal()
+        {
+            if (!m_simulator) { return; }
+
+            const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
+            const QObject *sender = QObject::sender();
+            if (sender == ui->pb_EmitAddedFailed && cs.isValid())
+            {
+                const CSimulatedAircraft aircraft = m_simulator->getAircraftInRangeForCallsign(cs);
+                const CStatusMessage msg(this, CStatusMessage::SeverityError, "Simulated driver driver failed for " + cs.asString());
+                emit m_simulator->physicallyAddingRemoteModelFailed(aircraft, true, ui->cb_Failover->isChecked(), msg);
+            }
         }
     } // ns
 } // ns
