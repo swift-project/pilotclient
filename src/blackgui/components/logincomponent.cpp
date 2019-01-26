@@ -763,22 +763,10 @@ namespace BlackGui
 
         void CLoginComponent::highlightModelField(const CAircraftModel &model)
         {
-            static const QString error("rgba(255, 0, 0, 40%)");
-            static const QString warning("rgba(255, 255, 0, 40%)");
-            static const QString ok("rgba(0, 255, 0, 40%)");
-            QString color(ok);
-            if (!model.hasModelString())
-            {
-                color = error;
-            }
-            else
-            {
-                if (!model.isLoadedFromDb())
-                {
-                    color = warning;
-                }
-            }
-            ui->le_SimulatorModel->setStyleSheet(QStringLiteral("background-color: %1;").arg(color));
+            if (!model.hasModelString())      { ui->le_SimulatorModel->setProperty("validation", "error"); }
+            else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
+            else                              { ui->le_SimulatorModel->setProperty("validation", "ok"); }
+            ui->le_SimulatorModel->setStyleSheet(""); // force update
         }
 
         bool CLoginComponent::isVatsimNetworkTabSelected() const

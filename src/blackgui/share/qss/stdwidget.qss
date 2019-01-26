@@ -330,6 +330,10 @@ QLineEdit:disabled {
   border: 1px solid rgba(50,50,50);
 }
 
+QLineEdit[validation="error"]   { border: 2px solid red; }
+QLineEdit[validation="warning"] { border: 2px solid yellow; }
+QLineEdit[validation="ok"]      { border: 2px solid green; }
+
 QTextEdit {
   border: 1px solid green;
   background: transparent;
