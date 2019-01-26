@@ -237,11 +237,26 @@ namespace BlackCore
                 c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedSelcal,
                             this->getCContextSimulator(), &CContextSimulator::xCtxUpdateSimulatorSelcalFromContext);
                 Q_ASSERT(c);
+
+                // relay changed aircraft to own aircraft provider but with identifier
+                // identifier is needed because own aircraft context also reports changed aircraft to xCtxChangedOwnAircraftModel
+                // and we avoid roundtrips
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
-                            this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedSimulatorModel);
+                            this->getCContextOwnAircraft(), [ = ](const CAircraftModel & changedModel)
+                {
+                    if (!this->getIContextOwnAircraft()) { return; }
+                    if (!this->getCContextSimulator())   { return; }
+                    this->getCContextOwnAircraft()->xCtxChangedSimulatorModel(changedModel, this->getCContextSimulator()->identifier());
+                });
+
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::simulatorStatusChanged,
                             this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedSimulatorStatus);
+                Q_ASSERT(c);
+
+                // this is used if the value in own aircraft is changed, to callback simulator
+                c = connect(this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedModel,
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedOwnAircraftModel);
                 Q_ASSERT(c);
             }
 

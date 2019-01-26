@@ -113,6 +113,11 @@ namespace BlackCore
             //! \copydoc BlackMisc::IProvider::asQObject
             virtual QObject *asQObject() override { return this; }
 
+        signals:
+            //! Changed aircraft model
+            //! \private Use ISimulatorContext::ownAircraftModelChanged
+            void ps_changedModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
+
         public slots:
             //! \copydoc IContextOwnAircraft::getOwnAircraft()
             //! \ingroup ownaircraftprovider
@@ -226,7 +231,7 @@ namespace BlackCore
 
             //! Simulator model has been changed
             //! \ingroup crosscontextfunction
-            void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
+            void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
 
             //! Simulator status changed
             //! \ingroup crosscontextfunction
@@ -248,6 +253,9 @@ namespace BlackCore
 
             //! Update position history
             void evaluateUpdateHistory();
+
+            //! Update own model and emit signal with identifier
+            bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
 
             //! Reverse lookup of the model against DB data
             static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);

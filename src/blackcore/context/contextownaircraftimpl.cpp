@@ -239,6 +239,11 @@ namespace BlackCore
 
         bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model)
         {
+            return updateOwnModel(model, this->identifier());
+        }
+
+        bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model, const CIdentifier &identifier)
+        {
             CAircraftModel updateModel(this->reverseLookupModel(model));
             {
                 QWriteLocker l(&m_lockAircraft);
@@ -248,7 +253,7 @@ namespace BlackCore
             }
 
             // changed model
-            emit this->changedModel(updateModel);
+            emit this->ps_changedModel(updateModel, identifier);
             return true;
         }
 
@@ -433,9 +438,9 @@ namespace BlackCore
             }
         }
 
-        void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model)
+        void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model, const CIdentifier &identifier)
         {
-            this->updateOwnModel(model);
+            this->updateOwnModel(model, identifier);
         }
 
         void CContextOwnAircraft::xCtxChangedSimulatorStatus(int status)

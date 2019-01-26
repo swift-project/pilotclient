@@ -186,6 +186,9 @@ namespace BlackCore
             //! Changed remote aircraft model
             void xCtxChangedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
+            //! Changed own aircraft model
+            void xCtxChangedOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &aircraftModel, const BlackMisc::CIdentifier &originator);
+
             //! Enable / disable aircraft
             void xCtxChangedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

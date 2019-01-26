@@ -104,9 +104,6 @@ namespace BlackCore
             //! Own pilot (aka the swift user) changed
             void changedPilot(const BlackMisc::Network::CUser &pilot);
 
-            //! Changed aircraft model
-            void changedModel(const BlackMisc::Simulation::CAircraftModel &model);
-
             //! Aircraft has been moved from one location to another (changed scenery)
             void movedAircraft();
 

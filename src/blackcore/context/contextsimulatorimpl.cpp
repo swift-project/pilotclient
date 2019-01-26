@@ -682,6 +682,14 @@ namespace BlackCore
             m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }
 
+        void CContextSimulator::xCtxChangedOwnAircraftModel(const CAircraftModel &aircraftModel, const CIdentifier &originator)
+        {
+            if (CIdentifiable::isMyIdentifier(originator)) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
+
+            emit this->ownAircraftModelChanged(aircraftModel);
+        }
+
         void CContextSimulator::xCtxChangedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             if (!this->isSimulatorAvailable()) { return; }

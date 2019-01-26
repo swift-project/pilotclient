@@ -52,9 +52,6 @@ namespace BlackCore
                                    "changedPilot", this, SIGNAL(changedPilot(BlackMisc::Network::CUser)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                   "changedModel", this, SIGNAL(changedModel(BlackMisc::Simulation::CAircraftModel)));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                    "movedAircraft", this, SIGNAL(movedAircraft()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
