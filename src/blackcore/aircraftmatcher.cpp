@@ -49,7 +49,7 @@ namespace BlackCore
 
     CAircraftMatcher::~CAircraftMatcher()
     {
-        this->saveRemovedModels();
+        this->saveDisabledForMatchingModels();
     }
 
     bool CAircraftMatcher::setSetup(const CAircraftMatcherSetup &setup)
@@ -826,21 +826,19 @@ namespace BlackCore
         if (remoteAircraft.hasCallsign() && remoteAircraft.hasModelString())
         {
             const QString modelString = remoteAircraft.getModelString();
-            const bool r = m_modelSet.removeModelWithString(modelString, Qt::CaseInsensitive);
-            if (r)
-            {
-                CLogMessage(this).warning(u"Removed model '%1' from matching model set") << modelString;
-                m_removedModels.replaceOrAddModelWithString(remoteAircraft.getModel(), Qt::CaseInsensitive);
-            }
+            const CAircraftModelList disabledModels({ remoteAircraft.getModel() });
+            this->disableModelsForMatching(disabledModels, true);
+            CLogMessage(this).warning(u"Disabled model '%1' for matching") << modelString;
         }
     }
 
-    bool CAircraftMatcher::saveRemovedModels()
+    bool CAircraftMatcher::saveDisabledForMatchingModels()
     {
-        if (m_removedModels.isEmpty()) { return false; }
+        if (m_disabledModels.isEmpty()) { return false; }
+
         // log the models
         const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
-        const QString json = m_removedModels.toJsonString();
+        const QString json = m_disabledModels.toJsonString();
         return CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), QStringLiteral("removed models %1.json").arg(ts)));
     }
 

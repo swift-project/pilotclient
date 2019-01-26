@@ -222,8 +222,8 @@ namespace BlackCore
         void setupChanged();
 
     private:
-        //! Save the removed models if any
-        bool saveRemovedModels();
+        //! Save the disabled models if any
+        bool saveDisabledForMatchingModels();
 
         //! The search based implementation
         static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,  const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr);
@@ -303,7 +303,6 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftMatcherSetup m_setup;          //!< setup
         BlackMisc::Simulation::CAircraftModel        m_defaultModel;   //!< model to be used as default model
         BlackMisc::Simulation::CAircraftModelList    m_modelSet;       //!< models used for model matching
-        BlackMisc::Simulation::CAircraftModelList    m_removedModels;  //!< removed models
         BlackMisc::Simulation::CAircraftModelList    m_disabledModels; //!< disabled models for matching
         BlackMisc::Simulation::CSimulatorInfo        m_simulator;      //!< simulator (optional)
         BlackMisc::Simulation::CMatchingStatistics   m_statistics;     //!< matching statistics
