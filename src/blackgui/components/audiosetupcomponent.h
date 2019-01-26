@@ -43,6 +43,9 @@ namespace BlackGui
             bool playNotificationSounds() const;
 
         private:
+            //! Init
+            void init();
+
             //! Reload settings
             void reloadSettings();
 

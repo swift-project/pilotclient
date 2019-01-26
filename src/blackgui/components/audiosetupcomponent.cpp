@@ -20,6 +20,7 @@
 #include <QComboBox>
 #include <QToolButton>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -38,6 +39,19 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
+            // deferred init, because in a distributed swift system
+            // it takes a moment until the settings are sychronized
+            // this is leading to undesired "save settings" messages and played sounds
+            QPointer<CAudioSetupComponent> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                this->init();
+            });
+        }
+
+        void CAudioSetupComponent::init()
+        {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             Q_ASSERT_X(sGui->getIContextAudio(), Q_FUNC_INFO, "Missing Audio context");
 
@@ -141,14 +155,14 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
             if (sender == ui->cb_SetupAudioInputDevice)
             {
-                CAudioDeviceInfoList inputDevices = devices.getInputDevices();
+                const CAudioDeviceInfoList inputDevices = devices.getInputDevices();
                 if (index >= inputDevices.size()) { return; }
                 selectedDevice = inputDevices[index];
                 sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
             }
             else if (sender == ui->cb_SetupAudioOutputDevice)
             {
-                CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
+                const CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
                 if (index >= outputDevices.size()) { return; }
                 selectedDevice = outputDevices[index];
                 sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
