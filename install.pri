@@ -185,6 +185,7 @@ win32-g++ {
 win32: externals_lib_target.path = $${PREFIX}/bin
 else: externals_lib_target.path = $${PREFIX}/lib
 externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/*.$${QMAKE_EXTENSION_SHLIB}*
+macx: externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/qwt.framework
 INSTALLS += externals_lib_target
 
 win32: externals_bin_target.path = $${PREFIX}/bin

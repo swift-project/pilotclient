@@ -25,6 +25,9 @@
                     <origin>../../dist/bin/*portaudio*.dll</origin>
                 </distributionFile>
                 <distributionFile>
+                    <origin>../../dist/bin/qwt.dll</origin>
+                </distributionFile>
+                <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/SimConnect*.dll</origin>
                 </distributionFile>
@@ -87,6 +90,9 @@
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libspeexdsp.so.*</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libqwt.so</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
@@ -104,6 +110,9 @@
                 <distributionFile>
                     <origin>../../dist/lib/libvatlib.dylib</origin>
                 </distributionFile>
+                <distributionDirectory>
+                    <origin>../../dist/lib/qwt.framework</origin>
+                </distributionDirectory>
             </distributionFileList>
         </folder>
     </folderList>
