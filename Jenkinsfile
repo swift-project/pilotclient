@@ -54,7 +54,7 @@ builders['Build swift Linux'] = {
             }
             throw error
         } finally {
-            notifySlack('Linux', buildResults['swift-linux'])
+            notifyDiscord('Linux', buildResults['swift-linux'])
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -102,7 +102,7 @@ builders['Build swift MacOS'] = {
             }
             throw error
         } finally {
-            notifySlack('MacOS', buildResults['swift-macos'])
+            notifyDiscord('MacOS', buildResults['swift-macos'])
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -146,7 +146,7 @@ builders['Build swift Win32'] = {
             }
             throw error
         } finally {
-            notifySlack('Win32', buildResults['swift-win32'])
+            notifyDiscord('Win32', buildResults['swift-win32'])
             killDBusDaemon()
             cleanWs deleteDirs: true, notFailBuild: true
         }
@@ -191,7 +191,7 @@ builders['Build swift Win64'] = {
             }
             throw error
         } finally {
-            notifySlack('Win64', buildResults['swift-win64'])
+            notifyDiscord('Win64', buildResults['swift-win64'])
             killDBusDaemon()
             cleanWs deleteDirs: true, notFailBuild: true
         }
@@ -349,7 +349,7 @@ def notifyHarbormaster() {
     }
 }
 
-def notifySlack(nodeName, buildStatus = 'STARTED') {
+def notifyDiscord(nodeName, buildStatus = 'UNSTABLE') {
     // build status of null means successful
     buildStatus = buildStatus ?: 'SUCCESS'
 
@@ -359,39 +359,28 @@ def notifySlack(nodeName, buildStatus = 'STARTED') {
     }
 
     // Default values
-    def colorCode = '#FF0000'
     def emoji = ':question:'
     def duration = currentBuild.durationString.replace(' and counting', '')
     def branch = params.STAGING_REF ?: scm.branches.first().name
     branch = branch.replaceFirst(/^refs\/tags\//, '')
-    def title = "${java.net.URLDecoder.decode(JOB_NAME)}: `${branch}`"
+    def title = "${nodeName}: ${java.net.URLDecoder.decode(JOB_NAME)} - #${BUILD_NUMBER}"
     if (params.REVISION_ID != null) {
         title += " - D${params.REVISION_ID} (Build ${params.BUILD_ID})"
     }
-    def subject = "${nodeName}: ${title} - #${BUILD_NUMBER} ${buildStatus} after ${duration}"
-    def summary = "${subject} (<${env.BUILD_URL}|Open>)"
+    def summary = "`${branch}` ${buildStatus} after ${duration}"
 
     // Override default values based on build status
-    if (buildStatus == 'STARTED') {
-        // yellow
-        colorCode = '#FFFF00'
-        emoji = ':heavy_plus_sign:'
-    } else if (buildStatus == 'SUCCESS') {
-        // green
-        colorCode = '#008000'
-        emoji = ':heavy_check_mark:'
+    if (buildStatus == 'SUCCESS') {
+        emoji = ':white_check_mark:'
     } else if (buildStatus == 'ABORTED') {
-        // grey
-        colorCode = '#808080'
         emoji = ':grey_question:'
     } else {
-        // darkred
-        colorCode = '#8B0000'
         emoji = ':x:'
     }
 
-    // Send notifications - disable during testing
-    slackSend (color: colorCode, message: "${emoji} ${summary}")
+    // Send notifications
+    discordSend(webhookURL: 'https://discordapp.com/api/webhooks/539127597586448412/G93TVxvm-0KOKp-5HRZtQbllKxUIvRBdqEDXW_FfoKqRvrbVzVu4xuOXROghKhyHN-E9',
+        description: "${emoji} ${summary}", link: env.BUILD_URL, result: buildStatus, title: title)
 }
 
 def getEolInMonth() {
