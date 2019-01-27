@@ -246,11 +246,12 @@ namespace BlackCore
 
         //! Find model by aircraft family
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, QString &usedFamily, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, QString &usedFamily, BlackMisc::CStatusMessageList *log);
 
         //! Find model by aircraft family
+        //! \remark pseudo family searches for same combined type and manufacturer
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &family, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &hint, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &family, bool allowPseudoFamily, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &hint, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Search for exact livery and aircraft ICAO code
         //! \threadsafe
@@ -270,7 +271,7 @@ namespace BlackCore
 
         //! Reduce by aircraft ICAO or family
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAircraftOrFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAircraftOrFamily(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Reduce by airline ICAO
         //! \threadsafe
@@ -299,6 +300,9 @@ namespace BlackCore
         //! Valid designator, allows to check against swift DB
         //! \threadsafe
         static bool isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb);
+
+        //! Use pseudo family
+        static bool constexpr UsePseudoFamily = true;
 
         BlackMisc::Simulation::CAircraftMatcherSetup m_setup;          //!< setup
         BlackMisc::Simulation::CAircraftModel        m_defaultModel;   //!< model to be used as default model

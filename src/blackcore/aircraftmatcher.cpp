@@ -874,7 +874,7 @@ namespace BlackCore
                 if (mode.testFlag(CAircraftMatcherSetup::ByFamily))
                 {
                     QString usedFamily;
-                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, matchedModels, reduced, usedFamily, log);
+                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, UsePseudoFamily, matchedModels, reduced, usedFamily, log);
                     if (reduced) { break; }
                 }
                 else if (log)
@@ -1045,7 +1045,7 @@ namespace BlackCore
             bool r1 = false;
             bool r2 = false;
             CAircraftModelList models = ifPossibleReduceByAirline(remoteAircraft, inList, QStringLiteral("Reduce by airline first."), r1, log);
-            models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, models, setup, QStringLiteral("Reduce by aircraft ICAO second."), r2, log);
+            models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, UsePseudoFamily, models, setup, QStringLiteral("Reduce by aircraft ICAO second."), r2, log);
             reduced = r1 || r2;
             if (reduced) { return models; }
         }
@@ -1053,7 +1053,7 @@ namespace BlackCore
         {
             bool r1 = false;
             bool r2 = false;
-            CAircraftModelList models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, inList, setup, QStringLiteral("Reduce by aircraft ICAO first."), r1, log);
+            CAircraftModelList models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, UsePseudoFamily, inList, setup, QStringLiteral("Reduce by aircraft ICAO first."), r1, log);
             models = ifPossibleReduceByAirline(remoteAircraft, models, QStringLiteral("Reduce aircraft ICAO by airline second."), r2, log);
 
             // not finding anything so far means we have no valid aircraft/airline ICAO combination
@@ -1064,7 +1064,7 @@ namespace BlackCore
 
                 bool r3 = false;
                 QString usedFamily;
-                CAircraftModelList models2nd = ifPossibleReduceByFamily(remoteAircraft, inList, r3, usedFamily, log);
+                CAircraftModelList models2nd = ifPossibleReduceByFamily(remoteAircraft, UsePseudoFamily, inList, r3, usedFamily, log);
                 models2nd = ifPossibleReduceByAirline(remoteAircraft, models2nd, "Reduce family by airline second.", r3, log);
                 if (r3)
                 {
@@ -1086,22 +1086,22 @@ namespace BlackCore
         return inList;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, QString &usedFamily, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const CAircraftModelList &inList, bool &reduced, QString &usedFamily, CStatusMessageList *log)
     {
         reduced = false;
         usedFamily = remoteAircraft.getAircraftIcaoCode().getFamily();
         if (!usedFamily.isEmpty())
         {
-            CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, usedFamily, inList, QStringLiteral("real family"), reduced, log);
+            CAircraftModelList matchedModels = ifPossibleReduceByFamily(remoteAircraft, usedFamily, allowPseudoFamily, inList, QStringLiteral("real family"), reduced, log);
             if (reduced) { return matchedModels; }
         }
 
         // scenario: the ICAO actually is the family
         usedFamily = remoteAircraft.getAircraftIcaoCodeDesignator();
-        return ifPossibleReduceByFamily(remoteAircraft, usedFamily, inList, QStringLiteral("ICAO treated as family"), reduced, log);
+        return ifPossibleReduceByFamily(remoteAircraft, usedFamily, allowPseudoFamily, inList, QStringLiteral("ICAO treated as family"), reduced, log);
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &inList, const QString &hint, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, bool allowPseudoFamily, const CAircraftModelList &inList, const QString &hint, bool &reduced, CStatusMessageList *log)
     {
         // Use an algorithm to find the best match
         reduced = false;
@@ -1110,6 +1110,7 @@ namespace BlackCore
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"No family, skipping step (" % hint % u")", getLogCategories()); }
             return inList;
         }
+
         if (inList.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"No models for family match (" % hint % u")", getLogCategories()); }
@@ -1120,7 +1121,19 @@ namespace BlackCore
         if (found.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Not found by family '" % family % u"' (" % hint % ")"); }
-            return inList;
+            if (!allowPseudoFamily) { return inList; }
+            // fallthru
+        }
+
+        if (allowPseudoFamily)
+        {
+            found = inList.findByCombinedAndManufacturer(remoteAircraft.getAircraftIcaoCode());
+            if (found.isEmpty())
+            {
+                const QString pseudo = remoteAircraft.getAircraftIcaoCode().getCombinedType() % "/" % remoteAircraft.getAircraftIcaoCode().getManufacturer();
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"Not found by pseudo family '" % pseudo % u"' (" % hint % ")"); }
+                return inList;
+            }
         }
 
         reduced = true;
@@ -1211,13 +1224,13 @@ namespace BlackCore
         return outList;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByAircraftOrFamily(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList,  const CAircraftMatcherSetup &setup, const QString &info, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByAircraftOrFamily(const CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const CAircraftModelList &inList,  const CAircraftMatcherSetup &setup, const QString &info, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
         const CAircraftModelList outList = ifPossibleReduceByAircraft(remoteAircraft, inList, info, reduced, log);
         if (reduced || !setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByFamily)) { return outList; }
         QString family;
-        return ifPossibleReduceByFamily(remoteAircraft, inList, reduced, family, log);
+        return ifPossibleReduceByFamily(remoteAircraft, allowPseudoFamily, inList, reduced, family, log);
     }
 
     CAircraftModelList CAircraftMatcher::ifPossibleReduceByAirline(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, bool &reduced, CStatusMessageList *log)
