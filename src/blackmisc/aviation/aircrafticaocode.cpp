@@ -371,7 +371,7 @@ namespace BlackMisc
             const bool wildcard = cc.contains('*');
             if (!wildcard) { return false; }
             const QChar at = cc.at(0);
-            const QChar c = cc.at(1);
+            const QChar c  = cc.at(1);
             const QChar et = cc.at(2);
             if (at != '*')
             {
@@ -385,6 +385,12 @@ namespace BlackMisc
             if (et == '*') { return true; }
             const QString cet = this->getEngineType();
             return cet.length() == 1 && cet.at(0) == et;
+        }
+
+        bool CAircraftIcaoCode::matchesCombinedTypeAndManufacturer(const QString &combinedType, const QString &manufacturer) const
+        {
+            return this->matchesCombinedType(combinedType) &&
+                   this->matchesManufacturer(manufacturer);
         }
 
         QString CAircraftIcaoCode::getDesignatorManufacturer() const

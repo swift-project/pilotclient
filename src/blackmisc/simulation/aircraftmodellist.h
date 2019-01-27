@@ -181,11 +181,19 @@ namespace BlackMisc
             //! Find by combined code and WTC, wildcards for combined code possible, e.g. L*P, *2J
             CAircraftModelList findByCombinedTypeAndWtc(const QString &combinedType, const QString &wtc) const;
 
-            //! \copydoc findByCombinedType
+            //! Combined type and color livery
             CAircraftModelList findByCombinedTypeWithColorLivery(const QString &combinedType) const;
 
-            //! \copydoc findByCombinedTypeAndWtc
+            //! Combined WTC/livery
             CAircraftModelList findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType, const QString &wtc) const;
+
+            //! Combined type and manufacturer
+            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar aircraft
+            CAircraftModelList findByCombinedAndManufacturer(const Aviation::CAircraftIcaoCode &icao) const;
+
+            //! Combined typeand manufacturer
+            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar aircraft
+            CAircraftModelList findByCombinedAndManufacturer(const QString &combinedType, const QString &manufacturer) const;
 
             //! Find models with color liveries
             CAircraftModelList findColorLiveries() const;

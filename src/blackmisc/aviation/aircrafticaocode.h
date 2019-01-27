@@ -166,6 +166,9 @@ namespace BlackMisc
             //! \remark * can be used as wildcard, e.g. L*J, L**
             bool matchesCombinedType(const QString &combinedType) const;
 
+            //! Matches combined type and
+            bool matchesCombinedTypeAndManufacturer(const QString &combinedType, const QString &manufacturer) const;
+
             //! Set the model description (ICAO description)
             void setModelDescription(const QString &modelDescription) { m_modelDescription = modelDescription.trimmed(); }
 

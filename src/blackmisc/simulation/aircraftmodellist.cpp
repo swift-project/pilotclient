@@ -311,6 +311,21 @@ namespace BlackMisc
             return this->findByCombinedTypeAndWtc(combinedType, wtc).findColorLiveries();
         }
 
+        CAircraftModelList CAircraftModelList::findByCombinedAndManufacturer(const CAircraftIcaoCode &icao) const
+        {
+            return this->findByCombinedAndManufacturer(icao.getCombinedType(), icao.getManufacturer());
+        }
+
+        CAircraftModelList CAircraftModelList::findByCombinedAndManufacturer(const QString &combinedType, const QString &manufacturer) const
+        {
+            if (manufacturer.isEmpty()) { return this->findByCombinedType(combinedType); }
+            if (combinedType.isEmpty()) { return this->findByManufacturer(manufacturer); }
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                return model.getAircraftIcaoCode().matchesCombinedTypeAndManufacturer(combinedType, manufacturer);
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findColorLiveries() const
         {
             return this->findBy([ = ](const CAircraftModel & model)
