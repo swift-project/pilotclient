@@ -149,7 +149,7 @@ class Builder:
             tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
             dumper.pack(tar_path)
             if upload_symbols:
-                self.__upload_symbol_files(symbol_path)
+                self.__upload_symbol_files(tar_path)
 
     def _get_swift_source_path(self):
         return self.__source_path
@@ -242,23 +242,18 @@ class Builder:
         out = subprocess.check_output(['git', 'log', '-1', '--date=format:"%Y%m%d%H%M"', '--pretty=format:%cd'])
         return out.decode("utf-8").strip('"')
 
-    def __upload_symbol_files(self, symbol_path):
+    def __upload_symbol_files(self, symbols_package):
         print('Uploading symbols')
-        url = 'http://crashreports.swift-project.org/symfiles'
+        url = 'https://swift-project.sp.backtrace.io:6098/post'
+        token = '44166372034af002070a1f0ae3c8dfd8632e0210b36577c5269626fe5b87b2f6'
 
-        symbol_files = [os.path.join(root, name)
-                        for root, dirs, files in os.walk(symbol_path)
-                        for name in files
-                        if name.endswith('.sym')]
-
-        for symbol_file in symbol_files:
-            print ('Uploading ' + symbol_file)
-            files = [
-                ('symfile', open(symbol_file, 'rb')),
-            ]
-            data = {'release': self.version}
-            r = requests.post(url, files=files, data=data)
-            r.raise_for_status()
+        data = open(symbols_package, 'rb').read()
+        params = (
+            ('format', 'symbols'),
+            ('token', token),
+        )
+        r = requests.post(url, params=params, data=data)
+        r.raise_for_status()
 
 
 class MSVCBuilder(Builder):
@@ -383,7 +378,7 @@ def main(argv):
     tool_chain = ''
     dev_build = False
     jobs = None
-    upload_symbols = False
+    upload_symbols = True
     eolInMonth = 0
     qmake_args = []
 
