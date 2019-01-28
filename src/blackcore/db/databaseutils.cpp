@@ -295,7 +295,7 @@ namespace BlackCore
         CAircraftModelList CDatabaseUtils::updateSimulatorForFsFamily(const CAircraftModelList &ownModels, CStatusMessageList *updateInfo, int maxToStash, IProgressIndicator *progressIndicator, bool processEvents)
         {
             if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return CAircraftModelList(); }
-            const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().getAllFsFamilyModels());
+            const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().findFsFamilyModels());
             CAircraftModelList stashModels;
             if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
             const QSet<QString> dbKeys = dbFsFamilyModels.getModelStringSet();

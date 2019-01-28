@@ -223,7 +223,10 @@ namespace BlackMisc
             CAircraftModelList findDuplicateModelStrings() const;
 
             //! All models of the FS (FSX, P3D, FS9) family
-            CAircraftModelList getAllFsFamilyModels() const;
+            CAircraftModelList findFsFamilyModels() const;
+
+            //! All models NOT of the FS (FSX, P3D, FS9) family
+            CAircraftModelList findNonFsFamilyModels() const;
 
             //! All included models
             CAircraftModelList getAllIncludedModels() const;

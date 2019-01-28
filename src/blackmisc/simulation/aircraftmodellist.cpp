@@ -358,11 +358,19 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::getAllFsFamilyModels() const
+        CAircraftModelList CAircraftModelList::findFsFamilyModels() const
         {
             return this->findBy([](const CAircraftModel & model)
             {
                 return model.getSimulator().isMicrosoftOrPrepare3DSimulator();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findNonFsFamilyModels() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return !model.getSimulator().isMicrosoftOrPrepare3DSimulator();
             });
         }
 
@@ -734,7 +742,7 @@ namespace BlackMisc
         int CAircraftModelList::removeIfNotFsFamily()
         {
             if (this->isEmpty()) { return 0; }
-            CAircraftModelList fsOnly = this->getAllFsFamilyModels();
+            CAircraftModelList fsOnly = this->findFsFamilyModels();
             if (fsOnly.size() == this->size()) { return 0; }
             const int delta = this->size() - fsOnly.size();
             *this = fsOnly;
@@ -1325,8 +1333,8 @@ namespace BlackMisc
             }
 
             // Summary
-            const CStatusMessage m1(this, CStatusMessage::SeverityInfo, QStringLiteral("File validation valid models: %1").arg(validModels.size()));
-            const CStatusMessage m2(this, CStatusMessage::SeverityWarning, QStringLiteral("File validation invalid models: %1").arg(invalidModels.size()));
+            const CStatusMessage m1(this, CStatusMessage::SeverityInfo, QStringLiteral("File validation, valid models: %1").arg(validModels.size()));
+            const CStatusMessage m2(this, CStatusMessage::SeverityWarning, QStringLiteral("File validation, invalid models: %1").arg(invalidModels.size()));
             msgs.push_back(m1);
             msgs.push_back(m2);
 
