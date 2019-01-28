@@ -546,15 +546,23 @@ namespace BlackMisc
             CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped)
             {
                 CAircraftModelList sorted(models);
+                CStatusMessage m;
                 sorted.sortByFileName();
                 stopped = false;
                 CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, true);
                 if (stopped || validModels.isEmpty()) { return msgs; }
 
-                const int d = validModels.removeIfNotFsFamily();
-                if (d > 0)
+                const CAircraftModelList nonFsModels = validModels.findNonFsFamilyModels();
+                if (!nonFsModels.isEmpty())
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed %1 non FS family models").arg(d), true);
+                    for (const CAircraftModel &model : nonFsModels)
+                    {
+                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed '%1' non FS family model").arg(model.getModelStringAndDbKey()), true);
+                        msgs.push_back(m);
+                    }
+
+                    const int d = validModels.removeIfNotFsFamily();
+                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("Removed %1 non FS family models").arg(d), true);
                     msgs.push_back(m);
                 }
 
@@ -564,21 +572,29 @@ namespace BlackMisc
                 for (const QString &fileName : fileNames)
                 {
                     bool ok = false;
-                    const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
-                    const CAircraftModelList removedModels = validModels.removeIfFileButNotInSet(fileName, entries.getTitleSetUpperCase());
+                    const CAircraftCfgEntriesList entries  = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
+                    const QSet<QString> removeModelStrings = entries.getTitleSetUpperCase();
+                    const CAircraftModelList removedModels = validModels.removeIfFileButNotInSet(fileName, removeModelStrings);
                     for (const CAircraftModel &removedModel : removedModels)
                     {
                         removedCfgEntries++;
-                        const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1', removed because no longer in '%1'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
+                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1', removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
                         msgs.push_back(m);
                     }
+                    invalidModels.push_back(removedModels);
                 }
 
                 if (removedCfgEntries < 1)
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Not removed any models, all OK!"), true);
+                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("Not removed any models, all OK!"), true);
                     msgs.push_back(m);
                 }
+
+                m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("cfg validation, %1 valid models").arg(validModels.size()), true);
+                msgs.push_back(m);
+                m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, %1 invalid models").arg(invalidModels.size()), true);
+                msgs.push_back(m);
+
                 return msgs;
             }
         } // namespace
