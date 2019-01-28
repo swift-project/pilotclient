@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CAircraftModelValidationComponent</class>
  <widget class="QFrame" name="CAircraftModelValidationComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>640</width>
-    <height>480</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Model validation</string>
   </property>
@@ -50,7 +42,7 @@
       <attribute name="title">
        <string>Messages</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="vl_Messages">
        <item>
         <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
          <property name="frameShape">
@@ -67,7 +59,7 @@
    </item>
    <item>
     <widget class="QWidget" name="wi_Buttons" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="hl_ValidationButtons">
       <item>
        <widget class="QCheckBox" name="cb_EnableStartupCheck">
         <property name="text">

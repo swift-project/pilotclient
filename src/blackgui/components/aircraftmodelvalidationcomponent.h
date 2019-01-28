@@ -55,6 +55,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CAircraftModelValidationComponent> ui;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+            qint64 m_lastResults = -1; //!< when received last results
 
             //! Invalid models
             void tempDisableModels(const BlackMisc::Simulation::CAircraftModelList &models);
