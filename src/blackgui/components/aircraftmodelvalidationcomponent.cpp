@@ -87,7 +87,7 @@ namespace BlackGui
             CAircraftMatcherSetup setup = m_matchingSettings.get();
             if (setup.doVerificationAtStartup() == checked) { return; }
             setup.setVerificationAtStartup(checked);
-            CStatusMessage msg = m_matchingSettings.setAndSave(setup);
+            const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
             Q_UNUSED(msg);
         }
 

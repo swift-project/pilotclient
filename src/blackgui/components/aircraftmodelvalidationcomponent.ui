@@ -25,7 +25,7 @@
       <attribute name="title">
        <string>Invalid models</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="vl_InvalidModels">
        <item>
         <widget class="BlackGui::Views::CAircraftModelView" name="tvp_InvalidModels">
          <property name="selectionBehavior">
@@ -59,28 +59,8 @@
    </item>
    <item>
     <widget class="QWidget" name="wi_Buttons" native="true">
-     <layout class="QHBoxLayout" name="hl_ValidationButtons">
-      <item>
-       <widget class="QCheckBox" name="cb_EnableStartupCheck">
-        <property name="text">
-         <string>check at startup</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="hs_Buttons">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
        <widget class="BlackGui::Components::CSimulatorSelector" name="comp_Simulator">
         <property name="minimumSize">
          <size>
@@ -96,24 +76,31 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pb_TriggerValidation">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cb_EnableStartupCheck">
         <property name="text">
-         <string>trigger validation</string>
+         <string>check at startup</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pb_TempDisableSelected">
+        <property name="text">
+         <string>temp.disable selected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
        <widget class="QPushButton" name="pb_TempDisableInvalid">
         <property name="text">
          <string>temp.disable invalid</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pb_TempDisableSelected">
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pb_TriggerValidation">
         <property name="text">
-         <string>temp.disable selected</string>
+         <string>trigger validation</string>
         </property>
        </widget>
       </item>
