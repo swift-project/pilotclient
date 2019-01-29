@@ -231,7 +231,7 @@ namespace BlackMisc
                 QFile file(fnFixed); // includes path
                 if (!file.open(QFile::ReadOnly | QFile::Text))
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories()).warning(u"Unable to read file '%1'") << fnFixed;
+                    const CStatusMessage m = CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).warning(u"Unable to read file '%1'") << fnFixed;
                     msgs.push_back(m);
                     return CAircraftCfgEntriesList();
                 }
@@ -371,7 +371,7 @@ namespace BlackMisc
                 {
                     if (e.getTitle().isEmpty())
                     {
-                        const CStatusMessage m = CStatusMessage(getLogCategories()).info(u"FS model in %1, index %2 has no title") << fileName << e.getIndex();
+                        const CStatusMessage m = CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).info(u"FS model in %1, index %2 has no title") << fileName << e.getIndex();
                         msgs.push_back(m);
                         continue;
                     }

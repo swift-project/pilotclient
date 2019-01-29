@@ -2088,7 +2088,7 @@ namespace BlackSimPlugin
                     if (position.Airspeed < 2)
                     {
                         position.OnGround = 1U;
-                        if (details) { *details = CStatusMessage(getLogCategories()).warning(u"Force GND flag for underflow protection"); }
+                        if (details) { *details = CStatusMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).warning(u"Force GND flag for underflow protection"); }
                         break;
                     }
                 }

@@ -1038,7 +1038,7 @@ namespace BlackCore
             const CStatusMessage m = this->supportsContexts() ?
                                      this->getIContextApplication()->saveSettings() :
                                      CSettingsCache::instance()->saveToStore();
-            CLogMessage(getLogCategories()).preformatted(m);
+            CLogMessage(this).preformatted(m);
         }
 
         // from here on we really rip apart the application object

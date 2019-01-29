@@ -493,7 +493,7 @@ namespace BlackCore
                         CStatusMessage m = m_updateInfo.set(updateInfo, lastModified);
                         if (m.isFailure())
                         {
-                            m.addCategories(getLogCategories());
+                            m.addCategories(this);
                             CLogMessage::preformatted(m);
                             this->manageUpdateInfoAvailability(false);
                         }

@@ -416,7 +416,7 @@ namespace BlackMisc
             }
             catch (const CJsonException &ex)
             {
-                const CStatusMessage m = ex.toStatusMessage(getLogCategories(), QString("Parsing flight plan from failed."));
+                const CStatusMessage m = ex.toStatusMessage(&fp, QString("Parsing flight plan from failed."));
                 Q_UNUSED(m);
             }
             return fp;
@@ -457,7 +457,7 @@ namespace BlackMisc
                         CStatusMessage m;
                         if (!Json::looksLikeSwiftJson(data))
                         {
-                            m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, u"Reading '%1' yields no data", true) << fileName;
+                            m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"Reading '%1' yields no data", true) << fileName;
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }
@@ -477,7 +477,7 @@ namespace BlackMisc
                                 }
                                 else
                                 {
-                                    m = CStatusMessage(CFlightPlan::getLogCategories(), CStatusMessage::SeverityWarning, u"Wrong format for flight plan in '%1'") << fileName;
+                                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, u"Wrong format for flight plan in '%1'") << fileName;
                                     if (msgs) { msgs->push_back(m); }
                                 }
                             }
@@ -489,7 +489,7 @@ namespace BlackMisc
                         }
                         catch (const CJsonException &ex)
                         {
-                            m = ex.toStatusMessage(CFlightPlan::getLogCategories(), "Parse error in " + fileName);
+                            m = ex.toStatusMessage(getLogCategories(), "Parse error in " + fileName);
                             if (msgs) { msgs->push_back(m); }
                             break;
                         }

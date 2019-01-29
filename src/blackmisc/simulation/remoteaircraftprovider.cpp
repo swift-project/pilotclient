@@ -443,7 +443,7 @@ namespace BlackMisc
             {
                 const QJsonDocument doc(jsonObject);
                 const QString partsAsString = doc.toJson(QJsonDocument::Compact);
-                const CStatusMessage message(getLogCategories(), CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
+                const CStatusMessage message(this, CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
 
                 QReadLocker l(&m_lockPartsHistory);
                 if (m_aircraftPartsMessages.contains(callsign))

@@ -757,7 +757,7 @@ namespace BlackCore
             if (jsonContent.isEmpty())
             {
                 static const QString errorMsg = "Empty JSON string, status: %1, URL: '%2', load time: %3";
-                datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
                                              CStatusMessage::SeverityError,
                                              errorMsg.arg(status).arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
                 return;
@@ -770,14 +770,14 @@ namespace BlackCore
                 {
                     static const QString errorMsg = "Looks like PHP errror, status %1, URL: '%2', msg: %3";
                     const QString phpErrorMessage = CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonContent);
-                    datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                    datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
                                                  CStatusMessage::SeverityError,
                                                  errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
                 }
                 else
                 {
                     static const QString errorMsg = "Empty JSON document, URL: '%1', load time: %2";
-                    datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                    datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
                                                  CStatusMessage::SeverityError,
                                                  errorMsg.arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
                 }

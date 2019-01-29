@@ -340,7 +340,7 @@ namespace BlackCore
                 stashModels.push_back(dbModel); // changed DB model
                 if (updateInfo)
                 {
-                    const CStatusMessage m = CStatusMessage(getLogCategories()).info(u"%1 -> %2 (%3) for '%4'")
+                    const CStatusMessage m = CStatusMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"%1 -> %2 (%3) for '%4'")
                                              << dbModelSimulator.toQString(true) << simulator.toQString(true)
                                              << delta.toQString(true) << dbModel.getModelStringAndDbKey();
                     updateInfo->push_back(m);
