@@ -83,8 +83,8 @@ msvc: QMAKE_CXXFLAGS *= /utf-8
 ################################
 
 # To reduce the size of MinGW binaries, uncomment the first and comment the second line
-# win32-g++: CONFIG += optimize_debug
-win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
+win32-g++: CONFIG += optimize_debug
+# win32-g++: QMAKE_CXXFLAGS *= -Wa,-mbig-obj
 
 ################################
 # FSX or FS9 on 32bit Windows only
