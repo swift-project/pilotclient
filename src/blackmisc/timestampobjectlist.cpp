@@ -295,6 +295,44 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::push_backIncreaseTimestamp(const OBJ &newObject)
+    {
+        if (this->container().isEmpty())
+        {
+            this->container().push_back(newObject);
+            return;
+        }
+        const qint64 newMs = newObject.getMSecsSinceEpoch();
+        const qint64 oldMs = this->container().back().getMSecsSinceEpoch();
+        if (newMs > oldMs)
+        {
+            this->container().push_back(newObject);
+            return;
+        }
+        this->push_backOverrideTimestamp(newObject, oldMs + 1);
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::push_backOverrideTimestamp(const OBJ &newObject, qint64 newTsMsSinceEpoch)
+    {
+        OBJ newObjectCopy(newObject);
+        newObjectCopy.setMSecsSinceEpoch(newTsMsSinceEpoch);
+        this->container().push_back(newObjectCopy);
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::setNewTimestampStartingLast(qint64 startTimeStampMs, qint64 deltaTimeMs)
+    {
+        if (this->container().isEmpty()) { return; }
+        qint64 currentMs = startTimeStampMs;
+        for (auto it = this->container().rbegin(); it != this->container().rend(); ++it)
+        {
+            it->setMSecsSinceEpoch(currentMs);
+            currentMs += deltaTimeMs;
+        }
+    }
+
+    template<class OBJ, class CONTAINER>
     int ITimestampObjectList<OBJ, CONTAINER>::replaceIfSameTimestamp(const OBJ &newObject)
     {
         int c = 0;

@@ -132,6 +132,16 @@ namespace BlackMisc
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestFirst(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
 
+        //! Push back and increase the timestamp at least by +1ms if equal to last element
+        //! \remark if the timestamp is already greater it does not modifcation
+        void push_backIncreaseTimestamp(const OBJ &newObject);
+
+        //! Push back, but set new timestamp
+        void push_backOverrideTimestamp(const OBJ &newObject, qint64 newTsMsSinceEpoch);
+
+        //! Set new timestamps starting with the last element
+        void setNewTimestampStartingLast(qint64 startTimeStampMs, qint64 deltaTimeMs);
+
         //! Replace if an object has the same timestamp
         int replaceIfSameTimestamp(const OBJ &newObject);
 
