@@ -1215,14 +1215,6 @@ namespace BlackSimPlugin
             bool result = service.isValid() && traffic.isValid() && weather.isValid();
             if (! result) { return; }
 
-            QString swiftVersion = BlackConfig::CBuildConfig::getVersionString();
-            QString xswiftbusVersion = service.getVersionNumber();
-            if (! swiftVersion.contains(xswiftbusVersion))
-            {
-                CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. Make sure to install %1 into X-Plane plugins!") << xswiftbusVersion;
-                return;
-            }
-
             if (!traffic.initialize())
             {
                 CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
