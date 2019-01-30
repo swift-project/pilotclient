@@ -578,7 +578,7 @@ namespace BlackMisc
                     for (const CAircraftModel &removedModel : removedModels)
                     {
                         removedCfgEntries++;
-                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1', removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
+                        m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1' removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
                         msgs.push_back(m);
                     }
                     invalidModels.push_back(removedModels);
@@ -595,6 +595,7 @@ namespace BlackMisc
                 m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, %1 invalid models").arg(invalidModels.size()), true);
                 msgs.push_back(m);
 
+                // finished
                 return msgs;
             }
         } // namespace
