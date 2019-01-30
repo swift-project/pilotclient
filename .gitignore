@@ -3,6 +3,7 @@ pch.h.cpp
 
 # QtCreator project files
 /swift.pro.user
+/swift.pro.user.*
 
 # Out-of-source build tree
 /build*/
