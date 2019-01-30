@@ -20,4 +20,12 @@ namespace BlackMisc
         CSequence<CPropertyIndex>(other)
     { }
 
+    CPropertyIndexList CPropertyIndexList::copyFrontRemoved() const
+    {
+        if (this->size() < 2) { return CPropertyIndexList(); }
+        CPropertyIndexList copy(*this);
+        copy.pop_front();
+        return copy;
+    }
+
 } // namespace

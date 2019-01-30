@@ -163,6 +163,7 @@ namespace BlackGui
             bool            m_modelDestroyed = false;          //!< model is about to be destroyed
             Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
             Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
+            BlackMisc::CPropertyIndexList m_sortTieBreakers;   //!< how column values are sorted if equal, if no value is given this is random
 
         private:
             BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };

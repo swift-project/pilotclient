@@ -120,6 +120,9 @@ namespace BlackMisc
             //! Convert string to DB key
             static int stringToDbKey(const QString &candidate);
 
+            //! The key index
+            static const CPropertyIndex &keyIndex() { static const CPropertyIndex k(IndexDbIntegerKey); return k; }
+
         protected:
             //! Constructor
             IDatastoreObjectWithIntegerKey() {}
@@ -200,6 +203,9 @@ namespace BlackMisc
 
             //! Invalid key
             static QString invalidDbKey() { return {}; }
+
+            //! The key index
+            static const CPropertyIndex &keyIndex() { static const CPropertyIndex k(IndexDbStringKey); return k; }
 
         protected:
             //! Constructor

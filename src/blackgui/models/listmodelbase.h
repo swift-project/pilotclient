@@ -193,19 +193,32 @@ namespace BlackGui
         {
             //! Sort with compare function
             template<class ObjectType>
-            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::true_type)
+            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, const BlackMisc::CPropertyIndexList &tieBreakers, std::true_type)
             {
                 const int c = a.comparePropertyByIndex(index, b);
-                if (c == 0) { return false; }
+                if (c == 0)
+                {
+                    if (!tieBreakers.isEmpty())
+                    {
+                        const std::integral_constant<bool, true> marker;
+                        return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), marker);
+                    }
+                    return false;
+                }
                 return (order == Qt::AscendingOrder) ? (c < 0) : (c > 0);
             }
 
             //! Sort without compare function
             template <typename ObjectType>
-            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::false_type)
+            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, const BlackMisc::CPropertyIndexList &tieBreakers, std::false_type)
             {
                 const BlackMisc::CVariant aQv = a.propertyByIndex(index);
                 const BlackMisc::CVariant bQv = b.propertyByIndex(index);
+                if (!tieBreakers.isEmpty() && aQv == bQv)
+                {
+                    const std::integral_constant<bool, false> marker;
+                    return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), marker);
+                }
                 return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
             }
         } // namespace

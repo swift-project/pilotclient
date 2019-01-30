@@ -127,8 +127,8 @@ namespace BlackGui
             if (!formatter) { return false; }
 
             ObjectType obj = m_container[index.row()];
-            ObjectType currentObject(obj);
-            CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
+            const ObjectType currentObject(obj);
+            const CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
             obj.setPropertyByIndex(propertyIndex, value);
 
             if (obj != currentObject)
@@ -149,7 +149,7 @@ namespace BlackGui
         bool CListModelBase<T, UseCompare>::setInContainer(const QModelIndex &index, const ObjectType &obj)
         {
             if (!index.isValid()) { return false; }
-            int row = index.row();
+            const int row = index.row();
             if (row < 0 || row >= this->container().size()) { return false; }
             m_container[row] = obj;
             return true;
@@ -215,8 +215,8 @@ namespace BlackGui
         {
             Q_UNUSED(sort);
             if (m_modelDestroyed) { return nullptr; }
-            auto sortColumn = this->getSortColumn();
-            auto sortOrder = this->getSortOrder();
+            const auto sortColumn = this->getSortColumn();
+            const auto sortOrder  = this->getSortOrder();
             CWorker *worker = CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
             {
                 return this->sortContainerByColumn(container, sortColumn, sortOrder);
@@ -399,11 +399,11 @@ namespace BlackGui
         template <typename T, bool UseCompare>
         void CListModelBase<T, UseCompare>::remove(const ObjectType &object)
         {
-            int oldSize = m_container.size();
+            const int oldSize = m_container.size();
             beginRemoveRows(QModelIndex(), 0, 0);
             m_container.remove(object);
             endRemoveRows();
-            int newSize = m_container.size();
+            const int newSize = m_container.size();
             if (oldSize != newSize)
             {
                 this->emitModelDataChanged();
@@ -533,10 +533,10 @@ namespace BlackGui
             }
 
             // sort the values
-            std::integral_constant<bool, UseCompare> marker {};
+            const std::integral_constant<bool, UseCompare> marker {};
             const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
             {
-                return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, marker);
+                return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, m_sortTieBreakers, marker);
             };
 
             return container.sorted(p);
@@ -555,7 +555,7 @@ namespace BlackGui
             for (const QModelIndex &index : indexes)
             {
                 if (!index.isValid()) { continue; }
-                int r = index.row();
+                const int r = index.row();
                 if (rows.contains(r)) { continue; }
                 container.push_back(this->at(index));
                 rows.append(r);

@@ -40,8 +40,10 @@ namespace BlackGui
         CListModelDbObjects<T, K, UseCompare>::CListModelDbObjects(const QString &translationContext, QObject *parent) :
             CListModelBase<ContainerType, UseCompare>(translationContext, parent)
         {
+            CListModelBaseNonTemplate::m_sortTieBreakers.push_front(ObjectType::keyIndex());
+
             constexpr bool hasIntegerKey = std::is_base_of<IDatastoreObjectWithIntegerKey, ObjectType>::value && std::is_same<int, KeyType>::value;
-            constexpr bool hasStringKey = std::is_base_of<IDatastoreObjectWithStringKey, ObjectType>::value && std::is_base_of<QString, KeyType>::value;
+            constexpr bool hasStringKey  = std::is_base_of<IDatastoreObjectWithStringKey, ObjectType>::value && std::is_base_of<QString, KeyType>::value;
             static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
         }
 
@@ -49,7 +51,7 @@ namespace BlackGui
         QVariant CListModelDbObjects<T, K, UseCompare>::data(const QModelIndex &index, int role) const
         {
             if (role != Qt::BackgroundRole) { return CListModelBase<ContainerType, UseCompare>::data(index, role); }
-            if (isHighlightedIndex(index) ) { return QBrush(m_highlightColor); }
+            if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
             return CListModelBase<ContainerType, UseCompare>::data(index, role);
         }
 

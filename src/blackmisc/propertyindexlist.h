@@ -35,6 +35,9 @@ namespace BlackMisc
 
         //! Construct from a base class object.
         CPropertyIndexList(const CSequence<CPropertyIndex> &other);
+
+        //! List without front element, or empty list if not applicable
+        CPropertyIndexList copyFrontRemoved() const;
     };
 } //namespace
 

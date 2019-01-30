@@ -26,6 +26,8 @@ namespace BlackGui
             CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
         {
             this->setMode(Detailed);
+            m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
+            m_sortTieBreakers.push_front(CStatusMessage::IndexSeverity);
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
