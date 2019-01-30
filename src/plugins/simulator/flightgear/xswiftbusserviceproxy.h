@@ -200,22 +200,22 @@ namespace BlackSimPlugin
             void getLongitudeDegAsync(double *o_longitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAltitudeMslM
+            //! \copydoc XSwiftBus::CService::getAltitudeMslFt
             //! @{
-            double getAltitudeMslM() const;
-            void getAltitudeMslMAsync(double *o_altitude);
+            double getAltitudeMslFt() const;
+            void getAltitudeMslFtAsync(double *o_altitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getHeightAglM
+            //! \copydoc XSwiftBus::CService::getHeightAglFt
             //! @{
-            double getHeightAglM() const;
-            void getHeightAglMAsync(double *o_height);
+            double getHeightAglFt() const;
+            void getHeightAglFtAsync(double *o_height);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getGroundSpeedMps
+            //! \copydoc XSwiftBus::CService::getGroundSpeedKts
             //! @{
-            double getGroundSpeedMps() const;
-            void getGroundSpeedMpsAsync(double *o_groundspeed);
+            double getGroundSpeedKts() const;
+            void getGroundSpeedKtsAsync(double *o_groundspeed);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getIndicatedAirspeedKias

@@ -212,31 +212,31 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getLongitudeDeg"), setterCallback(o_longitude));
         }
 
-        double CXSwiftBusServiceProxy::getAltitudeMslM() const
+        double CXSwiftBusServiceProxy::getAltitudeMslFt() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAltitudeMslM"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getAltitudeMslFt"));
         }
-        void CXSwiftBusServiceProxy::getAltitudeMslMAsync(double *o_altitude)
+        void CXSwiftBusServiceProxy::getAltitudeMslFtAsync(double *o_altitude)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getAltitudeMslM"), setterCallback(o_altitude));
-        }
-
-        double CXSwiftBusServiceProxy::getHeightAglM() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeightAglM"));
-        }
-        void CXSwiftBusServiceProxy::getHeightAglMAsync(double *o_height)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getHeightAglM"), setterCallback(o_height));
+            m_dbusInterface->callDBusAsync(QLatin1String("getAltitudeMslFt"), setterCallback(o_altitude));
         }
 
-        double CXSwiftBusServiceProxy::getGroundSpeedMps() const
+        double CXSwiftBusServiceProxy::getHeightAglFt() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundSpeedMps"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeightAglFt"));
         }
-        void CXSwiftBusServiceProxy::getGroundSpeedMpsAsync(double *o_groundspeed)
+        void CXSwiftBusServiceProxy::getHeightAglFtAsync(double *o_height)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getGroundSpeedMps"), setterCallback(o_groundspeed));
+            m_dbusInterface->callDBusAsync(QLatin1String("getHeightAglFt"), setterCallback(o_height));
+        }
+
+        double CXSwiftBusServiceProxy::getGroundSpeedKts() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundSpeedKts"));
+        }
+        void CXSwiftBusServiceProxy::getGroundSpeedKtsAsync(double *o_groundspeed)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getGroundSpeedKts"), setterCallback(o_groundspeed));
         }
 
         double CXSwiftBusServiceProxy::getIndicatedAirspeedKias() const
