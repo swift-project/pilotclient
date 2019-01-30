@@ -97,6 +97,11 @@ namespace BlackGui
             return ui->comp_TextMessages;
         }
 
+        CRadarComponent *CMainInfoAreaComponent::getRadarComponent()
+        {
+            return ui->comp_Radar;
+        }
+
         void CMainInfoAreaComponent::displayLog()
         {
             ui->comp_Log->displayLog();
@@ -195,6 +200,7 @@ namespace BlackGui
             case InfoAreaLog:        return CIcons::appLog16();
             case InfoAreaTextMessages:  return CIcons::appTextMessages16();
             case InfoAreaInterpolation: return CIcons::appInterpolation16();
+            case InfoAreaRadar:      return CIcons::appRadar16();
             default: return CIcons::empty();
             }
         }

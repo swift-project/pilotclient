@@ -56,6 +56,7 @@ namespace BlackMisc
             ApplicationSimulator,
             ApplicationTextMessages,
             ApplicationWeather,
+            ApplicationRadar,
             AviationAtis,
             AviationAttitudeIndicator,
             AviationMetar,
@@ -185,6 +186,7 @@ namespace BlackMisc
             StandardIconWarning16,
             StandardIconWeatherCloudy16,
             StandardIconWrench16,
+            StandardIconBuilding16,
             Swift16,
             Swift24,
             Swift48,
@@ -426,6 +428,9 @@ namespace BlackMisc
         //! Cut
         static const QPixmap &cut16();
 
+        //! Building
+        static const QPixmap &building16();
+
         // --------------------------------------------------
         // -- Database
         // --------------------------------------------------
@@ -625,6 +630,9 @@ namespace BlackMisc
 
         //! Stash
         static const QPixmap &appDbStash16();
+
+        //! Radar
+        static const QPixmap &appRadar16();
 
         // -------------------------------------------------------------
         // Network and aviation

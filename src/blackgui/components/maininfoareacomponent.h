@@ -34,6 +34,7 @@ namespace BlackGui
         class CLogComponent;
         class CMappingComponent;
         class CInterpolationComponent;
+        class CRadarComponent;
         class CSettingsComponent;
         class CSimulatorComponent;
         class CTextMessageComponent;
@@ -68,6 +69,7 @@ namespace BlackGui
                 InfoAreaInterpolation = 9,
                 InfoAreaSettings      = 10,
                 InfoAreaLog           = 11,
+                InfoAreaRadar         = 12,
                 InfoAreaNone          = -1
             };
 
@@ -106,6 +108,9 @@ namespace BlackGui
 
             //! Text messages
             CTextMessageComponent *getTextMessageComponent();
+
+            //! Radar
+            CRadarComponent *getRadarComponent();
 
             //! Display the log
             void displayLog();

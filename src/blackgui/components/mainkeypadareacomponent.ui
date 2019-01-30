@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>122</height>
+    <width>473</width>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -364,9 +364,9 @@
        </widget>
       </item>
       <item row="3" column="4">
-       <widget class="QPushButton" name="pb_Empty">
+       <widget class="QPushButton" name="pb_MainRadar">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -375,7 +375,10 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string/>
+         <string>Radar</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -427,7 +430,7 @@
   <tabstop>pb_Opacity050</tabstop>
   <tabstop>pb_Opacity100</tabstop>
   <tabstop>pb_CockpitIdent</tabstop>
-  <tabstop>pb_Empty</tabstop>
+  <tabstop>pb_MainRadar</tabstop>
   <tabstop>pb_SoundMute</tabstop>
   <tabstop>pb_SoundMaxVolume</tabstop>
  </tabstops>

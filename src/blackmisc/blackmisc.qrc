@@ -416,6 +416,7 @@
         <file>icons/diagona/icons/folders.png</file>
         <file>icons/diagona/icons/blue-folder-search-result.png</file>
         <file>icons/diagona/icons/folder-search-result.png</file>
+		<file>icons/diagona/icons/building.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>

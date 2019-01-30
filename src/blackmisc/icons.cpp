@@ -413,6 +413,12 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::building16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/building.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::filter16()
     {
         return tableSheet16();
@@ -820,7 +826,7 @@ namespace BlackMisc
 
     const QPixmap &CIcons::appAtc16()
     {
-        return radar16();
+        return building16();
     }
 
     const QPixmap &CIcons::appAircraft16()
@@ -891,6 +897,11 @@ namespace BlackMisc
     const QPixmap &CIcons::appDbStash16()
     {
         return databaseAdd16();
+    }
+
+    const QPixmap &CIcons::appRadar16()
+    {
+        return radar16();
     }
 
     const QPixmap &CIcons::roleC1()
@@ -1126,6 +1137,7 @@ namespace BlackMisc
         case ApplicationSimulator: return appSimulator16();
         case ApplicationTextMessages: return appTextMessages16();
         case ApplicationWeather: return appWeather16();
+        case ApplicationRadar: return appRadar16();
         case AviationAtis: return atis();
         case AviationAttitudeIndicator: return attitudeIndicator16();
         case AviationMetar: return metar();
@@ -1254,6 +1266,7 @@ namespace BlackMisc
         case StandardIconWarning16: return warning16();
         case StandardIconWeatherCloudy16: return weatherCloudy16();
         case StandardIconWrench16: return wrench16();
+        case StandardIconBuilding16: return building16();
         case Swift1024: return swift1024();
         case Swift128: return swift128();
         case Swift16: return swift16();

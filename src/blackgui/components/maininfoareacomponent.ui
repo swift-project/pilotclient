@@ -791,6 +791,66 @@
     </layout>
    </widget>
   </widget>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Radar">
+   <property name="minimumSize">
+    <size>
+     <width>165</width>
+     <height>66</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Radar</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="qw_RadarOuter">
+    <layout class="QVBoxLayout" name="vl_RadarOuter">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="fr_RadarInner">
+       <layout class="QVBoxLayout" name="vl_RadarInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CRadarComponent" name="comp_Radar"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -869,6 +929,12 @@
    <class>BlackGui::Components::CInterpolationComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/interpolationcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CRadarComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/radarcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
