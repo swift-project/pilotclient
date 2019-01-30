@@ -84,7 +84,6 @@ namespace BlackMisc
 
         bool CBackgroundValidation::requestLastResults()
         {
-
             CAircraftModelList valid;
             CAircraftModelList invalid;
             CAircraftModelList models;
@@ -129,8 +128,10 @@ namespace BlackMisc
                 const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
                 msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped);
 
-                const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - started;
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 deltaTimeMs = now - started;
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
+                msgs.setNewTimestampStartingLast(now, -1);
 
                 validated = true;
 
