@@ -243,7 +243,7 @@ namespace BlackMisc
         //! Removes an element at the end of the sequence.
         void pop_back() { Q_ASSERT(!empty()); m_impl.pop_back(); }
 
-        //! Removes an element at the end of the sequence.
+        //! Removes an element at the front of the sequence.
         void pop_front() { Q_ASSERT(!empty()); erase(begin()); }
 
         //! Remove the element pointed to by the given iterator.

@@ -44,7 +44,7 @@ namespace BlackGui
             void keepLatest(int desiredSize);
 
             //! Filter dialog if any
-            BlackGui::Filters::CStatusMessageFilterDialog *getFilterDialog() const;
+            Filters::CStatusMessageFilterDialog *getFilterDialog() const;
         };
     } // ns
 } // ns

@@ -46,7 +46,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IDatastoreObject : public ITimestampBased
         {
             // since we use different keys all the compares, set, get are in the derived class
-            // in general we can say, it was a bad decisio to use different key types
+            // in general we can say, it was a bad decision to use different key types
             // IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastore for future usage
 
         public:

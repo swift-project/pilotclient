@@ -237,11 +237,11 @@ namespace BlackGui
             if (container.size() > asyncThreshold && sort)
             {
                 // larger container with sorting
-                updateAsync(container, sort);
+                this->updateAsync(container, sort);
             }
             else
             {
-                update(container, sort);
+                this->update(container, sort);
             }
         }
 
