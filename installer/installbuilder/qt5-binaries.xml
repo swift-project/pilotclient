@@ -26,7 +26,15 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/Qt5Multimedia*.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/Qt5Network*.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/Qt5OpenGL*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
@@ -39,10 +47,6 @@
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/Qt5Xml*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Multimedia*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
@@ -91,7 +95,16 @@
                     <origin>../../dist/lib/libQt5Multimedia.so.5</origin>
                 </distributionFile>
                 <distributionFile>
+                    <origin>../../dist/lib/libQt5MultimediaGstTools.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5MultimediaWidgets.so.5</origin>
+                </distributionFile>
+                <distributionFile>
                     <origin>../../dist/lib/libQt5Network.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5OpenGL.so.5</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libQt5Svg.so.5</origin>
@@ -117,6 +130,9 @@
                     <origin>../../dist/lib/libdbus-1.3.dylib</origin>
                 </distributionFile>
                 <distributionDirectory>
+                    <origin>../../dist/lib/QtConcurrent.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
                     <origin>../../dist/lib/QtCore.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
@@ -130,6 +146,9 @@
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtNetwork.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtOpenGL.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtPrintSupport.framework</origin>

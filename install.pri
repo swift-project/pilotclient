@@ -10,13 +10,14 @@ INSTALLS += text_files_target
 
 win32 {
     QT5_LIBRARIES *= Qt5Core$${DLL_DEBUG_SUFFIX}.dll
-    QT5_LIBRARIES *= Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
-    QT5_LIBRARIES *= Qt5Network$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5DBus$${DLL_DEBUG_SUFFIX}.dll
-    QT5_LIBRARIES *= Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Multimedia$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Network$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5OpenGL$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Svg$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Widgets$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
 
     qt5_target.path = $${PREFIX}/bin
     QT5_LIBRARY_DIR = $$[QT_INSTALL_BINS]
@@ -24,15 +25,17 @@ win32 {
 else:macx {
     # MacOS workaround using rsync. Otherwise all headers are also copied.
     qt5_target.path = $${PREFIX}/lib/QtCore.framework
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtConcurrent.framework/ $${PREFIX}/lib/QtConcurrent.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/lib/QtCore.framework/ &&
-    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/lib/QtGui.framework/ &&
-    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/lib/QtNetwork.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtDBus.framework/ $${PREFIX}/lib/QtDBus.framework/ &&
-    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/lib/QtXml.framework/ &&
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/lib/QtGui.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtMultimedia.framework/ $${PREFIX}/lib/QtMultimedia.framework/ &&
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/lib/QtNetwork.framework/ &&
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtOpenGL.framework/ $${PREFIX}/lib/QtOpenGL.framework/ &&
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtPrintSupport.framework/ $${PREFIX}/lib/QtPrintSupport.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtSvg.framework/ $${PREFIX}/lib/QtSvg.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/lib/QtWidgets.framework/ &&
-    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtPrintSupport.framework/ $${PREFIX}/lib/QtPrintSupport.framework/
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/lib/QtXml.framework/
 }
 else:unix: {
     QT5_LIBRARIES *= libQt5Core.so.5
@@ -46,8 +49,7 @@ else:unix: {
     QT5_LIBRARIES *= libQt5Widgets.so.5
     QT5_LIBRARIES *= libQt5XcbQpa.so.5
     QT5_LIBRARIES *= libQt5Xml.so.5
-    greaterThan(QT_MINOR_VERSION, 9): QT5_LIBRARIES *= libQt5MultimediaGstTools.so.5
-    else: QT5_LIBRARIES *= libqgsttools_p.so.1
+    QT5_LIBRARIES *= libQt5MultimediaGstTools.so.5
 
     ICU_LIBRARIES *= libicui18n.so.56
     ICU_LIBRARIES *= libicuuc.so.56
