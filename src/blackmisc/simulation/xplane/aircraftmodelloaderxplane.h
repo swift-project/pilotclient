@@ -120,6 +120,8 @@ namespace BlackMisc
                 CSLPackage parsePackageHeader(const QString &path, const QString &content);
                 void parseFullPackage(const QString &content, CSLPackage &package);
 
+                void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
+
                 QPointer<CWorker> m_parserWorker;  //!< worker will destroy itself, so weak pointer
                 QVector<CSLPackage> m_cslPackages; //!< Parsed Packages. No lock required since accessed only from one thread
 

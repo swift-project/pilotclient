@@ -170,11 +170,12 @@ namespace BlackMisc
             }
 
             //! Add model only if there no other model with the same model string
-            void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
+            void CAircraftModelLoaderXPlane::addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
             {
                 if (models.containsModelString(model.getModelString()))
                 {
-                    CLogMessage(static_cast<CAircraftModelLoaderXPlane *>(nullptr)).warning(u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+                    const CStatusMessage m = CStatusMessage(this).warning(u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+                    m_loadingMessages.push_back(m);
                 }
                 models.push_back(model);
             }
@@ -187,7 +188,7 @@ namespace BlackMisc
                 QDir searchPath(rootDirectory, fileFilterFlyable());
                 QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-                emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(rootDirectory), -1);
+                emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable airplanes in '%1'").arg(rootDirectory), -1);
 
                 CAircraftModelList installedModels;
                 while (aircraftIt.hasNext())
@@ -320,7 +321,8 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': EXPORT_NAME command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : EXPORT_NAME command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -333,7 +335,8 @@ namespace BlackMisc
                 }
                 else
                 {
-                    CLogMessage(this).error(u"XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
+                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
             }
@@ -343,13 +346,15 @@ namespace BlackMisc
                 Q_UNUSED(package);
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"'%1' - '%2': DEPENDENCY command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : DEPENDENCY command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
                 if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; }) == 0)
                 {
-                    CLogMessage(this).error(u"XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
+                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -373,7 +378,8 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': OBJECT command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJECT command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -382,7 +388,8 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2: package not found.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -390,7 +397,8 @@ namespace BlackMisc
                 QFile objFile(fullPath);
                 if (!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
-                    CLogMessage(this).error(u"XPlane object '%1' does not exist.") << fullPath;
+                    const CStatusMessage m = CStatusMessage(this).error(u"XPlane object '%1' does not exist.") << fullPath;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
                 QTextStream ts(&objFile);
@@ -436,7 +444,8 @@ namespace BlackMisc
             {
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': TEXTURE command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : TEXTURE command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -447,14 +456,16 @@ namespace BlackMisc
 
                 if (!doPackageSub(absoluteTexPath))
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': package not found.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
                 QFileInfo fileInfo(absoluteTexPath);
                 if (!fileInfo.exists())
                 {
-                    CLogMessage(this).error(u"XPlane texture '%1' does not exist.") << absoluteTexPath;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%1' does not exist.") << path << lineNum << absoluteTexPath;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -468,7 +479,9 @@ namespace BlackMisc
                 // AIRCAFT <min> <max> <path>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': AIRCRAFT command requires 3 arguments.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRCRAFT command requires 3 arguments.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
+                    return false;
                 }
 
                 // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
@@ -482,7 +495,9 @@ namespace BlackMisc
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
+                    return false;
                 }
 
                 package.planes.push_back(CSLPlane());
@@ -494,7 +509,9 @@ namespace BlackMisc
                 // OBJ8 <group> <animate YES|NO> <filename> {<texture filename> {<lit texture filename>}}
                 if (tokens.size() < 4 || tokens.size() > 6)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': OBJ8 command takes 3-5 arguments.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8 command takes 3-5 arguments.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
+                    return false;
                 }
 
                 if (tokens[1] != "SOLID") { return true; }
@@ -504,7 +521,8 @@ namespace BlackMisc
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': package not found.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -533,14 +551,16 @@ namespace BlackMisc
 
                     if (!doPackageSub(absoluteTexPath))
                     {
-                        CLogMessage(this).error(u"XPlane '%1' - '%2': package not found.") << path << lineNum;
+                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
+                        m_loadingMessages.push_back(m);
                         return false;
                     }
 
                     QFileInfo fileInfo(absoluteTexPath);
                     if (!fileInfo.exists())
                     {
-                        CLogMessage(this).error(u"XPlane texture '%1' does not exist.") << absoluteTexPath;
+                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%1' does not exist.") << path << lineNum << absoluteTexPath;
+                        m_loadingMessages.push_back(m);
                         return false;
                     }
 
@@ -563,7 +583,8 @@ namespace BlackMisc
                 // ICAO <code>
                 if (tokens.size() != 2)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': ICAO command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : ICAO command requires 1 argument.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -577,7 +598,8 @@ namespace BlackMisc
                 // AIRLINE <code> <airline>
                 if (tokens.size() != 3)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': AIRLINE command requires 2 arguments.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRLINE command requires 2 arguments.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -593,7 +615,8 @@ namespace BlackMisc
                 // LIVERY <code> <airline> <livery>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).error(u"XPlane '%1' - '%2': LIVERY command requires 3 arguments.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : LIVERY command requires 3 arguments.") << path << lineNum;
+                    m_loadingMessages.push_back(m);
                     return false;
                 }
 
@@ -679,21 +702,22 @@ namespace BlackMisc
                     auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
                     if (!tokens.empty())
                     {
+                        const CStatusMessage parserErrorMessage = CStatusMessage(this).error(u"Ignoring rest of CSL package '%1' due to previous parser error. Please fix the error and reload the model cache!") << package.name;
                         auto it = commands.find(tokens[0]);
                         if (it != commands.end())
                         {
                             bool result = it.value()(tokens, package, package.path, lineNum);
                             if (!result)
                             {
-                                const CStatusMessage m = CStatusMessage(this).warning(u"XPlane ignoring CSL package '%1'") << package.name;
-                                m_loadingMessages.push_back(m);
+                                m_loadingMessages.push_back(parserErrorMessage);
                                 break;
                             }
                         }
                         else
                         {
-                            const CStatusMessage m = CStatusMessage(this).warning(u"XPlane unrecognized command '%1' in '%2'") << tokens[0] << package.name;
+                            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unrecognized CSL command: '%3'") << package.path << lineNum << tokens[0];
                             m_loadingMessages.push_back(m);
+                            m_loadingMessages.push_back(parserErrorMessage);
                             break;
                         }
                     }
