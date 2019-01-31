@@ -188,6 +188,8 @@ namespace BlackMisc
                 QDir searchPath(rootDirectory, fileFilterFlyable());
                 QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
+                emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(rootDirectory), -1);
+
                 CAircraftModelList installedModels;
                 while (aircraftIt.hasNext())
                 {
@@ -257,6 +259,9 @@ namespace BlackMisc
                 {
                     QString packageFile(package.path);
                     packageFile += "/xsb_aircraft.txt";
+
+                    emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(packageFile), -1);
+
                     QFile file(packageFile);
                     file.open(QIODevice::ReadOnly);
                     QString content;
