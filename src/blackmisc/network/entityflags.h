@@ -46,14 +46,15 @@ namespace BlackMisc
                 VatsimDataFile         = 1 << 10,          //!< the VATSIM data file (multiple data entities)
                 VatsimStatusFile       = 1 << 11,          //!< the VATSIM status file (URLs for data files etc.)
                 AirportEntity          = 1 << 12,          //!< airports
-                AllEntities            = ((1 << 13) - 1),  //!< everything
-                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                    //!< all ICAO codes
-                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity,    //!< all ICAO codes and countries
-                DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,      //!< Combinded
-                ModelMatchingEntities  = AllIcaoEntities    | LiveryEntity      | ModelEntity,      //!< all needed for model matching
-                AllDbEntities                        = AllIcaoAndCountries | DistributorLiveryModel | DbInfoObjectEntity | AirportEntity, //!< All DB stuff
-                AllDbEntitiesNoInfoObjects           = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                      //!< All DB entities, no info objects
-                AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                       //!< All DB entities, no info objects and airports
+                AircraftCategoryEntity = 1 << 13,          //!< aircraft category entities
+                AllEntities            = ((1 << 14) - 1),  //!< everything
+                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                 //!< all ICAO codes
+                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, //!< all ICAO codes and countries
+                DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,   //!< Combined
+                ModelMatchingEntities  = AllIcaoEntities    | LiveryEntity      | ModelEntity,   //!< all needed for model matching
+                AllDbEntitiesNoInfoObjects = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity | AircraftCategoryEntity, //!< all DB entities, no info objects
+                AllDbEntities              = AllDbEntitiesNoInfoObjects | DbInfoObjectEntity,                    //!< all DB stuff
+                AllDbEntitiesNoInfoObjectsNoAirportsAndCategories = AllIcaoAndCountries | DistributorLiveryModel //!< all DB entities, no info objects and airports
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 

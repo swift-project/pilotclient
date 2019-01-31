@@ -23,6 +23,7 @@ namespace BlackMisc
             switch (flag)
             {
             case AircraftIcaoEntity:     return QStringLiteral("Aircraft ICAO");
+            case AircraftCategoryEntity: return QStringLiteral("Aircraft category");
             case AirlineIcaoEntity:      return QStringLiteral("Airline ICAO");
             case AirportEntity:          return QStringLiteral("Airport");
             case AllEntities:            return QStringLiteral("All");
@@ -53,6 +54,7 @@ namespace BlackMisc
         {
             QStringList list;
             if (entities.testFlag(AircraftIcaoEntity))     list << QStringLiteral("Aircraft ICAO");
+            if (entities.testFlag(AircraftCategoryEntity)) list << QStringLiteral("Aircraft category");
             if (entities.testFlag(AirlineIcaoEntity))      list << QStringLiteral("Airline ICAO");
             if (entities.testFlag(AirportEntity))          list << QStringLiteral("Airport");
             if (entities.testFlag(BookingEntity))          list << QStringLiteral("VATSIM bookings");
@@ -155,6 +157,7 @@ namespace BlackMisc
             if (entities.testFlag(CountryEntity))      { entities &= ~CountryEntity; return CountryEntity; }
             if (entities.testFlag(ModelEntity))        { entities &= ~ModelEntity; return ModelEntity; }
             if (entities.testFlag(DistributorEntity))  { entities &= ~DistributorEntity; return DistributorEntity; }
+            if (entities.testFlag(AircraftCategoryEntity)) { entities &= ~AircraftCategoryEntity; return AircraftCategoryEntity; }
             return NoEntity;
         }
 
@@ -180,13 +183,14 @@ namespace BlackMisc
         CEntityFlags::Entity CEntityFlags::singleEntityByName(const QString &name)
         {
             // order here is crucial
-            if (name.contains("model", Qt::CaseInsensitive)) { return ModelEntity; }
+            if (name.contains("model", Qt::CaseInsensitive))    { return ModelEntity; }
+            if (name.contains("category", Qt::CaseInsensitive)) { return AircraftCategoryEntity; }
             if (name.contains("aircraft", Qt::CaseInsensitive)) { return AircraftIcaoEntity; }
-            if (name.contains("airline", Qt::CaseInsensitive)) { return AirlineIcaoEntity; }
-            if (name.contains("airport", Qt::CaseInsensitive)) { return AirportEntity; }
+            if (name.contains("airline", Qt::CaseInsensitive))  { return AirlineIcaoEntity; }
+            if (name.contains("airport", Qt::CaseInsensitive))  { return AirportEntity; }
             if (name.contains("distributor", Qt::CaseInsensitive)) { return DistributorEntity; }
-            if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; } // singular/plural
-            if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; } // singular/plural
+            if (name.contains("countr", Qt::CaseInsensitive))   { return CountryEntity; } // singular/plural
+            if (name.contains("liver", Qt::CaseInsensitive))    { return LiveryEntity; } // singular/plural
             return NoEntity;
         }
 

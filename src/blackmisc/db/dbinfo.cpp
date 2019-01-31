@@ -142,7 +142,7 @@ namespace BlackMisc
 
         const QStringList &CDbInfo::sharedFileNames()
         {
-            static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json" });
+            static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategory.json" });
             return names;
         }
 
@@ -154,7 +154,7 @@ namespace BlackMisc
 
         const QStringList &CDbInfo::serviceNames()
         {
-            static const QStringList names({"jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php" });
+            static const QStringList names({"jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php", "jsonaircraftcategory.php" });
             return names;
         }
 
@@ -163,15 +163,15 @@ namespace BlackMisc
             static const QString empty;
             switch (entity)
             {
-            case CEntityFlags::AircraftIcaoEntity: return sharedFileNames().at(0);
-            case CEntityFlags::AirlineIcaoEntity: return sharedFileNames().at(1);
-            case CEntityFlags::AirportEntity: return sharedFileNames().at(2);
-            case CEntityFlags::CountryEntity: return sharedFileNames().at(3);
-            case CEntityFlags::DistributorEntity: return sharedFileNames().at(4);
-            case CEntityFlags::LiveryEntity: return sharedFileNames().at(5);
-            case CEntityFlags::ModelEntity: return sharedFileNames().at(6);
-            default:
-                break;
+            case CEntityFlags::AircraftIcaoEntity:  return sharedFileNames().at(0);
+            case CEntityFlags::AirlineIcaoEntity:   return sharedFileNames().at(1);
+            case CEntityFlags::AirportEntity:       return sharedFileNames().at(2);
+            case CEntityFlags::CountryEntity:       return sharedFileNames().at(3);
+            case CEntityFlags::DistributorEntity:   return sharedFileNames().at(4);
+            case CEntityFlags::LiveryEntity:        return sharedFileNames().at(5);
+            case CEntityFlags::ModelEntity:         return sharedFileNames().at(6);
+            case CEntityFlags::AircraftCategoryEntity: return sharedFileNames().at(7);
+            default: break;
             }
             return empty;
         }
@@ -182,14 +182,14 @@ namespace BlackMisc
             switch (entity)
             {
             case CEntityFlags::AircraftIcaoEntity: return serviceNames().at(0);
-            case CEntityFlags::AirlineIcaoEntity: return serviceNames().at(1);
-            case CEntityFlags::AirportEntity: return serviceNames().at(2);
-            case CEntityFlags::CountryEntity: return serviceNames().at(3);
-            case CEntityFlags::DistributorEntity: return serviceNames().at(4);
-            case CEntityFlags::LiveryEntity: return serviceNames().at(5);
-            case CEntityFlags::ModelEntity: return serviceNames().at(6);
-            default:
-                break;
+            case CEntityFlags::AirlineIcaoEntity:  return serviceNames().at(1);
+            case CEntityFlags::AirportEntity:      return serviceNames().at(2);
+            case CEntityFlags::CountryEntity:      return serviceNames().at(3);
+            case CEntityFlags::DistributorEntity:  return serviceNames().at(4);
+            case CEntityFlags::LiveryEntity:       return serviceNames().at(5);
+            case CEntityFlags::ModelEntity:        return serviceNames().at(6);
+            case CEntityFlags::AircraftCategoryEntity: return serviceNames().at(7);
+            default: break;
             }
             return empty;
         }
