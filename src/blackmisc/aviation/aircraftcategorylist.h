@@ -13,8 +13,8 @@
 #define BLACKMISC_AVIATION_AIRCRAFTCATEGORYLIST_H
 
 #include "aircraftcategory.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/db/datastoreobjectlist.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/blackmiscexport.h"

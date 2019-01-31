@@ -16,7 +16,6 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
-#include <QColor>
 
 namespace BlackMisc
 {
@@ -33,7 +32,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexTableName = BlackMisc::CPropertyIndex::GlobalIndexCDbInfo,
+                IndexTableName = CPropertyIndex::GlobalIndexCDbInfo,
                 IndexEntries,
                 IndexEntity
             };
@@ -107,7 +106,7 @@ namespace BlackMisc
         private:
             QString m_tableName; //!< table name
             int     m_entries;   //!< number of entries
-            BlackMisc::Network::CEntityFlags::Entity m_entity = BlackMisc::Network::CEntityFlags::NoEntity; //!< lazy initialized entity
+            Network::CEntityFlags::Entity m_entity = Network::CEntityFlags::NoEntity; //!< lazy initialized entity
 
             BLACK_METACLASS(
                 CDbInfo,

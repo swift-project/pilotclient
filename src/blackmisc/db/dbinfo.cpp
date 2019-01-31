@@ -9,7 +9,7 @@
 
 #include "dbinfo.h"
 #include "blackmisc/comparefunctions.h"
-#include <QPainter>
+#include <QStringBuilder>
 
 using namespace BlackMisc::Network;
 
@@ -22,17 +22,17 @@ namespace BlackMisc
             m_tableName(tableName.trimmed().toLower()), m_entries(entries)
         {
             this->setEntity(this->getEntity());
-            Q_ASSERT_X(tableName.isEmpty() || this->m_entity != CEntityFlags::NoEntity, Q_FUNC_INFO, "Wrong entity");
+            Q_ASSERT_X(tableName.isEmpty() || m_entity != CEntityFlags::NoEntity, Q_FUNC_INFO, "Wrong entity");
         }
 
         bool CDbInfo::isValid() const
         {
-            return this->m_entity != CEntityFlags::NoEntity && !this->m_tableName.isEmpty();
+            return m_entity != CEntityFlags::NoEntity && !m_tableName.isEmpty();
         }
 
         CEntityFlags::Entity CDbInfo::getEntity() const
         {
-            if (this->m_entity != CEntityFlags::NoEntity) { return this->m_entity; }
+            if (m_entity != CEntityFlags::NoEntity) { return m_entity; }
             const QString tn(this->getTableName());
             return CEntityFlags::singleEntityByName(tn);
         }
@@ -51,7 +51,7 @@ namespace BlackMisc
 
         void CDbInfo::setEntity(CEntityFlags::Entity entity)
         {
-            this->m_entity = entity;
+            m_entity = entity;
         }
 
         bool CDbInfo::matchesEntity(CEntityFlags::Entity entity) const
@@ -62,27 +62,24 @@ namespace BlackMisc
         void CDbInfo::setTableName(const QString &tableName)
         {
             m_tableName = tableName.trimmed().toLower();
-            this->m_entity = this->getEntity();
+            m_entity = this->getEntity();
         }
 
         QString CDbInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QStringLiteral("Table %1 with entries %1").arg(this->m_tableName).arg(this->m_entries);
+            return QStringLiteral("Table %1 with entries %1").arg(m_tableName).arg(m_entries);
         }
 
         CVariant CDbInfo::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTableName:
-                return CVariant::fromValue(m_tableName);
-            case IndexEntries:
-                return CVariant::fromValue(m_entries);
-            case IndexEntity:
-                return CVariant::fromValue(m_entity);
+            case IndexTableName: return CVariant::fromValue(m_tableName);
+            case IndexEntries:   return CVariant::fromValue(m_entries);
+            case IndexEntity:    return CVariant::fromValue(m_entity);
             default:
                 return (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) ?
                        IDatastoreObjectWithIntegerKey::propertyByIndex(index) :
@@ -93,18 +90,12 @@ namespace BlackMisc
         void CDbInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CDbInfo>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTableName:
-                this->setTableName(variant.toQString());
-                break;
-            case IndexEntries:
-                this->setTableName(variant.toQString());
-                break;
-            case IndexEntity:
-                this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt()));
-                break;
+            case IndexTableName: this->setTableName(variant.toQString()); break;
+            case IndexEntries:   this->setTableName(variant.toQString()); break;
+            case IndexEntity:    this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt())); break;
             default:
                 if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
                 {
@@ -122,15 +113,12 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexTableName:
-                return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);
-            case IndexEntries:
-                return Compare::compare(this->getEntries(), compareValue.getEntries());
-            case IndexEntity:
-                return Compare::compare(this->getEntity(), compareValue.getEntity());
+            case IndexTableName: return this->getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);
+            case IndexEntries:   return Compare::compare(this->getEntries(), compareValue.getEntries());
+            case IndexEntity:    return Compare::compare(this->getEntity(), compareValue.getEntity());
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
             }
@@ -144,9 +132,9 @@ namespace BlackMisc
                 // when using relationship, this can be null
                 return CDbInfo();
             }
-            const int id(json.value(prefix + "id").toInt());
-            const int entries(json.value(prefix + "entries").toInt());
-            const QString tableName(json.value(prefix + "tablename").toString());
+            const int id(json.value(prefix % u"id").toInt());
+            const int entries(json.value(prefix % u"entries").toInt());
+            const QString tableName(json.value(prefix % u"tablename").toString());
             CDbInfo dbInfo(id, tableName, entries);
             dbInfo.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return dbInfo;

@@ -131,10 +131,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-            case IndexPath: return m_description.compare(compareValue.getPath(), Qt::CaseInsensitive);
+            case IndexName:        return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexPath:        return m_description.compare(compareValue.getPath(), Qt::CaseInsensitive);
             case IndexDescription: return m_path.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexAssignable: return Compare::compare(this->isAssignable(), compareValue.isAssignable());
+            case IndexAssignable:  return Compare::compare(this->isAssignable(), compareValue.isAssignable());
             default: return CValueObject::comparePropertyByIndex(index, *this);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");

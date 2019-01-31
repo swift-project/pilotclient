@@ -33,6 +33,7 @@
 #include <QNetworkReply>
 #include <QReadLocker>
 #include <QUrl>
+#include <QStringBuilder>
 #include <QWriteLocker>
 
 using namespace BlackMisc;
@@ -47,7 +48,7 @@ namespace BlackCore
     namespace Db
     {
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
-            BlackCore::CThreadedReader(owner, name), m_config(config)
+            CThreadedReader(owner, name), m_config(config)
         { }
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
@@ -724,7 +725,7 @@ namespace BlackCore
         QString CDatabaseReader::queryLatestTimestamp(const QDateTime &ts)
         {
             if (!ts.isValid()) return {};
-            const QString q = parameterLatestTimestamp() + "=" + dateTimeToDbLatestTs(ts);
+            const QString q = parameterLatestTimestamp() % u"=" % dateTimeToDbLatestTs(ts);
             return q;
         }
 
