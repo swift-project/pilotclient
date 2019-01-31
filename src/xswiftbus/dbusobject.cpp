@@ -17,7 +17,7 @@ namespace XSwiftBus
 
     CDBusObject::~CDBusObject()
     {
-        m_dbusConnection->unregisterDisconnectedCallback(this);
+        if (m_dbusConnection) { m_dbusConnection->unregisterDisconnectedCallback(this); }
     };
 
     void CDBusObject::setDBusConnection(const std::shared_ptr<CDBusConnection> &dbusConnection)
