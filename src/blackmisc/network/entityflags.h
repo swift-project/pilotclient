@@ -50,9 +50,10 @@ namespace BlackMisc
                 AllEntities            = ((1 << 14) - 1),  //!< everything
                 AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                 //!< all ICAO codes
                 AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, //!< all ICAO codes and countries
+                AllIcaoCountriesCategory = AllIcaoAndCountries | AircraftCategoryEntity,         //!< includes category
                 DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,   //!< Combined
                 ModelMatchingEntities  = AllIcaoEntities    | LiveryEntity      | ModelEntity,   //!< all needed for model matching
-                AllDbEntitiesNoInfoObjects = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity | AircraftCategoryEntity, //!< all DB entities, no info objects
+                AllDbEntitiesNoInfoObjects = AllIcaoCountriesCategory | DistributorLiveryModel | AirportEntity | AircraftCategoryEntity, //!< all DB entities, no info objects
                 AllDbEntities              = AllDbEntitiesNoInfoObjects | DbInfoObjectEntity,                    //!< all DB stuff
                 AllDbEntitiesNoInfoObjectsNoAirportsAndCategories = AllIcaoAndCountries | DistributorLiveryModel //!< all DB entities, no info objects and airports
             };

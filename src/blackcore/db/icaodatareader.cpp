@@ -141,6 +141,16 @@ namespace BlackCore
             return codes.smartAirlineIcaoSelector(icaoPattern, callsign);
         }
 
+        CAircraftCategoryList CIcaoDataReader::getAircraftCategories() const
+        {
+            return m_categoryCache.get();
+        }
+
+        int CIcaoDataReader::getAircraftCategoryCount() const
+        {
+            return this->getAircraftCategories().size();
+        }
+
         int CIcaoDataReader::getAircraftIcaoCodesCount() const
         {
             return this->getAircraftIcaoCodes().size();
@@ -165,7 +175,7 @@ namespace BlackCore
         {
             this->threadAssertCheck(); // runs in background thread
             if (!this->doWorkCheck()) { return; }
-            entities &= CEntityFlags::AllIcaoAndCountries;
+            entities &= CEntityFlags::AllIcaoCountriesCategory;
             if (!this->isInternetAccessible())
             {
                 emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
@@ -175,7 +185,7 @@ namespace BlackCore
             CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
-                CUrl url(getAircraftIcaoUrl(mode));
+                CUrl url(this->getAircraftIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -190,7 +200,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
-                CUrl url(getAirlineIcaoUrl(mode));
+                CUrl url(this->getAirlineIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -205,7 +215,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::CountryEntity))
             {
-                CUrl url(getCountryUrl(mode));
+                CUrl url(this->getCountryUrl(mode));
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
@@ -215,6 +225,21 @@ namespace BlackCore
                 else
                 {
                     this->logNoWorkingUrl(CEntityFlags::CountryEntity);
+                }
+            }
+
+            if (entities.testFlag(CEntityFlags::AircraftCategoryEntity))
+            {
+                CUrl url(this->getAircraftCategoryUrl(mode));
+                if (!url.isEmpty())
+                {
+                    url.appendQuery(queryLatestTimestamp(newerThan));
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAircraftCategoryData });
+                    entitiesTriggered |= CEntityFlags::AircraftCategoryEntity;
+                }
+                else
+                {
+                    this->logNoWorkingUrl(CEntityFlags::AircraftCategoryEntity);
                 }
             }
 
@@ -237,6 +262,11 @@ namespace BlackCore
         void CIcaoDataReader::countryCacheChanged()
         {
             this->cacheHasChanged(CEntityFlags::CountryEntity);
+        }
+
+        void CIcaoDataReader::aircraftCategoryCacheChanged()
+        {
+            this->cacheHasChanged(CEntityFlags::AircraftCategoryEntity);
         }
 
         void CIcaoDataReader::baseUrlCacheChanged()
@@ -393,7 +423,7 @@ namespace BlackCore
                 // normally read from special DB view which already filters incomplete
                 QTime time;
                 time.start();
-                countries  = CCountryList::fromDatabaseJson(res);
+                countries = CCountryList::fromDatabaseJson(res);
                 this->logParseMessage("countries", countries.size(), time.elapsed(), res);
             }
 
@@ -412,6 +442,51 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::CountryEntity, n, res);
         }
 
+        void CIcaoDataReader::parseAircraftCategoryData(QNetworkReply *nwReplyPtr)
+        {
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            if (res.hasErrorMessage())
+            {
+                CLogMessage::preformatted(res.lastWarningOrAbove());
+                emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0);
+                return;
+            }
+
+            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadParsing, 0);
+            CAircraftCategoryList categories;
+            if (res.isRestricted())
+            {
+                // create full list if it was just incremental
+                const CAircraftCategoryList incrementalCategories(CAircraftCategoryList::fromDatabaseJson(res));
+                if (incrementalCategories.isEmpty()) { return; } // currently ignored
+                categories = this->getAircraftCategories();
+                categories.replaceOrAddObjectsByKey(incrementalCategories);
+            }
+            else
+            {
+                // normally read from special DB view which already filters incomplete
+                QTime time;
+                time.start();
+                categories  = CAircraftCategoryList::fromDatabaseJson(res);
+                this->logParseMessage("categories", categories.size(), time.elapsed(), res);
+            }
+
+            if (!this->doWorkCheck()) { return; }
+            const int n = categories.size();
+            qint64 latestTimestamp = categories.latestTimestampMsecsSinceEpoch();
+            if (n > 0 && latestTimestamp < 0)
+            {
+                CLogMessage(this).error(u"No timestamp in category list, setting to last modified value");
+                latestTimestamp = this->lastModifiedMsSinceEpoch(nwReply.data());
+            }
+
+            m_categoryCache.set(categories, latestTimestamp);
+            this->updateReaderUrl(this->getBaseUrl(CDbFlags::DbReading));
+
+            this->emitAndLogDataRead(CEntityFlags::AircraftCategoryEntity, n, res);
+        }
+
         CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             const QDir directory(dir);
@@ -422,11 +497,11 @@ namespace BlackCore
 
             // Hint: Do not emit while locked -> deadlock
             CStatusMessageList msgs;
-            whatToRead &= CEntityFlags::AllIcaoAndCountries;
+            whatToRead &= CEntityFlags::AllIcaoCountriesCategory;
             CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
             if (whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
-                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json");
+                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::CountryEntity));
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
@@ -464,7 +539,7 @@ namespace BlackCore
 
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
-                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json");
+                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftIcaoEntity));
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
@@ -502,7 +577,7 @@ namespace BlackCore
 
             if (whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
-                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json");
+                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AirlineIcaoEntity));
                 const QFileInfo fi(fileName);
                 if (!fi.exists())
                 {
@@ -538,6 +613,44 @@ namespace BlackCore
                 }
             } // airline
 
+            if (whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity))
+            {
+                const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftCategoryEntity));
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
+                {
+                    msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AircraftCategoryEntity, msgs))
+                {
+                    // void
+                }
+                else
+                {
+                    const QJsonObject aircraftCategory(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (aircraftCategory.isEmpty())
+                    {
+                        msgs.push_back(CStatusMessage(this).error(u"Failed to read from file/empty file '%1'") << fileName);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            const CAircraftCategoryList aircraftCategories = CAircraftCategoryList::fromMultipleJsonFormats(aircraftCategory);
+                            const int c = aircraftCategories.size();
+                            msgs.push_back(m_categoryCache.set(aircraftCategories, fi.created().toUTC().toMSecsSinceEpoch()));
+                            reallyRead |= CEntityFlags::AircraftCategoryEntity;
+                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, c);
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QStringLiteral("Reading categories from '%1'").arg(fileName)));
+                        }
+                    }
+                }
+            } // categories
+
             return msgs;
         }
 
@@ -562,50 +675,61 @@ namespace BlackCore
             if (this->getCountriesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getCountries().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json"));
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::CountryEntity)));
                 if (!s) { return false; }
             }
 
             if (this->getAircraftIcaoCodesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getAircraftIcaoCodes().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json"));
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftIcaoEntity)));
                 if (!s) { return false; }
             }
 
             if (this->getAirlineIcaoCodesCount() > 0)
             {
                 const QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
-                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json"));
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AirlineIcaoEntity)));
                 if (!s) { return false; }
             }
+
+            if (this->getAircraftCategoryCount() > 0)
+            {
+                const QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftCategoryEntity)));
+                if (!s) { return false; }
+            }
+
             return true;
         }
 
         CEntityFlags::Entity CIcaoDataReader::getSupportedEntities() const
         {
-            return CEntityFlags::AllIcaoAndCountries;
+            return CEntityFlags::AllIcaoCountriesCategory;
         }
 
         void CIcaoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { if (m_syncedAircraftIcaoCache) { return; } m_syncedAircraftIcaoCache = true; m_aircraftIcaoCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))  { if (m_syncedAirlineIcaoCache) { return; } m_syncedAirlineIcaoCache = true; m_airlineIcaoCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::CountryEntity)) { if (m_syncedCountryCache) { return; } m_syncedCountryCache = true; m_countryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))  { if (m_syncedAirlineIcaoCache)  { return; } m_syncedAirlineIcaoCache  = true; m_airlineIcaoCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::CountryEntity))      { if (m_syncedCountryCache)      { return; } m_syncedCountryCache      = true; m_countryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::AircraftCategoryEntity)) { if (m_syncedCategories)    { return; } m_syncedCategories        = true; m_categoryCache.synchronize(); }
         }
 
         void CIcaoDataReader::admitCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { m_aircraftIcaoCache.admit(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { m_airlineIcaoCache.admit(); }
-            if (entities.testFlag(CEntityFlags::CountryEntity)) { m_countryCache.admit(); }
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))     { m_aircraftIcaoCache.admit(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))      { m_airlineIcaoCache.admit(); }
+            if (entities.testFlag(CEntityFlags::CountryEntity))          { m_countryCache.admit(); }
+            if (entities.testFlag(CEntityFlags::AircraftCategoryEntity)) { m_categoryCache.admit(); }
         }
 
         void CIcaoDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { CDataCache::instance()->clearAllValues(m_aircraftIcaoCache.getKey()); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) {CDataCache::instance()->clearAllValues(m_airlineIcaoCache.getKey()); }
-            if (entities.testFlag(CEntityFlags::CountryEntity)) {CDataCache::instance()->clearAllValues(m_countryCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))  { CDataCache::instance()->clearAllValues(m_airlineIcaoCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::CountryEntity))      { CDataCache::instance()->clearAllValues(m_countryCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::AircraftCategoryEntity)) { CDataCache::instance()->clearAllValues(m_categoryCache.getKey()); }
         }
 
         QDateTime CIcaoDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
@@ -615,6 +739,7 @@ namespace BlackCore
             case CEntityFlags::AircraftIcaoEntity: return m_aircraftIcaoCache.getAvailableTimestamp();
             case CEntityFlags::AirlineIcaoEntity:  return m_airlineIcaoCache.getAvailableTimestamp();
             case CEntityFlags::CountryEntity:      return m_countryCache.getAvailableTimestamp();
+            case CEntityFlags::AircraftCategoryEntity: return m_categoryCache.getAvailableTimestamp();
             default: return QDateTime();
             }
         }
@@ -626,6 +751,7 @@ namespace BlackCore
             case CEntityFlags::AircraftIcaoEntity: return m_aircraftIcaoCache.get().size();
             case CEntityFlags::AirlineIcaoEntity:  return m_airlineIcaoCache.get().size();
             case CEntityFlags::CountryEntity:      return m_countryCache.get().size();
+            case CEntityFlags::AircraftCategoryEntity: return m_categoryCache.get().size();
             default: return 0;
             }
         }
@@ -633,9 +759,10 @@ namespace BlackCore
         CEntityFlags::Entity CIcaoDataReader::getEntitiesWithCacheCount() const
         {
             CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-            if (this->getCacheCount(CEntityFlags::AircraftIcaoEntity) > 0) entities |= CEntityFlags::AircraftIcaoEntity;
-            if (this->getCacheCount(CEntityFlags::AirlineIcaoEntity) > 0) entities |= CEntityFlags::AirlineIcaoEntity;
-            if (this->getCacheCount(CEntityFlags::CountryEntity) > 0) entities |= CEntityFlags::CountryEntity;
+            if (this->getCacheCount(CEntityFlags::AircraftIcaoEntity) > 0)     entities |= CEntityFlags::AircraftIcaoEntity;
+            if (this->getCacheCount(CEntityFlags::AirlineIcaoEntity) > 0)      entities |= CEntityFlags::AirlineIcaoEntity;
+            if (this->getCacheCount(CEntityFlags::CountryEntity) > 0)          entities |= CEntityFlags::CountryEntity;
+            if (this->getCacheCount(CEntityFlags::AircraftCategoryEntity) > 0) entities |= CEntityFlags::AircraftCategoryEntity;
             return entities;
         }
 
@@ -643,8 +770,9 @@ namespace BlackCore
         {
             CEntityFlags::Entity entities = CEntityFlags::NoEntity;
             if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftIcaoEntity, threshold)) entities |= CEntityFlags::AircraftIcaoEntity;
-            if (this->hasCacheTimestampNewerThan(CEntityFlags::AirlineIcaoEntity, threshold)) entities |= CEntityFlags::AirlineIcaoEntity;
-            if (this->hasCacheTimestampNewerThan(CEntityFlags::CountryEntity, threshold)) entities |= CEntityFlags::CountryEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::AirlineIcaoEntity, threshold))  entities |= CEntityFlags::AirlineIcaoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::CountryEntity, threshold))      entities |= CEntityFlags::CountryEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftCategoryEntity, threshold)) entities |= CEntityFlags::CountryEntity;
             return entities;
         }
 
@@ -674,6 +802,11 @@ namespace BlackCore
         CUrl CIcaoDataReader::getCountryUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
             return this->getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::CountryEntity, mode));
+        }
+
+        CUrl CIcaoDataReader::getAircraftCategoryUrl(CDbFlags::DataRetrievalModeFlag mode) const
+        {
+            return this->getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AircraftCategoryEntity, mode));
         }
     } // ns
 } // ns

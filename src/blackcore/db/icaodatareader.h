@@ -128,6 +128,14 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
 
+            //! Get aircraft categories
+            //! \threadsafe
+            BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+
+            //! Get aircraft category  count
+            //! \threadsafe
+            int getAircraftCategoryCount() const;
+
             //! All data read?
             //! \threadsafe
             bool areAllDataRead() const;
@@ -155,12 +163,14 @@ namespace BlackCore
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private:
-            BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>  m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbCountryCache>      m_countryCache      {this, &CIcaoDataReader::countryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache>     m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>      m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbCountryCache>          m_countryCache      {this, &CIcaoDataReader::countryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbAircraftCategoryCache> m_categoryCache     {this, &CIcaoDataReader::aircraftCategoryCacheChanged };
             std::atomic_bool m_syncedAircraftIcaoCache { false }; //!< already synchronized?
             std::atomic_bool m_syncedAirlineIcaoCache  { false }; //!< already synchronized?
             std::atomic_bool m_syncedCountryCache      { false }; //!< already synchronized?
+            std::atomic_bool m_syncedCategories        { false }; //!< already synchronized?
 
             //! \copydoc CDatabaseReader::read
             virtual void read(BlackMisc::Network::CEntityFlags::Entity entities,
@@ -178,6 +188,9 @@ namespace BlackCore
             //! Countries have been read
             void parseCountryData(QNetworkReply *nwReply);
 
+            //! Categories have been read
+            void parseAircraftCategoryData(QNetworkReply *nwReplyPtr);
+
             //! Cache has changed elsewhere
             void aircraftIcaoCacheChanged();
 
@@ -186,6 +199,9 @@ namespace BlackCore
 
             //! Cache has changed elsewhere
             void countryCacheChanged();
+
+            //! Cache has changed elsewhere
+            void aircraftCategoryCacheChanged();
 
             //! Cache has changed elsewhere
             void baseUrlCacheChanged();
@@ -201,6 +217,9 @@ namespace BlackCore
 
             //! URL
             BlackMisc::Network::CUrl getCountryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+
+            //! URL
+            BlackMisc::Network::CUrl getAircraftCategoryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
         };
     } // ns
 } // ns
