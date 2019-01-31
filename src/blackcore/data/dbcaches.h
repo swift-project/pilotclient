@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/url.h"
@@ -90,6 +91,26 @@ namespace BlackCore
             static const char *key() { return "dbcountrycache"; }
         };
 
+        //! Trait for DB categories
+        struct TDbAircraftCategoryCache : public BlackMisc::TDataTrait<BlackMisc::Aviation::CAircraftCategoryList>
+        {
+            //! First load is synchronous, countries is a small cache
+            static constexpr bool isPinned() { return true; }
+
+            //! Key in data cache
+            static const char *key() { return "dbaircraftcategorycache"; }
+        };
+
+        //! Trait for airport list
+        struct TDbAirportCache : public BlackMisc::TDataTrait<BlackMisc::Aviation::CAirportList>
+        {
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
+
+            //! Key in data cache
+            static const char *key() { return "dbairportcache"; }
+        };
+
         //! Trait for ICAO reader base URL
         struct TDbIcaoReaderBaseUrl : public BlackMisc::TDataTrait<BlackMisc::Network::CUrl>
         {
@@ -108,16 +129,6 @@ namespace BlackCore
 
             //! Key in data cache
             static const char *key() { return "dbmodelreaderurl"; }
-        };
-
-        //! Trait for airport list
-        struct TDbAirportCache : public BlackMisc::TDataTrait<BlackMisc::Aviation::CAirportList>
-        {
-            //! Defer loading
-            static constexpr bool isDeferred() { return true; }
-
-            //! Key in data cache
-            static const char *key() { return "dbairportcache"; }
         };
     } // ns
 } // ns
