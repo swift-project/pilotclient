@@ -98,7 +98,7 @@ namespace BlackMisc
                     QVector<CSLPlane> planes;
                 };
 
-                CAircraftModelList performParsing(const QString &rootDirectory, const QStringList &excludeDirectories);
+                CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
                 CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
                 CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
 

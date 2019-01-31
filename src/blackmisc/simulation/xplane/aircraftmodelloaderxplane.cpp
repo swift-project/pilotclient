@@ -120,10 +120,7 @@ namespace BlackMisc
                     m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                                        [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
-                        //! \todo KB/MS 2017-09 not high prio, but still needed: according to meet XP needs to support multiple directories
-                        //! \todo KB with T118 now model directories are passed (changed signatures) but the code below needs to support multiple dirs
-                        const QString modelDirectory = modelDirs.front();
-                        auto models = this->performParsing(modelDirectory, excludedDirectoryPatterns);
+                        auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
                         if (modelConsolidation) { modelConsolidation(models, true); }
                         return models;
                     });
@@ -136,7 +133,7 @@ namespace BlackMisc
                 else if (mode.testFlag(LoadDirectly))
                 {
                     emit this->diskLoadingStarted(simulator, mode);
-                    CAircraftModelList models(this->performParsing(this->getFirstModelDirectoryOrDefault(), excludedDirectoryPatterns));
+                    CAircraftModelList models(this->performParsing(modelDirs, excludedDirectoryPatterns));
                     this->updateInstalledModels(models);
                 }
             }
@@ -161,12 +158,14 @@ namespace BlackMisc
                 return std::move(modelName).trimmed();
             }
 
-            CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QString &rootDirectory, const QStringList &excludeDirectories)
+            CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
             {
                 CAircraftModelList allModels;
-                allModels.push_back(parseCslPackages(CXPlaneUtil::xswiftbusLegacyDir(rootDirectory), excludeDirectories));
-                allModels.push_back(parseCslPackages(rootDirectory, excludeDirectories));
-                allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
+                for (const QString &rootDirectory : rootDirectories)
+                {
+                    allModels.push_back(parseCslPackages(rootDirectory, excludeDirectories));
+                    allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
+                }
                 return allModels;
             }
 
