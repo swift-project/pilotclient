@@ -117,10 +117,25 @@ namespace BlackMisc
             this->switchUnit(u);
         }
 
+        void CAngle::normalizeTo360Degrees()
+        {
+            const double v = normalizeDegrees360(this->value(CAngleUnit::deg()));
+            const CAngleUnit u = this->getUnit();
+            *this = CAngle(v, CAngleUnit::deg());
+            this->switchUnit(u);
+        }
+
         CAngle CAngle::normalizedToPlusMinus180Degrees() const
         {
             CAngle copy(*this);
             copy.normalizeToPlusMinus180Degrees();
+            return copy;
+        }
+
+        CAngle CAngle::normalizedTo360Degrees() const
+        {
+            CAngle copy(*this);
+            copy.normalizeTo360Degrees();
             return copy;
         }
 

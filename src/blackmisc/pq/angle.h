@@ -42,9 +42,9 @@ namespace BlackMisc
             struct DegMinSecFractionalSec
             {
                 int sign = 1; //!< 1/-1
-                int deg = 0;  //!< 0-359
-                int min = 0;  //!< 0-59
-                int sec = 0;  //!< 0-59
+                int deg  = 0; //!< 0-359
+                int min  = 0; //!< 0-59
+                int sec  = 0; //!< 0-59
                 double fractionalSec = 0; //!< value < 1.0
 
                 //! Degrees as string
@@ -100,8 +100,14 @@ namespace BlackMisc
             //! Normalize to +- 180deg, [-179.99, 180.0]
             void normalizeToPlusMinus180Degrees();
 
-            //! As [-179.99, 180.0] normalized heading
+            //! Normalize to 0-360, [0, 359,99]
+            void normalizeTo360Degrees();
+
+            //! As [-179.99, 180.0] normalized angle
             CAngle normalizedToPlusMinus180Degrees() const;
+
+            //! As [0, 359.99] normalized angle
+            CAngle normalizedTo360Degrees() const;
 
             //! Normalize: -180< degrees ≤180
             static double normalizeDegrees180(double degrees, int roundDigits = -1);
