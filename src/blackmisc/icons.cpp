@@ -430,6 +430,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::folder16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/folder.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::folderEdit16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/folder-edit.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::database16()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/database.png");
@@ -894,6 +906,11 @@ namespace BlackMisc
         return users16();
     }
 
+    const QPixmap &CIcons::appAircraftCategories16()
+    {
+        return folderEdit16();
+    }
+
     const QPixmap &CIcons::appDbStash16()
     {
         return databaseAdd16();
@@ -1119,6 +1136,7 @@ namespace BlackMisc
         switch (index)
         {
         case ApplicationAircraft: return appAircraft16();
+        case ApplicationAircraftCategories: return appAircraftCategories16();
         case ApplicationAircraftIcao: return appAircraftIcao16();
         case ApplicationAirlineIcao: return appAirlineIcao16();
         case ApplicationAtc: return appAtc16();

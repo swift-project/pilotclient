@@ -109,6 +109,16 @@
         <file>icons/pastel/16/font-error.png</file>
         <file>icons/pastel/16/font-go.png</file>
         <file>icons/pastel/16/font-shrink.png</file>
+        <file>icons/pastel/16/folder.png</file>
+        <file>icons/pastel/16/folder-add.png</file>
+        <file>icons/pastel/16/folder-blue.png</file>
+        <file>icons/pastel/16/folder-disk.png</file>
+        <file>icons/pastel/16/folder-edit.png</file>
+        <file>icons/pastel/16/folder-explore.png</file>
+        <file>icons/pastel/16/folder-export.png</file>
+        <file>icons/pastel/16/folder-green.png</file>
+        <file>icons/pastel/16/folder-pink.png</file>
+        <file>icons/pastel/16/folder-purple.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>

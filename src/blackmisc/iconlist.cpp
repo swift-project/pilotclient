@@ -43,6 +43,7 @@ namespace BlackMisc
         static const CIconList icons(
         {
             CIcon(CIcons::ApplicationAircraft, "aircraft"),
+            CIcon(CIcons::ApplicationAircraftCategories, "categories"),
             CIcon(CIcons::ApplicationAircraftIcao, "ICAO aircraft"),
             CIcon(CIcons::ApplicationAirlineIcao, "ICAO airlines"),
             CIcon(CIcons::ApplicationAtc, "ATC"),

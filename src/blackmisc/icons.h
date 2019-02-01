@@ -38,6 +38,7 @@ namespace BlackMisc
         {
             // !! keep indexes alphabetically sorted and in sync with CIconList
             ApplicationAircraft = 0,
+            ApplicationAircraftCategories,
             ApplicationAircraftIcao,
             ApplicationAirlineIcao,
             ApplicationAtc,
@@ -407,6 +408,12 @@ namespace BlackMisc
         //! Font
         static const QPixmap &font16();
 
+        //! Folder
+        static const QPixmap &folder16();
+
+        //! Folder edit
+        static const QPixmap &folderEdit16();
+
         //! Arrow
         static const QPixmap &arrowMediumNorth16();
 
@@ -627,6 +634,9 @@ namespace BlackMisc
 
         //! Distributors
         static const QPixmap &appDistributors16();
+
+        //! Categories
+        static const QPixmap &appAircraftCategories16();
 
         //! Stash
         static const QPixmap &appDbStash16();
