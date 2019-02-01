@@ -140,24 +140,6 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getAircraftName"), setterCallback(o_name));
         }
 
-        int CXSwiftBusServiceProxy::getXPlaneVersionMajor() const
-        {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getXPlaneVersionMajor"));
-        }
-        void CXSwiftBusServiceProxy::getXPlaneVersionMajorAsync(int *o_versionMajor)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getXPlaneVersionMajor"), setterCallback(o_versionMajor));
-        }
-
-        int CXSwiftBusServiceProxy::getXPlaneVersionMinor() const
-        {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getXPlaneVersionMinor"));
-        }
-        void CXSwiftBusServiceProxy::getXPlaneVersionMinorAsync(int *o_versionMinor)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getXPlaneVersionMinor"), setterCallback(o_versionMinor));
-        }
-
         QString CXSwiftBusServiceProxy::getXPlaneInstallationPath() const
         {
             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getXPlaneInstallationPath"));

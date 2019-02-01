@@ -152,18 +152,6 @@ namespace BlackSimPlugin
             void getAircraftNameAsync(QString *o_name);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getXPlaneVersionMajor
-            //! @{
-            int getXPlaneVersionMajor() const;
-            void getXPlaneVersionMajorAsync(int *o_versionMajor);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::getXPlaneVersionMinor
-            //! @{
-            int getXPlaneVersionMinor() const;
-            void getXPlaneVersionMinorAsync(int *o_versionMinor);
-            //! @}
-
             //! \copydoc XSwiftBus::CService::getXPlaneInstallationPath
             //! @{
             QString getXPlaneInstallationPath() const;
