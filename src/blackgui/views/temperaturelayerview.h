@@ -9,17 +9,14 @@
 
 //! \file
 
-#ifndef BLACKGUI_TEMPERATURELAYERVIEW_H
-#define BLACKGUI_TEMPERATURELAYERVIEW_H
+#ifndef BLACKGUI_VIEWS_TEMPERATURELAYERVIEW_H
+#define BLACKGUI_VIEWS_TEMPERATURELAYERVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/temperaturelayerlistmodel.h"
 #include "blackgui/views/viewbase.h"
 
-class QWidget;
-
 namespace BlackMisc { namespace Weather { class CTemperatureLayer; } }
-
 namespace BlackGui
 {
     namespace Views

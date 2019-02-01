@@ -17,8 +17,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/countrylist.h"
 
-class QWidget;
-
 namespace BlackGui
 {
     namespace Views

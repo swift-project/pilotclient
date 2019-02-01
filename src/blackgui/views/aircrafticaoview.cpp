@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/models/aircrafticaolistmodel.h"
 #include "blackgui/views/aircrafticaoview.h"
 #include "blackgui/views/viewbase.h"
 

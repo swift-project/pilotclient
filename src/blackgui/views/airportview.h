@@ -9,17 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRPORTVIEW_H
-#define BLACKGUI_AIRPORTVIEW_H
+#ifndef BLACKGUI_VIEWS_AIRPORTVIEW_H
+#define BLACKGUI_VIEWS_AIRPORTVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/aviation/airportlist.h"
-
-class QWidget;
-
-namespace BlackMisc { namespace Aviation { class CAirport; } }
 
 namespace BlackGui
 {

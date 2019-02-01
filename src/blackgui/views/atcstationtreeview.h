@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_ATCSTATIONTREEVIEW_H
-#define BLACKGUI_ATCSTATIONTREEVIEW_H
+#ifndef BLACKGUI_VIEWS_ATCSTATIONTREEVIEW_H
+#define BLACKGUI_VIEWS_ATCSTATIONTREEVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/atcstationlist.h"

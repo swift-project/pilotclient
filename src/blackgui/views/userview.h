@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_USERVIEW_H
 #define BLACKGUI_USERVIEW_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/models/userlistmodel.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/models/userlistmodel.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/userlist.h"
 
 namespace BlackMisc { namespace Network { class CUser; } }
@@ -47,6 +47,6 @@ namespace BlackGui
             void requestTextMessage();
         };
     }
-}
+} // ns
 
 #endif // guard

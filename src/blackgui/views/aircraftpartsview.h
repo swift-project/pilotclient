@@ -15,9 +15,6 @@
 #include "blackgui/views/viewtimestampobjects.h"
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
-
-class QWidget;
 
 namespace BlackGui
 {

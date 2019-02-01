@@ -9,23 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRCRAFTICAOVIEW_H
-#define BLACKGUI_AIRCRAFTICAOVIEW_H
+#ifndef BLACKGUI_VIEWS_AIRCRAFTICAOVIEW_H
+#define BLACKGUI_VIEWS_AIRCRAFTICAOVIEW_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/aircrafticaolistmodel.h"
 #include "blackgui/views/viewdbobjects.h"
-
-class QWidget;
-
-namespace BlackMisc
-{
-    namespace Aviation
-    {
-        class CAircraftIcaoCode;
-        class CAircraftIcaoCodeList;
-    }
-}
+#include "blackgui/blackguiexport.h"
 
 namespace BlackGui
 {

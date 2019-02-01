@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKGUI_STATUSMESSAGEVIEW_H
-#define BLACKGUI_STATUSMESSAGEVIEW_H
+#ifndef BLACKGUI_VIEWS_STATUSMESSAGEVIEW_H
+#define BLACKGUI_VIEWS_STATUSMESSAGEVIEW_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/models/statusmessagelistmodel.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackgui/blackguiexport.h"
 
 #include <QObject>
 

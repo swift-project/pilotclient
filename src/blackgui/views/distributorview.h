@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_DISTRIBUTORVIEW_H
-#define BLACKGUI_DISTRIBUTORVIEW_H
+#ifndef BLACKGUI_VIEWS_DISTRIBUTORVIEW_H
+#define BLACKGUI_VIEWS_DISTRIBUTORVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/distributorlistmodel.h"

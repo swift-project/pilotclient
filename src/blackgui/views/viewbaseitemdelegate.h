@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_VIEWBASE_ITEMDELEGATE_H
-#define BLACKGUI_VIEWBASE_ITEMDELEGATE_H
+#ifndef BLACKGUI_VIEWS_ITEMDELEGATE_H
+#define BLACKGUI_VIEWS_ITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
 
@@ -43,4 +43,5 @@ namespace BlackGui
         };
     } // namespace
 } // namespace
+
 #endif // guard

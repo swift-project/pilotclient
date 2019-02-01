@@ -12,12 +12,10 @@
 #ifndef BLACKGUI_TEXTMESSAGEVIEW_H
 #define BLACKGUI_TEXTMESSAGEVIEW_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/models/textmessagelistmodel.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/models/textmessagelistmodel.h"
 #include "blackmisc/network/textmessagelist.h"
-
-class QWidget;
+#include "blackgui/blackguiexport.h"
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace BlackGui
