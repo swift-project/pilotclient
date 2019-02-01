@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_ACTIONHOTKEYLISTMODEL_H
-#define BLACKGUI_ACTIONHOTKEYLISTMODEL_H
+#ifndef BLACKGUI_MODELS_ACTIONHOTKEYLISTMODEL_H
+#define BLACKGUI_MODELS_ACTIONHOTKEYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/input/actionhotkeylist.h"
@@ -43,7 +43,7 @@ namespace BlackGui
             CActionHotkeyListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CActionHotkeyListModel() {}
+            virtual ~CActionHotkeyListModel() override {}
 
             //! \copydoc QAbstractTableModel::rowCount
             int rowCount(const QModelIndex &parent = QModelIndex()) const override;

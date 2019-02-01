@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SERVERLISTMODEL_H
-#define BLACKGUI_SERVERLISTMODEL_H
+#ifndef BLACKGUI_MODELS_SERVERLISTMODEL_H
+#define BLACKGUI_MODELS_SERVERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"

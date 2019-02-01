@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_LISTMODELBASENONTEMPLATE_H
-#define BLACKGUI_LISTMODELBASENONTEMPLATE_H
+#ifndef BLACKGUI_MODELS_LISTMODELBASENONTEMPLATE_H
+#define BLACKGUI_MODELS_LISTMODELBASENONTEMPLATE_H
 
 #include "blackgui/models/columns.h"
 #include "blackgui/dropbase.h"

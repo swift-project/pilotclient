@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_LISTMODELFILTER_H
-#define BLACKGUI_LISTMODELFILTER_H
+#ifndef BLACKGUI_MODELS_LISTMODELFILTER_H
+#define BLACKGUI_MODELS_LISTMODELFILTER_H
 
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_STATUSMESSAGELISTMODEL_H
-#define BLACKGUI_STATUSMESSAGELISTMODEL_H
+#ifndef BLACKGUI_MODELS_STATUSMESSAGELISTMODEL_H
+#define BLACKGUI_MODELS_STATUSMESSAGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"

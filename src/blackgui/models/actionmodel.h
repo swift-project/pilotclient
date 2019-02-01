@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_ACTIONMODEL_H
-#define BLACKGUI_ACTIONMODEL_H
+#ifndef BLACKGUI_MODELS_ACTIONMODEL_H
+#define BLACKGUI_MODELS_ACTIONMODEL_H
 
 #include "blackgui/blackguiexport.h"
 

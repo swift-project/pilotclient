@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_ACTIONITEM_H
-#define BLACKGUI_ACTIONITEM_H
+#ifndef BLACKGUI_MODELS_ACTIONITEM_H
+#define BLACKGUI_MODELS_ACTIONITEM_H
 
 #include <QList>
 #include <QString>

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_DISTRIBUTORFILTER_H
-#define BLACKGUI_DISTRIBUTORFILTER_H
+#ifndef BLACKGUI_MODELS_DISTRIBUTORFILTER_H
+#define BLACKGUI_MODELS_DISTRIBUTORFILTER_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"

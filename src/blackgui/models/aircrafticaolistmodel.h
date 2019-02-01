@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRCRAFTICAOLISTMODEL_H
-#define BLACKGUI_AIRCRAFTICAOLISTMODEL_H
+#ifndef BLACKGUI_MODELS_AIRCRAFTICAOLISTMODEL_H
+#define BLACKGUI_MODELS_AIRCRAFTICAOLISTMODEL_H
 
-#include "blackgui/models/listmodeldbobjects.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackgui/models/listmodeldbobjects.h"
 #include "blackgui/blackguiexport.h"
 
 namespace BlackGui

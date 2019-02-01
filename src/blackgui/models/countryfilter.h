@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COUNTRYFILTER_H
-#define BLACKGUI_COUNTRYFILTER_H
+#ifndef BLACKGUI_MODELS_COUNTRYFILTER_H
+#define BLACKGUI_MODELS_COUNTRYFILTER_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"

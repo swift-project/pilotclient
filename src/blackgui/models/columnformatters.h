@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COLUMNFORMATTERS_H
-#define BLACKGUI_COLUMNFORMATTERS_H
+#ifndef BLACKGUI_MODELS_COLUMNFORMATTERS_H
+#define BLACKGUI_MODELS_COLUMNFORMATTERS_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"

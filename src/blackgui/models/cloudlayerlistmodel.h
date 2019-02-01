@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_CLOUDLAYERLISTMODEL_H
-#define BLACKGUI_CLOUDLAYERLISTMODEL_H
+#ifndef BLACKGUI_MODELS_CLOUDLAYERLISTMODEL_H
+#define BLACKGUI_MODELS_CLOUDLAYERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"

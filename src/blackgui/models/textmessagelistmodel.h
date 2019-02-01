@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_TEXTMESSAGELISTMODEL_H
-#define BLACKGUI_TEXTMESSAGELISTMODEL_H
+#ifndef BLACKGUI_MODELS_TEXTMESSAGELISTMODEL_H
+#define BLACKGUI_MODELS_TEXTMESSAGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"

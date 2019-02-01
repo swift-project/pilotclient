@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_IDENTIFIERLISTMODEL_H
-#define BLACKGUI_IDENTIFIERLISTMODEL_H
+#ifndef BLACKGUI_MODELS_IDENTIFIERLISTMODEL_H
+#define BLACKGUI_MODELS_IDENTIFIERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"

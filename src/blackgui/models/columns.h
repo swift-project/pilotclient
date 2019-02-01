@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COLUMNS_H
-#define BLACKGUI_COLUMNS_H
+#ifndef BLACKGUI_MODELS_COLUMNS_H
+#define BLACKGUI_MODELS_COLUMNS_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/columnformatters.h"

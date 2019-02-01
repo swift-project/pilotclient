@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRPORTLISTMODEL_H
-#define BLACKGUI_AIRPORTLISTMODEL_H
+#ifndef BLACKGUI_MODELS_AIRPORTLISTMODEL_H
+#define BLACKGUI_MODELS_AIRPORTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
