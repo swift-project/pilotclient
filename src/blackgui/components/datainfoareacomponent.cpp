@@ -15,6 +15,7 @@
 #include "blackgui/components/dbdistributorcomponent.h"
 #include "blackgui/components/dbliverycomponent.h"
 #include "blackgui/components/dbmodelcomponent.h"
+#include "blackgui/components/dbaircraftcategorycomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
@@ -81,6 +82,11 @@ namespace BlackGui
             return ui->comp_DbCountries;
         }
 
+        CDbAircraftCategoryComponent *CDataInfoAreaComponent::getAircraftCategoryComponent() const
+        {
+            return ui->comp_DbAircraftCategories;
+        }
+
         bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
         {
             if (!sGui || !sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb())
@@ -137,6 +143,7 @@ namespace BlackGui
             case InfoAreaLiveries:
             case InfoAreaModels:
             case InfoAreaCountries:
+            case InfoAreaAircraftCategories:
             default:
                 return QSize(800, 600);
             }
@@ -148,11 +155,12 @@ namespace BlackGui
             switch (area)
             {
             case InfoAreaAircraftIcao: return CIcons::appAircraftIcao16();
-            case InfoAreaAirlineIcao: return CIcons::appAirlineIcao16();
-            case InfoAreaLiveries: return CIcons::appLiveries16();
+            case InfoAreaAirlineIcao:  return CIcons::appAirlineIcao16();
+            case InfoAreaLiveries:     return CIcons::appLiveries16();
             case InfoAreaDistributors: return CIcons::appDistributors16();
-            case InfoAreaModels: return CIcons::appModels16();
-            case InfoAreaCountries: return CIcons::appCountries16();
+            case InfoAreaModels:       return CIcons::appModels16();
+            case InfoAreaCountries:    return CIcons::appCountries16();
+            case InfoAreaAircraftCategories: return CIcons::appAircraftCategories16();
             default: return CIcons::empty();
             }
         }

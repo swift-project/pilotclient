@@ -34,6 +34,7 @@ namespace BlackGui
         class CDbDistributorComponent;
         class CDbLiveryComponent;
         class CDbModelComponent;
+        class CDbAircraftCategoryComponent;
 
         /**
          * Info area containing the DB data (models, liveries ...)
@@ -48,13 +49,14 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaModels        = 0,
-                InfoAreaLiveries      = 1,
-                InfoAreaDistributors  = 2,
-                InfoAreaAircraftIcao  = 3,
-                InfoAreaAirlineIcao   = 4,
-                InfoAreaCountries     = 5,
-                InfoAreaNone          = -1
+                InfoAreaModels             = 0,
+                InfoAreaLiveries           = 1,
+                InfoAreaDistributors       = 2,
+                InfoAreaAircraftIcao       = 3,
+                InfoAreaAirlineIcao        = 4,
+                InfoAreaCountries          = 5,
+                InfoAreaAircraftCategories = 6,
+                InfoAreaNone               = -1
             };
 
             //! Constructor
@@ -80,6 +82,9 @@ namespace BlackGui
 
             //! DB country component
             CDbCountryComponent *getCountryComponent() const;
+
+            //! DB aircraft category componentxs
+            CDbAircraftCategoryComponent *getAircraftCategoryComponent() const;
 
         public slots:
             //! Write to resource dir

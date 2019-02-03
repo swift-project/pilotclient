@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>55</height>
+    <width>349</width>
+    <height>37</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -260,15 +260,6 @@
      </property>
      <item>
       <widget class="QFrame" name="fr_AircraftIcaoInner">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
        <layout class="QVBoxLayout" name="vl_AircraftIcaoCodeinner">
         <property name="spacing">
          <number>0</number>
@@ -312,7 +303,7 @@
     <number>4</number>
    </attribute>
    <widget class="QWidget" name="qw_AirlineIcaoOuter">
-    <layout class="QVBoxLayout" name="vlAirlineIcaoOuter">
+    <layout class="QVBoxLayout" name="vl_AirlineIcaoOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -330,12 +321,6 @@
      </property>
      <item>
       <widget class="QFrame" name="fr_AirlineIcaoInner">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
        <layout class="QVBoxLayout" name="vl_AirlineIcaoInner">
         <property name="spacing">
          <number>0</number>
@@ -378,8 +363,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_Countries">
-    <layout class="QVBoxLayout" name="vlAirlineIcaoOuter_2">
+   <widget class="QWidget" name="qw_CountriesOuter">
+    <layout class="QVBoxLayout" name="vl_CountriesOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -396,14 +381,8 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="fr_Countries">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <layout class="QVBoxLayout" name="vl_AirlineIcaoInner_2">
+      <widget class="QFrame" name="fr_CountriesInner">
+       <layout class="QVBoxLayout" name="vl_CountriesInner">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -421,6 +400,67 @@
         </property>
         <item>
          <widget class="BlackGui::Components::CDbCountryComponent" name="comp_DbCountries">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_AircraftCategories">
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Aircraft categories</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="qw_AircraftCategoriesOuter">
+    <layout class="QVBoxLayout" name="vl_AircraftCategoriesOuter">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="fr_AircraftCategoriesInner">
+       <layout class="QVBoxLayout" name="vl_AircraftCategoriesInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CDbAircraftCategoryComponent" name="comp_DbAircraftCategories">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -477,6 +517,12 @@
    <class>BlackGui::Components::CDbCountryComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbcountrycomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAircraftCategoryComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbaircraftcategorycomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
