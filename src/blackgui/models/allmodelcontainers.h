@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/atcstationlist.h"

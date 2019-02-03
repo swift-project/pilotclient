@@ -233,6 +233,7 @@ namespace BlackGui
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         template class CViewWithDbObjects<BlackGui::Models::CAircraftIcaoCodeListModel>;
+        template class CViewWithDbObjects<BlackGui::Models::CAircraftCategoryListModel>;
         template class CViewWithDbObjects<BlackGui::Models::CAirlineIcaoCodeListModel>;
         template class CViewWithDbObjects<BlackGui::Models::CCountryListModel>;
         template class CViewWithDbObjects<BlackGui::Models::CLiveryListModel>;

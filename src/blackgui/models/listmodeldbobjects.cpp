@@ -16,6 +16,8 @@
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
+#include "blackmisc/aviation/aircraftcategory.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/liverylist.h"
@@ -114,6 +116,7 @@ namespace BlackGui
         template class CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>;
         template class CListModelDbObjects<BlackMisc::CCountryList, QString, true>;
         template class CListModelDbObjects<BlackMisc::Aviation::CAircraftIcaoCodeList, int, true>;
+        template class CListModelDbObjects<BlackMisc::Aviation::CAircraftCategoryList, int, true>;
         template class CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>;
         template class CListModelDbObjects<BlackMisc::Simulation::CAircraftModelList, int, true>;
         template class CListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>;

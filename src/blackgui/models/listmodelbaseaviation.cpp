@@ -19,6 +19,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAtcStationList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirportList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
+        template class CListModelBase<BlackMisc::Aviation::CAircraftCategoryList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftPartsList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftSituationList, true>;

@@ -12,6 +12,7 @@
 
 #include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/models/aircraftcategorylistmodel.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/models/aircraftsituationlistmodel.h"

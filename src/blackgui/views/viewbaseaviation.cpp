@@ -18,6 +18,7 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CAircraftSituationListModel>;
         template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel>;
         template class CViewBase<BlackGui::Models::CAirlineIcaoCodeListModel>;
+        template class CViewBase<BlackGui::Models::CAircraftCategoryListModel>;
         template class CViewBase<BlackGui::Models::CAircraftIcaoCodeListModel>;
         template class CViewBase<BlackGui::Models::CAirportListModel>;
         template class CViewBase<BlackGui::Models::CAtcStationListModel>;
