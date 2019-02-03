@@ -21,7 +21,7 @@
 
 #include <QJsonArray>
 #include <QMetaType>
-#include <QStringList>
+#include <QSet>
 #include <tuple>
 
 namespace BlackMisc
@@ -47,7 +47,22 @@ namespace BlackMisc
             CAircraftCategoryList findByName(const QString &name, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
             //! Sort by path
-            void sortByRank();
+            void sortByPath();
+
+            //! Sort by level
+            void sortByLevel();
+
+            //! Get all level strings
+            QSet<QString> getLevelStrings() const;
+
+            //! All levels sorted
+            QList<int> getFirstLevels() const;
+
+            //! Find by first level
+            CAircraftCategoryList findByFirstLevel(int level) const;
+
+            //! Find first levels
+            CAircraftCategoryList findFirstLevels() const;
 
             //! From our database JSON format
             static CAircraftCategoryList fromDatabaseJson(const QJsonArray &array);

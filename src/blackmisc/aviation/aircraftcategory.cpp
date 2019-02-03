@@ -79,14 +79,31 @@ namespace BlackMisc
 
         void CAircraftCategory::setLevel(int l1, int l2, int l3)
         {
-            m_level[0] = l1;
-            m_level[1] = l2;
-            m_level[2] = l3;
+            m_l1 = l1;
+            m_l2 = l2;
+            m_l3 = l3;
+        }
+
+        bool CAircraftCategory::isFirstLevel() const
+        {
+            return (m_l3 == 0 && m_l2 == 0 && m_l1 > 0);
+        }
+
+        int CAircraftCategory::getDepth() const
+        {
+            if (this->isFirstLevel()) { return 1; }
+            if (m_l3 == 0 && m_l2 > 0 && m_l1 > 0) { return 2; }
+            return 3;
         }
 
         QString CAircraftCategory::getLevelString() const
         {
-            return QStringLiteral("%1.%2.%3").arg(m_level[0]).arg(m_level[1]).arg(m_level[2]);
+            return QStringLiteral("%1.%2.%3").arg(m_l1).arg(m_l2).arg(m_l3);
+        }
+
+        QString CAircraftCategory::getLevelAndName() const
+        {
+            return QStringLiteral("%1 %2").arg(this->getLevelString(), this->getName());
         }
 
         bool CAircraftCategory::matchesPath(const QString &path, Qt::CaseSensitivity cs)
@@ -132,9 +149,10 @@ namespace BlackMisc
             switch (i)
             {
             case IndexName:        return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-            case IndexPath:        return m_description.compare(compareValue.getPath(), Qt::CaseInsensitive);
-            case IndexDescription: return m_path.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexPath:        return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive);
+            case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
             case IndexAssignable:  return Compare::compare(this->isAssignable(), compareValue.isAssignable());
+            case IndexLevelString: return this->compareByLevel(compareValue);
             default: return CValueObject::comparePropertyByIndex(index, *this);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
@@ -155,6 +173,17 @@ namespace BlackMisc
             cat.setLevel(l1, l2, l3);
             cat.setKeyVersionTimestampFromDatabaseJson(json, prefix);
             return cat;
+        }
+
+        int CAircraftCategory::compareByLevel(const CAircraftCategory &other) const
+        {
+            // any faster or better way to compare can be used here
+            int c = Compare::compare(m_l1, other.m_l1);
+            if (c != 0) { return c; }
+            c = Compare::compare(m_l2, other.m_l2);
+            if (c != 0) { return c; }
+            c = Compare::compare(m_l3, other.m_l3);
+            return c;
         }
     } // namespace
 } // namespace

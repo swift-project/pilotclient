@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = BlackMisc::CPropertyIndex::GlobalIndexCAircraftCategory,
+                IndexName = CPropertyIndex::GlobalIndexCAircraftCategory,
                 IndexDescription,
                 IndexLevelString,
                 IndexPath,
@@ -78,8 +78,20 @@ namespace BlackMisc
             //! Level
             void setLevel(int l1, int l2, int l3);
 
+            //! First level
+            int getFirstLevel() const { return m_l1; }
+
+            //! First level
+            bool isFirstLevel() const;
+
+            //! Depth 1, 2, 3
+            int getDepth() const;
+
             //! Level string
             QString getLevelString() const;
+
+            //! Level and name
+            QString getLevelAndName() const;
 
             //! Matching path?
             bool matchesPath(const QString &path, Qt::CaseSensitivity cs);
@@ -108,6 +120,9 @@ namespace BlackMisc
             //! Null ICAO?
             bool isNull() const;
 
+            //! Level compare
+            int compareByLevel(const CAircraftCategory &other) const;
+
             //! NULL object
             static const CAircraftCategory &null();
 
@@ -119,13 +134,17 @@ namespace BlackMisc
             QString m_description;    //!< description
             QString m_path;           //!< path
             bool m_assignable = true; //!< can assign to category?
-            int m_level[3] = { 0, 0, 0};
+            int m_l1 = 0;
+            int m_l2 = 0;
+            int m_l3 = 0;
             BLACK_METACLASS(
                 CAircraftCategory,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(name),
-                // BLACK_METAMEMBER(level),
+                BLACK_METAMEMBER(l1),
+                BLACK_METAMEMBER(l2),
+                BLACK_METAMEMBER(l3),
                 BLACK_METAMEMBER(description),
                 BLACK_METAMEMBER(path),
                 BLACK_METAMEMBER(assignable)
