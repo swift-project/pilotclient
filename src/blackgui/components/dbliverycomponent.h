@@ -23,8 +23,8 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc { namespace Aviation { class CLivery; } }
 namespace Ui { class CDbLiveryComponent; }
+namespace BlackMisc { namespace Aviation { class CLivery; } }
 namespace BlackGui
 {
     namespace Views { class CLiveryView; }
@@ -36,7 +36,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbLiveryComponent :
             public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
+            public CEnableForViewBasedIndicator
         {
             Q_OBJECT
 

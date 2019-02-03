@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CDbAircraftIcaoComponent</class>
  <widget class="QFrame" name="CDbAircraftIcaoComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>258</width>
+    <height>208</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Search and find aircraft ICAO codes</string>
   </property>

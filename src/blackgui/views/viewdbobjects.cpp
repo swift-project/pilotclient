@@ -10,19 +10,20 @@
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/views/viewdbobjects.h"
 #include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/models/aircraftcategorylistmodel.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/models/airlineicaolistmodel.h"
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/liverylistmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/countrylist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
 
 #include <QAction>
 #include <QIntValidator>

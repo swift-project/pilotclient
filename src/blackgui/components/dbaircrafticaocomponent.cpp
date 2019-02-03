@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
 #include "blackgui/components/dbaircrafticaocomponent.h"
 #include "blackgui/filters/aircrafticaofilterbar.h"
-#include "blackgui/guiapplication.h"
 #include "blackgui/views/aircrafticaoview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "dbaircrafticaocomponent.h"
 #include "ui_dbaircrafticaocomponent.h"
 
@@ -23,7 +23,6 @@
 using namespace BlackCore;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
-using namespace BlackGui;
 using namespace BlackGui::Views;
 
 namespace BlackGui

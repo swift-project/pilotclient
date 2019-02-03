@@ -8,10 +8,10 @@
  */
 
 #include "blackgui/guiutility.h"
-#include "blackgui/models/allmodels.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/views/viewbaseproxystyle.h"
 #include "blackgui/views/viewbaseitemdelegate.h"
+#include "blackgui/models/allmodels.h"
 #include "blackgui/components/texteditdialog.h"
 #include "blackmisc/worker.h"
 #include "blackconfig/buildconfig.h"

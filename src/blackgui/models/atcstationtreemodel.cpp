@@ -43,17 +43,7 @@ namespace BlackGui
     namespace Models
     {
         CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent)
-        {
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "callsign");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "frequency");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "controllername");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookedfrom");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookeduntil");
-            (void)QT_TRANSLATE_NOOP("ModelAtcList", "voiceroomurl");
-        }
+        { }
 
         void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
         {

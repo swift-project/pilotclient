@@ -13,7 +13,6 @@ namespace BlackGui
 {
     namespace Views
     {
-        template class CViewBase<BlackGui::Models::CAircraftModelListModel>;
         template class CViewBase<BlackGui::Models::CAircraftPartsListModel>;
         template class CViewBase<BlackGui::Models::CAircraftSituationListModel>;
         template class CViewBase<BlackGui::Models::CAircraftSituationChangeListModel>;
