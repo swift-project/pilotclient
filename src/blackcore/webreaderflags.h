@@ -39,8 +39,8 @@ namespace BlackCore
             AirportReader        = 1 << 6,   //!< reader for airport list
             DbInfoDataReader     = 1 << 7,   //!< DB info data (metdata, how many data, when updated)
             AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader | VatsimStatusReader,  //!< all VATSIM readers
-            AllSwiftDbReaders    = IcaoDataReader | ModelReader | DbInfoDataReader | AirportReader,                    //!< all swift data
-            AllReaders           = AllSwiftDbReaders | AllVatsimReaders                                              //!< everything
+            AllSwiftDbReaders    = IcaoDataReader      | ModelReader      | DbInfoDataReader  | AirportReader,       //!< all swift data
+            AllReaders           = AllSwiftDbReaders   | AllVatsimReaders                                            //!< everything
         };
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 

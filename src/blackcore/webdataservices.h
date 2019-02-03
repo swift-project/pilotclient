@@ -262,6 +262,14 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
 
+        //! Aircraft categories
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+
+        //! Aircraft categories count
+        //! \threadsafe
+        int getAircraftCategoriesCount() const;
+
         //! Contains the given designator?
         //! \threadsafe
         bool containsAircraftIcaoDesignator(const QString &designator) const;

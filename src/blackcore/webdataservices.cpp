@@ -285,9 +285,9 @@ namespace BlackCore
 
         if (m_icaoDataReader)
         {
-            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
+            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
-                CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoAndCountries;
+                CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoCountriesCategory;
                 m_icaoDataReader->readInBackgroundThread(icaoEntities, newerThan);
                 triggeredRead |= icaoEntities;
             }
@@ -697,6 +697,18 @@ namespace BlackCore
         if (!airline.hasValidDesignator()) { return CAircraftIcaoCodeList(); }
         if (m_modelDataReader) { return m_modelDataReader->getAicraftIcaoCodesForAirline(airline); }
         return CAircraftIcaoCodeList();
+    }
+
+    CAircraftCategoryList CWebDataServices::getAircraftCategories() const
+    {
+        if (m_icaoDataReader) { return m_icaoDataReader->getAircraftCategories(); }
+        return CAircraftCategoryList();
+    }
+
+    int CWebDataServices::getAircraftCategoriesCount() const
+    {
+        if (m_icaoDataReader) { return m_icaoDataReader->getAircraftCategoryCount(); }
+        return 0;
     }
 
     bool CWebDataServices::containsAircraftIcaoDesignator(const QString &designator) const

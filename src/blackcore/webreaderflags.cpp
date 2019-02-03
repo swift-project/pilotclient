@@ -49,7 +49,7 @@ namespace BlackCore
     CEntityFlags::Entity CWebReaderFlags::allEntitiesForReaders(WebReader readers)
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (readers.testFlag(IcaoDataReader))      { entities |= CEntityFlags::AllIcaoAndCountries; }
+        if (readers.testFlag(IcaoDataReader))      { entities |= CEntityFlags::AllIcaoCountriesCategory; }
         if (readers.testFlag(ModelReader))         { entities |= CEntityFlags::DistributorLiveryModel; }
         if (readers.testFlag(AirportReader))       { entities |= CEntityFlags::AirportEntity; }
         if (readers.testFlag(DbInfoDataReader))    { entities |= CEntityFlags::DbInfoObjectEntity; }
