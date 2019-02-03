@@ -440,10 +440,6 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
 {
     this->displayValidationDialog();
     m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
-
-    // modal version
-    // const int r = m_validationDialog->exec();
-    // Q_UNUSED(r);
 }
 
 void SwiftGuiStd::displayValidationDialog()

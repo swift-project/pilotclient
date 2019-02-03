@@ -208,7 +208,7 @@ namespace BlackMisc
             m_loadingInProgress = false;
 
             const QMap<int, int> counts = statusMsgs.countSeverities();
-            const int errors = counts.value(SeverityError);
+            const int errors   = counts.value(SeverityError);
             const int warnings = counts.value(SeverityWarning);
 
             if (statusMsgs.hasWarningOrErrorMessages())

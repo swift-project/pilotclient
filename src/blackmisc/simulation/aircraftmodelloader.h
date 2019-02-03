@@ -132,21 +132,21 @@ namespace BlackMisc
         signals:
             //! Disk loading started
             //! \remark will only indicate loading from disk, not cache loading
-            void diskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode loadMode);
+            void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode loadMode);
 
             //! Parsing is finished or cache has been loaded
             //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
-            void loadingFinished(const BlackMisc::CStatusMessageList &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Loading progress, normally from disk
             //! \param simulator corresponding simulator
             //! \param message a progress message which can be sent by each individual loader implementation as needed
             //! \param progressPercentage 0-100 or -1 if not available
-            void loadingProgress(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &message, int progressPercentage);
+            void loadingProgress(const CSimulatorInfo &simulator, const QString &message, int progressPercentage);
 
             //! Relayed from centralized caches
             //! \remark this can result from loading, the cache changed elsewhere or clearing data
-            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void cacheChanged(const CSimulatorInfo &simulator);
 
         protected:
             //! Constructor

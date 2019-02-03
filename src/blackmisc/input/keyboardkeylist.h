@@ -29,7 +29,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of keyboard keys.
         class BLACKMISC_EXPORT CKeyboardKeyList :
             public CSequence<CKeyboardKey>,
-            public BlackMisc::Mixin::MetaType<CKeyboardKeyList>
+            public Mixin::MetaType<CKeyboardKeyList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CKeyboardKeyList)
