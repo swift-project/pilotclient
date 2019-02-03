@@ -67,7 +67,7 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (!entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+            if (!entity.testFlag(CEntityFlags::LiveryEntity)) { return; }
 
             if (CEntityFlags::isFinishedReadState(readState))
             {
@@ -82,7 +82,7 @@ namespace BlackGui
 
         void CDbLiveryComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
         {
-            if (CEntityFlags::LiveryEntity != entity) { return; }
+            if (!entity.testFlag(CEntityFlags::LiveryEntity)) { return; }
             this->showDownloadProgress(progress, current, max, url, 5000);
             Q_UNUSED(logId);
         }

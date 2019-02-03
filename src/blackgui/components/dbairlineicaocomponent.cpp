@@ -60,7 +60,7 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
-            if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+            if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { return; }
 
             if (CEntityFlags::isFinishedReadState(readState))
             {
@@ -75,7 +75,7 @@ namespace BlackGui
 
         void CDbAirlineIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
         {
-            if (CEntityFlags::AirlineIcaoEntity != entity) { return; }
+            if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { return; }
             this->showDownloadProgress(progress, current, max, url, 5000);
             Q_UNUSED(logId);
         }

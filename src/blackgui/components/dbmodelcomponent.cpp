@@ -115,7 +115,7 @@ namespace BlackGui
 
         void CDbModelComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
         {
-            if (CEntityFlags::ModelEntity != entity) { return; }
+            if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
             this->showDownloadProgress(progress, current, max, url, 5000);
             Q_UNUSED(logId);
         }
