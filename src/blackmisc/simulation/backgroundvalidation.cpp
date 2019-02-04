@@ -131,6 +131,7 @@ namespace BlackMisc
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 const qint64 deltaTimeMs = now - started;
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
+                msgs.freezeOrder();
 
                 validated = true;
 
