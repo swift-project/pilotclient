@@ -29,6 +29,7 @@ namespace BlackGui
             ui->setupUi(this);
             ui->comp_Simulator->setMode(CSimulatorSelector::ComboBox);
             ui->comp_Simulator->setRememberSelection(false);
+            ui->comp_Messages->setNoSorting(); // keep order
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
@@ -60,7 +61,11 @@ namespace BlackGui
             ui->tvp_InvalidModels->updateContainerMaybeAsync(invalid);
             ui->comp_Simulator->setValue(simulator);
             ui->comp_Messages->clear();
-            ui->comp_Messages->appendStatusMessagesToList(msgs);
+
+            if (!msgs.isEmpty())
+            {
+                ui->comp_Messages->appendStatusMessagesToList(msgs.isSortedLatestLast() ? CStatusMessageList(msgs.reversed()) : msgs);
+            }
 
             const QString msg = stopped ?
                                 QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible").arg(simulator.toQString(true)) :
