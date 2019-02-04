@@ -50,8 +50,14 @@ namespace BlackGui
             //! Set mode and adjust order/no order
             void setMode(Mode mode, const BlackMisc::CStatusMessageList &messages);
 
+            //! Adjust order column depending on messages
+            void adjustOrderColumn(const BlackMisc::CStatusMessageList &messages);
+
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
+
+        private:
+            Mode m_mode; //!< used mode
         };
     } // ns
 } // ns

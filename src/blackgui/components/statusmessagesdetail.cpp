@@ -120,6 +120,7 @@ namespace BlackGui
                 newMsgs.keepLatest(m_maxLogMessages);
             }
 
+            ui->tvp_StatusMessages->adjustOrderColumn(newMsgs);
             ui->tvp_StatusMessages->updateContainerMaybeAsync(newMsgs);
         }
 

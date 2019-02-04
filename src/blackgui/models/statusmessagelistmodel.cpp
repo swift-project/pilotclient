@@ -52,16 +52,23 @@ namespace BlackGui
             }
         }
 
+        void CStatusMessageListModel::adjustOrderColumn(const CStatusMessageList &messages)
+        {
+            this->setMode(m_mode, messages);
+        }
+
         void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
         {
             m_columns.clear();
             m_sortColumn = CStatusMessage::IndexUtcTimestamp;
+            m_mode = mode;
 
             switch (mode)
             {
             case DetailedWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
                 m_sortColumn = CStatusMessage::IndexOrder;
+                m_sortOrder = Qt::DescendingOrder;
                 Q_FALLTHROUGH();
             case Detailed:
                 {
@@ -71,8 +78,6 @@ namespace BlackGui
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
                     m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
-
-                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
             case SimplifiedWithOrder:
@@ -86,9 +91,6 @@ namespace BlackGui
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-
-                    m_sortColumn = CStatusMessage::IndexUtcTimestamp;
-                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
             }

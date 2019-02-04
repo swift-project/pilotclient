@@ -38,6 +38,11 @@ namespace BlackGui
             this->derivedModel()->setMode(mode, messages);
         }
 
+        void CStatusMessageView::adjustOrderColumn(const CStatusMessageList &messages)
+        {
+            this->derivedModel()->adjustOrderColumn(messages);
+        }
+
         void CStatusMessageView::addFilterDialog()
         {
             if (this->getFilterDialog()) { return; } // already existing
