@@ -37,6 +37,9 @@ namespace BlackGui
             //! Set mode
             void setMode(Models::CStatusMessageListModel::Mode mode);
 
+            //! Set mode and adjust order/no order
+            void setMode(Models::CStatusMessageListModel::Mode mode, const BlackMisc::CStatusMessageList &messages);
+
             //! Add my own filter dialog
             void addFilterDialog();
 

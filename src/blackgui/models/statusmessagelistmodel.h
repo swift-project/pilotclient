@@ -33,7 +33,9 @@ namespace BlackGui
             enum Mode
             {
                 Detailed,
-                Simplified
+                DetailedWithOrder,
+                Simplified,
+                SimplifiedWithOrder
             };
 
             //! Constructor
@@ -44,6 +46,9 @@ namespace BlackGui
 
             //! Set mode
             void setMode(Mode mode);
+
+            //! Set mode and adjust order/no order
+            void setMode(Mode mode, const BlackMisc::CStatusMessageList &messages);
 
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;

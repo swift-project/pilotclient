@@ -33,6 +33,11 @@ namespace BlackGui
             this->derivedModel()->setMode(mode);
         }
 
+        void CStatusMessageView::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
+        {
+            this->derivedModel()->setMode(mode, messages);
+        }
+
         void CStatusMessageView::addFilterDialog()
         {
             if (this->getFilterDialog()) { return; } // already existing

@@ -37,11 +37,32 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "all categories");
         }
 
+        void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
+        {
+            switch (mode)
+            {
+            case DetailedWithOrder:
+            case Detailed:
+                this->setMode(messages.needsOrder() ? Detailed : DetailedWithOrder);
+                break;
+            case SimplifiedWithOrder:
+            case Simplified:
+                this->setMode(messages.needsOrder() ? Simplified : SimplifiedWithOrder);
+                break;
+            }
+        }
+
         void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
         {
             m_columns.clear();
+            m_sortColumn = CStatusMessage::IndexUtcTimestamp;
+
             switch (mode)
             {
+            case DetailedWithOrder:
+                m_columns.addColumn(CColumn::orderColumn());
+                m_sortColumn = CStatusMessage::IndexOrder;
+                Q_FALLTHROUGH();
             case Detailed:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
@@ -51,10 +72,13 @@ namespace BlackGui
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
                     m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
 
-                    m_sortColumn = CStatusMessage::IndexUtcTimestamp;
                     m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
+            case SimplifiedWithOrder:
+                m_columns.addColumn(CColumn::orderColumn());
+                m_sortColumn = CStatusMessage::IndexOrder;
+                Q_FALLTHROUGH();
             case Simplified:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
