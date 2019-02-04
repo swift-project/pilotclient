@@ -189,6 +189,11 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
+    void COverlayMessages::sortOverlayMessages(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+    {
+        ui->tvp_StatusMessages->sortByPropertyIndex(propertyIndex, order);
+    }
+
     void COverlayMessages::showOverlayMessage(const CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
