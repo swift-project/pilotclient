@@ -89,7 +89,8 @@ namespace BlackMisc
     CStatusMessage::CStatusMessage(const CStatusMessage &other) :
         CValueObject(other),
         CMessageBase(other),
-        ITimestampBased(other)
+        ITimestampBased(other),
+        IOrderable(other)
     {
         QReadLocker lock(&other.m_lock);
         m_handledByObjects = other.m_handledByObjects;
@@ -103,13 +104,15 @@ namespace BlackMisc
         static_cast<CMessageBase &>(*this) = other;
 
         QReadLocker readLock(&other.m_lock);
-        auto handledBy = other.m_handledByObjects;
-        qint64 ts = other.m_timestampMSecsSinceEpoch;
+        const auto handledBy = other.m_handledByObjects;
+        const qint64 ts = other.m_timestampMSecsSinceEpoch;
+        const int order = other.m_order;
         readLock.unlock(); // avoid deadlock
 
         QWriteLocker writeLock(&m_lock);
         m_handledByObjects = handledBy;
         m_timestampMSecsSinceEpoch = ts;
+        m_order = order;
         return *this;
     }
 
@@ -420,6 +423,7 @@ namespace BlackMisc
     {
         if (index.isMyself()) { return CVariant::from(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (IOrderable::canHandleIndex(index))      { return IOrderable::propertyByIndex(index); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -438,6 +442,7 @@ namespace BlackMisc
     {
         if (index.isMyself()) { (*this) = variant.to<CStatusMessage>(); return; }
         if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (IOrderable::canHandleIndex(index))      { IOrderable::setPropertyByIndex(index, variant); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -455,6 +460,7 @@ namespace BlackMisc
     {
         if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (IOrderable::canHandleIndex(index))      { return IOrderable::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

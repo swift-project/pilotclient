@@ -294,7 +294,8 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CStatusMessage :
         public CValueObject<CStatusMessage>,
         public CMessageBase<CStatusMessage>,
-        public ITimestampBased
+        public ITimestampBased,
+        public IOrderable
     {
     public:
         //! \copydoc BlackMisc::StatusSeverity
@@ -518,12 +519,14 @@ namespace BlackMisc
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
 
+        //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
         BLACK_METACLASS(
             CStatusMessage,
             BLACK_METAMEMBER(categories),
             BLACK_METAMEMBER(severity),
             BLACK_METAMEMBER(message),
             BLACK_METAMEMBER(args),
+            BLACK_METAMEMBER(order, 0, DisabledForHashing | DisabledForComparison),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForHashing | DisabledForComparison)
         );
     };
