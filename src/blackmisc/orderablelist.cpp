@@ -11,6 +11,7 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <algorithm>
 #include <type_traits>
@@ -140,6 +141,16 @@ namespace BlackMisc
         }
     }
 
+    template <class OBJ, class CONTAINER>
+    void IOrderableList<OBJ, CONTAINER>::freezeOrderReverse()
+    {
+        int c = this->container().size() - 1;
+        for (OBJ &obj : container())
+        {
+            obj.setOrder(c--);
+        }
+    }
+
     template<class OBJ, class CONTAINER>
     OBJ IOrderableList<OBJ, CONTAINER>::minOrderOrDefault() const
     {
@@ -173,6 +184,7 @@ namespace BlackMisc
     }
 
     //! \cond PRIVATE
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IOrderableList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     //! \endcond

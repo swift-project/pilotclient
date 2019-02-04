@@ -33,6 +33,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CStatusMessageList :
         public CSequence<CStatusMessage>,
         public ITimestampObjectList<CStatusMessage, CStatusMessageList>,
+        public IOrderableList<CStatusMessage, CStatusMessageList>,
         public Mixin::MetaType<CStatusMessageList>
     {
     public:

@@ -50,6 +50,9 @@ namespace BlackMisc
         //! Current order of list will be new order values
         void freezeOrder();
 
+        //! Current reverse order of list will be new order values
+        void freezeOrderReverse();
+
         //! Object with min.order or default
         OBJ minOrderOrDefault() const;
 
@@ -68,6 +71,9 @@ namespace BlackMisc
     };
 
     //! \cond PRIVATE
+    class CStatusMessage;
+    class CStatusMessageList;
+
     namespace Simulation
     {
         class CDistributor;
@@ -76,6 +82,7 @@ namespace BlackMisc
         class CAircraftModelList;
     }
 
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IOrderableList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     //! \endcond
