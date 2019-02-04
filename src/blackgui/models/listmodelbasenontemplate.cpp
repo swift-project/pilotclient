@@ -104,6 +104,12 @@ namespace BlackGui
 
         bool CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
+            if (propertyIndex.isEmpty())
+            {
+                this->setNoSorting();
+                return false;
+            }
+
             const bool changedColumn = this->setSortColumnByPropertyIndex(propertyIndex);
             const bool changedOrder = (m_sortOrder == order);
             m_sortOrder = order;
@@ -112,7 +118,6 @@ namespace BlackGui
 
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
-
             if (!(m_sortColumn >= 0 && m_sortColumn < m_columns.size())) { return false; }
             return m_columns.isSortable(m_sortColumn);
         }

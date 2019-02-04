@@ -171,8 +171,11 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setSorting
             virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
-            //! Sort by index
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::sortByPropertyIndex
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setNoSorting
+            virtual void setNoSorting() = 0;
 
             //! Allow to drag and/or drop value objects
             virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) = 0;
@@ -715,6 +718,7 @@ namespace BlackGui
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
             virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual void setNoSorting() override { m_model->setNoSorting(); }
             //! @}
 
             //! Column count

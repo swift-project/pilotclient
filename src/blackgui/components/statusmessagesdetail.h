@@ -69,6 +69,12 @@ namespace BlackGui
             //! \copydoc BlackGui::Filters::CStatusMessageFilterBar::useRadioButtonDescriptiveIcons
             void filterUseRadioButtonDescriptiveIcons(bool oneCharacterText);
 
+            //! Sorting for view
+            void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+
+            //! Disable sorting
+            void setNoSorting();
+
         signals:
             //! \copydoc BlackGui::Views::CStatusMessageView::modelDataChangedDigest
             void modelDataChangedDigest(int count, bool withFilter);

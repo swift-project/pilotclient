@@ -38,7 +38,7 @@ namespace BlackGui
         void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
         {
             if (message.isEmpty()) { return; }
-            m_pending.push_front(message); // in many cases we want to havethe latest "on top"
+            m_pending.push_front(message); // in many cases we want to have the latest "on top"
             m_dsDeferredUpdate.inputSignal();
         }
 
@@ -85,6 +85,16 @@ namespace BlackGui
         void CStatusMessagesDetail::filterUseRadioButtonDescriptiveIcons(bool oneCharacterText)
         {
             ui->filter_LogMessages->useRadioButtonDescriptiveIcons(oneCharacterText);
+        }
+
+        void CStatusMessagesDetail::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        {
+            ui->tvp_StatusMessages->setSorting(propertyIndex, order);
+        }
+
+        void CStatusMessagesDetail::setNoSorting()
+        {
+            ui->tvp_StatusMessages->setNoSorting();
         }
 
         void CStatusMessagesDetail::deferredUpdate()

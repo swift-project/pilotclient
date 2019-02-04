@@ -74,6 +74,9 @@ namespace BlackGui
             //! Set sort column
             virtual void setSortColumn(int column) { m_sortColumn = column; }
 
+            //! Disable sorting
+            void setNoSorting() { this->setSortColumn(-1); }
+
             //! Sort by index
             void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
