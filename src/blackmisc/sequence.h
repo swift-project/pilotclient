@@ -411,6 +411,13 @@ namespace BlackMisc
             std::reverse(begin(), end());
         }
 
+        //! Reversed order
+        CSequence reversed() const {
+            CSequence result = *this;
+            result.reverse();
+            return result;
+        }
+
         //! In-place sort by a given comparator predicate.
         template <class Predicate> void sort(Predicate p)
         {
