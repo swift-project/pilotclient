@@ -44,7 +44,7 @@ namespace BlackMisc
         bool hasValidOrder() const;
 
         //! Can given index be handled
-        static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
+        static bool canHandleIndex(const CPropertyIndex &index);
 
     protected:
         //! Constructor
@@ -54,12 +54,12 @@ namespace BlackMisc
         IOrderable(int order);
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        CVariant propertyByIndex(const CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-        //! Compare for index
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const IOrderable &compareValue) const;
 
         int m_order = -1; //!< order number

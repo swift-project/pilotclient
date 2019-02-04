@@ -13,7 +13,6 @@
 #define BLACKMISC_ORDERABLELIST_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QList>
 
 namespace BlackMisc

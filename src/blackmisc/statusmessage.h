@@ -12,12 +12,13 @@
 #ifndef BLACKMISC_STATUSMESSAGE_H
 #define BLACKMISC_STATUSMESSAGE_H
 
-#include "blackmiscexport.h"
-#include "icon.h"
-#include "propertyindex.h"
 #include "logcategorylist.h"
 #include "timestampbased.h"
+#include "orderable.h"
+#include "icon.h"
+#include "propertyindex.h"
 #include "typetraits.h"
+#include "blackmiscexport.h"
 
 #include <QReadWriteLock>
 

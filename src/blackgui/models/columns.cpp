@@ -171,7 +171,7 @@ namespace BlackGui
 
         bool CColumns::isSortable(int column) const
         {
-            if (!isValidColumn(column)) return false;
+            if (!isValidColumn(column)) { return false; }
             return m_columns.at(column).isSortable();
         }
 

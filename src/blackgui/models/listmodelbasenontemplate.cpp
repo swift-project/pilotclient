@@ -111,7 +111,7 @@ namespace BlackGui
             }
 
             const bool changedColumn = this->setSortColumnByPropertyIndex(propertyIndex);
-            const bool changedOrder = (m_sortOrder == order);
+            const bool changedOrder  = (m_sortOrder == order);
             m_sortOrder = order;
             return changedColumn || changedOrder;
         }

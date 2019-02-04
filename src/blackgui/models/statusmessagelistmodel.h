@@ -12,11 +12,9 @@
 #ifndef BLACKGUI_MODELS_STATUSMESSAGELISTMODEL_H
 #define BLACKGUI_MODELS_STATUSMESSAGELISTMODEL_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
-
-class QObject;
 
 namespace BlackGui
 {

@@ -35,7 +35,7 @@ namespace BlackGui
             explicit CStatusMessageView(QWidget *parent = nullptr);
 
             //! Set mode
-            void setMode(BlackGui::Models::CStatusMessageListModel::Mode mode);
+            void setMode(Models::CStatusMessageListModel::Mode mode);
 
             //! Add my own filter dialog
             void addFilterDialog();

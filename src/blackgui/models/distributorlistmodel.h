@@ -18,10 +18,7 @@
 
 #include <QString>
 
-class QObject;
-
 namespace BlackMisc { namespace Simulation { class CDistributor; } }
-
 namespace BlackGui
 {
     namespace Models
@@ -47,7 +44,7 @@ namespace BlackGui
             explicit CDistributorListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CDistributorListModel() {}
+            virtual ~CDistributorListModel() override {}
 
             //! Set mode
             void setDistributorMode(DistributorMode distributorMode);

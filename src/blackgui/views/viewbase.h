@@ -538,7 +538,7 @@ namespace BlackGui
             bool m_acceptDoubleClickSelection         = false;                 //!< double clicked
             bool m_displayAutomatically               = true;                  //!< display directly when loaded
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
-            bool m_dropIndicator                      = false;                 //!< draw indicator
+            bool m_dropIndicator                      = false;                 //!< drop indicator
             bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
             bool m_allowCacheFileJson                 = true;                  //!< allow Cache format JSON to be loaded
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
@@ -548,7 +548,7 @@ namespace BlackGui
             CLoadIndicator   *m_loadIndicator         = nullptr;               //!< load indicator if needed
             Components::CTextEditDialog *m_textEditDialog = nullptr;           //!< text edit dialog
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions for menu flag (enum)
-            QString        m_saveFileName;                                     //!< save file name (JSON)
+            QString m_saveFileName;                                            //!< save file name (JSON)
             BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings

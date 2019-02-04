@@ -225,16 +225,16 @@ namespace BlackMisc
 
         signals:
             //! \copydoc IAircraftModelLoader::loadingFinished
-            void loadingFinished(const BlackMisc::CStatusMessageList &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void loadingFinished(const BlackMisc::CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
 
             //! \copydoc IAircraftModelLoader::diskLoadingStarted
-            void diskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode);
 
             //! \copydoc IAircraftModelLoader::loadingProgress
-            void loadingProgress(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &message, int progressPercentage);
+            void loadingProgress(const CSimulatorInfo &simulator, const QString &message, int progressPercentage);
 
             //! \copydoc IAircraftModelLoader::cacheChanged
-            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void cacheChanged(const CSimulatorInfo &simulator);
 
         private:
             IAircraftModelLoader *m_loaderFsx = nullptr;
