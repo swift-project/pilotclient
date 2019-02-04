@@ -336,13 +336,13 @@ namespace BlackMisc
 
     CStatusMessage CStatusMessage::fromDatabaseJson(const QJsonObject &json)
     {
-        QString msgText(json.value("text").toString());
-        QString severityText(json.value("severity").toString());
+        const QString msgText(json.value("text").toString());
+        const QString severityText(json.value("severity").toString());
         QString typeText(json.value("type").toString());
         StatusSeverity severity = stringToSeverity(severityText);
 
-        typeText = "swift.db.type." + typeText.toLower().remove(' ');
-        CStatusMessage m({ CLogCategory::swiftDbWebservice(), CLogCategory(typeText)}, severity, msgText);
+        typeText = u"swift.db.type." % typeText.toLower().remove(' ');
+        const CStatusMessage m({ CLogCategory::swiftDbWebservice(), CLogCategory(typeText)}, severity, msgText);
         return m;
     }
 
