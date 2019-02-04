@@ -98,6 +98,16 @@ namespace BlackGui
             ui->comp_StatusMessages->setMaxLogMessages(max);
         }
 
+        void CLogComponent::setNoSorting()
+        {
+            ui->comp_StatusMessages->setNoSorting();
+        }
+
+        void CLogComponent::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        {
+            ui->comp_StatusMessages->setSorting(propertyIndex, order);
+        }
+
         void CLogComponent::clear()
         {
             ui->tep_StatusPageConsole->clear();

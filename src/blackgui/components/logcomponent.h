@@ -80,6 +80,12 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CStatusMessagesDetail::setMaxLogMessages
             void setMaxLogMessages(int max);
 
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::setNoSorting
+            void setNoSorting();
+
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::setSorting
+            void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order);
+
             //! Clear
             void clear();
 
