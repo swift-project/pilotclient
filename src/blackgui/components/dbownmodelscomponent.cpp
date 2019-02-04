@@ -137,10 +137,10 @@ namespace BlackGui
             return ui->comp_SimulatorSelector->getValue();
         }
 
-        void CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator)
+        bool CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator, bool forced)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (m_simulator == simulator) { return; }
+            if (!forced && m_simulator == simulator) { return false; }
 
             // changed simulator
             m_simulator = simulator;
@@ -148,6 +148,7 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setValue(simulator);
             ui->le_Simulator->setText(simulator.toQString());
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
+            return true;
         }
 
         void CDbOwnModelsComponent::setSimulatorSelectorMode(CSimulatorSelector::Mode mode)
@@ -271,7 +272,7 @@ namespace BlackGui
                         {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fsx());
+                            ownModelsComp->setSimulator(CSimulatorInfo::fsx(), true);
                         });
                     }
                     menuActions.addAction(m_loadActions[0], CMenuAction::pathSimulator());
@@ -285,7 +286,7 @@ namespace BlackGui
                         {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::p3d());
+                            ownModelsComp->setSimulator(CSimulatorInfo::p3d(), true);
                         });
                     }
                     menuActions.addAction(m_loadActions[1], CMenuAction::pathSimulator());
@@ -299,7 +300,7 @@ namespace BlackGui
                         {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fs9());
+                            ownModelsComp->setSimulator(CSimulatorInfo::fs9(), true);
                         });
                     }
                     menuActions.addAction(m_loadActions[2], CMenuAction::pathSimulator());
@@ -313,7 +314,7 @@ namespace BlackGui
                         {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::xplane());
+                            ownModelsComp->setSimulator(CSimulatorInfo::xplane(), true);
                         });
                     }
                     menuActions.addAction(m_loadActions[3], CMenuAction::pathSimulator());
@@ -327,7 +328,7 @@ namespace BlackGui
                         {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked);
-                            ownModelsComp->requestSimulatorModelsWithCacheInBackground(CSimulatorInfo::fg());
+                            ownModelsComp->setSimulator(CSimulatorInfo::fg(), true);
                         });
                     }
                     menuActions.addAction(m_loadActions[4], CMenuAction::pathSimulator());
