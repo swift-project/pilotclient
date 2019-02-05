@@ -93,13 +93,13 @@ namespace BlackGui
         {
             QPen pen(Qt::white, 1);
             pen.setCosmetic(true);
-            QGraphicsLineItem *li = new QGraphicsLineItem{QLineF(-5.0, 0.0, 5.0, 0.0), &m_center};
-            li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
-            li->setPen(pen);
+            QGraphicsLineItem *lix = new QGraphicsLineItem{QLineF(-5.0, 0.0, 5.0, 0.0), &m_center};
+            lix->setFlags(QGraphicsItem::ItemIgnoresTransformations);
+            lix->setPen(pen);
 
-            li = new QGraphicsLineItem(QLineF(0.0, -5.0, 0.0, 5.0), &m_center);
-            li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
-            li->setPen(pen);
+            QGraphicsLineItem *liy = new QGraphicsLineItem(QLineF(0.0, -5.0, 0.0, 5.0), &m_center);
+            liy->setFlags(QGraphicsItem::ItemIgnoresTransformations);
+            liy->setPen(pen);
         }
 
         void CRadarComponent::addGraticules()
@@ -110,11 +110,7 @@ namespace BlackGui
             // Macro graticule, drawn as full line at every 10 nm
             for (qreal range = 10.0; range < 101.0; range += 10.0)
             {
-                qreal x = -range;
-                qreal y = -range;
-                qreal width = 2.0 * range;
-                qreal height = 2.0 * range;
-                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(x, y, width, height, &m_macroGraticule);
+                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
                 circle->setPen(pen);
             }
             pen = QPen(Qt::gray, 1, Qt::DashLine);
@@ -123,11 +119,7 @@ namespace BlackGui
             // Micro graticule, drawn as dash line at every 2.5 nm
             for (qreal range = 2.5; range < 9.9; range += 2.5)
             {
-                qreal x = -range;
-                qreal y = -range;
-                qreal width = 2.0 * range;
-                qreal height = 2.0 * range;
-                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(x, y, width, height, &m_microGraticule);
+                QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_microGraticule);
                 circle->setPen(pen);
             }
         }
