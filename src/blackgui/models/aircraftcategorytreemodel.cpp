@@ -40,15 +40,11 @@ namespace BlackGui
 
         void CAircraftCategoryTreeModel::updateContainer(const CAircraftCategoryList &categories)
         {
-            if (categories.isEmpty())
-            {
-                CAircraftCategoryTreeModel::clear();
-                return;
-            }
+            this->clear();
+            if (categories.isEmpty())  { return; }
 
             m_categories = categories;
             m_categories.sortByLevel();
-            QStandardItemModel::clear();
             QMap<int, QStandardItem *> items;
             this->setColumnCount(m_columns.size() + 1);
 
@@ -69,18 +65,8 @@ namespace BlackGui
                 {
                     const CPropertyIndex i(column.getPropertyIndex());
                     const CVariant v(category.propertyByIndex(i));
-
-                    if (column.getFormatter()->supportsRole(Qt::DecorationRole))
-                    {
-                        const QIcon icon = column.getFormatter()->decorationRole(v).toPixmap();
-                        si = new QStandardItem(icon, QString());
-                    }
-                    else if (column.getFormatter()->supportsRole(Qt::DisplayRole))
-                    {
-                        const CVariant f = column.getFormatter()->displayRole(v);
-                        si = new QStandardItem(f.toQString(true));
-                    }
-                    if (!si) { continue; }
+                    const CVariant f = column.getFormatter()->displayRole(v);
+                    si = new QStandardItem(f.toQString(true));
                     si->setEditable(false); // make not editable
                     categoryRow.push_back(si);
                 } // columns
@@ -94,8 +80,11 @@ namespace BlackGui
                 else
                 {
                     const int p = category.getDepth() - 1;
+                    Q_ASSERT_X(items[p], Q_FUNC_INFO, "No parent item");
                     items[p]->appendRow(categoryRow);
                 }
+
+                Q_ASSERT_X(!categoryRow.isEmpty(), Q_FUNC_INFO, "Category row is empty");
                 items.insert(category.getDepth(), categoryRow.front());
             }
         }

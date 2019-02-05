@@ -48,15 +48,21 @@ namespace BlackGui
             this->categoryModel()->clear();
         }
 
+        void CAircraftCategoryTreeView::fullResizeToContents()
+        {
+            m_dsFullResize.inputSignal();
+        }
+
         void CAircraftCategoryTreeView::setColumns(const CColumns &columns)
         {
             if (this->categoryModel()) { this->categoryModel()->setColumns(columns); }
         }
 
-        void CAircraftCategoryTreeView::fullResizeToContents()
+        void CAircraftCategoryTreeView::fullResizeToContentsImpl()
         {
             if (this->isEmpty()) { return; }
-            for (int c = 0; c < this->categoryModel()->columnCount(); c++)
+            const int cc = this->categoryModel()->columnCount();
+            for (int c = 0; c < cc; c++)
             {
                 this->resizeColumnToContents(c);
             }
@@ -105,7 +111,7 @@ namespace BlackGui
 
             QMenu *menu = new QMenu(this);  // menu
             QAction *resize = new QAction(CIcons::resize16(), "Resize", this);
-            connect(resize, &QAction::triggered, this, &CAircraftCategoryTreeView::fullResizeToContents);
+            connect(resize, &QAction::triggered, this, &CAircraftCategoryTreeView::fullResizeToContentsImpl);
 
             menu->addAction(resize);
             menu->popup(this->viewport()->mapToGlobal(point));

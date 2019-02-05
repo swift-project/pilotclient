@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircraftcategorylist.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QTreeView>
 #include <QObject>
@@ -46,11 +47,11 @@ namespace BlackGui
             //! Clear
             void clear();
 
-            //! Set columns
-            void setColumns(const Models::CColumns &columns);
-
             //! Resize all columns
             void fullResizeToContents();
+
+            //! Set columns
+            void setColumns(const Models::CColumns &columns);
 
             //! Empty data
             bool isEmpty() const;
@@ -61,6 +62,9 @@ namespace BlackGui
 
             //! Used model
             BlackGui::Models::CAircraftCategoryTreeModel *categoryModel();
+
+            //! Resize all columns
+            void fullResizeToContentsImpl();
 
             //! The selected object
             BlackMisc::Aviation::CAircraftCategory selectedObject() const;
@@ -73,6 +77,8 @@ namespace BlackGui
 
             //! Custom menu
             void customMenu(const QPoint &point);
+
+            BlackMisc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl, 1000, 25 };
         };
     } // ns
 } // ns
