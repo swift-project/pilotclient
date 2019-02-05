@@ -104,6 +104,7 @@ namespace BlackMisc
                         }
                         else
                         {
+                            m_loadingMessages.freezeOrder();
                             emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
                         }
                     });
@@ -116,6 +117,7 @@ namespace BlackMisc
                     m_parsedCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
                     const CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
                     m_loadingMessages = msgs;
+                    m_loadingMessages.freezeOrder();
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {

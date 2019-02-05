@@ -127,6 +127,7 @@ namespace BlackMisc
                     m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
                     {
                         this->updateInstalledModels(models);
+                        m_loadingMessages.freezeOrder();
                         emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
                     });
                 }

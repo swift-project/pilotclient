@@ -144,6 +144,7 @@ namespace BlackMisc
                                               u"Empty or not existing '%1' directory '%2', skipping read")
                                               << simulator.toQString() << modelDirectories.join(", ");
                 m_loadingMessages.push_back(status);
+                m_loadingMessages.freezeOrder();
                 emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
                 return;
             }
