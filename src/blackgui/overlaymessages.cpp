@@ -170,22 +170,18 @@ namespace BlackGui
             return;
         }
 
-        //! \fixme KB 2017-09 a possible alternative maybe is to resize rows always to content -> performance?
+        CStatusMessageList newMsgs(messages);
         if (appendOldMessages && !ui->tvp_StatusMessages->isEmpty())
         {
-            CStatusMessageList messagesWithOld(messages);
-            messagesWithOld.push_back(ui->tvp_StatusMessages->container());
-            ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(messages.size());
-            ui->tvp_StatusMessages->updateContainerMaybeAsync(messagesWithOld);
-            this->setModeToMessages(messagesWithOld.hasErrorMessages());
+            newMsgs.push_back(ui->tvp_StatusMessages->container());
         }
-        else
-        {
-            ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(messages.size());
-            ui->tvp_StatusMessages->updateContainerMaybeAsync(messages);
-            this->setModeToMessages(messages.hasErrorMessages());
-        }
-        this->showKill(false);
+
+        //! \fixme KB 2017-09 a possible alternative maybe is to resize rows always to content -> performance?
+        ui->tvp_StatusMessages->adjustOrderColumn(newMsgs);
+        ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(newMsgs.size());
+        ui->tvp_StatusMessages->updateContainerMaybeAsync(newMsgs);
+
+        this->setModeToMessages(false);
         this->display(timeOutMs);
     }
 

@@ -56,6 +56,12 @@ namespace BlackGui
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
+            //! Currently sorted by timestamp or by order
+            bool isSortedByTimestampOrOrder() const;
+
+            //! Sorted by timestamp or order
+            static bool sortedByTimestampOrOrder(const BlackMisc::CPropertyIndex &p);
+
         private:
             Mode m_mode; //!< used mode
         };

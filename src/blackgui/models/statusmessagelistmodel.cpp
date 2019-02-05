@@ -25,9 +25,10 @@ namespace BlackGui
         CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
             CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
         {
-            this->setMode(Detailed);
+            this->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
             m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
             m_sortTieBreakers.push_front(CStatusMessage::IndexSeverity);
+            this->setMode(Detailed);
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
@@ -57,18 +58,30 @@ namespace BlackGui
             this->setMode(m_mode, messages);
         }
 
+        bool CStatusMessageListModel::isSortedByTimestampOrOrder() const
+        {
+            const CPropertyIndex p = this->getSortProperty();
+            return sortedByTimestampOrOrder(p);
+        }
+
+        bool CStatusMessageListModel::sortedByTimestampOrOrder(const CPropertyIndex &p)
+        {
+            if (p.isEmpty()) { return false; }
+            const int last = p.indexVector().last();
+            return IOrderable::isAnyOrderIndex(last) || ITimestampBased::isAnyTimestampIndex(last);
+        }
+
         void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
         {
+            const Qt::SortOrder  oldOrder = this->getSortOrder();
+            const CPropertyIndex oldIndex = this->getSortProperty();
             m_columns.clear();
-            m_sortColumn = CStatusMessage::IndexUtcTimestamp;
             m_mode = mode;
 
             switch (mode)
             {
             case DetailedWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                m_sortColumn = CStatusMessage::IndexOrder;
-                m_sortOrder = Qt::DescendingOrder;
                 Q_FALLTHROUGH();
             case Detailed:
                 {
@@ -82,7 +95,6 @@ namespace BlackGui
                 break;
             case SimplifiedWithOrder:
                 m_columns.addColumn(CColumn::orderColumn());
-                m_sortColumn = CStatusMessage::IndexOrder;
                 Q_FALLTHROUGH();
             case Simplified:
                 {
@@ -93,6 +105,24 @@ namespace BlackGui
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
                 }
                 break;
+            }
+
+            // sorting
+            if (CStatusMessageListModel::sortedByTimestampOrOrder(oldIndex))
+            {
+                if (mode == DetailedWithOrder || mode == SimplifiedWithOrder)
+                {
+                    this->setSorting(CStatusMessage::IndexOrder, oldOrder);
+                }
+                else
+                {
+                    this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder);
+                }
+            }
+            else
+            {
+                // restore sorting
+                this->setSorting(oldIndex, oldOrder);
             }
         }
 
