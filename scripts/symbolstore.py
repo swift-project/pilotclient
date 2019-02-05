@@ -312,12 +312,6 @@ class Dumper:
                             # FILE index filename
                             (x, index, filename) = line.rstrip().split(None, 2)
                             filename = os.path.normpath(self.fix_filename_case(filename))
-                            # We want original file paths for the source server.
-                            sourcepath = filename
-                            # gather up files with hg for indexing
-                            if filename.startswith("hg"):
-                                (ver, checkout, source_file, revision) = filename.split(":", 3)
-                                source_file_stream += sourcepath + "*" + source_file + '*' + revision + "\r\n"
                             f.write("FILE %s %s\n" % (index, filename))
                         elif line.startswith("INFO CODE_ID "):
                             # INFO CODE_ID code_id code_file
@@ -379,8 +373,8 @@ class DumperWin32(Dumper):
         result = file_name
 
         ctypes.windll.kernel32.SetErrorMode(ctypes.c_uint(1))
-        if not isinstance(file_name, unicode):
-            file_name = unicode(file_name, sys.getfilesystemencoding())
+        if not isinstance(file_name, str):
+            file_name = file_name.decode(sys.getfilesystemencoding())
         handle = ctypes.windll.kernel32.CreateFileW(file_name,
                                                     # GENERIC_READ
                                                     0x80000000,

@@ -38,7 +38,7 @@ def get_environment_from_batch_command(env_cmd, initial=None):
     # Construct the command that will alter the environment.
     env_cmd = subprocess.list2cmdline(env_cmd)
     # Create a tag so we can tell in the output when the proc is done.
-    tag = 'END OF BATCH COMMAND'
+    tag = b'END OF BATCH COMMAND'
     # Construct a cmd.exe command to do accomplish this.
     cmd = 'cmd.exe /s /c "{env_cmd} && echo "{tag}" && set"'.format(**vars())
     # Launch the process.
@@ -48,7 +48,7 @@ def get_environment_from_batch_command(env_cmd, initial=None):
     # Consume whatever output occurs until the tag is reached.
     consume(itertools.takewhile(lambda l: tag not in l, lines))
     # Define a way to handle each KEY=VALUE line.
-    handle_line = lambda l: l.rstrip().split('=', 1)
+    handle_line = lambda l: l.decode('utf-8').rstrip().split('=', 1)
     # Parse key/values into pairs.
     pairs = map(handle_line, lines)
     # Make sure the pairs are valid.
