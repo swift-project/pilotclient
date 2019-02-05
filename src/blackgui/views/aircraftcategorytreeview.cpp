@@ -39,7 +39,7 @@ namespace BlackGui
         {
             if (!this->categoryModel()) { return; }
             this->categoryModel()->updateContainer(categories);
-            this->expandAll();
+            if (!this->isEmpty()) { this->expandAll(); }
         }
 
         void CAircraftCategoryTreeView::clear()
@@ -55,10 +55,16 @@ namespace BlackGui
 
         void CAircraftCategoryTreeView::fullResizeToContents()
         {
-            for (int c = 0; c < this->model()->columnCount(); c++)
+            if (this->isEmpty()) { return; }
+            for (int c = 0; c < this->categoryModel()->columnCount(); c++)
             {
                 this->resizeColumnToContents(c);
             }
+        }
+
+        bool CAircraftCategoryTreeView::isEmpty() const
+        {
+            return this->categoryModel()->rowCount() < 1;
         }
 
         const CAircraftCategoryTreeModel *CAircraftCategoryTreeView::categoryModel() const

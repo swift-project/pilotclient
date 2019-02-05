@@ -52,6 +52,9 @@ namespace BlackGui
             //! Resize all columns
             void fullResizeToContents();
 
+            //! Empty data
+            bool isEmpty() const;
+
         private:
             //! Used model
             const Models::CAircraftCategoryTreeModel *categoryModel() const;
