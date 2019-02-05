@@ -43,11 +43,14 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CStatusMessageListModel::adjustOrderColumn
             void adjustOrderColumn(const BlackMisc::CStatusMessageList &messages);
 
-            //! Add my own filter dialog
-            void addFilterDialog();
+            //! \copydoc BlackGui::Models::CStatusMessageListModel::isSortedByTimestampOrOrder
+            bool isSortedByTimestampOrOrder() const;
 
             //! \copydoc BlackMisc::CStatusMessageList::keepLatest
             void keepLatest(int desiredSize);
+
+            //! Add my own filter dialog
+            void addFilterDialog();
 
             //! Filter dialog if any
             Filters::CStatusMessageFilterDialog *getFilterDialog() const;

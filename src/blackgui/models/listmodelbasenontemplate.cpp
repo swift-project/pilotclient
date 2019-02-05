@@ -116,6 +116,12 @@ namespace BlackGui
             return changedColumn || changedOrder;
         }
 
+        CPropertyIndex CListModelBaseNonTemplate::getSortProperty() const
+        {
+            if (!this->hasValidSortColumn()) { return CPropertyIndex::empty(); }
+            return m_columns.at(m_sortColumn).getPropertyIndex();
+        }
+
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
             if (!(m_sortColumn >= 0 && m_sortColumn < m_columns.size())) { return false; }

@@ -90,6 +90,9 @@ namespace BlackGui
             //! Get sort column property index
             virtual int getSortColumn() const { return m_sortColumn; }
 
+            //! Sorted by property
+            BlackMisc::CPropertyIndex getSortProperty() const;
+
             //! Has valid sort column?
             virtual bool hasValidSortColumn() const;
 

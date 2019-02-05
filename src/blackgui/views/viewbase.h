@@ -177,6 +177,18 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setNoSorting
             virtual void setNoSorting() = 0;
 
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortProperty
+            virtual BlackMisc::CPropertyIndex getSortProperty() const = 0;
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortColumn
+            virtual int getSortColumn() const = 0;
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::hasValidSortColumn
+            virtual bool hasValidSortColumn() const = 0;
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortOrder
+            virtual Qt::SortOrder getSortOrder() const = 0;
+
             //! Allow to drag and/or drop value objects
             virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) = 0;
 
@@ -719,6 +731,10 @@ namespace BlackGui
             virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void setNoSorting() override { m_model->setNoSorting(); }
+            virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
+            virtual int getSortColumn() const override { return m_model->getSortColumn(); }
+            virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
+            virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
 
             //! Column count

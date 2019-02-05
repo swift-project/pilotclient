@@ -43,6 +43,11 @@ namespace BlackGui
             this->derivedModel()->adjustOrderColumn(messages);
         }
 
+        bool CStatusMessageView::isSortedByTimestampOrOrder() const
+        {
+            return this->derivedModel()->isSortedByTimestampOrOrder();
+        }
+
         void CStatusMessageView::addFilterDialog()
         {
             if (this->getFilterDialog()) { return; } // already existing
