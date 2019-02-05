@@ -47,11 +47,8 @@ namespace BlackGui
 
         void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
         {
-            if (stations.isEmpty())
-            {
-                CAtcStationTreeModel::clear();
-                return;
-            }
+            this->clear();
+            if (stations.isEmpty()) { return; }
 
             m_stations = stations.sortedByAtcSuffixSortOrderAndDistance();
             m_stationsBySuffix = m_stations.splitPerSuffix();

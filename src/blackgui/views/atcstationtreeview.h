@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/pq/frequency.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QTreeView>
 #include <QList>
@@ -52,6 +53,9 @@ namespace BlackGui
             //! Clear
             void clear();
 
+            //! Empty
+            bool isEmpty() const;
+
             //! Set columns
             void setColumns(const Models::CColumns &columns);
 
@@ -74,6 +78,9 @@ namespace BlackGui
 
             //! Used model
             Models::CAtcStationTreeModel *stationModel();
+
+            //! Resize all columns
+            void fullResizeToContentsImpl();
 
             //! The selected object
             BlackMisc::Aviation::CAtcStation selectedObject() const;
@@ -99,6 +106,7 @@ namespace BlackGui
             void requestTextMessage();
             //! @}
 
+            BlackMisc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000, 25 };
             QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
     } // ns

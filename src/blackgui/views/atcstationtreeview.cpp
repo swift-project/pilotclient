@@ -57,6 +57,11 @@ namespace BlackGui
             this->stationModel()->clear();
         }
 
+        bool CAtcStationTreeView::isEmpty() const
+        {
+            return this->stationModel()->rowCount() < 1;
+        }
+
         void CAtcStationTreeView::setColumns(const CColumns &columns)
         {
             if (this->stationModel()) { this->stationModel()->setColumns(columns); }
@@ -64,6 +69,12 @@ namespace BlackGui
 
         void CAtcStationTreeView::fullResizeToContents()
         {
+            m_dsFullResize.inputSignal();
+        }
+
+        void CAtcStationTreeView::fullResizeToContentsImpl()
+        {
+            if (this->isEmpty()) { return; }
             for (int c = 0; c < this->model()->columnCount(); c++)
             {
                 this->resizeColumnToContents(c);
@@ -83,8 +94,7 @@ namespace BlackGui
         CAtcStation CAtcStationTreeView::selectedObject() const
         {
             const QModelIndex index = this->currentIndex();
-            // Qt 5.11 or later const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
-            const QVariant data = this->model()->data(index.sibling(index.row(), 0)); // supposed to be the callsign
+            const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
             const QString callsign = data.toString();
             const CAtcStationTreeModel *model = this->stationModel();
             if (!model) { return CAtcStation(); }
@@ -118,7 +128,7 @@ namespace BlackGui
             connect(com1, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom1);
             connect(com2, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom2);
             connect(text, &QAction::triggered, this, &CAtcStationTreeView::requestTextMessage);
-            connect(resize, &QAction::triggered, this, &CAtcStationTreeView::fullResizeToContents);
+            connect(resize, &QAction::triggered, this, &CAtcStationTreeView::fullResizeToContentsImpl);
 
             menu->addAction(com1);
             menu->addAction(com2);
