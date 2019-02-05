@@ -133,6 +133,9 @@ namespace BlackMisc
         //! Valid timestamp?
         bool hasValidTimestamp() const;
 
+        //! Any of the timestamp indexes
+        static bool isAnyTimestampIndex(int index);
+
     protected:
         //! Can given index be handled
         static bool canHandleIndex(const CPropertyIndex &index);

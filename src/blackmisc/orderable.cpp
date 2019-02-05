@@ -34,11 +34,16 @@ namespace BlackMisc
         return this->getOrder() >= 0;
     }
 
+    bool IOrderable::isAnyOrderIndex(int index)
+    {
+        return (index >= static_cast<int>(IndexOrder)) && (index <= static_cast<int>(IndexOrderString));
+    }
+
     bool IOrderable::canHandleIndex(const CPropertyIndex &index)
     {
         if (index.isEmpty()) { return false; }
         const int i = index.frontCasted<int>();
-        return (i >= static_cast<int>(IndexOrder)) && (i <= static_cast<int>(IndexOrderString));
+        return isAnyOrderIndex(i);
     }
 
     CVariant IOrderable::propertyByIndex(const CPropertyIndex &index) const

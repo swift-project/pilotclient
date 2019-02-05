@@ -175,11 +175,16 @@ namespace BlackMisc
         return m_timestampMSecsSinceEpoch >= 0;
     }
 
+    bool ITimestampBased::isAnyTimestampIndex(int index)
+    {
+        return (index >= static_cast<int>(IndexUtcTimestamp)) && (index <= static_cast<int>(IndexMSecsSinceEpoch));
+    }
+
     bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
     {
         if (index.isEmpty()) { return false; }
         const int i = index.frontCasted<int>();
-        return (i >= static_cast<int>(IndexUtcTimestamp)) && (i <= static_cast<int>(IndexMSecsSinceEpoch));
+        return isAnyTimestampIndex(i);
     }
 
     CVariant ITimestampBased::propertyByIndex(const CPropertyIndex &index) const
@@ -189,15 +194,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexUtcTimestamp: return CVariant::fromValue(this->getUtcTimestamp());
-            case IndexMSecsSinceEpoch: return CVariant::fromValue(this->getMSecsSinceEpoch());
-            case IndexUtcTimestampFormattedDhms: return CVariant::fromValue(this->getFormattedUtcTimestampDhms());
-            case IndexUtcTimestampFormattedHm: return CVariant::fromValue(this->getFormattedUtcTimestampHm());
-            case IndexUtcTimestampFormattedHms: return CVariant::fromValue(this->getFormattedUtcTimestampHms());
-            case IndexUtcTimestampFormattedYmdhms: return CVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
+            case IndexUtcTimestamp:                 return CVariant::fromValue(this->getUtcTimestamp());
+            case IndexMSecsSinceEpoch:              return CVariant::fromValue(this->getMSecsSinceEpoch());
+            case IndexUtcTimestampFormattedDhms:    return CVariant::fromValue(this->getFormattedUtcTimestampDhms());
+            case IndexUtcTimestampFormattedHm:      return CVariant::fromValue(this->getFormattedUtcTimestampHm());
+            case IndexUtcTimestampFormattedHms:     return CVariant::fromValue(this->getFormattedUtcTimestampHms());
+            case IndexUtcTimestampFormattedYmdhms:  return CVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
             case IndexUtcTimestampFormattedYmdhmsz: return CVariant::fromValue(this->getFormattedUtcTimestampYmdhmsz());
-            case IndexUtcTimestampFormattedMdhms: return CVariant::fromValue(this->getFormattedUtcTimestampMdhms());
-            case IndexUtcTimestampFormattedMdhmsz: return CVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
+            case IndexUtcTimestampFormattedMdhms:   return CVariant::fromValue(this->getFormattedUtcTimestampMdhms());
+            case IndexUtcTimestampFormattedMdhmsz:  return CVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
             default: break;
             }
         }

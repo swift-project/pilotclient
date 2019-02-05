@@ -43,10 +43,13 @@ namespace BlackMisc
         //! Valid order set?
         bool hasValidOrder() const;
 
+        //! Any order index
+        static bool isAnyOrderIndex(int index);
+
+    protected:
         //! Can given index be handled
         static bool canHandleIndex(const CPropertyIndex &index);
 
-    protected:
         //! Constructor
         IOrderable();
 
