@@ -719,6 +719,7 @@ namespace BlackCore
         const QFileInfo fi(saveAsFileName);
         if (!fi.dir().exists()) { return nullptr; }
 
+        // function called with reply when done
         CallbackSlot callbackSlot([ = ](QNetworkReply * reply)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
@@ -731,7 +732,7 @@ namespace BlackCore
             {
                 const bool ok = CFileUtils::writeByteArrayToFile(reply->readAll(), saveAsFileName);
                 msg = ok ?
-                      CStatusMessage(this, CStatusMessage::SeverityInfo, u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
+                      CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
                       CStatusMessage(this, CStatusMessage::SeverityError, u"Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
             }
             nwReply->close();
@@ -1803,7 +1804,7 @@ namespace BlackCore
                 // called when there are no more callbacks
                 callback(reply);
 
-            }, Qt::QueuedConnection);
+            }, Qt::QueuedConnection); // called in callback thread
         }
         return reply;
     }

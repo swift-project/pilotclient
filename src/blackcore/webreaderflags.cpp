@@ -16,8 +16,9 @@ namespace BlackCore
     CWebReaderFlags::WebReader CWebReaderFlags::entitiesToReaders(CEntityFlags::Entity entities)
     {
         WebReader f = None;
-        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) || entities.testFlag(CEntityFlags::AirlineIcaoEntity) ||
-                entities.testFlag(CEntityFlags::CountryEntity) || entities.testFlag(CEntityFlags::AircraftCategoryEntity))
+        if (
+            entities.testFlag(CEntityFlags::AircraftIcaoEntity) || entities.testFlag(CEntityFlags::AirlineIcaoEntity) ||
+            entities.testFlag(CEntityFlags::CountryEntity) || entities.testFlag(CEntityFlags::AircraftCategoryEntity))
         {
             f |= IcaoDataReader;
         }

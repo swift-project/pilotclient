@@ -205,8 +205,8 @@ namespace BlackCore
 
         CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
         {
-            if (m_mode == CDbFlags::DbReading) return CEntityFlags::DbInfoObjectEntity;
-            if (m_mode == CDbFlags::Shared)    return CEntityFlags::SharedInfoObjectEntity;
+            if (m_mode == CDbFlags::DbReading) { return CEntityFlags::DbInfoObjectEntity; }
+            if (m_mode == CDbFlags::Shared)    { return CEntityFlags::SharedInfoObjectEntity; }
             qFatal("Wrong mode");
             return CEntityFlags::NoEntity;
         }
