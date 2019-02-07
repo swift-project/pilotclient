@@ -54,13 +54,20 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
 
-            connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
-            connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this, &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished,    this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingProgress,    this, &CDbOwnModelsComponent::onModelLoadingProgress, Qt::QueuedConnection);
-            connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged,       this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
+            bool c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this, &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingProgress, this, &CDbOwnModelsComponent::onModelLoadingProgress, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
@@ -612,15 +619,16 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::onModelLoadingProgress(const CSimulatorInfo &simulator, const QString &message, int progress)
         {
-            CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2") << simulator.toQString(true) << message;
+            const CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2") << simulator.toQString(true) << message;
             this->showOverlayHTMLMessage(loadingMsg, 5000);
+            ui->tvp_OwnAircraftModels->showLoadIndicatorWithTimeout(5000); // trigger new load indicator
             Q_UNUSED(progress);
         }
 
         void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
-            if (statusMessages.isSuccess() && m_modelLoader)
+            if (IAircraftModelLoader::isLoadedInfo(info) && m_modelLoader)
             {
                 const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
                 const int modelsLoaded = models.size();
@@ -645,16 +653,28 @@ namespace BlackGui
                 // signal
                 emit this->successfullyLoadedModels(simulator, modelsLoaded);
             }
+            else if (info == IAircraftModelLoader::LoadingSkipped)
+            {
+                CLogMessage(this).error(u"Loading of models skipped, simulator '%1'") << simulator.toQString();
+            }
             else
             {
                 ui->tvp_OwnAircraftModels->clear();
                 CLogMessage(this).error(u"Loading of models failed, simulator '%1'") << simulator.toQString();
             }
 
-            if (statusMessages.hasWarningOrErrorMessages())
+            // with errors we make sure errors are on top
+            int timeoutMs = -1;
+            if (statusMessages.hasErrorMessages())
             {
-                this->showOverlayMessages(statusMessages);
+                this->setOverlayMessagesSorting(CStatusMessage::IndexSeverityAsIcon, Qt::DescendingOrder);
             }
+            else if (!statusMessages.hasWarningOrErrorMessages())
+            {
+                // no issues
+                timeoutMs = 5000;
+            }
+            this->showOverlayMessages(statusMessages, false, timeoutMs);
 
             // cache loads may occur in background, do not adjust UI settings
             if (info == IAircraftModelLoader::CacheLoaded) { return; }
