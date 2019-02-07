@@ -154,6 +154,18 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
+        //! \copydoc BlackGui::COverlayMessages::sortOverlayMessages
+        void sortOverlayMessages(const BlackMisc::CPropertyIndex &property, Qt::SortOrder order)
+        {
+            m_overlayMessages->sortOverlayMessages(property, order);
+        }
+
+        //! \copydoc BlackGui::COverlayMessages::setOverlayMessagesSorting
+        void setOverlayMessagesSorting(const BlackMisc::CPropertyIndex &property, Qt::SortOrder order)
+        {
+            m_overlayMessages->setOverlayMessagesSorting(property, order);
+        }
+
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessage
         void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
         {

@@ -105,6 +105,9 @@ namespace BlackGui
         //! Sort of overlay messages
         void sortOverlayMessages(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
+        //! Set sorting of overlay messages
+        void setOverlayMessagesSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+
         //! Show single message
         void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
