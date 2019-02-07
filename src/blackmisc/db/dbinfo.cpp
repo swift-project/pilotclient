@@ -142,7 +142,7 @@ namespace BlackMisc
 
         const QStringList &CDbInfo::sharedFileNames()
         {
-            static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategory.json" });
+            static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategories.json" });
             return names;
         }
 
