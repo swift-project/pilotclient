@@ -786,7 +786,7 @@ namespace BlackGui
         }
 
         template <class T>
-        CStatusMessage CViewBase<T>::ps_loadJson(const QString &directory)
+        CStatusMessage CViewBase<T>::loadJson(const QString &directory)
         {
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
                                      tr("Load data file"),
@@ -796,7 +796,7 @@ namespace BlackGui
         }
 
         template <class T>
-        CStatusMessage CViewBase<T>::ps_saveJson(bool selectedOnly, const QString &directory)
+        CStatusMessage CViewBase<T>::saveJson(bool selectedOnly, const QString &directory)
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
                                      tr("Save data file"),
@@ -899,27 +899,27 @@ namespace BlackGui
         }
 
         template <class T>
-        void CViewBase<T>::ps_clicked(const QModelIndex &index)
+        void CViewBase<T>::onClicked(const QModelIndex &index)
         {
             if (!m_acceptClickSelection) { return; }
             if (!index.isValid()) { return; }
-            emit objectClicked(CVariant::fromValue(at(index)));
+            emit this->objectClicked(CVariant::fromValue(at(index)));
         }
 
         template <class T>
-        void CViewBase<T>::ps_doubleClicked(const QModelIndex &index)
+        void CViewBase<T>::onDoubleClicked(const QModelIndex &index)
         {
             if (!m_acceptDoubleClickSelection) { return; }
             if (!index.isValid()) { return; }
-            emit objectDoubleClicked(CVariant::fromValue(at(index)));
+            emit this->objectDoubleClicked(CVariant::fromValue(at(index)));
         }
 
         template <class T>
-        void CViewBase<T>::ps_rowSelected(const QModelIndex &index)
+        void CViewBase<T>::onRowSelected(const QModelIndex &index)
         {
             if (!m_acceptRowSelection) { return; }
             if (!index.isValid()) { return; }
-            emit objectSelected(CVariant::fromValue(at(index)));
+            emit this->objectSelected(CVariant::fromValue(at(index)));
         }
     } // namespace
 } // namespace

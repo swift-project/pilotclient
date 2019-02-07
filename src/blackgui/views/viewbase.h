@@ -517,6 +517,21 @@ namespace BlackGui
             virtual void paste() = 0;
             //! @}
 
+            //! Index clicked
+            virtual void onClicked(const QModelIndex &index) = 0;
+
+            //! Index double clicked
+            virtual void onDoubleClicked(const QModelIndex &index) = 0;
+
+            //! Row selected
+            virtual void onRowSelected(const QModelIndex &index) = 0;
+
+            //! Load JSON
+            virtual BlackMisc::CStatusMessage loadJson(const QString &directory = {}) = 0;
+
+            //! Save JSON
+            virtual BlackMisc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
+
             //! Trigger reload from backend by signal requestUpdate();
             void triggerReload();
 
@@ -565,28 +580,6 @@ namespace BlackGui
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
-        protected slots:
-            //! Index clicked
-            virtual void ps_clicked(const QModelIndex &index) = 0;
-
-            //! Index double clicked
-            virtual void ps_doubleClicked(const QModelIndex &index) = 0;
-
-            //! Row selected
-            virtual void ps_rowSelected(const QModelIndex &index) = 0;
-
-            //! Load JSON
-            virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) = 0;
-
-            //! Save JSON
-            virtual BlackMisc::CStatusMessage ps_saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
-
-            // ------------ slots of CViewDbObjects ----------------
-            // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
-
-            //! Highlight DB data
-            virtual void ps_toggleHighlightDbData() {}
-
         private:
             //! Remove selected rows if enabled
             void removeSelectedRowsChecked();
@@ -597,8 +590,8 @@ namespace BlackGui
             //! Custom menu was requested
             void customMenuRequested(const QPoint &pos);
 
-            //! Indicator has been updated
-            void updatedIndicator();
+            //! Indicator timed out
+            void onLoadIndicatorTimedOut();
 
             //! Toggle the resize mode
             void toggleResizeMode(bool checked);
@@ -820,15 +813,13 @@ namespace BlackGui
             //! Display the container as JSON popup
             virtual void displayContainerAsJsonPopup(bool selectedOnly);
 
-            // --------------------------------------------- SLOTS start here -----------------------------------------
-
-            //! \name Slot overrides from base class
+            //! \name Overrides from base class
             //! @{
-            virtual void ps_clicked(const QModelIndex &index) override;
-            virtual void ps_doubleClicked(const QModelIndex &index) override;
-            virtual void ps_rowSelected(const QModelIndex &index) override;
-            virtual BlackMisc::CStatusMessage ps_loadJson(const QString &directory = {}) override;
-            virtual BlackMisc::CStatusMessage ps_saveJson(bool selectedOnly = false, const QString &directory = {}) override;
+            virtual void onClicked(const QModelIndex &index) override;
+            virtual void onDoubleClicked(const QModelIndex &index) override;
+            virtual void onRowSelected(const QModelIndex &index) override;
+            virtual BlackMisc::CStatusMessage loadJson(const QString &directory = {}) override;
+            virtual BlackMisc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };
     } // namespace

@@ -43,8 +43,8 @@ namespace BlackGui
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::customMenuRequested);
-            connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
-            connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::ps_doubleClicked);
+            connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::onClicked);
+            connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::onDoubleClicked);
             this->horizontalHeader()->setSortIndicatorShown(true);
 
             // setting resize mode rowsResizeModeToContent() causes extremly slow views
@@ -166,7 +166,7 @@ namespace BlackGui
             QTableView::setSelectionModel(model);
             if (this->selectionModel())
             {
-                connect(this->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &CViewBaseNonTemplate::ps_rowSelected);
+                connect(this->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &CViewBaseNonTemplate::onRowSelected);
             }
         }
 
@@ -177,12 +177,12 @@ namespace BlackGui
 
         CStatusMessage CViewBaseNonTemplate::showFileLoadDialog(const QString &directory)
         {
-            return this->ps_loadJson(directory);
+            return this->loadJson(directory);
         }
 
         CStatusMessage CViewBaseNonTemplate::showFileSaveDialog(bool selectedOnly, const QString &directory)
         {
-            return this->ps_saveJson(selectedOnly, directory);
+            return this->saveJson(selectedOnly, directory);
         }
 
         void CViewBaseNonTemplate::setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode)
@@ -616,7 +616,7 @@ namespace BlackGui
         void CViewBaseNonTemplate::loadJsonAction()
         {
             if (!m_menus.testFlag(MenuLoad)) { return; }
-            const CStatusMessage m = this->ps_loadJson();
+            const CStatusMessage m = this->loadJson();
             if (!m.isEmpty())
             {
                 CLogMessage::preformatted(m);
@@ -627,7 +627,7 @@ namespace BlackGui
         {
             if (this->isEmpty()) { return; }
             if (!m_menus.testFlag(MenuSave)) { return; }
-            const CStatusMessage m = this->ps_saveJson(false);
+            const CStatusMessage m = this->saveJson(false);
             if (!m.isEmpty())
             {
                 CLogMessage::preformatted(m);
@@ -638,7 +638,7 @@ namespace BlackGui
         {
             if (this->isEmpty()) { return; }
             if (!m_menus.testFlag(MenuSave)) { return; }
-            const CStatusMessage m = this->ps_saveJson(true);
+            const CStatusMessage m = this->saveJson(true);
             if (!m.isEmpty())
             {
                 CLogMessage::preformatted(m);
@@ -712,6 +712,7 @@ namespace BlackGui
             if (!m_loadIndicator)
             {
                 m_loadIndicator = new CLoadIndicator(64, 64, this);
+                connect(m_loadIndicator, &CLoadIndicator::timedOut, this, &CViewBaseNonTemplate::onLoadIndicatorTimedOut);
             }
             this->centerLoadIndicator();
             return m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : m_loadIndicatorTimeoutMsDefault, processEvents);
@@ -808,6 +809,11 @@ namespace BlackGui
             menu.exec(globalPos);
         }
 
+        void CViewBaseNonTemplate::onLoadIndicatorTimedOut()
+        {
+            m_showingLoadIndicator = false;
+        }
+
         void CViewBaseNonTemplate::toggleResizeMode(bool checked)
         {
             m_resizeMode = checked ? ResizingAuto : ResizingOff;
@@ -846,11 +852,6 @@ namespace BlackGui
         {
             if (!m_enableDeleteSelectedRows) { return; }
             this->removeSelectedRows();
-        }
-
-        void CViewBaseNonTemplate::updatedIndicator()
-        {
-            this->update();
         }
 
         void CViewBaseNonTemplate::dragEnterEvent(QDragEnterEvent *event)
