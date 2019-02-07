@@ -117,6 +117,7 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     emit this->diskLoadingStarted(simulator, mode);
+
                     m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                                        [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
@@ -147,7 +148,8 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setModelsForSimulator(models, CSimulatorInfo::xplane());
-                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models") << models.size(), CSimulatorInfo::xplane(), ParsedData);
+                const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models") << models.size();
+                m_loadingMessages.push_back(m);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
@@ -216,6 +218,7 @@ namespace BlackMisc
 
                     const QString baseModelString = model.getModelString();
                     QDirIterator liveryIt(aircraftIt.fileInfo().canonicalPath() + "/liveries", QDir::Dirs | QDir::NoDotAndDotDot);
+                    emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable liveries in '%1'").arg(aircraftIt.fileInfo().canonicalPath()), -1);
                     while (liveryIt.hasNext())
                     {
                         liveryIt.next();
@@ -258,10 +261,8 @@ namespace BlackMisc
                 // Now we do a full run
                 for (auto &package : m_cslPackages)
                 {
-                    QString packageFile(package.path);
-                    packageFile += "/xsb_aircraft.txt";
-
-                    emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing '%1'").arg(packageFile), -1);
+                    const QString packageFile = CFileUtils::appendFilePaths(package.path, "/xsb_aircraft.txt");
+                    emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing CSL '%1'").arg(packageFile), -1);
 
                     QFile file(packageFile);
                     file.open(QIODevice::ReadOnly);

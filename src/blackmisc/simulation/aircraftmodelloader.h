@@ -71,10 +71,17 @@ namespace BlackMisc
             //! Load mode
             enum LoadFinishedInfo
             {
-                CacheLoaded,   //!< cache was loaded
-                ParsedData,    //!< parsed data
-                LoadingSkipped //!< Loading skipped (empty directory)
+                CacheLoaded,    //!< cache was loaded
+                ParsedData,     //!< parsed data
+                LoadingSkipped, //!< loading skipped (empty directory)
+                LoadingFailed   //!< loading failed
             };
+
+            //! Loaded info
+            static bool isLoadedInfo(LoadFinishedInfo info)
+            {
+                return info == CacheLoaded || info == ParsedData;
+            }
 
             //! Enum as string
             static const QString &enumToString(LoadFinishedInfo info);
