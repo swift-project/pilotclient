@@ -146,23 +146,23 @@ namespace BlackGui
         // painter.setBrush(QBrush(QColor(0, 0, 255)));
         // painter.drawEllipse(0, 0, width, width);
 
-        int outerRadius = (width - 1) * 0.5;
-        int innerRadius = (width - 1) * 0.5 * 0.38;
+        int outerRadius = qRound((width - 1) * 0.5);
+        int innerRadius = qRound((width - 1) * 0.5 * 0.38);
 
         int capsuleHeight = outerRadius - innerRadius;
-        int capsuleWidth  = (width > 32) ? capsuleHeight * .23 : capsuleHeight * .35;
+        int capsuleWidth  = (width > 32) ? qRound(capsuleHeight * .23) : qRound(capsuleHeight * .35);
         int capsuleRadius = capsuleWidth / 2;
 
         for (int i = 0; i < 12; i++)
         {
             QColor color = m_color;
-            color.setAlphaF(1.0f - (i / 12.0f));
+            color.setAlphaF(qRound(1.0f - (i / 12.0f)));
             painter.setPen(Qt::NoPen);
             painter.setBrush(color);
             painter.save();
             painter.translate(rect().center());
-            painter.rotate(m_angle - i * 30.0f);
-            painter.drawRoundedRect(-capsuleWidth * 0.5, -(innerRadius + capsuleHeight), capsuleWidth, capsuleHeight, capsuleRadius, capsuleRadius);
+            painter.rotate(m_angle - qRound(i * 30.0f));
+            painter.drawRoundedRect(-qRound(capsuleWidth * 0.5), -(innerRadius + capsuleHeight), capsuleWidth, capsuleHeight, capsuleRadius, capsuleRadius);
             painter.restore();
         }
     }
@@ -197,8 +197,7 @@ namespace BlackGui
         if (!m_loadIndicator)
         {
             m_loadIndicator = new CLoadIndicator(64, 64, m_usingWidget);
-            QObject::connect(m_loadIndicator, &CLoadIndicator::timedOut,
-                             [this] { this->indicatorTimedOut(); });
+            QObject::connect(m_loadIndicator, &CLoadIndicator::timedOut, [this] { this->indicatorTimedOut(); });
         }
 
         this->centerLoadIndicator();

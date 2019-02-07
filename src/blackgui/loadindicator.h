@@ -133,6 +133,12 @@ namespace BlackGui
         //! Destructor
         virtual ~CLoadIndicatorEnabled() {}
 
+        //! Copy constructor
+        CLoadIndicatorEnabled(const CLoadIndicatorEnabled &) = delete;
+
+        //! Copy assignment operator
+        CLoadIndicatorEnabled &operator =(const CLoadIndicatorEnabled &) = delete;
+
         //! Showing load indicator?
         bool isShowingLoadIndicator() const;
 
@@ -153,10 +159,10 @@ namespace BlackGui
         //! \remark override for usage
         virtual void indicatorTimedOut();
 
-        QWidget *m_usingWidget = nullptr; //!< widget which uses load indicator
+        QWidget        *m_usingWidget = nullptr;   //!< widget which uses load indicator
         CLoadIndicator *m_loadIndicator = nullptr; //!< indicator itself
-        bool m_loadInProgress = false; //!< flag indicating loading
-        int m_indicatorId = -1; //!< last indicator id returned
+        bool            m_loadInProgress = false;  //!< flag indicating loading
+        int             m_indicatorId = -1;        //!< last indicator id returned
     };
 } // ns
 
