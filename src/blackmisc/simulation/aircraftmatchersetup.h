@@ -61,8 +61,8 @@ namespace BlackMisc
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
-                // ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverWhenNoModelCanBeLoaded,
-                ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverIfNoModelCanBeAdded,
+                ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
+                // ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverIfNoModelCanBeAdded,
                 ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
                 ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
                 ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault,
