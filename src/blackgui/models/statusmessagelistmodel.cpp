@@ -86,7 +86,7 @@ namespace BlackGui
             case Detailed:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                    CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
+                    CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
@@ -99,7 +99,7 @@ namespace BlackGui
             case Simplified:
                 {
                     m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                    CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
+                    CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));

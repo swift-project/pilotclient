@@ -315,6 +315,7 @@ namespace BlackMisc
             IndexCategoryHumanReadableOrTechnicalAsString,
             IndexSeverity,
             IndexSeverityAsString,
+            IndexSeverityAsIcon,
             IndexMessage,
             IndexMessageNoLineBreaks,
             IndexMessageAsHtml
@@ -464,10 +465,13 @@ namespace BlackMisc
         void setCategories(const CLogCategoryList &categories) { this->m_categories = categories; }
 
         //! Representing icon
-        CIcon toIcon() const { return convertToIcon(*this); }
+        const CIcon &toIcon() const { return convertToIcon(*this); }
 
         //! Severity as string
         const QString &getSeverityAsString() const;
+
+        //! Severity as icon
+        const CIcon &getSeverityAsIcon() const;
 
         //! Severity as string
         static const QString &severityToString(StatusSeverity severity);

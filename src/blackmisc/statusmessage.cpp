@@ -413,6 +413,11 @@ namespace BlackMisc
         return severityToString(m_severity);
     }
 
+    const CIcon &CStatusMessage::getSeverityAsIcon() const
+    {
+        return convertToIcon(m_severity);
+    }
+
     const QStringList &CStatusMessage::allSeverityStrings()
     {
         static const QStringList all { severityToString(SeverityDebug), severityToString(SeverityInfo), severityToString(SeverityWarning), severityToString(SeverityError) };
@@ -430,6 +435,7 @@ namespace BlackMisc
         case IndexMessage: return CVariant::from(this->getMessage());
         case IndexSeverity: return CVariant::from(m_severity);
         case IndexSeverityAsString: return CVariant::from(this->getSeverityAsString());
+        case IndexSeverityAsIcon: return CVariant::from(this->getSeverityAsIcon());
         case IndexCategoriesAsString: return CVariant::from(m_categories.toQString());
         case IndexCategoriesHumanReadableAsString: return CVariant::from(this->getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString: return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
@@ -467,8 +473,9 @@ namespace BlackMisc
         case IndexMessageAsHtml:
         case IndexMessage:
             return this->getMessage().compare(compareValue.getMessage());
+        case IndexSeverityAsString:
+        case IndexSeverityAsIcon:
         case IndexSeverity: return Compare::compare(this->getSeverity(), compareValue.getSeverity());
-        case IndexSeverityAsString: return this->getSeverityAsString().compare(compareValue.getSeverityAsString());
         case IndexCategoriesAsString: return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
         case IndexCategoriesHumanReadableAsString: return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString: return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
