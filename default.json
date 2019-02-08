@@ -26,7 +26,8 @@
         "xplane": true,
         "fg": true
     },
-    "profileRelease": true,
+    "releaseWithDebugInfo": true,
+    "profileRelease": false,
     "assertsInRelease": true,
     "allowNoisyWarnings": false,
     "packageInstaller": true,

@@ -54,9 +54,19 @@ include(wordsize.pri)
 contains(TEMPLATE, "vc.*"): QMAKE_CXXFLAGS *= /MP
 
 ################################
-# Profile build
+# Release build with debug info
 ################################
 
+swiftConfig(releaseWithDebugInfo):swiftConfig(profileRelease) {
+    error(releaseWithDebugInfo and profileRelease can not be enabled together,\
+          as they require different PDB formats.)
+}
+swiftConfig(releaseWithDebugInfo) {
+    msvc {
+        QMAKE_CXXFLAGS_RELEASE *= /Z7
+        QMAKE_LFLAGS_RELEASE *= /DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF
+    }
+}
 swiftConfig(profileRelease) {
     msvc {
         QMAKE_CXXFLAGS_RELEASE *= /Zi
