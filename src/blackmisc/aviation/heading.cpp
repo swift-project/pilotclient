@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/aviation/heading.h"
-
 #include <QCoreApplication>
 
 using BlackMisc::PhysicalQuantities::CAngle;
@@ -22,11 +21,19 @@ namespace BlackMisc
         {
             return i18n ?
                    QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
-                         this->isMagneticHeading() ?
-                         QCoreApplication::translate("Aviation", "magnetic") :
-                         QCoreApplication::translate("Aviation", "true")) :
+                                               this->isMagneticHeading() ?
+                                               QCoreApplication::translate("Aviation", "magnetic") :
+                                               QCoreApplication::translate("Aviation", "true")) :
                    QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
-                         this->isMagneticHeading() ? "magnetic" : "true");
+                                               this->isMagneticHeading() ? "magnetic" : "true");
+        }
+
+        void CHeading::normalizeTo360Degrees()
+        {
+            const double v = normalizeDegrees360(this->value(CAngleUnit::deg()));
+            const CAngleUnit u = this->getUnit();
+            *this = CHeading(v, this->getReferenceNorth(), CAngleUnit::deg());
+            this->switchUnit(u);
         }
 
         void CHeading::normalizeToPlusMinus180Degrees()
@@ -41,6 +48,13 @@ namespace BlackMisc
         {
             CHeading copy(*this);
             copy.normalizeToPlusMinus180Degrees();
+            return copy;
+        }
+
+        CHeading CHeading::normalizedTo360Degrees() const
+        {
+            CHeading copy(*this);
+            copy.normalizeTo360Degrees();
             return copy;
         }
 
