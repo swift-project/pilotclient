@@ -69,6 +69,7 @@ namespace BlackSimPlugin
         void CFsxSettingsComponent::refresh()
         {
             const CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            const bool localSim = fsxOrP3D;
             if (fsxOrP3D)
             {
                 ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTracingSendId());
@@ -76,6 +77,12 @@ namespace BlackSimPlugin
                 ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
                 ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcOpened());
             }
+
+            ui->lbl_NoLocalSimulator->setVisible(!localSim);
+            ui->cb_TraceSimConnectCalls->setEnabled(localSim);
+            ui->cb_EnableTerrainProbe->setEnabled(localSim);
+            ui->cb_SBOffsets->setEnabled(localSim);
+            ui->cb_UseFsuipc->setEnabled(localSim);
 
             const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);
             ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
@@ -134,9 +141,12 @@ namespace BlackSimPlugin
 
         CSimulatorFsxCommon *CFsxSettingsComponent::getFsxOrP3DSimulator() const
         {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator() || !sGui->getISimulator()) { return nullptr; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
             const CSimulatorPluginInfo plugin = sGui->getIContextSimulator()->getSimulatorPluginInfo();
             if (plugin.isEmulatedPlugin()) { return nullptr; } // cast would fail
+
+            // ISimulator can only be obtained in local environment, not distributed UI
+            if (!sGui->hasSimulator()) { return nullptr; }
 
             ISimulator *simulator = sGui->getISimulator().data();
             if (!simulator || simulator->isEmulatedDriver())     { return nullptr; }

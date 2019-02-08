@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>254</width>
-    <height>147</height>
+    <height>174</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,6 +106,16 @@
     <widget class="QCheckBox" name="cb_EnableTerrainProbe">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lbl_NoLocalSimulator">
+     <property name="text">
+      <string>Looks like you are running a remote GUI, these settings only work locally. Use core settings.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
