@@ -1434,9 +1434,15 @@ namespace BlackCore
 
     QPointer<ISimulator> CApplication::getISimulator() const
     {
-        if (!this->getCoreFacade()) { return nullptr; }
-        if (!this->getCoreFacade()->getCContextSimulator()) { return nullptr; }
+        if (!this->hasSimulator()) { return nullptr; }
         return this->getCoreFacade()->getCContextSimulator()->simulator();
+    }
+
+    bool CApplication::hasSimulator() const
+    {
+        if (!this->getCoreFacade()) { return false; }
+        if (!this->getCoreFacade()->getIContextSimulator()->isUsingImplementingObject()) { return false; }
+        return (this->getCoreFacade()->getCContextSimulator()); // should always be true
     }
 
     void CApplication::cmdLineHelpMessage()

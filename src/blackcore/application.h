@@ -331,6 +331,9 @@ namespace BlackCore
         //! The simulator plugin, if available
         QPointer<ISimulator> getISimulator() const;
 
+        //! Simulator object available?
+        bool hasSimulator() const;
+
         // ----------------------- contexts ----------------------------------------
 
         //! \name Context / core facade related
