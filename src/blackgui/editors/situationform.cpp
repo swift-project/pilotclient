@@ -137,12 +137,13 @@ namespace BlackGui
 
         CPressure CSituationForm::getBarometricPressureMsl() const
         {
-            return CPressure(getBarometricPressureMslMillibar(), CPressureUnit::mbar());
+            return CPressure(this->getBarometricPressureMslMillibar(), CPressureUnit::mbar());
         }
 
         CSpeed CSituationForm::getGroundSpeed() const
         {
-            return CSpeed(0, CSpeedUnit::kts());
+            const int gsKts = ui->sb_GsKts->value();
+            return CSpeed(gsKts, CSpeedUnit::kts());
         }
 
         void CSituationForm::setReadOnly(bool readonly)
