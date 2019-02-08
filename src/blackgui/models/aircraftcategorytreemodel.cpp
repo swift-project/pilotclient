@@ -12,6 +12,7 @@
 #include "blackgui/models/columns.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icon.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/propertyindex.h"
 
@@ -40,6 +41,8 @@ namespace BlackGui
 
         void CAircraftCategoryTreeModel::updateContainer(const CAircraftCategoryList &categories)
         {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Wrong thread");
+
             this->clear();
             if (categories.isEmpty())  { return; }
 
@@ -73,6 +76,8 @@ namespace BlackGui
 
                 // add all items
                 if (categoryRow.isEmpty()) { continue; }
+
+                QStandardItem *parent = categoryRow.first();
                 if (category.isFirstLevel())
                 {
                     this->invisibleRootItem()->appendRow(categoryRow);
@@ -83,9 +88,7 @@ namespace BlackGui
                     Q_ASSERT_X(items[p], Q_FUNC_INFO, "No parent item");
                     items[p]->appendRow(categoryRow);
                 }
-
-                Q_ASSERT_X(!categoryRow.isEmpty(), Q_FUNC_INFO, "Category row is empty");
-                items.insert(category.getDepth(), categoryRow.front());
+                items.insert(category.getDepth(), parent);
             }
         }
 

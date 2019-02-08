@@ -32,14 +32,18 @@ namespace BlackGui
             this->setModel(new CAircraftCategoryTreeModel(this));
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &CAircraftCategoryTreeView::customContextMenuRequested, this, &CAircraftCategoryTreeView::customMenu);
-            connect(this, &CAircraftCategoryTreeView::expanded, this, &CAircraftCategoryTreeView::onExpanded);
+            connect(this, &CAircraftCategoryTreeView::expanded, this, &CAircraftCategoryTreeView::onExpanded, Qt::QueuedConnection);
         }
 
         void CAircraftCategoryTreeView::updateContainer(const CAircraftCategoryList &categories)
         {
             if (!this->categoryModel()) { return; }
             this->categoryModel()->updateContainer(categories);
-            if (!this->isEmpty()) { this->expandAll(); }
+
+            //! \fixme 2019-02 workaround for HEAP: Free Heap block 000001AB439BFFF0 modified at 000001AB439C00BC after it was freed
+            // using Qt::QueuedConnection seems to fix for expand all
+            // also this->expandToDepth(0) seems to work
+            this->expandAll();
         }
 
         void CAircraftCategoryTreeView::clear()
@@ -86,16 +90,10 @@ namespace BlackGui
         CAircraftCategory CAircraftCategoryTreeView::selectedObject() const
         {
             const QModelIndex index = this->currentIndex();
-            const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
+            const QVariant data = this->model()->data(index.siblingAtColumn(0));
             const CAircraftCategoryTreeModel *model = this->categoryModel();
             if (!model) { return CAircraftCategory(); }
             return model->container().frontOrDefault();
-        }
-
-        QString CAircraftCategoryTreeView::suffixForIndex(const QModelIndex &index)
-        {
-            const QVariant data = this->model()->data(index); // supposed to be the suffix
-            return data.toString();
         }
 
         void CAircraftCategoryTreeView::onExpanded(const QModelIndex &index)

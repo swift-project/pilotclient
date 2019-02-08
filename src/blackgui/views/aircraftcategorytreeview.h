@@ -69,9 +69,6 @@ namespace BlackGui
             //! The selected object
             BlackMisc::Aviation::CAircraftCategory selectedObject() const;
 
-            //! Suffix for index
-            QString suffixForIndex(const QModelIndex &index);
-
             //! Expanded
             void onExpanded(const QModelIndex &index);
 
