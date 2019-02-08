@@ -149,15 +149,22 @@ namespace BlackGui
             }
             this->addOrUpdateLiveDataByName("latitude", s.latitude().toQString(), iconLatLng);
             this->addOrUpdateLiveDataByName("longitude", s.longitude().toQString(), iconLatLng);
-            this->addOrUpdateLiveDataByName("altitude", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude (ft)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude (m)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
+
             if (s.hasGroundElevation())
             {
                 this->addOrUpdateLiveDataByName("elevation", s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
             }
             this->addOrUpdateLiveDataByName("pitch", s.getPitch().toQString(), iconAttitude);
             this->addOrUpdateLiveDataByName("bank", s.getBank().toQString(), iconAttitude);
-            this->addOrUpdateLiveDataByName("heading", s.getHeading().toQString(), s.getHeading().toIcon());
-            this->addOrUpdateLiveDataByName("ground speed", s.getGroundSpeed().toQString(), s.getGroundSpeed().toIcon());
+
+            const CHeading heading = s.getHeading().normalizedTo360Degrees();
+            this->addOrUpdateLiveDataByName("heading", heading.valueRoundedWithUnit(CAngleUnit::deg(), 1), s.getHeading().toIcon());
+
+            const CSpeed gs = s.getGroundSpeed();
+            this->addOrUpdateLiveDataByName("ground speed (kts)", gs.valueRoundedWithUnit(CSpeedUnit::kts(), 1), gs.toIcon());
+            this->addOrUpdateLiveDataByName("ground speed (km/h)", gs.valueRoundedWithUnit(CSpeedUnit::km_h(), 1), gs.toIcon());
 
             this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toQString(), iconRadio);
             this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toQString(), iconRadio);
