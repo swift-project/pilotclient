@@ -54,6 +54,17 @@ include(wordsize.pri)
 contains(TEMPLATE, "vc.*"): QMAKE_CXXFLAGS *= /MP
 
 ################################
+# Cache intermediate files to improve build times
+################################
+
+swiftConfig(ccache) {
+    swiftConfig(profileRelease):error(profileRelease is incompatible with clcache)
+    msvc:       QMAKE_CXX = clcache
+    else:macx:  QMAKE_CXX = /usr/local/bin/ccache $$QMAKE_CXX
+    else:gcc:   QMAKE_CXX = ccache $$QMAKE_CXX
+}
+
+################################
 # Release build with debug info
 ################################
 

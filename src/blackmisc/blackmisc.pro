@@ -14,6 +14,7 @@ INCLUDEPATH += ..
 # DEPENDPATH += . .. // BlackMisc should be independent
 
 PRECOMPILED_HEADER = pch/pch.h
+INCLUDEPATH += pch
 
 DEFINES += LOG_IN_FILE BUILD_BLACKMISC_LIB
 RESOURCES += blackmisc.qrc

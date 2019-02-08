@@ -1,5 +1,19 @@
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 
+regexDevBranch = /develop\/\d+\.\d+\.\d+/
+regexReleaseBranch = /release\/\d+\.\d+/
+regexNocacheBranch = /nocache\/.+/
+regexRecacheBranches = [regexDevBranch, regexReleaseBranch]
+
+if (env.BRANCH_NAME && regexRecacheBranches.any{ env.BRANCH_NAME ==~ it }) {
+    env.CCACHE_RECACHE = 1
+    env.CLCACHE_RECACHE = 1
+}
+if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexNocacheBranch) {
+    env.CCACHE_DISABLE = 1
+    env.CLCACHE_DISABLE = 1
+}
+
 abortPreviousRunningBuilds()
 
 def builders = [:]
@@ -147,7 +161,9 @@ builders['Build swift Win32'] = {
             throw error
         } finally {
             notifyDiscord('Win32', buildResults['swift-win32'])
-            killDBusDaemon()
+            killWindowsProcess('dbus-daemon.exe')
+            killWindowsProcess('clcache.exe')
+            killWindowsProcess('python.exe')
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -192,7 +208,9 @@ builders['Build swift Win64'] = {
             throw error
         } finally {
             notifyDiscord('Win64', buildResults['swift-win64'])
-            killDBusDaemon()
+            killWindowsProcess('dbus-daemon.exe')
+            killWindowsProcess('clcache.exe')
+            killWindowsProcess('python.exe')
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -250,7 +268,6 @@ node('master') {
 
 node('master') {
     try {
-        def regexDevBranch = /develop\/\d+\.\d+\.\d+/
         if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
             stage('Publish') {
                 unstash name: 'swift-linux-64'
@@ -384,8 +401,6 @@ def notifyDiscord(nodeName, buildStatus = 'UNSTABLE') {
 }
 
 def getEolInMonth() {
-    def regexDevBranch = /develop\/\d+\.\d+\.\d+/
-    def regexReleaseBranch = /release\/\d+\.\d+/
     if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         // 6 month for dev builds
         return 6
@@ -410,10 +425,10 @@ def shouldUploadSymbols() {
     }
 }
 
-def killDBusDaemon() {
-    bat '''
-        tasklist /FI "IMAGENAME eq dbus-daemon.exe" 2>NUL | find /I /N "dbus-daemon.exe">NUL
-        if "%ERRORLEVEL%"=="0" taskkill /f /im dbus-daemon.exe
+def killWindowsProcess(name) {
+    bat """
+        tasklist /FI "IMAGENAME eq ${name}" 2>NUL | find /I /N "${name}">NUL
+        if "%ERRORLEVEL%"=="0" taskkill /f /im ${name}
         EXIT 0
-    '''
+    """
 }
