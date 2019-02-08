@@ -315,9 +315,13 @@ namespace BlackGui
 
         void CMappingComponent::doMatchingsAgain()
         {
-            if (!sGui || !sGui->getIContextSimulator() || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+            if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const int rematchedNumber = sGui->getIContextSimulator()->doMatchingsAgain();
-            CLogMessage(this).info(u"Triggered re-matching of %1 aircraft") << rematchedNumber;
+
+            const QString info = QStringLiteral("Triggered re-matching of %1 aircraft").arg(rematchedNumber);
+            this->showOverlayHTMLMessage(info, 5000);
+            CLogMessage(this).info(info);
         }
 
         void CMappingComponent::onSaveAircraft()
