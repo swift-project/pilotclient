@@ -135,6 +135,9 @@ namespace BlackGui
             //! Count has been changed
             void onCountChanged(int count, bool withFilter);
 
+            //! Online tab info
+            void setOnlineTabs(int count, int filtered);
+
             //! Set COM frequency
             void setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 

@@ -106,6 +106,7 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
+            // will be manually set
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
@@ -216,17 +217,31 @@ namespace BlackGui
                 {
                     const CAtcStationsSettings settings = ui->comp_AtcStationsSettings->getSettings();
                     CAtcStationList onlineStations = sGui->getIContextNetwork()->getAtcStationsOnline(true);
+                    const int allStationsCount = onlineStations.sizeInt();
+                    int inRangeCount = -1;
+
                     if (settings.showOnlyWithValidFrequency()) { onlineStations = onlineStations.stationsWithValidFrequency(); }
                     if (settings.showOnlyWithValidVoiceRoom()) { onlineStations = onlineStations.stationsWithValidVoiceRoom(); }
                     if (settings.showOnlyInRange())
                     {
                         onlineStations.removeIfOutsideRange();
+                        inRangeCount = onlineStations.sizeInt();
                     }
 
+                    const int stationsCount = onlineStations.sizeInt();
                     ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                     m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     m_timestampOnlineStationsChanged  = m_timestampLastReadOnlineStations;
                     this->updateTreeView();
+                    this->setOnlineTabs(allStationsCount, stationsCount);
+                    ui->comp_AtcStationsSettings->setCounts(allStationsCount, inRangeCount);
+
+                    if (stationsCount < 1 && allStationsCount > 0)
+                    {
+                        const QString msg = QStringLiteral("All %1 ATC stations are filtered").arg(allStationsCount);
+                        ui->tvp_AtcStationsOnline->showOverlayHTMLMessage(msg, 5000);
+                        ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5000);
+                    }
                 }
             }
             else
@@ -354,18 +369,22 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
+            const int ib = ui->tw_Atc->indexOf(ui->tb_AtcStationsBooked);
+            QString b = ui->tw_Atc->tabBar()->tabText(ib);
+            b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());
+            ui->tw_Atc->tabBar()->setTabText(ib, b);
+        }
+
+        void CAtcStationComponent::setOnlineTabs(int count, int filtered)
+        {
             const int io = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnline);
             const int it = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnlineTree);
-            const int ib = ui->tw_Atc->indexOf(ui->tb_AtcStationsBooked);
-            QString o = ui->tw_Atc->tabBar()->tabText(io);
-            QString t = ui->tw_Atc->tabBar()->tabText(it);
-            QString b = ui->tw_Atc->tabBar()->tabText(ib);
-            o = CGuiUtility::replaceTabCountValue(o, this->countOnlineStations());
-            t = CGuiUtility::replaceTabCountValue(t, this->countOnlineStations());
-            b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());
-            ui->tw_Atc->tabBar()->setTabText(io, o);
-            ui->tw_Atc->tabBar()->setTabText(it, t);
-            ui->tw_Atc->tabBar()->setTabText(ib, b);
+            static const QString o = ui->tw_Atc->tabBar()->tabText(io);
+            static const QString t = ui->tw_Atc->tabBar()->tabText(it);
+            const bool isFiltered = filtered < count && filtered >= 0;
+            const QString filteredInfo = isFiltered ? QStringLiteral(" (%1 of %2)").arg(filtered).arg(count) : QStringLiteral(" (%1)").arg(count);
+            ui->tw_Atc->tabBar()->setTabText(io, o % filteredInfo);
+            ui->tw_Atc->tabBar()->setTabText(it, t % filteredInfo);
         }
 
         void CAtcStationComponent::setComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit unit)
