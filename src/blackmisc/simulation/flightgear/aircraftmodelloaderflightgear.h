@@ -16,10 +16,11 @@ namespace BlackMisc{
             void updateInstalledModels(const CAircraftModelList &models);
 
         private:
-            Simulation::CAircraftModelList parseFlyableAirplaces(const QString &rootDirectory);
+            Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
             static const QString &fileFilterFlyable();
             void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
             QPointer<CWorker> m_parserWorker;
+            CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
 
         protected:
             void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories);

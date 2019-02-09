@@ -18,12 +18,15 @@ namespace BlackMisc{
     void AircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
     {
         this->setModelsForSimulator(models, CSimulatorInfo::fg());
-        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models") << models.size();
+        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Flightgear updated '%1' models") << models.size();
         m_loadingMessages.push_back(m);
     }
 
-        Simulation::CAircraftModelList AircraftModelLoaderFlightgear::parseFlyableAirplaces(const QString &rootDirectory)
+        Simulation::CAircraftModelList AircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
         {
+            Q_UNUSED(excludeDirectories);
+            if (rootDirectory.isEmpty()) { return {}; }
+
             Simulation::CAircraftModelList installedModels;
 
             QDir searchPath(rootDirectory, fileFilterFlyable());
@@ -32,7 +35,8 @@ namespace BlackMisc{
 
             while (aircraftIt.hasNext()) {
                 aircraftIt.next();
-                //TODO Add possibility of exclude dir
+                if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
+
                 Simulation::CAircraftModel model;
                 model.setAircraftIcaoCode(QString::fromStdString("A320"));
                 model.setDescription(QString::fromStdString("Description"));
@@ -40,14 +44,11 @@ namespace BlackMisc{
                 model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 model.setSimulator(CSimulatorInfo::fg());
                 model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
-                model.setModelMode(CAircraftModel::Exclude);
+                model.setModelMode(CAircraftModel::Include);
 
                 addUniqueModel(model,installedModels);
 
             }
-
-
-
 
             return installedModels;
         }
@@ -64,6 +65,18 @@ namespace BlackMisc{
             models.push_back(model);
         }
 
+        CAircraftModelList AircraftModelLoaderFlightgear::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
+        {
+            CAircraftModelList allModels;
+            for (const QString &rootDirectory : rootDirectories)
+            {
+                //allModels.push_back(parseCslPackages(rootDirectory, excludeDirectories));
+                allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
+            }
+
+            return allModels;
+        }
+
         void AircraftModelLoaderFlightgear::startLoadingFromDisk(IAircraftModelLoader::LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
         {
             const CSimulatorInfo simulator = CSimulatorInfo::fg();
@@ -76,7 +89,7 @@ namespace BlackMisc{
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
                                                                    [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                                 {
-                                    auto models = this->parseFlyableAirplaces("X:/Flightsim/Flightgear/2018.3/data/Aircraft");
+                                    auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
                                     if (modelConsolidation) { modelConsolidation(models, true); }
                                     return models;
                                 });
