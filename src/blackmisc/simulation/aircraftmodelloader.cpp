@@ -9,6 +9,7 @@
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
+#include "blackmisc/simulation/flightgear/aircraftmodelloaderflightgear.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/compare.h"
@@ -174,12 +175,7 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
             if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
-            if (simulator.isFG())
-            {
-                //! \todo FG add real loader
-                IAircraftModelLoader *dummy = new CDummyModelLoader(simulator, parent);
-                return dummy;
-            }
+            if (simulator.isFG())     { return new BlackMisc::Simulation::Flightgear::AircraftModelLoaderFlightgear(parent); }
             return CAircraftCfgParser::createModelLoader(simulator, parent);
         }
 

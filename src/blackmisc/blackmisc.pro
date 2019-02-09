@@ -39,6 +39,7 @@ HEADERS +=  *.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/data/*.h \
             $$PWD/simulation/settings/*.h \
+			$$PWD/simulation/flightgear/*.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
             $$PWD/simulation/xplane/*.h \
@@ -60,6 +61,7 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/data/*.cpp \
             $$PWD/simulation/settings/*.cpp \
+			$$PWD/simulation/flightgear/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \
             $$PWD/simulation/xplane/*.cpp \
