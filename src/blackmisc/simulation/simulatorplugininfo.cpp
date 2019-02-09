@@ -107,7 +107,8 @@ namespace BlackMisc
                 p3dPluginIdentifier(),
                 xplanePluginIdentifier(),
                 fs9PluginIdentifier(),
-                emulatedPluginIdentifier()
+                emulatedPluginIdentifier(),
+				fgPluginIdentifier()
             });
             return identifiers;
         }
@@ -117,6 +118,7 @@ namespace BlackMisc
             if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())
             {
                 // On UNIX we likely run XP
+				// TODO Add FG?
                 return QStringList { xplanePluginIdentifier() };
             }
 
@@ -124,7 +126,8 @@ namespace BlackMisc
             {
                 fsxPluginIdentifier(),
                 p3dPluginIdentifier(),
-                xplanePluginIdentifier()
+                xplanePluginIdentifier(),
+				fgPluginIdentifier()
             };
         }
     } // ns
