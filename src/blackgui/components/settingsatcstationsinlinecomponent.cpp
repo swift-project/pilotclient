@@ -12,6 +12,7 @@
 
 #include <QTimer>
 #include <QPointer>
+#include <QStringBuilder>
 
 using namespace BlackGui::Settings;
 
@@ -24,9 +25,9 @@ namespace BlackGui
             ui(new Ui::CSettingsAtcStationsInlineComponent)
         {
             ui->setupUi(this);
-            connect(ui->rb_InRange, &QRadioButton::toggled, this, &CSettingsAtcStationsInlineComponent::changeSettings);
-            connect(ui->cb_Frequency, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings);
-            connect(ui->cb_VoiceRoom, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings);
+            connect(ui->rb_InRange,   &QRadioButton::toggled,  this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
+            connect(ui->cb_Frequency, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
+            connect(ui->cb_VoiceRoom, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
 
             QPointer<CSettingsAtcStationsInlineComponent> myself(this);
             QTimer::singleShot(2000, this, [ = ]
@@ -39,10 +40,27 @@ namespace BlackGui
         CSettingsAtcStationsInlineComponent::~CSettingsAtcStationsInlineComponent()
         { }
 
+        void CSettingsAtcStationsInlineComponent::setCounts(int all, int inRange)
+        {
+            static const QString sAll = ui->rb_All->text();
+            static const QString sInRange = ui->rb_InRange->text();
+
+            ui->rb_All->setText(all < 0 ? sAll : sAll % QStringLiteral(" (%1)").arg(all));
+            ui->rb_InRange->setText(inRange < 0 ? sInRange : sInRange % QStringLiteral(" (%1)").arg(inRange));
+        }
+
         void CSettingsAtcStationsInlineComponent::onSettingsChanged()
         {
             const CAtcStationsSettings s = m_atcSettings.getThreadLocal();
-            ui->rb_InRange->setChecked(s.showOnlyInRange());
+            if (s.showOnlyInRange())
+            {
+                ui->rb_InRange->setChecked(true);
+            }
+            else
+            {
+                ui->rb_All->setChecked(true);
+            }
+
             ui->cb_Frequency->setChecked(s.showOnlyWithValidFrequency());
             ui->cb_VoiceRoom->setChecked(s.showOnlyWithValidVoiceRoom());
         }

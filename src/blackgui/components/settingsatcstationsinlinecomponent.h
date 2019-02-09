@@ -37,6 +37,9 @@ namespace BlackGui
             //! Get the settings
             Settings::CAtcStationsSettings getSettings() const { return m_atcSettings.get(); }
 
+            //! Set count information
+            void setCounts(int all, int inRange);
+
         signals:
             //! Changed value
             void changed();
