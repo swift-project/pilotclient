@@ -39,7 +39,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) : QTableView(parent)
+        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) : COverlayMessagesTableView(parent)
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::customMenuRequested);

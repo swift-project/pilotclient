@@ -29,7 +29,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CAtcStationTreeView::CAtcStationTreeView(QWidget *parent) : QTreeView(parent)
+        CAtcStationTreeView::CAtcStationTreeView(QWidget *parent) : COverlayMessagesTreeView(parent)
         {
             this->setModel(new CAtcStationTreeModel(this));
             this->setContextMenuPolicy(Qt::CustomContextMenu);

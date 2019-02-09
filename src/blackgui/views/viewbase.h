@@ -17,6 +17,7 @@
 #include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/menus/menuaction.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/directories.h"
@@ -83,7 +84,7 @@ namespace BlackGui
     {
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
         class BLACKGUI_EXPORT CViewBaseNonTemplate :
-            public QTableView,
+            public COverlayMessagesTableView,
             public Components::CEnableForDockWidgetInfoArea
         {
             Q_OBJECT

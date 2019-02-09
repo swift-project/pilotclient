@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_VIEWS_ATCSTATIONTREEVIEW_H
 #define BLACKGUI_VIEWS_ATCSTATIONTREEVIEW_H
 
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -36,7 +37,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class BLACKGUI_EXPORT CAtcStationTreeView : public QTreeView
+        class BLACKGUI_EXPORT CAtcStationTreeView : public COverlayMessagesTreeView
         {
             Q_OBJECT
 

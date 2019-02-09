@@ -26,6 +26,8 @@
 #include <QTabWidget>
 #include <QWizardPage>
 #include <QDockWidget>
+#include <QTableView>
+#include <QTreeView>
 #include <QMessageBox>
 #include <QObject>
 #include <QSize>
@@ -407,6 +409,30 @@ namespace BlackGui
     public:
         //! Constructor
         explicit COverlayMessagesDockWidget(QWidget *parent = nullptr);
+    };
+
+    /*!
+     * Using this class provides a QTableView with the overlay functionality already integrated.
+     */
+    class BLACKGUI_EXPORT COverlayMessagesTableView : public COverlayMessagesBase<QTableView>
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit COverlayMessagesTableView(QWidget *parent = nullptr);
+    };
+
+    /*!
+     * Using this class provides a QTableView with the overlay functionality already integrated.
+     */
+    class BLACKGUI_EXPORT COverlayMessagesTreeView : public COverlayMessagesBase<QTreeView>
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit COverlayMessagesTreeView(QWidget *parent = nullptr);
     };
 
 } // ns
