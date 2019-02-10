@@ -42,16 +42,17 @@ namespace BlackMisc
                 NotificationLogin                 = 1 << 1,
                 NotificationLogoff                = 1 << 2,
                 NotificationTextMessagePrivate    = 1 << 3,
-                NotificationTextCallsignMentioned = 1 << 4,
-                NotificationVoiceRoomJoined       = 1 << 5,
-                NotificationVoiceRoomLeft         = 1 << 6,
-                PTTClick                          = 1 << 7,
-                LoadSounds                        = 1 << 8, //!< end marker and force loading of sounds, keep as last element
-                AllTextNotifications              = NotificationTextMessagePrivate | NotificationTextCallsignMentioned,
+                NotificationTextMessageSupervisor = 1 << 4,
+                NotificationTextCallsignMentioned = 1 << 5,
+                NotificationVoiceRoomJoined       = 1 << 6,
+                NotificationVoiceRoomLeft         = 1 << 7,
+                PTTClick                          = 1 << 8,
+                LoadSounds                        = 1 << 9, //!< end marker and force loading of sounds, keep as last element
+                AllTextNotifications              = NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor,
                 AllLoginNotifications             = NotificationLogin | NotificationLogoff,
                 AllVoiceRoomNotifications         = NotificationVoiceRoomJoined | NotificationVoiceRoomLeft,
                 AllNotifications                  = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
-                DefaultNotifications              = NotificationError | NotificationTextMessagePrivate | AllLoginNotifications | AllVoiceRoomNotifications,
+                DefaultNotifications              = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
                 All                               = AllNotifications  | PTTClick
             };
             Q_DECLARE_FLAGS(Notification, NotificationFlag)

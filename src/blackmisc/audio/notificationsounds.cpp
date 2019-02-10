@@ -22,6 +22,7 @@ namespace BlackMisc
             static const QString login("login");
             static const QString logoff("logoff");
             static const QString privateMsg("private msg.");
+            static const QString supMsg("supervisor msg.");
             static const QString mentioned("cs mentioned");
             static const QString joined("room joined");
             static const QString left("room left");
@@ -34,6 +35,7 @@ namespace BlackMisc
             case NotificationLogin: return login;
             case NotificationLogoff: return logoff;
             case NotificationTextMessagePrivate: return privateMsg;
+            case NotificationTextMessageSupervisor: return supMsg;
             case NotificationTextCallsignMentioned: return mentioned;
             case NotificationVoiceRoomJoined: return joined;
             case NotificationVoiceRoomLeft: return left;
@@ -51,6 +53,7 @@ namespace BlackMisc
             if (notification.testFlag(NotificationLogin))  n << flagToString(NotificationLogin);
             if (notification.testFlag(NotificationLogoff)) n << flagToString(NotificationLogoff);
             if (notification.testFlag(NotificationTextMessagePrivate))    n << flagToString(NotificationTextMessagePrivate);
+            if (notification.testFlag(NotificationTextMessageSupervisor))    n << flagToString(NotificationTextMessageSupervisor);
             if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
             if (notification.testFlag(NotificationVoiceRoomJoined)) n << flagToString(NotificationVoiceRoomJoined);
             if (notification.testFlag(NotificationVoiceRoomLeft))   n << flagToString(NotificationVoiceRoomLeft);
