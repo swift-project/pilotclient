@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/propertyindexvariantmap.h"

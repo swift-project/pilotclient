@@ -12,11 +12,11 @@
 #ifndef BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 
-#include "blackcore/network.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/blackguiexport.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/network.h"
 #include "blackmisc/tokenbucket.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"

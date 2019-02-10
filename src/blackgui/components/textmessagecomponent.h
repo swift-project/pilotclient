@@ -14,7 +14,7 @@
 
 #include "textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/aviation/atcstation.h"

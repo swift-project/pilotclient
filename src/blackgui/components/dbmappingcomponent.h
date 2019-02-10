@@ -12,10 +12,10 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
 #include "blackmisc/aviation/airlineicaocode.h"

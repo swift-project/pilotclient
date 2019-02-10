@@ -9,11 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_COCKPITCOMCOMPONENT_H
-#define BLACKGUI_COCKPITCOMCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_COCKPITCOMCOMPONENT_H
+#define BLACKGUI_COMPONENTS_COCKPITCOMCOMPONENT_H
 
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/transponder.h"

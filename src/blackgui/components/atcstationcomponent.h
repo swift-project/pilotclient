@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_ATCSTATIONCOMPONENT_H
-#define BLACKGUI_ATCSTATIONCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_ATCSTATIONCOMPONENT_H
+#define BLACKGUI_COMPONENTS_ATCSTATIONCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/atcstationssettings.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"

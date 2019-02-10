@@ -12,10 +12,10 @@
 #ifndef BLACKGUI_USERCOMPONENT_H
 #define BLACKGUI_USERCOMPONENT_H
 
-#include "blackcore/network.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/settings/viewupdatesettings.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackcore/network.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -69,6 +69,6 @@ namespace BlackGui
             QTimer m_updateTimer;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

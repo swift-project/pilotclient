@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_DBDISTRIBUTORCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBDISTRIBUTORCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>

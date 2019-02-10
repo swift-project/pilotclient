@@ -13,7 +13,7 @@
 #define BLACKUI_COMPONENTS_DBMODELCOMPONENT_H
 
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"

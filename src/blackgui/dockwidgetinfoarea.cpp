@@ -8,7 +8,7 @@
  */
 
 #include "blackgui/dockwidgetinfoarea.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
 
 #include <QMenu>

@@ -12,8 +12,8 @@
 #ifndef BLACKGUI_COMPONENTS_DBAIRCRAFTCATEGORYCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBAIRCRAFTCATEGORYCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"

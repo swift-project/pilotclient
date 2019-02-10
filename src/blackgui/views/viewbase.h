@@ -12,12 +12,12 @@
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/directories.h"
@@ -85,7 +85,7 @@ namespace BlackGui
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
         class BLACKGUI_EXPORT CViewBaseNonTemplate :
             public COverlayMessagesTableView,
-            public Components::CEnableForDockWidgetInfoArea
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -199,7 +199,7 @@ namespace BlackGui
             //! Accept drop data?
             virtual bool acceptDrop(const QMimeData *mimeData) const = 0;
 
-            //! \copydoc Components::CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Resize mode

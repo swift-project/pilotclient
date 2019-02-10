@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_SIMULATORCOMPONENT_H
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/logcategorylist.h"

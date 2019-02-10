@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKGUI_RADARCOMPONENT_H
-#define BLACKGUI_RADARCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_RADARCOMPONENT_H
+#define BLACKGUI_COMPONENTS_RADARCOMPONENT_H
 
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>

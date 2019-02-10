@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRCRAFTCOMPONENT_H
-#define BLACKGUI_AIRCRAFTCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_AIRCRAFTCOMPONENT_H
+#define BLACKGUI_COMPONENTS_AIRCRAFTCOMPONENT_H
 
-#include "blackcore/network.h"
-#include "blackgui/blackguiexport.h"
 #include "blackgui/settings/viewupdatesettings.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/network.h"
 
 #include <QObject>
 #include <QScopedPointer>

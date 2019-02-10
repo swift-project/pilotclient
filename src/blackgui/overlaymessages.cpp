@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/overlaymessages.h"
 #include "blackgui/components/statusmessageform.h"
 #include "blackgui/components/statusmessageformsmall.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/models/statusmessagelistmodel.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/overlaymessages.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/network/textmessage.h"

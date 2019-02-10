@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"
 

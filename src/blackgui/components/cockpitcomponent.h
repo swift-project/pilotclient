@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 

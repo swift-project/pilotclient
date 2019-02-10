@@ -19,13 +19,12 @@
 #include <QObject>
 
 class QMenu;
-class QWidget;
 
 namespace BlackGui
 {
     //! Forward declarations
     class CInfoArea;
-    namespace Components { class CEnableForDockWidgetInfoArea; }
+    class CEnableForDockWidgetInfoArea;
 
     //! Specialized class for dock widgets serving as info area.
     //! \sa CDockWidgetInfoBar
@@ -61,7 +60,7 @@ namespace BlackGui
     private:
         //! Find all embedded dock widget components. These are components marked as CDockWidgetInfoAreaComponent
         //! \remarks Only directly embedded info area components, not those of nested info areas
-        QList<Components::CEnableForDockWidgetInfoArea *> findEmbeddedDockWidgetInfoAreaComponents();
+        QList<CEnableForDockWidgetInfoArea *> findEmbeddedDockWidgetInfoAreaComponents();
 
         //! Nested info areas
         QList<CDockWidgetInfoArea *> findNestedInfoAreas();
