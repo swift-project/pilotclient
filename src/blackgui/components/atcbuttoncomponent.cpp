@@ -113,6 +113,7 @@ namespace BlackGui
         void CAtcButtonComponent::onChangedAtcStations()
         {
             if (!m_backgroundUpdates) { return; }
+            if (!this->isVisible())   { return; }
             this->updateStations();
         }
 

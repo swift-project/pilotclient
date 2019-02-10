@@ -268,6 +268,7 @@ namespace BlackGui
     {
         ui->comp_OverlayTextMessage->setTab(tab);
         ui->comp_OverlayTextMessage->updateAtcStationsButtons();
+        ui->comp_OverlayTextMessage->showTextMessageEntry(true);
         this->setModeToOverlayTextMessage();
         this->display();
         ui->comp_OverlayTextMessage->focusTextEntry();
