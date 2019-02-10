@@ -93,6 +93,8 @@ namespace BlackGui
                 Q_ASSERT(c);
                 c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
                 Q_ASSERT(c);
+                c = connect(ui->cb_SetupAudioNotificationTextMessageSupervisor, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                Q_ASSERT(c);
                 c = connect(ui->cb_SetupAudioNotificationTextCallsignMentioned, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
                 Q_ASSERT(c);
             }
@@ -105,7 +107,8 @@ namespace BlackGui
         bool CAudioSetupComponent::playNotificationSounds() const
         {
             if (!this->hasAudio()) { return false; }
-            return ui->cb_SetupAudioPTTClick->isChecked() || ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() ||
+            return ui->cb_SetupAudioPTTClick->isChecked() ||
+                   ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
                    ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked() || ui->cb_SetupAudioNotificationVoiceRoomJoined->isChecked() ||
                    ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked();
         }
@@ -117,6 +120,7 @@ namespace BlackGui
             ui->cb_SetupAudioNotificationVoiceRoomLeft->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationVoiceRoomLeft));
             ui->cb_SetupAudioNotificationVoiceRoomJoined->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationVoiceRoomJoined));
             ui->cb_SetupAudioNotificationTextMessagePrivate->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate));
+            ui->cb_SetupAudioNotificationTextMessageSupervisor->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor));
             ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
         }
 
@@ -137,16 +141,17 @@ namespace BlackGui
             if (!cb) { return CNotificationSounds::NoNotifications; }
 
             if (cb == ui->cb_SetupAudioPTTClick) { return CNotificationSounds::PTTClick; }
-            if (cb == ui->cb_SetupAudioNotificationVoiceRoomJoined) { return CNotificationSounds::NotificationVoiceRoomJoined; }
-            if (cb == ui->cb_SetupAudioNotificationVoiceRoomLeft) { return CNotificationSounds::NotificationVoiceRoomLeft; }
+            if (cb == ui->cb_SetupAudioNotificationVoiceRoomJoined)       { return CNotificationSounds::NotificationVoiceRoomJoined; }
+            if (cb == ui->cb_SetupAudioNotificationVoiceRoomLeft)         { return CNotificationSounds::NotificationVoiceRoomLeft; }
             if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned) { return CNotificationSounds::NotificationTextCallsignMentioned; }
-            if (cb == ui->cb_SetupAudioNotificationTextMessagePrivate) { return CNotificationSounds::NotificationTextMessagePrivate; }
+            if (cb == ui->cb_SetupAudioNotificationTextMessagePrivate)    { return CNotificationSounds::NotificationTextMessagePrivate; }
+            if (cb == ui->cb_SetupAudioNotificationTextMessageSupervisor) { return CNotificationSounds::NotificationTextMessageSupervisor; }
             return CNotificationSounds::NoNotifications;
         }
 
         void CAudioSetupComponent::onAudioDeviceSelected(int index)
         {
-            if (!sGui->getIContextAudio()) return;
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (index < 0) { return; }
 
             CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioDevices();
@@ -213,10 +218,11 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             CSettings as(m_audioSettings.getThreadLocal());
-            as.setNotificationFlag(CNotificationSounds::PTTClick, ui->cb_SetupAudioPTTClick->isChecked());
-            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomLeft, ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked());
-            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined, ui->cb_SetupAudioNotificationVoiceRoomJoined->isChecked());
-            as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate, ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
+            as.setNotificationFlag(CNotificationSounds::PTTClick,                          ui->cb_SetupAudioPTTClick->isChecked());
+            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomLeft,         ui->cb_SetupAudioNotificationVoiceRoomLeft->isChecked());
+            as.setNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined,       ui->cb_SetupAudioNotificationVoiceRoomJoined->isChecked());
+            as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate,    ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
+            as.setNotificationFlag(CNotificationSounds::NotificationTextMessageSupervisor, ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked());
             as.setNotificationFlag(CNotificationSounds::NotificationTextCallsignMentioned, ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked());
             const CStatusMessage msg = m_audioSettings.set(as);
             CLogMessage(this).preformatted(msg);

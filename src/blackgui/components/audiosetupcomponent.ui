@@ -117,7 +117,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="lbl_Notifications">
        <property name="toolTip">
         <string>Notifications</string>
@@ -127,38 +127,45 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessagePrivate">
        <property name="text">
         <string>notification for private text messages</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="7" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
        <property name="text">
         <string>notfication for text msg. with my callsign</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="8" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomJoined">
        <property name="text">
         <string>notification joining a voice room</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
+     <item row="10" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioPTTClick">
        <property name="text">
         <string>PTT click</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="9" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomLeft">
        <property name="text">
         <string>notification leaving a voice room</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessageSupervisor">
+       <property name="text">
+        <string>supervisor messages</string>
        </property>
       </widget>
      </item>
@@ -185,6 +192,7 @@
   <tabstop>cb_SetupAudioOutputDevice</tabstop>
   <tabstop>cb_SetupAudioLoopback</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessagePrivate</tabstop>
+  <tabstop>cb_SetupAudioNotificationTextMessageSupervisor</tabstop>
   <tabstop>cb_SetupAudioNotificationTextCallsignMentioned</tabstop>
   <tabstop>cb_SetupAudioNotificationVoiceRoomJoined</tabstop>
   <tabstop>cb_SetupAudioNotificationVoiceRoomLeft</tabstop>

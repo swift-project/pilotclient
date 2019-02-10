@@ -47,7 +47,8 @@ namespace BlackMisc
             void setNotification(CNotificationSounds::Notification notification) { m_notification = static_cast<int>(notification); }
 
             //! Simplified functions @{
-            bool textMessagePrivate() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
+            bool textMessagePrivate()    const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
+            bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
             bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
             bool pttClick() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClick); }
             //! @}
