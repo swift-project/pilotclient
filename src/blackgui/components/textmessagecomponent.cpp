@@ -460,9 +460,18 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (!m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio() && m_audioSettings.get().textMessagePrivate())
+            const bool playSound = !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
+            if (playSound)
             {
-                sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
+                const CSettings settings = m_audioSettings.get();
+                if (textMessage.isSupervisorMessage() && settings.textMessageSupervisor())
+                {
+                    sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
+                }
+                else if (textMessage.isPrivateMessage() && settings.textMessagePrivate())
+                {
+                    sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
+                }
             }
         }
 
