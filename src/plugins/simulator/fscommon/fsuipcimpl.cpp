@@ -290,7 +290,7 @@ namespace BlackSimPlugin
             NewPress press;
             press.Drift = 0;
             // Pressure is measured in: 16 x mb
-            press.Pressure = static_cast<ushort>(gridPoint.getSurfacePressure().value(CPressureUnit::mbar()) * 16);
+            press.Pressure = static_cast<ushort>(gridPoint.getPressureAtMsl().value(CPressureUnit::mbar()) * 16);
             nw.Press = press;
 
             // writing will take place in

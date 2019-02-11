@@ -710,7 +710,7 @@ namespace BlackSimPlugin
             const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
             m_weatherProxy->setTemperature(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
             m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C()));
-            m_weatherProxy->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
+            m_weatherProxy->setQNH(gridPoint.getPressureAtMsl().value(CPressureUnit::inHg()));
 
             int layerNumber = 0;
             CCloudLayerList cloudLayers = gridPoint.getCloudLayers();

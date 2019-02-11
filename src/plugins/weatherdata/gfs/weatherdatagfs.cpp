@@ -141,6 +141,7 @@ namespace BlackWxPlugin
 
             static const QStringList grib2Levels =
             {
+                "mean_sea_level",
                 "surface",
                 "100_mb",
                 "150_mb",
@@ -329,12 +330,12 @@ namespace BlackWxPlugin
                     cloudLayers.push_back(cloudLayer);
                 }
 
-                auto surfacePressure = PhysicalQuantities::CPressure { gfsGridPoint.surfacePressure, PhysicalQuantities::CPressureUnit::Pa() };
+                auto pressureAtMsl = PhysicalQuantities::CPressure { gfsGridPoint.pressureAtMsl, PhysicalQuantities::CPressureUnit::Pa() };
 
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
                 auto position = CCoordinateGeodetic { latitude, longitude, {0} };
-                CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, surfacePressure);
+                CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
                 m_weatherGrid.push_back(gridPoint);
             }
         }
@@ -515,7 +516,7 @@ namespace BlackWxPlugin
                 return;
             }
 
-            // http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_temp4-0.shtml
+            // https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/grib2_temp4-0.shtml
             g2int parameterCategory = gfld->ipdtmpl[0];
             g2int parameterNumber = gfld->ipdtmpl[1];
             g2int typeFirstFixedSurface = gfld->ipdtmpl[9];
@@ -538,6 +539,9 @@ namespace BlackWxPlugin
             case IsobaricSurface:
                 level = std::round(millibarToLevel(valueFirstFixedSurface));
                 break;
+            case MeanSeaLevel:
+                level = 0.0;
+                break;
             default:
                 CLogMessage(this).warning(u"Unexpected first fixed surface type: %1") << typeFirstFixedSurface;
                 return;
@@ -559,9 +563,9 @@ namespace BlackWxPlugin
                 setWindV(gfld->fld, level);
                 break;
             case PRMSL:
+                setPressureAtMsl(gfld->fld);
                 break;
             case PRES:
-                setCloudPressure(gfld->fld, level);
                 break;
             default:
                 Q_ASSERT(false);
@@ -694,12 +698,11 @@ namespace BlackWxPlugin
             }
         }
 
-        void CWeatherDataGfs::setCloudPressure(const g2float *fld, double level)
+        void CWeatherDataGfs::setPressureAtMsl(const g2float *fld)
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                if (level > 0) { /* todo */ }
-                else { gridPoint.surfacePressure = fld[gridPoint.fieldPosition];  }
+                gridPoint.pressureAtMsl = fld[gridPoint.fieldPosition];
             }
         }
 

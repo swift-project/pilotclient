@@ -47,7 +47,7 @@ namespace BlackMisc
                 IndexCloudLayers,
                 IndexTemperatureLayers,
                 IndexWindLayers,
-                IndexSurfacePressure
+                IndexPressureAtMsl
             };
 
             //! Default constructor.
@@ -64,7 +64,7 @@ namespace BlackMisc
                        const CTemperatureLayerList &temperatureLayers,
                        const CVisibilityLayerList &visibilityLayers,
                        const CWindLayerList &windLayers,
-                       const PhysicalQuantities::CPressure &surfacePressure);
+                       const PhysicalQuantities::CPressure &pressureAtMsl);
 
             //! Set identifier
             void setIdentifier(const QString &identifier) { m_identifier = identifier; }
@@ -105,11 +105,11 @@ namespace BlackMisc
             //! Copies all weather data from other without modifying identifier and position.
             void copyWeatherDataFrom(const CGridPoint &other);
 
-            //! Set surface pressure
-            void setSurfacePressure(const PhysicalQuantities::CPressure &pressure) { m_surfacePressure = pressure; }
+            //! Set pressure at mean sea level
+            void setPressureAtMsl(const PhysicalQuantities::CPressure &pressure) { m_pressureAtMsl = pressure; }
 
-            //! Get surface pressure
-            const PhysicalQuantities::CPressure &getSurfacePressure() const { return m_surfacePressure; }
+            //! Get pressure at mean sea level
+            const PhysicalQuantities::CPressure &getPressureAtMsl() const { return m_pressureAtMsl; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -127,7 +127,7 @@ namespace BlackMisc
             CTemperatureLayerList m_temperatureLayers;
             CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
-            PhysicalQuantities::CPressure m_surfacePressure = { PhysicalQuantities::CPhysicalQuantitiesConstants::ISASeaLevelPressure() };
+            PhysicalQuantities::CPressure m_pressureAtMsl = { PhysicalQuantities::CPhysicalQuantitiesConstants::ISASeaLevelPressure() };
 
             BLACK_METACLASS(
                 CGridPoint,
@@ -137,7 +137,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(temperatureLayers),
                 BLACK_METAMEMBER(visibilityLayers),
                 BLACK_METAMEMBER(windLayers),
-                BLACK_METAMEMBER(surfacePressure)
+                BLACK_METAMEMBER(pressureAtMsl)
             );
         };
     } // namespace

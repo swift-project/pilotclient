@@ -63,7 +63,7 @@ void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeather
     {
         qtout << "Latitude:" << gridPoint.getPosition().latitude().toQString() << endl;
         qtout << "Longitude:" << gridPoint.getPosition().longitude().toQString() << endl;
-        qtout << "    Surface Pressure: " << gridPoint.getSurfacePressure().toQString() << endl;
+        qtout << "    MSL Pressure: " << gridPoint.getPressureAtMsl().toQString() << endl;
 
         CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
         temperatureLayers.sort([](const CTemperatureLayer &a, const CTemperatureLayer &b) { return a.getLevel() < b.getLevel(); });

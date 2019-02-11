@@ -246,7 +246,7 @@ namespace BlackMisc
                 simconnectMetar += QLatin1String(" Q");
                 // NNNN = altimeter in millibars
                 static const QString arg1s("%1");
-                const auto altimeter = gridPoint.getSurfacePressure().valueInteger(CPressureUnit::mbar());
+                const auto altimeter = gridPoint.getPressureAtMsl().valueInteger(CPressureUnit::mbar());
                 simconnectMetar += arg1s.arg(altimeter, 4, 10, QLatin1Char('0'));
 
                 return simconnectMetar;
