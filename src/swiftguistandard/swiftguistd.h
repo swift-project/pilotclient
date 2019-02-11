@@ -19,6 +19,7 @@
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
 #include "blackgui/components/aircraftmodelsetvalidationdialog.h"
+#include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
@@ -27,10 +28,11 @@
 #include "blackcore/network.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/variant.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/icons.h"
 
 #include <QMainWindow>
 #include <QObject>
@@ -42,7 +44,6 @@ class QCloseEvent;
 class QEvent;
 class QMouseEvent;
 class QTimer;
-class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CAltitude; } }
 namespace BlackGui { namespace Components { class CDbLoadDataDialog; }}
@@ -280,6 +281,12 @@ private:
 
     //! Copy the XSwiftBus files from build directory
     void copyXSwiftBusDialog(bool checkFileTimestamp);
+
+    //! Request overlay inline text message @{
+    void onShowOverlayVariant(const BlackMisc::CVariant &variant, int durationMs);
+    void onShowOverlayInlineTextMessageTab(BlackGui::Components::TextMessageTab tab);
+    void onShowOverlayInlineTextMessageCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+    //! @}
 };
 
 #pragma pop_macro("interface")

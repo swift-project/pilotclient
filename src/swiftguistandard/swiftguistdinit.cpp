@@ -48,13 +48,13 @@
 #include <QTimer>
 #include <QPointer>
 #include <QVBoxLayout>
-
-class QHBoxLayout;
+#include <QHBoxLayout>
 
 using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Input;
 using namespace BlackGui;
@@ -217,18 +217,13 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
 
-    connect(ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_WindowFont, &QAction::triggered,        this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_WindowMinimize, &QAction::triggered,    this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigatorVisibility);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_MovingMap, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_MovingMap, &QAction::triggered,     this, &SwiftGuiStd::onMenuClicked);
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed);
-
-    // command line / text messages
-    // here we display SUP messages and such in a central window
-    ui->fr_CentralFrameInside->activateTextMessages(true);
-    connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
 
     // settings (GUI component), styles
     connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);
@@ -253,13 +248,22 @@ void SwiftGuiStd::initGuiSignals()
     connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
 
     // text messages
-    connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(ui->comp_MainInfoArea->getMappingComponent(), &CMappingComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab, Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getMappingComponent(),    &CMappingComponent::requestTextMessageWidget,    ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab, Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getAircraftComponent(),   &CAircraftComponent::requestTextMessageWidget,   ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab, Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getUserComponent(),       &CUserComponent::requestTextMessageWidget,       ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab, Qt::QueuedConnection);
+
+    // command line / text messages
+    // here we display SUP messages and such in a central window
+    ui->fr_CentralFrameInside->activateTextMessages(true);
+    connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow,            this, &SwiftGuiStd::onShowOverlayVariant,                   Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getAtcStationComponent(),  &CAtcStationComponent::requestTextMessageEntryTab,      this, &SwiftGuiStd::onShowOverlayInlineTextMessageTab,      Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getAtcStationComponent(),  &CAtcStationComponent::requestTextMessageEntryCallsign, this, &SwiftGuiStd::onShowOverlayInlineTextMessageCallsign, Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getCockpitComponent(),     &CCockpitComponent::requestTextMessageEntryTab,         this, &SwiftGuiStd::onShowOverlayInlineTextMessageTab,      Qt::QueuedConnection);
+    connect(ui->comp_MainInfoArea->getCockpitComponent(),     &CCockpitComponent::requestTextMessageEntryCallsign,    this, &SwiftGuiStd::onShowOverlayInlineTextMessageCallsign, Qt::QueuedConnection);
 
     // interpolation and validation
-    connect(ui->comp_MainInfoArea->getMappingComponent(), &CMappingComponent::requestValidationDialog, this, &SwiftGuiStd::displayValidationDialog);
+    connect(ui->comp_MainInfoArea->getMappingComponent(),       &CMappingComponent::requestValidationDialog, this, &SwiftGuiStd::displayValidationDialog);
     connect(ui->comp_MainInfoArea->getInterpolationComponent(), &CInterpolationComponent::requestRenderingRestrictionsWidget, [ = ]
     {
         this->setSettingsPage(CSettingsComponent::SettingTabSimulator);

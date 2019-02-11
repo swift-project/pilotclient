@@ -489,6 +489,7 @@ void SwiftGuiStd::displayLog()
 void SwiftGuiStd::onPttChanged(bool enabled)
 {
     if (!enabled) { return; }
+    if (!sGui) { return; }
     sGui->getIContextAudio()->playNotification(CNotificationSounds::PTTClick, true);
 }
 
@@ -521,4 +522,22 @@ void SwiftGuiStd::displayDBusReconnectDialog()
     if (msg.isSuccess()) { m_coreFailures = 0; }
     msg.clampSeverity(CStatusMessage::SeverityWarning);
     CLogMessage::preformatted(msg);
+}
+
+void SwiftGuiStd::onShowOverlayVariant(const CVariant &variant, int durationMs)
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    ui->fr_CentralFrameInside->showOverlayVariant(variant, durationMs);
+}
+
+void SwiftGuiStd::onShowOverlayInlineTextMessageTab(Components::TextMessageTab tab)
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    ui->fr_CentralFrameInside->showOverlayInlineTextMessage(tab);
+}
+
+void SwiftGuiStd::onShowOverlayInlineTextMessageCallsign(const CCallsign &callsign)
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    ui->fr_CentralFrameInside->showOverlayInlineTextMessage(callsign);
 }
