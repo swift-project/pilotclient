@@ -33,7 +33,7 @@ void CLineReader::run()
 {
     QFile file;
     file.open(stdin, QIODevice::ReadOnly | QIODevice::Text);
-    QRegularExpression re("^(\\d+).([0,5])\\s(\\d+).([0,5])$");
+    QRegularExpression re("^(-?\\d+).([0,5])\\s(-?\\d+).([0,5])$");
     forever
     {
         QString line = file.readLine().trimmed();
@@ -48,8 +48,11 @@ void CLineReader::run()
         if (match.hasMatch())
         {
             double latitudeValue = match.captured(1).toDouble();
-            latitudeValue += match.captured(2).toDouble() / 10;
+            if (latitudeValue > 0) { latitudeValue += match.captured(2).toDouble() / 10; }
+            else { { latitudeValue -= match.captured(2).toDouble() / 10; } }
             double longitudeValue = match.captured(3).toDouble();
+            if (longitudeValue > 0) { longitudeValue += match.captured(4).toDouble() / 10; }
+            else { longitudeValue -= match.captured(4).toDouble() / 10; }
             longitudeValue += match.captured(4).toDouble() / 10;
             const CLatitude latitude(latitudeValue, CAngleUnit::deg());
             const CLongitude longitude(longitudeValue, CAngleUnit::deg());
