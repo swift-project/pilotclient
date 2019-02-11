@@ -57,7 +57,7 @@ namespace BlackGui
     CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
     {
         Q_ASSERT(m_parentDockableInfoArea);
-        if (!m_parentDockableInfoArea) return nullptr;
+        if (!m_parentDockableInfoArea) { return nullptr; }
         return m_parentDockableInfoArea->getParentInfoArea();
     }
 

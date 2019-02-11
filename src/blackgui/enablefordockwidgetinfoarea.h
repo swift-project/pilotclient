@@ -62,9 +62,8 @@ namespace BlackGui
         //! Destructor
         virtual ~CEnableForDockWidgetInfoArea() {}
 
-    private:
         CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
-        BlackMisc::CConnectionGuard m_connections;
+        BlackMisc::CConnectionGuard m_connections; //!< connections
     };
 } // namespace
 
