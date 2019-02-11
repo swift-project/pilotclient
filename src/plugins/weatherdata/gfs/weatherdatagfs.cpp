@@ -334,7 +334,7 @@ namespace BlackWxPlugin
 
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
-                auto position = CCoordinateGeodetic { latitude, longitude, {0} };
+                auto position = CCoordinateGeodetic { latitude, longitude };
                 CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, pressureAtMsl);
                 m_weatherGrid.push_back(gridPoint);
             }
@@ -530,46 +530,26 @@ namespace BlackWxPlugin
                 return;
             }
 
-            double level = 0;
-            switch (typeFirstFixedSurface)
+            double level = 0.0;
+
+            switch(typeFirstFixedSurface)
             {
-            case GroundOrWaterSurface:
-                level = 0;
-                break;
-            case IsobaricSurface:
-                level = std::round(millibarToLevel(valueFirstFixedSurface));
-                break;
-            case MeanSeaLevel:
-                level = 0.0;
-                break;
-            default:
-                CLogMessage(this).warning(u"Unexpected first fixed surface type: %1") << typeFirstFixedSurface;
-                return;
+            case GroundOrWaterSurface: level = 0.0; break;
+            case IsobaricSurface: level = std::round(millibarToLevel(valueFirstFixedSurface)); break;
+            case MeanSeaLevel: level = 0.0; break;
+            default: CLogMessage(this).warning(u"Unexpected first fixed surface type: %1") << typeFirstFixedSurface; return;
             }
 
             auto parameterValue = m_grib2ParameterTable[key];
             switch (parameterValue.code)
             {
-            case TMP:
-                setTemperature(gfld->fld, level);
-                break;
-            case RH:
-                setHumidity(gfld->fld, level);
-                break;
-            case UGRD:
-                setWindU(gfld->fld, level);
-                break;
-            case VGRD:
-                setWindV(gfld->fld, level);
-                break;
-            case PRMSL:
-                setPressureAtMsl(gfld->fld);
-                break;
-            case PRES:
-                break;
-            default:
-                Q_ASSERT(false);
-                break;
+            case TMP: setTemperature(gfld->fld, level); break;
+            case RH: setHumidity(gfld->fld, level); break;
+            case UGRD: setWindU(gfld->fld, level); break;
+            case VGRD: setWindV(gfld->fld, level); break;
+            case PRMSL: setPressureAtMsl(gfld->fld); break;
+            case PRES: /* Do nothing */ break;
+            default: CLogMessage(this).error(u"Unexpected parameterValue in Template 4.0: %1 (%2)") << parameterValue.code << parameterValue.name; return;
             }
         }
 
@@ -609,23 +589,12 @@ namespace BlackWxPlugin
             auto parameterValue = m_grib2ParameterTable[key];
             switch (parameterValue.code)
             {
-            case TCDC:
-                setCloudCoverage(gfld->fld, grib2CloudLevelHash.value(typeFirstFixedSurface));
-                break;
-            case PRES:
-                setCloudLevel(gfld->fld, typeFirstFixedSurface, grib2CloudLevelHash.value(typeFirstFixedSurface));
-                break;
-            case PRATE:
-                setPrecipitationRate(gfld->fld);
-                break;
-            case CRAIN:
-                setSurfaceRain(gfld->fld);
-                break;
-            case CSNOW:
-                setSurfaceSnow(gfld->fld);
-                break;
-            default:
-                break;
+            case TCDC: setCloudCoverage(gfld->fld, grib2CloudLevelHash.value(typeFirstFixedSurface)); break;
+            case PRES: setCloudLevel(gfld->fld, typeFirstFixedSurface, grib2CloudLevelHash.value(typeFirstFixedSurface)); break;
+            case PRATE: setPrecipitationRate(gfld->fld); break;
+            case CRAIN: setSurfaceRain(gfld->fld); break;
+            case CSNOW: setSurfaceSnow(gfld->fld); break;
+            default: CLogMessage(this).error(u"Unexpected parameterValue in Template 4.8: %1 (%2)") << parameterValue.code << parameterValue.name; return;
             }
         }
 
