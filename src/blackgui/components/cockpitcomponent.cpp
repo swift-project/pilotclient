@@ -22,8 +22,7 @@ namespace BlackGui
     namespace Components
     {
         CCockpitComponent::CCockpitComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
-            CEnableForDockWidgetInfoArea(),
+            COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
@@ -128,12 +127,12 @@ namespace BlackGui
 
         void CCockpitComponent::onRequestTextMessageCom1()
         {
-            this->showOverlayInlineTextMessage(TextMessagesCom1);
+            this->requestTextMessageEntryTab(TextMessagesCom1);
         }
 
         void CCockpitComponent::onRequestTextMessageCom2()
         {
-            this->showOverlayInlineTextMessage(TextMessagesCom2);
+            this->requestTextMessageEntryTab(TextMessagesCom2);
         }
 
         void CCockpitComponent::onToggleFloating(bool floating)

@@ -58,7 +58,7 @@ namespace BlackGui
     namespace Components
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-            COverlayMessagesFrame(parent),
+            COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
             CIdentifiable(this),
             ui(new Ui::CAtcStationComponent)
         {
@@ -106,7 +106,6 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
-            // will be manually set
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
@@ -488,7 +487,8 @@ namespace BlackGui
 
         void CAtcStationComponent::showOverlayInlineTextMessage()
         {
-            COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
+            // COverlayMessagesFrame::showOverlayInlineTextMessage(TextMessagesCom1);
+            this->requestTextMessageEntryTab(TextMessagesCom1);
         }
 
         void CAtcStationComponent::onDetailsToggled(bool checked)

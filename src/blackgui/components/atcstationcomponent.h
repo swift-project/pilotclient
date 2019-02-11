@@ -14,7 +14,6 @@
 
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/atcstationssettings.h"
-#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
@@ -45,8 +44,7 @@ namespace BlackGui
     {
         //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
-            public COverlayMessagesFrame,
-            public CEnableForDockWidgetInfoArea,
+            public COverlayMessagesFrameEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -86,9 +84,6 @@ namespace BlackGui
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
         signals:
-            //! Request a text message
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
-
             //! Request audio widget
             void requestAudioWidget();
 

@@ -12,7 +12,6 @@
 #ifndef BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
-#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 
@@ -29,9 +28,7 @@ namespace BlackGui
     namespace Components
     {
         //! Cockpit component: COM unit, show / hide bar, voice rooms
-        class BLACKGUI_EXPORT CCockpitComponent :
-            public COverlayMessagesFrame,
-            public CEnableForDockWidgetInfoArea
+        class BLACKGUI_EXPORT CCockpitComponent : public COverlayMessagesFrameEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
