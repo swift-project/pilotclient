@@ -361,7 +361,6 @@ namespace BlackGui
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
         {
             const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
-
             const CFrequency freq1 = ownAircraft.getCom1System().getFrequencyActive();
             const CFrequency freq2 = ownAircraft.getCom2System().getFrequencyActive();
 
@@ -685,6 +684,16 @@ namespace BlackGui
 
             // force display
             if (!m_usedAsOverlayWidget) { this->displayMyself(); }
+        }
+
+        void CTextMessageComponent::showCorrespondingTabForFrequency(const CFrequency &frequency)
+        {
+            const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+            const CFrequency freq1 = ownAircraft.getCom1System().getFrequencyActive();
+            const CFrequency freq2 = ownAircraft.getCom2System().getFrequencyActive();
+            if (freq1 == frequency) { this->setTab(TextMessagesCom1); return; }
+            if (freq2 == frequency) { this->setTab(TextMessagesCom2); return; }
+            this->setTab(TextMessagesAll);
         }
 
         void CTextMessageComponent::fontSizeMinus()

@@ -12,6 +12,8 @@
 #ifndef BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_TAB_H
 #define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_TAB_H
 
+#include <QMetaType>
+
 namespace BlackGui
 {
     namespace Components
@@ -26,4 +28,7 @@ namespace BlackGui
         };
     } // ns
 } // ns
+
+Q_DECLARE_METATYPE(BlackGui::Components::TextMessageTab)
+
 #endif // guard

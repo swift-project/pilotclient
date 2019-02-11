@@ -59,6 +59,9 @@ namespace BlackGui
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Display the tab for given frequency
+            void showCorrespondingTabForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
             //! Font size @{
             void fontSizeMinus();
             void fontSizePlus();

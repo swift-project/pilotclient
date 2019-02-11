@@ -8,6 +8,9 @@
  */
 
 #include "registermetadatacomponents.h"
+#include "textmessagecomponenttab.h"
+
+#include <QMetaType>
 
 namespace BlackGui
 {
@@ -15,7 +18,7 @@ namespace BlackGui
     {
         void registerMetadata()
         {
-
+            qRegisterMetaType<TextMessageTab>();
         }
     } // ns
 } // ns
