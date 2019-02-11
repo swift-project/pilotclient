@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     CApplication a(CApplicationInfo::Sample);
     BlackMisc::registerMetadata();
     CLogHandler::instance()->install(true);
-//    CLogHandler::instance()->enableConsoleOutput(false); // default disable
+    CLogHandler::instance()->enableConsoleOutput(false); // default disable
     BlackMisc::registerMetadata();
 
     CLineReader lineReader(&a);
