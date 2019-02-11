@@ -75,6 +75,9 @@ namespace BlackGui
         //! Active send/receive of text messages
         void activateTextMessages(bool activate);
 
+        //! Are text messages
+        bool isTextMessagesActivated() const;
+
         //! Display image
         void setModeToImage();
 

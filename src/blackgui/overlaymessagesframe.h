@@ -13,6 +13,7 @@
 #define BLACKGUI_OVERLAYMESSAGES_FRAME_H
 
 #include "blackgui/components/textmessagecomponenttab.h"
+#include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/overlaymessages.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/blackguiexport.h"
@@ -189,7 +190,16 @@ namespace BlackGui
         //! \copydoc BlackGui::COverlayMessages::showOverlayVariant
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1)
         {
-            this->initInnerFrame();
+            if (m_overlayMessages->isTextMessagesActivated() && variant.canConvert<BlackMisc::Network::CTextMessage>())
+            {
+                this->initInnerFrame(0.75, 0.75);
+                if (!this->hasMinimumSize(150, 150)) { return; }
+            }
+            else
+            {
+                this->initInnerFrame();
+            }
+
             m_overlayMessages->showOverlayVariant(variant, timeOutMs);
             WIDGET::repaint();
         }
@@ -373,6 +383,34 @@ namespace BlackGui
     public:
         //! Constructor
         explicit COverlayMessagesFrame(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+
+    signals:
+        //! Request an text message entry
+        void requestTextMessageEntryTab(Components::TextMessageTab tab);
+
+        //! Request an text message entry
+        void requestTextMessageEntryCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Request a text message widget
+        void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+    };
+
+    /*!
+     * Using this class provides a QFrame with the overlay and dock widget functionality already integrated.
+     */
+    class BLACKGUI_EXPORT COverlayMessagesFrameEnableForDockWidgetInfoArea :
+        public COverlayMessagesFrame,
+        public CEnableForDockWidgetInfoArea
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        explicit COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+
+    private:
+        //! Forward overlay messages
+        bool isForwardingOverlayMessages() const;
     };
 
     /*!

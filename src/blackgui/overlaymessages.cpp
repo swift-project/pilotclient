@@ -46,6 +46,7 @@ using namespace BlackCore::Context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -246,12 +247,20 @@ namespace BlackGui
         const bool activatedText = ui->comp_OverlayTextMessage->isActivated();
         if (activatedText)
         {
-            this->setModeToOverlayTextMessage();
-            timeOutMs = -1; // cancel timeout
+            if (textMessage.isPrivateMessage())
+            {
+                this->showOverlayInlineTextMessage(textMessage.getSenderCallsign());
+            }
+            else
+            {
+                this->showOverlayInlineTextMessage(TextMessagesAll);
+                ui->comp_OverlayTextMessage->showCorrespondingTabForFrequency(textMessage.getFrequency());
+            }
         }
         else
         {
             // message and display
+            //! @deprecated KB 2019-02 normally using overlay messages is used
             ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
             ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
             ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
@@ -260,11 +269,11 @@ namespace BlackGui
             ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
 
             this->setModeToTextMessage();
+            this->display(timeOutMs);
         }
-        this->display(timeOutMs);
     }
 
-    void COverlayMessages::showOverlayInlineTextMessage(Components::TextMessageTab tab)
+    void COverlayMessages::showOverlayInlineTextMessage(TextMessageTab tab)
     {
         ui->comp_OverlayTextMessage->setTab(tab);
         ui->comp_OverlayTextMessage->updateAtcStationsButtons();
@@ -276,7 +285,7 @@ namespace BlackGui
 
     void COverlayMessages::showOverlayInlineTextMessage(const CCallsign &callsign)
     {
-        this->showOverlayInlineTextMessage(Components::TextMessagesUnicom);
+        this->showOverlayInlineTextMessage(TextMessagesUnicom);
         ui->comp_OverlayTextMessage->showCorrespondingTab(callsign);
     }
 
@@ -322,7 +331,7 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    void COverlayMessages::showOverlayVariant(const CVariant &variant, int timeOutMs)
     {
         if (variant.canConvert<CStatusMessageList>())
         {
@@ -473,6 +482,11 @@ namespace BlackGui
     void COverlayMessages::activateTextMessages(bool activate)
     {
         ui->comp_OverlayTextMessage->activate(activate, activate);
+    }
+
+    bool COverlayMessages::isTextMessagesActivated() const
+    {
+        return ui->comp_OverlayTextMessage->isActivated();
     }
 
     void COverlayMessages::setModeToImage()

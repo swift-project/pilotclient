@@ -9,6 +9,7 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/overlaymessages.h"
+#include "dockwidgetinfoarea.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/network/textmessage.h"
@@ -28,6 +29,17 @@ namespace BlackGui
 {
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesBase(parent, f)
     { }
+
+    COverlayMessagesFrameEnableForDockWidgetInfoArea::COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent, Qt::WindowFlags f) :
+        COverlayMessagesFrame(parent, f)
+    { }
+
+    bool COverlayMessagesFrameEnableForDockWidgetInfoArea::isForwardingOverlayMessages() const
+    {
+        if (!this->hasDockWidgetArea()) { return false; }
+        if (this->isParentDockWidgetFloating()) { return false; }
+        return true;
+    }
 
     COverlayMessagesTabWidget::COverlayMessagesTabWidget(QWidget *parent) : COverlayMessagesBase(parent)
     { }
