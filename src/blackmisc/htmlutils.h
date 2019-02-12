@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_HTMLUTILS_H
 #define BLACKMISC_HTMLUTILS_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexlist.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QStringBuilder>
 
 //! Free functions in BlackMisc
@@ -41,6 +41,9 @@ namespace BlackMisc
 
     //! As white space preformatted
     BLACKMISC_EXPORT QString unwrappedTooltip(const QString &text);
+
+    //! As hyperlink
+    BLACKMISC_EXPORT QString asHyperlink(const QString &url, const QString &text = "");
 
 } // ns
 

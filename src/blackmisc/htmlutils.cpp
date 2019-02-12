@@ -39,4 +39,11 @@ namespace BlackMisc
         return u"<p style='white-space:pre'>" % text % u"</p>";
     }
 
+    QString asHyperlink(const QString &url, const QString &text)
+    {
+        return text.isEmpty() ?
+               u"<a href=\"" % url % u"\">" % url % u"</a>" :
+               u"<a href=\"" % url % u"\">" % text % u"</a>";
+    }
+
 } // ns

@@ -7,17 +7,18 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_dblogincomponent.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/dblogincomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/url.h"
+#include "blackmisc/htmlutils.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
-#include "ui_dblogincomponent.h"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -46,10 +47,11 @@ namespace BlackGui
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
             this->setModeLogin(true);
-            CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
+            const CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
+            const QString urlString = asHyperlink(url.getFullUrl());
             QString html = ui->tbr_InfoAndHints->toHtml();
-            html = html.replace("##swiftDB##", url.getFullUrl(), Qt::CaseInsensitive);
-            html = html.replace("##swiftEnableSSO##", url.getFullUrl(), Qt::CaseInsensitive);
+            html = html.replace("##swiftDB##", urlString, Qt::CaseInsensitive);
+            html = html.replace("##swiftEnableSSO##", urlString, Qt::CaseInsensitive);
 
             ui->tbr_InfoAndHints->setHtml(html);
             ui->tbr_InfoAndHints->setOpenExternalLinks(true);
@@ -58,7 +60,7 @@ namespace BlackGui
             ui->comp_DebugSetup->setVisible(devEnv);
 
             const QString dbUrl = sGui->getGlobalSetup().getDbHomePageUrl().toQString();
-            ui->lbl_DatabaseName->setText("<a href=\"" + dbUrl + "\">" + dbUrl + "</a>");
+            ui->lbl_DatabaseName->setText(asHyperlink(dbUrl));
             ui->lbl_DatabaseName->setTextFormat(Qt::RichText);
             ui->lbl_DatabaseName->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_DatabaseName->setOpenExternalLinks(true);

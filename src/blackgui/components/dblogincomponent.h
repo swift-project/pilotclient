@@ -32,7 +32,8 @@ namespace BlackGui
          * Login to DB
          */
         class BLACKGUI_EXPORT CDbLoginComponent :
-            public QFrame, public BlackGui::CLoadIndicatorEnabled
+            public QFrame,
+            public CLoadIndicatorEnabled
         {
             Q_OBJECT
 
