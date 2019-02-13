@@ -60,20 +60,12 @@ def get_environment_from_batch_command(env_cmd, initial=None):
     return result
 
 
-def get_vs_env(vs_version, arch):
+def get_vs_env(arch):
     """
     Returns the env object for VS building environment.
 
-    The vs_version can be one of the following strings:
-    - VS2015,
-    - VS2017,
-    the arch has to be one of "x86", "amd64", "arm", "x86_amd64", "x86_arm", "amd64_x86",
-    "amd64_arm", e.g. the args passed to vcvarsall.bat.
+    The arch has to be one of "x86", "amd64", "arm", "x86_amd64", "x86_arm", "amd64_x86",
+    "amd64_arm", i.e. the args passed to vcvarsall.bat.
     """
-    if vs_version == 'VS2015':
-        vsvarsall = "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat"
-    elif vs_version == 'VS2017':
-        vsvarsall = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\Auxiliary\\Build\\vcvarsall.bat"
-    else:
-        raise RuntimeError('Unsupported Visual Studio version!')
+    vsvarsall = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\Auxiliary\\Build\\vcvarsall.bat"
     return get_environment_from_batch_command([vsvarsall, arch])

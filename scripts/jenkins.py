@@ -262,9 +262,9 @@ class MSVCBuilder(Builder):
         os.environ['PATH'] += os.pathsep + self._get_externals_path() #TODO still needed? we copy externals anyway
         os.environ['PATH'] += os.pathsep + 'C:/Program Files/7-Zip'
         if self.word_size == '32':
-            vs_env = get_vs_env('VS2017', 'x86')
+            vs_env = get_vs_env('x86')
         else:
-            vs_env = get_vs_env('VS2017', 'amd64')
+            vs_env = get_vs_env('amd64')
 
         os.environ.update(vs_env)
 
