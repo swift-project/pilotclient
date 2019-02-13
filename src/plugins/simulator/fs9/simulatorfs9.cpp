@@ -138,10 +138,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(m_fsuipc,  Q_FUNC_INFO, "No FSUIPC");
             m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
 
-            if (m_useFsuipc)
-            {
-                m_fsuipc->open(); // connect FSUIPC too
-            }
+            useFsuipc(true);
             this->initSimulatorInternals();
             m_timerId = startTimer(50);
             return true;
