@@ -54,6 +54,7 @@ namespace BlackGui
             connect(ui->tb_DbReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
             connect(ui->tb_DbReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
             connect(ui->tb_DbReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadCategories,   &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
 
             connect(ui->tb_SharedReloadAircraft,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
             connect(ui->tb_SharedReloadAirlines,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
@@ -62,6 +63,7 @@ namespace BlackGui
             connect(ui->tb_SharedReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
             connect(ui->tb_SharedReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
             connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadCategories,   &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
 
             connect(ui->pb_LoadAllFromDB,        &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
             connect(ui->pb_LoadAllFromShared,    &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
@@ -98,6 +100,7 @@ namespace BlackGui
             ui->tb_DbReloadLiveries->setVisible(visible);
             ui->tb_DbReloadModels->setVisible(visible);
             ui->tb_DbReloadDistributors->setVisible(visible);
+            ui->tb_DbReloadCategories->setVisible(visible);
         }
 
         void CDbLoadOverviewComponent::showVisibleSharedRefreshButtons(bool visible)
@@ -110,6 +113,7 @@ namespace BlackGui
             ui->tb_SharedReloadLiveries->setVisible(visible);
             ui->tb_SharedReloadModels->setVisible(visible);
             ui->tb_SharedReloadDistributors->setVisible(visible);
+            ui->tb_SharedReloadCategories->setVisible(visible);
         }
 
         void CDbLoadOverviewComponent::resizeEvent(QResizeEvent *event)
@@ -163,6 +167,7 @@ namespace BlackGui
             ui->le_ModelsCacheCount->setText(cacheCountForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesCacheCount->setText(cacheCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsCacheCount->setText(cacheCountForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftCategoryEntity));
 
             ui->le_AircraftIcaoDbCount->setText(dbCountForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoDbCount->setText(dbCountForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -171,6 +176,7 @@ namespace BlackGui
             ui->le_ModelsDbCount->setText(dbCountForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesDbCount->setText(dbCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsDbCount->setText(dbCountForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesDbCount->setText(dbCountForEntity(CEntityFlags::AircraftCategoryEntity));
 
             ui->le_AircraftIcaoSharedCount->setText(sharedCountForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoSharedCount->setText(sharedCountForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -179,6 +185,7 @@ namespace BlackGui
             ui->le_ModelsSharedCount->setText(sharedCountForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesSharedCount->setText(sharedCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsSharedCount->setText(sharedCountForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesSharedCount->setText(sharedCountForEntity(CEntityFlags::AircraftCategoryEntity));
 
             ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -187,6 +194,7 @@ namespace BlackGui
             ui->le_ModelsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftCategoryEntity));
 
             ui->le_AircraftIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -195,6 +203,7 @@ namespace BlackGui
             ui->le_ModelsDbTs->setText(dbTimestampForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesDbTs->setText(dbTimestampForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsDbTs->setText(dbTimestampForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesDbTs->setText(dbTimestampForEntity(CEntityFlags::AircraftCategoryEntity));
 
             ui->le_AircraftIcaoSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -203,6 +212,7 @@ namespace BlackGui
             ui->le_ModelsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::DistributorEntity));
+            ui->le_CategoriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftCategoryEntity));
 
             // DB URL
             const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
