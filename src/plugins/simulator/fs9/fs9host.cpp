@@ -27,7 +27,16 @@ namespace BlackSimPlugin
     {
         CFs9Host::CFs9Host(QObject *owner) :
             CDirectPlayPeer(owner, sApp->swiftVersionString())
-        {}
+        {
+            initDirectPlay();
+            createHostAddress();
+            startHosting(sApp->swiftVersionString(), m_callsign.toQString());
+        }
+
+        CFs9Host::~CFs9Host()
+        {
+            stopHosting();
+        }
 
         QString CFs9Host::getHostAddress()
         {
@@ -71,18 +80,6 @@ namespace BlackSimPlugin
             message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
             qDebug() << "Message:" << textMessage;
             sendMessage(message);
-        }
-
-        void CFs9Host::initialize()
-        {
-            initDirectPlay();
-            createHostAddress();
-            startHosting(sApp->swiftVersionString(), m_callsign.toQString());
-        }
-
-        void CFs9Host::cleanup()
-        {
-            stopHosting();
         }
 
         HRESULT CFs9Host::startHosting(const QString &session, const QString &callsign)

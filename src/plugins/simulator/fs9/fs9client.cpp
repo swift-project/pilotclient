@@ -137,6 +137,7 @@ namespace BlackSimPlugin
 
         CFs9Client::~CFs9Client()
         {
+            closeConnection();
             SafeRelease(m_hostAddress);
         }
 
@@ -172,6 +173,13 @@ namespace BlackSimPlugin
             }
         }
 
+        void CFs9Client::start()
+        {
+            initDirectPlay();
+            createDeviceAddress();
+            connectToSession(m_callsign);
+        }
+
         CStatusMessageList CFs9Client::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             if (!this->getInterpolator()) { return CStatusMessageList(); }
@@ -193,18 +201,6 @@ namespace BlackSimPlugin
 
             sendMultiplayerPosition(result);
             sendMultiplayerParamaters();
-        }
-
-        void CFs9Client::initialize()
-        {
-            initDirectPlay();
-            createDeviceAddress();
-            connectToSession(m_callsign);
-        }
-
-        void CFs9Client::cleanup()
-        {
-            closeConnection();
         }
 
         HRESULT CFs9Client::enumDirectPlayHosts()
@@ -277,8 +273,6 @@ namespace BlackSimPlugin
         {
             HRESULT hr = s_ok();
             if (m_clientStatus == Connected) { return hr; }
-
-            QMutexLocker locker(&m_mutexHostList);
 
             QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[static_cast<uint>(callsign.toQString().size() + 1)]);
             callsign.toQString().toWCharArray(wszPlayername.data());
@@ -390,7 +384,7 @@ namespace BlackSimPlugin
 
         const ISimulator *CFs9Client::simulator() const
         {
-            return qobject_cast<const ISimulator *>(this->owner());
+            return qobject_cast<const ISimulator *>(this->parent());
         }
     }
 }

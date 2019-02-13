@@ -35,7 +35,7 @@ namespace BlackSimPlugin
             CFs9Host(QObject *owner);
 
             //! Destructor
-            virtual ~CFs9Host() {}
+            virtual ~CFs9Host();
 
             //! Returns true if the users simulator is connected
             bool isConnected() const { return m_playerUser != 0; }
@@ -50,13 +50,6 @@ namespace BlackSimPlugin
         signals:
             //! Hosting status changed
             void statusChanged(BlackSimPlugin::Fs9::CFs9Host::HostStatus);
-
-        protected:
-            //! \copydoc BlackMisc::CContinuousWorker::initialize
-            virtual void initialize() override;
-
-            //! \copydoc BlackMisc::CContinuousWorker::cleanup
-            virtual void cleanup() override;
 
         private:
             //! Start host session

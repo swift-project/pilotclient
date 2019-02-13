@@ -17,7 +17,6 @@
 #include <QFile>
 #include <QStringList>
 #include <QScopedPointer>
-#include <QMutexLocker>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -32,10 +31,9 @@ namespace BlackSimPlugin
             return cats;
         }
 
-        CDirectPlayPeer::CDirectPlayPeer(QObject *owner, const CCallsign &callsign)
-            : CContinuousWorker(owner, "peer_" + callsign.toQString()),
+        CDirectPlayPeer::CDirectPlayPeer(QObject *parent, const CCallsign &callsign)
+            : QObject(parent),
               m_callsign(callsign),
-              m_mutexHostList(QMutex::Recursive),
               m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)
         { }
 
@@ -114,8 +112,6 @@ namespace BlackSimPlugin
                 {
                     PDPNMSG_ENUM_HOSTS_RESPONSE enumHostsResponseMsg = static_cast<PDPNMSG_ENUM_HOSTS_RESPONSE>(msgBuffer);
                     const DPN_APPLICATION_DESC *applicationDescription = enumHostsResponseMsg->pApplicationDescription;
-
-                    QMutexLocker locker(&m_mutexHostList);
 
                     auto iterator = std::find_if(m_hostNodeList.begin(), m_hostNodeList.end(), [&](const CHostNode & hostNode)
                     {

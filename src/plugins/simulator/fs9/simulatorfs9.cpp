@@ -193,7 +193,7 @@ namespace BlackSimPlugin
             if (!m_hashFs9Clients.contains(callsign)) { return false; }
 
             auto fs9Client = m_hashFs9Clients.value(callsign);
-            fs9Client->quit();
+            delete fs9Client;
             m_hashFs9Clients.remove(callsign);
             updateAircraftRendered(callsign, false);
             CLogMessage(this).info(u"FS9: Removed aircraft %1") << callsign.toQString();
@@ -466,7 +466,7 @@ namespace BlackSimPlugin
 
         static void cleanupFs9Host(CFs9Host *host)
         {
-            host->quitAndWait();
+            delete host;
         }
 
         CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
@@ -478,8 +478,6 @@ namespace BlackSimPlugin
 
             /* After FS9 is disconnected, reset its data stored in the host */
             connect(m_lobbyClient.data(), &CLobbyClient::disconnected, m_fs9Host.data(), &CFs9Host::reset);
-
-            m_fs9Host->start();
         }
 
         CSimulatorFs9Factory::~CSimulatorFs9Factory()

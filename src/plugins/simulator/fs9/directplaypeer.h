@@ -18,7 +18,6 @@
 #include "blackmisc/logcategorylist.h"
 #include <QObject>
 #include <QList>
-#include <QMutex>
 #include <QScopedPointer>
 #include <dplay8.h>
 #include <functional>
@@ -31,13 +30,13 @@ namespace BlackSimPlugin
         //! DirectPlay peer implementation
         //! More information can be found in the DirectX9 SDK documentation
         //! http://doc.51windows.net/Directx9_SDK/?url=/Directx9_SDK/play/dplay.htm
-        class CDirectPlayPeer : public BlackMisc::CContinuousWorker
+        class CDirectPlayPeer : public QObject
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CDirectPlayPeer(QObject *owner, const BlackMisc::Aviation::CCallsign &callsign);
+            CDirectPlayPeer(QObject *parent, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Destructor
             virtual ~CDirectPlayPeer();
@@ -90,8 +89,6 @@ namespace BlackSimPlugin
             std::atomic<DPNID> m_playerLocal = {0}; //!< Local player Id
             // We need the Id of the users player, because we are sending packets only to him
             std::atomic<DPNID> m_playerUser = {0}; //!< User player Id
-
-            QMutex m_mutexHostList; //!< Host list mutex
 
             using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
             TCallbackWrapper m_callbackWrapper; //!< Callback wrapper

@@ -15,7 +15,6 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/time.h"
-#include <QMutex>
 #include <QScopedPointer>
 #include <QReadWriteLock>
 
@@ -52,6 +51,9 @@ namespace BlackSimPlugin
             //! Set DirectPlay host address
             void setHostAddress(const QString &hostAddress);
 
+            //! Starts the FS9 client messaging
+            void start();
+
             //! Get interpolator @{
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
             const BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
@@ -71,12 +73,6 @@ namespace BlackSimPlugin
         protected:
             //! \copydoc QObject::timerEvent
             virtual void timerEvent(QTimerEvent *event) override;
-
-            //! \copydoc BlackMisc::CContinuousWorker::initialize
-            virtual void initialize() override;
-
-            //! \copydoc BlackMisc::CContinuousWorker::cleanup
-            virtual void cleanup() override;
 
         private:
             //! Enumerate all FS9 session hosts
