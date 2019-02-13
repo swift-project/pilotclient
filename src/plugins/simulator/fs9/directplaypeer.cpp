@@ -284,15 +284,17 @@ namespace BlackSimPlugin
             //! \fixme KB 201707, style? pBufferData = const_cast<BYTE *>(reinterpret_cast<const BYTE *>(message.data()));
             dpBufferDesc.pBufferData = (BYTE *)message.data();
 
+            DPNHANDLE asyncHandle;
             // If m_playerUser is non zero, send it only to him
             if (FAILED(hr = m_directPlayPeer->SendTo(m_playerUser,
                             &dpBufferDesc,
                             1, 0,
-                            nullptr, nullptr,
-                            DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
+                            nullptr,
+                            &asyncHandle,
+                            DPNSEND_GUARANTEED)))
             {
                 const QString m(message);
-                CLogMessage(this).warning(u"DirectPlay: Failed to send message!");
+                CLogMessage(this).warning(u"DirectPlay: Failed to send message! Return value: %1 ") << hr;
                 CLogMessage(this).debug() << m;
             }
             return hr;
