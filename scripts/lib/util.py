@@ -5,6 +5,7 @@ from __future__ import print_function
 import itertools
 import subprocess
 import sys
+import os
 
 
 def validate_pair(ob):
@@ -67,5 +68,12 @@ def get_vs_env(arch):
     The arch has to be one of "x86", "amd64", "arm", "x86_amd64", "x86_arm", "amd64_x86",
     "amd64_arm", i.e. the args passed to vcvarsall.bat.
     """
-    vsvarsall = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\Auxiliary\\Build\\vcvarsall.bat"
+
+    # https://github.com/Microsoft/vswhere/wiki
+    component = 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64'
+    vswhere = os.environ['ProgramFiles(x86)'] + "\\Microsoft Visual Studio\\Installer\\vswhere.exe"
+    vswhereCmd = [vswhere, '-latest', '-products', '*', '-requires', component, '-property', 'installationPath']
+    vspath = subprocess.check_output(vswhereCmd).decode("utf-8").strip()
+
+    vsvarsall = vspath + "\\VC\\Auxiliary\\Build\\vcvarsall.bat"
     return get_environment_from_batch_command([vsvarsall, arch])
