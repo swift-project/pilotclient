@@ -47,24 +47,24 @@ namespace BlackGui
             ui->lbl_SharedUrls->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_SharedUrls->setOpenExternalLinks(true);
 
-            connect(ui->tb_DbReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-            connect(ui->tb_DbReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-            connect(ui->tb_DbReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-            connect(ui->tb_DbReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-            connect(ui->tb_DbReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-            connect(ui->tb_DbReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadAircraft,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadAirlines,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadAirports,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadCountries,    &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
             connect(ui->tb_DbReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
 
-            connect(ui->tb_SharedReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-            connect(ui->tb_SharedReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-            connect(ui->tb_SharedReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-            connect(ui->tb_SharedReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-            connect(ui->tb_SharedReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-            connect(ui->tb_SharedReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadAircraft,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadAirlines,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadAirports,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadCountries,    &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
             connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
 
-            connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
-            connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
+            connect(ui->pb_LoadAllFromDB,        &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
+            connect(ui->pb_LoadAllFromShared,    &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
             connect(ui->pb_LoadAllFromResources, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromResourceFiles);
 
             if (sGui->hasWebDataServices())

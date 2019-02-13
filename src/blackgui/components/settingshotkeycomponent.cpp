@@ -47,8 +47,8 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tv_Hotkeys->setModel(&m_model);
 
-            connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
-            connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
+            connect(ui->pb_AddHotkey,    &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
+            connect(ui->pb_EditHotkey,   &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
             connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::removeEntry);
             connect(ui->tb_ReloadHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings);
 
@@ -176,6 +176,7 @@ namespace BlackGui
         CIdentifierList CSettingsHotkeyComponent::getAllIdentifiers() const
         {
             CIdentifierList identifiers;
+            if (!sGui) { return identifiers; }
             if (sGui->getIContextApplication()) { identifiers = sGui->getIContextApplication()->getRegisteredApplications(); }
 
             // add local application

@@ -86,7 +86,7 @@ namespace BlackGui
         void CAircraftPartsHistory::updatePartsHistory()
         {
             if (!this->hasContexts()) { return; }
-            if (!this->isVisible()) { return; }
+            if (!this->isVisible())   { return; }
             const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
             if (cs.isEmpty()) { return; } // no or invalid callsign
             const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs).frontOrDefault();

@@ -12,10 +12,11 @@
 #ifndef BLACKGUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/loadindicator.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
 #include <QScopedPointer>
 
