@@ -108,6 +108,9 @@ namespace BlackMisc
         //! Check if other identifier is from the same machine id
         bool hasSameMachineId(const CIdentifier &other) const;
 
+        //! Same machine or id?
+        bool hasSameMachineNameOrId(const CIdentifier &other) const;
+
         //! Get process id
         qint64 getProcessId() const {return m_processId;}
 
@@ -128,6 +131,12 @@ namespace BlackMisc
 
         //! Null identifier (no name, ids etc)
         bool isNull() const;
+
+        //! Update to current machine
+        void updateToCurrentMachine();
+
+        //! Update to current process
+        void updateToCurrentProcess();
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

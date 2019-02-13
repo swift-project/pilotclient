@@ -29,7 +29,8 @@ const QString &cachedLocalHostName()
     return hostName;
 }
 
-enum {
+enum
+{
     UuidStringLen = sizeof("00000000-0000-0000-0000-000000000000")
 };
 
@@ -40,27 +41,27 @@ QByteArray getMachineUniqueIdImpl()
     // https://codereview.qt-project.org/#/c/249399
 
     QByteArray machineUniqueId;
-    #ifdef Q_OS_MAC
-        char uuid[UuidStringLen];
-        size_t uuidlen = sizeof(uuid);
-        int ret = sysctlbyname("kern.uuid", uuid, &uuidlen, nullptr, 0);
-        if (ret == 0 && uuidlen == sizeof(uuid))
-        {
-            machineUniqueId = QByteArray(uuid, uuidlen - 1);
-        }
-    #elif defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
-        HKEY key = nullptr;
-        if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Cryptography", 0, KEY_READ | KEY_WOW64_64KEY, &key) == ERROR_SUCCESS)
-        {
-            wchar_t buffer[UuidStringLen];
-            DWORD size = sizeof(buffer);
-            bool ok = (RegQueryValueEx(key, L"MachineGuid", nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer), &size) == ERROR_SUCCESS);
-            RegCloseKey(key);
-            if (ok) { machineUniqueId = QStringView(buffer, (size - 1) / 2).toLatin1(); }
-        }
-    #else
-        machineUniqueId = QSysInfo::machineUniqueId();
-    #endif
+#ifdef Q_OS_MAC
+    char uuid[UuidStringLen];
+    size_t uuidlen = sizeof(uuid);
+    int ret = sysctlbyname("kern.uuid", uuid, &uuidlen, nullptr, 0);
+    if (ret == 0 && uuidlen == sizeof(uuid))
+    {
+        machineUniqueId = QByteArray(uuid, uuidlen - 1);
+    }
+#elif defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
+    HKEY key = nullptr;
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Cryptography", 0, KEY_READ | KEY_WOW64_64KEY, &key) == ERROR_SUCCESS)
+    {
+        wchar_t buffer[UuidStringLen];
+        DWORD size = sizeof(buffer);
+        bool ok = (RegQueryValueEx(key, L"MachineGuid", nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer), &size) == ERROR_SUCCESS);
+        RegCloseKey(key);
+        if (ok) { machineUniqueId = QStringView(buffer, (size - 1) / 2).toLatin1(); }
+    }
+#else
+    machineUniqueId = QSysInfo::machineUniqueId();
+#endif
     return machineUniqueId;
 }
 
@@ -162,8 +163,14 @@ namespace BlackMisc
         return !m_machineIdBase64.isEmpty() && m_machineIdBase64 == other.m_machineIdBase64;
     }
 
+    bool CIdentifier::hasSameMachineNameOrId(const CIdentifier &other) const
+    {
+        return this->hasSameMachineId(other) || this->hasSameMachineName(other);
+    }
+
     bool CIdentifier::isFromLocalMachine() const
     {
+        //! \fixme KB 2019-02 wonder if we should check on id (strict) or machine name (lenient)
         return cachedMachineUniqueId() == getMachineId();
     }
 
@@ -185,6 +192,18 @@ namespace BlackMisc
     bool CIdentifier::isNull() const
     {
         return &null() == this || null() == *this;
+    }
+
+    void CIdentifier::updateToCurrentMachine()
+    {
+        m_machineIdBase64 =  cachedMachineUniqueId().toBase64();
+        m_machineName = cachedLocalHostName();
+    }
+
+    void CIdentifier::updateToCurrentProcess()
+    {
+        m_processName = QCoreApplication::applicationName();
+        m_processId = QCoreApplication::applicationPid();
     }
 
     QString CIdentifier::convertToQString(bool i18n) const

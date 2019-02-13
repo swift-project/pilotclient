@@ -57,6 +57,9 @@ namespace BlackMisc
 
             //! Contains action?
             bool containsAction(const QString &action) const;
+
+            //! Update for my machine
+            void updateToCurrentMachine();
         };
     } // ns
 } // ns

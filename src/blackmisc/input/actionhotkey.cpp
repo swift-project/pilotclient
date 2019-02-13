@@ -38,9 +38,24 @@ namespace BlackMisc
             m_combination = combination;
         }
 
-        bool CActionHotkey::isForSameMachine(const CActionHotkey &key) const
+        bool CActionHotkey::isForSameMachineId(const CActionHotkey &key) const
         {
             return this->getApplicableMachine().hasSameMachineId(key.getApplicableMachine());
+        }
+
+        bool CActionHotkey::isForSameMachineName(const CActionHotkey &key) const
+        {
+            return this->getApplicableMachine().hasSameMachineName(key.getApplicableMachine());
+        }
+
+        bool CActionHotkey::isForSameMachine(const CActionHotkey &key) const
+        {
+            return this->isForSameMachineId(key) || this->isForSameMachineName(key);
+        }
+
+        void CActionHotkey::updateToCurrentMachine()
+        {
+            m_identifier.updateToCurrentMachine();
         }
 
         void CActionHotkey::setObject(const CActionHotkey &obj)

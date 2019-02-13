@@ -64,14 +64,26 @@ namespace BlackMisc
             //! Set function
             void setAction(const QString &action) { m_action = action; }
 
+            //! The identifier
+            const CIdentifier &getIdentifier() const { return m_identifier; }
+
             //! Set applicable machine
             void setApplicableMachine(const CIdentifier &identifier) { m_identifier = identifier; }
 
             //! Get applicable machine
             const CIdentifier &getApplicableMachine() const { return m_identifier; }
 
-            //! Key for the same machine?
+            //! Key for the same machine id?
+            bool isForSameMachineId(const CActionHotkey &key) const;
+
+            //! Key for the same machine name
+            bool isForSameMachineName(const CActionHotkey &key) const;
+
+            //! Key for the same machine (same name or id)?
             bool isForSameMachine(const CActionHotkey &key) const;
+
+            //! Local machine
+            void updateToCurrentMachine();
 
             //! Set object
             void setObject(const CActionHotkey &obj);

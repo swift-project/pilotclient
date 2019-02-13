@@ -51,7 +51,7 @@ namespace BlackMisc
             CActionHotkeyList sameMachineKeys;
             for (const CActionHotkey &actionHotkey : *this)
             {
-                if (!actionHotkey.isForSameMachine(key)) { continue; }
+                if (!actionHotkey.isForSameMachineId(key)) { continue; }
                 sameMachineKeys.push_back(actionHotkey);
             }
             return sameMachineKeys;
@@ -60,6 +60,16 @@ namespace BlackMisc
         bool CActionHotkeyList::containsAction(const QString &action) const
         {
             return this->contains(&CActionHotkey::getAction, action);
+        }
+
+        void CActionHotkeyList::updateToCurrentMachine()
+        {
+            const CIdentifier comparison("comparison for local machine");
+            for (CActionHotkey &actionHotkey : *this)
+            {
+                const bool sameMachine = actionHotkey.getIdentifier().hasSameMachineNameOrId(comparison);
+                if (sameMachine) { actionHotkey.updateToCurrentMachine(); }
+            }
         }
     } // ns
 } // ns

@@ -361,7 +361,8 @@ namespace BlackGui
                 const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsActionHotkeys.getFilename());
                 if (!joStr.isEmpty())
                 {
-                    const CActionHotkeyList hotkeys = CActionHotkeyList::fromJsonNoThrow(joStr, true, success, errMsg);
+                    CActionHotkeyList hotkeys = CActionHotkeyList::fromJsonNoThrow(joStr, true, success, errMsg);
+                    hotkeys.updateToCurrentMachine();
                     if (this->parsingMessage(success, errMsg, m_settingsActionHotkeys.getKey()))
                     {
                         this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true));
