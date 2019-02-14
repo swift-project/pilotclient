@@ -139,6 +139,7 @@ namespace BlackCore
         {
             const auto nearestGridPoint = fetchedWeatherGrid.findClosest(1, gridPoint.getPosition()).frontOrDefault();
             gridPoint.copyWeatherDataFrom(nearestGridPoint);
+            gridPoint.setPosition(nearestGridPoint.getPosition());
         }
 
         if (weatherRequest.callback) { weatherRequest.callback(requestedWeatherGrid); }

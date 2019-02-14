@@ -23,6 +23,7 @@
 #include <QCompleter>
 #include <QRegExpValidator>
 #include <QRegularExpression>
+#include <QStringView>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -221,10 +222,15 @@ namespace BlackGui
 
         void CWeatherComponent::setWeatherGrid(const CWeatherGrid &weatherGrid)
         {
-            auto gridPoint = weatherGrid.frontOrDefault();
+            CGridPoint gridPoint = weatherGrid.frontOrDefault();
             ui->tvp_TemperatureLayers->updateContainer(gridPoint.getTemperatureLayers());
             ui->tvp_CloudLayers->updateContainer(gridPoint.getCloudLayers());
             ui->tvp_WindLayers->updateContainer(gridPoint.getWindLayers());
+            CCoordinateGeodetic position = gridPoint.getPosition();
+            double pressureAtMsl = gridPoint.getPressureAtMsl().value(CPressureUnit::hPa());
+            QString status = QString("Weather Position: %1 %2").arg(position.latitude().toWgs84(), position.longitude().toWgs84());
+            status += QString("\nPressure (MSL): %1 hPa").arg(pressureAtMsl);
+            ui->lbl_Status->setText(status);
         }
 
         void CWeatherComponent::requestWeatherGrid(const CCoordinateGeodetic &position)
