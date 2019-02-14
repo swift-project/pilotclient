@@ -132,7 +132,6 @@ namespace BlackWxPlugin
                 double surfaceSnow = 0;
                 double surfacePrecipitationRate = 0;
                 double pressureAtMsl = 0.0;
-                double surfaceTemperature = 0;
             };
 
             //! Asyncronous fetching finished

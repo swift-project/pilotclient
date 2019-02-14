@@ -286,10 +286,6 @@ namespace BlackWxPlugin
 
                 CTemperatureLayerList temperatureLayers;
 
-                CAltitude surfaceAltitude(0, CAltitude::AboveGround, CLengthUnit::defaultUnit());
-                CTemperatureLayer surfaceTemperature(surfaceAltitude, CTemperature(gfsGridPoint.surfaceTemperature, CTemperatureUnit::K()), {}, {});
-                temperatureLayers.push_back(surfaceTemperature);
-
                 CWindLayerList windLayers;
                 for (auto isobaricLayerIt = gfsGridPoint.isobaricLayers.begin(); isobaricLayerIt != gfsGridPoint.isobaricLayers.end(); ++isobaricLayerIt)
                 {
@@ -603,7 +599,6 @@ namespace BlackWxPlugin
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 if (level > 0) { gridPoint.isobaricLayers[level].temperature = fld[gridPoint.fieldPosition]; }
-                else { gridPoint.surfaceTemperature = fld[gridPoint.fieldPosition]; }
             }
         }
 
