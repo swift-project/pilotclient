@@ -13,6 +13,7 @@
 //! \file
 
 #include "blackinput/joystick.h"
+#include "blackmisc/input/joystickbutton.h"
 
 #include <QHash>
 #include <IOKit/hid/IOHIDManager.h>
@@ -35,12 +36,15 @@ namespace BlackInput
         //! Initialize device
         bool init(const IOHIDDeviceRef device);
 
+        //! Get all available device buttons
+        BlackMisc::Input::CJoystickButtonList getDeviceButtons() const;
+
         //! Return the native IOHIDDeviceRef
         IOHIDDeviceRef getNativeDevice() const { return m_deviceRef; }
 
     signals:
         //! Joystick button changed
-        void buttonChanged(const QString &name, int index, bool isPressed);
+        void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
     private:
         friend bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs);
@@ -55,7 +59,7 @@ namespace BlackInput
         QString m_deviceName = "unknown";  //!< Device name
         // IOHIDDeviceRef is owned by IOHIDManager. Do not release it.
         IOHIDDeviceRef m_deviceRef = nullptr;
-        QHash<IOHIDElementRef, int> m_joystickDeviceInputs;
+        QHash<IOHIDElementRef, BlackMisc::Input::CJoystickButton> m_joystickDeviceInputs;
     };
 
     //! MacOS implemenation of IJoystick
@@ -73,6 +77,9 @@ namespace BlackInput
         //! Destructor
         virtual ~CJoystickMacOS() override;
 
+        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+
     protected:
         virtual bool init() override;
 
@@ -88,7 +95,7 @@ namespace BlackInput
         //! Remove joystick device
         void removeJoystickDevice(const IOHIDDeviceRef device);
 
-        void joystickButtonChanged(const QString &name, int index, bool isPressed);
+        void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
         static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDeviceRef device);
         static void removeCallback(void* context, IOReturn result, void* sender, IOHIDDeviceRef device);

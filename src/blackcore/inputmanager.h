@@ -17,6 +17,7 @@
 #include "blackinput/joystick.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/input/joystickbuttonlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 
@@ -95,6 +96,9 @@ namespace BlackCore
 
         //! Releases all devices
         void releaseDevices();
+
+        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const;
 
     signals:
         //! Event hotkeyfunction occured

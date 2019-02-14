@@ -86,6 +86,12 @@ namespace BlackInput
         reloadDevices(inputDevicesDir());
     }
 
+    CJoystickButtonList CJoystickLinux::getAllAvailableJoystickButtons() const
+    {
+        // We don't know which buttons are available yet.
+        return {};
+    }
+
     void CJoystickLinux::cleanupJoysticks()
     {
         for (auto it = m_joystickDevices.begin(); it != m_joystickDevices.end();)

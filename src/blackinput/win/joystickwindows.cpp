@@ -81,6 +81,16 @@ namespace BlackInput
         return true;
     }
 
+    CJoystickButtonList CJoystickDevice::getDeviceButtons() const
+    {
+        CJoystickButtonList buttons;
+        for (const CJoystickDeviceInput &deviceInput : m_joystickDeviceInputs)
+        {
+            buttons.push_back(deviceInput.m_button);
+        }
+        return buttons;
+    }
+
     void CJoystickDevice::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event);
@@ -123,8 +133,8 @@ namespace BlackInput
             const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
             bool isPressed = state.rgbButtons[buttonIndex] & 0x80;
 
-            if (isPressed) { emit buttonChanged(m_deviceName, buttonIndex, true); }
-            else { emit buttonChanged(m_deviceName, buttonIndex, false); }
+            if (isPressed) { emit buttonChanged(input.m_button, true); }
+            else { emit buttonChanged(input.m_button, false); }
 
         }
         return hr;
@@ -138,12 +148,11 @@ namespace BlackInput
         if (dev->guidType != GUID_Button) return DIENUM_CONTINUE;
 
         CJoystickDeviceInput deviceInput;
-        deviceInput.m_number = joystickDevice->m_joystickDeviceInputs.size();
-        deviceInput.m_offset = DIJOFS_BUTTON(deviceInput.m_number);
-        deviceInput.m_name = QString::fromWCharArray(dev->tszName);
+        int number = joystickDevice->m_joystickDeviceInputs.size();
+        deviceInput.m_offset = DIJOFS_BUTTON(number);
+        deviceInput.m_button = CJoystickButton(joystickDevice->m_deviceName, DIJOFS_BUTTON(number) - DIJOFS_BUTTON0);
 
         joystickDevice->m_joystickDeviceInputs.append(deviceInput);
-
         CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
 
         return DIENUM_CONTINUE;
@@ -194,6 +203,16 @@ namespace BlackInput
         m_directInput.reset();
         if (m_coInitializeSucceeded) { CoUninitialize(); }
         destroyHelperWindow();
+    }
+
+    CJoystickButtonList CJoystickWindows::getAllAvailableJoystickButtons() const
+    {
+        CJoystickButtonList availableButtons;
+        for (const CJoystickDevice *device : as_const(m_joystickDevices))
+        {
+            availableButtons.push_back(device->getDeviceButtons());
+        }
+        return availableButtons;
     }
 
     void ReleaseDirectInput(IDirectInput8 *obj)
@@ -304,11 +323,11 @@ namespace BlackInput
         }
     }
 
-    void CJoystickWindows::joystickButtonChanged(const QString &name, int index, bool isPressed)
+    void CJoystickWindows::joystickButtonChanged(const CJoystickButton &joystickButton, bool isPressed)
     {
         BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
-        if (isPressed) { m_buttonCombination.addJoystickButton({name, index}); }
-        else { m_buttonCombination.removeJoystickButton({name, index}); }
+        if (isPressed) { m_buttonCombination.addJoystickButton(joystickButton); }
+        else { m_buttonCombination.removeJoystickButton(joystickButton); }
 
         if (oldCombination != m_buttonCombination)
         {
@@ -338,8 +357,7 @@ namespace BlackInput
 
     bool operator == (CJoystickDeviceInput const &lhs, CJoystickDeviceInput const &rhs)
     {
-        return lhs.m_number == rhs.m_number &&
-               lhs.m_offset == rhs.m_offset &&
-               lhs.m_name == rhs.m_name;
+        return lhs.m_offset == rhs.m_offset &&
+               lhs.m_button == rhs.m_button;
     }
 } // ns

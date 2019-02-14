@@ -36,6 +36,9 @@ namespace BlackInput
         //! Creates a native joystick handler object
         static std::unique_ptr<IJoystick> create(QObject *parent = nullptr);
 
+        //! Get all available joystick buttons
+        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const { return {}; }
+
     signals:
         //! Joystick button combination has changed
         void buttonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);

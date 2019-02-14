@@ -73,6 +73,9 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickLinux() = default;
 
+        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+
     private:
         friend class IJoystick;
 

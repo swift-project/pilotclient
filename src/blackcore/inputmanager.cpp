@@ -133,6 +133,11 @@ namespace BlackCore
         m_joystick.reset();
     }
 
+    CJoystickButtonList CInputManager::getAllAvailableJoystickButtons() const
+    {
+        return m_joystick->getAllAvailableJoystickButtons();
+    }
+
     int CInputManager::bindImpl(const QString &action, QObject *receiver, std::function<void (bool)> function)
     {
         static int index = 0;

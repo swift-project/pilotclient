@@ -17,6 +17,7 @@
 #include <array>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
@@ -52,8 +53,8 @@ namespace BlackInput
             {
                 CLogMessage(static_cast<CJoystickMacOS *>(nullptr)).debug() << "Found joystick button " << m_joystickDeviceInputs.size();
 
-                int size = m_joystickDeviceInputs.size();
-                m_joystickDeviceInputs.insert(elementRef, size);
+                int number = m_joystickDeviceInputs.size();
+                m_joystickDeviceInputs.insert(elementRef, { m_deviceName, number });
                 IOHIDDeviceRegisterInputValueCallback(device, valueCallback, this);
             }
         }
@@ -66,15 +67,20 @@ namespace BlackInput
         return true;
     }
 
+    CJoystickButtonList CJoystickDevice::getDeviceButtons() const
+    {
+        return CSequence<CJoystickButton>(m_joystickDeviceInputs.values());
+    }
+
     void CJoystickDevice::processButtonEvent(IOHIDValueRef value)
     {
         IOHIDElementRef element = IOHIDValueGetElement(value);
-        int buttonNumber = m_joystickDeviceInputs.value(element, -1);
-        if (buttonNumber != -1)
+        CJoystickButton joystickButton = m_joystickDeviceInputs.value(element);
+        if (joystickButton.isValid())
         {
             bool isPressed = IOHIDValueGetIntegerValue(value) == 1;
-            if (isPressed) { emit buttonChanged(m_deviceName, buttonNumber, true); }
-            else { emit buttonChanged(m_deviceName, buttonNumber, false); }
+            if (isPressed) { emit buttonChanged(joystickButton, true); }
+            else { emit buttonChanged(joystickButton, false); }
         }
     }
 
@@ -102,6 +108,16 @@ namespace BlackInput
             IOHIDManagerClose(m_hidManager, kIOHIDOptionsTypeNone);
             CFRelease(m_hidManager);
         }
+    }
+
+    CJoystickButtonList CJoystickMacOS::getAllAvailableJoystickButtons() const
+    {
+        CJoystickButtonList availableButtons;
+        for (const CJoystickDevice *device : as_const(m_joystickDevices))
+        {
+            availableButtons.push_back(device->getDeviceButtons());
+        }
+        return availableButtons;
     }
 
     bool CJoystickMacOS::init()
@@ -182,11 +198,11 @@ namespace BlackInput
         }
     }
 
-    void CJoystickMacOS::joystickButtonChanged(const QString &name, int index, bool isPressed)
+    void CJoystickMacOS::joystickButtonChanged(const CJoystickButton &joystickButton, bool isPressed)
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
-        if (isPressed) { m_buttonCombination.addJoystickButton({name, index}); }
-        else { m_buttonCombination.removeJoystickButton({name, index}); }
+        CHotkeyCombination oldCombination(m_buttonCombination);
+        if (isPressed) { m_buttonCombination.addJoystickButton(joystickButton); }
+        else { m_buttonCombination.removeJoystickButton(joystickButton); }
 
         if (oldCombination != m_buttonCombination)
         {

@@ -33,9 +33,8 @@ namespace BlackInput
     //! Joystick device input/button
     struct CJoystickDeviceInput
     {
-        int m_number;   //!< Input number
-        int m_offset;   //!< Input offset
-        QString m_name; //!< Input name
+        int m_offset;                               //!< Input offset
+        BlackMisc::Input::CJoystickButton m_button; //!< Joystick button
     };
 
     //! Joystick device
@@ -50,9 +49,12 @@ namespace BlackInput
         //! Initialize DirectInput device
         bool init(HWND helperWindow);
 
+        //! Get all available device buttons
+        BlackMisc::Input::CJoystickButtonList getDeviceButtons() const;
+
     signals:
         //! Joystick button changed
-        void buttonChanged(const QString &name, int index, bool isPressed);
+        void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
     protected:
         //! Timer based updates
@@ -108,6 +110,9 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickWindows() override;
 
+        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+
     private:
         friend class IJoystick;
 
@@ -129,7 +134,7 @@ namespace BlackInput
         //! Add new joystick device
         void addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance);
 
-        void joystickButtonChanged(const QString &name, int index, bool isPressed);
+        void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
         //! Joystick enumeration callback
         static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
