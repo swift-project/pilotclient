@@ -596,15 +596,15 @@ namespace BlackGui
             {
                 if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM1))
                 {
-                    cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(3)));
+                    cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3)));
                 }
                 else if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM2))
                 {
-                    cmd.append(QString::number(this->getOwnAircraft().getCom2System().getFrequencyActive().valueRounded(3)));
+                    cmd.append(QString::number(this->getOwnAircraft().getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3)));
                 }
                 else if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesUnicom))
                 {
-                    cmd.append(QString::number(CPhysicalQuantitiesConstants::FrequencyUnicom().valueRounded(3)));
+                    cmd.append(QString::number(CPhysicalQuantitiesConstants::FrequencyUnicom().valueRounded(CFrequencyUnit::MHz(), 3)));
                 }
                 else
                 {
@@ -614,10 +614,10 @@ namespace BlackGui
                     const double frequency = selectedTabText.toDouble(&isNumber);
                     if (isNumber)
                     {
-                        CFrequency radioFrequency = CFrequency(frequency, CFrequencyUnit::MHz());
+                        const CFrequency radioFrequency = CFrequency(frequency, CFrequencyUnit::MHz());
                         if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
                         {
-                            cmd.append(QString::number(radioFrequency.valueRounded(3)));
+                            cmd.append(QString::number(radioFrequency.valueRounded(CFrequencyUnit::MHz(), 3)));
                         }
                         else
                         {
