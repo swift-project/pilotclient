@@ -137,7 +137,7 @@ namespace BlackWxPlugin
 
         CUrl CWeatherDataGfs::getDownloadUrl() const
         {
-            CUrl downloadUrl = sApp->getGlobalSetup().getNcepGlobalForecastSystemUrl();
+            CUrl downloadUrl = sApp->getGlobalSetup().getNcepGlobalForecastSystemUrl25();
 
             static const QStringList grib2Levels =
             {
@@ -182,7 +182,7 @@ namespace BlackWxPlugin
             static const std::array<int, 4> cycles = { { 0, 6, 12, 18 } };
             const QDateTime now = QDateTime::currentDateTimeUtc();
 
-            // GFS data is published after 4 yours.
+            // GFS data is published after 5 yours.
             const QDateTime cnow = now.addSecs(-5 * 60 * 60);
 
             int hourLastPublishedCycle = 0;
@@ -195,9 +195,11 @@ namespace BlackWxPlugin
             // Round down to a multiple of 3
             int forecast = now.time().hour() - hourLastPublishedCycle;
             if (forecast < 0) { forecast += 24; }
-            forecast = CMathUtils::roundToMultipleOf(forecast, 3);
 
-            QString filename("gfs.t%1z.pgrb2full.0p50.f%2");
+            // The 0 hour forecast, does not contain all required parameters. Hence use 1 hour forecast instead.
+            if (forecast == 0) { forecast = 1; }
+
+            QString filename("gfs.t%1z.pgrb2.0p25.f%2");
             filename = filename.arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
             filename = filename.arg(forecast, 3, 10, QLatin1Char('0'));
 
