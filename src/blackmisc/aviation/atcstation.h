@@ -89,6 +89,9 @@ namespace BlackMisc
             //! Get callsign.
             const CCallsign &getCallsign() const { return m_callsign; }
 
+            //! Has callsign?
+            bool hasCallsign() const { return !m_callsign.isEmpty(); }
+
             //! Get callsign as string.
             QString getCallsignAsString() const { return m_callsign.asString(); }
 

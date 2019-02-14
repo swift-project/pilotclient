@@ -34,7 +34,8 @@ namespace BlackGui
             this->setModel(new CAtcStationTreeModel(this));
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &CAtcStationTreeView::customContextMenuRequested, this, &CAtcStationTreeView::customMenu);
-            connect(this, &CAtcStationTreeView::expanded, this, &CAtcStationTreeView::onExpanded);
+            connect(this, &CAtcStationTreeView::expanded, this, &CAtcStationTreeView::onExpanded, Qt::QueuedConnection);
+            connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CAtcStationTreeView::onSelected, Qt::QueuedConnection);
         }
 
         void CAtcStationTreeView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
@@ -94,6 +95,11 @@ namespace BlackGui
         CAtcStation CAtcStationTreeView::selectedObject() const
         {
             const QModelIndex index = this->currentIndex();
+            return this->selectedObject(index);
+        }
+
+        CAtcStation CAtcStationTreeView::selectedObject(const QModelIndex &index) const
+        {
             const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
             const QString callsign = data.toString();
             const CAtcStationTreeModel *model = this->stationModel();
@@ -111,6 +117,15 @@ namespace BlackGui
         {
             Q_UNUSED(index);
             this->fullResizeToContents();
+        }
+
+        void CAtcStationTreeView::onSelected(const QItemSelection &selected, const QItemSelection &deselected)
+        {
+            Q_UNUSED(deselected);
+            if (selected.isEmpty()) { return; }
+            const CAtcStation atcStation = this->selectedObject(selected.indexes().front());
+            if (!atcStation.hasCallsign()) { return; }
+            emit this->objectSelected(atcStation);
         }
 
         void CAtcStationTreeView::customMenu(const QPoint &point)

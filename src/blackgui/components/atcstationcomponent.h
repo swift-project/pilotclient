@@ -98,10 +98,13 @@ namespace BlackGui
             void getMetarAsEntered();
 
             //! Request new ATIS
-            void requestAtis();
+            void requestAtisUpdates();
+
+            //! A tree view station has been selected
+            void onOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
 
             //! Online ATC station selected
-            void onlineAtcStationSelected(const BlackMisc::CVariant &object);
+            void onOnlineAtcStationVariantSelected(const BlackMisc::CVariant &object);
 
             //! Tab changed
             void atcStationsTabChanged();

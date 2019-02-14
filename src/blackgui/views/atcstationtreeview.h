@@ -73,6 +73,9 @@ namespace BlackGui
             //! Request a text message to
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! This object has been selected
+            void objectSelected(const BlackMisc::Aviation::CAtcStation &station);
+
         private:
             //! Used model
             const Models::CAtcStationTreeModel *stationModel() const;
@@ -86,11 +89,17 @@ namespace BlackGui
             //! The selected object
             BlackMisc::Aviation::CAtcStation selectedObject() const;
 
+            //! The selected object
+            BlackMisc::Aviation::CAtcStation selectedObject(const QModelIndex &index) const;
+
             //! Suffix for index
             QString suffixForIndex(const QModelIndex &index);
 
             //! Expanded
             void onExpanded(const QModelIndex &index);
+
+            //! Selected
+            void onSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
             //! Custom menu
             void customMenu(const QPoint &point);

@@ -99,15 +99,18 @@ namespace BlackGui
             connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
             connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
             connect(ui->tw_Atc, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
-            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this, &CAtcStationComponent::onlineAtcStationSelected);
-            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onlineAtcStationSelected);
+
+            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked,  this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
+            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
+
             connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
+            connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationSelected, Qt::QueuedConnection);
             connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
@@ -116,7 +119,7 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
 
-            connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
+            connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
             // Group box
@@ -153,7 +156,7 @@ namespace BlackGui
         CAtcStationComponent::~CAtcStationComponent()
         { }
 
-        void CAtcStationComponent::setTab(CAtcStationComponent::AtcTab tab)
+        void CAtcStationComponent::setTab(AtcTab tab)
         {
             const int t = static_cast<int>(tab);
             ui->tw_Atc->setCurrentIndex(t);
@@ -433,22 +436,21 @@ namespace BlackGui
             }
         }
 
-        void CAtcStationComponent::onlineAtcStationSelected(const CVariant &object)
+        void CAtcStationComponent::onOnlineAtcStationVariantSelected(const CVariant &object)
         {
             ui->te_AtcStationsOnlineInfo->setText(""); // reset
             if (!object.isValid() || !object.canConvert<CAtcStation>()) { return; }
-            const CAtcStation stationClicked = object.valueOrDefault(CAtcStation());
-            QString infoMessage;
+            const CAtcStation station = object.valueOrDefault(CAtcStation());
+            this->onOnlineAtcStationSelected(station);
+        }
 
-            if (stationClicked.hasAtis())
-            {
-                infoMessage.append(stationClicked.getAtis().getMessage());
-            }
-            if (stationClicked.hasMetar())
-            {
-                if (!infoMessage.isEmpty()) { infoMessage.append("\n\n"); }
-                infoMessage.append(stationClicked.getMetar().getMessage());
-            }
+        void CAtcStationComponent::onOnlineAtcStationSelected(const CAtcStation &station)
+        {
+            if (!station.hasCallsign()) { return; }
+            const QString infoMessage =
+                station.getCallsignAsString() % u": " % station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 3) %
+                (station.hasAtis()  ? u"\n\n" % station.getAtis().getMessage()  : QStringLiteral("")) %
+                (station.hasMetar() ? u"\n\n" % station.getMetar().getMessage() : QStringLiteral(""));
             ui->te_AtcStationsOnlineInfo->setText(infoMessage);
         }
 
@@ -465,10 +467,18 @@ namespace BlackGui
             ui->gb_Details->setVisible(!booked);
         }
 
-        void CAtcStationComponent::requestAtis()
+        void CAtcStationComponent::requestAtisUpdates()
         {
-            if (!this->canAccessContext()) return;
+            if (!this->canAccessContext()) { return; }
             sGui->getIContextNetwork()->requestAtisUpdates();
+            if (ui->tw_Atc->currentIndex() == TabAtcOnline)
+            {
+                ui->tvp_AtcStationsOnline->showOverlayHTMLMessage("Requested ATIS update", 5000);
+            }
+            else
+            {
+                ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5000);
+            }
         }
 
         bool CAtcStationComponent::canAccessContext() const
