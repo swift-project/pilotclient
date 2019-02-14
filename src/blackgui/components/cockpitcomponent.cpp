@@ -121,7 +121,7 @@ namespace BlackGui
 
         void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
         {
-            if (event) { this->showOverlayInlineTextMessage(TextMessagesAll); }
+            if (event) { this->requestTextMessageEntryTab(TextMessagesAll); }
             COverlayMessagesFrame::mouseDoubleClickEvent(event);
         }
 
