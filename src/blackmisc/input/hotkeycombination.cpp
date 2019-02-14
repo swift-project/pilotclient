@@ -89,5 +89,20 @@ namespace BlackMisc
             }
             return sl.join('+');
         }
+
+        QString CHotkeyCombination::asStringWithDeviceNames() const
+        {
+            QStringList sl;
+            sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
+            for (const auto &key : m_keyboardKeys)
+            {
+                sl << key.toQString();
+            }
+            for (const auto &button : m_joystickButtons)
+            {
+                sl << button.getButtonAsStringWithDeviceName();
+            }
+            return sl.join('+');
+        }
     } // ns
 } // ns

@@ -86,6 +86,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Returns the button name with the device name prefix
+            QString asStringWithDeviceNames() const;
+
         private:
             CKeyboardKeyList m_keyboardKeys;
             CJoystickButtonList m_joystickButtons;

@@ -54,6 +54,9 @@ namespace BlackMisc
             //! Get button as String
             QString getButtonAsString() const { return buttonIndexToString(m_buttonIndex); }
 
+            //! Get button as String including its device name
+            QString getButtonAsStringWithDeviceName() const;
+
             //! Set owning device name
             void setDeviceName(const QString &deviceName) { m_deviceName = deviceName; }
 

@@ -19,6 +19,11 @@ namespace BlackMisc
             m_deviceName(deviceName), m_buttonIndex(index)
         {}
 
+        QString CJoystickButton::getButtonAsStringWithDeviceName() const
+        {
+            return QString("%1 Button%2").arg(m_deviceName).arg(m_buttonIndex);
+        }
+
         void CJoystickButton::setButtonIndex(int buttonIndex)
         {
             m_buttonIndex = buttonIndex;
