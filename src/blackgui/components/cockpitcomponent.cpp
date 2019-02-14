@@ -27,7 +27,6 @@ namespace BlackGui
         {
             ui->setupUi(this);
             m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
-            this->activateTextMessages(true);
 
             connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
             connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1);

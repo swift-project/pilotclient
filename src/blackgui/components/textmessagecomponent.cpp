@@ -94,7 +94,7 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
                 c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this, &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-                c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
+                c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             }
             Q_UNUSED(c);
@@ -106,7 +106,7 @@ namespace BlackGui
                 // init decoupled when sub components are fully init
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->onSettingsChanged();
-                this->onChangedAircraftCockpit();
+                this->showCurrentFrequenciesFromCockpit();
 
                 // hde for the beginning
                 ui->gb_Settings->setChecked(false);
@@ -257,9 +257,12 @@ namespace BlackGui
             } // for
         }
 
-        void CTextMessageComponent::onChangedAircraftCockpit()
+        void CTextMessageComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            this->showCurrentFrequenciesFromCockpit();
+            // this is called for every overlay widget as well
+            Q_UNUSED(originator);
+            if (!this->isActivated()) { return; }
+            this->showCurrentFrequenciesFromCockpit(aircraft);
         }
 
         void CTextMessageComponent::onSettingsChecked(bool checked)
@@ -361,6 +364,11 @@ namespace BlackGui
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
         {
             const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+            this->showCurrentFrequenciesFromCockpit(ownAircraft);
+        }
+
+        void CTextMessageComponent::showCurrentFrequenciesFromCockpit(const CSimulatedAircraft &ownAircraft)
+        {
             const CFrequency freq1 = ownAircraft.getCom1System().getFrequencyActive();
             const CFrequency freq2 = ownAircraft.getCom2System().getFrequencyActive();
 
@@ -760,5 +768,12 @@ namespace BlackGui
         {
             ui->tw_TextMessages->removeTab(0);
         }
+
+        void CTextMessageComponent::activate(bool send, bool receive)
+        {
+            m_activeSend = send;
+            m_activeReceive = receive;
+        }
+
     } // namespace
 } // namespace

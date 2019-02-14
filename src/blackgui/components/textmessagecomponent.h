@@ -16,9 +16,9 @@
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/variant.h"
 
@@ -56,16 +56,16 @@ namespace BlackGui
             //! \remark takes the messages, turns it into a ".msg" command, and emits it
             bool handleGlobalCommandLineText(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
+            //! Font size @{
+            void fontSizeMinus();
+            void fontSizePlus();
+            //! @}
+
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Display the tab for given frequency
             void showCorrespondingTabForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-
-            //! Font size @{
-            void fontSizeMinus();
-            void fontSizePlus();
-            //! @}
 
             //! Set tab
             void setTab(TextMessageTab tab);
@@ -91,10 +91,10 @@ namespace BlackGui
             void setAsUsedInOverlayMode() { m_usedAsOverlayWidget = true; }
 
             //! Ignore incoming send/receive signals
-            void activate(bool send, bool receive) { m_activeSend = send; m_activeReceive = receive; }
+            void activate(bool send, bool receive);
 
             //! Text activated
-            bool isActivated() const { return m_activeSend && m_activeReceive; }
+            bool isActivated() const { return m_activeSend || m_activeReceive; }
 
             //! Rows/columns
             void setAtcButtonsRowsColumns(int rows, int cols, bool setMaxElements);
@@ -119,7 +119,7 @@ namespace BlackGui
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
             BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings   { this };
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
-            bool m_activeSend          = true;  //!< ignore sent callback
+            bool m_activeSend          = true;  //!< ignore sent messages
             bool m_activeReceive       = true;  //!< ignore received messages
 
             //! Enum to widget
@@ -158,8 +158,10 @@ namespace BlackGui
             //! Network connected?
             bool isNetworkConnected() const;
 
-            //! Show current frequencies
+            //! Show current frequencies @{
             void showCurrentFrequenciesFromCockpit();
+            void showCurrentFrequenciesFromCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+            //! @}
 
             //! Append text messages (received, to be sent) to GUI
             void displayTextMessage(const BlackMisc::Network::CTextMessageList &messages);
@@ -180,7 +182,7 @@ namespace BlackGui
             void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Cockpit values changed, used to updated some components
-            void onChangedAircraftCockpit();
+            void onChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Settings have been checked (group box visible/invisible)
             void onSettingsChecked(bool checked);
