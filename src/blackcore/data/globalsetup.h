@@ -213,6 +213,9 @@ namespace BlackCore
             //! NCEP GFS Forecasts (0.50 degree grid) data url
             BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl() const { return m_ncepGlobalForecastSystemUrl; }
 
+            //! NCEP GFS Forecasts (0.25 degree grid) data url
+            BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl25() const { return m_ncepGlobalForecastSystemUrl25; }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -255,7 +258,8 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
             BlackMisc::Network::CUrlList    m_mapUrls;                     //!< swift map URLs
             BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
-            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url
+            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
+            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
@@ -284,6 +288,7 @@ namespace BlackCore
                 BLACK_METAMEMBER(development),
                 BLACK_METAMEMBER(mappingMinimumVersion),
                 BLACK_METAMEMBER(ncepGlobalForecastSystemUrl),
+                BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25),
                 BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
             );
         };

@@ -59,5 +59,8 @@
     "wasLoaded": true,
     "ncepGlobalForecastSystemUrl": {
         "url": "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl"
+    },
+	"ncepGlobalForecastSystemUrl25": {
+        "url": "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
     }
 }
