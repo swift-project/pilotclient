@@ -11,8 +11,12 @@ namespace BlackMisc{
     }
 
     AircraftModelLoaderFlightgear::AircraftModelLoaderFlightgear(QObject *parent) : Simulation::IAircraftModelLoader (Simulation::CSimulatorInfo::fg(), parent)
-        {
-        std::cout << "Test";
+        { }
+
+    AircraftModelLoaderFlightgear::~AircraftModelLoaderFlightgear()
+    {
+        // that should be safe as long as the worker uses deleteLater (which it does)
+        if (m_parserWorker) { m_parserWorker->waitForFinished(); }
     }
 
     void AircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
@@ -32,22 +36,25 @@ namespace BlackMisc{
             QDir searchPath(rootDirectory, fileFilterFlyable());
             QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-
+            int i = 0;
             while (aircraftIt.hasNext()) {
                 aircraftIt.next();
                 if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
-
+                i++;
                 Simulation::CAircraftModel model;
                 model.setAircraftIcaoCode(QString::fromStdString("A320"));
                 model.setDescription(QString::fromStdString("Flyable"));
-                model.setName(QString::fromStdString("ModelName"));
+                model.setName(aircraftIt.fileName());
+                model.setModelString(QString::fromStdString(std::to_string(i)));
+                //model.setModelString(aircraftIt.filePath() + aircraftIt.fileName());
                 model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 model.setSimulator(CSimulatorInfo::fg());
+                //model.setCG(PhysicalQuantities::CLength());
                 model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
                 model.setModelMode(CAircraftModel::Include);
 
                 addUniqueModel(model,installedModels);
-
+                //TODO Add livery adding
             }
 
             return installedModels;
@@ -74,6 +81,9 @@ namespace BlackMisc{
                 model.setAircraftIcaoCode(QString::fromStdString("A320"));
                 model.setDescription(QString::fromStdString("AI"));
                 model.setName(QString::fromStdString("ModelName"));
+                std::string modelString = aircraftIt.filePath().toStdString();
+                modelString = modelString.substr(modelString.find("Aircraft"));
+                model.setModelString(QString::fromStdString(modelString));
                 model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 model.setSimulator(CSimulatorInfo::fg());
                 model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
@@ -112,7 +122,7 @@ namespace BlackMisc{
             {
                 //TODO Make paths variable
                 allModels.push_back(parseAIAirplanes("X:/Flightsim/Flightgear/2018.3/data/AI/Aircraft", excludeDirectories));
-                allModels.push_back(parseFlyableAirplanes("X:/Flightsim/Flightgear/2018.3/data/Aircraft", excludeDirectories));
+                //allModels.push_back(parseFlyableAirplanes("X:/Flightsim/Flightgear/2018.3/data/Aircraft", excludeDirectories));
             }
 
             return allModels;
@@ -124,22 +134,30 @@ namespace BlackMisc{
             const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
             const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
-            if (m_parserWorker && !m_parserWorker->isFinished()){ return; }
-            emit this->diskLoadingStarted(simulator, mode);
 
-            m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
-                                                                   [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
-                                {
-                                    auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
-                                    if (modelConsolidation) { modelConsolidation(models, true); }
-                                    return models;
-                                });
-                                m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
-                                {
-                                    this->updateInstalledModels(models);
-                                    m_loadingMessages.freezeOrder();
-                                    emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
-                                });
+            if(mode.testFlag(LoadInBackground)){
+                if (m_parserWorker && !m_parserWorker->isFinished()){ return; }
+                emit this->diskLoadingStarted(simulator, mode);
+
+                m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
+                                                                       [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
+                                    {
+                                        auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
+                                        if (modelConsolidation) { modelConsolidation(models, true); }
+                                        return models;
+                                    });
+                                    m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
+                                    {
+                                        this->updateInstalledModels(models);
+                                        m_loadingMessages.freezeOrder();
+                                        emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
+                                    });
+            } else if (mode.testFlag(LoadDirectly)){
+                emit this->diskLoadingStarted(simulator, mode);
+                CAircraftModelList models(this->performParsing(modelDirs, excludedDirectoryPatterns));
+                this->updateInstalledModels(models);
+            }
+
         }
 
 

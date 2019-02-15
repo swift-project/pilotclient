@@ -5,15 +5,25 @@ namespace BlackMisc{
     namespace Simulation {
         namespace Flightgear {
         class AircraftModelLoaderFlightgear : public Simulation::IAircraftModelLoader{
-
+            Q_OBJECT
 
             // IAircraftModelLoader interface
         public:
-            bool isLoadingFinished() const;
+
+
+            //Constructor
             AircraftModelLoaderFlightgear(QObject *parent = nullptr);
 
-            //! Parsed or injected models
+            virtual ~AircraftModelLoaderFlightgear() override;
+
+            // Interface functions
+            // Parsed or injected models
             void updateInstalledModels(const CAircraftModelList &models);
+            bool isLoadingFinished() const;
+
+            protected:
+            // Interface functions
+            void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
 
         private:
             Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
@@ -24,8 +34,7 @@ namespace BlackMisc{
             QPointer<CWorker> m_parserWorker;
             CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
 
-        protected:
-            void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories);
+
         };
         }
     }
