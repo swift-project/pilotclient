@@ -11,7 +11,20 @@ swiftConfig(static) {
 }
 
 INCLUDEPATH += ..
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/qwt
+
+msvc {
+    INCLUDEPATH *= $$EXTERNALSROOT/common/include/qwt
+}
+else:mingw {
+    QMAKE_CXXFLAGS += -isystem $$EXTERNALSROOT/common/include/qwt
+}
+else:macx {
+    INCLUDEPATH *= $$EXTERNALSROOT/common/include/qwt
+}
+else {
+    QMAKE_CXXFLAGS += -idirafter $$EXTERNALSROOT/common/include/qwt
+}
+
 DEPENDPATH += . ..
 
 PRECOMPILED_HEADER = pch/pch.h
