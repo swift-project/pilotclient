@@ -46,7 +46,7 @@ namespace BlackSimPlugin
             }
 
             SafeRelease(m_deviceAddress);
-            CoUninitialize();
+            if (m_coInitializeSucceeded) { CoUninitialize(); }
         }
 
         HRESULT CDirectPlayPeer::directPlayMessageHandler(DWORD messageId, void *msgBuffer)
@@ -160,10 +160,29 @@ namespace BlackSimPlugin
 
         HRESULT CDirectPlayPeer::initDirectPlay()
         {
-            HRESULT hr = S_OK;
+            // Initialize COM.
+            // https://docs.microsoft.com/en-us/windows/desktop/api/combaseapi/nf-combaseapi-coinitializeex
+            HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
 
-            // Init COM so we can use CoCreateInstance
-            CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+            // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
+            if (hr == RPC_E_CHANGED_MODE)
+            {
+                CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
+                hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
+            }
+
+            // Continue here only if CoInitializeEx was successful
+            // S_OK: The COM library was initialized successfully on this thread.
+            // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
+            if (hr == S_OK || hr == S_FALSE)
+            {
+                m_coInitializeSucceeded = true;
+            }
+            else
+            {
+                CLogMessage(this).warning(u"CoInitializeEx returned error code %1");
+                return E_FAIL;
+            }
 
             // Create the IDirectPlay8Peer Object
             if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer,

@@ -92,6 +92,9 @@ namespace BlackSimPlugin
 
             using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
             TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
+
+        private:
+            bool m_coInitializeSucceeded = false;
         };
     } // ns
 } // ns
