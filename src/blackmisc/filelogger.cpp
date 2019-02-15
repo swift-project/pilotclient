@@ -88,16 +88,17 @@ namespace BlackMisc
 
     QString CFileLogger::getFullFileName()
     {
-        QString filename;
+        QString filePath;
         Q_ASSERT(!m_applicationName.isEmpty());
-        if (!m_logPath.isEmpty()) filename += m_logPath;
-        filename += m_applicationName;
-        filename += QLatin1String("_");
-        filename += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
-        filename += QLatin1String("_");
-        filename += QString::number(QCoreApplication::applicationPid());
-        filename += QLatin1String(".log");
-        return filename;
+        if (!m_logPath.isEmpty()) filePath += m_logPath;
+
+        m_fileName += m_applicationName;
+        m_fileName += QLatin1String("_");
+        m_fileName += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
+        m_fileName += QLatin1String("_");
+        m_fileName += QString::number(QCoreApplication::applicationPid());
+        m_fileName += QLatin1String(".log");
+        return filePath + m_fileName;
     }
 
     void CFileLogger::removeOldLogFiles()

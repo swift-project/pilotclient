@@ -52,12 +52,17 @@ namespace BlackMisc
         //! Close file
         void close();
 
+        //! Get the current log file path
+        QString getLogFilePath() const { return m_logFile.fileName(); }
+
+        //! Get the current log file name
+        QString getLogFileName() const { return m_fileName; }
+
     private slots:
         //! Write single status message to file
         void ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
 
     private:
-
         QString getFullFileName();
         void removeOldLogFiles();
 
@@ -66,6 +71,7 @@ namespace BlackMisc
 
         CLogPattern m_logPattern;
         QFile m_logFile;
+        QString m_fileName;
         QTextStream m_stream;
         QString m_applicationName;
         QString m_logPath; //!< Empty by default. Hence the working directory "." is used
