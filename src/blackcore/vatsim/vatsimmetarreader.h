@@ -74,7 +74,7 @@ namespace BlackCore
             void decodeMetars(QNetworkReply *nwReply);
 
             //! Do reading
-            void readMetars();
+            void read();
 
             //! Reload settings
             void reloadSettings();

@@ -42,12 +42,17 @@ namespace BlackCore
             CThreadedReader(owner, "CVatsimMetarReader"),
             CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
         {
-            reloadSettings();
+            this->reloadSettings();
         }
 
         void CVatsimMetarReader::readInBackgroundThread()
         {
-            QTimer::singleShot(0, this, &CVatsimMetarReader::readMetars);
+            QPointer<CVatsimMetarReader> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->read();
+            });
         }
 
         CMetarList CVatsimMetarReader::getMetars() const
@@ -70,10 +75,10 @@ namespace BlackCore
 
         void CVatsimMetarReader::doWorkImpl()
         {
-            readMetars();
+            this->read();
         }
 
-        void CVatsimMetarReader::readMetars()
+        void CVatsimMetarReader::read()
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
@@ -122,7 +127,7 @@ namespace BlackCore
                 {
                     if (!this->doWorkCheck()) { return; }
                     const QString line = lineReader.readLine();
-                    CMetar metar = m_metarDecoder.decode(line);
+                    const CMetar metar = m_metarDecoder.decode(line);
                     if (metar != CMetar()) { metars.push_back(metar); }
                     else { invalidLines++; }
                 }
@@ -142,7 +147,7 @@ namespace BlackCore
                 // network error
                 CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
-                emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
             }
         } // method
 

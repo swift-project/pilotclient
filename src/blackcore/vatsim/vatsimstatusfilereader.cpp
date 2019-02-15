@@ -47,9 +47,12 @@ namespace BlackCore
 
         void CVatsimStatusFileReader::readInBackgroundThread()
         {
-            const bool s = QMetaObject::invokeMethod(this, &CVatsimStatusFileReader::read);
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
-            Q_UNUSED(s);
+            QPointer<CVatsimStatusFileReader> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->read();
+            });
         }
 
         CUrlList CVatsimStatusFileReader::getMetarFileUrls() const
