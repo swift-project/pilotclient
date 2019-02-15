@@ -127,6 +127,8 @@ namespace BlackCore
                 {
                     if (!this->doWorkCheck()) { return; }
                     const QString line = lineReader.readLine();
+                    // some check for obvious errors
+                    if (line.contains("<html")) { continue; }
                     const CMetar metar = m_metarDecoder.decode(line);
                     if (metar != CMetar()) { metars.push_back(metar); }
                     else { invalidLines++; }
