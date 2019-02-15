@@ -1667,6 +1667,13 @@ namespace BlackCore
         annotations["format"] = "minidump";
         annotations["version"] = CBuildConfig::getVersionString().toStdString();
 
+        QString logFilePath = m_fileLogger->getLogFilePath();
+        QString logFileName = m_fileLogger->getLogFileName();
+        QString logAttachment = QString("--attachment=%1=%2").arg(logFileName, logFilePath);
+
+        std::vector<std::string> arguments;
+        arguments.push_back(logAttachment.toStdString());
+
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
@@ -1677,7 +1684,7 @@ namespace BlackCore
                                        qstringToFilePath(metrics),
                                        serverUrl.getFullUrl().toStdString(),
                                        annotations,
-                                       {},
+                                       arguments,
                                        false, true);
         return CStatusMessage(this).info(u"Using crash handler");
 #else
