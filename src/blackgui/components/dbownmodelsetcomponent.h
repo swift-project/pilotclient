@@ -102,11 +102,11 @@ namespace BlackGui
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! \copydoc BlackGui::Components::CSimulatorSelector::setMode
-            void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
-
             //! Deferred init of simulator
             void triggerSetSimulatorDeferred(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! \copydoc BlackGui::Components::CSimulatorSelector::setMode
+            void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;

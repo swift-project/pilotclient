@@ -272,6 +272,27 @@ namespace BlackGui
                 modelsForSet = modelsForSet.findByDistributors(distributors);
             }
 
+            if (ui->cb_DbDataOnly->isChecked()) { modelsForSet.removeObjectsWithoutDbKey(); }
+            if (modelsForSet.isEmpty())
+            {
+                this->showOverlayHTMLMessage("Selection yielded no result!");
+                return;
+            }
+
+            // just in case, paranoia
+            if (!m_modelSetDialog || !m_modelSetDialog->modelSetComponent())
+            {
+                this->showOverlayHTMLMessage("No model set dialog, cannot continue");
+                return;
+            }
+
+            const int modelsSetCount = m_modelSetDialog->modelSetComponent()->getModelSetCount();
+            if (modelsSetCount > 0)
+            {
+                QMessageBox::StandardButton override = QMessageBox::question(this, "Override", "Override existing model set?", QMessageBox::Yes | QMessageBox::No);
+                if (override != QMessageBox::Yes) { return; }
+            }
+
             m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, simulator);
             ui->pb_ModelSet->click();
         }
