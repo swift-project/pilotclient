@@ -13,12 +13,12 @@
 #define BLACKMISC_AVIATION_AIRCRAFTCATEGORY_H
 
 #include "blackmisc/db/datastore.h"
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QJsonObject>
 #include <QMetaType>
@@ -117,7 +117,7 @@ namespace BlackMisc
             //! Validate data
             BlackMisc::CStatusMessageList validate() const;
 
-            //! Null ICAO?
+            //! Null category?
             bool isNull() const;
 
             //! Level compare

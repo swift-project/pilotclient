@@ -113,11 +113,11 @@ namespace BlackMisc
                 if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
             }
 
-            if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: unknown designator")); }
+            if (!hasKnownDesignator())   { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: unknown designator")); }
             if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: invalid combined type")); }
-            if (!hasValidWtc()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: wrong WTC")); }
-            if (!hasManufacturer()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: missing manufacturer")); }
-            if (!hasModelDescription()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: no description")); }
+            if (!hasValidWtc())          { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: wrong WTC")); }
+            if (!hasManufacturer())      { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: missing manufacturer")); }
+            if (!hasModelDescription())  { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: no description")); }
             return msg;
         }
 
@@ -168,7 +168,7 @@ namespace BlackMisc
                 else if (this->hasValidCombinedType())
                 {
                     if (this->getEnginesCount() == otherCode.getEnginesCount()) { score += 2; }
-                    if (this->getEngineType() == otherCode.getEngineType()) { score += 2; }
+                    if (this->getEngineType()   == otherCode.getEngineType()) { score += 2; }
                     if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
                     CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }
@@ -339,7 +339,7 @@ namespace BlackMisc
             if (!this->hasModelIataDescription() && !this->hasModelSwiftDescription()) { return this->getModelDescription(); }
 
             QStringList combined({ this->getModelDescription() });
-            if (this->hasModelIataDescription()) { combined.append(this->getModelIataDescription()); }
+            if (this->hasModelIataDescription())  { combined.append(this->getModelIataDescription()); }
             if (this->hasModelSwiftDescription()) { combined.append(this->getModelSwiftDescription()); }
             combined.removeDuplicates();
             return combined.join(", ");
