@@ -78,9 +78,10 @@ namespace BlackMisc{
                 //if(base.compare(aircraftIt.fileName())){ continue;}
 
                 Simulation::CAircraftModel model;
-                model.setAircraftIcaoCode(QString::fromStdString("A320"));
                 model.setDescription(QString::fromStdString("AI"));
-                model.setName(QString::fromStdString("ModelName"));
+                std::string modelName = aircraftIt.fileName().toStdString();
+                modelName = modelName.substr(0,modelName.find(".xml"));
+                model.setName(QString::fromStdString(modelName));
                 std::string modelString = aircraftIt.filePath().toStdString();
                 modelString = modelString.substr(modelString.find("Aircraft"));
                 model.setModelString(QString::fromStdString(modelString));
