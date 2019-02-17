@@ -52,14 +52,14 @@ namespace BlackGui
 
             if (CEntityFlags::isFinishedReadState(readState))
             {
-                this->showOverlayHTMLMessage(QStringLiteral("Updating"), 2000);
+                this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2000);
                 const CAircraftCategoryList categories = sGui->getWebDataServices()->getAircraftCategories();
                 ui->tvp_AircraftCategoryView->updateContainerMaybeAsync(categories);
                 ui->tvp_AircraftCategoryTree->updateContainer(categories);
             }
             else
             {
-                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::stateToString(readState), 10000);
+                this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " % CEntityFlags::stateToString(readState), 10000);
             }
         }
 
