@@ -35,6 +35,7 @@ namespace BlackGui
     {
         CAircraftCategoryTreeModel::CAircraftCategoryTreeModel(QObject *parent) : QStandardItemModel(parent)
         {
+            m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey));
             m_columns.addColumn(CColumn::standardString("description", CAircraftCategory::IndexDescription));
             m_columns.addColumn(CColumn::standardString("changed", CAircraftCategory::IndexUtcTimestampFormattedYmdhms));
         }
