@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "aircrafticaocodelist.h"
+#include "aircraftcategorylist.h"
 #include "blackmisc/range.h"
 
 #include <QJsonObject>
@@ -314,19 +315,29 @@ namespace BlackMisc
         {
             const QMap<QString, int> counts(countManufacturers());
             if (counts.isEmpty()) return { {}, 0 };
-            const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto &a, const auto &b)
+            const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto & a, const auto & b)
             {
                 return a.second < b.second;
             });
             return { pair.first, pair.second };
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates, CAircraftIcaoCodeList *inconsistent)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, const CAircraftCategoryList &categories, bool ignoreIncompleteAndDuplicates, CAircraftIcaoCodeList *inconsistent)
         {
             CAircraftIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
-                const CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
+                CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
+                const int catId = icao.getCategory().getDbKey();
+                if (!categories.isEmpty() && catId >= 0)
+                {
+                    const CAircraftCategory category = categories.findByKey(catId);
+                    if (!category.isNull())
+                    {
+                        icao.setCategory(category);
+                    }
+                }
+
                 if (!icao.hasSpecialDesignator() && !icao.hasCompleteData())
                 {
                     if (ignoreIncompleteAndDuplicates) { continue; }

@@ -584,6 +584,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexAircraftDesignator: return CVariant::fromValue(m_designator);
+            case IndexCategory: return m_category.propertyByIndex(index.copyFrontRemoved());
             case IndexIataCode: return CVariant::fromValue(m_iataCode);
             case IndexFamily: return CVariant::fromValue(m_family);
             case IndexCombinedAircraftType: return CVariant::fromValue(m_combinedType);
@@ -611,6 +612,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexAircraftDesignator: this->setDesignator(variant.value<QString>()); break;
+            case IndexCategory: m_category.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIataCode: this->setIataCode(variant.value<QString>()); break;
             case IndexFamily: this->setFamily(variant.value<QString>()); break;
             case IndexCombinedAircraftType: this->setCombinedType(variant.value<QString>()); break;
@@ -634,6 +636,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
+            case IndexCategory: return m_category.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCategory());
             case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
             case IndexFamily: return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
             case IndexCombinedAircraftType: return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
@@ -770,6 +773,8 @@ namespace BlackMisc
                 return CAircraftIcaoCode();
             }
 
+            const int engineCount(json.value(prefix % u"enginecount").toInt(-1));
+            const int categoryId(json.value(prefix % u"idcategory").toInt(-1));
             const QString designator(json.value(prefix % u"designator").toString());
             const QString iata(json.value(prefix % u"iata").toString());
             const QString family(json.value(prefix % u"family").toString());
@@ -779,8 +784,8 @@ namespace BlackMisc
             const QString modelSwift(json.value(prefix % u"modelswift").toString());
             const QString type(json.value(prefix % u"type").toString());
             const QString engine(json.value(prefix % u"engine").toString());
-            const int engineCount(json.value(prefix % u"enginecount").toInt(-1));
             const QString combined(createdCombinedString(type, engineCount, engine));
+
             QString wtc(json.value(prefix % u"wtc").toString());
             if (wtc.length() > 1 && wtc.contains("/"))
             {
@@ -800,6 +805,7 @@ namespace BlackMisc
                 real, legacy, military, rank
             );
             code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
+            if (categoryId >=0) { code.setCategoryId(categoryId); }
             return code;
         }
 
@@ -813,7 +819,7 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::createdCombinedString(const QString &type, int engineCount, const QString &engine)
         {
-            const bool valid = engineCount >= 0 && engineCount < 10;
+            const bool valid = (engineCount >= 0 && engineCount < 10);
             return createdCombinedString(type, valid ? QString::number(engineCount) : "", engine);
         }
     } // namespace

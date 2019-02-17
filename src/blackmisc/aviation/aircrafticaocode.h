@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
+#include "aircraftcategory.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
@@ -39,7 +40,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAircraftDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcaoCode,
+                IndexAircraftDesignator = CPropertyIndex::GlobalIndexCAircraftIcaoCode,
                 IndexIataCode,
                 IndexFamily,
                 IndexCombinedAircraftType,
@@ -54,6 +55,7 @@ namespace BlackMisc
                 IndexIsLegacy,
                 IndexIsVtol,
                 IndexRank,
+                IndexCategory,
                 IndexDesignatorManufacturer //!< designator and manufacturer
             };
 
@@ -254,6 +256,15 @@ namespace BlackMisc
             //! Combined family descriptive string with key
             QString getCombinedFamilyStringWithKey() const;
 
+            //! Get category
+            const CAircraftCategory &getCategory() const { return m_category; }
+
+            //! Set category
+            void setCategory(const CAircraftCategory &category) { m_category = category; }
+
+            //! Set category id
+            void setCategoryId(int id) { m_category.setDbKey(id); }
+
             //! All data set?
             bool hasCompleteData() const;
 
@@ -348,7 +359,8 @@ namespace BlackMisc
             bool m_realWorld = true;         //!< real world aircraft
             bool m_legacy = false;           //!< legacy code
             bool m_military = false;         //!< military aircraft?
-            int m_rank = 10;                 //!< rank among same codes (0 is best)
+            int  m_rank     = 10;            //!< rank among same codes (0 is best)
+            CAircraftCategory m_category;    //!< aircraft category
 
             //! Create a combined string like L2J
             static QString createdCombinedString(const QString &type, const QString &engineCount, const QString &engine);
@@ -368,6 +380,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(modelDescription),
                 BLACK_METAMEMBER(modelIataDescription),
                 BLACK_METAMEMBER(modelSwiftDescription),
+                BLACK_METAMEMBER(category),
                 BLACK_METAMEMBER(wtc),
                 BLACK_METAMEMBER(military),
                 BLACK_METAMEMBER(realWorld),
