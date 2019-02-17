@@ -49,9 +49,6 @@ macx:staticlib:isEmpty(SOURCES) {
 # only MSVC gains any build time improvement
 !msvc: CONFIG -= precompile_header
 
-# expression SFINAE bug in MSVC2015 when using PCH
-msvc:lessThan(MSVC_VER, 15): CONFIG -= precompile_header
-
 # not supported by clang_cl
 clang_cl: CONFIG -= precompile_header
 
