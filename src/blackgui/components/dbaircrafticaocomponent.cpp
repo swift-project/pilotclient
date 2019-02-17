@@ -64,7 +64,7 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-            if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState)) { return; }
+            if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity)) { return; }
 
             if (CEntityFlags::isFinishedReadState(readState))
             {
