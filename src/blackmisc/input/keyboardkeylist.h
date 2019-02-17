@@ -18,6 +18,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
+#include <QStringList>
 #include <QMetaType>
 #include <initializer_list>
 #include <tuple>
@@ -45,6 +46,9 @@ namespace BlackMisc
 
             //! Initializer list constructor.
             CKeyboardKeyList(std::initializer_list<CKeyboardKey> il) : CSequence<CKeyboardKey>(il) {}
+
+            //! All key strings
+            QStringList getKeyStrings() const;
 
             //! Get all supported keys
             static const CKeyboardKeyList &allSupportedKeys();

@@ -21,7 +21,7 @@
 #include "blackmisc/valueobject.h"
 
 #include <QMetaType>
-#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -45,6 +45,9 @@ namespace BlackMisc
 
             //! Get keyboard keys
             CKeyboardKeyList getKeyboardKeys() const { return m_keyboardKeys; }
+
+            //! As keyboard key strings
+            QStringList getKeyStrings() const { return m_keyboardKeys.getKeyStrings(); }
 
             //! Set joystick buttons
             void setJoystickButtons(const CJoystickButtonList &list) { m_joystickButtons = list; }

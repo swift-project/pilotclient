@@ -42,8 +42,11 @@ namespace BlackMisc
 
         void CHotkeyCombination::replaceKey(CKeyboardKey oldKey, CKeyboardKey newKey)
         {
-            Q_ASSERT(!oldKey.isUnknown());
-            m_keyboardKeys.remove(oldKey);
+            if (oldKey.hasKey())
+            {
+                Q_ASSERT(!oldKey.isUnknown());
+                m_keyboardKeys.remove(oldKey);
+            }
             if (!newKey.isUnknown()) { m_keyboardKeys.push_back(newKey); }
             m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
         }

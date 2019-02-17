@@ -25,6 +25,16 @@ namespace BlackMisc
             CSequence<CKeyboardKey>(baseClass)
         { }
 
+        QStringList CKeyboardKeyList::getKeyStrings() const
+        {
+            QStringList keys;
+            for (const CKeyboardKey &k : *this)
+            {
+                if (k.hasKey()) { keys.push_back(k.getKeyAsString()); }
+            }
+            return keys;
+        }
+
         const CKeyboardKeyList &CKeyboardKeyList::allSupportedKeys()
         {
             static const CKeyboardKeyList allKeys =
