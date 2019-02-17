@@ -32,9 +32,11 @@ namespace BlackGui
             m_columns.addColumn(CColumn::standardValueObject("rank", CAircraftIcaoCode::IndexRank, CDefaultFormatter::alignRightVCenter()));
             m_columns.addColumn(CColumn::standardString("manufacturer", CAircraftIcaoCode::IndexManufacturer));
             m_columns.addColumn(CColumn::standardString("family", CAircraftIcaoCode::IndexFamily));
-            m_columns.addColumn(CColumn::standardString("ICAO desc.", "ICAO description", CAircraftIcaoCode::IndexModelDescription));
-            m_columns.addColumn(CColumn::standardString("IATA desc.", "IATA description", CAircraftIcaoCode::IndexModelIataDescription));
-            m_columns.addColumn(CColumn::standardString("swift desc.", "swift description", CAircraftIcaoCode::IndexModelSwiftDescription));
+            m_columns.addColumn(CColumn::standardString("category", { CAircraftIcaoCode::IndexCategory, CAircraftCategory::IndexPath }));
+            // m_columns.addColumn(CColumn::standardString("ICAO desc.", "ICAO description", CAircraftIcaoCode::IndexModelDescription));
+            // m_columns.addColumn(CColumn::standardString("IATA desc.", "IATA description", CAircraftIcaoCode::IndexModelIataDescription));
+            // m_columns.addColumn(CColumn::standardString("swift desc.", "swift description", CAircraftIcaoCode::IndexModelSwiftDescription));
+            m_columns.addColumn(CColumn::standardString("description", "ICAO description", CAircraftIcaoCode::IndexCombinedDescription));
             m_columns.addColumn(CColumn::standardString("type", "combined type", CAircraftIcaoCode::IndexCombinedAircraftType));
             m_columns.addColumn(CColumn::standardString("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
             m_columns.addColumn(CColumn("mil.", "military", CAircraftIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civil")));

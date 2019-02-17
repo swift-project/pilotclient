@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackcore/application.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
@@ -56,22 +57,22 @@ namespace BlackCore
 
         CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDesignator(const QString &designator) const
         {
-            return getAircraftIcaoCodes().findFirstByDesignatorAndRank(designator);
+            return this->getAircraftIcaoCodes().findFirstByDesignatorAndRank(designator);
         }
 
         CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodesForDesignator(const QString &designator) const
         {
-            return getAircraftIcaoCodes().findByDesignator(designator);
+            return this->getAircraftIcaoCodes().findByDesignator(designator);
         }
 
         CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodesForIataCode(const QString &iataCode) const
         {
-            return getAircraftIcaoCodes().findByIataCode(iataCode);
+            return this->getAircraftIcaoCodes().findByIataCode(iataCode);
         }
 
         CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDbKey(int key) const
         {
-            return getAircraftIcaoCodes().findByKey(key);
+            return this->getAircraftIcaoCodes().findByKey(key);
         }
 
         bool CIcaoDataReader::containsAircraftIcaoDesignator(const QString &designator) const
@@ -163,7 +164,7 @@ namespace BlackCore
 
         bool CIcaoDataReader::areAllDataRead() const
         {
-            return getCountriesCount() > 0 && getAirlineIcaoCodesCount() > 0 && getAircraftIcaoCodesCount() > 0;
+            return this->getCountriesCount() > 0 && getAirlineIcaoCodesCount() > 0 && getAircraftIcaoCodesCount() > 0;
         }
 
         int CIcaoDataReader::getCountriesCount() const
@@ -303,10 +304,11 @@ namespace BlackCore
             emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0);
             CAircraftIcaoCodeList codes;
             CAircraftIcaoCodeList inconsistent;
+            const CAircraftCategoryList categories = this->getAircraftCategories();
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAircraftIcaoCodeList incrementalCodes(CAircraftIcaoCodeList::fromDatabaseJson(res, true, &inconsistent));
+                const CAircraftIcaoCodeList incrementalCodes(CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent));
                 if (incrementalCodes.isEmpty()) { return; } // currently ignored
                 codes = this->getAircraftIcaoCodes();
                 codes.replaceOrAddObjectsByKey(incrementalCodes);
@@ -316,7 +318,7 @@ namespace BlackCore
                 // normally read from special DB view which already filters incomplete
                 QTime time;
                 time.start();
-                codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+                codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent);
                 this->logParseMessage("aircraft ICAO", codes.size(), time.elapsed(), res);
             }
 

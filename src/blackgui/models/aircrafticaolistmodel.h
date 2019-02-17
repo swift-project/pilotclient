@@ -34,6 +34,7 @@ namespace BlackGui
             //! Destructor
             virtual ~CAircraftIcaoCodeListModel() {}
         };
-    }
-}
+    } // ns
+} // ns
+
 #endif // guard
