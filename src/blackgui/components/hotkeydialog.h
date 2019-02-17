@@ -15,8 +15,8 @@
 #include "blackgui/models/actionmodel.h"
 #include "blackgui/horizontalcombobox.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/identifierlist.h"
 #include "blackmisc/input/actionhotkey.h"
+#include "blackmisc/identifierlist.h"
 
 #include <QDialog>
 #include <QObject>
@@ -24,9 +24,16 @@
 
 class QItemSelection;
 
-namespace BlackCore { class CInputManager; }
-namespace BlackMisc { namespace Input { class CHotkeyCombination; } }
 namespace Ui { class CHotkeyDialog; }
+namespace BlackCore { class CInputManager; }
+namespace BlackMisc
+{
+    namespace Input
+    {
+        class CHotkeyCombination;
+        class CKeyboardKeyList;
+    }
+}
 namespace BlackGui
 {
     namespace Components
@@ -89,10 +96,11 @@ namespace BlackGui
 
         private:
             void advancedModeChanged();
-            void selectHotkey();
+            void captureHotkey();
             void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
             void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
             void changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
+            CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CKeyboardKeyList &allSupportedKeys, const QString &currentKey = {});
 
             void changeApplicableMachine(int index);
             void synchronize();
@@ -106,6 +114,9 @@ namespace BlackGui
             QScopedPointer<Ui::CHotkeyDialog> ui;
             BlackMisc::Input::CActionHotkey m_actionHotkey;
             BlackGui::Models::CActionModel  m_actionModel;
+
+            //! "No key"
+            static const QString &noKey();
         };
     } // ns
 } // ns
