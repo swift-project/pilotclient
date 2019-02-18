@@ -114,18 +114,19 @@ namespace BlackMisc
 
     void CWorkerBase::abandon() noexcept
     {
-        thread()->requestInterruption();
+        if (thread() != thread()->thread()) { thread()->requestInterruption(); }
         quit();
     }
 
     void CWorkerBase::abandonAndWait() noexcept
     {
-        thread()->requestInterruption();
+        if (thread() != thread()->thread()) { thread()->requestInterruption(); }
         quitAndWait();
     }
 
     bool CWorkerBase::isAbandoned() const
     {
+        Q_ASSERT(thread() == QThread::currentThread());
         return thread()->isInterruptionRequested();
     }
 
