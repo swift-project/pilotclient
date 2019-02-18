@@ -378,7 +378,7 @@ def main(argv):
     tool_chain = ''
     dev_build = False
     jobs = None
-    upload_symbols = True
+    upload_symbols = False
     eolInMonth = 0
     qmake_args = []
 

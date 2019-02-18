@@ -18,7 +18,7 @@ builders['Build swift Linux'] = {
                          'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
                     sh """
                         cp ~/vatsim.json .
-                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                        python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2 -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                     """
                 }
 
@@ -73,7 +73,7 @@ builders['Build swift MacOS'] = {
                          'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
                     sh """
                         cp ~/vatsim.json .
-                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                        python -u scripts/jenkins.py -w 64 -t clang -d -j2  -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                     """
                 }
 
@@ -118,7 +118,7 @@ builders['Build swift Win32'] = {
             stage('Win32 Build') {
                 bat """
                     copy c:\\var\\vatsim.json .
-                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                    python -u scripts/jenkins.py -w 32 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
@@ -163,7 +163,7 @@ builders['Build swift Win64'] = {
             stage('Win64 Build') {
                 bat """
                     copy c:\\var\\vatsim.json .
-                    python -u scripts/jenkins.py -w 64 -t msvc -d -e ${getEolInMonth()} -q SWIFT_CONFIG_JSON+=vatsim.json
+                    python -u scripts/jenkins.py -w 64 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
                 warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
@@ -395,6 +395,18 @@ def getEolInMonth() {
     } else {
         // 3 month for everything else
         return 3
+    }
+}
+
+def shouldUploadSymbols() {
+    def regexDevBranch = /develop\/\d+\.\d+\.\d+/
+    def regexReleaseBranch = /release\/\d+\.\d+/
+    if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
+        return '-u'
+    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexReleaseBranch) {
+        return '-u'
+    } else {
+        return ''
     }
 }
 
