@@ -100,7 +100,8 @@ namespace BlackGui
             void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
             void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
             void changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
-            CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CKeyboardKeyList &allSupportedKeys, const QString &currentKey = {});
+            CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CKeyboardKeyList &allSupportedKeys, const BlackMisc::Input::CKeyboardKey &keyboardKey = {});
+            CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CJoystickButtonList &allAvailableButtons, const BlackMisc::Input::CJoystickButton &joystickButton = {});
 
             void changeApplicableMachine(int index);
             void synchronize();
@@ -115,8 +116,8 @@ namespace BlackGui
             BlackMisc::Input::CActionHotkey m_actionHotkey;
             BlackGui::Models::CActionModel  m_actionModel;
 
-            //! "No key"
-            static const QString &noKey();
+            //! "No key/button"
+            static const QString &noKeyButton();
         };
     } // ns
 } // ns

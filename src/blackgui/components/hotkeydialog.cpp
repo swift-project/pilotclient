@@ -62,7 +62,16 @@ namespace BlackGui
             ui->tv_Actions->setModel(&m_actionModel);
             selectAction();
 
-            if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
+            CHotkeyCombination combination = actionHotkey.getCombination();
+            if (!combination.isEmpty())
+            {
+                ui->pb_SelectedHotkey->setText(combination.toQString());
+                ui->pb_SelectedHotkey->setToolTip(combination.asStringWithDeviceNames());
+            }
+            else
+            {
+                ui->pb_SelectedHotkey->setToolTip("Press to select an new combination...");
+            }
 
             // get all remote identifiers in case there is no key for a remote machine yet
             CIdentifierList registeredApplications;
@@ -173,12 +182,14 @@ namespace BlackGui
         {
             if (!sApp || sApp->isShuttingDown()) { return; }
             ui->pb_SelectedHotkey->setText("Press any key/button...");
+            ui->pb_SelectedHotkey->setToolTip({});
             sApp->getInputManager()->startCapture();
         }
 
         void CHotkeyDialog::combinationSelectionChanged(const CHotkeyCombination &combination)
         {
             ui->pb_SelectedHotkey->setText(combination.toQString());
+            ui->pb_SelectedHotkey->setToolTip(combination.asStringWithDeviceNames());
         }
 
         void CHotkeyDialog::combinationSelectionFinished(const CHotkeyCombination &combination)
@@ -195,26 +206,55 @@ namespace BlackGui
             m_actionHotkey.setAction(index.data(CActionModel::ActionRole).toString());
         }
 
-        CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CKeyboardKeyList &allSupportedKeys, const QString &currentKey)
+        CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CKeyboardKeyList &allSupportedKeys, const CKeyboardKey &keyboardKey)
         {
-            int currentIndex = -1;
+            int currentIndex = 0;
             const int width = qRound(1.5 * this->width());
-            const bool select = !currentKey.isEmpty();
+            const bool select = !keyboardKey.isUnknown();
 
             CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
-            ksb->addItem(noKey()); // at front
+            ksb->addItem(noKeyButton(), QVariant::fromValue(CKeyboardKey())); // at front
             for (const CKeyboardKey &supportedKey : allSupportedKeys)
             {
-                QString supportedKeyAsString = supportedKey.toQString();
-                ksb->addItem(supportedKeyAsString, QVariant::fromValue(supportedKey));
-                if (select && supportedKeyAsString == currentKey)
+                ksb->addItem(supportedKey.toQString(), QVariant::fromValue(supportedKey));
+                if (select && supportedKey == keyboardKey)
                 {
                     currentIndex = ksb->count() - 1;
                 }
             }
+
             ksb->setSelectedIndex(currentIndex);
             ksb->setPopupWidth(qMin(width, 600));
-            ksb->addItem(noKey()); // at back (easier to find it is there twice)
+            ksb->addItem(noKeyButton(), QVariant::fromValue(CKeyboardKey())); // at back (easier to find it is there twice)
+
+            ui->qf_Advanced->layout()->addWidget(ksb);
+            const int position = ui->qf_Advanced->layout()->count() - 1;
+            ksb->setProperty("position", position);
+            connect(ksb, &CKeySelectionBox::keySelectionChanged, this, &CHotkeyDialog::advancedKeyChanged);
+
+            return ksb;
+        }
+
+        CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CJoystickButtonList &allAvailableButtons, const CJoystickButton &joystickButton)
+        {
+            int currentIndex = -1;
+            const int width = qRound(1.5 * this->width());
+
+            CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
+            ksb->addItem(noKeyButton(), QVariant::fromValue(CJoystickButton())); // at front
+            for (const CJoystickButton &availableButton : allAvailableButtons)
+            {
+                ksb->addItem(availableButton.toQString(), QVariant::fromValue(availableButton));
+                if (availableButton == joystickButton)
+                {
+                    currentIndex = ksb->count() - 1;
+                    ksb->setToolTip(joystickButton.getButtonAsStringWithDeviceName());
+                }
+            }
+
+            ksb->setSelectedIndex(currentIndex);
+            ksb->setPopupWidth(qMin(width, 600));
+            ksb->addItem(noKeyButton(), QVariant::fromValue(CJoystickButton())); // at back (easier to find it is there twice)
 
             ui->qf_Advanced->layout()->addWidget(ksb);
             const int position = ui->qf_Advanced->layout()->count() - 1;
@@ -263,7 +303,9 @@ namespace BlackGui
 
         void CHotkeyDialog::synchronizeSimpleSelection()
         {
-            ui->pb_SelectedHotkey->setText(m_actionHotkey.getCombination().toQString());
+            CHotkeyCombination combination = m_actionHotkey.getCombination();
+            ui->pb_SelectedHotkey->setText(combination.toQString());
+            ui->pb_SelectedHotkey->setToolTip(combination.asStringWithDeviceNames());
         }
 
         void CHotkeyDialog::synchronizeAdvancedSelection()
@@ -275,17 +317,25 @@ namespace BlackGui
         {
             this->clearAdvancedFrame();
             const CKeyboardKeyList allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
+            const CJoystickButtonList allAvailableButtons = sGui->getInputManager()->getAllAvailableJoystickButtons();
 
-            const QStringList splitKeys = m_actionHotkey.getCombination().getKeyStrings();
+            const CKeyboardKeyList keyboardKeys = m_actionHotkey.getCombination().getKeyboardKeys();
             int c = 0;
 
-            for (const QString &splitKey : splitKeys)
+            for (const CKeyboardKey &keyboardKey : keyboardKeys)
             {
-                this->addSelectionBox(allSupportedKeys, splitKey);
+                this->addSelectionBox(allSupportedKeys, keyboardKey);
                 c++;
             }
 
-            // add one box more so we can add keys
+            const CJoystickButtonList joystickButtons = m_actionHotkey.getCombination().getJoystickButtons();
+            for (const CJoystickButton &joystickButton : joystickButtons)
+            {
+                this->addSelectionBox(allAvailableButtons, joystickButton);
+                c++;
+            }
+
+            // add one box more so we can add keys/buttons
             if (c < 2)
             {
                 this->addSelectionBox(allSupportedKeys);
@@ -308,13 +358,31 @@ namespace BlackGui
         {
             CKeySelectionBox *ksb = qobject_cast<CKeySelectionBox *>(sender());
             Q_ASSERT(ksb);
-            CKeyboardKey oldKey = ksb->itemData(oldIndex).value<CKeyboardKey>();
-            CKeyboardKey newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
 
-            CHotkeyCombination combination = m_actionHotkey.getCombination();
-            combination.replaceKey(oldKey, newKey);
-            m_actionHotkey.setCombination(combination);
-            synchronize();
+            if (ksb->itemData(oldIndex).canConvert<CKeyboardKey>() && ksb->itemData(newIndex).canConvert<CKeyboardKey>())
+            {
+                CKeyboardKey oldKey = ksb->itemData(oldIndex).value<CKeyboardKey>();
+                CKeyboardKey newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
+
+                CHotkeyCombination combination = m_actionHotkey.getCombination();
+                if (newKey.isUnknown()) { combination.removeKeyboardKey(oldKey); }
+                else { combination.replaceKey(oldKey, newKey); }
+                m_actionHotkey.setCombination(combination);
+            }
+
+            if (ksb->itemData(oldIndex).canConvert<CJoystickButton>() && ksb->itemData(newIndex).canConvert<CJoystickButton>())
+            {
+                CJoystickButton oldButton = ksb->itemData(oldIndex).value<CJoystickButton>();
+                CJoystickButton newButton = ksb->itemData(newIndex).value<CJoystickButton>();
+
+                CHotkeyCombination combination = m_actionHotkey.getCombination();
+                if (! newButton.isValid()) { combination.removeJoystickButton(oldButton); }
+                else { combination.replaceButton(oldButton, newButton); }
+                m_actionHotkey.setCombination(combination);
+            }
+
+            ui->pb_SelectedHotkey->setText(m_actionHotkey.getCombination().toQString());
+            ui->pb_SelectedHotkey->setToolTip(m_actionHotkey.getCombination().asStringWithDeviceNames());
         }
 
         void CHotkeyDialog::selectAction()
@@ -336,7 +404,7 @@ namespace BlackGui
             selectionModel->select(parentIndex, QItemSelectionModel::Select);
         }
 
-        const QString &CHotkeyDialog::noKey()
+        const QString &CHotkeyDialog::noKeyButton()
         {
             static const QString k = "[none]";
             return k;
