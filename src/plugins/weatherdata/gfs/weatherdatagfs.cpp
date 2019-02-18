@@ -44,12 +44,11 @@ namespace BlackWxPlugin
             { { {6, 1} }, { TCDC, "Total Cloud Cover", "%" } },
         };
 
-        double millibarToLevel(double millibar)
+        // https://physics.stackexchange.com/questions/333475/how-to-calculate-altitude-from-current-temperature-and-pressure
+        double calculateAltitudeFt(double seaLevelPressurePa, double atmosphericPressurePa, double temperatureK)
         {
-            static const double hPaStandardPressure = CPhysicalQuantitiesConstants::ICAOFlightLevelPressure().value(CPressureUnit::mbar());
-            millibar /= 100;
-            double level = (1 - std::pow(millibar / hPaStandardPressure, 0.190284)) * 145366.45;
-            return level;
+            double altitude = (std::pow(seaLevelPressurePa / atmosphericPressurePa, 0.19022) - 1) * temperatureK * 3.28084 /  0.0065;
+            return altitude;
         }
 
         CWeatherDataGfs::CWeatherDataGfs(QObject *parent) :
@@ -287,17 +286,19 @@ namespace BlackWxPlugin
                 if (QThread::currentThread()->isInterruptionRequested()) { return; }
 
                 CTemperatureLayerList temperatureLayers;
-
                 CWindLayerList windLayers;
-                for (auto isobaricLayerIt = gfsGridPoint.isobaricLayers.begin(); isobaricLayerIt != gfsGridPoint.isobaricLayers.end(); ++isobaricLayerIt)
+
+                for (const GfsIsobaricLayer &isobaricLayer :  gfsGridPoint.isobaricLayers)
                 {
-                    GfsIsobaricLayer isobaricLayer = isobaricLayerIt.value();
-                    CAltitude level(isobaricLayerIt.key(), CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                    double level = gfsGridPoint.isobaricLayers.key(isobaricLayer);
+                    double altitudeFt = calculateAltitudeFt(gfsGridPoint.pressureAtMsl, level, isobaricLayer.temperature);
+
+                    CAltitude altitude(altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
 
                     auto temperature = CTemperature { isobaricLayer.temperature, CTemperatureUnit::K() };
                     auto dewPoint = calculateDewPoint(temperature, isobaricLayer.relativeHumidity);
 
-                    CTemperatureLayer temperatureLayer(level, temperature, dewPoint, isobaricLayer.relativeHumidity);
+                    CTemperatureLayer temperatureLayer(altitude, temperature, dewPoint, isobaricLayer.relativeHumidity);
                     temperatureLayers.push_back(temperatureLayer);
 
                     double windDirection = -1 * CMathUtils::rad2deg(std::atan2(-isobaricLayer.windU, isobaricLayer.windV));
@@ -305,19 +306,21 @@ namespace BlackWxPlugin
                     if (windDirection < 0.0) { windDirection += 360.0; }
                     if (windDirection >= 360.0) { windDirection -= 360.0; }
                     double windSpeed = std::hypot(isobaricLayer.windU, isobaricLayer.windV);
-                    CWindLayer windLayer(level, CAngle(windDirection, CAngleUnit::deg()), CSpeed(windSpeed, CSpeedUnit::m_s()), {});
+                    CWindLayer windLayer(altitude, CAngle(windDirection, CAngleUnit::deg()), CSpeed(windSpeed, CSpeedUnit::m_s()), {});
                     windLayers.push_back(windLayer);
                 }
 
                 CCloudLayerList cloudLayers;
-                for (auto cloudLayerIt = gfsGridPoint.cloudLayers.begin(); cloudLayerIt != gfsGridPoint.cloudLayers.end(); ++cloudLayerIt)
+                for (const GfsCloudLayer &gfsCloudLayer : gfsGridPoint.cloudLayers)
                 {
-                    if (std::isnan(cloudLayerIt.value().bottomLevel) || std::isnan(cloudLayerIt.value().topLevel)) { continue; }
+                    if (std::isnan(gfsCloudLayer.bottomLevelPressure) || std::isnan(gfsCloudLayer.topLevelPressure) || std::isnan(gfsCloudLayer.topLevelTemperature)) { continue; }
 
                     CCloudLayer cloudLayer;
-                    cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-                    cloudLayer.setTop(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-                    cloudLayer.setCoveragePercent(cloudLayerIt.value().totalCoverage);
+                    double bottomLevelFt = calculateAltitudeFt(gfsGridPoint.pressureAtMsl, gfsCloudLayer.bottomLevelPressure, gfsCloudLayer.topLevelTemperature);
+                    double topLevelFt = calculateAltitudeFt(gfsGridPoint.pressureAtMsl, gfsCloudLayer.topLevelPressure, gfsCloudLayer.topLevelTemperature);
+                    cloudLayer.setBase(CAltitude(bottomLevelFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+                    cloudLayer.setTop(CAltitude(topLevelFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+                    cloudLayer.setCoveragePercent(gfsCloudLayer.totalCoverage);
                     if (gfsGridPoint.surfaceSnow > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Snow); }
                     if (gfsGridPoint.surfaceRain > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Rain); }
 
@@ -533,7 +536,7 @@ namespace BlackWxPlugin
             switch(typeFirstFixedSurface)
             {
             case GroundOrWaterSurface: level = 0.0; break;
-            case IsobaricSurface: level = std::round(millibarToLevel(valueFirstFixedSurface)); break;
+            case IsobaricSurface: level = valueFirstFixedSurface; break;
             case MeanSeaLevel: level = 0.0; break;
             default: CLogMessage(this).warning(u"Unexpected first fixed surface type: %1") << typeFirstFixedSurface; return;
             }
@@ -592,7 +595,8 @@ namespace BlackWxPlugin
             case PRATE: setPrecipitationRate(gfld->fld); break;
             case CRAIN: setSurfaceRain(gfld->fld); break;
             case CSNOW: setSurfaceSnow(gfld->fld); break;
-            default: CLogMessage(this).error(u"Unexpected parameterValue in Template 4.8: %1 (%2)") << parameterValue.code << parameterValue.name; return;
+            case TMP: setCloudTemperature(gfld->fld, typeFirstFixedSurface, grib2CloudLevelHash.value(typeFirstFixedSurface)); break;
+            default: CLogMessage(this).warning(u"Unexpected parameterValue in Template 4.8: %1 (%2)") << parameterValue.code << parameterValue.name; return;
             }
         }
 
@@ -641,21 +645,42 @@ namespace BlackWxPlugin
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 static const g2float minimumLayer = 0.0;
-                double levelFt = std::numeric_limits<double>::quiet_NaN();
+                double levelPressure = std::numeric_limits<double>::quiet_NaN();
                 g2float fieldValue = fld[gridPoint.fieldPosition];
                 // A value of 9.999e20 is undefined. Check that the pressure value is below
-                if (fieldValue < 9.998e20f) { levelFt = millibarToLevel(fld[gridPoint.fieldPosition]); }
+                if (fieldValue < 9.998e20f) { levelPressure = fld[gridPoint.fieldPosition]; }
                 switch (surfaceType)
                 {
                 case LowCloudBottomLevel:
                 case MiddleCloudBottomLevel:
                 case HighCloudBottomLevel:
-                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].bottomLevel = levelFt; }
+                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].bottomLevelPressure = levelPressure; }
                     break;
                 case LowCloudTopLevel:
                 case MiddleCloudTopLevel:
                 case HighCloudTopLevel:
-                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].topLevel = levelFt; }
+                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].topLevelPressure = levelPressure; }
+                    break;
+                default:
+                    Q_ASSERT(false);
+                    break;
+                }
+            }
+        }
+
+        void CWeatherDataGfs::setCloudTemperature(const g2float *fld, int surfaceType, int level)
+        {
+            for (auto &gridPoint : m_gfsWeatherGrid)
+            {
+                double temperature = std::numeric_limits<double>::quiet_NaN();
+                g2float fieldValue = fld[gridPoint.fieldPosition];
+                if (fieldValue < 9.998e20f) { temperature = fld[gridPoint.fieldPosition]; }
+                switch (surfaceType)
+                {
+                case LowCloudTopLevel:
+                case MiddleCloudTopLevel:
+                case HighCloudTopLevel:
+                    gridPoint.cloudLayers[level].topLevelTemperature = temperature;
                     break;
                 default:
                     Q_ASSERT(false);

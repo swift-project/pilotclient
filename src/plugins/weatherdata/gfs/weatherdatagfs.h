@@ -116,9 +116,10 @@ namespace BlackWxPlugin
 
             struct GfsCloudLayer
             {
-                double bottomLevel = 0.0;
-                double topLevel = 0.0;
+                double bottomLevelPressure = 0.0;
+                double topLevelPressure = 0.0;
                 double totalCoverage = 0.0;
+                double topLevelTemperature = 0.0;
             };
 
             struct GfsGridPoint
@@ -151,6 +152,7 @@ namespace BlackWxPlugin
             void setWindU(const g2float *fld, double level);
             void setCloudCoverage(const g2float *fld, int level);
             void setCloudLevel(const g2float *fld, int surfaceType, int level);
+            void setCloudTemperature(const g2float *fld, int surfaceType, int level);
             void setPressureAtMsl(const g2float *fld);
             void setSurfaceRain(const g2float *fld);
             void setSurfaceSnow(const g2float *fld);
