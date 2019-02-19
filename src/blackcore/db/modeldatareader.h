@@ -191,6 +191,14 @@ namespace BlackCore
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
+            //! Get ICAO codes
+            //! \remark cross reader access
+            BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftAircraftIcaos() const;
+
+            //! Get categories
+            //! \remark cross reader access
+            BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+
             //! URL livery web service
             BlackMisc::Network::CUrl getLiveryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 

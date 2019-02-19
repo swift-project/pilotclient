@@ -274,6 +274,18 @@ namespace BlackCore
             }
         }
 
+        CAircraftIcaoCodeList CModelDataReader::getAircraftAircraftIcaos() const
+        {
+            if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return CAircraftIcaoCodeList(); }
+            return sApp->getWebDataServices()->getAircraftIcaoCodes();
+        }
+
+        CAircraftCategoryList CModelDataReader::getAircraftCategories() const
+        {
+            if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return CAircraftCategoryList(); }
+            return sApp->getWebDataServices()->getAircraftCategories();
+        }
+
         void CModelDataReader::parseLiveryData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
@@ -387,11 +399,20 @@ namespace BlackCore
 
             // get all or incremental set of models
             emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadParsing, 0);
+
+            // use prefilled data:
+            // this saves a lot of parsing time as the models do not need to re-parse the sub parts
+            // but can use objects directly
+            const CAircraftCategoryList categories = this->getAircraftCategories();
+            const CLiveryList liveries = this->getLiveries();
+            const CAircraftIcaoCodeList icaos = this->getAircraftAircraftIcaos();
+            const CDistributorList distributors = this->getDistributors();
+
             CAircraftModelList models;
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJsonCaching(res));
+                const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors));
                 if (incrementalModels.isEmpty()) { return; } // currently ignored
                 models = this->getModels();
                 models.replaceOrAddObjectsByKey(incrementalModels);
@@ -400,7 +421,7 @@ namespace BlackCore
             {
                 QTime time;
                 time.start();
-                models = CAircraftModelList::fromDatabaseJsonCaching(res);
+                models = CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors);
                 this->logParseMessage("models", models.size(), time.elapsed(), res);
             }
 
@@ -572,22 +593,22 @@ namespace BlackCore
             if (!directory.exists()) { return false; }
             if (this->getLiveriesCount() > 0)
             {
-                QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
+                const QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
                 if (!s) { return false; }
             }
 
             if (this->getModelsCount() > 0)
             {
-                QString json(QJsonDocument(this->getModels().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
+                const QString json(QJsonDocument(this->getModels().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
                 if (!s) { return false; }
             }
 
             if (this->getDistributorsCount() > 0)
             {
-                QString json(QJsonDocument(this->getDistributors().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json"));
+                const QString json(QJsonDocument(this->getDistributors().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json"));
                 if (!s) { return false; }
             }
             return true;
