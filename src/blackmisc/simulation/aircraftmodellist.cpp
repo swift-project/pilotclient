@@ -10,7 +10,6 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
@@ -1507,16 +1506,23 @@ namespace BlackMisc
             return stats;
         }
 
-        CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(const QJsonArray &array)
+        CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(
+            const QJsonArray &array,
+            const CAircraftIcaoCodeList &icaos,
+            const CAircraftCategoryList &categories,
+            const CLiveryList &liveries,
+            const CDistributorList &distributors
+        )
         {
-            AircraftIcaoIdMap aircraftIcaos;
-            LiveryIdMap       liveries;
-            DistributorIdMap  distributors;
+            AircraftIcaoIdMap aircraftIcaosMap = icaos.toDbKeyValueMap();
+            LiveryIdMap       liveriesMap = liveries.toDbKeyValueMap();
+            DistributorIdMap  distributorsMap = distributors.toDbKeyValueMap();
+            const AircraftCategoryIdMap categoriesMap = categories.toDbKeyValueMap();
 
             CAircraftModelList models;
             for (const QJsonValue &value : array)
             {
-                models.push_back(CAircraftModel::fromDatabaseJsonCaching(value.toObject(), aircraftIcaos, liveries, distributors));
+                models.push_back(CAircraftModel::fromDatabaseJsonCaching(value.toObject(), aircraftIcaosMap, categoriesMap, liveriesMap, distributorsMap));
             }
             return models;
         }

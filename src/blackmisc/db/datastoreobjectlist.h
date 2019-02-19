@@ -16,6 +16,7 @@
 #include "blackmisc/jsonexception.h"
 #include <QJsonArray>
 #include <QSet>
+#include <QMap>
 #include <QString>
 
 namespace BlackMisc
@@ -47,6 +48,9 @@ namespace BlackMisc
 
             //! All keys as set
             QSet<KEYTYPE> toDbKeySet() const;
+
+            //! As map with DB key/object
+            QMap<KEYTYPE, OBJ> toDbKeyValueMap() const;
 
             //! All keys as string set (also integer keys will be converted to string)
             QSet<QString> toDbKeyStringSet() const;

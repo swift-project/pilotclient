@@ -119,6 +119,18 @@ namespace BlackMisc
             return keys;
         }
 
+        template <class OBJ, class CONTAINER, typename KEYTYPE>
+        QMap<KEYTYPE, OBJ> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyValueMap() const
+        {
+            QMap<KEYTYPE, OBJ> map;
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!obj.hasValidDbKey()) { continue; }
+                map.insert(obj.getDbKey(), obj);
+            }
+            return map;
+        }
+
         template<class OBJ, class CONTAINER, typename KEYTYPE>
         QSet<QString> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyStringSet() const
         {

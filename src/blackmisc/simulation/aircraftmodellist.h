@@ -17,6 +17,8 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
+#include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
@@ -462,7 +464,11 @@ namespace BlackMisc
             QString htmlStatistics(bool aircraftStats, bool airlineStats) const;
 
             //! Newer version
-            static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array);
+            static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array,
+                    const Aviation::CAircraftIcaoCodeList &aircraftIcaos = {},
+                    const Aviation::CAircraftCategoryList &aircraftCategories = {},
+                    const Aviation::CLiveryList &liveries = {},
+                    const CDistributorList &distributors = {});
         };
 
         //! Model per callsign

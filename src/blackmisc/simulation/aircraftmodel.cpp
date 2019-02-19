@@ -961,7 +961,7 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModel::fromDatabaseJsonCaching(
             const QJsonObject &json,
-            AircraftIcaoIdMap &aircraftIcaos, LiveryIdMap &liveries, DistributorIdMap &distributors,
+            AircraftIcaoIdMap &aircraftIcaos, const AircraftCategoryIdMap &categories, LiveryIdMap &liveries, DistributorIdMap &distributors,
             const QString &prefix)
         {
             static const QString prefixAircraftIcao("ac_");
@@ -988,9 +988,18 @@ namespace BlackMisc
                                      CDistributor::fromDatabaseJson(json, prefixDistributor));
 
             if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
-            if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
             if (!livery.isLoadedFromDb() && idLivery >= 0) { livery.setDbKey(idLivery); }
             if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
+
+            // update category
+            if (!cachedAircraftIcao)
+            {
+                const int catId = aircraftIcao.getCategory().getDbKey();
+                if (catId >= 0 && categories.contains(catId))
+                {
+                    aircraftIcao.setCategory(categories[catId]);
+                }
+            }
 
             // store in temp.cache
             if (!cachedAircraftIcao && aircraftIcao.isLoadedFromDb()) { aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao; }

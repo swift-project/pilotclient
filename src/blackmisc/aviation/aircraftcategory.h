@@ -21,9 +21,9 @@
 #include "blackmisc/blackmiscexport.h"
 
 #include <QJsonObject>
-#include <QMetaType>
-#include <QString>
+#include <QMap>
 #include <QStringList>
+#include <QMetaType>
 
 namespace BlackMisc
 {
@@ -150,6 +150,10 @@ namespace BlackMisc
                 BLACK_METAMEMBER(assignable)
             );
         };
+
+        //! Category/id map
+        using AircraftCategoryIdMap = QMap<int, CAircraftCategory>;
+
     } // namespace
 } // namespace
 

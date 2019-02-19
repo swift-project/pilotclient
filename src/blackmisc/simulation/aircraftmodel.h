@@ -503,7 +503,7 @@ namespace BlackMisc
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("mod_"));
 
             //! From swift DB JSON, caching during this process (faster)
-            static CAircraftModel fromDatabaseJsonCaching(const QJsonObject &json, Aviation::AircraftIcaoIdMap &aircraftIcaos, Aviation::LiveryIdMap &liveries, DistributorIdMap &distributors, const QString &prefix = QString("mod_"));
+            static CAircraftModel fromDatabaseJsonCaching(const QJsonObject &json, Aviation::AircraftIcaoIdMap &aircraftIcaos, const Aviation::AircraftCategoryIdMap &categories, Aviation::LiveryIdMap &liveries, DistributorIdMap &distributors, const QString &prefix = QString("mod_"));
 
             //! Livery string prefix
             static const QString &liveryStringPrefix();
