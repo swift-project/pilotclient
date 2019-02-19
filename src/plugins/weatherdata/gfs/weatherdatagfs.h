@@ -32,6 +32,10 @@ namespace BlackWxPlugin
 {
     namespace Gfs
     {
+        struct Grib2ParameterKey;
+        struct Grib2ParameterValue;
+        struct GfsGridPoint;
+
         /*!
          * GFS implemenation
          */
@@ -44,7 +48,7 @@ namespace BlackWxPlugin
             CWeatherDataGfs(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CWeatherDataGfs();
+            virtual ~CWeatherDataGfs() override;
 
             //! \copydoc BlackCore::IWeatherData::fetchWeatherData
             virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
@@ -59,82 +63,6 @@ namespace BlackWxPlugin
             virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const override;
 
         private:
-            enum Grib2CloudLevel
-            {
-                LowCloud,
-                MiddleCloud,
-                HighCloud
-            };
-
-            enum Grib2ParameterCode
-            {
-                UNKNOWN,
-                TMP,
-                RH,
-                UGRD,
-                VGRD,
-                PRATE,
-                PRES,
-                PRMSL,
-                TCDC,
-                CRAIN,
-                CSNOW
-            };
-
-            enum Grib2FixedSurfaceTypes
-            {
-                GroundOrWaterSurface = 1,
-                IsobaricSurface = 100,
-                MeanSeaLevel = 101,
-                LowCloudBottomLevel = 212,
-                LowCloudTopLevel = 213,
-                LowCloudLayer = 214,
-                MiddleCloudBottomLevel = 222,
-                MiddleCloudTopLevel = 223,
-                MiddleCloudLayer = 224,
-                HighCloudBottomLevel = 232,
-                HighCloudTopLevel = 233,
-                HighCloudLayer = 234
-            };
-
-            struct Grib2ParameterValue
-            {
-                Grib2ParameterValue() = default;
-                Grib2ParameterValue(Grib2ParameterCode code_, const QString &name_, const QString &unit_) : code(code_), name(name_), unit(unit_) {}
-                Grib2ParameterCode code = UNKNOWN;
-                QString name;
-                QString unit;
-            };
-
-            struct GfsIsobaricLayer
-            {
-                double temperature = 0.0;
-                double relativeHumidity = 0.0;
-                double windU = 0.0;
-                double windV = 0.0;
-            };
-
-            struct GfsCloudLayer
-            {
-                double bottomLevelPressure = 0.0;
-                double topLevelPressure = 0.0;
-                double totalCoverage = 0.0;
-                double topLevelTemperature = 0.0;
-            };
-
-            struct GfsGridPoint
-            {
-                double latitude = 0.0;
-                double longitude = 0.0;
-                int fieldPosition = 0;
-                QHash<int, GfsCloudLayer> cloudLayers;
-                QHash<double, GfsIsobaricLayer> isobaricLayers;
-                double surfaceRain = 0;
-                double surfaceSnow = 0;
-                double surfacePrecipitationRate = 0;
-                double pressureAtMsl = 0.0;
-            };
-
             //! Asyncronous fetching finished
             //! \threadsafe
             void fetchingWeatherDataFinished();
@@ -146,10 +74,10 @@ namespace BlackWxPlugin
             void createWeatherGrid(const gribfield *gfld);
             void handleProductDefinitionTemplate40(const gribfield *gfld);
             void handleProductDefinitionTemplate48(const gribfield *gfld);
-            void setTemperature(const g2float *fld, double level);
-            void setHumidity(const g2float *fld, double level);
-            void setWindV(const g2float *fld, double level);
-            void setWindU(const g2float *fld, double level);
+            void setTemperature(const g2float *fld, float level);
+            void setHumidity(const g2float *fld, float level);
+            void setWindV(const g2float *fld, float level);
+            void setWindU(const g2float *fld, float level);
             void setCloudCoverage(const g2float *fld, int level);
             void setCloudLevel(const g2float *fld, int surfaceType, int level);
             void setCloudTemperature(const g2float *fld, int surfaceType, int level);
@@ -186,7 +114,6 @@ namespace BlackWxPlugin
         public:
             //! \copydoc BlackCore::IWeatherDataFactory::create()
             virtual BlackCore::IWeatherData *create(QObject *parent = nullptr) override;
-
         };
 
     } // ns

@@ -30,6 +30,92 @@ namespace BlackWxPlugin
 {
     namespace Gfs
     {
+        //! \cond PRIVATE
+        enum Grib2CloudLevel
+        {
+            LowCloud,
+            MiddleCloud,
+            HighCloud
+        };
+
+        enum Grib2ParameterCode
+        {
+            UNKNOWN,
+            TMP,
+            RH,
+            UGRD,
+            VGRD,
+            PRATE,
+            PRES,
+            PRMSL,
+            TCDC,
+            CRAIN,
+            CSNOW
+        };
+
+        enum Grib2FixedSurfaceTypes
+        {
+            GroundOrWaterSurface = 1,
+            IsobaricSurface = 100,
+            MeanSeaLevel = 101,
+            LowCloudBottomLevel = 212,
+            LowCloudTopLevel = 213,
+            LowCloudLayer = 214,
+            MiddleCloudBottomLevel = 222,
+            MiddleCloudTopLevel = 223,
+            MiddleCloudLayer = 224,
+            HighCloudBottomLevel = 232,
+            HighCloudTopLevel = 233,
+            HighCloudLayer = 234
+        };
+
+        struct Grib2ParameterValue
+        {
+            Grib2ParameterValue() = default;
+            Grib2ParameterValue(Grib2ParameterCode code_, const QString &name_, const QString &unit_) : code(code_), name(name_), unit(unit_) {}
+            Grib2ParameterCode code = UNKNOWN;
+            QString name;
+            QString unit;
+        };
+
+        struct GfsIsobaricLayer
+        {
+            float temperature = 0.0;
+            float relativeHumidity = 0.0;
+            float windU = 0.0;
+            float windV = 0.0;
+        };
+
+        inline bool operator==(const GfsIsobaricLayer& lhs, const GfsIsobaricLayer& rhs)
+        {
+            return qFuzzyCompare(lhs.temperature, rhs.temperature) &&
+                   qFuzzyCompare(lhs.relativeHumidity, rhs.relativeHumidity) &&
+                   qFuzzyCompare(lhs.windU, rhs.windU) &&
+                   qFuzzyCompare(lhs.windV, rhs.windV);
+        }
+
+        struct GfsCloudLayer
+        {
+            float bottomLevelPressure = 0.0;
+            float topLevelPressure = 0.0;
+            float totalCoverage = 0.0;
+            float topLevelTemperature = 0.0;
+        };
+
+        struct GfsGridPoint
+        {
+            float latitude = 0.0;
+            float longitude = 0.0;
+            int fieldPosition = 0;
+            QHash<int, GfsCloudLayer> cloudLayers;
+            QHash<float, GfsIsobaricLayer> isobaricLayers;
+            float surfaceRain = 0;
+            float surfaceSnow = 0;
+            float surfacePrecipitationRate = 0;
+            float pressureAtMsl = 0.0;
+        };
+        //! \endcond
+
         const CWeatherDataGfs::Grib2ParameterTable CWeatherDataGfs::m_grib2ParameterTable
         {
             { { {0, 0} }, { TMP, "Temperature", "K" } },
@@ -45,7 +131,7 @@ namespace BlackWxPlugin
         };
 
         // https://physics.stackexchange.com/questions/333475/how-to-calculate-altitude-from-current-temperature-and-pressure
-        double calculateAltitudeFt(double seaLevelPressurePa, double atmosphericPressurePa, double temperatureK)
+        double calculateAltitudeFt(float seaLevelPressurePa, float atmosphericPressurePa, float temperatureK)
         {
             double altitude = (std::pow(seaLevelPressurePa / atmosphericPressurePa, 0.19022) - 1) * temperatureK * 3.28084 /  0.0065;
             return altitude;
@@ -288,9 +374,9 @@ namespace BlackWxPlugin
                 CTemperatureLayerList temperatureLayers;
                 CWindLayerList windLayers;
 
-                for (const GfsIsobaricLayer &isobaricLayer :  gfsGridPoint.isobaricLayers)
+                for (const GfsIsobaricLayer &isobaricLayer : gfsGridPoint.isobaricLayers)
                 {
-                    double level = gfsGridPoint.isobaricLayers.key(isobaricLayer);
+                    float level = gfsGridPoint.isobaricLayers.key(isobaricLayer);
                     double altitudeFt = calculateAltitudeFt(gfsGridPoint.pressureAtMsl, level, isobaricLayer.temperature);
 
                     CAltitude altitude(altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
@@ -389,21 +475,21 @@ namespace BlackWxPlugin
             int npnts = gfld->ngrdpts;
             int nx = gfld->igdtmpl[7];
             int ny = gfld->igdtmpl[8];
-            double units = 0.000001;
-            double latitude1 = gfld->igdtmpl[11] * units;
-            double longitude1 = gfld->igdtmpl[12] * units;
+            float units = 0.000001f;
+            float latitude1 = gfld->igdtmpl[11] * units;
+            float longitude1 = gfld->igdtmpl[12] * units;
             int nres = gfld->igdtmpl[13];
-            double latitude2 = gfld->igdtmpl[14] * units;
-            double longitude2 = gfld->igdtmpl[15] * units;
-            double dlatitude = gfld->igdtmpl[16] * units;
-            double dlongitude = gfld->igdtmpl[17] * units;
+            float latitude2 = gfld->igdtmpl[14] * units;
+            float longitude2 = gfld->igdtmpl[15] * units;
+            float dlatitude = gfld->igdtmpl[16] * units;
+            float dlongitude = gfld->igdtmpl[17] * units;
 
-            if (latitude1 < -90.0 || latitude2 < -90.0 || latitude1 > 90.0 || latitude2 > 90.0)
+            if (latitude1 < -90.0f || latitude2 < -90.0f || latitude1 > 90.0f || latitude2 > 90.0f)
             {
                 CLogMessage(this).warning(u"Invalid grid definition: lat1 = %1 - lat2 = %2") << latitude1 << latitude2;
                 return;
             }
-            if (longitude1 < 0.0 || longitude2 < 0.0 || longitude1 > 360.0 || longitude2 > 360.0)
+            if (longitude1 < 0.0f || longitude2 < 0.0f || longitude1 > 360.0f || longitude2 > 360.0f)
             {
                 CLogMessage(this).warning(u"Invalid grid definition: lon1 = %1 - lon2 = %2") << longitude1 << longitude2;
                 return;
@@ -415,8 +501,8 @@ namespace BlackWxPlugin
             }
 
             // Scan direction is North -> South
-            double north = latitude1;
-            double south = latitude2;
+            float north = latitude1;
+            float south = latitude2;
 
             if (south > north)
             {
@@ -424,13 +510,13 @@ namespace BlackWxPlugin
                 return;
             }
 
-            double dy = 0;
+            float dy = 0.0f;
             if (ny != 1)
             {
-                dy = (north - south) / (ny - 1.0);
+                dy = (north - south) / (ny - 1.0f);
                 if (nres & 16)
                 {
-                    if (fabs(dy - dlatitude) > 0.001)
+                    if (fabs(dy - dlatitude) > 0.001f)
                     {
                         CLogMessage(this).warning(u"Invalid grid definition: delta latitude is inconsistent");
                         return;
@@ -443,24 +529,24 @@ namespace BlackWxPlugin
             }
 
             // Scan direction is West -> East
-            double west = longitude1;
-            double east = longitude2;
-            if (east <= west) { east += 360.0; }
-            if (east - west > 360.0) { east -= 360.0; }
+            float west = longitude1;
+            float east = longitude2;
+            if (east <= west) { east += 360.0f; }
+            if (east - west > 360.0f) { east -= 360.0f; }
             if (west < 0)
             {
-                west += 360.0;
-                east += 360.0;
+                west += 360.0f;
+                east += 360.0f;
             }
 
-            double dx = 0;
+            float dx = 0;
             if (nx != 1)
             {
                 dx = (east - west) / (nx - 1);
                 dx = fabs(dx);
                 if (nres & 32)
                 {
-                    if (fabs(dx - fabs(dlongitude)) > 0.001)
+                    if (fabs(dx - fabs(dlongitude)) > 0.001f)
                     {
                         CLogMessage(this).warning(u"Invalid grid definition: delta longitude is inconsistent");
                         return;
@@ -483,8 +569,8 @@ namespace BlackWxPlugin
                         GfsGridPoint gridPoint;
                         gridPoint.latitude = latitude1 - iy * dy;
                         gridPoint.longitude = longitude1 + ix * dx;
-                        if (gridPoint.longitude >= 360.0) { gridPoint.longitude -= 360.0; }
-                        if (gridPoint.longitude < 0.0) { gridPoint.longitude += 360.0; }
+                        if (gridPoint.longitude >= 360.0f) { gridPoint.longitude -= 360.0f; }
+                        if (gridPoint.longitude < 0.0f) { gridPoint.longitude += 360.0f; }
                         gridPoint.fieldPosition = ix + i;
                         CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
                         if (m_maxRange == CLength())
@@ -531,7 +617,7 @@ namespace BlackWxPlugin
                 return;
             }
 
-            double level = 0.0;
+            float level = 0.0;
 
             switch(typeFirstFixedSurface)
             {
@@ -600,7 +686,7 @@ namespace BlackWxPlugin
             }
         }
 
-        void CWeatherDataGfs::setTemperature(const g2float *fld, double level)
+        void CWeatherDataGfs::setTemperature(const g2float *fld, float level)
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
@@ -608,7 +694,7 @@ namespace BlackWxPlugin
             }
         }
 
-        void CWeatherDataGfs::setHumidity(const g2float *fld, double level)
+        void CWeatherDataGfs::setHumidity(const g2float *fld, float level)
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
@@ -616,7 +702,7 @@ namespace BlackWxPlugin
             }
         }
 
-        void CWeatherDataGfs::setWindV(const g2float *fld, double level)
+        void CWeatherDataGfs::setWindV(const g2float *fld, float level)
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
@@ -624,7 +710,7 @@ namespace BlackWxPlugin
             }
         }
 
-        void CWeatherDataGfs::setWindU(const g2float *fld, double level)
+        void CWeatherDataGfs::setWindU(const g2float *fld, float level)
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
@@ -636,7 +722,7 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                if (fld[gridPoint.fieldPosition] > 0.0) { gridPoint.cloudLayers[level].totalCoverage = fld[gridPoint.fieldPosition]; }
+                if (fld[gridPoint.fieldPosition] > 0.0f) { gridPoint.cloudLayers[level].totalCoverage = fld[gridPoint.fieldPosition]; }
             }
         }
 
@@ -645,7 +731,7 @@ namespace BlackWxPlugin
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 static const g2float minimumLayer = 0.0;
-                double levelPressure = std::numeric_limits<double>::quiet_NaN();
+                float levelPressure = std::numeric_limits<float>::quiet_NaN();
                 g2float fieldValue = fld[gridPoint.fieldPosition];
                 // A value of 9.999e20 is undefined. Check that the pressure value is below
                 if (fieldValue < 9.998e20f) { levelPressure = fld[gridPoint.fieldPosition]; }
@@ -672,7 +758,7 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                double temperature = std::numeric_limits<double>::quiet_NaN();
+                float temperature = std::numeric_limits<float>::quiet_NaN();
                 g2float fieldValue = fld[gridPoint.fieldPosition];
                 if (fieldValue < 9.998e20f) { temperature = fld[gridPoint.fieldPosition]; }
                 switch (surfaceType)
