@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "xswiftbustrafficproxy.h"
+#include "fgswiftbustrafficproxy.h"
 #include <QLatin1String>
 #include <QDBusConnection>
 

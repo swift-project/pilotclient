@@ -28,34 +28,31 @@ namespace BlackMisc{
 
         Simulation::CAircraftModelList AircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
         {
-            Q_UNUSED(excludeDirectories);
-            if (rootDirectory.isEmpty()) { return {}; }
+            //Q_UNUSED(excludeDirectories);
+            //if (rootDirectory.isEmpty()) { return {}; }
 
             Simulation::CAircraftModelList installedModels;
 
-            QDir searchPath(rootDirectory, fileFilterFlyable());
-            QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+            //QDir searchPath(rootDirectory, fileFilterFlyable());
+            //QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-            int i = 0;
-            while (aircraftIt.hasNext()) {
-                aircraftIt.next();
-                if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
-                i++;
-                Simulation::CAircraftModel model;
-                model.setAircraftIcaoCode(QString::fromStdString("A320"));
-                model.setDescription(QString::fromStdString("Flyable"));
-                model.setName(aircraftIt.fileName());
-                model.setModelString(QString::fromStdString(std::to_string(i)));
+            //while (aircraftIt.hasNext()) {
+                //aircraftIt.next();
+                //if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
+                //Simulation::CAircraftModel model;
+                //model.setAircraftIcaoCode(QString::fromStdString("A320"));
+                //model.setDescription(QString::fromStdString("Flyable"));
+                //model.setName(aircraftIt.fileName());
                 //model.setModelString(aircraftIt.filePath() + aircraftIt.fileName());
-                model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                model.setSimulator(CSimulatorInfo::fg());
+                //model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                //model.setSimulator(CSimulatorInfo::fg());
                 //model.setCG(PhysicalQuantities::CLength());
-                model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
-                model.setModelMode(CAircraftModel::Include);
+                //model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
+                //model.setModelMode(CAircraftModel::Include);
 
-                addUniqueModel(model,installedModels);
+                //addUniqueModel(model,installedModels);
                 //TODO Add livery adding
-            }
+            //}
 
             return installedModels;
         }
@@ -74,9 +71,6 @@ namespace BlackMisc{
             while (aircraftIt.hasNext()) {
                 aircraftIt.next();
                 if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
-                //QString base = "main";
-                //if(base.compare(aircraftIt.fileName())){ continue;}
-
                 Simulation::CAircraftModel model;
                 model.setDescription(QString::fromStdString("AI"));
                 std::string modelName = aircraftIt.fileName().toStdString();
@@ -121,7 +115,7 @@ namespace BlackMisc{
             CAircraftModelList allModels;
             for (const QString &rootDirectory : rootDirectories)
             {
-                //TODO Make paths variable
+                //TODO Make paths changeable (using env variable)
                 allModels.push_back(parseAIAirplanes("X:/Flightsim/Flightgear/2018.3/data/AI/Aircraft", excludeDirectories));
                 //allModels.push_back(parseFlyableAirplanes("X:/Flightsim/Flightgear/2018.3/data/Aircraft", excludeDirectories));
             }

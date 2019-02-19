@@ -14,7 +14,7 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 FORMS += *.ui
-DISTFILES += simulatorxplaneconfig.json
+DISTFILES += simulatorflightgearconfig.json
 
 DESTDIR = $$DestRoot/bin/plugins/simulator
 

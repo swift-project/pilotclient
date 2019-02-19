@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "xswiftbusweatherproxy.h"
+#include "fgswiftbusweatherproxy.h"
 
 #include <QLatin1String>
 

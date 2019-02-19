@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "xswiftbusserviceproxy.h"
-#include "simulatorxplane.h"
+#include "fgswiftbusserviceproxy.h"
+#include "simulatorflightgear.h"
 
 #include <QLatin1String>
 #include <QPointer>

@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorxplaneconfig.h"
-#include "simulatorxplaneconfigwindow.h"
+#include "simulatorflightgearconfig.h"
+#include "simulatorflightgearconfigwindow.h"
 
 class QWidget;
 

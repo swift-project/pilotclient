@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorxplaneconfigwindow.h"
+#include "simulatorflightgearconfigwindow.h"
 #include "blackcore/application.h"
-#include "ui_simulatorxplaneconfigwindow.h"
+#include "ui_simulatorflightgearconfigwindow.h"
 #include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>

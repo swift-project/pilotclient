@@ -13,8 +13,8 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/simulation/settings/mysettings.h"
-#include "simulatorxplaneconfig.h"
+#include "blackmisc/simulation/settings/fgsettings.h"
+#include "simulatorflightgearconfig.h"
 #include <QObject>
 #include <QScopedPointer>
 

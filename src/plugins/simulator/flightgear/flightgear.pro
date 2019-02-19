@@ -18,7 +18,7 @@ unix:!macx {
 
 SOURCES += *.cpp
 HEADERS += *.h
-DISTFILES += simulatorxplane.json
+DISTFILES += simulatorflightgear.json
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {

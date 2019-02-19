@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "xplanempaircraft.h"
+#include "flightgearmpaircraft.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 

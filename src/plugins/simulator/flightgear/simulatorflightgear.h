@@ -12,13 +12,13 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
-#include "xplanempaircraft.h"
-#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
+#include "flightgearmpaircraft.h"
+#include "plugins/simulator/flightgearconfig/simulatorflightgearconfig.h"
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/settings/mysettings.h"
+#include "blackmisc/simulation/settings/fgsettings.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -294,7 +294,7 @@ namespace BlackSimPlugin
         class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorxplane.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorflightgear.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:

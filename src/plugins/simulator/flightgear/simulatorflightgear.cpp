@@ -7,11 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorxplane.h"
+#include "simulatorflightgear.h"
 #include "qcompilerdetection.h"
-#include "xswiftbusserviceproxy.h"
-#include "xswiftbustrafficproxy.h"
-#include "xswiftbusweatherproxy.h"
+#include "fgswiftbusserviceproxy.h"
+#include "fgswiftbustrafficproxy.h"
+#include "fgswiftbusweatherproxy.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
