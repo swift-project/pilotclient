@@ -40,7 +40,7 @@ namespace BlackCore
     namespace Db
     {
         //! Specialized version of threaded reader for DB data
-        class BLACKCORE_EXPORT CDatabaseReader : public BlackCore::CThreadedReader
+        class BLACKCORE_EXPORT CDatabaseReader : public CThreadedReader
         {
             Q_OBJECT
 

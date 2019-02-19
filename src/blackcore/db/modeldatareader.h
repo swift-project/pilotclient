@@ -12,18 +12,16 @@
 #ifndef BLACKCORE_MODELDATAREADER_H
 #define BLACKCORE_MODELDATAREADER_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/data/dbcaches.h"
 #include "blackcore/db/databasereader.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
 
 #include <QDateTime>
 #include <QList>

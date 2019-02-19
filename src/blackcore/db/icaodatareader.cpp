@@ -29,6 +29,7 @@
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
 #include <QUrl>
+#include <QPointer>
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
@@ -659,8 +660,11 @@ namespace BlackCore
         bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+
+            QPointer<CIcaoDataReader> myself(this);
             QTimer::singleShot(0, this, [ = ]()
             {
+                if (!myself) { return; }
                 const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {

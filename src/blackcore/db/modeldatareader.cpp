@@ -6,11 +6,11 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
-
-#include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/modeldatareader.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackcore/webdataservices.h"
+#include "blackcore/application.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
@@ -26,6 +26,7 @@
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
 #include <QTime>
+#include <QPointer>
 #include <QUrl>
 #include <QWriteLocker>
 #include <Qt>
@@ -551,8 +552,11 @@ namespace BlackCore
         bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+
+            QPointer<CModelDataReader> myself(this);
             QTimer::singleShot(0, this, [ = ]()
             {
+                if (!myself) { return; }
                 const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {
