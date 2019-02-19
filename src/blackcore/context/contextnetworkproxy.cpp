@@ -201,7 +201,7 @@ namespace BlackCore
 
         bool CContextNetworkProxy::setOtherClient(const CClient &client)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setOtherClientForCallsign"), client);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setOtherClient"), client);
         }
 
         CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const
@@ -231,7 +231,7 @@ namespace BlackCore
 
         bool CContextNetworkProxy::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setEnabledFlag"), callsign, enabledForRendering);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setAircraftEnabledFlag"), callsign, enabledForRendering);
         }
 
         bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
@@ -276,12 +276,12 @@ namespace BlackCore
 
         bool CContextNetworkProxy::isReverseLookupMessagesEnabled() const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isReverseLookupLoggingEnabled"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isReverseLookupMessagesEnabled"));
         }
 
         void CContextNetworkProxy::enableReverseLookupMessages(bool enabled)
         {
-            m_dBusInterface->callDBus(QLatin1String("enableReverseLookupLogging"), enabled);
+            m_dBusInterface->callDBus(QLatin1String("enableReverseLookupMessages"), enabled);
         }
 
         CStatusMessageList CContextNetworkProxy::getAircraftPartsHistory(const CCallsign &callsign) const

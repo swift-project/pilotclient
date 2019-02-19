@@ -222,7 +222,7 @@ namespace BlackCore
 
         CInterpolationAndRenderingSetupPerCallsign CContextSimulatorProxy::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
         {
-            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupPerCallsign>(QLatin1String("getInterpolationAndRenderingSetupsPerCallsign"), callsign);
+            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupPerCallsign>(QLatin1String("getInterpolationAndRenderingSetupPerCallsignOrDefault"), callsign);
         }
 
         bool CContextSimulatorProxy::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
@@ -282,7 +282,7 @@ namespace BlackCore
 
         bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("resetToModelMatchingAircraft"), callsign, callsign);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("resetToModelMatchingAircraft"), callsign);
         }
 
         void CContextSimulatorProxy::setWeatherActivated(bool activated)

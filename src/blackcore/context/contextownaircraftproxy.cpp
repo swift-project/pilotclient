@@ -100,7 +100,7 @@ namespace BlackCore
 
         bool CContextOwnAircraftProxy::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateCockpit"), transponderMode, originator);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateTransponderMode"), transponderMode, originator);
         }
 
         bool CContextOwnAircraftProxy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const CIdentifier &originator)
