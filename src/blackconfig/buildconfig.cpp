@@ -256,7 +256,7 @@ namespace BlackConfig
     {
         // for testing set to "true", never commit with TRUE before FG is completed
         // this will be removed when FG is fully productive
-        return false; // && isLocalDeveloperDebugBuild();
+        return true; // && isLocalDeveloperDebugBuild();
     }
 } // ns
 
