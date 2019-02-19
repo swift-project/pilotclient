@@ -34,7 +34,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextOwnAircraftProxy(CDBusServer::coreServiceName(), connection, mode, parent);
+                return new CContextOwnAircraftProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextOwnAircraftEmpty(parent);
