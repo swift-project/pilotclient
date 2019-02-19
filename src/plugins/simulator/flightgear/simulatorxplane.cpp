@@ -602,7 +602,7 @@ namespace BlackSimPlugin
                 const QString callsign = newRemoteAircraft.getCallsign().asString();
                 const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
+                m_trafficProxy->addPlane(callsign, aircraftModel.getFileName(),
                                          newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                          newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                          livery);
