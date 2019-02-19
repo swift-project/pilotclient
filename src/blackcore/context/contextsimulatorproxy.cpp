@@ -51,13 +51,13 @@ namespace BlackCore
                                         "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                                   "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));
+                                   "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
+                                   "vitalityLost", this, SIGNAL(vitalityLost()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
@@ -69,22 +69,25 @@ namespace BlackCore
                                    "matchingSetupChanged", this, SIGNAL(matchingSetupChanged()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
+                                   "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                                   "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "vitalityLost", this, SIGNAL(vitalityLost()));
+                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, bool, bool, BlackMisc::CStatusMessage)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "aircraftRenderingChanged", this, SIGNAL(aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, bool, bool, BlackMisc::CStatusMessage)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));

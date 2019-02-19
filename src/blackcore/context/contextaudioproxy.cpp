@@ -46,7 +46,13 @@ namespace BlackCore
                                         "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                   "changedVoiceRoomMembers", this, SIGNAL(changedVoiceRoomMembers()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                    "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                   "changedMute", this, SIGNAL(changedMute(bool)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                    "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
@@ -54,9 +60,7 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                    "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
             Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                   "changedMute", this, SIGNAL(changedMute(bool)));
-            Q_ASSERT(s);
+
             Q_UNUSED(s);
 
             this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());
