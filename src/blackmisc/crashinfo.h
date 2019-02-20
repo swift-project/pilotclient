@@ -41,6 +41,9 @@ namespace BlackMisc
         //! User name
         void setUserName(const QString &userName) { m_userName = userName; }
 
+        //! Any info available?
+        bool hasInfo() const { return !m_info.isEmpty(); }
+
         //! Get the info
         const QString &getInfo() const { return m_info; }
 
@@ -62,6 +65,9 @@ namespace BlackMisc
         //! Append some info
         void appendInfo(const QString &extraInfo);
 
+        //! Set path and file name
+        void setLogPathAndFileName(const QString &fileName);
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -74,16 +80,26 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const CCrashInfo &compareValue) const;
 
+        //! Trigger writing this to file
+        void triggerWritingFile();
+
+        //! Summary
+        QString summary() const;
+
     private:
         QString m_userName;
         QString m_info;
         QString m_simulatorString;
         QString m_flightNetwork;
+        QString m_logFileAndPath;
 
         BLACK_METACLASS(
             CCrashInfo,
             BLACK_METAMEMBER(userName),
-            BLACK_METAMEMBER(info)
+            BLACK_METAMEMBER(info),
+            BLACK_METAMEMBER(simulatorString),
+            BLACK_METAMEMBER(flightNetwork),
+            BLACK_METAMEMBER(logFileAndPath)
         );
     };
 } // ns

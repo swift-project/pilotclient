@@ -102,9 +102,9 @@ namespace BlackMisc
     bool CFileUtils::writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath)
     {
         if (fileNameAndPath.isEmpty()) { return false; }
-        CWorker *worker = BlackMisc::CWorker::fromTask(QCoreApplication::instance(), "writeStringToFileInBackground", [content, fileNameAndPath]()
+        CWorker *worker = CWorker::fromTask(QCoreApplication::instance(), "writeStringToFileInBackground", [content, fileNameAndPath]()
         {
-            bool s = CFileUtils::writeStringToFile(content, fileNameAndPath);
+            const bool s = CFileUtils::writeStringToFile(content, fileNameAndPath);
             Q_UNUSED(s);
         });
         return worker ? true : false;

@@ -8,6 +8,9 @@
 */
 
 #include "blackmisc/crashinfo.h"
+#include "fileutils.h"
+
+#include <QFile>
 #include <QStringBuilder>
 
 namespace BlackMisc
@@ -25,6 +28,11 @@ namespace BlackMisc
         if (extraInfo.isEmpty()) { return; }
         if (m_info.isEmpty()) { this->setInfo(extraInfo); return; }
         m_info += u' ' % extraInfo;
+    }
+
+    void CCrashInfo::setLogPathAndFileName(const QString &fileName)
+    {
+        m_logFileAndPath = fileName;
     }
 
     CVariant CCrashInfo::propertyByIndex(const CPropertyIndex &index) const
@@ -68,5 +76,19 @@ namespace BlackMisc
         case IndexFlightNetworkInfo: return this->getFlightNetworkString().compare(compareValue.getFlightNetworkString());
         default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
+    }
+
+    void CCrashInfo::triggerWritingFile()
+    {
+        if (m_logFileAndPath.isEmpty()) { return; }
+        CFileUtils::writeStringToFileInBackground(summary(), m_logFileAndPath);
+    }
+
+    QString CCrashInfo::summary() const
+    {
+        return (m_userName.isEmpty() ? QStringLiteral("") : u"user name: " % m_userName % u"\n") %
+               (m_simulatorString.isEmpty() ? QStringLiteral("") : u"simulator: " % m_simulatorString % u"\n") %
+               (m_flightNetwork.isEmpty() ? QStringLiteral("") : u"network: " % m_flightNetwork % u"\n") %
+               (m_info.isEmpty() ? QStringLiteral("") : u"info: " % m_info % u"\n");
     }
 } // ns
