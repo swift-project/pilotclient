@@ -203,7 +203,7 @@ namespace BlackMisc
             CStatusMessageList validate() const;
 
             //! Identifying a session, if not connected empty
-            QString getServerSessionId() const;
+            QString getServerSessionId(bool onlyConnected) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;

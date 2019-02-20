@@ -703,7 +703,7 @@ namespace BlackCore
             BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
             if (to == INetwork::Connected && this->getIContextNetwork())
             {
-                m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
+                m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId(false);
                 if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
                 {
                     m_simulatorPlugin.second->setFlightNetworkConnected(true);

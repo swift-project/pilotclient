@@ -186,11 +186,12 @@ namespace BlackMisc
             return msgs;
         }
 
-        QString CServer::getServerSessionId() const
+        QString CServer::getServerSessionId(bool onlyConnected) const
         {
-            if (!this->isConnected()) { return {}; }
-            static const QString session("%1 %2:%3 [%4] %5 %6");
-            return session.arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getEcosystem().getSystemString(), this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
+            const bool isConnected = this->isConnected();
+            if (onlyConnected && !isConnected) { return {}; }
+            static const QString session("%1 %2 %3:%4 [%5] %6 %7");
+            return session.arg(isConnected ? u"connected" : u"disconnected").arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getEcosystem().getSystemString(), this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
         }
 
         CVariant CServer::propertyByIndex(const CPropertyIndex &index) const

@@ -314,7 +314,7 @@ namespace BlackGui
                     sGui->setExtraWindowTitle(QStringLiteral("[%1]").arg(ownAircraft.getCallsignAsString()));
                     sGui->crashAndLogInfoUserName(currentServer.getUser().getRealNameAndId());
                     sGui->crashAndLogInfoFlightNetwork(currentServer.getEcosystem().toQString(true));
-                    sGui->crashAndLogAppendInfo(currentServer.getServerSessionId());
+                    sGui->crashAndLogAppendInfo(currentServer.getServerSessionId(false));
                     m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
                     ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
