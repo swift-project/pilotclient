@@ -424,6 +424,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onFlightPlanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
     {
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
         CFlightPlan plan(flightPlan);
         plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
         m_flightPlanCache.insert(callsign, plan);
@@ -498,8 +499,8 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, int trial)
     {
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -549,9 +550,8 @@ namespace BlackCore
     void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-
         if (!this->isConnectedAndNotShuttingDown()) { return; }
+
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
@@ -601,6 +601,8 @@ namespace BlackCore
     void CAirspaceMonitor::onAtcControllerDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
+
         this->removeClient(callsign);
         if (m_atcStationsOnline.containsCallsign(callsign))
         {
@@ -618,7 +620,7 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
-        bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
+        const bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
 
         // receiving an ATIS means station is online, update in bookings
         m_atcStationsBooked.setOnline(callsign, true);
@@ -654,6 +656,7 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
+
         if (zuluTime.length() == 4)
         {
             // Logic to set logoff time
@@ -712,10 +715,10 @@ namespace BlackCore
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
+        if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
         CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("Data from network: aircraft '%1', airline '%2', livery '%3'").
@@ -1190,8 +1193,8 @@ namespace BlackCore
 
     bool CAirspaceMonitor::isConnectedAndNotShuttingDown() const
     {
-        if (!this->isConnected()) { return false; }
-        return (sApp && !sApp->isShuttingDown());
+        if (!sApp || sApp->isShuttingDown()) { return false; }
+        return this->isConnected();
     }
 
     const CServer &CAirspaceMonitor::getConnectedServer() const
