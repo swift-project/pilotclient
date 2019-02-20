@@ -26,6 +26,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
+
 #include "ui_internalscomponent.h"
 
 #include <QCheckBox>
@@ -85,10 +86,22 @@ namespace BlackGui
             connect(ui->pb_LatestPartsLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
             connect(ui->pb_RequestFromNetwork, &QPushButton::released, this, &CInternalsComponent::requestPartsFromNetwork);
             connect(ui->pb_DisplayLog, &QPushButton::released, this, &CInternalsComponent::displayLogInSimulator);
-
             connect(ui->pb_SendAtis, &QPushButton::released, this, &CInternalsComponent::sendAtis);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
+
+            if (sGui && sGui->isSupportingCrashpad())
+            {
+                ui->cb_CrashDumpUpload->setChecked(sGui->isCrashDumpUploadEnabled());
+                connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash);
+                connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled, this, &CInternalsComponent::onCrashDumpUploadToggled);
+            }
+            else
+            {
+                ui->pb_SimulateCrash->setEnabled(false);
+                ui->cb_CrashDumpUpload->setEnabled(false);
+            }
+
             this->contextFlagsToGui();
         }
 
@@ -315,6 +328,23 @@ namespace BlackGui
             ui->cb_DebugContextNetwork->setChecked(sGui->getIContextNetwork()->isDebugEnabled());
             ui->cb_DebugContextOwnAircraft->setChecked(sGui->getIContextOwnAircraft()->isDebugEnabled());
             ui->cb_DebugContextSimulator->setChecked(sGui->getIContextSimulator()->isDebugEnabled());
+        }
+
+        void CInternalsComponent::simulateCrash()
+        {
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, "crash", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) { return; }
+            sGui->simulateCrash();
+        }
+
+        void CInternalsComponent::onCrashDumpUploadToggled(bool checked)
+        {
+            if (sGui && sGui->isSupportingCrashpad())
+            {
+                const bool current = sGui->isCrashDumpUploadEnabled();
+                if (current == checked) { return; }
+                sGui->enableCrashDumpUpload(checked);
+            }
         }
     } // namespace
 } // namespace

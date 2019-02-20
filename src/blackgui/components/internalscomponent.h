@@ -27,8 +27,7 @@ namespace BlackGui
     namespace Components
     {
         //! Internals for debugging, statistics
-        class BLACKGUI_EXPORT CInternalsComponent :
-            public QWidget
+        class BLACKGUI_EXPORT CInternalsComponent : public QWidget
         {
             Q_OBJECT
 
@@ -76,6 +75,12 @@ namespace BlackGui
 
             //! Set the context flags
             void contextFlagsToGui();
+
+            //! Simulate a crash
+            void simulateCrash();
+
+            //! Checkbox toggled
+            void onCrashDumpUploadToggled(bool checked);
 
             QScopedPointer<Ui::CInternalsComponent> ui;
         };
