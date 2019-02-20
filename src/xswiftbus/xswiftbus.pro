@@ -79,20 +79,15 @@ TARGET_EXT = .xpl
 win32:TARGET = win
 linux:TARGET = lin
 macx:TARGET = mac
-macx {
-    # a single dylib file contains both 32bit and 64bit binaries
-    XSWIFTBUS_DIR = xswiftbus
-    XSWIFTBUS_DESTDIR = $$DestRoot/$$XSWIFTBUS_DIR
-} else {
-    equals(WORD_SIZE,64) {
-        XSWIFTBUS_DIR = xswiftbus/64
-        DEFINES += WORD_SIZE_64
-    }
-    equals(WORD_SIZE,32) {
-        XSWIFTBUS_DIR = xswiftbus
-    }
-    XSWIFTBUS_DESTDIR = $$DestRoot/$$XSWIFTBUS_DIR
+
+equals(WORD_SIZE,64) {
+    XSWIFTBUS_DIR = xswiftbus/64
+    DEFINES += WORD_SIZE_64
 }
+equals(WORD_SIZE,32) {
+    XSWIFTBUS_DIR = xswiftbus/32
+}
+XSWIFTBUS_DESTDIR = $$DestRoot/$$XSWIFTBUS_DIR
 
 # Default MSVC project name is $$TARGET, so use a better name
 QMAKE_PROJECT_NAME = xswiftbus
