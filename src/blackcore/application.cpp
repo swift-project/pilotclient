@@ -360,14 +360,11 @@ namespace BlackCore
             // crashpad dump
             if (this->isSet(m_cmdTestCrashpad))
             {
+                msgs.push_back(CLogMessage(this).info(u"About to simulate crash"));
                 QTimer::singleShot(10 * 1000, [ = ]
                 {
                     if (!sApp || sApp->isShuttingDown()) { return; }
-#ifdef BLACK_USE_CRASHPAD
-                    CRASHPAD_SIMULATE_CRASH();
-#else
-                    CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
-#endif
+                    this->simulateCrash();
                 });
             }
 
@@ -1667,17 +1664,24 @@ namespace BlackCore
         annotations["format"] = "minidump";
         annotations["version"] = CBuildConfig::getVersionString().toStdString();
 
-        QString logFilePath = m_fileLogger->getLogFilePath();
-        QString logFileName = m_fileLogger->getLogFileName();
-        QString logAttachment = QString("--attachment=%1=%2").arg(logFileName, logFilePath);
+        // add our logfile
+        const QString logFilePath = m_fileLogger->getLogFilePath(); // file and path
+        const QString logFileName = m_fileLogger->getLogFileName();
+        const QString logAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(logFileName, logFilePath);
 
         std::vector<std::string> arguments;
         arguments.push_back(logAttachment.toStdString());
 
+        // and the simplified crash info if any
+        const QString crashInfoFileName("swiftcrashinfo.txt");
+        const QString crashInfoFilePath(CFileUtils::appendFilePaths(CFileUtils::stripFileFromPath(logFilePath), crashInfoFileName));
+        m_crashAndLogInfo.setLogPathAndFileName(crashInfoFilePath);
+        const QString crashAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(crashInfoFileName, crashInfoFilePath);
+        arguments.push_back(crashAttachment.toStdString());
+
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
-        crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
-        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled());
+        this->onCrashDumpUploadEnabledChanged(); // settings for crashpad uploads
         m_crashpadClient = std::make_unique<CrashpadClient>();
         m_crashpadClient->StartHandler(qstringToFilePath(handler),
                                        qstringToFilePath(database),
@@ -1686,6 +1690,8 @@ namespace BlackCore
                                        annotations,
                                        arguments,
                                        false, true);
+
+        this->crashAndLogAppendInfo(u"Init crash info at " % QDateTime::currentDateTimeUtc().toString());
         return CStatusMessage(this).info(u"Using crash handler");
 #else
         return CStatusMessage(this).info(u"Not using crash handler");
@@ -1694,36 +1700,87 @@ namespace BlackCore
 
     void CApplication::onCrashDumpUploadEnabledChanged()
     {
-#ifdef BLACK_USE_CRASHPAD
-        if (!m_crashReportDatabase) { return; }
-        auto settings = m_crashReportDatabase->GetSettings();
-        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled());
-#endif
+        const bool enabled = CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled();
+        this->enableCrashDumpUpload(enabled);
+    }
+
+    void CApplication::triggerCrashInfoWrite()
+    {
+        m_crashAndLogInfo.triggerWritingFile();
     }
 
     void CApplication::setCrashInfo(const CCrashInfo &info)
     {
         m_crashAndLogInfo = info;
+        m_dsCrashAndLogInfo.inputSignal();
     }
 
     void CApplication::crashAndLogInfoUserName(const QString &name)
     {
         m_crashAndLogInfo.setUserName(name);
+        m_dsCrashAndLogInfo.inputSignal();
     }
 
     void CApplication::crashAndLogInfoSimulator(const QString &simulator)
     {
         m_crashAndLogInfo.setSimulatorString(simulator);
+        m_dsCrashAndLogInfo.inputSignal();
     }
 
     void CApplication::crashAndLogInfoFlightNetwork(const QString &flightNetwork)
     {
         m_crashAndLogInfo.setFlightNetworkString(flightNetwork);
+        m_dsCrashAndLogInfo.inputSignal();
     }
 
     void CApplication::crashAndLogAppendInfo(const QString &info)
     {
         m_crashAndLogInfo.appendInfo(info);
+        m_dsCrashAndLogInfo.inputSignal();
+    }
+
+    void CApplication::simulateCrash()
+    {
+#ifdef BLACK_USE_CRASHPAD
+        CRASHPAD_SIMULATE_CRASH();
+        // real crash
+        // raise(SIGSEGV); #include <signal.h>
+#else
+        CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
+#endif
+    }
+
+    void CApplication::enableCrashDumpUpload(bool enable)
+    {
+#ifdef BLACK_USE_CRASHPAD
+        if (!m_crashReportDatabase) { return; }
+        crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
+        settings->SetUploadsEnabled(enable);
+#else
+        Q_UNUSED(enable);
+#endif
+    }
+
+    bool CApplication::isCrashDumpUploadEnabled() const
+    {
+#ifdef BLACK_USE_CRASHPAD
+        if (!m_crashReportDatabase) { return false; }
+        crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
+        bool enabled = false;
+        bool ok = settings->GetUploadsEnabled(&enabled);
+        return ok && enabled;
+#else
+        return false;
+#endif
+    }
+
+    bool CApplication::isSupportingCrashpad() const
+    {
+#ifdef BLACK_USE_CRASHPAD
+        return true;
+#else
+        return false;
+#endif
     }
 
     void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)

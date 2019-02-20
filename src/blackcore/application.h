@@ -24,6 +24,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/slot.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/crashinfo.h"
@@ -300,7 +301,7 @@ namespace BlackCore
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
         //! @}
 
-        // ----------------------- CrashPad info ---------------------------------
+        // ----------------------- Crash info ---------------------------------
 
         //! Extra annotation for crash to easier identify annotation
         void setCrashInfo(const BlackMisc::CCrashInfo &info);
@@ -319,6 +320,20 @@ namespace BlackCore
 
         //! Get the crash info
         const BlackMisc::CCrashInfo &getCrashInfo() const { return m_crashAndLogInfo; }
+
+        //! Simulate a crash
+        //! \private only for testing purposes
+        void simulateCrash();
+
+        //! Enable crash upload
+        //! \remark only change for testing
+        void enableCrashDumpUpload(bool enable);
+
+        //! Is crash dump upload enabled
+        bool isCrashDumpUploadEnabled() const;
+
+        //! Has crashpad support?
+        bool isSupportingCrashpad() const;
 
         // ----------------------- Input ----------------------------------------
 
@@ -720,8 +735,11 @@ namespace BlackCore
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
         BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
 #endif
-        BlackMisc::CCrashInfo m_crashAndLogInfo; //!< info representing details
+        // crash info
+        void triggerCrashInfoWrite();
 
+        BlackMisc::CCrashInfo m_crashAndLogInfo; //!< info representing details
+        BlackMisc::CDigestSignal m_dsCrashAndLogInfo { this, &CApplication::triggerCrashInfoWrite, 10000, 5 };
     };
 } // namespace
 
