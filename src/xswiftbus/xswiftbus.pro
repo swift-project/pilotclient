@@ -139,6 +139,9 @@ win32 {
     QMAKE_EXTRA_TARGETS += fix_plugin_rpath
 
 } else:unix: {
+    dep_target.files *= $$DestRoot/lib/libevent_core-2.0.so.5
+    dep_target.files *= $$DestRoot/lib/libpng12.so.0
+
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 }
