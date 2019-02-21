@@ -420,16 +420,7 @@ namespace BlackSimPlugin
             if (isInFunction) { return; }
             isInFunction = true;
 
-            QColor color = "cyan";
-            /* switch (message.getSeverity())
-            {
-            case CStatusMessage::SeverityDebug: color = "teal"; break;
-            case CStatusMessage::SeverityInfo: color = "cyan"; break;
-            case CStatusMessage::SeverityWarning: color = "orange"; break;
-            case CStatusMessage::SeverityError: color = "red"; break;
-            } */
-
-            m_serviceProxy->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
+            m_serviceProxy->addTextMessage("swift: " + message.getMessage());
             isInFunction = false;
         }
 
@@ -437,13 +428,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
 
-            QColor color;
-            if (message.isServerMessage()) { color = "orchid"; }
-            else if (message.isSupervisorMessage()) { color = "yellow"; }
-            else if (message.isPrivateMessage()) { color = "magenta"; }
-            else { color = "lime"; }
-
-            m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
+            m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage());
         }
 
         void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const CSequence<double> &lats, const CSequence<double> &lons, const CSequence<double> &alts)

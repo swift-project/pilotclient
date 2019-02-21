@@ -67,9 +67,9 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftSituationData"), callback);
         }
 
-        void CXSwiftBusServiceProxy::addTextMessage(const QString &text, double red, double green, double blue)
+        void CXSwiftBusServiceProxy::addTextMessage(const QString &text)
         {
-            m_dbusInterface->callDBus(QLatin1String("addTextMessage"), text, red, green, blue);
+            m_dbusInterface->callDBus(QLatin1String("addTextMessage"), text);
         }
 
         void CXSwiftBusServiceProxy::updateAirportsInRange()

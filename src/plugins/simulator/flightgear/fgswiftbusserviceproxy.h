@@ -105,7 +105,7 @@ namespace BlackSimPlugin
             void getOwnAircraftSituationData(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
 
             //! \copydoc XSwiftBus::CService::addTextMessage
-            void addTextMessage(const QString &text, double red, double green, double blue);
+            void addTextMessage(const QString &text);
 
             //! \copydoc XSwiftBus::CService::updateAirportsInRange
             void updateAirportsInRange();
