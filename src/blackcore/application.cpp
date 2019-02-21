@@ -1646,9 +1646,9 @@ namespace BlackCore
 
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), crashpadHandler);
-        static const QString crashpadPath = CDirectoryUtils::crashpadDirectory();
-        static const QString database = CFileUtils::appendFilePaths(crashpadPath, "/database");
-        static const QString metrics = CFileUtils::appendFilePaths(crashpadPath, "/metrics");
+        // const QString crashpadPath = CDirectoryUtils::crashpadDirectory();
+        const QString database = CDirectoryUtils::crashpadDatabaseDirectory();
+        const QString metrics  = CDirectoryUtils::crashpadMetricsDirectory();
 
         if (!QFileInfo::exists(handler))
         {
@@ -1677,6 +1677,12 @@ namespace BlackCore
         m_crashAndLogInfo.setLogPathAndFileName(crashInfoFilePath);
         const QString crashAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(crashInfoFileName, crashInfoFilePath);
         arguments.push_back(crashAttachment.toStdString());
+
+        // for testing purposes
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            arguments.push_back("--no-rate-limit");
+        }
 
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
@@ -1741,6 +1747,9 @@ namespace BlackCore
     void CApplication::simulateCrash()
     {
 #ifdef BLACK_USE_CRASHPAD
+        CLogMessage(this).info(u"Simulated crash dump!");
+        m_crashAndLogInfo.appendInfo("Simulated crash dump!");
+        m_crashAndLogInfo.writeToFile();
         CRASHPAD_SIMULATE_CRASH();
         // real crash
         // raise(SIGSEGV); #include <signal.h>

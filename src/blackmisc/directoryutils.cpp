@@ -378,7 +378,7 @@ namespace BlackMisc
 
     QString getDocumentationDirectoryImpl()
     {
-        QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
+        const QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
         QString d = pathes.first();
         d = QDir::cleanPath(d + QDir::separator() + "swift");
         QDir dir(d);
@@ -395,6 +395,18 @@ namespace BlackMisc
     const QString &CDirectoryUtils::crashpadDirectory()
     {
         static const QString p = CFileUtils::appendFilePaths(normalizedApplicationDataDirectory(), "/crashpad");
+        return p;
+    }
+
+    const QString &CDirectoryUtils::crashpadDatabaseDirectory()
+    {
+        static const QString p = CFileUtils::appendFilePaths(crashpadDirectory(), "/database");
+        return p;
+    }
+
+    const QString &CDirectoryUtils::crashpadMetricsDirectory()
+    {
+        static const QString p = CFileUtils::appendFilePaths(crashpadDirectory(), "/metrics");
         return p;
     }
 

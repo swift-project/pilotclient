@@ -25,6 +25,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include "ui_internalscomponent.h"
 
@@ -39,6 +40,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -331,7 +333,13 @@ namespace BlackGui
 
         void CInternalsComponent::simulateCrash()
         {
-            const QMessageBox::StandardButton reply = QMessageBox::question(this, "crash", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
+            if (CBuildConfig::isReleaseBuild())
+            {
+                QMessageBox::information(this, "crash simulation", "Not possible in release builds!");
+                return;
+            }
+
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, "crash simulation", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
             sGui->simulateCrash();
         }

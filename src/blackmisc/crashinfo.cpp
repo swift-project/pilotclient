@@ -77,10 +77,16 @@ namespace BlackMisc
         }
     }
 
-    void CCrashInfo::triggerWritingFile()
+    void CCrashInfo::triggerWritingFile() const
     {
         if (m_logFileAndPath.isEmpty()) { return; }
-        CFileUtils::writeStringToFileInBackground(summary(), m_logFileAndPath);
+        CFileUtils::writeStringToFileInBackground(this->summary(), m_logFileAndPath);
+    }
+
+    bool CCrashInfo::writeToFile() const
+    {
+        if (m_logFileAndPath.isEmpty()) { return false; }
+        return CFileUtils::writeStringToFile(this->summary(), m_logFileAndPath);
     }
 
     QString CCrashInfo::summary() const

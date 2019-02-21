@@ -139,6 +139,12 @@ namespace BlackMisc
         //! Directory for crashpad files
         static const QString &crashpadDirectory();
 
+        //! Directory for crashpad database files
+        static const QString &crashpadDatabaseDirectory();
+
+        //! Directory for crashpad metrics files
+        static const QString &crashpadMetricsDirectory();
+
         //! Virtually the inverse operation of CDirectoryUtils::normalizedApplicationDirectory
         static QString decodeNormalizedDirectory(const QString &directory);
 

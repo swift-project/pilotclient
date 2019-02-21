@@ -79,8 +79,11 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const CCrashInfo &compareValue) const;
 
-        //! Trigger writing this to file
-        void triggerWritingFile();
+        //! Trigger writing this to file (in background)
+        void triggerWritingFile() const;
+
+        //! Write to file (synchronous)
+        bool writeToFile() const;
 
         //! Summary
         QString summary() const;
