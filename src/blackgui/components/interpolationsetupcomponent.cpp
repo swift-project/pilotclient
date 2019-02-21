@@ -35,7 +35,7 @@ namespace BlackGui
 
             connect(ui->pb_RenderingSetup, &QPushButton::clicked, this, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
             connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
-            connect(ui->pb_Delete, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
+            connect(ui->pb_DeleteOrReset, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
             connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
@@ -98,7 +98,7 @@ namespace BlackGui
             }
             this->displaySetupsPerCallsign();
             ui->comp_CallsignCompleter->setReadOnly(!enableCallsign);
-            ui->pb_Delete->setText(enableCallsign ? "delete" : "reset");
+            ui->pb_DeleteOrReset->setText(enableCallsign ? "delete" : "reset");
         }
 
         void CInterpolationSetupComponent::onModelChanged()
@@ -179,12 +179,14 @@ namespace BlackGui
             if (!this->checkPrerequisites(!global, true)) { }
             if (global)
             {
+                // reset
                 CInterpolationAndRenderingSetupGlobal gs;
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(gs);
                 this->reloadSetup();
             }
             else
             {
+                // delete/remove
                 const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
                 CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
                 const int removed = setups.removeByCallsign(cs);

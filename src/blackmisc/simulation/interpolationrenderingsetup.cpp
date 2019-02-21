@@ -24,7 +24,8 @@ namespace BlackMisc
     {
         CInterpolationAndRenderingSetupBase::CInterpolationAndRenderingSetupBase()
         {
-            m_fixSceneryOffset = CBuildConfig::isLocalDeveloperDebugBuild();
+            // Experimental
+            // m_fixSceneryOffset = CBuildConfig::isLocalDeveloperDebugBuild();
         }
 
         bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)

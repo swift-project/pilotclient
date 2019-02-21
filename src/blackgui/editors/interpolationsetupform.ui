@@ -59,11 +59,14 @@
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="cb_FixSceneryOffset">
+     <property name="toolTip">
+      <string>experimental feature to fix offset values</string>
+     </property>
      <property name="text">
-      <string>fix scenery offset</string>
+      <string>fix scenery offset (exp.)</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
    </item>
