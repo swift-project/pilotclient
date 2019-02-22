@@ -22,6 +22,7 @@ namespace BlackMisc
             {
                 // no 2nd elevation nearby?
                 QReadLocker l(&m_lockElvCoordinates);
+                if (!m_enableElevation) { return false; }
                 if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
             }
 
@@ -54,6 +55,7 @@ namespace BlackMisc
         bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const CCallsign &cs)
         {
             if (cs.isEmpty()) { return false; }
+
             const bool remove = cg.isNull();
             if (remove)
             {
@@ -72,6 +74,7 @@ namespace BlackMisc
         {
             bool ok = false;
             QWriteLocker l(&m_lockCG);
+            if (!m_enableCG) { return false; }
             if (!cs.isEmpty()) { m_cgsPerCallsign[cs] = cg; ok = true; }
             if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toLower()] = cg; ok = true; }
             return ok;
@@ -81,6 +84,7 @@ namespace BlackMisc
         {
             if (modelString.isEmpty()) { return false; }
             QWriteLocker l(&m_lockCG);
+            if (!m_enableCG) { return false; }
             m_cgsPerModel[modelString.toLower()] = cg;
             return true;
         }
@@ -130,6 +134,8 @@ namespace BlackMisc
 
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const CLength &range) const
         {
+            if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
+
             // for single point we use a slightly optimized version
             const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() || range <= CElevationPlane::singlePointRadius());
             const CCoordinateGeodetic coordinate = singlePoint ?
@@ -153,6 +159,7 @@ namespace BlackMisc
 
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest(const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
         {
+            if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
             const CElevationPlane ep = ISimulationEnvironmentProvider::findClosestElevationWithinRange(reference, range);
             if (ep.isNull())
             {
@@ -166,6 +173,7 @@ namespace BlackMisc
 
         bool ISimulationEnvironmentProvider::requestElevationBySituation(const CAircraftSituation &situation)
         {
+            if (!this->isElevationProviderEnabled()) { return false; }
             return this->requestElevation(situation, situation.getCallsign());
         }
 
@@ -193,6 +201,8 @@ namespace BlackMisc
 
         QString ISimulationEnvironmentProvider::getElevationRequestTimesInfo() const
         {
+            if (!this->isElevationProviderEnabled()) { return QStringLiteral("Elevation provider disabled"); }
+
             static const QString info("%1ms/%2ms");
             QPair<qint64, qint64> times = this->getElevationRequestTimes();
             if (times.first < 0 || times.second < 0) { return QStringLiteral("no req. times"); }
@@ -225,7 +235,7 @@ namespace BlackMisc
 
             const CSimulatorInfo simInfo = this->getSimulatorInfo();
             if (!simInfo.isUnspecified()) { return simInfo.toQString(true); }
-            return "not available";
+            return QStringLiteral("not available");
         }
 
         CAircraftModel ISimulationEnvironmentProvider::getDefaultModel() const
@@ -237,8 +247,9 @@ namespace BlackMisc
         CLength ISimulationEnvironmentProvider::getCG(const Aviation::CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CLength::null(); }
+
             QReadLocker l(&m_lockCG);
-            if (!m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
+            if (!m_enableCG || !m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
             return m_cgsPerCallsign.value(callsign);
         }
 
@@ -247,7 +258,7 @@ namespace BlackMisc
             if (modelString.isEmpty()) { return CLength::null(); }
             const QString ms = modelString.toLower();
             QReadLocker l(&m_lockCG);
-            if (!m_cgsPerModel.contains(ms)) { return CLength::null(); }
+            if (!m_enableCG || !m_cgsPerModel.contains(ms)) { return CLength::null(); }
             return m_cgsPerModel.value(ms);
         }
 
@@ -255,7 +266,7 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
-            return m_cgsPerCallsign.contains(callsign);
+            return m_enableCG && m_cgsPerCallsign.contains(callsign);
         }
 
         bool ISimulationEnvironmentProvider::hasSameCG(const CLength &cg, const CCallsign &callsign) const
@@ -290,6 +301,41 @@ namespace BlackMisc
         ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)
         { }
 
+        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, bool supportElevation, bool supportCG) :
+            m_simulatorPluginInfo(pluginInfo), m_enableElevation(supportElevation), m_enableCG(supportCG)
+        { }
+
+        bool ISimulationEnvironmentProvider::isCgProviderEnabled() const
+        {
+            QReadLocker l(&m_lockCG);
+            return m_enableCG;
+        }
+
+        bool ISimulationEnvironmentProvider::isElevationProviderEnabled() const
+        {
+            QReadLocker l(&m_lockElvCoordinates);
+            return m_enableElevation;
+        }
+
+        void ISimulationEnvironmentProvider::setCgProviderEnabled(bool enabled)
+        {
+            QWriteLocker l(&m_lockCG);
+            m_enableCG = enabled;
+        }
+
+        void ISimulationEnvironmentProvider::setElevationProviderEnabled(bool enabled)
+        {
+            QWriteLocker l(&m_lockElvCoordinates);
+            m_enableElevation = enabled;
+        }
+
+        void ISimulationEnvironmentProvider::setSimulationProviderEnabled(bool elvEnabled, bool cgEnabled)
+        {
+            QWriteLocker l(&m_lockElvCoordinates);
+            m_enableElevation = elvEnabled;
+            m_enableCG = cgEnabled;
+        }
+
         void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
         {
             {
@@ -302,7 +348,7 @@ namespace BlackMisc
         void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details, const QString &version)
         {
             QWriteLocker l(&m_lockSimInfo);
-            m_simulatorName = name;
+            m_simulatorName    = name;
             m_simulatorDetails = details;
             m_simulatorVersion = version;
         }

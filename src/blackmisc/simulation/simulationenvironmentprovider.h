@@ -117,6 +117,19 @@ namespace BlackMisc
             //! Ctor
             ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
 
+            //! Ctor
+            ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, bool supportElevation, bool supportCG);
+
+            //! Provider enabled
+            //! \threadsafe
+            //! @{
+            bool isCgProviderEnabled() const;
+            bool isElevationProviderEnabled() const;
+            void setCgProviderEnabled(bool enabled);
+            void setElevationProviderEnabled(bool enabled);
+            void setSimulationProviderEnabled(bool elvEnabled, bool cgEnabled);
+            //! @}
+
             //! All remembered coordiantes plus max.remembered situations
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinates(int &maxRemembered) const;
@@ -209,10 +222,15 @@ namespace BlackMisc
             Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
-            qint64 m_statsMaxElevRequestTimeMs = -1;
+            qint64 m_statsMaxElevRequestTimeMs     = -1;
             qint64 m_statsCurrentElevRequestTimeMs = -1;
+
+            bool m_enableElevation = true;
+            bool m_enableCG = true;
+
             mutable int m_elvFound  = 0;   //!< statistics only
             mutable int m_elvMissed = 0;   //!< statistics only
+
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates, m_pendingElevationRequests
             mutable QReadWriteLock m_lockCG;      //!< lock CGs
             mutable QReadWriteLock m_lockModel;   //!< lock models
