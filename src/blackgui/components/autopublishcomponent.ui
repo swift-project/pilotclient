@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAutoPublishComponent</class>
+ <widget class="QFrame" name="CAutoPublishComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>323</width>
+    <height>389</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Auto publish information</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gb_Summary">
+     <property name="title">
+      <string>Summary</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_Summary">
+      <item>
+       <widget class="QLabel" name="lbl_Info">
+        <property name="text">
+         <string>swift automatically collects data about your used models. These collected data can help to improve the matching and interpolation experience. There are no hidden data, you can see the data as it is sent below.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_Summary">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_DBJson">
+     <property name="title">
+      <string>DB data (JSON)</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_DBJson">
+      <item>
+       <widget class="QPlainTextEdit" name="pte_Json">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_Buttons">
+     <layout class="QHBoxLayout" name="hl_Buttons">
+      <item>
+       <widget class="QPushButton" name="pb_SendToDB">
+        <property name="text">
+         <string>send to DB</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_DeleteFiles">
+        <property name="text">
+         <string>clean</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Analyze">
+        <property name="text">
+         <string>analyze</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>le_Summary</tabstop>
+  <tabstop>pte_Json</tabstop>
+  <tabstop>pb_SendToDB</tabstop>
+  <tabstop>pb_DeleteFiles</tabstop>
+  <tabstop>pb_Analyze</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
