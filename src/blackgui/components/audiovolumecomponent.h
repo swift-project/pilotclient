@@ -17,16 +17,13 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CAudioVolumeComponent; }
 namespace BlackGui
 {
     namespace Components
     {
         //! Audio volume, mixer
-        class BLACKGUI_EXPORT CAudioVolumeComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CAudioVolumeComponent : public QFrame
         {
             Q_OBJECT
 
@@ -35,28 +32,27 @@ namespace BlackGui
             explicit CAudioVolumeComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAudioVolumeComponent();
-
-        private slots:
-            //! Mute toggleBlackGui::Components::CHotkeyDialog
-            void ps_onMuteChanged(bool muted);
-
-            //! Volumes changed (elsewhere)
-            void ps_onOutputVolumeChanged(int volume);
-
-            //! Set volume to 100
-            void ps_setVolume100();
-
-            //! Change values because of volume GUI controls
-            void ps_changeOutputVolumeFromSlider(int volume);
-
-            //! Change values because of volume GUI controls
-            void ps_changeOutputVolumeFromSpinBox(int volume);
-
-            //! Requested windows mixer
-            void ps_onWindowsMixerRequested();
+            virtual ~CAudioVolumeComponent();
 
         private:
+            //! Mute toggleBlackGui::Components::CHotkeyDialog
+            void onMuteChanged(bool muted);
+
+            //! Volumes changed (elsewhere)
+            void onOutputVolumeChanged(int volume);
+
+            //! Set volume to 100
+            void setVolume100();
+
+            //! Change values because of volume GUI controls
+            void changeOutputVolumeFromSlider(int volume);
+
+            //! Change values because of volume GUI controls
+            void changeOutputVolumeFromSpinBox(int volume);
+
+            //! Requested windows mixer
+            void onWindowsMixerRequested();
+
             QScopedPointer<Ui::CAudioVolumeComponent> ui;
         };
     } // namespace

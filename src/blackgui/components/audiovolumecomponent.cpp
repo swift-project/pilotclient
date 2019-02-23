@@ -20,6 +20,7 @@
 #include <QString>
 #include <QtGlobal>
 
+using namespace BlackMisc;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -32,23 +33,23 @@ namespace BlackGui
             ui(new Ui::CAudioVolumeComponent)
         {
             ui->setupUi(this);
-            bool c = connect(ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixerRequested);
+            bool c = connect(ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::onWindowsMixerRequested);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSlider);
+            c = connect(ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::changeOutputVolumeFromSlider);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(ui->sb_Volume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
+            c = connect(ui->sb_Volume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioVolumeComponent::changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);
+            c = connect(ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::setVolume100);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
-            c = connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
+            c = connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::onMuteChanged);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            connect(sGui->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::ps_onOutputVolumeChanged);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::onOutputVolumeChanged);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
@@ -67,24 +68,24 @@ namespace BlackGui
             }
 
             // init volume
-            this->ps_changeOutputVolumeFromSlider(sGui->getIContextAudio()->getVoiceOutputVolume()); // init volume
+            this->changeOutputVolumeFromSlider(sGui->getIContextAudio()->getVoiceOutputVolume()); // init volume
         }
 
         CAudioVolumeComponent::~CAudioVolumeComponent()
         { }
 
-        void CAudioVolumeComponent::ps_onMuteChanged(bool muted)
+        void CAudioVolumeComponent::onMuteChanged(bool muted)
         {
             if (muted == ui->pb_Mute->isChecked()) { return; } // avoid roundtrips
             ui->pb_Mute->setChecked(muted);
         }
 
-        void CAudioVolumeComponent::ps_onOutputVolumeChanged(int volume)
+        void CAudioVolumeComponent::onOutputVolumeChanged(int volume)
         {
             ui->hs_Volume->setToolTip(QString::number(volume));
 
             // comparisons to avoid rountrips
-            QString v = QString::number(volume);
+            const QString v = QString::number(volume);
             if (volume != ui->sb_Volume->value())
             {
                 ui->sb_Volume->setValue(volume);
@@ -104,30 +105,31 @@ namespace BlackGui
             }
         }
 
-        void CAudioVolumeComponent::ps_setVolume100()
+        void CAudioVolumeComponent::setVolume100()
         {
-            this->ps_onOutputVolumeChanged(100);
+            this->onOutputVolumeChanged(100);
         }
 
-        void CAudioVolumeComponent::ps_changeOutputVolumeFromSlider(int volume)
+        void CAudioVolumeComponent::changeOutputVolumeFromSlider(int volume)
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             if (volume > 100)
             {
                 // 100 -> 100, 120 -> 200, 140 -> 300
-                int v = volume - 100;
+                const int v = volume - 100;
                 volume = 100 + v * 5;
             }
             ui->hs_Volume->setToolTip(QString::number(volume));
 
-            Q_ASSERT(sGui->getIContextAudio());
             if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
             {
                 sGui->getIContextAudio()->setVoiceOutputVolume(volume);
             }
         }
 
-        void CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox(int volume)
+        void CAudioVolumeComponent::changeOutputVolumeFromSpinBox(int volume)
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
             ui->sb_Volume->setToolTip(QString::number(volume));
             Q_ASSERT(sGui->getIContextAudio());
             if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
@@ -136,9 +138,9 @@ namespace BlackGui
             }
         }
 
-        void CAudioVolumeComponent::ps_onWindowsMixerRequested()
+        void CAudioVolumeComponent::onWindowsMixerRequested()
         {
-            BlackMisc::Audio::startWindowsMixer();
+            Audio::startWindowsMixer();
         }
 
     } // namespace
