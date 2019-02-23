@@ -203,30 +203,41 @@ namespace BlackCore
         {
             if (!m_history) { return; }
             if (!this->getIContextSimulator()) { return; }
+            if (!this->getIContextSimulator()->isSimulatorSimulating()) { return; }
 
-            if (this->getIContextSimulator()->isSimulatorSimulating())
+            QReadLocker rl(&m_lockAircraft);
+            const CAircraftSituationList situations = m_situationHistory; // latest first
+            rl.unlock();
+
+            constexpr int minElements = qRound(MaxHistoryElements * 0.75);
+            if (m_situationHistory.size() < minElements) { return; }
+
+            // using copy to minimize lock time
+            // 500km/h => 1sec: 0.1388 km
+            static const CLength maxDistance(25, CLengthUnit::km());
+            const bool jumpDetected = situations.containsObjectOutsideRange(situations.front(), maxDistance);
+
+            if (jumpDetected)
             {
-                if (!m_situationHistory.isEmpty())
                 {
-                    QReadLocker rl(&m_lockAircraft);
-                    const CAircraftSituationList situations = m_situationHistory;
-                    rl.unlock();
-
-                    // using copy to minimize lock time
-                    // 500km/h => 1sec: 0.1388 km
-                    static const CLength maxDistance(25, CLengthUnit::km());
-                    const bool jumpDetected = situations.containsObjectOutsideRange(situations.front(), maxDistance);
-
-                    if (jumpDetected)
-                    {
-                        {
-                            QWriteLocker wl(&m_lockAircraft);
-                            m_situationHistory.clear();
-                        }
-                        emit this->movedAircraft();
-                    }
+                    QWriteLocker wl(&m_lockAircraft);
+                    m_situationHistory.clear();
                 }
-            } // only if simulating
+                emit this->movedAircraft();
+            }
+            else
+            {
+                const bool to = situations.isTakingOff(true);
+                if (to)
+                {
+                    emit this->isTakingOff();
+                }
+                else
+                {
+                    const bool td = situations.isTouchingDown(true);
+                    if (td) { emit this->isTouchingDown(); }
+                }
+            }
         }
 
         CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)

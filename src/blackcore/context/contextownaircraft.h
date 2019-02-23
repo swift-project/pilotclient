@@ -107,10 +107,10 @@ namespace BlackCore
             void movedAircraft();
 
             //! Just airborne
-            void airborne();
+            void isTakingOff();
 
             //! Just landed
-            void touchdown();
+            void isTouchingDown();
 
         public slots:
             //! Get own aircraft

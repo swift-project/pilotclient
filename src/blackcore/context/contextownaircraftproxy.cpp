@@ -54,10 +54,10 @@ namespace BlackCore
                                    "movedAircraft", this, SIGNAL(movedAircraft()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                   "airborne", this, SIGNAL(airborne()));
+                                   "isTakingOff", this, SIGNAL(isTakingOff()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                   "touchdown", this, SIGNAL(touchdown()));
+                                   "isTouchingDown", this, SIGNAL(isTouchingDown()));
             Q_ASSERT(s);
 
             this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());
