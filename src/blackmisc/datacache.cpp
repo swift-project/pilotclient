@@ -491,7 +491,8 @@ namespace BlackMisc
 
         if (! revisionFile.checkedClose())
         {
-            CLogMessage(this).error(u"Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+            static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
+            CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << revisionFile.fileName() << revisionFile.errorString() << advice;
         }
     }
 
@@ -651,9 +652,17 @@ namespace BlackMisc
             timestamps.insert(key, timestamp);
             json.insert("timestamps", timestamps);
 
-            if (!(revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
+            if (revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()))
             {
-                CLogMessage(this).error(u"Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+                if (!revisionFile.checkedClose())
+                {
+                    static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
+                    CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << revisionFile.fileName() << revisionFile.errorString() << advice;
+                }
+            }
+            else
+            {
+                CLogMessage(this).error(u"Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             }
         }
         m_lockFile.unlock();
@@ -804,9 +813,17 @@ namespace BlackMisc
         apps.replaceOrAdd(currentProcess);
         json.insert("apps", apps.toJson());
         json.insert("uuid", uuid.toString());
-        if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()) && file.checkedClose()))
+        if (file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()))
         {
-            CLogMessage(this).error(u"Failed to write to session file %1: %2 (%3 %4)") << m_filename << file.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
+            if (!file.checkedClose())
+            {
+                static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
+                CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << file.fileName() << file.errorString() << advice;
+            }
+        }
+        else
+        {
+            CLogMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
         }
     }
 

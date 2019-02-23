@@ -146,12 +146,9 @@ namespace BlackMisc
             : MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_WRITE_THROUGH);
         if (! result)
         {
-            m_renameError = true;
             wchar_t *s = nullptr;
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
-            // MS 2018-09 Testing T321 ("failed to write session file")
-            //setErrorString((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified());
-            CLogMessage(this).error((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified() + "\n" + getStackTraceAlways().join("\n"));
+            const QString windowsError = (replace ? u"ReplaceFile: " : u"MoveFileEx: ") % QString::fromWCharArray(s).simplified();
             LocalFree(reinterpret_cast<HLOCAL>(s));
 
             // fall back to non-atomic remove-and-rename
@@ -160,11 +157,18 @@ namespace BlackMisc
                 QFile old(m_originalFilename);
                 if (!old.remove())
                 {
-                    setErrorString(old.errorString());
+                    // fall back failed, so report the reasons for the original failure AND the fall back failure
+                    m_renameError = true;
+                    setErrorString(windowsError % u" QFile::remove: " % old.errorString());
                     return;
                 }
             }
-            rename(m_originalFilename);
+            if (rename(m_originalFilename))
+            {
+                // fall back succeeded, so just log the reason for the original failure
+                CLogMessage(this).debug(u"CAtomicFile replacing %1: %2") << m_originalFilename << windowsError;
+            }
+            // else if rename() failed, then the reason is already reported by QFile
         }
     }
 #else
