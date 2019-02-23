@@ -45,17 +45,17 @@ namespace BlackCore
         Q_ASSERT(c);
 
         // network connected
-        c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
+        c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign);
+        c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged);
+        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // network situations
-        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::onNetworkPositionUpdate);
+        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::onNetworkPositionUpdate, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(network, &INetwork::atcPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign);
+        c = connect(network, &INetwork::atcPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // Monitor
