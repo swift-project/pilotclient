@@ -403,7 +403,7 @@ namespace BlackSimPlugin
                 const QString &icao, const QString &modelString, const QString &name, const QString &description)
         {
             CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
-            if (!livery.isEmpty()) { model.setModelString(model.getModelString() + " " + livery); }
+            if (!livery.isEmpty()) { model.setModelString(model.getModelString()); }
             model.setFileName(path + "/" + filename);
 
             this->reverseLookupAndUpdateOwnAircraftModel(model);
