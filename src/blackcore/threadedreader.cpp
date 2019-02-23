@@ -165,7 +165,10 @@ namespace BlackCore
     {
         // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
         if (!this->isEnabled())  { return false; }
-        if (this->isAbandoned()) { return false; }
+
+        // MS 2019-02-23 isAbandoned() check only makes sense when called by worker thread (T541)
+        if (CThreadUtils::isCurrentThreadObjectThread(this) && this->isAbandoned()) { return false; }
+
         if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
         return true;
     }
