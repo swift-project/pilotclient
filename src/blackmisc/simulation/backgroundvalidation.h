@@ -27,7 +27,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Update and consolidation of DB data
+        //! Validate model files from the sets and check if the model still exists
         class BLACKMISC_EXPORT CBackgroundValidation : public CContinuousWorker
         {
             Q_OBJECT
@@ -66,7 +66,7 @@ namespace BlackMisc
             //! Request last results (again), if there are any
             //! \remark emits CBackgroundValidation::validated signal
             //! \threadsafe
-            bool requestLastResults();
+            bool requestLastValidationResults();
 
         signals:
             //! Validating
@@ -93,7 +93,7 @@ namespace BlackMisc
             // Set/caches as member as we are in own thread, central instance will not work
             Data::CModelSetCaches m_modelSets { false, this };
 
-            //! Do the update checks
+            //! Do the validation checks
             void doWork();
         };
     } // ns

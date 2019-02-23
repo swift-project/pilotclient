@@ -64,7 +64,7 @@ namespace BlackMisc
             const QPointer<CBackgroundValidation> myself(this);
             if (simulator.isNoSimulator())
             {
-                return this->requestLastResults();
+                return this->requestLastValidationResults();
             }
 
             {
@@ -81,7 +81,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool CBackgroundValidation::requestLastResults()
+        bool CBackgroundValidation::requestLastValidationResults()
         {
             CAircraftModelList valid;
             CAircraftModelList invalid;
@@ -143,7 +143,6 @@ namespace BlackMisc
                 m_checkedSimulatorMsgs.insert(simulator, msgs);
             }
             while (false);
-
 
             m_inWork = false;
             emit this->validating(false);
