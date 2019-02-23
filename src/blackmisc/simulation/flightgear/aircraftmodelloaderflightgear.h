@@ -26,10 +26,10 @@ namespace BlackMisc{
             void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
 
         private:
+            std::string getModelString(std::string filePath,bool ai);
             Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
             Simulation::CAircraftModelList parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
             static const QString &fileFilterFlyable();
-            static const QString &fileFilterAI();
             void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
             QPointer<CWorker> m_parserWorker;
             CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);

@@ -64,7 +64,8 @@ namespace BlackMisc{
 
             Simulation::CAircraftModelList installedModels;
 
-            QDir searchPath(rootDirectory, fileFilterAI());
+            QDir searchPath(rootDirectory);
+            searchPath.setNameFilters(QStringList()<< "*.xml");
             QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
 
@@ -72,13 +73,10 @@ namespace BlackMisc{
                 aircraftIt.next();
                 if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
                 Simulation::CAircraftModel model;
-                model.setDescription(QString::fromStdString("AI"));
                 std::string modelName = aircraftIt.fileName().toStdString();
                 modelName = modelName.substr(0,modelName.find(".xml"));
                 model.setName(QString::fromStdString(modelName));
-                std::string modelString = aircraftIt.filePath().toStdString();
-                modelString = modelString.substr(modelString.find("Aircraft"));
-                model.setModelString(QString::fromStdString(modelString));
+                model.setModelString(QString::fromStdString(getModelString(aircraftIt.filePath().toStdString(),true)));
                 model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 model.setSimulator(CSimulatorInfo::fg());
                 model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
@@ -97,13 +95,6 @@ namespace BlackMisc{
             return f;
         }
 
-        const QString &AircraftModelLoaderFlightgear::fileFilterAI()
-        {
-            static const QString f("*.xml");
-            return f;
-
-        }
-
         void AircraftModelLoaderFlightgear::addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
         {
             //TODO Add check
@@ -116,7 +107,7 @@ namespace BlackMisc{
             for (const QString &rootDirectory : rootDirectories)
             {
                 //TODO Make paths changeable (using env variable)
-                allModels.push_back(parseAIAirplanes("X:/Flightsim/Flightgear/2018.3/data/AI/Aircraft", excludeDirectories));
+                allModels.push_back(parseAIAirplanes(rootDirectory + "/AI/Aircraft", excludeDirectories));
                 //allModels.push_back(parseFlyableAirplanes("X:/Flightsim/Flightgear/2018.3/data/Aircraft", excludeDirectories));
             }
 
@@ -153,6 +144,18 @@ namespace BlackMisc{
                 this->updateInstalledModels(models);
             }
 
+        }
+
+        std::string AircraftModelLoaderFlightgear::getModelString(std::string filePath, bool ai)
+        {
+            std::string modelString = "FG ";
+            if(ai)
+                modelString.append("AI ");
+            std::string path = filePath;
+            filePath = filePath.substr(filePath.find("Aircraft")+9);
+            filePath = filePath.substr(0,filePath.find(".xml"));
+            modelString.append(filePath);
+            return modelString;
         }
 
 
