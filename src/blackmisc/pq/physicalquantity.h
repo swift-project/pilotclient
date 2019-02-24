@@ -102,10 +102,6 @@ namespace BlackMisc
             //! Set value in current unit
             void setCurrentUnitValue(double value);
 
-            //! Rounded value in given unit
-            //! \note default digits is CMeasurementUnit::getDisplayDigits
-            double valueRounded(MU unit, int digits = -1) const;
-
             //! As integer value
             int valueInteger(MU unit) const;
 
@@ -115,9 +111,17 @@ namespace BlackMisc
             //! Is value an integer
             bool isInteger() const;
 
+            //! Rounded value in given unit
+            //! \note default digits is CMeasurementUnit::getDisplayDigits
+            double valueRounded(MU unit, int digits = -1) const;
+
             //! Rounded value in current unit
             //! \note default digits is CMeasurementUnit::getDisplayDigits
             double valueRounded(int digits = -1) const;
+
+            //! Rounded value in given unit
+            //! \note default digits is CMeasurementUnit::getDisplayDigits
+            QString valueRoundedAsString(MU unit, int digits = -1) const;
 
             //! Value to QString with the given unit, e.g. "5.00m"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
