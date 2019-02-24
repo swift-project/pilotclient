@@ -76,7 +76,7 @@ namespace BlackMisc
             QWriteLocker l(&m_lockCG);
             if (!m_enableCG) { return false; }
             if (!cs.isEmpty()) { m_cgsPerCallsign[cs] = cg; ok = true; }
-            if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toLower()] = cg; ok = true; }
+            if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toUpper()] = cg; ok = true; }
             return ok;
         }
 
@@ -85,7 +85,7 @@ namespace BlackMisc
             if (modelString.isEmpty()) { return false; }
             QWriteLocker l(&m_lockCG);
             if (!m_enableCG) { return false; }
-            m_cgsPerModel[modelString.toLower()] = cg;
+            m_cgsPerModel[modelString.toUpper()] = cg;
             return true;
         }
 
@@ -256,7 +256,7 @@ namespace BlackMisc
         CLength ISimulationEnvironmentProvider::getCGPerModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return CLength::null(); }
-            const QString ms = modelString.toLower();
+            const QString ms = modelString.toUpper();
             QReadLocker l(&m_lockCG);
             if (!m_enableCG || !m_cgsPerModel.contains(ms)) { return CLength::null(); }
             return m_cgsPerModel.value(ms);
