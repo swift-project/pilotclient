@@ -394,7 +394,7 @@ namespace BlackMisc
             return null;
         }
 
-        const CLengthUnit &CAltitude::defaultUnit()
+        CLengthUnit CAltitude::defaultUnit()
         {
             return CLengthUnit::ft();
         }

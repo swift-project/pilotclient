@@ -367,10 +367,10 @@ namespace BlackMisc
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
             //! Get altitude unit
-            const PhysicalQuantities::CLengthUnit &getAltitudeUnit() const { return m_position.geodeticHeight().getUnit(); }
+            PhysicalQuantities::CLengthUnit getAltitudeUnit() const { return m_position.geodeticHeight().getUnit(); }
 
             //! Get altitude unit
-            const PhysicalQuantities::CLengthUnit &getAltitudeOrDefaultUnit() const;
+            PhysicalQuantities::CLengthUnit getAltitudeOrDefaultUnit() const;
 
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise only underflow

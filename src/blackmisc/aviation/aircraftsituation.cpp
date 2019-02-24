@@ -906,7 +906,7 @@ namespace BlackMisc
             m_heading = heading.normalizedToPlusMinus180Degrees();
         }
 
-        const CLengthUnit &CAircraftSituation::getAltitudeOrDefaultUnit() const
+        CLengthUnit CAircraftSituation::getAltitudeOrDefaultUnit() const
         {
             if (this->getAltitude().isNull()) { return CAltitude::defaultUnit(); }
             return m_position.geodeticHeight().getUnit();

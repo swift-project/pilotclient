@@ -198,7 +198,7 @@ namespace BlackMisc
 
             //! Default unit for calculations
             //! \remark using this is optional and will simplify debugging and calculations
-            static const PhysicalQuantities::CLengthUnit &defaultUnit();
+            static PhysicalQuantities::CLengthUnit defaultUnit();
 
             //! Standard pressure 1013.25mbar/hPa
             static const PhysicalQuantities::CPressure &standardISASeaLevelPressure();

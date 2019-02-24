@@ -460,7 +460,7 @@ namespace BlackMisc
             //! Dimensionless unit
             static CMeasurementUnit None()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data none(constQLatin1("none"), constQLatin1(""), NilConverter(), 0, 0);
+                static constexpr CMeasurementUnit::Data none(constQLatin1("none"), constQLatin1(""), NilConverter(), 0, 0);
                 return none;
             }
         };
