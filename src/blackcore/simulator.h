@@ -55,9 +55,9 @@ namespace BlackCore
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
         public QObject,
-        public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-        public BlackMisc::Weather::CWeatherGridAware,       // gain access to in memory weather grid
+        public BlackMisc::Simulation::COwnAircraftAware,    // access to in memory own aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftAware, // access to in memory remote aircraft data
+        public BlackMisc::Weather::CWeatherGridAware,       // access to in memory weather grid
         public BlackMisc::Network::CClientAware,            // the network client with its capabilities
         public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation etc.
         public BlackMisc::Simulation::IInterpolationSetupProvider,    // setup
