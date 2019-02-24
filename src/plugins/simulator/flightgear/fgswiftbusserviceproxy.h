@@ -106,9 +106,6 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CService::addTextMessage
             void addTextMessage(const QString &text);
 
-            //! \copydoc XSwiftBus::CService::updateAirportsInRange
-            void updateAirportsInRange();
-
             //! \copydoc XSwiftBus::CService::getAircraftModelPath
             //! @{
             QString getAircraftModelPath() const;
@@ -169,12 +166,6 @@ namespace BlackSimPlugin
             void isPausedAsync(bool *o_paused);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::isUsingRealTime
-            //! @{
-            bool isUsingRealTime() const;
-            void isUsingRealTimeAsync(bool *o_isRealTime);
-            //! @}
-
             //! \copydoc XSwiftBus::CService::getLatitudeDeg
             //! @{
             double getLatitudeDeg() const;
@@ -205,18 +196,6 @@ namespace BlackSimPlugin
             void getGroundSpeedKtsAsync(double *o_groundspeed);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getIndicatedAirspeedKias
-            //! @{
-            double getIndicatedAirspeedKias() const;
-            void getIndicatedAirspeedKiasAsync(double *o_ias);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::getTrueAirspeedKias
-            //! @{
-            double getTrueAirspeedKias() const;
-            void getTrueAirspeedKiasAsync(double *o_tas);
-            //! @}
-
             //! \copydoc XSwiftBus::CService::getPitchDeg
             //! @{
             double getPitchDeg() const;
@@ -227,18 +206,6 @@ namespace BlackSimPlugin
             //! @{
             double getRollDeg() const;
             void getRollDegAsync(double *o_roll);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::getTrueHeadingDeg
-            //! @{
-            double getTrueHeadingDeg() const;
-            void getTrueHeadingDegAsync(double *o_heading);
-            //! @}
-
-            //! Get whether any wheel is on the ground
-            //! @{
-            bool getAnyWheelOnGround() const;
-            void getAnyWheelOnGroundAsync(bool *o_anyWheel);
             //! @}
 
             //! Get whether all wheels are on the ground
@@ -354,13 +321,6 @@ namespace BlackSimPlugin
             //! @{
             double getGearDeployRatio() const;
             void getGearDeployRatioAsync(double *o_gearDeployRatio);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::getNumberOfEngines
-
-            //! @{
-            int getNumberOfEngines() const;
-            void getNumberOfEnginesAsync(double *o_numberOfEngines);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getEngineN1Percentage

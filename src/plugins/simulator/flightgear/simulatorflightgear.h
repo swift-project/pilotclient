@@ -186,9 +186,6 @@ namespace BlackSimPlugin
             //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();
 
-            //! Update airports
-            void updateAirportsInRange();
-
             //! Request elevation and CG from XPlane @{
             void requestRemoteAircraftDataFromXPlane();
             void requestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);

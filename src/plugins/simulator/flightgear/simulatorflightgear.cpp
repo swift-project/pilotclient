@@ -106,7 +106,6 @@ namespace BlackSimPlugin
             m_pendingAddedTimer.setObjectName(this->objectName().append(":m_pendingAddedTimer"));
             connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
             connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
-            connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
             connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::addNextPendingAircraft);
             m_fastTimer.start(100);
             m_slowTimer.start(1000);
@@ -357,7 +356,6 @@ namespace BlackSimPlugin
             setSimulatorDetails("X-Plane", {}, "");
             connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
             connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
-            m_serviceProxy->updateAirportsInRange();
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
@@ -952,11 +950,6 @@ namespace BlackSimPlugin
                 else { QDBusConnection::disconnectFromBus(m_dBusConnection.name()); }
             }
             m_dBusConnection = QDBusConnection { "default" };
-        }
-
-        void CSimulatorXPlane::updateAirportsInRange()
-        {
-            if (this->isConnected()) { m_serviceProxy->updateAirportsInRange(); }
         }
 
         void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)

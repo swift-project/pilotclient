@@ -71,11 +71,6 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("addTextMessage"), text);
         }
 
-        void CXSwiftBusServiceProxy::updateAirportsInRange()
-        {
-            m_dbusInterface->callDBus(QLatin1String("updateAirportsInRange"));
-        }
-
         QString CXSwiftBusServiceProxy::getAircraftModelPath() const
         {
             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelPath"));
@@ -166,15 +161,6 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("isPaused"), setterCallback(o_paused));
         }
 
-        bool CXSwiftBusServiceProxy::isUsingRealTime() const
-        {
-            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isUsingRealTime"));
-        }
-        void CXSwiftBusServiceProxy::isUsingRealTimeAsync(bool *o_isRealTime)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
-        }
-
         double CXSwiftBusServiceProxy::getLatitudeDeg() const
         {
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));
@@ -220,24 +206,6 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getGroundSpeedKts"), setterCallback(o_groundspeed));
         }
 
-        double CXSwiftBusServiceProxy::getIndicatedAirspeedKias() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getIndicatedAirspeedKias"));
-        }
-        void CXSwiftBusServiceProxy::getIndicatedAirspeedKiasAsync(double *o_ias)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getIndicatedAirspeedKias"), setterCallback(o_ias));
-        }
-
-        double CXSwiftBusServiceProxy::getTrueAirspeedKias() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueAirspeedKias"));
-        }
-        void CXSwiftBusServiceProxy::getTrueAirspeedKiasAsync(double *o_tas)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getTrueAirspeedKias"), setterCallback(o_tas));
-        }
-
         double CXSwiftBusServiceProxy::getPitchDeg() const
         {
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getPitchDeg"));
@@ -254,24 +222,6 @@ namespace BlackSimPlugin
         void CXSwiftBusServiceProxy::getRollDegAsync(double *o_roll)
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getRollDeg"), setterCallback(o_roll));
-        }
-
-        double CXSwiftBusServiceProxy::getTrueHeadingDeg() const
-        {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueHeadingDeg"));
-        }
-        void CXSwiftBusServiceProxy::getTrueHeadingDegAsync(double *o_heading)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getTrueHeadingDeg"), setterCallback(o_heading));
-        }
-
-        bool CXSwiftBusServiceProxy::getAnyWheelOnGround() const
-        {
-            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getAnyWheelOnGround"));
-        }
-        void CXSwiftBusServiceProxy::getAnyWheelOnGroundAsync(bool *o_anyWheel)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getAnyWheelOnGround"), setterCallback(o_anyWheel));
         }
 
         bool CXSwiftBusServiceProxy::getAllWheelsOnGround() const
@@ -456,16 +406,6 @@ namespace BlackSimPlugin
         void CXSwiftBusServiceProxy::getGearDeployRatioAsync(double *o_gearDeployRatio)
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getGearDeployRatio"), setterCallback(o_gearDeployRatio));
-        }
-
-        int CXSwiftBusServiceProxy::getNumberOfEngines() const
-        {
-            return m_dbusInterface->callDBusRet<int>(QLatin1String("getNumberOfEngines"));
-        }
-
-        void CXSwiftBusServiceProxy::getNumberOfEnginesAsync(double *o_numberOfEngines)
-        {
-            m_dbusInterface->callDBusAsync(QLatin1String("getNumberOfEngines"), setterCallback(o_numberOfEngines));
         }
 
         QList<double> CXSwiftBusServiceProxy::getEngineN1Percentage() const
