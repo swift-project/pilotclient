@@ -450,7 +450,7 @@ namespace BlackCore
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
                 CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'")
-                                               : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
+                                       : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
                 return true;
             }
             else
@@ -459,7 +459,7 @@ namespace BlackCore
                 const bool changed = setup.setInterpolatorMode(part1);
                 if (changed) { this->setInterpolationSetupGlobal(setup); }
                 CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally")
-                                               : QStringLiteral("Unchanged interpolation mode"));
+                                       : QStringLiteral("Unchanged interpolation mode"));
                 return true;
             }
         } // spline/linear
@@ -793,7 +793,14 @@ namespace BlackCore
             this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
             this->rememberGroundElevation(callsign, elevation);
         }
-        if (!cg.isNull() && !this->hasSameCG(cg, callsign)) { this->insertCG(cg, modelString, callsign); }
+        if (!cg.isNull() && !this->hasSameCG(cg, callsign))
+        {
+            this->insertCG(cg, modelString, callsign);
+
+            // here we know we have a valid model and CG
+            m_autoPublishing.insert(modelString, cg);
+            m_autoPublishing.insert(modelString, this->getSimulatorInfo());
+        }
     }
 
     void ISimulator::emitSimulatorCombinedStatus(SimulatorStatus oldStatus)
@@ -927,6 +934,8 @@ namespace BlackCore
     void ISimulator::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
+        m_autoPublishing.writeJsonToFile();
+        m_autoPublishing.clear();
         m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 

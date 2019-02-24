@@ -24,6 +24,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/simulation/interpolationsetupprovider.h"
+#include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/clientprovider.h"
@@ -282,6 +283,9 @@ namespace BlackCore
         //! Interpolation messages for callsign
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+        //! Get the data for auto publishing
+        const BlackMisc::Simulation::CAutoPublishData &getPublishData() const { return m_autoPublishing; }
+
         //!  Counter added aircraft
         int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }
 
@@ -423,7 +427,7 @@ namespace BlackCore
         //! \sa ISimulator::clearAllRemoteAircraftData
         virtual int physicallyRemoveAllRemoteAircraft();
 
-        //! Set elevation and CG in the providers
+        //! Set elevation and CG in the providers and for auto publishing
         void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
 
         //! Emit the combined status
@@ -546,6 +550,7 @@ namespace BlackCore
 
         BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
+        BlackMisc::Simulation::CAutoPublishData     m_autoPublishing;      //!< for the DB
         BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
         BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
 
