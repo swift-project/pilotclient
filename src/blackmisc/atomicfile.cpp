@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFlags>
+#include <QStringBuilder>
 #include <random>
 #include <type_traits>
 
