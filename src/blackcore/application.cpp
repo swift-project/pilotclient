@@ -1717,8 +1717,10 @@ namespace BlackCore
 
     void CApplication::onCrashDumpUploadEnabledChanged()
     {
+    #ifdef BLACK_USE_CRASHPAD
         const bool enabled = CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled();
         this->enableCrashDumpUpload(enabled);
+    #endif
     }
 
     void CApplication::triggerCrashInfoWrite()
