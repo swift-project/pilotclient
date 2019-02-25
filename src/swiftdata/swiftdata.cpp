@@ -11,15 +11,17 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/datasettingscomponent.h"
+#include "blackgui/components/autopublishdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackmisc/simulation/autopublishdata.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/simulation/distributorlist.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_swiftdata.h"
 
@@ -28,6 +30,7 @@
 #include <QStyle>
 #include <QtGlobal>
 #include <QVersionNumber>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -58,8 +61,7 @@ void CSwiftData::initStyleSheet()
         CStyleSheetUtility::fileNameFonts(),
         CStyleSheetUtility::fileNameStandardWidget(),
         CStyleSheetUtility::fileNameSwiftData()
-    }
-    );
+    });
     this->setStyleSheet(s);
 }
 
@@ -99,7 +101,7 @@ void CSwiftData::init()
     this->initLogDisplay();
 
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
-    m_mwaStatusBar = &m_statusBar;
+    m_mwaStatusBar    = &m_statusBar;
     m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
@@ -113,8 +115,15 @@ void CSwiftData::init()
         this->setWindowTitle(QStringLiteral("%1 %2").arg(this->windowTitle(), s.getDbHomePageUrl().toQString(true)));
     }
 
-    sGui->triggerNewVersionCheck(15 * 1000);
-    QTimer::singleShot(15 * 1000, this, &CSwiftData::checkMinimumVersion);
+    sGui->triggerNewVersionCheck(20 * 1000);
+    QPointer<CSwiftData> myself(this);
+    QTimer::singleShot(15 * 1000, this, [ = ]
+    {
+        if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+        this->checkMinimumVersion();
+        this->checkAutoPublishing();
+    });
+
     emit sGui->startUpCompleted(true);
 }
 
@@ -138,8 +147,8 @@ void CSwiftData::initMenu()
     this->initDynamicMenus();
     ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 
-    connect(ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::onMenuClicked);
-    connect(ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_WindowFont,        &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_MappingMaxData,    &QAction::triggered, this, &CSwiftData::onMenuClicked);
     connect(ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::onMenuClicked);
 
     sGui->addMenuFile(*ui->menu_File);
@@ -202,4 +211,12 @@ void CSwiftData::checkMinimumVersion()
         CLogMessage::preformatted(sm);
         this->displayInOverlayWindow(sm);
     }
+}
+
+void CSwiftData::checkAutoPublishing()
+{
+    if (!sApp || sApp->isShuttingDown()) { return; }
+    if (!CAutoPublishData::existAutoPublishFiles()) { return; }
+    if (!m_autoPublishDialog) { m_autoPublishDialog = new CAutoPublishDialog(this); }
+    m_autoPublishDialog->readAndShow();
 }

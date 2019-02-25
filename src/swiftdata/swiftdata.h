@@ -22,10 +22,9 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CSwiftData; }
 namespace BlackCore { class CWebDataServices; }
+namespace BlackGui { namespace Components { class CAutoPublishDialog; }}
 
 /*!
  * swift data entry control (aka mapping tool)
@@ -46,8 +45,7 @@ public:
     virtual ~CSwiftData() override;
 
 protected:
-    //! \name QMainWindow events
-    //! @[
+    //! \name QMainWindow events @[
     virtual void closeEvent(QCloseEvent *event) override;
     //! @}
 
@@ -61,14 +59,16 @@ private:
     //! Menu clicked
     void onMenuClicked();
 
-    //! Init functions
-    //! @{
+    //! Init functions @{
     void init();
     void initLogDisplay();
     void initStyleSheet();
     void initMenu();
     void initDynamicMenus();
     //! @}
+
+    //! Check auto-publishing
+    void checkAutoPublishing();
 
     void performGracefulShutdown();
     void consolidationSettingChanged();
@@ -81,6 +81,9 @@ private:
     BlackGui::CManagedStatusBar m_statusBar;
     BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
     BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
+
+    // auto update
+    BlackGui::Components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog
 };
 
 #endif // guard
