@@ -258,7 +258,7 @@ namespace BlackMisc
         if (dateTimeString.isEmpty() || format.isEmpty()) { return QDateTime(); }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
-        dt.setUtcOffset(0); // must only be applied to valid timestamps
+        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
         return dt;
     }
 
@@ -267,7 +267,7 @@ namespace BlackMisc
         if (dateTimeString.isEmpty()) { return QDateTime(); }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
-        dt.setUtcOffset(0); // must only be applied to valid timestamps
+        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
         return dt;
     }
 
