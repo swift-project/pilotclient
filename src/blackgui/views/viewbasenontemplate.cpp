@@ -11,6 +11,7 @@
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/filters/filterdialog.h"
 #include "blackgui/filters/filterwidget.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/loadindicator.h"
 #include "blackgui/menus/fontmenus.h"
@@ -764,7 +765,8 @@ namespace BlackGui
             if (m_forceColumnsToMaxSize)
             {
                 // vpNew.setWidth(std::numeric_limits<qint32>::max()); // largest finite value
-                const QRect screenGeometry = QApplication::desktop()->screenGeometry();
+                QGuiApplication::screens();
+                const QRect screenGeometry = sGui->currentScreen()->geometry();
                 QRect vpNew = vpOriginal;
                 vpNew.setWidth(screenGeometry.width());
                 this->viewport()->setGeometry(vpNew);

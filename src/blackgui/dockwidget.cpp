@@ -21,6 +21,7 @@
 #include <QLayoutItem>
 #include <QMenu>
 #include <QScopedPointer>
+#include <QScreen>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStatusBar>
@@ -616,6 +617,6 @@ namespace BlackGui
     {
         // center on screen when floating
         if (!this->isFloating()) { return; }
-        this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
+        this->move(sGui->currentScreen()->geometry().center() - this->rect().center());
     }
 } // namespace
