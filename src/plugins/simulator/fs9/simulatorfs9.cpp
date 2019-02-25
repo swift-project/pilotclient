@@ -240,7 +240,10 @@ namespace BlackSimPlugin
             if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode()) { changed = true; }
             if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode()) { changed = true; }
 
-            //! \todo KB 8/2017 set FS9 cockpit values
+            m_fsuipc->write(ownAircraft);
+
+            // avoid changes of cockpit back to old values due to an outdated read back value
+            if (changed) { m_skipCockpitUpdateCycles = SkipUpdateCyclesForCockpit; }
 
             // bye
             return changed;
@@ -371,11 +374,22 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::updateOwnAircraftFromSimulator(const CSimulatedAircraft &simDataOwnAircraft)
         {
-            this->updateCockpit(
-                simDataOwnAircraft.getCom1System(),
-                simDataOwnAircraft.getCom2System(),
-                simDataOwnAircraft.getTransponder(),
-                this->identifier());
+            // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
+            // it takes a little while before these values are set in the simulator.
+            // To avoid jitters, I wait some update cylces to stabilize the values
+            if (m_skipCockpitUpdateCycles < 1)
+            {
+                this->updateCockpit(
+                    simDataOwnAircraft.getCom1System(),
+                    simDataOwnAircraft.getCom2System(),
+                    simDataOwnAircraft.getTransponder(),
+                    this->identifier());
+            }
+            else
+            {
+                m_skipCockpitUpdateCycles--;
+            }
+
             this->updateOwnSituation(simDataOwnAircraft.getSituation());
             reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
         }

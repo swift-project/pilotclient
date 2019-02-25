@@ -148,6 +148,38 @@ namespace BlackSimPlugin
             return false;
         }
 
+        bool CFsuipc::write(const CSimulatedAircraft &aircraft)
+        {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
+            if (!this->isOpened()) { return false; }
+
+            quint16 com1ActiveRaw = aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100;
+            quint16 com2ActiveRaw = aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100;
+            quint16 com1StandbyRaw = aircraft.getCom1System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100;
+            quint16 com2StandbyRaw = aircraft.getCom2System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100;
+            com1ActiveRaw = CBcdConversions::dec2Bcd(com1ActiveRaw - 10000);
+            com2ActiveRaw = CBcdConversions::dec2Bcd(com2ActiveRaw - 10000);
+            com1StandbyRaw = CBcdConversions::dec2Bcd(com1StandbyRaw - 10000);
+            com2StandbyRaw = CBcdConversions::dec2Bcd(com2StandbyRaw - 10000);
+            quint16 transponderCodeRaw = static_cast<quint16>(aircraft.getTransponderCode());
+
+            transponderCodeRaw = CBcdConversions::dec2Bcd(transponderCodeRaw);
+
+            DWORD dwResult = 0;
+
+            bool ok =
+                FSUIPC_Write(0x034e, 2, &com1ActiveRaw,  &dwResult) &&
+                FSUIPC_Write(0x3118, 2, &com2ActiveRaw, &dwResult) &&
+                FSUIPC_Write(0x311a, 2, &com1StandbyRaw, &dwResult) &&
+                FSUIPC_Write(0x311c, 2, &com2StandbyRaw, &dwResult) &&
+                FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
+            if (ok) { FSUIPC_Process(&dwResult); }
+
+            ok = ok && write(aircraft.getTransponder());
+
+            return ok && dwResult == 0;
+        }
+
         bool CFsuipc::write(const CTransponder &xpdr)
         {
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");

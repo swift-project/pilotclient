@@ -48,6 +48,12 @@ namespace BlackSimPlugin
             return false;
         }
 
+        bool CFsuipc::write(const CSimulatedAircraft &aircraft)
+        {
+            Q_UNUSED(aircraft);
+            return false;
+        }
+
         bool CFsuipc::write(const CTransponder &xpdr)
         {
             Q_UNUSED(xpdr);

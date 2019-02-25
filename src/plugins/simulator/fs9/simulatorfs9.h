@@ -105,6 +105,9 @@ namespace BlackSimPlugin
             bool m_simConnected = false; //!< Is simulator connected?
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
+            int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
+
+            static constexpr int SkipUpdateCyclesForCockpit = 10;
         };
 
         //! Listener for FS9
