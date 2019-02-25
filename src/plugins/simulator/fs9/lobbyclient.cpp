@@ -312,7 +312,7 @@ namespace BlackSimPlugin
                     case DPLSESSION_HOSTMIGRATEDHERE:
                         message.append("Host migrated to this client"); break;
                     default:
-                        message.append("%1").arg(pStatusMsg->dwStatus);
+                        message.append(QString("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
                         break;
                     }
                     qDebug() << message;
