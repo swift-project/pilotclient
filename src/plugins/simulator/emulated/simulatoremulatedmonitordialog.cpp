@@ -10,8 +10,10 @@
 #include "simulatoremulated.h"
 #include "ui_simulatoremulatedmonitordialog.h"
 #include "blackmisc/logmessage.h"
+
 #include <QIntValidator>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -24,7 +26,7 @@ namespace BlackSimPlugin
     {
         const CLogCategoryList &CSimulatorEmulatedMonitorDialog::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::driver(), CLogCategory::plugin() };
+            static const CLogCategoryList cats { CLogCategory::driver(), CLogCategory::plugin() };
             return cats;
         }
 
@@ -64,6 +66,7 @@ namespace BlackSimPlugin
             connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_InterpolatorFetch,    &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
             connect(ui->pb_EmitAddedFailed,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
+            connect(ui->pb_AddAutoPublishData,   &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
 
             ui->led_Receiving->setToolTips("receiving", "idle");
             ui->led_Receiving->setShape(CLedWidget::Rounded);
@@ -291,6 +294,11 @@ namespace BlackSimPlugin
                 const CStatusMessage msg(this, CStatusMessage::SeverityError, "Simulated driver driver failed for " + cs.asString());
                 emit m_simulator->physicallyAddingRemoteModelFailed(aircraft, true, ui->cb_Failover->isChecked(), msg);
             }
+        }
+
+        void CSimulatorEmulatedMonitorDialog::addAutoPublishTestData()
+        {
+            m_simulator->m_autoPublishing.testData();
         }
     } // ns
 } // ns

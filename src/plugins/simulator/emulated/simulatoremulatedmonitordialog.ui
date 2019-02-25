@@ -293,7 +293,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer">
+              <spacer name="hs_AddedFailed">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -553,6 +553,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="gb_AutoPublish">
+         <property name="title">
+          <string>Auto publish</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item alignment="Qt::AlignRight">
+           <widget class="QPushButton" name="pb_AddAutoPublishData">
+            <property name="text">
+             <string>add</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="gb_LogMessages">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
@@ -574,8 +590,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>546</width>
-               <height>369</height>
+               <width>535</width>
+               <height>339</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
@@ -679,6 +695,11 @@
   <tabstop>tw_SwiftMonitorDialog</tabstop>
   <tabstop>le_SimulatorPlugin</tabstop>
   <tabstop>le_Simulator</tabstop>
+  <tabstop>cb_Connected</tabstop>
+  <tabstop>cb_Simulating</tabstop>
+  <tabstop>cb_Paused</tabstop>
+  <tabstop>cb_Failover</tabstop>
+  <tabstop>pb_EmitAddedFailed</tabstop>
   <tabstop>le_InterpolatorTimeMs</tabstop>
   <tabstop>pb_InterpolatorFetch</tabstop>
   <tabstop>pb_InterpolatorClearLog</tabstop>
@@ -695,6 +716,7 @@
   <tabstop>le_SituationAdded</tabstop>
   <tabstop>le_PartsAdded</tabstop>
   <tabstop>le_PartsEnabledAircraft</tabstop>
+  <tabstop>pb_AddAutoPublishData</tabstop>
   <tabstop>sa_LogMessages</tabstop>
  </tabstops>
  <resources/>
@@ -706,8 +728,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>255</x>
+     <y>585</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -722,8 +744,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>323</x>
+     <y>585</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

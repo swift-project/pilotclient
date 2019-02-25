@@ -107,6 +107,9 @@ namespace BlackSimPlugin
             //! Emit a simulator signal
             void emitSignal();
 
+            //! Test data for auto publishing
+            void addAutoPublishTestData();
+
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;
             QTimer m_uiUpdateTimer;
