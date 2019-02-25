@@ -524,8 +524,8 @@ namespace BlackSound
     {
         if (!QFile::exists(file)) { return; }
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
-        QMediaResource mediaResource(QUrl(file), "audio");
-        QMediaContent media(mediaResource);
+        QUrl url(file);
+        QMediaContent media(url);
         mediaPlayer->setMedia(media);
         mediaPlayer->setVolume(volume); // 0-100
         mediaPlayer->play();
