@@ -225,6 +225,7 @@ namespace BlackGui
             if (!m_splashScreen) { return; }
             this->displaySplashMessage(m);
             this->processEventsToRefreshGui();
+            if (!sGui) { return; }
         }
     }
 

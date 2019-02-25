@@ -51,16 +51,18 @@ namespace BlackGui
         m_angle = 0;
         this->show();
         this->setEnabled(true);
+
+        QPointer<CLoadIndicator> myself(this);
         if (m_timerId == -1) { m_timerId = startTimer(m_delayMs); }
         if (processEvents && sGui)
         {
             sGui->processEventsToRefreshGui();
+            if (!myself) { return -1; } // deleted in meantime (process events)
         }
 
         const int stopId = m_currentId++; // copy
         if (timeoutMs > 0)
         {
-            QPointer<CLoadIndicator> myself(this);
             QTimer::singleShot(timeoutMs, this, [ = ]
             {
                 if (!myself) { return; }

@@ -39,6 +39,7 @@
 #include <Qt>
 #include <QtGlobal>
 #include <QMessageBox>
+#include <QPointer>
 
 class QCloseEvent;
 class QEvent;
@@ -122,8 +123,9 @@ void SwiftGuiStd::performGracefulShutdown()
     ui->comp_MainInfoArea->dockAllWidgets();
 
     // allow some other parts to react
-    if (!sGui) { return; } // overall shutdown
-    sGui->processEventsToRefreshGui();
+    const QPointer<SwiftGuiStd> myself(this);
+    if (sGui) { sGui->processEventsToRefreshGui(); }
+    if (!sGui || !myself) { return; } // killed in meantime?
 
     // tell context GUI is going down
     if (sGui->getIContextApplication())
@@ -132,7 +134,7 @@ void SwiftGuiStd::performGracefulShutdown()
     }
 
     // allow some other parts to react
-    sGui->processEventsToRefreshGui();
+    if (sGui) { sGui->processEventsToRefreshGui(); }
 }
 
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
