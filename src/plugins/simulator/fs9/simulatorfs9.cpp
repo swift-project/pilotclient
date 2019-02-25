@@ -111,6 +111,9 @@ namespace BlackSimPlugin
             m_fs9Host(fs9Host),
             m_lobbyClient(lobbyClient)
         {
+            // disabled CG/elevation parts
+            this->setSimulationProviderEnabled(false, false);
+
             //! \fixme KB 7/2017 change or remove comment when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [ = ]
             {
