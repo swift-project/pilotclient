@@ -39,12 +39,12 @@ namespace BlackSimPlugin
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFs9(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                          const QSharedPointer<CFs9Host> &fs9Host,
+                          const QSharedPointer<CFs9Host>     &fs9Host,
                           const QSharedPointer<CLobbyClient> &lobbyClient,
-                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                          BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                           BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                          BlackMisc::Network::IClientProvider *clientProvider,
+                          BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
+                          BlackMisc::Network::IClientProvider            *clientProvider,
                           QObject *parent = nullptr);
 
             //! Destructor
@@ -56,7 +56,7 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual int physicallyRemoveAllRemoteAircraft() override;
+            virtual int  physicallyRemoveAllRemoteAircraft() override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;

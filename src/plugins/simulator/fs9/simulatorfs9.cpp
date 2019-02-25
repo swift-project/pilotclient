@@ -100,12 +100,12 @@ namespace BlackSimPlugin
         }
 
         CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
-                                     const QSharedPointer<CFs9Host> &fs9Host,
+                                     const QSharedPointer<CFs9Host>     &fs9Host,
                                      const QSharedPointer<CLobbyClient> &lobbyClient,
-                                     IOwnAircraftProvider *ownAircraftProvider,
+                                     IOwnAircraftProvider    *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
-                                     IWeatherGridProvider *weatherGridProvider,
-                                     IClientProvider *clientProvider,
+                                     IWeatherGridProvider    *weatherGridProvider,
+                                     IClientProvider         *clientProvider,
                                      QObject *parent) :
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
             m_fs9Host(fs9Host),
@@ -483,10 +483,10 @@ namespace BlackSimPlugin
         { }
 
         BlackCore::ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
-                IOwnAircraftProvider *ownAircraftProvider,
+                IOwnAircraftProvider    *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
-                IWeatherGridProvider *weatherGridProvider,
-                IClientProvider *clientProvider)
+                IWeatherGridProvider    *weatherGridProvider,
+                IClientProvider         *clientProvider)
         {
             return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
