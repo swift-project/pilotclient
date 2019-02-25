@@ -25,6 +25,8 @@
 #include <QMetaMethod>
 #include <QShortcut>
 
+#include <algorithm>
+
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -469,7 +471,7 @@ namespace BlackGui
             // if we'd know for sure the indexes are always sorted we can remove the sorting here
             // Qt docu selectedIndexes: Returns a list of all selected model item indexes. The list contains no duplicates, and is not sorted.
             QModelIndexList indexes = this->selectionModel()->selectedRows();
-            qSort(indexes);
+            std::sort(indexes.begin(), indexes.end());
             return indexes;
         }
 

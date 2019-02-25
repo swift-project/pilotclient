@@ -12,6 +12,8 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 
+#include <algorithm>
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -69,11 +71,11 @@ namespace BlackMisc
             // to HTML
             QString html("<table>\n");
             QStringList airlineIcaos = models.getAirlineVDesignators().toList();
-            qSort(airlineIcaos);
+            airlineIcaos.sort();
             airlineIcaos.push_front(colorLiveryDesignator);
             airlineIcaos.push_back(emptyDesignator);
             QStringList aircraftIcaos = modelsByDesignator.keys();
-            qSort(aircraftIcaos);
+            aircraftIcaos.sort();
 
             // header
             html += "<thead><tr>\n";

@@ -15,6 +15,8 @@
 #include <Qt>
 #include <QtGlobal>
 
+#include <algorithm>
+
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -162,7 +164,7 @@ namespace BlackMisc
 
         QString rows;
         QList<CommandHtmlHelp> cmds(s_commands);
-        qSort(cmds.begin(), cmds.end(), CommandHtmlHelp::less);
+        std::sort(cmds.begin(), cmds.end(), CommandHtmlHelp::less);
 
         static const QString cmdCol(QString().fill('-', 20));
         static const QString textCol(QString().fill('-', 40));
