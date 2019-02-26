@@ -193,7 +193,8 @@ namespace BlackMisc
         bool matchesVariant(const CVariant &value) const;
 
         //! True if this map matches the value
-        template <typename T> bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
+        template <typename T, typename = std::enable_if_t<!std::is_same<T, CVariant>::value>>
+        bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return m_values; }

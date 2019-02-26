@@ -29,6 +29,8 @@
 #include "blackmisc/variant.h"
 #include "test.h"
 
+#include <QDBusArgument>
+#include <QObject>
 #include <QDateTime>
 #include <QTest>
 
@@ -55,10 +57,32 @@ namespace BlackMiscTest
         //! Unit tests for variant lists
         void variantList();
 
+        //! Unit tests for matches feature
+        void matches();
+
         //! Unit tests for value maps and value objects
         void valueMap();
     };
 
+    //! \private
+    class CTestMatcher : public BlackMisc::Mixin::MetaType<CTestMatcher>
+    {
+    public:
+        bool matches(const BlackMisc::CVariant &) const { return true; }
+
+        // methods needed for metatype registration
+        QString toQString(bool) const { return {}; }
+        friend QDBusArgument &operator <<(QDBusArgument &arg, const CTestMatcher &) { return arg; }
+        friend const QDBusArgument &operator >>(const QDBusArgument &arg, CTestMatcher &) { return arg; }
+        friend QDataStream &operator <<(QDataStream &ds, const CTestMatcher &) { return ds; }
+        friend QDataStream &operator >>(QDataStream &ds, CTestMatcher &) { return ds; }
+    };
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMiscTest::CTestMatcher)
+
+namespace BlackMiscTest
+{
     void CTestVariantAndMap::initTestCase()
     {
         BlackMisc::registerMetadata();
@@ -132,6 +156,14 @@ namespace BlackMiscTest
         QVERIFY2(list[0] == variantList[0].to<CAirlineIcaoCode>(), "Variant list has same element");
         QVERIFY2(variant.canConvert<CAirlineIcaoCodeList>(), "Variant containing can convert back");
         QVERIFY2(list == variant.to<CAirlineIcaoCodeList>(), "Variant list converted back compares equal");
+    }
+
+    void CTestVariantAndMap::matches()
+    {
+        CTestMatcher::registerMetadata();
+        const CTestMatcher matcher {};
+        const CVariant variant = CVariant::from(matcher);
+        QVERIFY2(variant.matches(CVariant()), "Variant provides access to stored object's matches() method");
     }
 
     void CTestVariantAndMap::valueMap()

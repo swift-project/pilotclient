@@ -36,4 +36,9 @@ namespace BlackMisc
         QMetaType::registerConverter<CVariantList, QVector<CVariant>>([](const CVariantList &list) { return list.toVector(); });
         QMetaType::registerConverter<QVector<CVariant>, CVariantList>([](const QVector<CVariant> &list) { return CSequence(list); });
     }
+
+    bool CVariantList::matches(const CVariant &event) const
+    {
+        return containsBy([ & ](const CVariant &pattern) { return pattern.matches(event); });
+    }
 } // ns

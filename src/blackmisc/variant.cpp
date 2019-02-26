@@ -533,6 +533,26 @@ namespace BlackMisc
         return toIcon().toPixmap();
     }
 
+    bool CVariant::matches(const CVariant &value) const
+    {
+        if (! isValid()) { return false; }
+        auto *meta = getValueObjectMetaInfo();
+        if (! meta)
+        {
+            CLogMessage(this).warning(u"Invalid type for CVariant::matches: %1") << typeName();
+            return false;
+        }
+        try
+        {
+            return meta->matches(data(), value);
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage(this).debug() << ex.what();
+            return false;
+        }
+    }
+
     QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName)
     {
         if (localUserType == static_cast<int>(QVariant::Invalid))

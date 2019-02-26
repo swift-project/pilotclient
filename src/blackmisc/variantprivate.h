@@ -59,6 +59,7 @@ namespace BlackMisc
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
             virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
+            virtual bool matches(const void *object, const CVariant &value) const = 0;
             virtual void toIcon(const void *object, CIcon &o_icon) const = 0;
         };
 
@@ -141,6 +142,11 @@ namespace BlackMisc
             static void toIcon(const T &object, CIcon &o_icon, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { assign(o_icon, object.toIcon()); }
             template <typename T>
             static void toIcon(const T &object, CIcon &, ...) { throw CVariantException(object, "toIcon"); }
+
+            template <typename T>
+            static bool matches(const T &object, const CVariant &value, decltype(static_cast<void>(object.matches(value)), 0)) { return object.matches(value); }
+            template <typename T>
+            static bool matches(const T &object, const CVariant &, ...) { throw CVariantException(object, "matches"); }
         };
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
@@ -207,6 +213,10 @@ namespace BlackMisc
             virtual void toIcon(const void *object, CIcon &o_icon) const override
             {
                 CValueObjectMetaInfoHelper::toIcon(cast(object), o_icon, 0);
+            }
+            virtual bool matches(const void *object, const CVariant &value) const override
+            {
+                return CValueObjectMetaInfoHelper::matches(cast(object), value, 0);
             }
 
             static const T &cast(const void *object) { return *static_cast<const T *>(object); }

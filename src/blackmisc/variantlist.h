@@ -59,6 +59,9 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::CValueObject::registerMetadata
         static void registerMetadata();
+
+        //! True if any element of the list matches the given event.
+        bool matches(const CVariant &event) const;
     };
 }
 

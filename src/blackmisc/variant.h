@@ -343,6 +343,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
         CIcon toIcon() const;
 
+        //! If this is an event subscription, return true if it matches the given event.
+        bool matches(const CVariant &event) const;
+
     private:
         QVariant m_v;
 
