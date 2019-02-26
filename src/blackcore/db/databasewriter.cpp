@@ -6,14 +6,15 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
+#include "blackcore/application.h"
+#include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/db/datastoreutility.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QStringBuilder>
@@ -38,7 +39,8 @@ namespace BlackCore
     {
         CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) :
             QObject(parent),
-            m_modelPublishUrl(getModelPublishUrl(baseUrl))
+            m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
+            m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
         {
             // void
         }
@@ -51,15 +53,15 @@ namespace BlackCore
         CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models)
         {
             CStatusMessageList msgs;
-            if (m_shutdown)
+            if (m_shutdown || !sApp)
             {
-                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Database writer shuts down"));
+                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Database writer shutting down"));
                 return msgs;
             }
 
-            if (this->isReplyOverdue())
+            if (this->isModelReplyOverdue())
             {
-                const bool killed = this->killPendingReply();
+                const bool killed = this->killPendingModelReply();
                 if (killed)
                 {
                     const CStatusMessage msg(CStatusMessage::SeverityWarning, u"Aborted outdated pending reply");
@@ -69,7 +71,7 @@ namespace BlackCore
                 }
             }
 
-            if (m_pendingReply)
+            if (m_pendingModelPublishReply)
             {
                 msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Another write operation in progress"));
                 return msgs;
@@ -88,15 +90,49 @@ namespace BlackCore
             QNetworkRequest request(url);
             CNetworkUtils::ignoreSslVerification(request);
             const int logId = m_writeLog.addPendingUrl(url);
-            m_pendingReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse});
-            m_replyPendingSince = QDateTime::currentMSecsSinceEpoch();
+            m_pendingModelPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse});
+            m_modelReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
+            return msgs;
+        }
+
+        CStatusMessageList CDatabaseWriter::asyncAutoPublish(const CAutoPublishData &data)
+        {
+            CStatusMessageList msgs;
+            if (m_shutdown || !sApp)
+            {
+                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Database writer shutting down"));
+                return msgs;
+            }
+
+            if (data.isEmpty())
+            {
+                msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"No auto update data"));
+                return msgs;
+            }
+
+            const QString json = data.toDatabaseJson();
+            const bool compress = json.size() > 2048;
+            QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
+            multiPart->append(CDatabaseUtils::getJsonTextMultipart(json, compress));
+            if (sApp->getGlobalSetup().dbDebugFlag())
+            {
+                multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag());
+            }
+
+            QUrl url(m_modelPublishUrl.toQUrl());
+            if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
+            QNetworkRequest request(url);
+            CNetworkUtils::ignoreSslVerification(request);
+            const int logId = m_writeLog.addPendingUrl(url);
+            m_pendingAutoPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse});
+            m_autoPublishReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
             return msgs;
         }
 
         void CDatabaseWriter::gracefulShutdown()
         {
             m_shutdown = true;
-            this->killPendingReply();
+            this->killPendingModelReply();
         }
 
         const QString &CDatabaseWriter::getName()
@@ -109,20 +145,20 @@ namespace BlackCore
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (m_shutdown)
+            if (m_shutdown || !sApp)
             {
                 nwReply->abort();
                 return;
             }
 
-            m_pendingReply = nullptr;
+            m_pendingModelPublishReply = nullptr;
             const QUrl url(nwReply->url());
             const QString urlString(url.toString());
             if (nwReply->error() == QNetworkReply::NoError)
             {
-                const QString dataFileData(nwReply->readAll().trimmed());
+                const QString responseData(nwReply->readAll().trimmed());
                 nwReply->close(); // close asap
-                if (dataFileData.isEmpty())
+                if (responseData.isEmpty())
                 {
                     const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"No response data from " % urlString)});
                     emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
@@ -133,7 +169,7 @@ namespace BlackCore
                 CAircraftModelList modelsSkipped;
                 CStatusMessageList msgs;
                 bool directWrite;
-                const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
+                const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
                 const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);
                 emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
                 if (!modelsPublished.isEmpty())
@@ -146,30 +182,66 @@ namespace BlackCore
             {
                 const QString error = nwReply->errorString();
                 nwReply->close(); // close asap
-                const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)});
+                const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)});
                 emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
             }
         }
 
-        bool CDatabaseWriter::killPendingReply()
+        void CDatabaseWriter::postedAutoPublishResponse(QNetworkReply *nwReplyPtr)
         {
-            if (!m_pendingReply) { return false; }
-            m_pendingReply->abort();
-            m_pendingReply = nullptr;
-            m_replyPendingSince = -1;
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (m_shutdown || !sApp)
+            {
+                nwReply->abort();
+                return;
+            }
+
+            m_pendingAutoPublishReply = nullptr;
+            const QUrl url(nwReply->url());
+            const QString urlString(url.toString());
+            if (nwReply->error() == QNetworkReply::NoError)
+            {
+                const QString responseData(nwReply->readAll().trimmed());
+                nwReply->close(); // close asap
+                if (responseData.isEmpty())
+                {
+                    const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"No response data from " % urlString)});
+                    return;
+                }
+            }
+            else
+            {
+                const QString error = nwReply->errorString();
+                nwReply->close(); // close asap
+                const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)});
+            }
+        }
+
+        bool CDatabaseWriter::killPendingModelReply()
+        {
+            if (!m_pendingModelPublishReply) { return false; }
+            m_pendingModelPublishReply->abort();
+            m_pendingModelPublishReply = nullptr;
+            m_modelReplyPendingSince = -1;
             return true;
         }
 
-        bool CDatabaseWriter::isReplyOverdue() const
+        bool CDatabaseWriter::isModelReplyOverdue() const
         {
-            if (m_replyPendingSince < 0 || !m_pendingReply) { return false; }
-            const qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_replyPendingSince;
+            if (m_modelReplyPendingSince < 0 || !m_pendingModelPublishReply) { return false; }
+            const qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_modelReplyPendingSince;
             return ms > 7500;
         }
 
         CUrl CDatabaseWriter::getModelPublishUrl(const Network::CUrl &baseUrl)
         {
             return baseUrl.withAppendedPath("service/publishmodels.php");
+        }
+
+        CUrl CDatabaseWriter::getAutoPublishUrl(const CUrl &baseUrl)
+        {
+            return baseUrl.withAppendedPath("service/publishauto.php");
         }
 
         QList<QByteArray> CDatabaseWriter::splitData(const QByteArray &data, int size)

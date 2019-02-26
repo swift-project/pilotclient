@@ -167,6 +167,12 @@ namespace BlackCore
         return CStatusMessageList();
     }
 
+    CStatusMessageList CWebDataServices::asyncAutoPublish(const CAutoPublishData &data) const
+    {
+        if (m_databaseWriter) { return m_databaseWriter->asyncAutoPublish(data);}
+        return CStatusMessageList();
+    }
+
     void CWebDataServices::triggerReadOfDbInfoObjects()
     {
         initDbInfoObjectReaderAndTriggerRead();
@@ -1242,8 +1248,7 @@ namespace BlackCore
 
     void CWebDataServices::initWriters()
     {
-        m_databaseWriter = new CDatabaseWriter(sApp->getGlobalSetup().getDbRootDirectoryUrl(),
-                                               this);
+        m_databaseWriter = new CDatabaseWriter(sApp->getGlobalSetup().getDbRootDirectoryUrl(), this);
     }
 
     bool CWebDataServices::signalEntitiesAlreadyRead(CEntityFlags::Entity entities)

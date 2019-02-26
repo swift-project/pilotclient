@@ -94,6 +94,9 @@ namespace BlackCore
             static QHttpPart getJsonTextMultipart(const QJsonObject &json, bool compress);
 
             //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QString &json, bool compress);
+
+            //! Multipart for JSON
             static QHttpPart getJsonTextMultipart(const QJsonArray &json, bool compress);
 
             //! Multipart for JSON

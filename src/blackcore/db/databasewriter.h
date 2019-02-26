@@ -12,9 +12,9 @@
 #define BLACKCORE_DATABASE_WRITER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/urlloglist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/network/urlloglist.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QByteArray>
@@ -23,6 +23,7 @@
 
 class QNetworkReply;
 
+namespace BlackMisc { namespace Simulation { class CAutoPublishData; }}
 namespace BlackCore
 {
     namespace Db
@@ -41,6 +42,9 @@ namespace BlackCore
 
             //! Write models to DB
             BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! Write auto publis data
+            BlackMisc::CStatusMessageList asyncAutoPublish(const BlackMisc::Simulation::CAutoPublishData &data);
 
             //! Shutdown
             void gracefulShutdown();
@@ -66,22 +70,31 @@ namespace BlackCore
 
         private:
             BlackMisc::Network::CUrlLogList m_writeLog;
-            BlackMisc::Network::CUrl m_modelPublishUrl;
-            QNetworkReply *m_pendingReply = nullptr;
-            qint64         m_replyPendingSince = -1;
+            BlackMisc::Network::CUrl m_modelPublishUrl; //!< model publishing
+            BlackMisc::Network::CUrl m_autoPublishUrl;  //!< auto publish data
+            QNetworkReply *m_pendingModelPublishReply = nullptr;
+            QNetworkReply *m_pendingAutoPublishReply  = nullptr;
+            qint64         m_modelReplyPendingSince = -1;
+            qint64         m_autoPublishReplyPendingSince = -1;
             bool           m_shutdown = false;
 
-            //! Post response
+            //! Post response for models
             void postedModelsResponse(QNetworkReply *nwReplyPtr);
 
+            //! Post response for auto publish
+            void postedAutoPublishResponse(QNetworkReply *nwReplyPtr);
+
             //! Kill the pending reply
-            bool killPendingReply();
+            bool killPendingModelReply();
 
             //! Reply timed out?
-            bool isReplyOverdue() const;
+            bool isModelReplyOverdue() const;
 
             //! URL model web service
             static BlackMisc::Network::CUrl getModelPublishUrl(const BlackMisc::Network::CUrl &baseUrl);
+
+            //! URL auto publish web service
+            static BlackMisc::Network::CUrl getAutoPublishUrl(const BlackMisc::Network::CUrl &baseUrl);
 
             //! Split data array
             static QList<QByteArray> splitData(const QByteArray &data, int size);

@@ -425,6 +425,12 @@ namespace BlackCore
             return CDatabaseUtils::getJsonTextMultipart(bytes, compress);
         }
 
+        QHttpPart CDatabaseUtils::getJsonTextMultipart(const QString &json, bool compress)
+        {
+            const QByteArray bytes(json.toUtf8());
+            return CDatabaseUtils::getJsonTextMultipart(bytes, compress);
+        }
+
         QHttpPart CDatabaseUtils::getJsonTextMultipart(const QJsonArray &json, bool compress)
         {
             const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));

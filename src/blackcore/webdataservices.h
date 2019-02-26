@@ -50,7 +50,11 @@ namespace BlackMisc
     template <typename T> class Restricted;
 
     namespace Aviation { class CCallsign; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+        class CAutoPublishData;
+    }
 }
 
 namespace BlackCore
@@ -386,6 +390,9 @@ namespace BlackCore
 
         //! Publish models to database
         BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &modelsToBePublished) const;
+
+        //! Auto publish to database
+        BlackMisc::CStatusMessageList asyncAutoPublish(const BlackMisc::Simulation::CAutoPublishData &data) const;
 
         //! Trigger read of DB info objects
         void triggerReadOfDbInfoObjects();
