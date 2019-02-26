@@ -14,6 +14,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/variantlist.h"
 #include "blackmisc/variant.h"
 
 #include <QByteArray>
@@ -40,6 +41,58 @@ namespace BlackMisc
     Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(const QVariant &v)
     {
         return v.value<IValueObjectMetaInfo *>();
+    }
+
+    bool CVariant::canConvert(int typeId) const
+    {
+        if (m_v.canConvert(typeId))
+        {
+            return true;
+        }
+        if (typeId == qMetaTypeId<CVariantList>())
+        {
+            return m_v.canConvert<QVector<CVariant>>() || m_v.canConvert<QVariantList>();
+        }
+        if (userType() == qMetaTypeId<CVariantList>())
+        {
+            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId)
+                || QVariant(typeId, nullptr).canConvert<QVariantList>();
+        }
+        return false;
+    }
+
+    bool CVariant::convert(int typeId)
+    {
+        if (!m_v.canConvert(typeId))
+        {
+            if (!canConvert(typeId)) { return false; }
+            if (typeId == qMetaTypeId<CVariantList>())
+            {
+                if (m_v.canConvert<QVector<CVariant>>())
+                {
+                    if (!m_v.convert(qMetaTypeId<QVector<CVariant>>())) { return false; }
+                }
+                else if (m_v.canConvert<QVariantList>())
+                {
+                    m_v.setValue(CVariantList(m_v.value<QSequentialIterable>()));
+                }
+                else { return false; }
+            }
+            if (userType() == qMetaTypeId<CVariantList>())
+            {
+                if (QVariant::fromValue(QVector<CVariant>()).canConvert(typeId))
+                {
+                    if (!m_v.convert(qMetaTypeId<QVector<CVariant>>())) { return false; }
+                }
+                else { return false; }
+            }
+        }
+        return m_v.convert(typeId);
+    }
+
+    bool CVariant::isVariantList() const
+    {
+        return userType() == qMetaTypeId<CVariantList>();
     }
 
     QString CVariant::convertToQString(bool i18n) const

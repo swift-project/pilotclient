@@ -45,6 +45,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other);
 
+            //! Construct from initializer list.
+            CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il);
+
             //! Find by designator
             CAircraftIcaoCodeList findByDesignator(const QString &designator, int fuzzySearch = -1) const;
 

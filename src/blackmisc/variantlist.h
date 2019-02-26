@@ -15,11 +15,17 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include <QVariantList>
 #include <QMetaType>
+#include <iterator>
 
 namespace BlackMisc
 {
-    //! Value object encapsulating a list of variants.
+    /*!
+     * Value object encapsulating a list of variants.
+     *
+     * A CVariant containing any registered sequential container type can be converted to a CVariantList.
+     */
     class BLACKMISC_EXPORT CVariantList :
         public CSequence<CVariant>,
         public BlackMisc::Mixin::MetaType<CVariantList>
@@ -33,6 +39,26 @@ namespace BlackMisc
 
         //! Construct from a base class object.
         CVariantList(const CSequence &other);
+
+        //! Construct from a QVariantList.
+        CVariantList(const QVariantList &other);
+
+        //! Construct from a moved QVariantList.
+        CVariantList(QVariantList &&other);
+
+        //! Construct from a QSequentialIterable.
+        CVariantList(const QSequentialIterable &other);
+
+        //! Convert to a sequence type by converting all elements.
+        template <typename T>
+        T to() const { return CVariant::from(*this).template to<T>(); }
+
+        //! Convert from a sequence type by converting all elements.
+        template <typename T>
+        static CVariantList from(const T &list) { return CVariant::from(list).template to<CVariantList>(); }
+
+        //! \copydoc BlackMisc::CValueObject::registerMetadata
+        static void registerMetadata();
     };
 }
 

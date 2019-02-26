@@ -25,6 +25,10 @@ namespace BlackMisc
             CSequence<CAircraftIcaoCode>(other)
         { }
 
+        CAircraftIcaoCodeList::CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il) :
+            CSequence<CAircraftIcaoCode>(il)
+        { }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator, int fuzzySearch) const
         {
             if (!fuzzySearch && !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }

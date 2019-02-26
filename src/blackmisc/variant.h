@@ -18,6 +18,7 @@
 #include "blackmisc/datastream.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/json.h"
+#include "blackmisc/range.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variantprivate.h"
 
@@ -36,6 +37,7 @@ namespace BlackMisc
 {
     class CIcon;
     class CPropertyIndex;
+    class CVariantList;
 
     namespace Mixin
     {
@@ -127,6 +129,8 @@ namespace BlackMisc
         public Mixin::JsonOperators<CVariant>,
         public Mixin::String<CVariant>
     {
+        template <typename> struct tag {};
+
     public:
         //! Default constructor.
         CVariant() {}
@@ -212,10 +216,10 @@ namespace BlackMisc
         template <typename T> void set(T &&value) { m_v.setValue(std::forward<T>(value)); }
 
         //! Return the value converted to the type T.
-        template <typename T> T value() const { return m_v.value<T>(); }
+        template <typename T> T value() const { return to(tag<T>()); }
 
         //! Synonym for value().
-        template <typename T> T to() const { return m_v.value<T>(); }
+        template <typename T> T to() const { return to(tag<T>()); }
 
         //! Returns the value converted to the type T, or a default if it can not be converted.
         //! \details Parameter is passed by value to avoid odr-using the argument in case it is
@@ -226,13 +230,13 @@ namespace BlackMisc
         const QVariant &getQVariant() const { return m_v; }
 
         //! True if this variant can be converted to the type with the given metatype ID.
-        bool canConvert(int typeId) const { return m_v.canConvert(typeId); }
+        bool canConvert(int typeId) const;
 
         //! True if this variant can be converted to the type T.
-        template <typename T> bool canConvert() const { return m_v.canConvert<T>(); }
+        template <typename T> bool canConvert() const { return canConvert(qMetaTypeId<T>()); }
 
         //! Convert this variant to the type with the given metatype ID and return true if successful.
-        bool convert(int typeId) { return m_v.convert(typeId); }
+        bool convert(int typeId);
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -349,17 +353,53 @@ namespace BlackMisc
         static int compareImpl(const CVariant &, const CVariant &);
         uint getValueHash() const;
 
+        template <typename T> T to(tag<T>) const
+        {
+            auto copy = *this; copy.convert(qMetaTypeId<T>()); return *static_cast<const T*>(copy.data());
+        }
+        template <typename T> QList<T> to(tag<QList<T>>) const { return toImpl<QList<T>>(); }
+        template <typename T> QVector<T> to(tag<QVector<T>>) const { return toImpl<QVector<T>>(); }
+        template <typename T> CSequence<T> to(tag<CSequence<T>>) const { return toImpl<CSequence<T>>(); }
+        template <typename T> T toImpl() const
+        {
+            using VT = typename T::value_type;
+            T result;
+            if (isVariantList()) { for (const auto &v : m_v.value<QVector<CVariant>>())   { result.push_back(v.value<VT>()); } }
+            else                 { for (const auto &v : m_v.value<QSequentialIterable>()) { result.push_back(v.value<VT>()); } }
+            return result;
+        }
+        bool isVariantList() const;
+
         template <typename F> static CVariant fromResultOfImpl(F &&func, std::true_type) { std::forward<F>(func)(); return {}; }
         template <typename F> static CVariant fromResultOfImpl(F &&func, std::false_type) { return from(std::forward<F>(func)()); }
     };
+} // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::CVariant)
+
+namespace BlackMisc
+{
     namespace Private
     {
         //! \private Needed so we can copy forward-declared CVariant.
         inline void assign(CVariant &a, const CVariant &b) { a = b; }
+
+        //! \private
+        template <typename T, typename>
+        void maybeRegisterMetaListConvert(int)
+        {
+            if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
+
+            QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
+            {
+                return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
+            });
+            QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
+            {
+                return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+            });
+        }
     }
 } // namespace
-
-Q_DECLARE_METATYPE(BlackMisc::CVariant)
 
 #endif

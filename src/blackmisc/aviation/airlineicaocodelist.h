@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other);
 
+            //! Construct from initializer list.
+            CAirlineIcaoCodeList(std::initializer_list<CAirlineIcaoCode> il);
+
             //! Find by designator
             //! Not unique because of virtual airlines
             CAirlineIcaoCodeList findByDesignator(const QString &designator) const;

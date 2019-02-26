@@ -33,6 +33,10 @@ namespace BlackMisc
             CSequence<CAirlineIcaoCode>(other)
         { }
 
+        CAirlineIcaoCodeList::CAirlineIcaoCodeList(std::initializer_list<CAirlineIcaoCode> il) :
+            CSequence<CAirlineIcaoCode>(il)
+        { }
+
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator) const
         {
             if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }

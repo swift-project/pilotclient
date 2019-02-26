@@ -80,6 +80,12 @@ namespace BlackMisc
         //! Destructor.
         ~CSequence() = default;
 
+        //! Copy of internal vector.
+        //! @{
+        QVector<T> toVector() const & { return m_impl; }
+        QVector<T> toVector() && { return std::move(m_impl); }
+        //! @}
+
         //! Returns iterator at the beginning of the sequence.
         iterator begin() { return m_impl.begin(); }
 

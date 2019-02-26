@@ -28,6 +28,9 @@ namespace BlackMisc
     class CIcon;
 
     template <typename T>
+    class CSequence;
+
+    template <typename T>
     void registerMetaValueType();
 
     namespace Private
@@ -234,11 +237,16 @@ namespace BlackMisc
         IValueObjectMetaInfo *getValueObjectMetaInfo() { return getValueObjectMetaInfo(qMetaTypeId<T>()); }
 
         //! \cond PRIVATE
+        template <typename T, typename = std::enable_if_t<std::is_base_of<CSequence<typename T::value_type>, T>::value && ! std::is_same<typename T::value_type, CVariant>::value>>
+        void maybeRegisterMetaListConvert(int);
+        template <typename T>
+        void maybeRegisterMetaListConvert(...) {}
+
         template <typename T, bool IsRegisteredMetaType /* = true */>
         struct MetaTypeHelperImpl
         {
             static constexpr int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
-            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); qRegisterMetaTypeStreamOperators<T>(); registerMetaValueType<T>(); }
+            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); qRegisterMetaTypeStreamOperators<T>(); registerMetaValueType<T>(); maybeRegisterMetaListConvert<T>(0); }
         };
 
         template <typename T>
