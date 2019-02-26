@@ -47,6 +47,9 @@ namespace BlackMisc
         //! Connect with QObject providing the name
         CIdentifiable(QObject *nameProvider);
 
+        //! Construct without a name
+        CIdentifiable() {}
+
         //! Destructor
         ~CIdentifiable();
 

@@ -76,6 +76,12 @@ namespace BlackMisc
         //! UUID string
         QString toUuidString() const;
 
+        //! Produces a DBus object path from the identifier.
+        QString toDBusObjectPath(const QString &root = {}) const;
+
+        //! Reconstruct an identifier from a DBus object path.
+        CIdentifier fromDBusObjectPath(const QString &path, const QString &root = {});
+
         //! Name
         const QString &getName() const { return m_name; }
 

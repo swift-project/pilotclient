@@ -8,6 +8,7 @@
 
 #include "blackmisc/identifier.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>
 #include <QHostInfo>
@@ -21,6 +22,25 @@
 #ifdef Q_OS_MAC
 #include <sys/sysctl.h>
 #endif
+
+//! \private Remove characters not allowed in dbus paths
+QString sanitizeForDBusPath(const QString &s)
+{
+    return BlackMisc::removeChars(s, [](QChar c) { return !c.isUpper() && !c.isLower() && !c.isDigit() && c != '_' && c != '/'; });
+}
+
+//! \private Remove characters not allowed in dbus path elements
+QString sanitizeForDBusPathElement(const QString &s)
+{
+    return BlackMisc::removeChars(s, [](QChar c) { return !c.isUpper() && !c.isLower() && !c.isDigit() && c != '_'; });
+}
+
+//! \private
+const QString &cachedSanitizedApplicationName()
+{
+    static const QString appName = sanitizeForDBusPathElement(QCoreApplication::applicationName());
+    return appName;
+}
 
 //! \private
 const QString &cachedLocalHostName()
@@ -78,7 +98,7 @@ namespace BlackMisc
           m_name(name.trimmed()),
           m_machineIdBase64(cachedMachineUniqueId().toBase64()),
           m_machineName(cachedLocalHostName()),
-          m_processName(QCoreApplication::applicationName()),
+          m_processName(cachedSanitizedApplicationName()),
           m_processId(QCoreApplication::applicationPid())
     { }
 
@@ -113,7 +133,7 @@ namespace BlackMisc
 
     const CIdentifier &CIdentifier::fake()
     {
-        static const CIdentifier id("fake", QByteArrayLiteral("0").repeated(32).toBase64(), "fake machine", "fake process", 0);
+        static const CIdentifier id("fake", QByteArrayLiteral("00000000-0000-0000-0000-000000000000").toBase64(), "fake machine", "fake process", 0);
         return id;
     }
 
@@ -153,6 +173,33 @@ namespace BlackMisc
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());
     }
 
+    QString CIdentifier::toDBusObjectPath(const QString &root) const
+    {
+        QString path = root;
+        path += '/' % sanitizeForDBusPathElement(m_machineName) % '_' % m_machineIdBase64;
+        path += '/' % sanitizeForDBusPathElement(m_processName) % '_' % QString::number(m_processId);
+
+        const QString name = sanitizeForDBusPath(m_name);
+        Q_ASSERT_X(!name.contains("//") && !name.startsWith('/') && !name.endsWith('/'), Q_FUNC_INFO, "Invalid name");
+        if (!name.isEmpty()) { path += '/' % name; }
+        return path;
+    }
+
+    CIdentifier CIdentifier::fromDBusObjectPath(const QString &path, const QString &root)
+    {
+        const QString relative = path.startsWith(root) ? path.mid(root.length()) : path;
+        const QString machine = relative.section('/', 0, 0);
+        const QString process = relative.section('/', 1, 1);
+        const QString name = relative.section('/', 2, -1);
+
+        CIdentifier result(name);
+        result.m_machineIdBase64 = machine.section('_', -1, -1);
+        result.m_machineName = machine.section('_', 0, -2);
+        result.m_processId = process.section('_', -1, -1).toInt();
+        result.m_processName = process.section('_', 0, -2);
+        return result;
+    }
+
     bool CIdentifier::hasSameMachineName(const CIdentifier &other) const
     {
         return !other.getMachineName().isEmpty() && other.getMachineName() == this->getMachineName();
@@ -181,7 +228,7 @@ namespace BlackMisc
 
     bool CIdentifier::hasApplicationProcessName() const
     {
-        return QCoreApplication::applicationName() == getProcessName();
+        return cachedSanitizedApplicationName() == sanitizeForDBusPathElement(getProcessName());
     }
 
     bool CIdentifier::isAnonymous() const
