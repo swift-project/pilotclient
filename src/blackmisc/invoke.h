@@ -11,10 +11,14 @@
 #ifndef BLACKMISC_INVOKE_H
 #define BLACKMISC_INVOKE_H
 
-#include <tuple>
 #include "blackmisc/typetraits.h"
 #include "blackmisc/integersequence.h"
+#include "blackmisc/promise.h"
+#include <QMetaObject>
 #include <QtGlobal>
+#include <QThread>
+#include <QTimer>
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -57,6 +61,17 @@ namespace BlackMisc
         {
             using seq = MaskSequence < std::make_index_sequence<sizeof...(Ts)>, ! TIsQPrivateSignal<std::decay_t<Ts>>::value... >;
             return invokeSlotImpl(std::forward<F>(func), object, std::forward_as_tuple(std::forward<Ts>(args)...), seq(), std::is_member_pointer<std::decay_t<F>>());
+        }
+
+        // Like QMetaObject::invokeMethod but the return value is accessed through a QFuture, and extra arguments can be provided.
+        template <typename T, typename F, typename... Ts>
+        auto invokeMethod(T *object, F &&func, Ts &&... args)
+        {
+            const auto invoker = [](auto &&... x) { return Private::invokeSlot(std::forward<decltype(x)>(x)...); };
+            auto method = std::bind(invoker, std::forward<F>(func), object, std::forward<Ts>(args)...);
+            CPromise<decltype(std::move(method)())> promise;
+            QMetaObject::invokeMethod(object, [promise, method = std::move(method)]() mutable { promise.setResultFrom(std::move(method)); });
+            return promise.future();
         }
 
     }

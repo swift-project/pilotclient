@@ -15,10 +15,12 @@
 #include "blackmisc/connectionguard.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/invoke.h"
+#include "blackmisc/promise.h"
 #include "blackmisc/stacktrace.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
 
+#include <QFuture>
 #include <QMetaObject>
 #include <QMetaType>
 #include <QMutex>
@@ -43,24 +45,25 @@ namespace BlackMisc
     /*!
      * Starts a single-shot timer which will call a task in the thread of the given object when it times out.
      *
-     * Differs from QTimer::singleShot in that this implementation interacts better with QObject::moveToThread.
+     * Differs from QTimer::singleShot in that this implementation interacts better with QObject::moveToThread,
+     * and returns a QFuture which can be used to detect when the task has finished or obtain its return value.
      */
-    //! @{
     template <typename F>
-    void singleShot(int msec, QObject *target, F &&task)
+    auto singleShot(int msec, QObject *target, F &&task)
     {
+        CPromise<decltype(task())> promise;
         QSharedPointer<QTimer> timer(new QTimer, [](QObject * o) { QMetaObject::invokeMethod(o, &QObject::deleteLater); });
         timer->setSingleShot(true);
         timer->moveToThread(target->thread());
-        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer]() mutable
+        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer, promise]() mutable
         {
             static_cast<void>(trace);
             timer.clear();
-            task();
+            promise.setResultFrom(task);
         });
         QMetaObject::invokeMethod(timer.data(), [t = timer.data(), msec] { t->start(msec); });
+        return promise.future();
     }
-    //! @}
 
     /*!
      * Just a subclass of QThread whose destructor waits for the thread to finish.

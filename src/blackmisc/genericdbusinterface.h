@@ -12,12 +12,14 @@
 #define BLACKMISC_GENERICDBUSINTERFACE_H
 
 #include "logmessage.h"
+#include "blackmisc/promise.h"
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include <QDBusError>
 #include <QObject>
 #include <QMetaMethod>
+#include <QSharedPointer>
 
 #ifndef Q_MOC_RUN
 /*!
@@ -100,6 +102,15 @@ namespace BlackMisc
             auto pcw = new QDBusPendingCallWatcher(pc, this);
             connect(pcw, &QDBusPendingCallWatcher::finished, callback);
             return pcw;
+        }
+
+        //! Call DBus with asynchronous return as a future
+        template <typename Ret, typename... Args>
+        QFuture<Ret> callDBusFuture(QLatin1String method, Args&&... args)
+        {
+            auto sharedPromise = QSharedPointer<CPromise<Ret>>::create();
+            this->callDBusAsync(method, [ = ](auto pcw) { sharedPromise->setResult(QDBusPendingReply<Ret>(*pcw)); }, std::forward<Args>(args)...);
+            return sharedPromise->future();
         }
 
         //! Cancel all asynchronous DBus calls which are currently pending
