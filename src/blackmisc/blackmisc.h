@@ -28,6 +28,11 @@
  */
 
 /*!
+ * \namespace BlackMisc::SharedState
+ * \brief Utilities for sharing state between multiple objects.
+ */
+
+/*!
  * \namespace BlackMisc::Predicates
  * \brief Functor classes for evaluating predicate calculus expressions.
  */

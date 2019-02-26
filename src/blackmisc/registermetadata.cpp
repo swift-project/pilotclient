@@ -17,6 +17,7 @@
 #include "blackmisc/geo/registermetadatageo.h"
 #include "blackmisc/pq/registermetadatapq.h"
 
+#include "blackmisc/sharedstate/passiveobserver.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/crashsettings.h"
@@ -99,6 +100,8 @@ namespace BlackMisc
         Simulation::registerMetadata();
         Settings::CCrashSettings::registerMetadata();
         Weather::registerMetadata();
+
+        SharedState::CAnyMatch::registerMetadata();
 
         // needed by XSwiftBus proxy class
         qDBusRegisterMetaType<CSequence<double>>();
