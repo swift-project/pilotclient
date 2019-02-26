@@ -276,7 +276,7 @@ namespace BlackMisc
             }
             break;
         default:
-            Q_ASSERT_X(false, "CDBusServer::addObject", "Wrong server mode");
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong server mode");
         }
     }
 
@@ -298,7 +298,6 @@ namespace BlackMisc
 
     void CDBusServer::removeAllObjects()
     {
-        if (m_objects.isEmpty()) { return; }
         for (const QString &path : makeKeysRange(as_const(m_objects)))
         {
             switch (m_serverMode)
@@ -310,13 +309,11 @@ namespace BlackMisc
                 QDBusConnection::systemBus().unregisterObject(path);
                 break;
             case SERVERMODE_P2P:
+                for (QDBusConnection connection : as_const(m_connections))
                 {
-                    for (QDBusConnection connection : as_const(m_connections))
-                    {
-                        connection.unregisterObject(path);
-                    }
-                    break;
+                    connection.unregisterObject(path);
                 }
+                break;
             }
         }
         m_objects.clear();
