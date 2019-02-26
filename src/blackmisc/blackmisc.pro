@@ -39,6 +39,7 @@ HEADERS +=  *.h \
             $$files($$PWD/network/external/*.h) \
             $$files($$PWD/pq/*.h) \
             $$files($$PWD/sharedstate/*.h) \
+            $$files($$PWD/sharedstate/dbus/*.h) \
             $$files($$PWD/simulation/*.h) \
             $$files($$PWD/simulation/data/*.h) \
             $$files($$PWD/simulation/settings/*.h) \
@@ -63,6 +64,7 @@ SOURCES +=  *.cpp \
             $$files($$PWD/network/external/*.cpp) \
             $$files($$PWD/pq/*.cpp) \
             $$files($$PWD/sharedstate/*.cpp) \
+            $$files($$PWD/sharedstate/dbus/*.cpp) \
             $$files($$PWD/simulation/*.cpp) \
             $$files($$PWD/simulation/data/*.cpp) \
             $$files($$PWD/simulation/settings/*.cpp) \

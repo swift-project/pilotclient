@@ -47,10 +47,8 @@ namespace BlackMisc
 
         //! For each signal in parent, attempt to connect to it an interface signal of the same name.
         //! \see BLACK_NO_RELAY
-        //! \deprecated KB 2018-08 this seems to be not used anymore and might be removed
         void relayParentSignals()
         {
-            Q_ASSERT_X(false, Q_FUNC_INFO, "crosscheck if still used");
             const QMetaObject *metaObject = this->parent()->metaObject();
             const QMetaObject *superMetaObject = metaObject;
             while (strcmp(superMetaObject->superClass()->className(), "QObject") != 0) { superMetaObject = superMetaObject->superClass(); }

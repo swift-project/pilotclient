@@ -33,6 +33,11 @@
  */
 
 /*!
+ * \namespace BlackMisc::SharedState::DBus
+ * \brief Implementation detail classes used by SharedState::CDataLinkDBus.
+ */
+
+/*!
  * \namespace BlackMisc::Predicates
  * \brief Functor classes for evaluating predicate calculus expressions.
  */
