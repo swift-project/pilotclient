@@ -182,7 +182,7 @@ namespace BlackMisc
     enum MetaFlag
     {
         DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
-        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
+        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus and QDataStream marshalling
         DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
         DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
         DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
