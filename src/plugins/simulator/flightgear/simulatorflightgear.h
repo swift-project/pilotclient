@@ -67,7 +67,6 @@ namespace BlackSimPlugin
     {
         class CXSwiftBusServiceProxy;
         class CXSwiftBusTrafficProxy;
-        class CXSwiftBusWeatherProxy;
 
         //! X-Plane data
         struct XPlaneData
@@ -153,7 +152,6 @@ namespace BlackSimPlugin
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual int physicallyRemoveAllRemoteAircraft() override;
             virtual void clearAllRemoteAircraftData() override;
-            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             virtual bool isPaused() const override
             {
                 //! \todo XP: provide correct pause state
@@ -226,7 +224,6 @@ namespace BlackSimPlugin
             QDBusServiceWatcher *m_watcher { nullptr };
             CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
             CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
-            CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
             QTimer m_fastTimer;
             QTimer m_slowTimer;
             QTimer m_airportUpdater;

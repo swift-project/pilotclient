@@ -10,7 +10,6 @@
 #include "qcompilerdetection.h"
 #include "fgswiftbusserviceproxy.h"
 #include "fgswiftbustrafficproxy.h"
-#include "fgswiftbusweatherproxy.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -253,21 +252,6 @@ namespace BlackSimPlugin
                 {
                     this->updateCockpit(com1, com2, transponder, identifier());
                 }
-
-                if (m_isWeatherActivated)
-                {
-                    const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude() };
-                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-                    {
-                        if (m_lastWeatherPosition.isNull() ||
-                                calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
-                        {
-                            m_lastWeatherPosition = currentPosition;
-                            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                            requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
-                        }
-                    }
-                }
             }
         }
 
@@ -318,7 +302,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isConnected() const
         {
-            return m_serviceProxy && m_trafficProxy && m_weatherProxy;
+            return m_serviceProxy && m_trafficProxy;
         }
 
         bool CSimulatorXPlane::connectTo()
@@ -340,12 +324,11 @@ namespace BlackSimPlugin
 
             m_serviceProxy = new CXSwiftBusServiceProxy(m_dBusConnection, this);
             m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
-            m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
             bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
                                               "Disconnected", this, SLOT(serviceUnregistered()));
             Q_ASSERT(s);
-            if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid() || !m_weatherProxy->isValid())
+            if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid())
             {
                 this->disconnectFrom();
                 return false;
@@ -375,10 +358,8 @@ namespace BlackSimPlugin
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             delete m_serviceProxy;
             delete m_trafficProxy;
-            delete m_weatherProxy;
             m_serviceProxy = nullptr;
             m_trafficProxy = nullptr;
-            m_weatherProxy = nullptr;
             this->emitSimulatorCombinedStatus();
             return true;
         }
@@ -390,10 +371,8 @@ namespace BlackSimPlugin
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             delete m_serviceProxy;
             delete m_trafficProxy;
-            delete m_weatherProxy;
             m_serviceProxy = nullptr;
             m_trafficProxy = nullptr;
-            m_weatherProxy = nullptr;
             this->emitSimulatorCombinedStatus();
         }
 
@@ -669,95 +648,6 @@ namespace BlackSimPlugin
             if (! m_trafficProxy || ! m_trafficProxy->isValid()) { return false; }
             m_trafficProxy->setFollowedAircraft(callsign.toQString());
             return true;
-        }
-
-        void CSimulatorXPlane::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
-        {
-            Q_ASSERT(isConnected());
-            m_weatherProxy->setUseRealWeather(false);
-
-            //! TODO: find the closest
-            if (weatherGrid.isEmpty()) { return; }
-            const CGridPoint gridPoint = weatherGrid.front();
-
-            // todo: find the closest
-            auto visibilityLayers = gridPoint.getVisibilityLayers();
-            visibilityLayers.sortBy(&CVisibilityLayer::getBase);
-            const CVisibilityLayer visibilityLayer = visibilityLayers.frontOrDefault();
-            m_weatherProxy->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
-
-            CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-            temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
-            const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
-            m_weatherProxy->setTemperature(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
-            m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C()));
-            m_weatherProxy->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
-
-            int layerNumber = 0;
-            CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-            auto numberOfLayers = cloudLayers.size();
-            // Fill cloud layers if less then 3
-            while (numberOfLayers < 3)
-            {
-                cloudLayers.push_back(CCloudLayer());
-                numberOfLayers++;
-            }
-            cloudLayers.sortBy(&CCloudLayer::getBase);
-            // todo: Instead of truncate, find the 3 vertical closest cloud layers
-            cloudLayers.truncate(3);
-            for (const auto &cloudLayer : as_const(cloudLayers))
-            {
-                const int base = cloudLayer.getBase().valueInteger(CLengthUnit::m());
-                const int top = cloudLayer.getTop().valueInteger(CLengthUnit::m());
-
-                int coverage = 0;
-                switch (cloudLayer.getCoverage())
-                {
-                case CCloudLayer::None: coverage = 0; break;
-                case CCloudLayer::Few: coverage = 2; break;
-                case CCloudLayer::Scattered: coverage = 3; break;
-                case CCloudLayer::Broken: coverage = 4; break;
-                case CCloudLayer::Overcast: coverage = 6; break;
-                default: coverage = 0; break;
-                }
-
-                // Clear = 0, High Cirrus = 1, Scattered = 2, Broken = 3, Overcast = 4, Stratus = 5
-                int type = 0;
-                switch (cloudLayer.getClouds())
-                {
-                case CCloudLayer::NoClouds: type = 0; break;
-                case CCloudLayer::Cirrus: type = 1; break;
-                case CCloudLayer::Stratus: type = 5; break;
-                default: type = 0; break;
-                }
-
-                m_weatherProxy->setCloudLayer(layerNumber, base, top, type, coverage);
-                layerNumber++;
-            }
-
-            layerNumber = 0;
-            CWindLayerList windLayers = gridPoint.getWindLayers();
-            numberOfLayers = windLayers.size();
-            // Fill cloud layers if less then 3
-            while (numberOfLayers < 3)
-            {
-                windLayers.push_back(CWindLayer());
-                numberOfLayers++;
-            }
-            windLayers.sortBy(&CWindLayer::getLevel);
-            // todo: Instead of truncate, find the 3 vertical closest cloud layers
-            windLayers.truncate(3);
-            for (const auto &windLayer : windLayers)
-            {
-                const int altitudeMeter = windLayer.getLevel().valueInteger(CLengthUnit::m());
-                const double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
-                const int speedKts = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
-                m_weatherProxy->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
-                layerNumber++;
-            }
-
-            m_weatherProxy->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
-            m_weatherProxy->setThunderstormRatio(0.0);
         }
 
         void CSimulatorXPlane::updateRemoteAircraft()
@@ -1186,9 +1076,8 @@ namespace BlackSimPlugin
         {
             CXSwiftBusServiceProxy service(m_conn);
             CXSwiftBusTrafficProxy traffic(m_conn);
-            CXSwiftBusWeatherProxy weather(m_conn);
 
-            bool result = service.isValid() && traffic.isValid() && weather.isValid();
+            bool result = service.isValid() && traffic.isValid();
             if (! result) { return; }
 
             if (!traffic.initialize())
