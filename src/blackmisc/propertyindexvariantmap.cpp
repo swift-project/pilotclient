@@ -92,6 +92,28 @@ namespace BlackMisc
         m_values.swap(newMap);
     }
 
+    void CPropertyIndexVariantMap::marshalToDataStream(QDataStream &stream) const
+    {
+        stream << m_values.keys();
+        stream << m_values.values();
+    }
+
+    void CPropertyIndexVariantMap::unmarshalFromDataStream(QDataStream &stream)
+    {
+        QList<CPropertyIndex> indexes;
+        QList<CVariant> values;
+        stream >> indexes;
+        stream >> values;
+        Q_ASSERT(indexes.size() == values.size());
+        QMap<CPropertyIndex, CVariant> newMap;
+        for (int i = 0; i < indexes.size(); i++)
+        {
+            newMap.insert(indexes[i], values[i]);
+        }
+        // replace values in one step
+        m_values.swap(newMap);
+    }
+
     void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const CVariant &value)
     {
         m_values.insert(index, value);

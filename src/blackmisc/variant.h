@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/json.h"
 #include "blackmisc/stringutils.h"
@@ -122,6 +123,7 @@ namespace BlackMisc
         public Mixin::EqualsByCompare<CVariant>,
         public Mixin::LessThanByCompare<CVariant>,
         public Mixin::DBusOperators<CVariant>,
+        public Mixin::DataStreamOperators<CVariant>,
         public Mixin::JsonOperators<CVariant>,
         public Mixin::String<CVariant>
     {
@@ -309,6 +311,12 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const;
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream);
 
         //! \copydoc CValueObject::compare
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }

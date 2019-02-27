@@ -44,6 +44,7 @@ namespace BlackMisc
             public Mixin::CompareByMetaClass<CTrack>,
             public Mixin::HashByMetaClass<CTrack>,
             public Mixin::DBusByMetaClass<CTrack>,
+            public Mixin::DataStreamByMetaClass<CTrack>,
             public Mixin::JsonByMetaClass<CTrack>,
             public Mixin::String<CTrack>,
             public Mixin::Index<CTrack>
@@ -55,6 +56,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CTrack)
 

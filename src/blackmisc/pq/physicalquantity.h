@@ -13,6 +13,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/json.h"
 #include "blackmisc/pq/pqstring.h"
@@ -46,6 +47,7 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity :
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
+            public Mixin::DataStreamOperators<CPhysicalQuantity<MU, PQ>>,
                     public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
                     public Mixin::Index<PQ>,
                     public Mixin::MetaType<PQ>,
@@ -218,6 +220,12 @@ namespace BlackMisc
 
             //! Unmarshal from DBus, with preserved measurement unit
             void unmarshallFromDbus(const QDBusArgument &argument, LosslessTag);
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+            void marshalToDataStream(QDataStream &stream) const;
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream);
 
             //! \copydoc BlackMisc::Mixin::HashByMetaClass::qHash
             uint getValueHash() const;

@@ -383,6 +383,16 @@ namespace BlackMisc
         }
     }
 
+    void CVariant::marshalToDataStream(QDataStream &stream) const
+    {
+        stream << m_v;
+    }
+
+    void CVariant::unmarshalFromDataStream(QDataStream &stream)
+    {
+        stream >> m_v;
+    }
+
     void CVariant::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         auto *meta = getValueObjectMetaInfo();

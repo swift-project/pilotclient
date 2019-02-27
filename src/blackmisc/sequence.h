@@ -30,6 +30,7 @@ namespace BlackMisc
     template <class T>
     class CSequence :
         public CContainerBase<CSequence<T>>,
+        public Mixin::DataStreamOperators<CSequence<T>>,
         public Mixin::Icon<CSequence<T>>
     {
     public:
@@ -559,6 +560,12 @@ namespace BlackMisc
 
         //! Greater or equal operator.
         friend bool operator >=(const CSequence &a, const CSequence &b) { return a.m_impl >= b.m_impl; }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream) { stream >> m_impl; }
 
     private:
         QVector<T> m_impl;

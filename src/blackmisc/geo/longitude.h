@@ -24,6 +24,7 @@ namespace BlackMisc
             public Mixin::MetaType<CLongitude>,
             public Mixin::String<CLongitude>,
             public Mixin::DBusOperators<CLongitude>,
+            public Mixin::DataStreamOperators<CLatitude>,
             public Mixin::Index<CLongitude>
         {
         public:

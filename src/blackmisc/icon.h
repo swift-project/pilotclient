@@ -14,6 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/json.h"
@@ -67,6 +68,7 @@ namespace BlackMisc
         public Mixin::MetaType<CIcon>,
         public Mixin::HashByMetaClass<CIcon>,
         public Mixin::DBusByMetaClass<CIcon>,
+        public Mixin::DataStreamByMetaClass<CIcon>,
         public Mixin::JsonByMetaClass<CIcon>,
         public Mixin::EqualsByMetaClass<CIcon>,
         public Mixin::LessThanByMetaClass<CIcon>,

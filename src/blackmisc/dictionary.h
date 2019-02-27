@@ -14,6 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/json.h"
@@ -96,6 +97,7 @@ namespace BlackMisc
     template<class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
+        public Mixin::DataStreamOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::String<CDictionary<Key, Value, Impl>>
     {
@@ -459,6 +461,12 @@ namespace BlackMisc
         {
             argument >> m_impl;
         }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream) { stream >> m_impl; }
 
     private:
         Impl<Key,Value> m_impl;

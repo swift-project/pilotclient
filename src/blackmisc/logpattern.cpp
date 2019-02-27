@@ -359,4 +359,26 @@ namespace BlackMisc
             if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
         }
     }
+
+    void CLogPattern::marshalToDataStream(QDataStream &stream) const
+    {
+        quint8 severities = 0;
+        for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
+
+        stream << severities << m_strategy << m_strings.toList();
+    }
+
+    void CLogPattern::unmarshalFromDataStream(QDataStream &stream)
+    {
+        quint8 severities;
+        QStringList strings;
+        stream >> severities >> m_strategy >> strings;
+        m_strings = strings.toSet();
+
+        m_severities.clear();
+        for (int s : { 0, 1, 2, 3 })
+        {
+            if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
+        }
+    }
 }

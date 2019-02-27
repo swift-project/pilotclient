@@ -14,6 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/metaclass.h"
@@ -65,10 +66,12 @@ namespace BlackMisc
         public CDictionary<QString, std::pair<CVariant, qint64>, QMap>,
         public Mixin::MetaType<CValueCachePacket>,
         public Mixin::DBusByMetaClass<CValueCachePacket>,
+        public Mixin::DataStreamByMetaClass<CValueCachePacket>,
         public Mixin::EqualsByMetaClass<CValueCachePacket>
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_DBUS(CValueCachePacket)
+        BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CValueCachePacket)
 
         //! \copydoc BlackMisc::CValueObject::base_type
         using base_type = CDictionary;

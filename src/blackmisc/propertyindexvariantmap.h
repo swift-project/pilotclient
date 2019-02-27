@@ -127,6 +127,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CPropertyIndexVariantMap :
         public Mixin::MetaType<CPropertyIndexVariantMap>,
         public Mixin::DBusOperators<CPropertyIndexVariantMap>,
+        public Mixin::DataStreamOperators<CPropertyIndexVariantMap>,
         public Mixin::String<CPropertyIndexVariantMap>
     {
     public:
@@ -216,6 +217,12 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const;
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream);
     };
 
     namespace Mixin

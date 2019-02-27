@@ -41,6 +41,7 @@ namespace BlackMisc
             public Mixin::CompareByMetaClass<CHeading>,
             public Mixin::HashByMetaClass<CHeading>,
             public Mixin::DBusByMetaClass<CHeading>,
+            public Mixin::DataStreamByMetaClass<CHeading>,
             public Mixin::JsonByMetaClass<CHeading>,
             public Mixin::String<CHeading>,
             public Mixin::Index<CHeading>
@@ -52,6 +53,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CHeading)
+            BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CHeading)
 

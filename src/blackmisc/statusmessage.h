@@ -53,6 +53,7 @@ namespace BlackMisc
         public Mixin::EqualsByCompare<CStrongStringView>,
         public Mixin::LessThanByCompare<CStrongStringView>,
         public Mixin::DBusOperators<CStrongStringView>,
+        public Mixin::DataStreamOperators<CStrongStringView>,
         public Mixin::JsonOperators<CStrongStringView>,
         public Mixin::String<CStrongStringView>
     {
@@ -108,6 +109,12 @@ namespace BlackMisc
         //! @{
         void marshallToDbus(QDBusArgument &arg) const { arg << toQString(); }
         void unmarshallFromDbus(const QDBusArgument &arg) { arg >> m_string; m_view = m_string; }
+        //! @}
+
+        //! QDataStream marshalling.
+        //! @{
+        void marshalToDataStream(QDataStream &stream) const { stream << toQString(); }
+        void unmarshalFromDataStream(QDataStream &stream) { stream >> m_string; m_view = m_string; }
         //! @}
 
         //! JSON conversion.

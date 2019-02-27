@@ -14,6 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/json.h"
 #include "blackmisc/metaclass.h"
@@ -62,6 +63,7 @@ namespace BlackMisc
         public Mixin::MetaType<CPropertyIndex>,
         public Mixin::HashByMetaClass<CPropertyIndex>,
         public Mixin::DBusByMetaClass<CPropertyIndex>,
+        public Mixin::DataStreamByMetaClass<CPropertyIndex>,
         public Mixin::JsonOperators<CPropertyIndex>,
         public Mixin::EqualsByMetaClass<CPropertyIndex>,
         public Mixin::LessThanByMetaClass<CPropertyIndex>,

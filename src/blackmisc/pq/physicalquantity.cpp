@@ -189,6 +189,24 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::marshalToDataStream(QDataStream &stream) const
+        {
+            constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
+            stream << (this->isNull() ? NaN : this->value(UnitClass::defaultUnit()));
+        }
+
+        template <class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::unmarshalFromDataStream(QDataStream &stream)
+        {
+            stream >> m_value;
+            m_unit = UnitClass::defaultUnit();
+            if (std::isnan(m_value))
+            {
+                this->setNull();
+            }
+        }
+
+        template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double factor)
         {
             m_value *= factor;

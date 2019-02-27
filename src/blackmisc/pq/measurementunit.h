@@ -271,6 +271,20 @@ namespace BlackMisc
                 (*this) = CMeasurementUnit::None();
             }
 
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+            void marshalToDataStream(QDataStream &stream) const
+            {
+                stream << QString(m_data->m_symbol);
+            }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &)
+            {
+                // the concrete implementations will override this default
+                // this is required so that None can be marshalled
+                *this = CMeasurementUnit::None();
+            }
+
             //! Equal operator ==
             friend bool operator == (const CMeasurementUnit &a, const CMeasurementUnit &b)
             {

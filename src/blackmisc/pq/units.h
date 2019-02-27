@@ -44,6 +44,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CLengthUnit>,
             public Mixin::DBusOperators<CLengthUnit>,
+            public Mixin::DataStreamOperators<CLengthUnit>,
             public Mixin::Index<CLengthUnit>
         {
         private:
@@ -152,6 +153,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CLengthUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CLengthUnit>(unitName);
+            }
         };
 
         //! Specialized class for angles (degrees, radian).
@@ -159,6 +168,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CAngleUnit>,
             public Mixin::DBusOperators<CAngleUnit>,
+            public Mixin::DataStreamOperators<CAngleUnit>,
             public Mixin::Index<CAngleUnit>
         {
         private:
@@ -245,6 +255,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CAngleUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CAngleUnit>(unitName);
+            }
         };
 
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
@@ -252,6 +270,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CFrequencyUnit>,
             public Mixin::DBusOperators<CFrequencyUnit>,
+            public Mixin::DataStreamOperators<CFrequencyUnit>,
             public Mixin::Index<CFrequencyUnit>
         {
         private:
@@ -332,6 +351,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unitName);
+            }
         };
 
         //! Specialized class for mass units (kg, lbs).
@@ -339,6 +366,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CMassUnit>,
             public Mixin::DBusOperators<CMassUnit>,
+            public Mixin::DataStreamOperators<CMassUnit>,
             public Mixin::Index<CMassUnit>
         {
         private:
@@ -428,6 +456,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CMassUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CMassUnit>(unitName);
+            }
         };
 
         //! Specialized class for pressure (psi, hPa, bar).
@@ -435,6 +471,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CPressureUnit>,
             public Mixin::DBusOperators<CPressureUnit>,
+            public Mixin::DataStreamOperators<CPressureUnit>,
             public Mixin::Index<CPressureUnit>
         {
         private:
@@ -541,6 +578,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CPressureUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CPressureUnit>(unitName);
+            }
         };
 
         //! Specialized class for temperatur units (kelvin, centidegree).
@@ -548,6 +593,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CTemperatureUnit>,
             public Mixin::DBusOperators<CTemperatureUnit>,
+            public Mixin::DataStreamOperators<CTemperatureUnit>,
             public Mixin::Index<CTemperatureUnit>
         {
         private:
@@ -629,6 +675,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unitName);
+            }
         };
 
         //! Specialized class for speed units (m/s, ft/s, NM/h).
@@ -636,6 +690,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CSpeedUnit>,
             public Mixin::DBusOperators<CSpeedUnit>,
+            public Mixin::DataStreamOperators<CSpeedUnit>,
             public Mixin::Index<CSpeedUnit>
         {
         private:
@@ -735,6 +790,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unitName);
+            }
         };
 
         //! Specialized class for time units (ms, hour, min).
@@ -742,6 +805,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CTimeUnit>,
             public Mixin::DBusOperators<CTimeUnit>,
+            public Mixin::DataStreamOperators<CTimeUnit>,
             public Mixin::Index<CTimeUnit>
         {
         private:
@@ -863,6 +927,14 @@ namespace BlackMisc
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CTimeUnit>(unitName);
             }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CTimeUnit>(unitName);
+            }
         };
 
         //! Specialized class for acceleration units (m/s2, ft/s2).
@@ -870,6 +942,7 @@ namespace BlackMisc
             public CMeasurementUnit,
             public Mixin::MetaType<CAccelerationUnit>,
             public Mixin::DBusOperators<CAccelerationUnit>,
+            public Mixin::DataStreamOperators<CAccelerationUnit>,
             public Mixin::Index<CAccelerationUnit>
         {
         private:
@@ -933,6 +1006,14 @@ namespace BlackMisc
                 QString unitName;
                 argument >> unitName;
                 (*this) = CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unitName);
+            }
+
+            //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+            void unmarshalFromDataStream(QDataStream &stream)
+            {
+                QString unitName;
+                stream >> unitName;
+                *this = CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unitName);
             }
         };
 

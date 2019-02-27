@@ -17,6 +17,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
@@ -46,6 +47,7 @@ namespace BlackMisc
             public Mixin::HashByMetaClass<CAltitude>,
             public Mixin::DBusByMetaClass<CAltitude>,
             public Mixin::DBusByMetaClass<CAltitude, LosslessTag>,
+            public Mixin::DataStreamByMetaClass<CAltitude>,
             public Mixin::JsonByMetaClass<CAltitude>,
             public Mixin::String<CAltitude>,
             public Mixin::Icon<CAltitude>,
@@ -59,6 +61,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude, LosslessTag)
+            BLACKMISC_DECLARE_USING_MIXIN_DATASTREAM(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_ICON(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CAltitude)

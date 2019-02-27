@@ -14,6 +14,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/datastream.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
@@ -44,6 +45,7 @@ namespace BlackMisc
         public Mixin::HashByMetaClass<CLogPattern>,
         public Mixin::EqualsByMetaClass<CLogPattern>,
         public Mixin::DBusOperators<CLogPattern>,
+        public Mixin::DataStreamOperators<CLogPattern>,
         public Mixin::Index<CLogPattern>,
         public Mixin::String<CLogPattern>,
         public Mixin::Icon<CLogPattern>
@@ -106,6 +108,12 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus()
         void unmarshallFromDbus(const QDBusArgument &argument);
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const;
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream);
 
     private:
         bool checkInvariants() const;

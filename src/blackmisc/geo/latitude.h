@@ -24,6 +24,7 @@ namespace BlackMisc
             public Mixin::MetaType<CLatitude>,
             public Mixin::String<CLatitude>,
             public Mixin::DBusOperators<CLatitude>,
+            public Mixin::DataStreamOperators<CLatitude>,
             public Mixin::Index<CLatitude>
         {
         public:

@@ -12,6 +12,7 @@
 #define BLACKMISC_COLLECTION_H
 
 #include "containerbase.h"
+#include "datastream.h"
 #include "icon.h"
 #include <QMap>
 #include <algorithm>
@@ -54,6 +55,7 @@ namespace BlackMisc
     template <class T>
     class CCollection :
         public CContainerBase<CCollection<T>>,
+        public Mixin::DataStreamOperators<CCollection<T>>,
         public Mixin::Icon<CCollection<T>>
     {
     public:
@@ -269,6 +271,12 @@ namespace BlackMisc
 
         //! Test for inequality.
         friend bool operator !=(const CCollection &a, const CCollection &b) { return a.m_impl != b.m_impl; }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        void unmarshalFromDataStream(QDataStream &stream) { stream >> m_impl; }
 
     private:
         QOrderedSet<T> m_impl;

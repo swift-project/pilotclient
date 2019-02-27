@@ -13,6 +13,7 @@
 
 #include "blackmiscexport.h"
 #include "dbus.h"
+#include "datastream.h"
 #include "metaclass.h"
 #include "json.h"
 #include "compare.h"
@@ -71,6 +72,7 @@ namespace BlackMisc
         public Mixin::MetaType<Derived>,
         public Mixin::HashByMetaClass<Derived>,
         public Mixin::DBusByMetaClass<Derived>,
+        public Mixin::DataStreamByMetaClass<Derived>,
         public Mixin::JsonByMetaClass<Derived>,
         public Mixin::EqualsByMetaClass<Derived>,
         public Mixin::LessThanByMetaClass<Derived>,
@@ -160,6 +162,12 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         using Mixin::DBusByMetaClass<Derived>::unmarshallFromDbus;
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
+        using Mixin::DataStreamByMetaClass<Derived>::marshalToDataStream;
+
+        //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::unmarshalFromDataStream
+        using Mixin::DataStreamByMetaClass<Derived>::unmarshalFromDataStream;
     };
 
 } // namespace
