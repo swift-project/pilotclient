@@ -16,17 +16,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
-        {
-            if (this == &other) return true;
-            return m_data->m_name == other.m_data->m_name;
-        }
-
-        bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
-        {
-            return !(other == *this);
-        }
-
         double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
         {
             if (this->isNull() || unit.isNull()) return 0;

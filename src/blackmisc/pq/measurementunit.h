@@ -272,10 +272,17 @@ namespace BlackMisc
             }
 
             //! Equal operator ==
-            bool operator == (const CMeasurementUnit &other) const;
+            friend bool operator == (const CMeasurementUnit &a, const CMeasurementUnit &b)
+            {
+                if (&a == &b) return true;
+                return a.m_data->m_name == b.m_data->m_name;
+            }
 
             //! Unequal operator !=
-            bool operator != (const CMeasurementUnit &other) const;
+            friend bool operator != (const CMeasurementUnit &a, const CMeasurementUnit &b)
+            {
+                return !(a == b);
+            }
 
             //! \copydoc CValueObject::qHash
             friend uint qHash(const CMeasurementUnit &unit)

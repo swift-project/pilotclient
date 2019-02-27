@@ -265,10 +265,10 @@ namespace BlackMisc
         void detach() { m_impl.detach(); }
 
         //! Test for equality.
-        bool operator ==(const CCollection &other) const { return m_impl == other.m_impl; }
+        friend bool operator ==(const CCollection &a, const CCollection &b) { return a.m_impl == b.m_impl; }
 
         //! Test for inequality.
-        bool operator !=(const CCollection &other) const { return m_impl != other.m_impl; }
+        friend bool operator !=(const CCollection &a, const CCollection &b) { return a.m_impl != b.m_impl; }
 
     private:
         QOrderedSet<T> m_impl;

@@ -76,7 +76,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
+        bool CPhysicalQuantity<MU, PQ>::equals(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (this == &other) return true;
 
@@ -88,24 +88,10 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator !=(const CPhysicalQuantity<MU, PQ> &other) const
-        {
-            return !((*this) == other);
-        }
-
-        template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &other)
         {
             m_value += other.value(m_unit);
             return *this;
-        }
-
-        template <class MU, class PQ>
-        PQ CPhysicalQuantity<MU, PQ>::operator +(const PQ &other) const
-        {
-            PQ copy(other);
-            copy += *this;
-            return copy;
         }
 
         template <class MU, class PQ>
@@ -125,14 +111,6 @@ namespace BlackMisc
         {
             m_value -= other.value(m_unit);
             return *this;
-        }
-
-        template <class MU, class PQ>
-        PQ CPhysicalQuantity<MU, PQ>::operator -(const PQ &other) const
-        {
-            PQ copy = *derived();
-            copy -= other;
-            return copy;
         }
 
         template <class MU, class PQ>
@@ -241,32 +219,12 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator <(const CPhysicalQuantity<MU, PQ> &other) const
+        bool CPhysicalQuantity<MU, PQ>::lessThan(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return false;
             if (this->isNull() || other.isNull()) return false;
 
             return (m_value < other.value(m_unit));
-        }
-
-        template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator >(const CPhysicalQuantity<MU, PQ> &other) const
-        {
-            return other < *this;
-        }
-
-        template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator >=(const CPhysicalQuantity<MU, PQ> &other) const
-        {
-            if (*this == other) return true;
-            return *this > other;
-        }
-
-        template <class MU, class PQ>
-        bool CPhysicalQuantity<MU, PQ>::operator <=(const CPhysicalQuantity<MU, PQ> &other) const
-        {
-            if (*this == other) return true;
-            return *this < other;
         }
 
         template <class MU, class PQ>

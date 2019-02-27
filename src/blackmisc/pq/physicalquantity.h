@@ -160,10 +160,10 @@ namespace BlackMisc
             PQ operator /(double divide) const;
 
             //! Equal operator ==
-            bool operator==(const CPhysicalQuantity &other) const;
+            friend bool operator==(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return a.equals(b); }
 
             //! Not equal operator !=
-            bool operator!=(const CPhysicalQuantity &other) const;
+            friend bool operator!=(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return !a.equals(b); }
 
             //! Plus operator +=
             CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
@@ -172,22 +172,22 @@ namespace BlackMisc
             CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
             //! Greater operator >
-            bool operator >(const CPhysicalQuantity &other) const;
+            friend bool operator>(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return b.lessThan(a); }
 
             //! Less operator <
-            bool operator <(const CPhysicalQuantity &other) const;
+            friend bool operator<(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return a.lessThan(b); }
 
             //! Less equal operator <=
-            bool operator <=(const CPhysicalQuantity &other) const;
+            friend bool operator<=(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return !b.lessThan(a); }
 
             //! Greater equal operator >=
-            bool operator >=(const CPhysicalQuantity &other) const;
+            friend bool operator>=(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return !a.lessThan(b); }
 
             //! Plus operator +
-            PQ operator +(const PQ &other) const;
+            friend PQ operator +(const PQ &a, const PQ &b) { PQ copy(a); copy += b; return copy; }
 
             //! Minus operator -
-            PQ operator -(const PQ &other) const;
+            friend PQ operator -(const PQ &a, const PQ &b) { PQ copy(a); copy -= b; return copy; }
 
             //! Quantity value <= epsilon
             bool isZeroEpsilonConsidered() const;
@@ -280,6 +280,12 @@ namespace BlackMisc
 
             //! Implementation of compare
             static int compareImpl(const PQ &, const PQ &);
+
+            //! Private implementation of equality operators
+            bool equals(const CPhysicalQuantity &other) const;
+
+            //! Private implementation of comparison operators
+            bool lessThan(const CPhysicalQuantity &other) const;
 
             //! Easy access to derived class (CRTP template parameter)
             PQ const *derived() const;
