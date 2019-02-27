@@ -318,6 +318,13 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::isWeatherActivated
+            virtual bool isWeatherActivated() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::setWeatherActivated
             virtual void setWeatherActivated(bool activated) override
             {

@@ -278,6 +278,9 @@ namespace BlackCore
             //! Reset model by matching it again
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+            //! Is simulator weather activated or deactivated?
+            virtual bool isWeatherActivated() const = 0;
+
             //! Activates or deactivates simulator weather
             virtual void setWeatherActivated(bool activated) = 0;
 

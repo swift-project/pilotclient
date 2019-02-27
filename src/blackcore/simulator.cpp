@@ -116,6 +116,11 @@ namespace BlackCore
         this->setUpdateAllRemoteAircraft();
     }
 
+    bool ISimulator::isWeatherActivated() const
+    {
+        return m_isWeatherActivated;
+    }
+
     void ISimulator::setWeatherActivated(bool activated)
     {
         m_isWeatherActivated = activated;

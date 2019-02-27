@@ -177,6 +177,9 @@ namespace BlackCore
         //! Recalculate all aircraft
         virtual void recalculateAllAircraft();
 
+        //! Weather activated
+        virtual bool isWeatherActivated() const ;
+
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated);
 

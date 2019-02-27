@@ -979,10 +979,15 @@ namespace BlackCore
             return true;
         }
 
+        bool CContextSimulator::isWeatherActivated() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return m_isWeatherActivated; }
+            return m_simulatorPlugin.second->isWeatherActivated();
+        }
+
         void CContextSimulator::setWeatherActivated(bool activated)
         {
-            m_isWeatherActivated = activated;
-
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
             m_simulatorPlugin.second->setWeatherActivated(activated);
