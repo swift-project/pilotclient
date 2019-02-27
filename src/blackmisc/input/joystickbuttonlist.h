@@ -32,6 +32,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CJoystickButtonList)
+            using CSequence::CSequence;
 
             //! Default constructor
             CJoystickButtonList() = default;

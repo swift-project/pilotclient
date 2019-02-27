@@ -38,6 +38,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTextMessageList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CTextMessageList();

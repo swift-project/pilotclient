@@ -37,6 +37,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CStatusMessageList)
+        using CSequence::CSequence;
 
         //! Constructor
         CStatusMessageList() {}

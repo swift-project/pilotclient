@@ -35,6 +35,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRoleList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CRoleList();

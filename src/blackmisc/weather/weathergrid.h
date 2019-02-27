@@ -36,6 +36,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CWeatherGrid)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CWeatherGrid() = default;

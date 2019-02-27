@@ -61,6 +61,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftModelList)
+            using CSequence::CSequence;
 
             //! Empty constructor.
             CAircraftModelList();

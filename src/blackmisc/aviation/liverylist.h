@@ -35,6 +35,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLiveryList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CLiveryList();

@@ -27,6 +27,8 @@ namespace BlackMisc
         //! Value object for a set of callsigns.
         class BLACKMISC_EXPORT CCallsignSet : public CCollection<CCallsign>
         {
+            using CCollection::CCollection;
+
         public:
             //! Default constructor.
             CCallsignSet();

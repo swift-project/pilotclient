@@ -45,6 +45,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatedAircraftList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CSimulatedAircraftList();

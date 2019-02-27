@@ -36,6 +36,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTemperatureLayerList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CTemperatureLayerList() = default;

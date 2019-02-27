@@ -36,6 +36,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CLogCategoryList : public CSequence<CLogCategory>
     {
+        using CSequence::CSequence;
+
     public:
         //! Empty constructor.
         CLogCategoryList() = default;

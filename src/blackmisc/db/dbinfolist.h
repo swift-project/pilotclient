@@ -32,6 +32,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDbInfoList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CDbInfoList();

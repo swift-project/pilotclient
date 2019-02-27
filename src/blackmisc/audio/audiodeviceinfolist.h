@@ -30,6 +30,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAudioDeviceInfoList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CAudioDeviceInfoList();

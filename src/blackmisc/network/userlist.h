@@ -29,6 +29,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUserList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CUserList();

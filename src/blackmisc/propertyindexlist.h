@@ -28,6 +28,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPropertyIndexList)
+        using CSequence::CSequence;
 
         //! Default constructor.
         CPropertyIndexList();

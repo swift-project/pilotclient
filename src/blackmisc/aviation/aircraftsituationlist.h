@@ -45,6 +45,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftSituationList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CAircraftSituationList();

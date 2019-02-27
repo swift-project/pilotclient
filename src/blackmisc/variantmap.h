@@ -38,6 +38,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVariantMap)
+        using CDictionary::CDictionary;
 
         //! Default constructor.
         CVariantMap() {}

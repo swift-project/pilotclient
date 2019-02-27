@@ -28,6 +28,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMatchingStatistics)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CMatchingStatistics();

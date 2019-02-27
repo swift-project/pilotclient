@@ -37,6 +37,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftIcaoCodeList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CAircraftIcaoCodeList();

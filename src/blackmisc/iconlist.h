@@ -31,6 +31,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CIconList : public CSequence<CIcon>
     {
+        using CSequence::CSequence;
+
     public:
         //! Constructor
         CIconList() {}

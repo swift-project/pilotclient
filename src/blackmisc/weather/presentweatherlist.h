@@ -32,6 +32,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPresentWeatherList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CPresentWeatherList() = default;

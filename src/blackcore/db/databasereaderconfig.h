@@ -95,6 +95,7 @@ namespace BlackCore
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDatabaseReaderConfigList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CDatabaseReaderConfigList() = default;

@@ -36,6 +36,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCoordinateGeodeticList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CCoordinateGeodeticList();

@@ -39,9 +39,7 @@ namespace BlackMisc
             {
             public:
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
-
-                //! Constructor
-                CAircraftCfgEntriesList() {}
+                using CSequence::CSequence;
 
                 //! Contains model with title?
                 bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);

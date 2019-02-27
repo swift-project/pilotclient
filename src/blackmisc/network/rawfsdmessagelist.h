@@ -33,6 +33,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRawFsdMessageList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CRawFsdMessageList();

@@ -24,6 +24,8 @@ namespace BlackMisc
     //! Value object for a set of platforms.
     class BLACKMISC_EXPORT CPlatformSet : public CCollection<CPlatform>
     {
+        using CCollection::CCollection;
+
     public:
         //! Default constructor.
         CPlatformSet();

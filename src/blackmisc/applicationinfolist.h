@@ -26,6 +26,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CApplicationInfoList)
+        using CSequence::CSequence;
 
         //! Default constructor.
         CApplicationInfoList();

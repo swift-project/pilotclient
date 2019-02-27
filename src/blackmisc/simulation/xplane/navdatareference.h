@@ -90,6 +90,7 @@ namespace BlackMisc
             {
             public:
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNavDataReferenceList)
+                using CSequence::CSequence;
 
                 //! Default constructor.
                 CNavDataReferenceList();

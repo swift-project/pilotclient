@@ -26,6 +26,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVariantList)
+        using CSequence::CSequence;
 
         //! Default constructor.
         CVariantList() {}

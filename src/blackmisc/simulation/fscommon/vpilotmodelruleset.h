@@ -37,6 +37,7 @@ namespace BlackMisc
             {
             public:
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVPilotModelRuleSet)
+                using CCollection::CCollection;
 
                 //! Default constructor.
                 CVPilotModelRuleSet() = default;

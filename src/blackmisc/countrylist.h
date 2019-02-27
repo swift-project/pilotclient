@@ -35,6 +35,7 @@ namespace BlackMisc
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCountryList)
+        using CSequence::CSequence;
 
         //! Default constructor.
         CCountryList();

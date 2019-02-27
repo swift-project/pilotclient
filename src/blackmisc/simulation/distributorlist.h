@@ -38,6 +38,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributorList)
+            using CSequence::CSequence;
 
             //! Default constructor.
             CDistributorList();

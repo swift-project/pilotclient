@@ -33,6 +33,7 @@ namespace BlackMisc
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CWeatherDataPluginInfoList)
+            using CSequence::CSequence;
 
             //! Default constructor
             CWeatherDataPluginInfoList();
@@ -42,7 +43,6 @@ namespace BlackMisc
 
             //! String list with meaningful representations
             QStringList toStringList(bool i18n = false) const;
-
         };
     } // ns
 } // ns

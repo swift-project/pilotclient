@@ -24,6 +24,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CIdentifierSet : public CCollection<CIdentifier>
     {
+        using CCollection::CCollection;
+
     public:
         //! Default constructor.
         CIdentifierSet();
