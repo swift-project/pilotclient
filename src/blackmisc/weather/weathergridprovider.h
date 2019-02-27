@@ -27,6 +27,18 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IWeatherGridProvider
         {
         public:
+            //! Copy constructor
+            IWeatherGridProvider() = default;
+
+            //! Copy constructor
+            IWeatherGridProvider(const IWeatherGridProvider &) = delete;
+
+            //! Copy assignment operator
+            IWeatherGridProvider &operator =(const IWeatherGridProvider &) = delete;
+
+            //! Destructor
+            virtual ~IWeatherGridProvider() {}
+
             //! Request weather grid
             virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
                                             const CSlot<void(const CWeatherGrid &)> &callback) = 0;
