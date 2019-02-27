@@ -663,7 +663,6 @@ namespace BlackSimPlugin
 
             // interpolation for all remote aircraft
             PlanesPositions planesPositions;
-            PlanesSurfaces planesSurfaces;
             PlanesTransponders planesTransponders;
 
             int aircraftNumber = 0;
@@ -707,31 +706,6 @@ namespace BlackSimPlugin
                     CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus()));
                 }
 
-                const CAircraftParts parts(result);
-                if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
-                {
-                    if (updateAllAircraft || !this->isEqualLastSent(parts, callsign))
-                    {
-                        this->rememberLastSent(parts, callsign);
-                        planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
-                        planesSurfaces.gears.push_back(parts.isGearDown() ? 1 : 0);
-                        planesSurfaces.flaps.push_back(parts.getFlapsPercent() / 100.0);
-                        planesSurfaces.spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
-                        planesSurfaces.speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
-                        planesSurfaces.slats.push_back(parts.getFlapsPercent() / 100.0);
-                        planesSurfaces.wingSweeps.push_back(0.0);
-                        planesSurfaces.thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
-                        planesSurfaces.elevators.push_back(0.0);
-                        planesSurfaces.rudders.push_back(0.0);
-                        planesSurfaces.ailerons.push_back(0.0);
-                        planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
-                        planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
-                        planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
-                        planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
-                        planesSurfaces.lightPatterns.push_back(0);
-                    }
-                }
-
             } // all callsigns
 
             if (!planesTransponders.isEmpty())
@@ -746,11 +720,6 @@ namespace BlackSimPlugin
                     Q_ASSERT_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
                 }
                 m_trafficProxy->setPlanesPositions(planesPositions);
-            }
-
-            if (! planesSurfaces.isEmpty())
-            {
-                m_trafficProxy->setPlanesSurfaces(planesSurfaces);
             }
 
             // stats

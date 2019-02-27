@@ -192,9 +192,6 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::setPlanesPositions
             void setPlanesPositions(const BlackSimPlugin::XPlane::PlanesPositions &planesPositions);
 
-            //! \copydoc XSwiftBus::CTraffic::setPlanesSurfaces
-            void setPlanesSurfaces(const BlackSimPlugin::XPlane::PlanesSurfaces &planesSurfaces);
-
             //! \copydoc XSwiftBus::CTraffic::setPlanesTransponders
             void setPlanesTransponders(const BlackSimPlugin::XPlane::PlanesTransponders &planesTransponders);
 
