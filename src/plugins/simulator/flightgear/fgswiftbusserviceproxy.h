@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
-#define BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
+#ifndef BLACKSIMPLUGIN_FGSWIFTBUS_SERVICE_PROXY_H
+#define BLACKSIMPLUGIN_FGSWIFTBUS_SERVICE_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 
@@ -27,20 +27,20 @@ class QDBusConnection;
 class QDBusPendingCallWatcher;
 
 //! \cond PRIVATE
-#define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
-#define XSWIFTBUS_SERVICE_OBJECTPATH "/xswiftbus/service"
+#define FGSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.fgswiftbus.service"
+#define FGSWIFTBUS_SERVICE_OBJECTPATH "/fgswiftbus/service"
 //! \endcond
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
-        struct XPlaneData;
+        struct FlightgearData;
 
         /*!
-         * Proxy object connected to a real XSwiftBus::CService object via DBus
+         * Proxy object connected to a real FGSwiftBus::CService object via DBus
          */
-        class CXSwiftBusServiceProxy : public QObject
+        class CFGSwiftBusServiceProxy : public QObject
         {
             Q_OBJECT
 
@@ -48,19 +48,19 @@ namespace BlackSimPlugin
             //! Service name
             static const QString &InterfaceName()
             {
-                static const QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
+                static const QString s(FGSWIFTBUS_SERVICE_INTERFACENAME);
                 return s;
             }
 
             //! Service path
             static const QString &ObjectPath()
             {
-                static const QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
+                static const QString s(FGSWIFTBUS_SERVICE_OBJECTPATH);
                 return s;
             }
 
             //! Constructor
-            CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
+            CFGSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
 
             //! Does the remote object exist?
             bool isValid() const { return m_dbusInterface->isValid(); }
@@ -97,112 +97,100 @@ namespace BlackSimPlugin
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
         public slots:
-            //! Get XSwiftBus version number
+            //! Get FGSwiftBus version number
             QString getVersionNumber();
 
             //! Get own aircraft situation data
-            void getOwnAircraftSituationData(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+            void getOwnAircraftSituationData(BlackSimPlugin::Flightgear::FlightgearData *o_flightgearData);
 
-            //! \copydoc XSwiftBus::CService::addTextMessage
+            //! \copydoc FGSwiftBus::CService::addTextMessage
             void addTextMessage(const QString &text);
 
-            //! \copydoc XSwiftBus::CService::getAircraftModelPath
+            //! \copydoc FGSwiftBus::CService::getAircraftModelPath
             //! @{
             QString getAircraftModelPath() const;
             void getAircraftModelPathAsync(QString *o_modelPath);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftModelFilename
+            //! \copydoc FGSwiftBus::CService::getAircraftModelFilename
             //! @{
             QString getAircraftModelFilename() const;
             void getAircraftModelFilenameAsync(QString *o_modelFilename);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftLivery
+            //! \copydoc FGSwiftBus::CService::getAircraftLivery
             //! @{
             QString getAircraftLivery() const;
             void getAircraftLiveryAsync(QString *o_modelLivery);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftIcaoCode
+            //! \copydoc FGSwiftBus::CService::getAircraftIcaoCode
             //! @{
             QString getAircraftIcaoCode() const;
             void getAircraftIcaoCodeAsync(QString *o_icaoCode);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftDescription
+            //! \copydoc FGSwiftBus::CService::getAircraftDescription
             //! @{
             QString getAircraftDescription() const;
             void getAircraftDescriptionAsync(QString *o_description);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftModelString
+            //! \copydoc FGSwiftBus::CService::getAircraftModelString
             //! @{
             QString getAircraftModelString() const;
             void getAircraftModelStringAsync(QString *o_modelString);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAircraftName
+            //! \copydoc FGSwiftBus::CService::getAircraftName
             //! @{
             QString getAircraftName() const;
             void getAircraftNameAsync(QString *o_name);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getXPlaneInstallationPath
-            //! @{
-            QString getXPlaneInstallationPath() const;
-            void getXPlaneInstallationPathAsync(QString *o_installPath);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::getXPlanePreferencesPath
-            //! @{
-            QString getXPlanePreferencesPath() const;
-            void getXPlanePreferencesPathAsync(QString *o_prefsPath);
-            //! @}
-
-            //! \copydoc XSwiftBus::CService::isPaused
+            //! \copydoc FGSwiftBus::CService::isPaused
             //! @{
             bool isPaused() const;
             void isPausedAsync(bool *o_paused);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLatitudeDeg
+            //! \copydoc FGSwiftBus::CService::getLatitudeDeg
             //! @{
             double getLatitudeDeg() const;
             void getLatitudeDegAsync(double *o_latitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLongitudeDeg
+            //! \copydoc FGSwiftBus::CService::getLongitudeDeg
             //! @{
             double getLongitudeDeg() const;
             void getLongitudeDegAsync(double *o_longitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getAltitudeMslFt
+            //! \copydoc FGSwiftBus::CService::getAltitudeMslFt
             //! @{
             double getAltitudeMslFt() const;
             void getAltitudeMslFtAsync(double *o_altitude);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getHeightAglFt
+            //! \copydoc FGSwiftBus::CService::getHeightAglFt
             //! @{
             double getHeightAglFt() const;
             void getHeightAglFtAsync(double *o_height);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getGroundSpeedKts
+            //! \copydoc FGSwiftBus::CService::getGroundSpeedKts
             //! @{
             double getGroundSpeedKts() const;
             void getGroundSpeedKtsAsync(double *o_groundspeed);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getPitchDeg
+            //! \copydoc FGSwiftBus::CService::getPitchDeg
             //! @{
             double getPitchDeg() const;
             void getPitchDegAsync(double *o_pitch);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getRollDeg
+            //! \copydoc FGSwiftBus::CService::getRollDeg
             //! @{
             double getRollDeg() const;
             void getRollDegAsync(double *o_roll);
@@ -214,122 +202,122 @@ namespace BlackSimPlugin
             void getAllWheelsOnGroundAsync(bool *o_allWheels);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom1ActiveKhz
+            //! \copydoc FGSwiftBus::CService::getCom1ActiveKhz
             //! @{
             int getCom1ActiveKhz() const;
             void getCom1ActiveKhzAsync(int *o_com1Active);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom1StandbyKhz
+            //! \copydoc FGSwiftBus::CService::getCom1StandbyKhz
             //! @{
             int getCom1StandbyKhz() const;
             void getCom1StandbyKhzAsync(int *o_com1Standby);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom2ActiveKhz
+            //! \copydoc FGSwiftBus::CService::getCom2ActiveKhz
             //! @{
             int getCom2ActiveKhz() const;
             void getCom2ActiveKhzAsync(int *o_com2Active);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getCom2StandbyKhz
+            //! \copydoc FGSwiftBus::CService::getCom2StandbyKhz
             //! @{
             int getCom2StandbyKhz() const;
             void getCom2StandbyKhzAsync(int *o_com2Standby);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTransponderCode
+            //! \copydoc FGSwiftBus::CService::getTransponderCode
             //! @{
             int getTransponderCode() const;
             void getTransponderCodeAsync(int *o_xpdrCode);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTransponderMode
+            //! \copydoc FGSwiftBus::CService::getTransponderMode
             //! @{
             int getTransponderMode() const;
             void getTransponderModeAsync(int *o_xpdrMode);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTransponderIdent
+            //! \copydoc FGSwiftBus::CService::getTransponderIdent
             //! @{
             bool getTransponderIdent() const;
             void getTransponderIdentAsync(bool *o_ident);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLandingLightsOn
+            //! \copydoc FGSwiftBus::CService::getLandingLightsOn
             //! @{
             bool getBeaconLightsOn() const;
             void getBeaconLightsOnAsync(bool *o_beaconLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getLandingLightsOn
+            //! \copydoc FGSwiftBus::CService::getLandingLightsOn
             //! @{
             bool getLandingLightsOn() const;
             void getLandingLightsOnAsync(bool *o_landingLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getNavLightsOn
+            //! \copydoc FGSwiftBus::CService::getNavLightsOn
             //! @{
             bool getNavLightsOn() const;
             void getNavLightsOnAsync(bool *o_navLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getStrobeLightsOn
+            //! \copydoc FGSwiftBus::CService::getStrobeLightsOn
             //! @{
             bool getStrobeLightsOn() const;
             void getStrobeLightsOnAsync(bool *o_strobeLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getTaxiLightsOn
+            //! \copydoc FGSwiftBus::CService::getTaxiLightsOn
             //! @{
             bool getTaxiLightsOn() const;
             void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getQNHInHg
+            //! \copydoc FGSwiftBus::CService::getQNHInHg
             //! @{
             double getQNHInHg() const;
             void getQNHInHgAsync(double *o_qnh);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::setCom1ActiveKhz
+            //! \copydoc FGSwiftBus::CService::setCom1ActiveKhz
             void setCom1ActiveKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom1StandbyKhz
+            //! \copydoc FGSwiftBus::CService::setCom1StandbyKhz
             void setCom1StandbyKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom2ActiveKhz
+            //! \copydoc FGSwiftBus::CService::setCom2ActiveKhz
             void setCom2ActiveKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setCom2StandbyKhz
+            //! \copydoc FGSwiftBus::CService::setCom2StandbyKhz
             void setCom2StandbyKhz(int freq);
 
-            //! \copydoc XSwiftBus::CService::setTransponderCode
+            //! \copydoc FGSwiftBus::CService::setTransponderCode
             void setTransponderCode(int code);
 
-            //! \copydoc XSwiftBus::CService::setTransponderMode
+            //! \copydoc FGSwiftBus::CService::setTransponderMode
             void setTransponderMode(int mode);
 
-            //! \copydoc XSwiftBus::CService::getFlapsDeployRatio
+            //! \copydoc FGSwiftBus::CService::getFlapsDeployRatio
 
             //! @{
             double getFlapsDeployRatio() const;
             void getFlapsDeployRatioAsync(double *o_flapsDeployRatio);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getGearDeployRatio
+            //! \copydoc FGSwiftBus::CService::getGearDeployRatio
             //! @{
             double getGearDeployRatio() const;
             void getGearDeployRatioAsync(double *o_gearDeployRatio);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getEngineN1Percentage
+            //! \copydoc FGSwiftBus::CService::getEngineN1Percentage
             //! @{
             QList<double> getEngineN1Percentage() const;
             void getEngineN1PercentageAsync(QList<double> *o_engineN1Percentage);
             //! @}
 
-            //! \copydoc XSwiftBus::CService::getSpeedBrakeRatio
+            //! \copydoc FGSwiftBus::CService::getSpeedBrakeRatio
             //! @{
             double getSpeedBrakeRatio() const;
             void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);

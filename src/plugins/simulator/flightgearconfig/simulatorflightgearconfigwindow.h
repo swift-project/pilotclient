@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
+#define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
 #include "blackmisc/simulation/settings/fgsettings.h"
@@ -17,31 +17,31 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorXPlaneConfigWindow; }
+namespace Ui { class CSimulatorFlightgearConfigWindow; }
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
         /**
-         * A window that shows all the X-Plane plugin options.
+         * A window that shows all the Flightgear plugin options.
          */
-        class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
+        class CSimulatorFlightgearConfigWindow : public BlackGui::CPluginConfigWindow
         {
             Q_OBJECT
 
         public:
             //! Ctor.
-            CSimulatorXPlaneConfigWindow(QWidget *parent);
+            CSimulatorFlightgearConfigWindow(QWidget *parent);
 
             //! Dtor.
-            virtual ~CSimulatorXPlaneConfigWindow();
+            virtual ~CSimulatorFlightgearConfigWindow();
 
         private:
             //! Settings have been accepted
             void onSettingsAccepted();
 
-            QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
+            QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this };
         };
     } // ns
 } // ns

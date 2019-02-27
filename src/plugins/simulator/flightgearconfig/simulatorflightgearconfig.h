@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_H
+#define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_H
 
 #include "blackgui/pluginconfig.h"
 #include "blackmisc/settingscache.h"
@@ -22,12 +22,12 @@ class QWidget;
 namespace BlackGui { class CPluginConfigWindow; }
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
         /*!
-         * Config plugin for the X-Plane plugin.
+         * Config plugin for the Flightgear plugin.
          */
-        class CSimulatorXPlaneConfig : public QObject, public BlackGui::IPluginConfig
+        class CSimulatorFlightgearConfig : public QObject, public BlackGui::IPluginConfig
         {
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorflightgearconfig.json")
@@ -35,10 +35,10 @@ namespace BlackSimPlugin
 
         public:
             //! Ctor
-            CSimulatorXPlaneConfig(QObject *parent = nullptr);
+            CSimulatorFlightgearConfig(QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorXPlaneConfig() {}
+            virtual ~CSimulatorFlightgearConfig() {}
 
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

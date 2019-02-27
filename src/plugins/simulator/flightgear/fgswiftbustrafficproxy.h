@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
-#define BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
+#ifndef BLACKSIMPLUGIN_FGSWIFTBUS_TRAFFIC_PROXY_H
+#define BLACKSIMPLUGIN_FGSWIFTBUS_TRAFFIC_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/aviation/callsign.h"
@@ -24,13 +24,13 @@
 class QDBusConnection;
 
 //! \cond PRIVATE
-#define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
-#define XSWIFTBUS_TRAFFIC_OBJECTPATH "/xswiftbus/traffic"
+#define FGSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.fgswiftbus.traffic"
+#define FGSWIFTBUS_TRAFFIC_OBJECTPATH "/fgswiftbus/traffic"
 //! \endcond
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
         //! List of doubles
         using QDoubleList = QList<double>;
@@ -103,14 +103,14 @@ namespace BlackSimPlugin
         //! Multiplayer Acquire Info
         struct MultiplayerAcquireInfo
         {
-            bool hasAcquired;       //!< Has XSwiftBus acquired multiplayer planes?
+            bool hasAcquired;       //!< Has FGSwiftBus acquired multiplayer planes?
             QString owner;          //!< Name of the plugin having multiplayer planes acquired
         };
 
         /*!
-         * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
+         * Proxy object connected to a real FGSwiftBus::CTraffic object via DBus
          */
-        class CXSwiftBusTrafficProxy : public QObject
+        class CFGSwiftBusTrafficProxy : public QObject
         {
             Q_OBJECT
 
@@ -124,19 +124,19 @@ namespace BlackSimPlugin
             //! Service name
             static const QString &InterfaceName()
             {
-                static QString s(XSWIFTBUS_TRAFFIC_INTERFACENAME);
+                static QString s(FGSWIFTBUS_TRAFFIC_INTERFACENAME);
                 return s;
             }
 
             //! Service path
             static const QString &ObjectPath()
             {
-                static QString s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
+                static QString s(FGSWIFTBUS_TRAFFIC_OBJECTPATH);
                 return s;
             }
 
             //! Constructor
-            CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
+            CFGSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
 
             //! Does the remote object exist?
             bool isValid() const { return m_dbusInterface->isValid(); }
@@ -153,59 +153,59 @@ namespace BlackSimPlugin
             void remoteAircraftAddingFailed(const QString &callsign);
 
         public slots:
-            //! \copydoc XSwiftBus::CTraffic::acquireMultiplayerPlanes
+            //! \copydoc FGSwiftBus::CTraffic::acquireMultiplayerPlanes
             MultiplayerAcquireInfo acquireMultiplayerPlanes();
 
-            //! \copydoc XSwiftBus::CTraffic::initialize
+            //! \copydoc FGSwiftBus::CTraffic::initialize
             bool initialize();
 
-            //! \copydoc XSwiftBus::CTraffic::cleanup
+            //! \copydoc FGSwiftBus::CTraffic::cleanup
             void cleanup();
 
-            //! \copydoc XSwiftBus::CTraffic::loadPlanesPackage
+            //! \copydoc FGSwiftBus::CTraffic::loadPlanesPackage
             bool loadPlanesPackage(const QString &path);
 
-            //! \copydoc XSwiftBus::CTraffic::setDefaultIcao
+            //! \copydoc FGSwiftBus::CTraffic::setDefaultIcao
             void setDefaultIcao(const QString &defaultIcao);
 
-            //! \copydoc XSwiftBus::CTraffic::setDrawingLabels
+            //! \copydoc FGSwiftBus::CTraffic::setDrawingLabels
             void setDrawingLabels(bool drawing);
 
-            //! \copydoc XSwiftBus::CTraffic::isDrawingLabels
+            //! \copydoc FGSwiftBus::CTraffic::isDrawingLabels
             bool isDrawingLabels() const;
 
-            //! \copydoc XSwiftBus::CTraffic::setMaxPlanes
+            //! \copydoc FGSwiftBus::CTraffic::setMaxPlanes
             void setMaxPlanes(int planes);
 
-            //! \copydoc XSwiftBus::CTraffic::setMaxDrawDistance
+            //! \copydoc FGSwiftBus::CTraffic::setMaxDrawDistance
             void setMaxDrawDistance(double nauticalMiles);
 
-            //! \copydoc XSwiftBus::CTraffic::addPlane
+            //! \copydoc FGSwiftBus::CTraffic::addPlane
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
-            //! \copydoc XSwiftBus::CTraffic::removePlane
+            //! \copydoc FGSwiftBus::CTraffic::removePlane
             void removePlane(const QString &callsign);
 
-            //! \copydoc XSwiftBus::CTraffic::removeAllPlanes
+            //! \copydoc FGSwiftBus::CTraffic::removeAllPlanes
             void removeAllPlanes();
 
-            //! \copydoc XSwiftBus::CTraffic::setPlanesPositions
-            void setPlanesPositions(const BlackSimPlugin::XPlane::PlanesPositions &planesPositions);
+            //! \copydoc FGSwiftBus::CTraffic::setPlanesPositions
+            void setPlanesPositions(const BlackSimPlugin::Flightgear::PlanesPositions &planesPositions);
 
-            //! \copydoc XSwiftBus::CTraffic::setPlanesTransponders
-            void setPlanesTransponders(const BlackSimPlugin::XPlane::PlanesTransponders &planesTransponders);
+            //! \copydoc FGSwiftBus::CTraffic::setPlanesTransponders
+            void setPlanesTransponders(const BlackSimPlugin::Flightgear::PlanesTransponders &planesTransponders);
 
-            //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
+            //! \deprecated FGSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);
 
-            //! \copydoc XSwiftBus::CTraffic::getRemoteAircraftData
+            //! \copydoc FGSwiftBus::CTraffic::getRemoteAircraftData
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
-            //! \copydoc XSwiftBus::CTraffic::getElevationAtPosition
+            //! \copydoc FGSwiftBus::CTraffic::getElevationAtPosition
             void getElevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
                                         const ElevationCallback &setter) const;
 
-            //! \copydoc XSwiftBus::CTraffic::setFollowedAircraft
+            //! \copydoc FGSwiftBus::CTraffic::setFollowedAircraft
             void setFollowedAircraft(const QString &callsign);
 
         private:

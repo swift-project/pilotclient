@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_H
+#define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_H
 
 #include "flightgearmpaircraft.h"
 #include "plugins/simulator/flightgearconfig/simulatorflightgearconfig.h"
@@ -63,13 +63,13 @@ namespace BlackMisc
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
-        class CXSwiftBusServiceProxy;
-        class CXSwiftBusTrafficProxy;
+        class CFGSwiftBusServiceProxy;
+        class CFGSwiftBusTrafficProxy;
 
-        //! X-Plane data
-        struct XPlaneData
+        //! Flightgear data
+        struct FlightgearData
         {
             QString aircraftModelPath;          //!< Aircraft model path
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
@@ -100,14 +100,14 @@ namespace BlackSimPlugin
             double seaLevelPressureInHg;        //!< Sea level pressure [inhg]
         };
 
-        //! X-Plane ISimulator implementation
-        class CSimulatorXPlane : public Common::CSimulatorPluginCommon
+        //! Flightgear ISimulator implementation
+        class CSimulatorFlightgear : public Common::CSimulatorPluginCommon
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+            CSimulatorFlightgear(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
@@ -115,11 +115,11 @@ namespace BlackSimPlugin
                              QObject *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorXPlane() override;
+            virtual ~CSimulatorFlightgear() override;
 
             //! \name ISimulator implementations
             //! @{
-            virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
+            virtual bool isTimeSynchronized() const override { return false; }
             virtual bool connectTo() override;
             virtual bool disconnectFrom() override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
@@ -154,7 +154,6 @@ namespace BlackSimPlugin
             virtual void clearAllRemoteAircraftData() override;
             virtual bool isPaused() const override
             {
-                //! \todo XP: provide correct pause state
                 return false;
             }
             //! @}
@@ -177,17 +176,14 @@ namespace BlackSimPlugin
             void fastTimerTimeout();
             void slowTimerTimeout();
 
-            void loadCslPackages();
-            QString findCslPackage(const QString &modelFileName);
-
             //! Update remote aircraft
             //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();
 
-            //! Request elevation and CG from XPlane @{
-            void requestRemoteAircraftDataFromXPlane();
-            void requestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
-            void triggerRequestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            //! Request elevation and CG from Flightgear @{
+            void requestRemoteAircraftDataFromFlightgear();
+            void requestRemoteAircraftDataFromFlightgear(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            void triggerRequestRemoteAircraftDataFromFlightgear(const BlackMisc::Aviation::CCallsignSet &callsigns);
             //! @}
 
             //! Adding new aircraft @{
@@ -218,46 +214,46 @@ namespace BlackSimPlugin
             void disconnectFromDBus();
 
             DBusMode m_dbusMode;
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this };
             static constexpr qint64 TimeoutAdding = 10000;
             QDBusConnection m_dBusConnection { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
-            CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
+            CFGSwiftBusServiceProxy *m_serviceProxy { nullptr };
+            CFGSwiftBusTrafficProxy *m_trafficProxy { nullptr };
             QTimer m_fastTimer;
             QTimer m_slowTimer;
             QTimer m_airportUpdater;
             QTimer m_pendingAddedTimer;
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
-            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this }; //!< XPlane model set
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheFG> m_modelSet { this }; //!< Flightgear model set
             BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed; //! aircraft for which adding failed
-            CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
-            XPlaneData m_xplaneData; //!< XPlane data
+            CFlightgearMPAircraftObjects m_flightgearAircraftObjects; //!< Flightgear multiplayer aircraft
+            FlightgearData m_flightgearData; //!< Flightgear data
 
             // statistics
             qint64 m_statsAddMaxTimeMs = -1;
             qint64 m_statsAddCurrentTimeMs = -1;
 
-            //! Reset the XPlane data
-            void resetXPlaneData()
+            //! Reset the Flightgear data
+            void resetFlightgearData()
             {
-                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
+                m_flightgearData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
                                  false, false, 0, 0, {}, 0.0, 0.0
                                };
 
             }
         };
 
-        //! Listener waits for xswiftbus service to show up
-        class CSimulatorXPlaneListener : public BlackCore::ISimulatorListener
+        //! Listener waits for fgswiftbus service to show up
+        class CSimulatorFlightgearListener : public BlackCore::ISimulatorListener
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorXPlaneListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+            CSimulatorFlightgearListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         protected:
             //! \copydoc BlackCore::ISimulatorListener::startImpl
@@ -276,15 +272,15 @@ namespace BlackSimPlugin
             void checkConnectionCommon();
 
             void serviceRegistered(const QString &serviceName);
-            void xSwiftBusServerSettingChanged();
+            void fgSwiftBusServerSettingChanged();
 
             QTimer m_timer { this };
             QDBusConnection m_conn { "default" };
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::xSwiftBusServerSettingChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearListener::fgSwiftBusServerSettingChanged };
         };
 
-        //! Factory for creating CSimulatorXPlane instance
-        class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
+        //! Factory for creating CSimulatorFlightgear instance
+        class CSimulatorFlightgearFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorflightgear.json")
@@ -299,7 +295,7 @@ namespace BlackSimPlugin
                                                   BlackMisc::Network::IClientProvider *clientProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
-            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
+            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorFlightgearListener(info); }
         };
     } // ns
 } // ns

@@ -13,16 +13,16 @@ class QWidget;
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
-        CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
+        CSimulatorFlightgearConfig::CSimulatorFlightgearConfig(QObject *parent) : QObject(parent)
         {
 
         }
 
-        BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
+        BlackGui::CPluginConfigWindow *CSimulatorFlightgearConfig::createConfigWindow(QWidget *parent)
         {
-            CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow(parent);
+            CSimulatorFlightgearConfigWindow* w = new CSimulatorFlightgearConfigWindow(parent);
             return w;
         }
     }

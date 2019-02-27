@@ -2,6 +2,6 @@
     "identifier" : "org.swift-project.plugins.simulator.flightgear",
     "name" : "Flightgear",
     "simulator" : "flightgear",
-    "description" : "Support for the Flightgear simulator via the xswiftbus plugin.",
+    "description" : "Support for the Flightgear simulator via the fgswiftbus plugin.",
     "config" : "org.swift-project.plugins.simulator.flightgear.config"
 }

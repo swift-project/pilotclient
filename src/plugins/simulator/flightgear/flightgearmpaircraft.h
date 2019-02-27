@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
-#define BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
+#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
+#define BLACKSIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/interpolatormulti.h"
@@ -19,22 +19,22 @@
 namespace BlackCore { class ISimulator; }
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
-        //! Class representing a X-Plane multiplayer aircraft
-        class CXPlaneMPAircraft
+        //! Class representing a Flightgear multiplayer aircraft
+        class CFlightgearMPAircraft
         {
         public:
             //! Constructor
-            CXPlaneMPAircraft();
+            CFlightgearMPAircraft();
 
             //! Constructor providing initial situation/parts
-            CXPlaneMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+            CFlightgearMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
                               BlackCore::ISimulator *simulator,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
             //! Destructor
-            ~CXPlaneMPAircraft() {}
+            ~CFlightgearMPAircraft() {}
 
             //! Set simulated aircraft
             void setSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &simulatedAircraft);
@@ -69,7 +69,7 @@ namespace BlackSimPlugin
         };
 
         //! Simulator objects (aka AI aircraft)
-        class CXPlaneMPAircraftObjects : public QHash<BlackMisc::Aviation::CCallsign, CXPlaneMPAircraft>
+        class CFlightgearMPAircraftObjects : public QHash<BlackMisc::Aviation::CCallsign, CFlightgearMPAircraft>
         {
         public:
             //! Get all callsigns

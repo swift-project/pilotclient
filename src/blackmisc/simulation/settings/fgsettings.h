@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
-#define BLACKMISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
+#ifndef BLACKMISC_SIMULATION_SETTINGS_FGSWIFTBUSSETTINGS_H
+#define BLACKMISC_SIMULATION_SETTINGS_FGSWIFTBUSSETTINGS_H
 
 #include <QString>
 #include "blackmisc/settingscache.h"
@@ -23,15 +23,15 @@ namespace BlackMisc
         namespace Settings
         {
             /*!
-             * Setting for XSwiftBus.
+             * Setting for FGSwiftBus.
              */
-            struct TXSwiftBusServer : public BlackMisc::TSettingTrait<QString>
+            struct TFGSwiftBusServer : public BlackMisc::TSettingTrait<QString>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key
-                static const char *key() { return "xswiftbus/server"; }
+                static const char *key() { return "fgswiftbus/server"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("XSwiftBus"); return name; }
+                static const QString &humanReadable() { static const QString name("FGSiftBus"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static QString defaultValue() { return "tcp:host=127.0.0.1,port=45003"; }

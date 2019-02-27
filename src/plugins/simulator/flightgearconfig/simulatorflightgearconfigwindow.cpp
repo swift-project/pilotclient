@@ -9,44 +9,44 @@
 #include "simulatorflightgearconfigwindow.h"
 #include "blackcore/application.h"
 #include "ui_simulatorflightgearconfigwindow.h"
-#include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
+#include "blackmisc/simulation/flightgear/fgswiftbusconfigwriter.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
 
 using namespace BlackGui;
 using namespace BlackMisc;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace BlackMisc::Simulation::Flightgear;
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Flightgear
     {
-        CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) :
+        CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) :
             CPluginConfigWindow(parent),
-            ui(new Ui::CSimulatorXPlaneConfigWindow)
+            ui(new Ui::CSimulatorFlightgearConfigWindow)
         {
             ui->setupUi(this);
-            ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xswiftbusServerSetting.getDefault());
-            ui->comp_SettingsXSwiftBus->set(m_xswiftbusServerSetting.getThreadLocal());
+            ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(m_fgswiftbusServerSetting.getDefault());
+            ui->comp_SettingsFGSwiftBus->set(m_fgswiftbusServerSetting.getThreadLocal());
 
-            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::onSettingsAccepted);
-            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
+            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorFlightgearConfigWindow::onSettingsAccepted);
+            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorFlightgearConfigWindow::close);
         }
 
-        CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow()
+        CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow()
         { }
 
-        void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
+        void CSimulatorFlightgearConfigWindow::onSettingsAccepted()
         {
-            const QString currentAddress = m_xswiftbusServerSetting.getThreadLocal();
-            const QString updatedAddress = ui->comp_SettingsXSwiftBus->getDBusAddress();
-            if (currentAddress != ui->comp_SettingsXSwiftBus->getDBusAddress())
+            const QString currentAddress = m_fgswiftbusServerSetting.getThreadLocal();
+            const QString updatedAddress = ui->comp_SettingsFGSwiftBus->getDBusAddress();
+            if (currentAddress != ui->comp_SettingsFGSwiftBus->getDBusAddress())
             {
-                m_xswiftbusServerSetting.set(updatedAddress);
-                CXSwiftBusConfigWriter xswiftbusConfigWriter;
-                xswiftbusConfigWriter.setDBusAddress(updatedAddress);
-                xswiftbusConfigWriter.updateInAllXPlaneVersions();
+                m_fgswiftbusServerSetting.set(updatedAddress);
+                CFGSwiftBusConfigWriter fgswiftbusConfigWriter;
+                fgswiftbusConfigWriter.setDBusAddress(updatedAddress);
+                fgswiftbusConfigWriter.updateInAllXPlaneVersions();
             }
             close();
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CSimulatorXPlaneConfigWindow</class>
- <widget class="QWidget" name="CSimulatorXPlaneConfigWindow">
+ <class>CSimulatorFlightgearConfigWindow</class>
+ <widget class="QWidget" name="CSimulatorFlightgearConfigWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>X-Plane plugin settings</string>
+   <string>Flightgear plugin settings</string>
   </property>
   <layout class="QGridLayout" name="gl_ConfigWindow">
    <property name="leftMargin">
@@ -46,7 +46,7 @@
     </widget>
    </item>
    <item row="0" column="0" alignment="Qt::AlignTop">
-    <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
+    <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsFGSwiftBus">
      <property name="minimumSize">
       <size>
        <width>0</width>
