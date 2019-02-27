@@ -43,6 +43,13 @@ namespace BlackCore
         qDBusRegisterMetaType<INetwork::LoginMode>();
         qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
 
+        qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionHash>();
+        qRegisterMetaTypeStreamOperators<Context::CLogSubscriptionPair>();
+        qRegisterMetaTypeStreamOperators<Context::CSettingsDictionary>();
+        qRegisterMetaTypeStreamOperators<INetwork::ConnectionStatus>();
+        qRegisterMetaTypeStreamOperators<INetwork::LoginMode>();
+        qRegisterMetaTypeStreamOperators<IVoiceChannel::ConnectionStatus>();
+
         Db::CDatabaseReaderConfig::registerMetadata();
         Db::CDatabaseReaderConfigList::registerMetadata();
         Data::CGlobalSetup::registerMetadata();

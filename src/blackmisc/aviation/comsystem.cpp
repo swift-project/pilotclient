@@ -26,6 +26,8 @@ namespace BlackMisc
             Mixin::MetaType<CComSystem>::registerMetadata();
             qDBusRegisterMetaType<ChannelSpacing>();
             qDBusRegisterMetaType<ComUnit>();
+            qRegisterMetaTypeStreamOperators<ChannelSpacing>();
+            qRegisterMetaTypeStreamOperators<ComUnit>();
         }
 
         void CComSystem::setFrequencyActiveMHz(double frequencyMHz)

@@ -27,6 +27,8 @@ namespace BlackMisc
             // ENUMs
             qDBusRegisterMetaType<CNotificationSounds::PlayMode>();
             qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
+            qRegisterMetaTypeStreamOperators<CNotificationSounds::PlayMode>();
+            qRegisterMetaTypeStreamOperators<CNotificationSounds::NotificationFlag>();
         }
     } // ns
 } // ns

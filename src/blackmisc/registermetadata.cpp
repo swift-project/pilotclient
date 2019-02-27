@@ -102,5 +102,6 @@ namespace BlackMisc
 
         // needed by XSwiftBus proxy class
         qDBusRegisterMetaType<CSequence<double>>();
+        qRegisterMetaTypeStreamOperators<CSequence<double>>();
     }
 } // ns

@@ -85,6 +85,7 @@ namespace BlackMisc
         {
             qRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
             qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
+            qRegisterMetaTypeStreamOperators<BlackMisc::Simulation::CSimulatorInternals>();
             registerMetaValueType<BlackMisc::Simulation::CSimulatorInternals>();
         }
 

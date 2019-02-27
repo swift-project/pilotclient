@@ -67,6 +67,15 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qDBusRegisterMetaType<ReverseLookupLoggingFlag>();
             qDBusRegisterMetaType<ReverseLookupLogging>();
+
+            qRegisterMetaTypeStreamOperators<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
+            qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingAlgorithm>();
+            qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingModeFlag>();
+            qRegisterMetaTypeStreamOperators<MatchingLogFlag>();
+            qRegisterMetaTypeStreamOperators<MatchingLog>();
+            qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::PickSimilarStrategy>();
+            qRegisterMetaTypeStreamOperators<ReverseLookupLoggingFlag>();
+            qRegisterMetaTypeStreamOperators<ReverseLookupLogging>();
         }
     } // ns
 } // ns

@@ -238,7 +238,7 @@ namespace BlackMisc
         struct MetaTypeHelperImpl
         {
             static constexpr int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
-            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); registerMetaValueType<T>(); }
+            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); qRegisterMetaTypeStreamOperators<T>(); registerMetaValueType<T>(); }
         };
 
         template <typename T>
