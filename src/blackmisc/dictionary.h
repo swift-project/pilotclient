@@ -517,7 +517,7 @@ namespace BlackMisc
             static uint hashImpl(const Derived &value)
             {
                 uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
                 meta.forEachMember(Private::Hasher<Derived> { value, hash });
                 return hash;
             }

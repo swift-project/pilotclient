@@ -91,7 +91,7 @@ namespace BlackMisc
             void marshallToDbus(QDBusArgument &arg, Tags...) const
             {
                 baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
                     using lossless = std::integral_constant<bool, member.has(MetaFlags<LosslessMarshalling>())>;
@@ -103,7 +103,7 @@ namespace BlackMisc
             void unmarshallFromDbus(const QDBusArgument &arg, Tags...)
             {
                 baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember([ &, this ](auto member)
                 {
                     using lossless = std::integral_constant<bool, member.has(MetaFlags<LosslessMarshalling>())>;

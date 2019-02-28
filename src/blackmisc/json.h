@@ -404,7 +404,7 @@ namespace BlackMisc
             QJsonObject toJson() const
             {
                 QJsonObject json;
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMember([ &, this ](auto member)
                 {
                     json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
@@ -423,7 +423,7 @@ namespace BlackMisc
             void convertFromJson(const QJsonObject &json)
             {
                 baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMember([ &, this ](auto member)
                 {
                     const auto value = json.value(CExplicitLatin1String(member.latin1Name()));

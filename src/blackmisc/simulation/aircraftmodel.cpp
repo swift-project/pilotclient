@@ -125,7 +125,7 @@ namespace BlackMisc
         QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
         {
             QJsonObject json;
-            const auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            constexpr auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
             meta.forEachMember([ &, this ](auto member)
             {
                 auto &&maybeMemo = helper.maybeMemoize(member.in(*this));
@@ -136,7 +136,7 @@ namespace BlackMisc
 
         void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
         {
-            const auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            constexpr auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
             meta.forEachMember([ &, this ](auto member)
             {
                 auto it = json.find(CExplicitLatin1String(member.latin1Name()));

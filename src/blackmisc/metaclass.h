@@ -239,12 +239,12 @@ namespace BlackMisc
         //! Return a CMetaClassIntrospector<T> covering only those members which have the given flags.
         //! \see BlackMisc::MetaFlags
         template <typename Flags>
-        static auto with(Flags) { return filter(MaskSequence<(members().at(index<Is>()).has(Flags()))...>()); }
+        constexpr static auto with(Flags) { return filter(MaskSequence<(members().at(index<Is>()).has(Flags()))...>()); }
 
         //! Return a CMetaClassIntrospector<T> covering only those members which do not have the given flags.
         //! \see BlackMisc::MetaFlags
         template <typename Flags>
-        static auto without(Flags) { return filter(MaskSequence<(! members().at(index<Is>()).has(Flags()))...>()); }
+        constexpr static auto without(Flags) { return filter(MaskSequence<(! members().at(index<Is>()).has(Flags()))...>()); }
 
         //! For each metamember in metaclass, pass metamember as argument to visitor function.
         template <typename F>
@@ -263,7 +263,7 @@ namespace BlackMisc
         using MaskSequence = Private::MaskSequence<std::index_sequence<Is...>, Mask...>;
 
         template <size_t... Js>
-        static auto filter(std::index_sequence<Js...>) { return CMetaClassIntrospector<T, MetaClass, Js...>(); }
+        constexpr static auto filter(std::index_sequence<Js...>) { return CMetaClassIntrospector<T, MetaClass, Js...>(); }
 
         template <size_t I>
         using index = std::integral_constant<size_t, I>;
@@ -278,22 +278,22 @@ namespace BlackMisc
         struct CMetaClassAccessor
         {
             template <typename T, size_t... Is>
-            static auto getIntrospector(std::index_sequence<Is...>)
+            constexpr static auto getIntrospector(std::index_sequence<Is...>)
             {
                 return CMetaClassIntrospector<T, typename T::MetaClass, Is...>();
             }
 
             template <typename T>
-            static auto getIntrospector()
+            constexpr static auto getIntrospector()
             {
                 return getIntrospector<T>(std::make_index_sequence<T::MetaClass::getMemberList().c_size>());
             }
 
             template <typename T>
-            static std::true_type hasMetaClass(int, typename T::MetaClass * = nullptr) { return {}; }
+            constexpr static std::true_type hasMetaClass(int, typename T::MetaClass * = nullptr) { return {}; }
 
             template <typename T>
-            static std::false_type hasMetaClass(...) { return {}; }
+            constexpr static std::false_type hasMetaClass(...) { return {}; }
         };
     }
 
@@ -303,7 +303,7 @@ namespace BlackMisc
      * \ingroup MetaClass
      */
     template <typename T>
-    auto introspect()
+    constexpr auto introspect()
     {
         return Private::CMetaClassAccessor::getIntrospector<T>();
     }

@@ -58,7 +58,7 @@ namespace BlackMisc
         private:
             static bool equals(const Derived &a, const Derived &b)
             {
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 bool result = baseEquals(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 meta.forEachMember([ & ](auto member) { result = result && EqualsByMetaClass::membersEqual(member.in(a), member.in(b), member.m_flags); });
                 return result;
@@ -122,7 +122,7 @@ namespace BlackMisc
         private:
             static bool less(const Derived &a, const Derived &b)
             {
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 bool result = baseLess(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 bool gt = baseLess(static_cast<const TBaseOfT<Derived> *>(&b), static_cast<const TBaseOfT<Derived> *>(&a));
                 meta.forEachMember([ & ](auto member) { result = result || LessThanByMetaClass::membersLess(gt, member.in(a), member.in(b), member.m_flags); });
@@ -159,7 +159,7 @@ namespace BlackMisc
         private:
             static int compareImpl(const Derived &a, const Derived &b)
             {
-                auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
+                constexpr auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
                 int result = baseCompare(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 meta.forEachMember([ & ](auto member) { result = result ? result : CompareByMetaClass::membersCompare(member.in(a), member.in(b), member.m_flags); });
                 return result;
@@ -194,7 +194,7 @@ namespace BlackMisc
         template <typename T, std::enable_if_t<THasMetaClass<T>::value, int> = 0>
         QList<QPair<QString, bool>> operator ()(const T &a, const T &b) const
         {
-            auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
+            constexpr auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
             auto result = baseEquals(static_cast<const TBaseOfT<T> *>(&a), static_cast<const TBaseOfT<T> *>(&b));
             meta.forEachMember([ & ](auto member)
             {
@@ -209,7 +209,7 @@ namespace BlackMisc
         QList<QPair<QString, bool>> operator ()(const T &a, const T &b, QStringList memberNames) const // clazy:exclude=function-args-by-ref
         {
             if (memberNames.isEmpty()) { return CMetaMemberComparator()(a, b); }
-            auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
+            constexpr auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
             auto result = baseEquals(static_cast<const TBaseOfT<T> *>(&a), static_cast<const TBaseOfT<T> *>(&b), memberNames);
             const auto memberName = memberNames.takeFirst();
             meta.forEachMember([ & ](auto member)
