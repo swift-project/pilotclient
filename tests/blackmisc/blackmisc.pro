@@ -9,6 +9,7 @@ SUBDIRS += \
     simulation \
     testcompress \
     testcontainers \
+    testdatastream \
     testdbus \
     testicon \
     testidentifier \
