@@ -326,13 +326,6 @@ namespace BlackMisc
                 return stream;
             }
 
-            //! Operator << for QDataStream
-            friend QDataStream &operator<<(QDataStream &stream, const Derived &obj)
-            {
-                stream << obj.stringForStreaming();
-                return stream;
-            }
-
             //! Stream operator << for std::cout
             friend std::ostream &operator<<(std::ostream &ostr, const Derived &obj)
             {
