@@ -28,14 +28,14 @@ namespace BlackMisc
             {
                 MatchingScoreBased,
                 MatchingStepwiseReducePlusScoreBased,
-                MatchingStepwiseReduce
+                MatchingStepwiseReduce,
             };
 
             //! Enabled matching mode flags
             enum MatchingModeFlag
             {
                 ByModelString    = 1 << 0, //!< allow exact model string match
-                ByIcaoData       = 1 << 1,
+                ByIcaoData       = 1 << 1, //!< ICAO airline and aircraft codes
                 ByFamily         = 1 << 2,
                 ByLivery         = 1 << 3,
                 ByCombinedType   = 1 << 4,
@@ -46,6 +46,9 @@ namespace BlackMisc
                 ByVtol           = 1 << 8,
                 ByIcaoOrderAircraftFirst = (1 << 9)  | ByIcaoData,
                 ByIcaoOrderAirlineFirst  = (1 << 10) | ByIcaoData,
+                ByCategoryGlider   = 1 << 20,
+                ByCategoryMilitary = 1 << 21,
+
                 // --- score based matching ---
                 ScoreIgnoreZeros         = 1 << 11, //!< zero scores are ignored
                 ScorePreferColorLiveries = 1 << 12, //!< prefer color liveries
@@ -57,15 +60,18 @@ namespace BlackMisc
                 ModelSetRemoveFailedModel        = 1 << 15,
                 ModelVerificationAtStartup       = 1 << 16,
                 ModelFailoverIfNoModelCanBeAdded = 1 << 17,
+
                 // --- others ---
                 ModeNone          = 0,
                 ModeByFLags       = ByMilitary  | ByVtol,
+
+                // default mode for set handling
                 ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
-                // ModeDefaultSet    = ModelSetRemoveFailedModel | ModelFailoverIfNoModelCanBeAdded,
+
+                // default depending on algorithm
                 ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
                 ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
                 ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault,
-                ModeDefault       = ModeDefaultReducePlusScore | ModeDefaultSet
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -145,6 +151,9 @@ namespace BlackMisc
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
             //! Reset
+            void reset();
+
+            //! Reset
             void reset(MatchingAlgorithm algorithm);
 
             //! Algorithm to string
@@ -163,12 +172,12 @@ namespace BlackMisc
             static MatchingMode matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
-                                             bool byVtol,
+                                             bool byVtol, bool byGliderCategory, bool byMilitaryCategory,
                                              bool scoreIgnoreZeros,  bool scorePreferColorLiveries,  bool excludeNoDbData, bool excludeNoExcluded,
                                              bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover);
 
         private:
-            int m_algorithm = static_cast<int>(ModeDefault);
+            int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
             int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
             int m_strategy  = static_cast<int>(PickByOrder);
 

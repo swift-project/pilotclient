@@ -27,7 +27,8 @@ namespace BlackGui
             connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-            connect(ui->pb_Reset, &QPushButton::released, this, &CMatchingForm::clear, Qt::QueuedConnection);
+            connect(ui->pb_ResetAlgorithm, &QPushButton::released, this, &CMatchingForm::resetByAlgorithm, Qt::QueuedConnection);
+            connect(ui->pb_ResetAll, &QPushButton::released, this, &CMatchingForm::resetAll, Qt::QueuedConnection);
         }
 
         CMatchingForm::~CMatchingForm()
@@ -47,6 +48,8 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetRemoveFailed, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelFailedFailover, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetVerification, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_CategoryGlider, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_CategoryMilitaryAircraft, readonly);
 
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
@@ -76,6 +79,8 @@ namespace BlackGui
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
             ui->cb_ByForceMilitary->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceMilitary));
             ui->cb_ByForceCivilian->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceCivilian));
+            ui->cb_CategoryGlider->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCategoryGlider));
+            ui->cb_CategoryMilitaryAircraft->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCategoryMilitary));
             ui->cb_ByVtol->setChecked(mode.testFlag(CAircraftMatcherSetup::ByVtol));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
@@ -97,7 +102,18 @@ namespace BlackGui
 
         void CMatchingForm::clear()
         {
-            const CAircraftMatcherSetup s(algorithm());
+            this->resetAll();
+        }
+
+        void CMatchingForm::resetByAlgorithm()
+        {
+            const CAircraftMatcherSetup s(this->algorithm());
+            this->setValue(s);
+        }
+
+        void CMatchingForm::resetAll()
+        {
+            const CAircraftMatcherSetup s;
             this->setValue(s);
         }
 
@@ -118,6 +134,8 @@ namespace BlackGui
                        ui->cb_ByForceMilitary->isChecked(),
                        ui->cb_ByForceCivilian->isChecked(),
                        ui->cb_ByVtol->isChecked(),
+                       ui->cb_CategoryGlider->isChecked(),
+                       ui->cb_CategoryMilitaryAircraft->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
                        ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
                        ui->cb_ModelSetVerification->isChecked(), ui->cb_ModelSetRemoveFailed->isChecked(),
@@ -172,5 +190,6 @@ namespace BlackGui
             const CAircraftMatcherSetup setup = this->value();
             this->setValue(setup);
         }
+
     } // ns
 } // ns

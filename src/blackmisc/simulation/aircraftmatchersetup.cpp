@@ -15,7 +15,7 @@ namespace BlackMisc
     {
         CAircraftMatcherSetup::CAircraftMatcherSetup()
         {
-            this->reset(MatchingStepwiseReducePlusScoreBased);
+            this->reset();
         }
 
         CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
@@ -88,6 +88,11 @@ namespace BlackMisc
             CValueObject::setPropertyByIndex(index, variant);
         }
 
+        void CAircraftMatcherSetup::reset()
+        {
+            this->reset(MatchingStepwiseReducePlusScoreBased);
+        }
+
         void CAircraftMatcherSetup::reset(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
         {
             m_algorithm = static_cast<int>(algorithm);
@@ -101,6 +106,8 @@ namespace BlackMisc
                 mode = ModeDefaultReducePlusScore;
                 break;
             }
+            mode |= ModeDefaultSet; // add set default
+
             this->setMatchingMode(mode);
             this->setPickStrategy(PickByOrder);
         }
@@ -139,6 +146,8 @@ namespace BlackMisc
             static const QString removeFromModelSet("rem.from model set");
             static const QString verification("Verify models at startup");
             static const QString modelFailedAdded("Replace models failed to be added");
+            static const QString categoryGlider("glider categories");
+            static const QString categoryMilitary("military categories");
 
             switch (modeFlag)
             {
@@ -152,6 +161,8 @@ namespace BlackMisc
             case ByForceCivilian:            return forceCiv;
             case ByForceMilitary:            return forceMil;
             case ByVtol:                     return vtol;
+            case ByCategoryGlider:           return categoryGlider;
+            case ByCategoryMilitary:         return categoryMilitary;
             case ScoreIgnoreZeros:           return noZeros;
             case ScorePreferColorLiveries:   return preferColorLiveries;
             case ExcludeNoDbData:            return exNoDb;
@@ -178,6 +189,8 @@ namespace BlackMisc
             if (mode.testFlag(ByCombinedType))             { modes << modeFlagToString(ByCombinedType); }
             if (mode.testFlag(ByForceCivilian))            { modes << modeFlagToString(ByForceCivilian); }
             if (mode.testFlag(ByForceMilitary))            { modes << modeFlagToString(ByForceMilitary); }
+            if (mode.testFlag(ByCategoryGlider))           { modes << modeFlagToString(ByCategoryGlider); }
+            if (mode.testFlag(ByCategoryMilitary))         { modes << modeFlagToString(ByCategoryMilitary); }
             if (mode.testFlag(ByVtol))                     { modes << modeFlagToString(ByVtol); }
             if (mode.testFlag(ScoreIgnoreZeros))           { modes << modeFlagToString(ScoreIgnoreZeros); }
             if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
@@ -206,12 +219,13 @@ namespace BlackMisc
             return unknown;
         }
 
-        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-                bool byForceMilitary, bool byForceCivilian,
-                bool byVtol,
-                bool scoreIgnoreZeros, bool scorePreferColorLiveries,
-                bool excludeNoDbData, bool excludeNoExcluded,
-                bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover)
+        CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
+            bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
+            bool byForceMilitary, bool byForceCivilian, bool byVtol,
+            bool byGliderCategory, bool byMilitaryCategory,
+            bool scoreIgnoreZeros, bool scorePreferColorLiveries,
+            bool excludeNoDbData, bool excludeNoExcluded,
+            bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover)
         {
             if (modelFailover) { modelSetRemoveFailedModel = true; } // otherwise this does not make sense
 
@@ -224,6 +238,8 @@ namespace BlackMisc
             if (byForceMilitary)           { mode |= ByForceMilitary; }
             if (byForceCivilian)           { mode |= ByForceCivilian; }
             if (byVtol)                    { mode |= ByVtol; }
+            if (byGliderCategory)          { mode |= ByCategoryGlider; }
+            if (byMilitaryCategory)        { mode |= ByCategoryMilitary; }
             if (scoreIgnoreZeros)          { mode |= ScoreIgnoreZeros; }
             if (scorePreferColorLiveries)  { mode |= ScorePreferColorLiveries; }
             if (excludeNoDbData)           { mode |= ExcludeNoDbData; }

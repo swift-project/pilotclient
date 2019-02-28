@@ -66,6 +66,11 @@ namespace BlackGui
             //! Algorithm has been toggled
             void onAlgorithmChanged();
 
+            //! Reset @{
+            void resetByAlgorithm();
+            void resetAll();
+            //! }
+
             QScopedPointer<Ui::CMatchingForm> ui;
         };
     } // ns

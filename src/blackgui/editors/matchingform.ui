@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CMatchingForm</class>
  <widget class="QFrame" name="CMatchingForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>293</width>
-    <height>465</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Matching form</string>
   </property>
@@ -26,6 +18,13 @@
    <property name="bottomMargin">
     <number>5</number>
    </property>
+   <item alignment="Qt::AlignRight">
+    <widget class="QPushButton" name="pb_ResetAll">
+     <property name="text">
+      <string>reset (all)</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="gb_Algorithm">
      <property name="title">
@@ -54,9 +53,9 @@
        </widget>
       </item>
       <item row="3" column="2" alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="pb_Reset">
+       <widget class="QPushButton" name="pb_ResetAlgorithm">
         <property name="text">
-         <string>reset</string>
+         <string>reset (by algorithm)</string>
         </property>
        </widget>
       </item>
@@ -188,6 +187,29 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="gb_Categories">
+     <property name="title">
+      <string>Matching by categories</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cb_CategoryGlider">
+        <property name="text">
+         <string>Glider</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cb_CategoryMilitaryAircraft">
+        <property name="text">
+         <string>military aircraft</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="gb_FailureHandling">
      <property name="title">
       <string>Failure handling and verification</string>
@@ -278,7 +300,7 @@
   <tabstop>rb_Reduction</tabstop>
   <tabstop>rb_ScoreOnly</tabstop>
   <tabstop>rb_ScoreAndReduction</tabstop>
-  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_ResetAlgorithm</tabstop>
   <tabstop>rb_PickFirst</tabstop>
   <tabstop>rb_PickRandom</tabstop>
   <tabstop>rb_PickByOrder</tabstop>
@@ -291,6 +313,8 @@
   <tabstop>cb_ByVtol</tabstop>
   <tabstop>cb_ByForceMilitary</tabstop>
   <tabstop>cb_ByForceCivilian</tabstop>
+  <tabstop>cb_CategoryGlider</tabstop>
+  <tabstop>cb_CategoryMilitaryAircraft</tabstop>
   <tabstop>cb_ModelSetVerification</tabstop>
   <tabstop>cb_ModelSetRemoveFailed</tabstop>
   <tabstop>cb_ModelFailedFailover</tabstop>
