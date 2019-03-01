@@ -1316,24 +1316,22 @@ namespace BlackCore
 
     void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
     {
-        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
-
         if (state == CEntityFlags::ReadStarted) { return; } // just started
         if (CEntityFlags::isWarningOrAbove(state))
         {
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(cats).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+                CLogMessage(this).warning(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
             }
             else
             {
-                CLogMessage(cats).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+                CLogMessage(this).error(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
             }
         }
         else
         {
-            CLogMessage(cats).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
+            CLogMessage(this).info(u"Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::stateToString(state);
         }
 
         m_swiftDbEntitiesRead |= entities;
