@@ -130,14 +130,7 @@ namespace BlackSound
         //! \param volume    0-100
         //! \param tones     list of tones
         //! \param device    device to be used
-        //! \return generator used, important with SingleWithAutomaticDeletion automatically deleted
-        static CSoundGenerator *playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device);
-
-        //! Record the tones to a wav file, then play the wav file
-        //! \param volume    0-100
-        //! \param tones     list of tones
-        //! \param device    device to be used
-        static void playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device);
+        static void playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device);
 
         //! Play SELCAL tone
         //! \param volume    0-100
@@ -186,11 +179,6 @@ namespace BlackSound
         //! \param volume 0..100
         //! \param pull pull/push, if false push mode
         void start(int volume, bool pull = true);
-
-        //! Play sound in own thread, open device
-        //! \remarks always push mode
-        //! \param volume 0..100
-        void startInOwnThread(int volume);
 
     private slots:
         //! Push mode, timer expired

@@ -9,6 +9,7 @@
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/filedeleter.h"
+#include "blackmisc/worker.h"
 #include <QtCore/qendian.h>
 #include <math.h>
 #include <qmath.h>
@@ -80,25 +81,6 @@ namespace BlackSound
             }
             m_pushModeIODevice = m_audioOutput->start(); // push, IO device not owned
         }
-    }
-
-    void CSoundGenerator::startInOwnThread(int volume)
-    {
-        m_ownThread = new QThread(); // deleted by signals, hence no parent
-        this->moveToThread(m_ownThread);
-        // connect(this, &CSoundGenerator::startThread, this, &CSoundGenerator::start);
-
-        connect(m_ownThread, &QThread::started, this, [ = ]() { this->start(volume, false); });
-        connect(this, &CSoundGenerator::stopping, m_ownThread, &QThread::quit);
-
-        // in auto delete mode force deleteLater when thread is finished
-        if (m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
-        {
-            connect(m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
-        }
-
-        // start thread and begin processing by calling start via signal startThread
-        m_ownThread->start();
     }
 
     void CSoundGenerator::stop(bool destructor)
@@ -431,34 +413,22 @@ namespace BlackSound
         return generator;
     }
 
-    CSoundGenerator *CSoundGenerator::playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
+    void CSoundGenerator::playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
     {
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
-        if (tones.isEmpty()) { return generator; } // that was easy
-        if (volume < 1) { return generator; }
-        if (generator->singleCyleDurationMs() < 10) { return generator; } // unable to hear
-
-        // play, and maybe clean up when done
-        generator->startInOwnThread(volume);
-        return generator;
-    }
-
-    void CSoundGenerator::playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
-    {
         if (tones.isEmpty()) { return; } // that was easy
         if (volume < 1) { return; }
+        if (generator->singleCyleDurationMs() < 10) { return; } // unable to hear
 
-        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
-        if (generator->singleCyleDurationMs() > 10)
+        CWorker *worker = CWorker::fromTask(QCoreApplication::instance(), "CSoundGenerator::playSignalInBackground", [generator, volume]()
         {
-            // play, and maybe clean up when done
-            QString fileName = QString("blacksound").append(QString::number(QDateTime::currentMSecsSinceEpoch())).append(".wav");
-            fileName = QDir::temp().filePath(fileName);
-            generator->generateData();
-            generator->saveToWavFile(fileName);
-            CSoundGenerator::playFile(volume, fileName, true);
-        }
-        generator->deleteLater();
+            generator->start(volume, false);
+
+        });
+        worker->then([generator]()
+        {
+            generator->deleteLater();
+        });
     }
 
     void CSoundGenerator::playSelcal(int volume, const CSelcal &selcal, const QAudioDeviceInfo &device)
