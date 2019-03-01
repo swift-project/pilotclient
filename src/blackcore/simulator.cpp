@@ -1025,7 +1025,7 @@ namespace BlackCore
         if (details.isEmpty()) { return m; }
 
         static const QString addDetails(" details: '%1'");
-        return m + addDetails.arg(details);
+        return m % addDetails.arg(details);
     }
 
     void ISimulator::finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited)

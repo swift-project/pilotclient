@@ -81,8 +81,8 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
-            CSettingsMatchingDialog *m_settingsDialog = nullptr;
-            BlackCore::CAircraftMatcher m_matcher { this }; //!< used matcher
+            CSettingsMatchingDialog    *m_settingsDialog = nullptr; //!< matching settings as dialog
+            BlackCore::CAircraftMatcher m_matcher { this };         //!< used matcher
         };
     } // ns
 } // ns

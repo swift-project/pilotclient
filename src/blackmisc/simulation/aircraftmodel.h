@@ -11,8 +11,8 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 
-#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"

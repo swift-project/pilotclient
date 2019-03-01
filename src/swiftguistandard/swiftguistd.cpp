@@ -458,7 +458,7 @@ void SwiftGuiStd::checkDbDataLoaded()
     if (!sGui || sGui->isShuttingDown()) { return; }
     Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread, needs to run in main thread");
-    CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getSychronizedEntitiesWithNewerSharedFileOrEmpty(!m_dbDataLoading);
+    const CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getSynchronizedEntitiesWithNewerSharedFileOrEmpty(!m_dbDataLoading);
     if (loadEntities == CEntityFlags::NoEntity)
     {
         m_dbDataLoading = false;

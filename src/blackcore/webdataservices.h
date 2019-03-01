@@ -440,7 +440,7 @@ namespace BlackCore
         //! Synchronized entities either empty or with newer shared file
         //! \remark will synchronize entities
         //! \threadsafe
-        BlackMisc::Network::CEntityFlags::Entity getSychronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities);
+        BlackMisc::Network::CEntityFlags::Entity getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities);
 
         //! Cache count for entity
         //! \threadsafe

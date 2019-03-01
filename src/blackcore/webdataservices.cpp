@@ -467,7 +467,7 @@ namespace BlackCore
         return emptyEntities;
     }
 
-    CEntityFlags::Entity CWebDataServices::getSychronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData, CEntityFlags::Entity entities)
+    CEntityFlags::Entity CWebDataServices::getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData, CEntityFlags::Entity entities)
     {
         CEntityFlags::Entity loadEntities = this->getEntitiesWithNewerSharedFile(entities);
         const CEntityFlags::Entity checkForEmptyEntities = CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;

@@ -303,13 +303,13 @@ namespace BlackCore
         //! Use pseudo family
         static bool constexpr UsePseudoFamily = true;
 
-        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;          //!< setup
-        BlackMisc::Simulation::CAircraftModel        m_defaultModel;   //!< model to be used as default model
-        BlackMisc::Simulation::CAircraftModelList    m_modelSet;       //!< models used for model matching
-        BlackMisc::Simulation::CAircraftModelList    m_disabledModels; //!< disabled models for matching
-        BlackMisc::Simulation::CSimulatorInfo        m_simulator;      //!< simulator (optional)
-        BlackMisc::Simulation::CMatchingStatistics   m_statistics;     //!< matching statistics
-        QString                                      m_modelSetInfo;   //!< info string
+        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;           //!< setup
+        BlackMisc::Simulation::CAircraftModel        m_defaultModel;    //!< model to be used as default model
+        BlackMisc::Simulation::CAircraftModelList    m_modelSet;        //!< models used for model matching
+        BlackMisc::Simulation::CAircraftModelList    m_disabledModels;  //!< disabled models for matching
+        BlackMisc::Simulation::CSimulatorInfo        m_simulator;       //!< simulator (optional)
+        BlackMisc::Simulation::CMatchingStatistics   m_statistics;      //!< matching statistics
+        QString                                      m_modelSetInfo;    //!< info string
     };
 } // namespace
 
