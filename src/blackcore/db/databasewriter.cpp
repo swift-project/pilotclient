@@ -146,9 +146,17 @@ namespace BlackCore
             return n;
         }
 
+        const CLogCategoryList &CDatabaseWriter::getLogCategories()
+        {
+            static const CLogCategoryList cats
+            {
+                CLogCategory::swiftDbWebservice(), CLogCategory::webservice()
+            };
+            return cats;
+        }
+
         void CDatabaseWriter::postedModelsResponse(QNetworkReply *nwReplyPtr)
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (m_shutdown || !sApp)
             {
@@ -165,7 +173,7 @@ namespace BlackCore
                 nwReply->close(); // close asap
                 if (responseData.isEmpty())
                 {
-                    const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"No response data from " % urlString)});
+                    const CStatusMessageList msgs({CStatusMessage(this, CStatusMessage::SeverityError, u"No response data from " % urlString)});
                     emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                     return;
                 }
@@ -189,7 +197,7 @@ namespace BlackCore
             {
                 const QString error = nwReply->errorString();
                 nwReply->close(); // close asap
-                const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)});
+                const CStatusMessageList msgs({CStatusMessage(this, CStatusMessage::SeverityError, u"HTTP error: " % error)});
                 emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
             }
         }

@@ -58,6 +58,9 @@ namespace BlackCore
             //! Write log
             const BlackMisc::Network::CUrlLogList &getWriteLog() const { return m_writeLog; }
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
         signals:
             //! Published models, the response to \sa asyncPublishModels
             void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
