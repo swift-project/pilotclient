@@ -68,6 +68,15 @@ namespace BlackMisc
         template <typename T, typename = std::enable_if_t<std::is_class<T>::value>>
         CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass<T>()) { Q_UNUSED(pointer); }
 
+        //! Return a copy with another category appended.
+        CLogCategoryList with(const CLogCategory &other) const { auto copy = *this; copy.push_back(other); return copy; }
+
+        //! Return a copy with some other categories appended.
+        CLogCategoryList with(const CLogCategoryList &other) const { auto copy = *this; copy.push_back(other); return copy; }
+
+        //! Return a copy with validation category appended.
+        CLogCategoryList withValidation() const { return with(CLogCategory::validation()); }
+
         //! Convert each of the categories to a QString and return the result as a QStringList.
         QStringList toQStringList() const;
 

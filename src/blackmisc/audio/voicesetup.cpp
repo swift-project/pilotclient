@@ -27,7 +27,7 @@ namespace BlackMisc
 
         CStatusMessageList CVoiceSetup::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
             if (this->getVatsimUdpVoicePort() < 1 || this->getVatsimUdpVoicePort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Invalid voice port")); }
             msgs.addCategories(cats);

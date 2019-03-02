@@ -262,7 +262,7 @@ namespace BlackMisc
 
         CStatusMessageList CAirlineIcaoCode::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
             if (!hasValidDesignator()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing designator")); }
             if (!hasValidCountry()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing country")); }

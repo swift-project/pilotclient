@@ -708,10 +708,10 @@ namespace BlackCore
 
         const CLogCategoryList &CDatabaseReader::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats
-            (
-                CThreadedReader::getLogCategories().join({ CLogCategory::swiftDbWebservice(), CLogCategory::webservice() })
-            );
+            static const CLogCategoryList cats = CThreadedReader::getLogCategories().with(
+            {
+                CLogCategory::swiftDbWebservice(), CLogCategory::webservice()
+            });
             return cats;
         }
 

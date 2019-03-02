@@ -179,7 +179,7 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CAudioDeviceInfoList devices = m_voiceOutputDevice->getOutputDevices();
-            devices = devices.join(m_voiceInputDevice->getInputDevices());
+            devices.push_back(m_voiceInputDevice->getInputDevices());
             return devices;
         }
 

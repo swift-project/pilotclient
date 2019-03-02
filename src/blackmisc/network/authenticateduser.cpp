@@ -83,7 +83,7 @@ namespace BlackMisc
 
         CStatusMessageList CAuthenticatedUser::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
             // callsign optional
             if (!this->hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid id"));}

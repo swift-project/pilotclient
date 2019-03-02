@@ -24,10 +24,10 @@ namespace BlackCore
     {
         const CLogCategoryList &CNetworkWatchdog::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats
-            (
-                CContinuousWorker::getLogCategories().join({ CLogCategory::swiftDbWebservice(), CLogCategory::webservice(), CLogCategory::network() })
-            );
+            static const BlackMisc::CLogCategoryList cats = CContinuousWorker::getLogCategories().with(
+            {
+                CLogCategory::swiftDbWebservice(), CLogCategory::webservice(), CLogCategory::network()
+            });
             return cats;
         }
 

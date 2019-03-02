@@ -388,7 +388,7 @@ namespace BlackGui
 
         const CLogCategoryList &CDbStashComponent::validationCategories() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             return cats;
         }
 

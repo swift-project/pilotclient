@@ -68,7 +68,7 @@ namespace BlackCore
         CStatusMessageList CDatabaseAuthenticationService::login(const QString &username, const QString &password)
         {
             CStatusMessageList msgs;
-            static const CLogCategoryList cats(getLogCategories().join({ CLogCategory::validation() }));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
 
             if (!sApp || m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress")); return msgs; }
 
@@ -137,7 +137,7 @@ namespace BlackCore
                     return;
                 }
 
-                static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+                static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
                 const QJsonObject jsonObj(Json::jsonObjectFromString(json));
                 CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
                 CStatusMessageList msgs;

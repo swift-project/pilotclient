@@ -171,7 +171,7 @@ namespace BlackMisc
 
         CStatusMessageList CServer::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
             if (this->getName().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Missing name")); }
             if (this->getAddress().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Missing address")); }

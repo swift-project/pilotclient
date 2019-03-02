@@ -218,7 +218,7 @@ namespace BlackMisc
             newMsgs.append(msg.getMessage());
             CStatusMessage::StatusSeverity ms = msg.getSeverity();
             if (s < ms) { s = ms; }
-            cats = cats.join(msg.getCategories());
+            cats.push_back(msg.getCategories());
         }
         const CStatusMessage newMsg(cats, s, newMsgs.join(", "));
         return newMsg;

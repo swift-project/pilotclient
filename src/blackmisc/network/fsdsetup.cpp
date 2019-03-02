@@ -82,7 +82,7 @@ namespace BlackMisc
 
         CStatusMessageList CFsdSetup::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msgs;
             if (this->getTextCodec().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"No codec")); }
             if (!textCodecNames(true, true).contains(this->getTextCodec())) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Unrecognized codec name")); }

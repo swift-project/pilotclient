@@ -151,7 +151,7 @@ namespace BlackMisc
 
         CStatusMessageList CLivery::validate() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
+            static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             CStatusMessageList msg;
             if (!hasCombinedCode()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Livery: missing livery code")); }
             if (!hasColorFuselage()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Livery: no fuselage color")); }
