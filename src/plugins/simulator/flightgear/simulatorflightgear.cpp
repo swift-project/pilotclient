@@ -740,7 +740,7 @@ namespace BlackSimPlugin
                 const CLength cg = std::isnan(cgValue) ?
                                    CLength::null() :
                                    CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
-                //this->rememberElevationAndCG(cs, fgAircraft.getAircraftModelString(), elevation, cg);
+                this->rememberElevationAndCG(cs, fgAircraft.getAircraftModelString(), elevation, cg);
 
                 // loopback
                 if (logCallsigns.contains(cs))
