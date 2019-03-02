@@ -17,10 +17,6 @@ namespace BlackMisc
         CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other)
         { }
 
-        CRawFsdMessageList::CRawFsdMessageList(std::initializer_list<CRawFsdMessage> il) :
-            CSequence<CRawFsdMessage>(il)
-        { }
-
         CRawFsdMessageList CRawFsdMessageList::findByPacketType(const QString &type) const
         {
             return this->findBy([ & ](const CRawFsdMessage &rawFsdMessage)

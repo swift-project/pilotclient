@@ -22,9 +22,5 @@ namespace BlackMisc
         CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other) :
             CSequence<CCoordinateGeodetic>(other)
         { }
-
-        CCoordinateGeodeticList::CCoordinateGeodeticList(std::initializer_list<CCoordinateGeodetic> il) :
-            CSequence<CCoordinateGeodetic>(il)
-        { }
     } // namespace
 } // namespace

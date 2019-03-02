@@ -12,7 +12,4 @@ namespace BlackMisc
 {
     CVariantList::CVariantList(const CSequence &other) : CSequence(other)
     {}
-
-    CVariantList::CVariantList(std::initializer_list<CVariant> il) : CSequence(il)
-    {}
 } // ns

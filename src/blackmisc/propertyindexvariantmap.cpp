@@ -116,7 +116,7 @@ namespace BlackMisc
 
     CPropertyIndexList CPropertyIndexVariantMap::indexes() const
     {
-        return CSequence<CPropertyIndex>(m_values.keys());
+        return m_values.keys();
     }
 
     int CPropertyIndexVariantMap::size() const

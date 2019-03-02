@@ -41,9 +41,6 @@ namespace BlackMisc
             //! Default constructor.
             CCoordinateGeodeticList();
 
-            //! Construct by coordinates
-            CCoordinateGeodeticList(std::initializer_list<CCoordinateGeodetic> coordinates);
-
             //! Construct from a base class object.
             CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
         };

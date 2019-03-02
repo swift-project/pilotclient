@@ -41,9 +41,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CRawFsdMessageList(const CSequence &other);
 
-            //! Construct from initializer list.
-            CRawFsdMessageList(std::initializer_list<CRawFsdMessage> il);
-
             //! Find by a given list of raw messages which are type
             CRawFsdMessageList findByPacketType(const QString &type) const;
 

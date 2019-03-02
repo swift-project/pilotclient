@@ -21,10 +21,6 @@ namespace BlackMisc
             CSequence<CAircraftParts>(other)
         { }
 
-        CAircraftPartsList::CAircraftPartsList(std::initializer_list<CAircraftParts> il) :
-            CSequence<CAircraftParts>(il)
-        { }
-
         int CAircraftPartsList::setOnGround(bool onGround)
         {
             int c = 0;

@@ -39,9 +39,6 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CJoystickButtonList(const CSequence<CJoystickButton> &baseClass);
-
-            //! Initializer list constructor.
-            CJoystickButtonList(std::initializer_list<CJoystickButton> il) : CSequence<CJoystickButton>(il) {}
         };
 
     } //namespace

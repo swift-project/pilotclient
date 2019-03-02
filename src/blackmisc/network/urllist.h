@@ -78,11 +78,8 @@ namespace BlackMisc
             //! By list of URLs
             explicit CFailoverUrlList(const QStringList &listOfUrls, int maxTrials = 2);
 
-            //! Construct from a base class object.
-            CFailoverUrlList(const CSequence<CUrl> &other, int maxTrials = 2);
-
             //! From url list
-            CFailoverUrlList(const CUrlList &urlIst);
+            CFailoverUrlList(const CUrlList &urlIst, int maxTrials = 2);
 
             //! All failed URLs
             const CUrlList &getFailedUrls() const { return m_failedUrls; }

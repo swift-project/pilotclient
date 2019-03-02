@@ -21,9 +21,6 @@ namespace BlackMisc
 {
     CPlatformSet::CPlatformSet() { }
 
-    CPlatformSet::CPlatformSet(std::initializer_list<CPlatform> il) : CCollection<CPlatform>(il)
-    { }
-
     CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other)
     { }
 

@@ -62,7 +62,7 @@ namespace BlackGui
 
         bool CDownloadComponent::setDownloadFile(const CRemoteFile &remoteFile)
         {
-            return this->setDownloadFiles(CRemoteFileList(remoteFile));
+            return this->setDownloadFiles(CRemoteFileList { remoteFile });
         }
 
         bool CDownloadComponent::setDownloadFiles(const CRemoteFileList &remoteFiles)

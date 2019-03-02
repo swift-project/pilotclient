@@ -40,9 +40,6 @@ namespace BlackMisc
             //! Default constructor.
             CWindLayerList() = default;
 
-            //! Initializer list constructor.
-            CWindLayerList(std::initializer_list<CWindLayer> il) : CSequence<CWindLayer>(il) {}
-
             //! Construct from a base class object.
             CWindLayerList(const CSequence<CWindLayer> &other);
 

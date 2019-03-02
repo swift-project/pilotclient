@@ -53,9 +53,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftSituationList(const CSequence<CAircraftSituation> &other);
 
-            //! Construct from initializer list.
-            CAircraftSituationList(std::initializer_list<CAircraftSituation> il);
-
             //! Front or NULL
             CAircraftSituation frontOrNull() const;
 

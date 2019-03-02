@@ -38,9 +38,6 @@ namespace BlackMisc
             //! Default constructor
             CActionHotkeyList() = default;
 
-            //! Construct from std::initializer_list<bool>
-            CActionHotkeyList(std::initializer_list<CActionHotkey> il) : CSequence<CActionHotkey>(il) {}
-
             //! Construct from a base class object.
             CActionHotkeyList(const CSequence<CActionHotkey> &baseClass);
 

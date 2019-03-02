@@ -40,9 +40,6 @@ namespace BlackMisc
             //! Default constructor.
             CVisibilityLayerList() = default;
 
-            //! Initializer list constructor.
-            CVisibilityLayerList(std::initializer_list<CVisibilityLayer> il) : CSequence<CVisibilityLayer>(il) {}
-
             //! Construct from a base class object.
             CVisibilityLayerList(const CSequence<CVisibilityLayer> &other);
 

@@ -43,9 +43,6 @@ namespace BlackMisc
         //! Default constructor.
         CVariantMap() {}
 
-        //! Initializer list constructor.
-        CVariantMap(std::initializer_list<std::pair<QString, CVariant>> il) : CDictionary(il) {}
-
         //! Copy constructor.
         CVariantMap(const CVariantMap &) = default;
 

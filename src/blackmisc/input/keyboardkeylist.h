@@ -38,14 +38,8 @@ namespace BlackMisc
             //! Default constructor
             CKeyboardKeyList();
 
-            //! Init by single key
-            CKeyboardKeyList(CKeyboardKey key);
-
             //! Construct from a base class object.
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
-
-            //! Initializer list constructor.
-            CKeyboardKeyList(std::initializer_list<CKeyboardKey> il) : CSequence<CKeyboardKey>(il) {}
 
             //! All key strings
             QStringList getKeyStrings() const;

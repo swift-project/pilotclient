@@ -19,7 +19,7 @@ namespace BlackMisc
 {
     namespace Input
     {
-        CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList(key))
+        CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList { key })
         { }
 
         CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)

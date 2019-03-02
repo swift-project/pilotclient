@@ -19,10 +19,6 @@ namespace BlackMisc
             CSequence<CAircraftSituationChange>(other)
         { }
 
-        CAircraftSituationChangeList::CAircraftSituationChangeList(std::initializer_list<CAircraftSituationChange> il) :
-            CSequence<CAircraftSituationChange>(il)
-        { }
-
         CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
         {
             if (this->isEmpty()) { return CAircraftSituationChange::null(); }

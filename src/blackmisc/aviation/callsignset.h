@@ -36,9 +36,6 @@ namespace BlackMisc
             //! Construct from single callsign
             CCallsignSet(const CCallsign &callsign);
 
-            //! Initializer list constructor.
-            CCallsignSet(std::initializer_list<CCallsign> il) : CCollection<CCallsign>(il) {}
-
             //! Construct from a base class object.
             CCallsignSet(const CCollection<CCallsign> &other);
 

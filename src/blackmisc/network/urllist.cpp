@@ -129,12 +129,8 @@ namespace BlackMisc
             CUrlList(listOfUrls), m_maxTrials(maxTrials)
         { }
 
-        CFailoverUrlList::CFailoverUrlList(const CSequence<CUrl> &other, int maxTrials) :
-            CUrlList(other), m_maxTrials(maxTrials)
-        { }
-
-        CFailoverUrlList::CFailoverUrlList(const CUrlList &urlIst) :
-            CUrlList(urlIst)
+        CFailoverUrlList::CFailoverUrlList(const CUrlList &urlIst, int maxTrials) :
+            CUrlList(urlIst), m_maxTrials(maxTrials)
         { }
 
         CUrlList CFailoverUrlList::getWithoutFailed() const

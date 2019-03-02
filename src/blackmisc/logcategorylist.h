@@ -45,23 +45,11 @@ namespace BlackMisc
         //! By single element
         CLogCategoryList(const CLogCategory &category) { this->push_back(category); }
 
-        //! Copy constructor.
-        CLogCategoryList(const CLogCategoryList &) = default;
-
         //! Copy construct from superclass instance.
         CLogCategoryList(const CSequence<CLogCategory> &other) : CSequence<CLogCategory>(other) {}
 
-        //! Initializer list constructor.
-        CLogCategoryList(std::initializer_list<CLogCategory> il) : CSequence<CLogCategory>(il) {}
-
         //! Prevent accidental use of the initializer list constructor.
         CLogCategoryList(std::nullptr_t) = delete;
-
-        //! Copy assignment.
-        CLogCategoryList &operator =(const CLogCategoryList &) = default;
-
-        //! Copy assign from superclass instance.
-        CLogCategoryList &operator =(const CSequence<CLogCategory> &other) { CSequence<CLogCategory>::operator =(other); return *this; }
 
         /*!
          * Construct by extracting categories from a class T.

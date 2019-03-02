@@ -24,11 +24,6 @@ namespace BlackMisc
             CSequence<CRemoteFile>(other)
         { }
 
-        CRemoteFileList::CRemoteFileList(const CRemoteFile &remoteFile)
-        {
-            this->push_back(remoteFile);
-        }
-
         QStringList CRemoteFileList::getNames(bool sorted) const
         {
             QStringList fileNames;

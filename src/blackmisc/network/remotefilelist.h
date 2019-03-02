@@ -41,9 +41,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CRemoteFileList(const CSequence<CRemoteFile> &other);
 
-            //! From single file
-            CRemoteFileList(const CRemoteFile &remoteFile);
-
             //! All file names
             QStringList getNames(bool sorted = true) const;
 

@@ -41,9 +41,6 @@ namespace BlackMisc
             //! Default constructor.
             CTemperatureLayerList() = default;
 
-            //! Initializer list constructor.
-            CTemperatureLayerList(std::initializer_list<CTemperatureLayer> il) : CSequence<CTemperatureLayer>(il) {}
-
             //! Construct from a base class object.
             CTemperatureLayerList(const CSequence<CTemperatureLayer> &other);
 

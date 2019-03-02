@@ -33,9 +33,6 @@ namespace BlackMisc
 
         //! Construct from a base class object.
         CVariantList(const CSequence &other);
-
-        //! Initializer list constructor.
-        CVariantList(std::initializer_list<CVariant> il);
     };
 }
 

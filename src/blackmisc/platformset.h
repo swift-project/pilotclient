@@ -30,9 +30,6 @@ namespace BlackMisc
         //! Default constructor.
         CPlatformSet();
 
-        //! Initializer list constructor.
-        CPlatformSet(std::initializer_list<CPlatform> il);
-
         //! Construct from a base class object.
         CPlatformSet(const CCollection<CPlatform> &other);
 

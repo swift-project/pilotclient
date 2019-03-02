@@ -40,9 +40,6 @@ namespace BlackMisc
             //! Default constructor.
             CCloudLayerList() = default;
 
-            //! Initializer list constructor.
-            CCloudLayerList(std::initializer_list<CCloudLayer> il) : CSequence<CCloudLayer>(il) {}
-
             //! Construct from a base class object.
             CCloudLayerList(const CSequence<CCloudLayer> &other);
 
