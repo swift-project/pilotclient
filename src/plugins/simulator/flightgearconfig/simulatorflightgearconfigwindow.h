@@ -12,7 +12,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/simulation/settings/fgsettings.h"
+#include "blackmisc/simulation/settings/fgswiftbussettings.h"
 #include "simulatorflightgearconfig.h"
 #include <QObject>
 #include <QScopedPointer>

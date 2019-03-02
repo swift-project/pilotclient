@@ -17,7 +17,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/settings/fgsettings.h"
+#include "blackmisc/simulation/settings/fgswiftbussettings.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/aviation/airportlist.h"
