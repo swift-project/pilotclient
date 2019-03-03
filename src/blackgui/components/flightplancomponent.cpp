@@ -574,7 +574,7 @@ namespace BlackGui
         void CFlightPlanComponent::buildRemarksString()
         {
             QString v = ui->cb_VoiceCapabilities->currentText().toUpper();
-            QString rem = CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(v);
+            QString rem = CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(v).append(" ");
 
             v = ui->le_AirlineOperator->text().trimmed();
             if (!v.isEmpty()) rem.append("OPR/").append(v).append(" ");
