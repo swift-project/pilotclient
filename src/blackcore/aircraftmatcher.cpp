@@ -41,7 +41,14 @@ namespace BlackCore
     }
 
     CAircraftMatcher::CAircraftMatcher(const CAircraftMatcherSetup &setup, QObject *parent) : QObject(parent), m_setup(setup)
-    { }
+    {
+        if (sApp && !sApp->isShuttingDown())
+        {
+            sApp->getWebDataServices()->synchronizeDbCaches(CEntityFlags::AircraftCategoryEntity);
+            const CAircraftCategoryList categories = sApp->getWebDataServices()->getAircraftCategories();
+            m_categoryMatcher.setCategories(categories);
+        }
+    }
 
     CAircraftMatcher::CAircraftMatcher(QObject *parent) : CAircraftMatcher(CAircraftMatcherSetup(), parent)
     { }

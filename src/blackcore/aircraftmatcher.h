@@ -15,6 +15,7 @@
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
+#include "blackmisc/simulation/categorymatcher.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
@@ -309,6 +310,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModelList    m_disabledModels;  //!< disabled models for matching
         BlackMisc::Simulation::CSimulatorInfo        m_simulator;       //!< simulator (optional)
         BlackMisc::Simulation::CMatchingStatistics   m_statistics;      //!< matching statistics
+        BlackMisc::Simulation::CCategoryMatcher      m_categoryMatcher; //!< the category matcher
         QString                                      m_modelSetInfo;    //!< info string
     };
 } // namespace
