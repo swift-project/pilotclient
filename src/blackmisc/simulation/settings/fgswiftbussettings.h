@@ -31,7 +31,7 @@ namespace BlackMisc
                 static const char *key() { return "fgswiftbus/server"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("FGSiftBus"); return name; }
+                static const QString &humanReadable() { static const QString name("FGSwiftBus"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static QString defaultValue() { return "tcp:host=127.0.0.1,port=45003"; }

@@ -9,14 +9,13 @@
 #include "simulatorflightgearconfigwindow.h"
 #include "blackcore/application.h"
 #include "ui_simulatorflightgearconfigwindow.h"
-#include "blackmisc/simulation/flightgear/fgswiftbusconfigwriter.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
 
 using namespace BlackGui;
 using namespace BlackMisc;
-using namespace BlackMisc::Simulation::Flightgear;
+//using namespace BlackMisc::Simulation::Flightgear;
 
 namespace BlackSimPlugin
 {
@@ -44,9 +43,6 @@ namespace BlackSimPlugin
             if (currentAddress != ui->comp_SettingsFGSwiftBus->getDBusAddress())
             {
                 m_fgswiftbusServerSetting.set(updatedAddress);
-                CFGSwiftBusConfigWriter fgswiftbusConfigWriter;
-                fgswiftbusConfigWriter.setDBusAddress(updatedAddress);
-                fgswiftbusConfigWriter.updateInAllXPlaneVersions();
             }
             close();
         }
