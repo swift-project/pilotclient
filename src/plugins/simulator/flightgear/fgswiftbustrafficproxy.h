@@ -153,59 +153,59 @@ namespace BlackSimPlugin
             void remoteAircraftAddingFailed(const QString &callsign);
 
         public slots:
-            //! \copydoc FGSwiftBus::CTraffic::acquireMultiplayerPlanes
+            //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired it.
             MultiplayerAcquireInfo acquireMultiplayerPlanes();
 
-            //! \copydoc FGSwiftBus::CTraffic::initialize
+            //! Initialize the multiplayer planes rendering and return true if successful
             bool initialize();
 
-            //! \copydoc FGSwiftBus::CTraffic::cleanup
+            //! Reverse the actions of initialize().
             void cleanup();
 
-            //! \copydoc FGSwiftBus::CTraffic::loadPlanesPackage
+            //! Load a collection of planes from the given directory and return true if successful
             bool loadPlanesPackage(const QString &path);
 
-            //! \copydoc FGSwiftBus::CTraffic::setDefaultIcao
+            //! Set the ICAO code to use for aircraft without a model match
             void setDefaultIcao(const QString &defaultIcao);
 
-            //! \copydoc FGSwiftBus::CTraffic::setDrawingLabels
+            //! Set whether the plugin draws type and callsign labels above aircraft
             void setDrawingLabels(bool drawing);
 
-            //! \copydoc FGSwiftBus::CTraffic::isDrawingLabels
+            //! Get whether the plugin draws type and callsign labels above aircraft
             bool isDrawingLabels() const;
 
-            //! \copydoc FGSwiftBus::CTraffic::setMaxPlanes
+            //! Set the maximum number of aircraft.
             void setMaxPlanes(int planes);
 
-            //! \copydoc FGSwiftBus::CTraffic::setMaxDrawDistance
+            //! Set the maximum distance at which to draw aircraft (nautical miles).
             void setMaxDrawDistance(double nauticalMiles);
 
-            //! \copydoc FGSwiftBus::CTraffic::addPlane
+            //! Introduce a new traffic aircraft
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
-            //! \copydoc FGSwiftBus::CTraffic::removePlane
+            //! Remove a traffic aircraft
             void removePlane(const QString &callsign);
 
-            //! \copydoc FGSwiftBus::CTraffic::removeAllPlanes
+            //! Remove all traffic aircraft
             void removeAllPlanes();
 
-            //! \copydoc FGSwiftBus::CTraffic::setPlanesPositions
+            //! Set the position of multiple traffic aircrafts
             void setPlanesPositions(const BlackSimPlugin::Flightgear::PlanesPositions &planesPositions);
 
-            //! \copydoc FGSwiftBus::CTraffic::setPlanesTransponders
+            //! Set the transponder of multiple traffic aircraft
             void setPlanesTransponders(const BlackSimPlugin::Flightgear::PlanesTransponders &planesTransponders);
 
-            //! \deprecated FGSwiftBus::CTraffic::setInterpolatorMode
+            //! Set interpolator mode
             void setInterpolatorMode(const QString &callsign, bool spline);
 
-            //! \copydoc FGSwiftBus::CTraffic::getRemoteAircraftData
+            //! Get remote aircrafts data (lat, lon, elevation and CG)
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
-            //! \copydoc FGSwiftBus::CTraffic::getElevationAtPosition
+            //! Get the ground elevation at an arbitrary position
             void getElevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
                                         const ElevationCallback &setter) const;
 
-            //! \copydoc FGSwiftBus::CTraffic::setFollowedAircraft
+            //! Sets the aircraft with callsign to be followed in plane view
             void setFollowedAircraft(const QString &callsign);
 
         private:

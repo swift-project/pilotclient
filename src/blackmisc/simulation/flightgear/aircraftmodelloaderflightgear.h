@@ -12,6 +12,9 @@
 namespace BlackMisc{
     namespace Simulation {
         namespace Flightgear {
+        /*!
+         * Flightgear aircraft model loader
+         */
         class AircraftModelLoaderFlightgear : public Simulation::IAircraftModelLoader{
             Q_OBJECT
 
@@ -19,15 +22,16 @@ namespace BlackMisc{
         public:
 
 
-            //Constructor
+            //! Constructor
             AircraftModelLoaderFlightgear(QObject *parent = nullptr);
 
+            //! Virtual destructor
             virtual ~AircraftModelLoaderFlightgear() override;
 
             // Interface functions
-            // Parsed or injected models
+            //! Parsed or injected models
             void updateInstalledModels(const CAircraftModelList &models);
-            bool isLoadingFinished() const;
+            bool isLoadingFinished() const override;
 
             protected:
             // Interface functions

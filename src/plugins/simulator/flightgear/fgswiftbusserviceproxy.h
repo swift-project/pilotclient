@@ -103,94 +103,94 @@ namespace BlackSimPlugin
             //! Get own aircraft situation data
             void getOwnAircraftSituationData(BlackSimPlugin::Flightgear::FlightgearData *o_flightgearData);
 
-            //! \copydoc FGSwiftBus::CService::addTextMessage
+            //! Add a text message to the on-screen display
             void addTextMessage(const QString &text);
 
-            //! \copydoc FGSwiftBus::CService::getAircraftModelPath
+            //! Get full path to current aircraft model
             //! @{
             QString getAircraftModelPath() const;
             void getAircraftModelPathAsync(QString *o_modelPath);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftModelFilename
+            //! Get base filename of current aircraft model
             //! @{
             QString getAircraftModelFilename() const;
             void getAircraftModelFilenameAsync(QString *o_modelFilename);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftLivery
+            //! Get current aircraft livery
             //! @{
             QString getAircraftLivery() const;
             void getAircraftLiveryAsync(QString *o_modelLivery);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftIcaoCode
+            //! Get the ICAO code of the current aircraft model
             //! @{
             QString getAircraftIcaoCode() const;
             void getAircraftIcaoCodeAsync(QString *o_icaoCode);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftDescription
+            //! Get the description of the current aircraft model
             //! @{
             QString getAircraftDescription() const;
             void getAircraftDescriptionAsync(QString *o_description);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftModelString
+            //! Get canonical swift model string of current aircraft model
             //! @{
             QString getAircraftModelString() const;
             void getAircraftModelStringAsync(QString *o_modelString);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAircraftName
+            //! Get name of current aircraft model
             //! @{
             QString getAircraftName() const;
             void getAircraftNameAsync(QString *o_name);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::isPaused
+            //! True if sim is paused
             //! @{
             bool isPaused() const;
             void isPausedAsync(bool *o_paused);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getLatitudeDeg
+            //! Get aircraft latitude in degrees
             //! @{
             double getLatitudeDeg() const;
             void getLatitudeDegAsync(double *o_latitude);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getLongitudeDeg
+            //! Get aircraft longitude in degrees
             //! @{
             double getLongitudeDeg() const;
             void getLongitudeDegAsync(double *o_longitude);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getAltitudeMslFt
+            //! Get aircraft altitude in feet
             //! @{
             double getAltitudeMslFt() const;
             void getAltitudeMslFtAsync(double *o_altitude);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getHeightAglFt
+            //! Get aircraft height in feet
             //! @{
             double getHeightAglFt() const;
             void getHeightAglFtAsync(double *o_height);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getGroundSpeedKts
+            //! Get aircraft groundspeed in knots
             //! @{
             double getGroundSpeedKts() const;
             void getGroundSpeedKtsAsync(double *o_groundspeed);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getPitchDeg
+            //! Get aircraft pitch in degrees above horizon
             //! @{
             double getPitchDeg() const;
             void getPitchDegAsync(double *o_pitch);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getRollDeg
+            //! Get aircraft roll in degrees
             //! @{
             double getRollDeg() const;
             void getRollDegAsync(double *o_roll);
@@ -202,122 +202,121 @@ namespace BlackSimPlugin
             void getAllWheelsOnGroundAsync(bool *o_allWheels);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getCom1ActiveKhz
+            //! Get the current COM1 active frequency in kHz
             //! @{
             int getCom1ActiveKhz() const;
             void getCom1ActiveKhzAsync(int *o_com1Active);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getCom1StandbyKhz
+            //! Get the current COM1 standby frequency in kHz
             //! @{
             int getCom1StandbyKhz() const;
             void getCom1StandbyKhzAsync(int *o_com1Standby);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getCom2ActiveKhz
+            //! Get the current COM2 active frequency in kHz
             //! @{
             int getCom2ActiveKhz() const;
             void getCom2ActiveKhzAsync(int *o_com2Active);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getCom2StandbyKhz
+            //! Get the current COM2 standby frequency in kHz
             //! @{
             int getCom2StandbyKhz() const;
             void getCom2StandbyKhzAsync(int *o_com2Standby);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getTransponderCode
+            //! Get the current transponder code in decimal
             //! @{
             int getTransponderCode() const;
             void getTransponderCodeAsync(int *o_xpdrCode);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getTransponderMode
+            //! Get the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
             //! @{
             int getTransponderMode() const;
             void getTransponderModeAsync(int *o_xpdrMode);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getTransponderIdent
+            //! Get whether we are currently squawking ident
             //! @{
             bool getTransponderIdent() const;
             void getTransponderIdentAsync(bool *o_ident);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getLandingLightsOn
+            //! Get whether beacon lights are on
             //! @{
             bool getBeaconLightsOn() const;
             void getBeaconLightsOnAsync(bool *o_beaconLightsOn);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getLandingLightsOn
+            //! Get whether landing lights are on
             //! @{
             bool getLandingLightsOn() const;
             void getLandingLightsOnAsync(bool *o_landingLightsOn);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getNavLightsOn
+            //! Get whether nav lights are on
             //! @{
             bool getNavLightsOn() const;
             void getNavLightsOnAsync(bool *o_navLightsOn);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getStrobeLightsOn
+            //! Get whether strobe lights are on
             //! @{
             bool getStrobeLightsOn() const;
             void getStrobeLightsOnAsync(bool *o_strobeLightsOn);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getTaxiLightsOn
+            //! Get whether taxi lights are on
             //! @{
             bool getTaxiLightsOn() const;
             void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getQNHInHg
+            //! Get barometric pressure at sea level in inches of mercury.
             //! @{
             double getQNHInHg() const;
             void getQNHInHgAsync(double *o_qnh);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::setCom1ActiveKhz
+            //! Set the current COM1 active frequency in kHz
             void setCom1ActiveKhz(int freq);
 
-            //! \copydoc FGSwiftBus::CService::setCom1StandbyKhz
+            //! Set the current COM1 standby frequency in kHz
             void setCom1StandbyKhz(int freq);
 
-            //! \copydoc FGSwiftBus::CService::setCom2ActiveKhz
+            //! Set the current COM2 active frequency in kHz
             void setCom2ActiveKhz(int freq);
 
-            //! \copydoc FGSwiftBus::CService::setCom2StandbyKhz
+            //! Set the current COM2 standby frequency in kHz
             void setCom2StandbyKhz(int freq);
 
-            //! \copydoc FGSwiftBus::CService::setTransponderCode
+            //! Set the current transponder code in decimal
             void setTransponderCode(int code);
 
-            //! \copydoc FGSwiftBus::CService::setTransponderMode
+            //! Set the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
             void setTransponderMode(int mode);
 
-            //! \copydoc FGSwiftBus::CService::getFlapsDeployRatio
-
+            //! Get flaps deploy ratio, where 0.0 is flaps fully retracted, and 1.0 is flaps fully extended.
             //! @{
             double getFlapsDeployRatio() const;
             void getFlapsDeployRatioAsync(double *o_flapsDeployRatio);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getGearDeployRatio
+            //! Get gear deploy ratio, where 0 is up and 1 is down
             //! @{
             double getGearDeployRatio() const;
             void getGearDeployRatioAsync(double *o_gearDeployRatio);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getEngineN1Percentage
+            //! Get the N1 speed as percent of max (per engine)
             //! @{
             QList<double> getEngineN1Percentage() const;
             void getEngineN1PercentageAsync(QList<double> *o_engineN1Percentage);
             //! @}
 
-            //! \copydoc FGSwiftBus::CService::getSpeedBrakeRatio
+            //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
             //! @{
             double getSpeedBrakeRatio() const;
             void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
