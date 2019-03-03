@@ -156,6 +156,7 @@ namespace BlackCore
     CFlightPlan CAirspaceMonitor::loadFlightPlanFromNetwork(const CCallsign &callsign)
     {
         CFlightPlan plan;
+        QPointer<CAirspaceMonitor> myself(this);
 
         // use cache, but not for own callsign (always reload)
         if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
@@ -167,12 +168,12 @@ namespace BlackCore
             // with this little trick we try to make an asynchronous signal / slot
             // based approach a synchronous return value
             const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
-            while (QTime::currentTime() < waitForFlightPlan)
+            while (sApp && QTime::currentTime() < waitForFlightPlan)
             {
                 // process some other events and hope network answer is received already
                 // CEventLoop::processEventsUntil cannot be used, as a received flight plan might be for another callsign
                 sApp->processEventsFor(100);
-                if (!sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
                 if (m_flightPlanCache.contains(callsign))
                 {
                     plan = m_flightPlanCache[callsign];

@@ -447,7 +447,14 @@ namespace BlackGui
                     m = CStatusMessage(this).validationError(u"No errors, but not connected, cannot send flight plan");
                 }
                 ui->le_LastSent->setText(lastSent);
-                this->showOverlayMessage(m, OverlayMessageMs);
+                if (m.isSeverityInfoOrLess())
+                {
+                    this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
+                }
+                else
+                {
+                    this->showOverlayMessage(m, OverlayTimeoutMs);
+                }
                 m_sentFlightPlan = flightPlan; // last valid FP
             }
             else
@@ -496,7 +503,7 @@ namespace BlackGui
             }
             else
             {
-                this->showOverlayMessages(msgs, OverlayMessageMs);
+                this->showOverlayMessages(msgs, OverlayTimeoutMs);
             }
         }
 
@@ -789,7 +796,7 @@ namespace BlackGui
             }
 
             // messages
-            this->showOverlayMessages(msgs, false, OverlayMessageMs);
+            this->showOverlayMessages(msgs, false, OverlayTimeoutMs);
 
             // copy over
             if (msgs.isSuccess())
