@@ -21,6 +21,7 @@
 #include <QJsonArray>
 #include <QMetaType>
 #include <QSet>
+#include <QList>
 #include <tuple>
 
 namespace BlackMisc
@@ -57,11 +58,27 @@ namespace BlackMisc
             //! All levels sorted
             QList<int> getFirstLevels() const;
 
+            //! Find highest (top) level of categories
+            CAircraftCategoryList findHighestLevels(const CAircraftCategoryList &categories);
+
             //! Find by first level
             CAircraftCategoryList findByFirstLevel(int level) const;
 
+            //! Find by levels
+            CAircraftCategoryList findByLevel(const QList<int> &level) const;
+
             //! Find first levels
             CAircraftCategoryList findFirstLevels() const;
+
+            //! Find siblings
+            //! \remark if level is 3.2, siblings are 3.1 and 3.3
+            CAircraftCategoryList findSiblings(const CAircraftCategory &category) const;
+
+            //! Remove by level
+            int removeIfLevel(const QList<int> &level);
+
+            //! With removed categories
+            CAircraftCategoryList removedLevel(const QList<int> &level) const;
 
             //! From our database JSON format
             static CAircraftCategoryList fromDatabaseJson(const QJsonArray &array);

@@ -21,6 +21,7 @@
 
 #include <QJsonObject>
 #include <QMap>
+#include <QList>
 #include <QStringList>
 #include <QMetaType>
 
@@ -77,6 +78,9 @@ namespace BlackMisc
             //! Level
             void setLevel(int l1, int l2, int l3);
 
+            //! Levels depending on depth, 3.2 -> 3,2 / 1.0 -> 1 / 4.3.1 -> 4,3,1
+            QList<int> getLevel() const;
+
             //! First level
             int getFirstLevel() const { return m_l1; }
 
@@ -94,6 +98,12 @@ namespace BlackMisc
 
             //! Matching path?
             bool matchesPath(const QString &path, Qt::CaseSensitivity cs);
+
+            //! Is matching the level, 0 ignored
+            bool matchesLevel(int l1, int l2 = 0, int l3 = 0) const;
+
+            //! Is matching the level, 0 ignored
+            bool matchesLevel(const QList<int> &level) const;
 
             //! Assignable?
             bool isAssignable() const { return m_assignable; }
@@ -121,6 +131,9 @@ namespace BlackMisc
 
             //! Level compare
             int compareByLevel(const CAircraftCategory &other) const;
+
+            //! Higher level?
+            bool isHigherLevel(const CAircraftCategory &other) const;
 
             //! NULL object
             static const CAircraftCategory &null();

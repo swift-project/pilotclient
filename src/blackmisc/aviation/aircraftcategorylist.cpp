@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <Qt>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -68,12 +69,57 @@ namespace BlackMisc
             return ll;
         }
 
+        CAircraftCategoryList CAircraftCategoryList::findHighestLevels(const CAircraftCategoryList &categories)
+        {
+            if (categories.isEmpty()) { return CAircraftCategoryList(); }
+            QMap<int, CAircraftCategory> highestLevels;
+            for (const CAircraftCategory &category : *this)
+            {
+                const int fl = category.getFirstLevel();
+                if (highestLevels.contains(fl))
+                {
+                    if (highestLevels[fl].isHigherLevel(category))
+                    {
+                        highestLevels[fl] = category;
+                    }
+                }
+                else
+                {
+                    highestLevels[fl] = category;
+                }
+            }
+
+            CAircraftCategoryList topLevels;
+            for (const CAircraftCategory &category : highestLevels.values())
+            {
+                topLevels.push_back(category);
+            }
+            return topLevels;
+        }
+
         CAircraftCategoryList CAircraftCategoryList::findByFirstLevel(int level) const
         {
             CAircraftCategoryList categories;
             for (const CAircraftCategory &category : *this)
             {
-                if (category.getFirstLevel() != level) { continue; }
+                if (category.getFirstLevel() == level)
+                {
+                    categories.push_back(category);
+                }
+            }
+            return categories;
+        }
+
+        CAircraftCategoryList CAircraftCategoryList::findByLevel(const QList<int> &level) const
+        {
+            CAircraftCategoryList categories;
+            if (level.isEmpty()) { return categories; }
+            for (const CAircraftCategory &category : *this)
+            {
+                if (category.matchesLevel(level))
+                {
+                    categories.push_back(category);
+                }
             }
             return categories;
         }
@@ -81,6 +127,45 @@ namespace BlackMisc
         CAircraftCategoryList CAircraftCategoryList::findFirstLevels() const
         {
             return this->findBy(&CAircraftCategory::isFirstLevel, true);
+        }
+
+        CAircraftCategoryList CAircraftCategoryList::findSiblings(const CAircraftCategory &category) const
+        {
+            QList<int> levels = category.getLevel();
+            CAircraftCategoryList categories;
+            if (levels.size() < 2)
+            {
+                categories = this->findFirstLevels();
+            }
+            else
+            {
+                levels.removeLast();
+                categories = this->findByLevel(levels);
+            }
+            categories.remove(category);
+            return categories;
+        }
+
+        int CAircraftCategoryList::removeIfLevel(const QList<int> &level)
+        {
+            if (level.isEmpty()) { return 0; }
+            const int c = this->size();
+            const CAircraftCategoryList removed = this->removedLevel(level);
+            const int delta = c - removed.size();
+            if (delta > 0) { *this = removed; }
+            return delta;
+        }
+
+        CAircraftCategoryList CAircraftCategoryList::removedLevel(const QList<int> &level) const
+        {
+            if (level.isEmpty()) { return *this; } // nothing removed
+            CAircraftCategoryList removed;
+            for (const CAircraftCategory &category : * this)
+            {
+                if (category.matchesLevel(level)) { continue; }
+                removed.push_back(category);
+            }
+            return removed;
         }
 
         CAircraftCategoryList CAircraftCategoryList::fromDatabaseJson(const QJsonArray &array)

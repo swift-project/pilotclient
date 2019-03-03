@@ -83,6 +83,15 @@ namespace BlackMisc
             m_l3 = l3;
         }
 
+        QList<int> CAircraftCategory::getLevel() const
+        {
+            QList<int> l;
+            if (m_l1 > 0) l << m_l1;
+            if (m_l2 > 0) l << m_l2;
+            if (m_l3 > 0) l << m_l3;
+            return l;
+        }
+
         bool CAircraftCategory::isFirstLevel() const
         {
             return (m_l3 == 0 && m_l2 == 0 && m_l1 > 0);
@@ -108,6 +117,23 @@ namespace BlackMisc
         bool CAircraftCategory::matchesPath(const QString &path, Qt::CaseSensitivity cs)
         {
             return stringCompare(path, this->getPath(), cs);
+        }
+
+        bool CAircraftCategory::matchesLevel(int l1, int l2, int l3) const
+        {
+            if (l1 != m_l1) { return false; }
+            if (l2 > 0 && l2 != m_l2) { return false; }
+            if (l3 > 0 && l3 != m_l3) { return false; }
+            return true;
+        }
+
+        bool CAircraftCategory::matchesLevel(const QList<int> &level) const
+        {
+            if (level.isEmpty()) { return false; }
+            const int l1 = level.first();
+            const int l2 = level.size() > 1 ? level.at(1) : 0;
+            const int l3 = level.size() > 2 ? level.at(2) : 0;
+            return this->matchesLevel(l1, l2, l3);
         }
 
         CVariant CAircraftCategory::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -183,6 +209,12 @@ namespace BlackMisc
             if (c != 0) { return c; }
             c = Compare::compare(m_l3, other.m_l3);
             return c;
+        }
+
+        bool CAircraftCategory::isHigherLevel(const CAircraftCategory &other) const
+        {
+            const int c = this->compareByLevel(other);
+            return c < 0;
         }
     } // namespace
 } // namespace
