@@ -284,13 +284,13 @@ namespace BlackMisc
             const PhysicalQuantities::CTime &getEnrouteTime() const { return m_enrouteTime; }
 
             //! Get planned enroute flight time
-            QString getEnrouteTimeHourMin() const { return m_enrouteTime.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+            QString getEnrouteTimeHourMin() const { return m_enrouteTime.valueRoundedWithUnit(PhysicalQuantities::CTimeUnit::hrmin()); }
 
             //! Get amount of fuel load in time
             const PhysicalQuantities::CTime &getFuelTime() const { return m_fuelTime; }
 
             //! Get amount of fuel load in time
-            QString getFuelTimeHourMin() const { return m_fuelTime.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+            QString getFuelTimeHourMin() const { return m_fuelTime.valueRoundedWithUnit(PhysicalQuantities::CTimeUnit::hrmin()); }
 
             //! Cruising altitudes
             const CAltitude &getCruiseAltitude() const { return m_cruiseAltitude; }
@@ -308,7 +308,7 @@ namespace BlackMisc
             FlightRules getFlightRulesAsVFRorIFR() const;
 
             //! Get flight rules as in FlightRules as string
-            QString getFlightRulesAsString() const { return flightRuleToString(this->getFlightRules()); }
+            QString getFlightRulesAsString() const { return CFlightPlan::flightRuleToString(this->getFlightRules()); }
 
             //! Get route string
             const QString &getRoute() const { return m_route; }
@@ -452,8 +452,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(enrouteTime),
                 BLACK_METAMEMBER(fuelTime),
                 BLACK_METAMEMBER(cruiseAltitude),
-                BLACK_METAMEMBER(cruiseAltitude),
                 BLACK_METAMEMBER(cruiseAltitudeString),
+                BLACK_METAMEMBER(cruiseTrueAirspeed),
                 BLACK_METAMEMBER(flightRules),
                 BLACK_METAMEMBER(route),
                 BLACK_METAMEMBER(remarks),
