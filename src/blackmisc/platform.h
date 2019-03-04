@@ -118,6 +118,12 @@ namespace BlackMisc
         //! Current platform
         static const CPlatform &currentPlatform();
 
+        //! Is this the current platform
+        static bool isCurrentPlatform(const QString &platform);
+
+        //! Is this the current platform
+        static bool isCurrentPlatform(const CPlatform &platform);
+
         //! Win32
         static const CPlatform &win32Platform();
 

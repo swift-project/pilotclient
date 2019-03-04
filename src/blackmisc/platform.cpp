@@ -181,6 +181,17 @@ namespace BlackMisc
         return p;
     }
 
+    bool CPlatform::isCurrentPlatform(const QString &platform)
+    {
+        if (platform.isEmpty()) { return false; }
+        return isCurrentPlatform(CPlatform::stringToPlatform(platform));
+    }
+
+    bool CPlatform::isCurrentPlatform(const CPlatform &platform)
+    {
+        return platform == CPlatform::currentPlatform();
+    }
+
     const CPlatform &CPlatform::win32Platform()
     {
         static const CPlatform p(Win32);
