@@ -20,6 +20,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QPointer>
 #include <QDesktopServices>
 
 using namespace BlackMisc;
@@ -102,7 +103,12 @@ namespace BlackGui
             if (!m_waitingForDownload.isEmpty()) { return false; }
             if (delayMs > 0)
             {
-                QTimer::singleShot(delayMs, this, [ = ] { this->triggerDownloadingOfFiles(); });
+                const QPointer<CDownloadComponent> myself(this);
+                QTimer::singleShot(delayMs, this, [ = ]
+                {
+                    if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                    this->triggerDownloadingOfFiles();
+                });
                 return true;
             }
             m_waitingForDownload = m_remoteFiles;
@@ -125,7 +131,7 @@ namespace BlackGui
         CDownloadComponent::Mode CDownloadComponent::getMode() const
         {
             Mode mode = ui->cb_Shutdown->isChecked() ? ShutdownSwift : JustDownload;
-            if (ui->cb_StartAfterDownload) mode |= StartAfterDownload;
+            if (ui->cb_StartAfterDownload) { mode |= StartAfterDownload; }
             return mode;
         }
 
@@ -228,7 +234,12 @@ namespace BlackGui
 
         void CDownloadComponent::lastFileDownloaded()
         {
-            QTimer::singleShot(0, this, &CDownloadComponent::allDownloadsCompleted);
+            const QPointer<CDownloadComponent> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                this->allDownloadsCompleted();
+            });
             this->startDownloadedExecutable();
         }
 
@@ -330,8 +341,8 @@ namespace BlackGui
 
         void CDownloadComponent::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
         {
-            ui->prb_Current->setMaximum(bytesTotal);
-            ui->prb_Current->setValue(bytesReceived);
+            ui->prb_Current->setMaximum(static_cast<int>(bytesTotal));
+            ui->prb_Current->setValue(static_cast<int>(bytesReceived));
         }
 
         void CDownloadComponent::showFileInfo()
