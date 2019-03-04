@@ -19,6 +19,11 @@ namespace BlackMisc
 {
     namespace Db
     {
+        QVersionNumber IDatastoreObject::getQVersion() const
+        {
+            return QVersionNumber::fromString(this->getVersion());
+        }
+
         void IDatastoreObject::setTimestampVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             // we check 2 formats, the DB format and the backend object format

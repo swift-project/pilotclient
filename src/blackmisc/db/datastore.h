@@ -19,8 +19,9 @@
 
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QObject>
+#include <QVersionNumber>
 #include <QString>
+#include <QObject>
 
 namespace BlackMisc
 {
@@ -51,6 +52,12 @@ namespace BlackMisc
         public:
             //! Version info
             const QString &getVersion() const { return m_version; }
+
+            //! Version as QVersion
+            QVersionNumber getQVersion() const;
+
+            //! Having a version?s
+            bool hasVersion() const { return !m_version.isEmpty(); }
 
             //! Version info
             void setVersion(const QString &version) { m_version = version; }

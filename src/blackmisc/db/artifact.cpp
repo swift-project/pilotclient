@@ -25,10 +25,11 @@ namespace BlackMisc
         CArtifact::CArtifact(
             const QString &name, const QString &version, const QString &md5,
             CArtifact::ArtifactType type, int size, bool existing, const CPlatform &platform):
-            m_name(name.trimmed()), m_version(trimVersionString(version)),
+            m_name(name.trimmed()),
             m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
             m_platform(platform)
         {
+            this->setVersion(trimVersionString(version));
             if (!name.isEmpty() && version.isEmpty())
             {
                 m_version = versionNumberFromFilename(name);
@@ -84,15 +85,10 @@ namespace BlackMisc
             return rf;
         }
 
-        QVersionNumber CArtifact::getQVersion() const
-        {
-            return QVersionNumber::fromString(getVersionString());
-        }
-
         bool CArtifact::isNewerThanCurrentBuild() const
         {
             if (this->isUnknown()) { return false; }
-            if (this->getVersionString().isEmpty()) { return false; }
+            if (!this->hasVersion()) { return false; }
             return this->getQVersion() > CBuildConfig::getVersion();
         }
 

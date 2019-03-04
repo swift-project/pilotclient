@@ -150,9 +150,9 @@ namespace BlackMisc
             return rfs;
         }
 
-        QString CArtifactList::getLatestVersionString() const
+        QString CArtifactList::getLatestVersion() const
         {
-            return this->getLatestArtifactOrDefault().getVersionString();
+            return this->getLatestArtifactOrDefault().getVersion();
         }
 
         QVersionNumber CArtifactList::getLatestQVersion() const
@@ -182,9 +182,9 @@ namespace BlackMisc
             QStringList versions;
             for (const CArtifact &artifact : as_const(copy))
             {
-                if (artifact.hasVersionString())
+                if (artifact.hasVersion())
                 {
-                    versions.push_back(artifact.getVersionString());
+                    versions.push_back(artifact.getVersion());
                 }
             }
             return versions;

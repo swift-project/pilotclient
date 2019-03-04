@@ -229,7 +229,7 @@ void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
     {
         static const QString t("New version '%1' ['%2'/'%3']");
         ui->lbl_HeaderInfo->setText(
-            t.arg(latestArtifact.getVersionString(), latestArtifact.getPlatform().getPlatformName(),
+            t.arg(latestArtifact.getVersion(), latestArtifact.getPlatform().getPlatformName(),
                   latestArtifact.getMostStableDistribution().getChannel()));
         ui->lbl_HeaderInfo->setStyleSheet("background: red; color: yellow;");
     }

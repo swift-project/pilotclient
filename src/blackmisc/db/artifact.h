@@ -16,7 +16,6 @@
 #include "blackmisc/platform.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/remotefile.h"
-#include <QVersionNumber>
 #include <QString>
 
 namespace BlackMisc
@@ -59,9 +58,6 @@ namespace BlackMisc
             CArtifact(const QString &name, const QString &version, const QString &md5,
                       ArtifactType type, int size, bool existing, const CPlatform &platform);
 
-            //! Destructor.
-            ~CArtifact() {}
-
             //! Having name?
             bool hasName() const { return !m_name.isEmpty(); }
 
@@ -73,12 +69,6 @@ namespace BlackMisc
 
             //! Matching name?
             bool matchesName(const QString &name, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
-
-            //! Having a version string?
-            bool hasVersionString() const { return !m_version.isEmpty(); }
-
-            //! Version for platform
-            const QString &getVersionString() const { return m_version; }
 
             //! Get type
             ArtifactType getType() const { return static_cast<ArtifactType>(m_type); }
@@ -132,9 +122,6 @@ namespace BlackMisc
             //! \note requires distributions
             Network::CRemoteFile asRemoteFile() const;
 
-            //! Version as QVersion
-            QVersionNumber getQVersion() const;
-
             //! Newer tahn the current build
             bool isNewerThanCurrentBuild() const;
 
@@ -158,7 +145,6 @@ namespace BlackMisc
 
         private:
             QString m_name;    //!< channel the files belong to
-            QString m_version; //!< version string
             QString m_md5;     //!< MD5 checksum
             int  m_type = static_cast<int>(UnknownArtifact); //!< artifact type
             int  m_size = -1;        //!< size

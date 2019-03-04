@@ -88,7 +88,7 @@ namespace BlackMisc
             Network::CRemoteFileList asRemoteFiles() const;
 
             //! Latest version
-            QString getLatestVersionString() const;
+            QString getLatestVersion() const;
 
             //! Latest version
             QVersionNumber getLatestQVersion() const;
