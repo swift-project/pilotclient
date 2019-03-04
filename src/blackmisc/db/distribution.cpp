@@ -43,7 +43,8 @@ namespace BlackMisc
 
         CIcon CDistribution::getRestrictionIcon() const
         {
-            return CIcon::iconByIndex(m_restricted ? CIcons::StandardIconLockClosed16 : CIcons::StandardIconLockOpen16);
+            // StandardIconLockOpen16 is hard to distinguish from closed
+            return CIcon::iconByIndex(m_restricted ? CIcons::StandardIconLockClosed16 : CIcons::StandardIconGlobe16);
         }
 
         bool CDistribution::isStabilitySameOrBetter(const CDistribution &otherDistribution) const
@@ -131,7 +132,7 @@ namespace BlackMisc
 
             const QString channel(json.value("channel").toString());
             const bool restricted = json.value("restricted").toBool();
-            const int stability = json.value("stability").toInt();
+            const int  stability  = json.value("stability").toInt();
             CDistribution distribution(channel, stability, restricted);
             distribution.setKeyVersionTimestampFromDatabaseJson(json);
 
