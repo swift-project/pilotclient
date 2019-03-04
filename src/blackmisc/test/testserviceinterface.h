@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/track.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -264,6 +265,13 @@ namespace BlackMisc
                 return asyncCallWithArgumentList(QLatin1String("pingIndexVariantMap"), argumentList);
             }
 
+            QDBusPendingReply<BlackMisc::Aviation::CFlightPlan> pingFlightPlan(const Aviation::CFlightPlan &flightPlan)
+            {
+                QList<QVariant> argumentList;
+                argumentList << QVariant::fromValue(flightPlan);
+                return asyncCallWithArgumentList(QLatin1String("pingFlightPlan"), argumentList);
+            }
+
             QDBusPendingReply<BlackMisc::Aviation::CAltitude> receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
             {
                 QList<QVariant> argumentList;
@@ -382,12 +390,30 @@ namespace BlackMisc
             template<class ValueObject>
             static bool pingCompare(const ValueObject &in, const ValueObject &out, QTextStream &ts, bool verbose, int &errors)
             {
-                const bool equal = (in == out);
-                if (!equal) { errors++; }
-                if (equal && !verbose) { return true; }
-                ts << "I: " << in.toQString() << endl << "O: " << out.toQString() << endl;
+                const bool equal = (in == out && extraCompare(in, out));
+                if (!equal)
+                {
+                    errors++;
+                    if (verbose) { ts << "I: " << in.toQString() << endl << "O: " << out.toQString() << endl; }
+                }
                 return equal;
             }
+
+            //! Extra comparison step for some types
+            //! @{
+            template<class ValueObject>
+            static bool extraCompare(const ValueObject &, const ValueObject &) { return true; }
+
+            static bool extraCompare(const BlackMisc::Aviation::CFlightPlan &in, const BlackMisc::Aviation::CFlightPlan &out)
+            {
+                // flight plan: check units are preserved
+                if (in.getEnrouteTime().getUnit() != out.getEnrouteTime().getUnit()) { return false; }
+                if (in.getFuelTime().getUnit() != out.getFuelTime().getUnit()) { return false; }
+                if (in.getCruiseAltitude().getUnit() != out.getCruiseAltitude().getUnit()) { return false; }
+                if (in.getCruiseTrueAirspeed().getUnit() != out.getCruiseTrueAirspeed().getUnit()) { return false; }
+                return true;
+            }
+            //! @}
 
             //! Error info string
             static const QString &errorInfo(bool ok);

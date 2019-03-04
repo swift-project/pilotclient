@@ -183,8 +183,6 @@ namespace BlackMisc
         {
             constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
             argument << (this->isNull() ? NaN : this->value(UnitClass::defaultUnit()));
-            // argument << m_value;
-            // argument << m_unit;
         }
 
         template <class MU, class PQ>
@@ -196,8 +194,20 @@ namespace BlackMisc
             {
                 this->setNull();
             }
-            // argument >> m_value;
-            // argument >> m_unit;
+        }
+
+        template <class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::marshallToDbus(QDBusArgument &argument, LosslessTag) const
+        {
+            argument << m_value;
+            argument << m_unit;
+        }
+
+        template <class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::unmarshallFromDbus(const QDBusArgument &argument, LosslessTag)
+        {
+            argument >> m_value;
+            argument >> m_unit;
         }
 
         template <class MU, class PQ>

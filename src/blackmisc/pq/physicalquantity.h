@@ -213,6 +213,12 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument);
 
+            //! Marshal to DBus, preserving the measurement unit
+            void marshallToDbus(QDBusArgument &argument, LosslessTag) const;
+
+            //! Unmarshal from DBus, with preserved measurement unit
+            void unmarshallFromDbus(const QDBusArgument &argument, LosslessTag);
+
             //! \copydoc BlackMisc::Mixin::HashByMetaClass::qHash
             uint getValueHash() const;
 

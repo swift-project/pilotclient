@@ -10,6 +10,7 @@
 #include "testservice.h"
 #include "testing.h"
 #include "blackmisc/test/testdata.h"
+#include "blackmisc/aviation/flightplan.h"
 #include <QTextStream>
 
 class QDBusConnection;
@@ -140,6 +141,15 @@ namespace BlackMisc
             const CClientList clientsPing = testServiceInterface.pingClientList(clients);
             ok = pingCompare(clients, clientsPing, out, verbose, errors);
             if (verbose) { out << "Pinged client list via interface" << errorInfo(ok) << endl; }
+
+            CFlightPlan flightPlan;
+            flightPlan.setEnrouteTime(CTime(4, CTimeUnit::h()));
+            flightPlan.setFuelTime(CTime(5, CTimeUnit::h()));
+            flightPlan.setCruiseAltitude(CAltitude(10, CAltitude::FlightLevel, CLengthUnit::km()));
+            flightPlan.setCruiseTrueAirspeed(CSpeed(500, CSpeedUnit::km_h()));
+            const CFlightPlan flightPlanPing = testServiceInterface.pingFlightPlan(flightPlan);
+            ok = pingCompare(flightPlan, flightPlanPing, out, verbose, errors);
+            if (verbose) { out << "Pinged flight plan via interface" << errorInfo(ok) << endl; }
 
             const CVariant cv = CVariant::fromValue(clients);
             const CVariant cvPing = testServiceInterface.pingCVariant(cv);

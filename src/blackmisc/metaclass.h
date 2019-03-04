@@ -186,7 +186,8 @@ namespace BlackMisc
         DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
         DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
         DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
-        CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
+        CaseInsensitiveComparison = 1 << 5, //!< Element will be compared case insensitively (must be a QString)
+        LosslessMarshalling = 1 << 6        //!< Element marshalling will preserve data at the expense of size
     };
 
     /*!
@@ -205,6 +206,7 @@ namespace BlackMisc
         constexpr static MetaFlags<MetaFlag::DisabledForHashing> DisabledForHashing {};
         constexpr static MetaFlags<MetaFlag::DisabledForJson> DisabledForJson {};
         constexpr static MetaFlags<MetaFlag::CaseInsensitiveComparison> CaseInsensitiveComparison {};
+        constexpr static MetaFlags<MetaFlag::LosslessMarshalling> LosslessMarshalling {};
         //! @}
 
         //! Return a CMetaMemberList of type deduced from the types of the meta members.

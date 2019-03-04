@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/network/client.h"
@@ -215,6 +216,9 @@ namespace BlackMisc
 
             //! Ping ICAO data object
             BlackMisc::Aviation::CAircraftIcaoCode pingAircraftIcaoData(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const;
+
+            //! Ping flight plan
+            BlackMisc::Aviation::CFlightPlan pingFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) const;
 
             //! Ping CVariant
             BlackMisc::CVariant pingCVariant(const BlackMisc::CVariant &variant) const;

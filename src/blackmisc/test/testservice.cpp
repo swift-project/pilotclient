@@ -327,6 +327,12 @@ namespace BlackMisc
             return variant;
         }
 
+        BlackMisc::Aviation::CFlightPlan CTestService::pingFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) const
+        {
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << flightPlan << endl;
+            return flightPlan;
+        }
+
         CAtcStationList CTestService::getAtcStationList(int n) const
         {
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAtcStationList" << endl;

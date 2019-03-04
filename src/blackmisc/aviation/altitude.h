@@ -45,6 +45,7 @@ namespace BlackMisc
             public Mixin::CompareByMetaClass<CAltitude>,
             public Mixin::HashByMetaClass<CAltitude>,
             public Mixin::DBusByMetaClass<CAltitude>,
+            public Mixin::DBusByMetaClass<CAltitude, LosslessTag>,
             public Mixin::JsonByMetaClass<CAltitude>,
             public Mixin::String<CAltitude>,
             public Mixin::Icon<CAltitude>,
@@ -57,6 +58,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude, LosslessTag)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_ICON(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CAltitude)
