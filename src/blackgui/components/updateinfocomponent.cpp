@@ -35,10 +35,10 @@ namespace BlackGui
             ui->setupUi(this);
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
-            connect(sGui, &CGuiApplication::updateInfoAvailable, this, &CUpdateInfoComponent::changedUpdateInfo);
-            connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CUpdateInfoComponent::requestLoadOfSetup);
-            connect(ui->pb_DownloadXSwiftBus, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadXSwiftBusDialog);
-            connect(ui->pb_DownloadInstaller, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadInstallerDialog);
+            connect(sGui, &CGuiApplication::updateInfoAvailable,     this, &CUpdateInfoComponent::changedUpdateInfo,  Qt::QueuedConnection);
+            connect(ui->pb_CheckForUpdates,   &QPushButton::pressed, this, &CUpdateInfoComponent::requestLoadOfSetup, Qt::QueuedConnection);
+            connect(ui->pb_DownloadXSwiftBus, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadXSwiftBusDialog, Qt::QueuedConnection);
+            connect(ui->pb_DownloadInstaller, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadInstallerDialog, Qt::QueuedConnection);
 
             // use version signal as trigger for completion
             if (!m_updateInfo.get().isEmpty()) { this->changedUpdateInfo(); }
@@ -73,7 +73,7 @@ namespace BlackGui
 
         void CUpdateInfoComponent::requestLoadOfSetup()
         {
-            if (!sGui) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const CStatusMessageList msgs(sGui->requestReloadOfSetupAndVersion());
             CLogMessage::preformatted(msgs);
         }
@@ -110,8 +110,8 @@ namespace BlackGui
             if (distributions.containsChannel(settings.front())) { ui->cb_Channels->setCurrentText(settings.front()); }
 
             this->uiSelectionChanged();
-            connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::platformChanged);
-            connect(ui->cb_Channels, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::channelChanged);
+            connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::platformChanged, Qt::QueuedConnection);
+            connect(ui->cb_Channels,  &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::channelChanged,  Qt::QueuedConnection);
 
             // emit via digest signal
             m_dsDistributionAvailable.inputSignal();
@@ -134,7 +134,19 @@ namespace BlackGui
         {
             const CUpdateInfo update(m_updateInfo.get());
             const QString currentVersion = ui->cb_ArtifactsPilotClient->currentText();
-            const CArtifact artifact = update.getArtifactsPilotClient().findFirstByVersionOrDefault(currentVersion);
+            const QString platform = ui->cb_Platforms->currentText();
+            if (!CPlatform::isCurrentPlatform(platform))
+            {
+                const QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("Download installer"),
+                                                        QStringLiteral(
+                                                                "The platform '%1' does not match your current platform '%2'.\n"
+                                                                "Do you want to continue?").arg(platform, CPlatform::currentPlatform().getPlatformName()),
+                                                        QMessageBox::Yes | QMessageBox::No);
+                if (ret != QMessageBox::Yes) { return; }
+            }
+
+            // find artifcat
+            const CArtifact artifact = update.getArtifactsPilotClient().findByMatchingPlatform(platform).findFirstByVersionOrDefault(currentVersion);
 
             if (!m_downloadDialog)
             {
@@ -157,7 +169,7 @@ namespace BlackGui
 
         void CUpdateInfoComponent::saveSettings()
         {
-            const QString channel = this->getSelectedOrDefaultDistribution().getChannel();
+            const QString channel  = this->getSelectedOrDefaultDistribution().getChannel();
             const QString platform = this->getSelectedOrDefaultPlatform().getPlatformName();
             const QStringList settings({ channel, platform });
             const CStatusMessage m = m_updateSettings.setAndSave(settings);
@@ -197,6 +209,7 @@ namespace BlackGui
             ui->cb_ArtifactsXsb->insertItems(0, sortedXsbVersions);
             ui->pb_DownloadXSwiftBus->setEnabled(!artifactsXsb.isEmpty());
 
+            //! \fixme hardcoded stylesheet color
             const bool newer = this->isNewPilotClientVersionAvailable();
             ui->lbl_StatusInfo->setText(newer ? "New version available" : "Nothing new");
             ui->lbl_StatusInfo->setStyleSheet(newer ?
