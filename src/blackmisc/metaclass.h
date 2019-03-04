@@ -141,7 +141,7 @@ namespace BlackMisc
 
         //! True if m_flags contains all flags.
         template <typename Flags2>
-        constexpr bool has(Flags2 flags) const { return (m_flags & flags) == flags; }
+        constexpr bool has(Flags2 flags) const { return (MetaFlags<Flags>() & flags) == flags; }
 
         //! Invoke the member on an instance of the value class.
         template <typename T, typename... Ts>
