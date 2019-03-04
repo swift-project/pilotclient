@@ -162,24 +162,6 @@ namespace BlackSimPlugin
             //! Reverse the actions of initialize().
             void cleanup();
 
-            //! Load a collection of planes from the given directory and return true if successful
-            bool loadPlanesPackage(const QString &path);
-
-            //! Set the ICAO code to use for aircraft without a model match
-            void setDefaultIcao(const QString &defaultIcao);
-
-            //! Set whether the plugin draws type and callsign labels above aircraft
-            void setDrawingLabels(bool drawing);
-
-            //! Get whether the plugin draws type and callsign labels above aircraft
-            bool isDrawingLabels() const;
-
-            //! Set the maximum number of aircraft.
-            void setMaxPlanes(int planes);
-
-            //! Set the maximum distance at which to draw aircraft (nautical miles).
-            void setMaxDrawDistance(double nauticalMiles);
-
             //! Introduce a new traffic aircraft
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
@@ -192,21 +174,9 @@ namespace BlackSimPlugin
             //! Set the position of multiple traffic aircrafts
             void setPlanesPositions(const BlackSimPlugin::Flightgear::PlanesPositions &planesPositions);
 
-            //! Set the transponder of multiple traffic aircraft
-            void setPlanesTransponders(const BlackSimPlugin::Flightgear::PlanesTransponders &planesTransponders);
-
-            //! Set interpolator mode
-            void setInterpolatorMode(const QString &callsign, bool spline);
-
             //! Get remote aircrafts data (lat, lon, elevation and CG)
             void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
-            //! Get the ground elevation at an arbitrary position
-            void getElevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
-                                        const ElevationCallback &setter) const;
-
-            //! Sets the aircraft with callsign to be followed in plane view
-            void setFollowedAircraft(const QString &callsign);
 
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;

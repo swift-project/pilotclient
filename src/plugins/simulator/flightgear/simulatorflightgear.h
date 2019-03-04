@@ -131,15 +131,11 @@ namespace BlackSimPlugin
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-            virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void unload() override;
             virtual QString getStatisticsSimulatorSpecific() const override;
             virtual void resetAircraftStatistics() override;
             virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
-
-            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
-            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! Creates an appropriate dbus connection from the string describing it
             static QDBusConnection connectionFromString(const QString &str);

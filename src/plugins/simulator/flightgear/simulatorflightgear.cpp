@@ -155,36 +155,6 @@ namespace BlackSimPlugin
             CSimulatorPluginCommon::clearAllRemoteAircraftData();
         }
 
-        bool CSimulatorFlightgear::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
-        {
-            if (this->isShuttingDownOrDisconnected()) { return false; }
-            if (reference.isNull()) { return false; }
-
-            CCoordinateGeodetic pos(reference);
-            if (!pos.hasMSLGeodeticHeight())
-            {
-                // testing showed: height has an influence on the returned result
-                // - the most accurate value seems to be returned if the height is close to the elevation
-                // - in normal scenarios there is no much difference of the results if 0 is used
-                // - in Lukla (9200ft MSL) the difference between 0 and 9200 is around 1ft
-                // - in the LOWW scenario using 50000ft MSL results in around 3ft too low elevation
-                static const CAltitude alt(0, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-                pos.setGeodeticHeight(alt);
-            }
-
-            using namespace std::placeholders;
-            auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2);
-
-            // Request
-            m_trafficProxy->getElevationAtPosition(callsign,
-                                                   pos.latitude().value(CAngleUnit::deg()),
-                                                   pos.longitude().value(CAngleUnit::deg()),
-                                                   pos.geodeticHeight().value(CLengthUnit::m()),
-                                                   callback);
-            emit this->requestedElevation(callsign);
-            return true;
-        }
-
         // convert flightgear squawk mode to swift squawk mode
         CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
         {
@@ -594,13 +564,6 @@ namespace BlackSimPlugin
             return this->getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
-        bool CSimulatorFlightgear::followAircraft(const CCallsign &callsign)
-        {
-            if (! m_trafficProxy || ! m_trafficProxy->isValid()) { return false; }
-            m_trafficProxy->setFollowedAircraft(callsign.toQString());
-            return true;
-        }
-
         void CSimulatorFlightgear::updateRemoteAircraft()
         {
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
@@ -658,11 +621,6 @@ namespace BlackSimPlugin
                 }
 
             } // all callsigns
-
-            if (!planesTransponders.isEmpty())
-            {
-                m_trafficProxy->setPlanesTransponders(planesTransponders);
-            }
 
             if (!planesPositions.isEmpty())
             {
