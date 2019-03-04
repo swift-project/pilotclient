@@ -143,6 +143,9 @@ namespace BlackMisc
             //! Type as string
             static const QString &typeToString(ArtifactType type);
 
+            //! Name to platform
+            static CPlatform artifactNameToPlatform(const QString &name);
+
         private:
             QString m_name;    //!< channel the files belong to
             QString m_md5;     //!< MD5 checksum

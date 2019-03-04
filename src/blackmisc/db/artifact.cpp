@@ -201,6 +201,24 @@ namespace BlackMisc
             return unknown;
         }
 
+        CPlatform CArtifact::artifactNameToPlatform(const QString &name)
+        {
+            if (name.isEmpty()) { return CPlatform::unknownOs(); }
+            const QString n(name.toLower().trimmed());
+            if (n.contains("-windows-") || n.endsWith(".exe"))
+            {
+                if (n.contains("-64-")) { return CPlatform::win64Platform(); }
+                if (n.contains("-32-")) { return CPlatform::win32Platform(); }
+                return CPlatform::unknownOs();
+            }
+
+            if (n.contains("-macos-") || n.endsWith(".dmg")) { return CPlatform::macOSPlatform(); }
+            if (n.contains("-linux-") || n.endsWith(".run")) { return CPlatform::linuxPlatform(); }
+            if (n.contains("-allos-")) { return CPlatform::allOs(); }
+
+            return CPlatform::unknownOs();
+        }
+
         QString CArtifact::versionNumberFromFilename(const QString &filename)
         {
             if (filename.isEmpty()) { return {}; }
