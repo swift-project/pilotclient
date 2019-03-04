@@ -87,11 +87,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexChannel: return CVariant::fromValue(m_channel);
-            case IndexStability : return CVariant::fromValue(m_stability);
+            case IndexChannel:      return CVariant::fromValue(m_channel);
+            case IndexStability :   return CVariant::fromValue(m_stability);
             case IndexDownloadUrls: return CVariant::fromValue(m_downloadUrls);
-            case IndexRestricted: return CVariant::fromValue(m_restricted);
-            default: return CValueObject::propertyByIndex(index);
+            case IndexRestricted:   return CVariant::fromValue(m_restricted);
+            default:                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -107,10 +107,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexChannel: this->setChannel(variant.value<QString>()); break;
-            case IndexStability: m_stability = variant.toInt(); break;
+            case IndexChannel:      this->setChannel(variant.value<QString>()); break;
+            case IndexStability:    m_stability = variant.toInt(); break;
             case IndexDownloadUrls: m_downloadUrls = variant.value<CUrlList>(); break;
-            case IndexRestricted: m_restricted = variant.toBool(); break;
+            case IndexRestricted:   m_restricted = variant.toBool(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

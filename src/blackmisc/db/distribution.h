@@ -49,9 +49,6 @@ namespace BlackMisc
             //! Constructor
             CDistribution(const QString &channel, int stability, bool restricted);
 
-            //! Destructor.
-            ~CDistribution() {}
-
             //! Version channel (Alpha, Beta, Stable ..)
             const QString &getChannel() const { return m_channel; }
 
