@@ -11,15 +11,13 @@
 #ifndef BLACKSOUND_SELCALPLAYER_H
 #define BLACKSOUND_SELCALPLAYER_H
 
-#include "blacksoundexport.h"
 #include "blacksound/threadedtonepairplayer.h"
 #include "blacksound/tonepair.h"
+#include "blacksoundexport.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/worker.h"
 
 #include <QAudioDeviceInfo>
-
-class QTimer;
 
 namespace BlackSound
 {
@@ -36,7 +34,8 @@ namespace BlackSound
         ~CSelcalPlayer();
 
         //! Play selcal
-        void play(int volume, const BlackMisc::Aviation::CSelcal &selcal);
+        //! \return Time of the played tone
+        BlackMisc::PhysicalQuantities::CTime play(int volume, const BlackMisc::Aviation::CSelcal &selcal);
 
     private:
         CThreadedTonePairPlayer m_threadedPlayer;

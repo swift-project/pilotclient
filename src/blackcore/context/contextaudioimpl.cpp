@@ -29,16 +29,19 @@
 #include "blackmisc/statusmessage.h"
 #include "blacksound/soundgenerator.h"
 
-#include <stdbool.h>
 #include <QTimer>
 #include <QtGlobal>
+#include <QPointer>
+
 #include <algorithm>
+#include <stdbool.h>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackSound;
 using namespace BlackCore::Vatsim;
 
@@ -114,15 +117,8 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus; }
 
-            auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
-            if (voiceChannel)
-            {
-                return voiceChannel->getVoiceRoom();
-            }
-            else
-            {
-                return CVoiceRoom();
-            }
+            const auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
+            return voiceChannel ? voiceChannel->getVoiceRoom() : CVoiceRoom();
         }
 
         CVoiceRoomList CContextAudio::getComVoiceRooms() const
@@ -401,15 +397,8 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
-            auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
-            if (voiceChannel)
-            {
-                return voiceChannel->getVoiceRoomCallsigns();
-            }
-            else
-            {
-                return CCallsignSet();
-            }
+            const auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
+            return voiceChannel ? voiceChannel->getVoiceRoomCallsigns() : CCallsignSet();
         }
 
         Network::CUserList CContextAudio::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const
@@ -426,7 +415,18 @@ namespace BlackCore
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal; }
-            m_selcalPlayer->play(90, selcal);
+            const CTime t = m_selcalPlayer->play(90, selcal);
+            const int ms = t.toMs();
+            if (ms > 10)
+            {
+                // As of https://dev.swift-project.org/T558 play additional notification
+                const QPointer<CContextAudio> myself(const_cast<CContextAudio *>(this)); //! \fixme KB 2019-03 add bit hacky as I need non-const and do not want to change all signatures
+                QTimer::singleShot(ms, this, [ = ]
+                {
+                    if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                    this->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
+                });
+            }
         }
 
         void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings) const
@@ -545,7 +545,7 @@ namespace BlackCore
             case IVoiceChannel::ConnectingFailed:
             case IVoiceChannel::DisconnectedError:
                 CLogMessage(this).warning(u"Voice channel disconnecting error");
-            // intentional fall-through
+                Q_FALLTHROUGH();
             case IVoiceChannel::Disconnected:
                 emit this->changedVoiceRooms(getComVoiceRooms(), false);
                 break;

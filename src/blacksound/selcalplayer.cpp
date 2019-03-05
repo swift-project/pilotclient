@@ -27,19 +27,22 @@ namespace BlackSound
         m_threadedPlayer.quitAndWait();
     }
 
-    void CSelcalPlayer::play(int volume, const BlackMisc::Aviation::CSelcal &selcal)
+    CTime CSelcalPlayer::play(int volume, const CSelcal &selcal)
     {
+        CTime duration = CTime::null();
         if (selcal.isValid())
         {
-            QList<CFrequency> frequencies = selcal.getFrequencies();
+            const QList<CFrequency> frequencies = selcal.getFrequencies();
             Q_ASSERT(frequencies.size() == 4);
-            const BlackMisc::PhysicalQuantities::CTime oneSec(1000.0, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
-            CTonePair t1(frequencies.at(0), frequencies.at(1), oneSec);
-            CTonePair t2({}, {}, oneSec / 5.0);
-            CTonePair t3(frequencies.at(2), frequencies.at(3), oneSec);
+            const CTime oneSec(1000.0, CTimeUnit::ms());
+            const CTonePair t1(frequencies.at(0), frequencies.at(1), oneSec);
+            const CTonePair t2({}, {}, oneSec / 5.0);
+            const CTonePair t3(frequencies.at(2), frequencies.at(3), oneSec);
             QList<CTonePair> tonePairs;
             tonePairs << t1 << t2 << t3;
             m_threadedPlayer.play(volume, tonePairs);
+            duration = oneSec * 2.5;
         }
+        return duration;
     }
 }
