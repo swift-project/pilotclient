@@ -270,6 +270,9 @@ namespace BlackCore
         //! Called by installer?
         bool isInstallerOptionSet() const;
 
+        //! Skip the single application check
+        bool skipSingleApplicationCheck() const;
+
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QCommandLineOption &option) const;
 
@@ -625,21 +628,22 @@ namespace BlackCore
         static void registerMetadata();
 
         // cmd parsing
-        QList<QCommandLineOption> m_allOptions;                //!< all registered options
-        QCommandLineParser m_parser;                           //!< cmd parser
-        QCommandLineOption m_cmdHelp         {"help"};         //!< help option
-        QCommandLineOption m_cmdVersion      {"version"};      //!< version option
-        QCommandLineOption m_cmdDBusAddress  {"emptyDBus"};    //!< DBus address
-        QCommandLineOption m_cmdDevelopment  {"dev"};          //!< Development flag
-        QCommandLineOption m_cmdSharedDir    {"shared"};       //!< Shared directory
-        QCommandLineOption m_cmdClearCache   {"clearcache"};   //!< Clear cache
-        QCommandLineOption m_cmdTestCrashpad {"testcrashpad"}; //!< Test a crasphpad upload
-        bool               m_parsed  = false;                  //!< Parsing accomplished?
-        bool               m_started = false;                  //!< started with success?
-        bool               m_singleApplication = true;         //!< only one instance of that application
-        bool               m_alreadyRunning = false;           //!< Application already running
-        std::atomic_bool   m_shutdown { false };               //!< is being shutdown?
-        std::atomic_bool   m_shutdownInProgress { false };     //!< shutdown in progress?
+        QList<QCommandLineOption> m_allOptions;                 //!< All registered options
+        QCommandLineParser m_parser;                            //!< cmd parser
+        QCommandLineOption m_cmdHelp          {"help"};         //!< help option
+        QCommandLineOption m_cmdVersion       {"version"};      //!< version option
+        QCommandLineOption m_cmdDBusAddress   {"emptyDBus"};    //!< DBus address
+        QCommandLineOption m_cmdDevelopment   {"dev"};          //!< Development flag
+        QCommandLineOption m_cmdSharedDir     {"shared"};       //!< Shared directory
+        QCommandLineOption m_cmdClearCache    {"clearcache"};   //!< Clear cache
+        QCommandLineOption m_cmdTestCrashpad  {"testcrashpad"}; //!< Test a crasphpad upload
+        QCommandLineOption m_cmdSkipSingleApp {"skipsa"};       //!< Skip test for single application
+        bool               m_parsed  = false;                   //!< Parsing accomplished?
+        bool               m_started = false;                   //!< Started with success?
+        bool               m_singleApplication = true;          //!< Only one instance of that application
+        bool               m_alreadyRunning = false;            //!< Application already running
+        std::atomic_bool   m_shutdown { false };                //!< Is being shutdown?
+        std::atomic_bool   m_shutdownInProgress { false };      //!< shutdown in progress?
 
     private:
         //! Problem with network access manager

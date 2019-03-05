@@ -983,6 +983,11 @@ namespace BlackCore
                                             "shared");
         this->addParserOption(m_cmdSharedDir);
 
+        // Skip single application check
+        m_cmdSkipSingleApp = QCommandLineOption({ "skipsa", "skipsingleapp" },
+                                                QCoreApplication::translate("application", "Skip the single app.test."));
+        this->addParserOption(m_cmdSkipSingleApp);
+
         // reset caches upfront
         m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
                                              QCoreApplication::translate("application", "Clear (reset) the caches."));
@@ -990,7 +995,7 @@ namespace BlackCore
 
         // test crashpad upload
         m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
-                                               QCoreApplication::translate("application", "Simulate crashpad situation."));
+                                               QCoreApplication::translate("application", "Trigger crashpad situation."));
         this->addParserOption(m_cmdTestCrashpad);
     }
 
@@ -1321,6 +1326,11 @@ namespace BlackCore
         return this->isParserOptionSet("installer");
     }
 
+    bool CApplication::skipSingleApplicationCheck() const
+    {
+        return this->isParserOptionSet(m_cmdSkipSingleApp);
+    }
+
     bool CApplication::isParserOptionSet(const QCommandLineOption &option) const
     {
         return m_parser.isSet(option);
@@ -1354,17 +1364,17 @@ namespace BlackCore
             return false;
         }
 
-        if (m_singleApplication && m_alreadyRunning)
-        {
-            this->cmdLineErrorMessage("Program must only run once");
-            return false;
-        }
-
         // we call parse because we also want to display a GUI error message when applicable
         const QStringList args(QCoreApplication::instance()->arguments());
         if (!m_parser.parse(args))
         {
             this->cmdLineErrorMessage(m_parser.errorText());
+            return false;
+        }
+
+        if (m_singleApplication && m_alreadyRunning && !this->skipSingleApplicationCheck())
+        {
+            this->cmdLineErrorMessage("Program must only run once");
             return false;
         }
 
