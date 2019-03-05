@@ -103,7 +103,7 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-        //! Compare for index
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(const CPropertyIndex &index, const CPlatform &compareValue) const;
 
         //! Convert to QString
@@ -123,6 +123,9 @@ namespace BlackMisc
 
         //! Is this the current platform
         static bool isCurrentPlatform(const CPlatform &platform);
+
+        //! Can run on this platform
+        static bool canRunOnCurrentPlatform(const CPlatform &platform);
 
         //! Win32
         static const CPlatform &win32Platform();

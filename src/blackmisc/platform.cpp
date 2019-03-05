@@ -192,6 +192,15 @@ namespace BlackMisc
         return platform == CPlatform::currentPlatform();
     }
 
+    bool CPlatform::canRunOnCurrentPlatform(const CPlatform &platform)
+    {
+        if (platform == currentPlatform()) { return true; }
+        if (platform.isAnyWindows() && currentPlatform().isAnyWindows()) { return true; }
+        if (platform == CPlatform::allOs()) { return true; }
+        if (platform == CPlatform::independent()) { return true; }
+        return false;
+    }
+
     const CPlatform &CPlatform::win32Platform()
     {
         static const CPlatform p(Win32);
