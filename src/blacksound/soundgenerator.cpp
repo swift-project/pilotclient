@@ -16,12 +16,9 @@
 #include <qendian.h>
 #include <QMultimedia>
 #include <QAudioOutput>
-#include <QMediaPlayer>
-#include <QMediaPlaylist>
 #include <QTimer>
-#include <QUrl>
 #include <QFile>
-#include <QDir>
+#include <QSound>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -445,7 +442,6 @@ namespace BlackSound
             tones << t1 << t2 << t3;
         }
         CSoundGenerator::playSignalInBackground(volume, tones, device);
-        // CSoundGenerator::playSignalRecorded(volume, tones, device);
     }
 
     void CSoundGenerator::playSelcal(int volume, const CSelcal &selcal, const CAudioDeviceInfo &audioDevice)
@@ -455,50 +451,11 @@ namespace BlackSound
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
-    void CSoundGenerator::playNotificationSound(int volume, CNotificationSounds::NotificationFlag notification)
-    {
-        QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
-        if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
-        QMediaPlaylist *playlist = mediaPlayer->playlist();
-        if (!playlist || playlist->isEmpty())
-        {
-            // order here is crucial, needs to be the same as in CSoundGenerator::Notification
-            if (!playlist) playlist = new QMediaPlaylist(mediaPlayer);
-            bool success = true;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/error.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/login.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/logoff.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/privatemessage.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/supervisormessage.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/callsignmentioned.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomjoined.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomleft.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/noaudiotransmission.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav")) && success;
-
-            Q_ASSERT(success);
-            playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
-            mediaPlayer->setPlaylist(playlist);
-        }
-        if (notification == CNotificationSounds::LoadSounds) { return; }
-        if (notification == CNotificationSounds::NoNotifications) { return; }
-
-        const int index = qRound(std::log2(static_cast<double>(notification)));
-        playlist->setCurrentIndex(index);
-        mediaPlayer->setVolume(volume); // 0-100
-        mediaPlayer->play();
-    }
-
     void CSoundGenerator::playFile(int volume, const QString &file, bool removeFileAfterPlaying)
     {
         if (!QFile::exists(file)) { return; }
-        QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
-        QUrl url(file);
-        QMediaContent media(url);
-        mediaPlayer->setMedia(media);
-        mediaPlayer->setVolume(volume); // 0-100
-        mediaPlayer->play();
+        Q_UNUSED(volume);
+        QSound::play(file);
         // I cannot delete the file here, only after it has been played
         if (removeFileAfterPlaying) { new CTimedFileDeleter(file, 1000 * 60, QCoreApplication::instance()); }
     }

@@ -30,6 +30,7 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 #include "blacksound/selcalplayer.h"
+#include "blacksound/notificationplayer.h"
 
 #include <QHash>
 #include <QList>
@@ -118,9 +119,6 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            //! Init notification sounds
-            void initNotificationSounds();
-
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
@@ -159,6 +157,7 @@ namespace BlackCore
             QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
             QHash<QSharedPointer<IVoiceChannel>, IAudioMixer::OutputPort> m_voiceChannelOutputPortMapping;
             BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
+            BlackSound::CNotificationPlayer m_notificationPlayer;
 
             // settings
             BlackMisc::CSetting<BlackMisc::Audio::TSettings>     m_audioSettings { this };

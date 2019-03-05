@@ -79,9 +79,6 @@ namespace BlackCore
             m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
             this->setVoiceOutputVolume(90);
 
-            // Load sounds (init), not possible in own thread
-            QTimer::singleShot(10 * 1000, this, &CContextAudio::initNotificationSounds);
-
             m_unusedVoiceChannels.push_back(m_channel1);
             m_unusedVoiceChannels.push_back(m_channel2);
 
@@ -452,13 +449,7 @@ namespace BlackCore
                 }
             }
 
-            CSoundGenerator::playNotificationSound(90, notification);
-        }
-
-        void CContextAudio::initNotificationSounds()
-        {
-            // not possible in own thread
-            CSoundGenerator::playNotificationSound(0, CNotificationSounds::LoadSounds);
+            m_notificationPlayer.play(notification, 90);
         }
 
         void CContextAudio::enableAudioLoopback(bool enable)

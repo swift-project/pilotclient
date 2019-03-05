@@ -41,7 +41,6 @@ namespace BlackMisc
             case NotificationVoiceRoomLeft:   return left;
             case NotificationNoAudioTransmission: return noaudiotx;
             case PTTClickKeyDown:   return ptt;
-            case LoadSounds: return load;
             default: break;
             }
             return unknown;
@@ -59,7 +58,6 @@ namespace BlackMisc
             if (notification.testFlag(NotificationNoAudioTransmission))   n << flagToString(NotificationNoAudioTransmission);
             if (notification.testFlag(NotificationVoiceRoomJoined)) n << flagToString(NotificationVoiceRoomJoined);
             if (notification.testFlag(NotificationVoiceRoomLeft))   n << flagToString(NotificationVoiceRoomLeft);
-            if (notification.testFlag(LoadSounds)) n << flagToString(LoadSounds);
             return n.join(", ");
         }
     } // ns

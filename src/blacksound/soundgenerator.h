@@ -158,11 +158,6 @@ namespace BlackSound
         //! \param removeFileAfterPlaying delete the file, after it has been played
         static void playFile(int volume, const QString &file, bool removeFileAfterPlaying);
 
-        //! Play notification
-        //! \param volume    0-100
-        //! \param notification
-        static void playNotificationSound(int volume, BlackMisc::Audio::CNotificationSounds::NotificationFlag notification);
-
         //! For debugging purposes
         static void printAllQtSoundDevices(QTextStream &qtout);
 
@@ -242,13 +237,6 @@ namespace BlackSound
             WaveHeader  wave;
             DataHeader  data;
         };
-
-        //! "My" media player
-        static QMediaPlayer *mediaPlayer()
-        {
-            static QMediaPlayer *mediaPlayer = new QMediaPlayer();
-            return mediaPlayer;
-        }
 
         //! Duration of these tones
         static qint64 calculateDurationMs(const QList<Tone> &tones);

@@ -48,7 +48,6 @@ namespace BlackMisc
                 NotificationNoAudioTransmission   = 1 << 8,
                 PTTClickKeyDown                   = 1 << 9,
                 PTTClickKeyUp                     = 1 << 10,
-                LoadSounds                        = 1 << 11, //!< end marker and force loading of sounds, keep as last element
                 AllTextNotifications              = NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor,
                 AllLoginNotifications             = NotificationLogin | NotificationLogoff,
                 AllVoiceRoomNotifications         = NotificationVoiceRoomJoined | NotificationVoiceRoomLeft | NotificationNoAudioTransmission,
