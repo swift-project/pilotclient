@@ -213,7 +213,7 @@ namespace BlackMisc
             //! \copydoc Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare for index
+            //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const;
 
             //! Validate data

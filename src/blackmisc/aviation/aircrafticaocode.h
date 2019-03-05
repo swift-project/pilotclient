@@ -299,7 +299,7 @@ namespace BlackMisc
             void updateMissingParts(const CAircraftIcaoCode &otherIcaoCode);
 
             //! Validate data
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! As a brief HTML summary (e.g. used in tooltips)
             QString asHtmlSummary() const;

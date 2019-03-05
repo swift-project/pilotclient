@@ -585,19 +585,19 @@ namespace BlackMisc
             case IndexAircraftDesignator: return CVariant::fromValue(m_designator);
             case IndexCategory: return m_category.propertyByIndex(index.copyFrontRemoved());
             case IndexIataCode: return CVariant::fromValue(m_iataCode);
-            case IndexFamily: return CVariant::fromValue(m_family);
-            case IndexCombinedAircraftType: return CVariant::fromValue(m_combinedType);
-            case IndexModelDescription: return CVariant::fromValue(m_modelDescription);
-            case IndexModelIataDescription: return CVariant::fromValue(m_modelIataDescription);
+            case IndexFamily:   return CVariant::fromValue(m_family);
+            case IndexCombinedAircraftType:  return CVariant::fromValue(m_combinedType);
+            case IndexModelDescription:      return CVariant::fromValue(m_modelDescription);
+            case IndexModelIataDescription:  return CVariant::fromValue(m_modelIataDescription);
             case IndexModelSwiftDescription: return CVariant::fromValue(m_modelSwiftDescription);
-            case IndexCombinedDescription: return CVariant::fromValue(this->getCombinedModelDescription());
-            case IndexManufacturer: return CVariant::fromValue(m_manufacturer);
-            case IndexWtc: return CVariant::fromValue(m_wtc);
-            case IndexIsVtol: return CVariant::fromValue(this->isVtol());
-            case IndexIsLegacy: return CVariant::fromValue(m_legacy);
-            case IndexIsMilitary: return CVariant::fromValue(m_military);
+            case IndexCombinedDescription:   return CVariant::fromValue(this->getCombinedModelDescription());
+            case IndexManufacturer:          return CVariant::fromValue(m_manufacturer);
+            case IndexWtc:         return CVariant::fromValue(m_wtc);
+            case IndexIsVtol:      return CVariant::fromValue(this->isVtol());
+            case IndexIsLegacy:    return CVariant::fromValue(m_legacy);
+            case IndexIsMilitary:  return CVariant::fromValue(m_military);
             case IndexIsRealworld: return CVariant::fromValue(m_realWorld);
-            case IndexRank: return CVariant::fromValue(m_rank);
+            case IndexRank:        return CVariant::fromValue(m_rank);
             case IndexDesignatorManufacturer: return CVariant::fromValue(this->getDesignatorManufacturer());
             default: return CValueObject::propertyByIndex(index);
             }
@@ -637,10 +637,10 @@ namespace BlackMisc
             case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
             case IndexCategory: return m_category.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCategory());
             case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
-            case IndexFamily: return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
-            case IndexCombinedAircraftType: return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
-            case IndexModelDescription: return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
-            case IndexModelIataDescription: return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
+            case IndexFamily:   return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
+            case IndexCombinedAircraftType:  return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
+            case IndexModelDescription:      return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+            case IndexModelIataDescription:  return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
             case IndexModelSwiftDescription: return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
             case IndexCombinedDescription:
                 {
@@ -657,12 +657,12 @@ namespace BlackMisc
                     return c;
                 }
             case IndexManufacturer: return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
-            case IndexWtc: return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
-            case IndexIsLegacy: return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
-            case IndexIsMilitary: return Compare::compare(m_military, compareValue.isMilitary());
-            case IndexIsVtol: return Compare::compare(isVtol(), compareValue.isVtol());
-            case IndexIsRealworld: return Compare::compare(m_realWorld, compareValue.isRealWorld());
-            case IndexRank: return Compare::compare(m_rank, compareValue.getRank());
+            case IndexWtc:          return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
+            case IndexIsLegacy:     return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
+            case IndexIsMilitary:   return Compare::compare(m_military, compareValue.isMilitary());
+            case IndexIsVtol:       return Compare::compare(isVtol(), compareValue.isVtol());
+            case IndexIsRealworld:  return Compare::compare(m_realWorld, compareValue.isRealWorld());
+            case IndexRank:         return Compare::compare(m_rank, compareValue.getRank());
             case IndexDesignatorManufacturer: return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
             default: return CValueObject::comparePropertyByIndex(index, *this);
             }
@@ -804,7 +804,7 @@ namespace BlackMisc
                 real, legacy, military, rank
             );
             code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
-            if (categoryId >=0) { code.setCategoryId(categoryId); }
+            if (categoryId >= 0) { code.setCategoryId(categoryId); }
             return code;
         }
 
