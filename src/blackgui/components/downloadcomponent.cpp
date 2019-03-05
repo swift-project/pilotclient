@@ -193,14 +193,31 @@ namespace BlackGui
             this->showStartedFileMessage(remoteFile);
             m_fileInProgress = remoteFile;
             const QString saveAsFile = CFileUtils::appendFilePaths(ui->le_DownloadDir->text(), remoteFile.getName());
-            QNetworkReply *r = sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile});
+            const QFileInfo fiSaveAs(saveAsFile);
+            if (fiSaveAs.exists())
+            {
+                const QString msg = QStringLiteral("File '%1' already exists locally.\n\nDo you want to reload the file?").arg(fiSaveAs.absoluteFilePath());
+                QMessageBox::StandardButton reply = QMessageBox::question(this, "File exists", msg, QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes)
+                {
+                    const QPointer<CDownloadComponent> myself(this);
+                    QTimer::singleShot(10, this, [ = ]
+                    {
+                        if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                        this->downloadedFile(CStatusMessage(this).info(u"File was already downloaded"));
+                    });
+                    return true;
+                }
+            }
+
+            QNetworkReply *reply = sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile});
             bool success = false;
-            if (r)
+            if (reply)
             {
                 // this->showLoading(10 * 1000);
                 CLogMessage(this).info(u"Triggered downloading of file from '%1'") << download.getHost();
-                connect(r, &QNetworkReply::downloadProgress, this, &CDownloadComponent::downloadProgress);
-                m_reply = r;
+                connect(reply, &QNetworkReply::downloadProgress, this, &CDownloadComponent::downloadProgress, Qt::QueuedConnection);
+                m_reply = reply;
                 success = true;
             }
             else
@@ -267,9 +284,19 @@ namespace BlackGui
                 QMessageBox::StandardButton reply = QMessageBox::question(this, "Start?", msg.arg(rf.getName()), QMessageBox::Yes | QMessageBox::No);
                 if (reply != QMessageBox::Yes) { return; }
 
+                const CPlatform p = CArtifact::artifactNameToPlatform(rf.getName());
+                if (!CPlatform::canRunOnCurrentPlatform(p))
+                {
+                    // cannot run on this OS, just show the directory where the download resides
+                    // do not close
+                    ui->pb_OpenDownloadDir->click();
+                    return;
+                }
+
                 QStringList arguments;
                 if (rf.isSwiftInstaller())
                 {
+                    /** installer now remembers install dir
                     QDir dir(QCoreApplication::applicationDirPath());
                     dir.cdUp();
                     if (dir.exists())
@@ -278,6 +305,7 @@ namespace BlackGui
                         arguments << "--installdir";
                         arguments << d;
                     }
+                    **/
                 }
 
                 const bool started = QProcess::startDetached(executable, arguments, dir.absolutePath());
