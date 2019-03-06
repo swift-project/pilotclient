@@ -28,7 +28,7 @@ namespace BlackMisc
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator, int fuzzySearch) const
         {
             if (!fuzzySearch && !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
-            if (fuzzySearch && designator.length() < 3) { return CAircraftIcaoCodeList(); }
+            if (fuzzySearch  && designator.length() < CAircraftIcaoCode::DesignatorMinLength) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
             {
                 return code.matchesDesignator(designator, fuzzySearch);
@@ -37,7 +37,7 @@ namespace BlackMisc
 
         CAircraftIcaoCode CAircraftIcaoCodeList::findBestFuzzyMatchOrDefault(const QString &designator, int cutoff) const
         {
-            if (designator.length() < 3) { return CAircraftIcaoCode(); }
+            if (designator.length() < CAircraftIcaoCode::DesignatorMinLength) { return CAircraftIcaoCode(); }
             int best = 0;
             int current = 0;
             CAircraftIcaoCode found;

@@ -345,6 +345,9 @@ namespace BlackMisc
             //! From our database JSON format
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
+            static constexpr int DesignatorMinLength = 2; //!< designator length (min)
+            static constexpr int DesignatorMaxLength = 5; //!< designator length (max)
+
         private:
             QString m_designator;            //!< "B737"
             QString m_iataCode;              //!< "320"

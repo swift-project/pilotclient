@@ -660,8 +660,11 @@ namespace BlackCore
             //! \fixme that would be the official string, can this be used?
             // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
+            QString act = flightPlan.getCombinedPrefixIcaoSuffix();
+            if (act.isEmpty()) { act = flightPlan.getAircraftIcao().getDesignator(); } // fallback
+
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
-            vatlibFP.aircraftType     = acTypeTemp    = toFSDnoColon(flightPlan.getCombinedPrefixIcaoSuffix());
+            vatlibFP.aircraftType     = acTypeTemp    = toFSDnoColon(act);
             vatlibFP.alternateAirport = altAptTemp    = toFSDnoColon(flightPlan.getAlternateAirportIcao().asString());
             vatlibFP.cruiseAltitude   = cruiseAltTemp = toFSDnoColon(alt);
             vatlibFP.departAirport    = depAptTemp    = toFSDnoColon(flightPlan.getOriginAirportIcao().asString());

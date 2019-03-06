@@ -672,7 +672,7 @@ namespace BlackMisc
 
         bool CAircraftIcaoCode::isValidDesignator(const QString &designator)
         {
-            if (designator.length() < 2 || designator.length() > 5) { return false; }
+            if (designator.length() < DesignatorMinLength || designator.length() > DesignatorMaxLength) { return false; }
             if (!designator[0].isUpper()) { return false; }
             return !containsChar(designator, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
         }
