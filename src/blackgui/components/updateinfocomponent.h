@@ -14,6 +14,7 @@
 #include "blackcore/application/updatesettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/db/updateinfo.h"
+#include "blackmisc/db/artifact.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/digestsignal.h"
 #include <QFrame>
@@ -52,6 +53,9 @@ namespace BlackGui
         signals:
             //! Update info loaded
             void updateInfoAvailable();
+
+            //! A newer pilot client is available
+            void newerPilotClientAvailable(const BlackMisc::Db::CArtifact &latestPilotClient);
 
             //! New platfrom or channel
             void selectionChanged();

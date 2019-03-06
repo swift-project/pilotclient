@@ -56,21 +56,23 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     this->init();
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
     connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_SwiftGui,   &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_Database,   &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
 
     connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
-    connect(ui->rb_SwiftCoreAudioOnGui, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
-    connect(ui->rb_SwiftStandalone, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+    connect(ui->rb_SwiftCoreAudioOnGui,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+    connect(ui->rb_SwiftStandalone,      &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
 
-    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::updateInfoAvailable, this, &CSwiftLauncher::updateInfoAvailable);
-    connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished, this, &CSwiftLauncher::onDBusEditingFinished);
+    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::updateInfoAvailable,       this, &CSwiftLauncher::updateInfoAvailable,   Qt::QueuedConnection);
+    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::newerPilotClientAvailable, this, &CSwiftLauncher::setHeaderInfo,         Qt::QueuedConnection);
+    connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,   this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
 
-    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
+    const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
+    Q_UNUSED(logPageShortCut);
 
     // default from settings
     this->setDefaults();
@@ -86,7 +88,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
         const QPointer<CSwiftLauncher> myself(this);
         QTimer::singleShot(2500, this, [ = ]
         {
-            if (!myself) { return; }
+            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
             myself->startWizard();
         });
     }
@@ -198,7 +200,7 @@ void CSwiftLauncher::loadLatestNews()
 
     CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
     const CUrl newsUrl(newsUrls.obtainNextWorkingUrl(true, 10 * 1000));
-    // const CUrl newsUrl("https://dev.swift-project.org/phame/blog/view/1/");
+    // const CUrl newsUrl("https://dev.swift-project.org/phame/blog/view/1/?__print__=1");
 
     if (newsUrl.isEmpty())
     {

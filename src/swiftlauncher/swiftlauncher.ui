@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -403,7 +403,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
-                     <height>100</height>
+                     <height>110</height>
                     </size>
                    </property>
                   </widget>
@@ -443,7 +443,7 @@
                       <x>0</x>
                       <y>0</y>
                       <width>376</width>
-                      <height>136</height>
+                      <height>126</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">

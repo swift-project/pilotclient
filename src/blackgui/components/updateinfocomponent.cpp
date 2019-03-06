@@ -137,7 +137,7 @@ namespace BlackGui
             const QString platform = ui->cb_Platforms->currentText();
             if (!CPlatform::isCurrentPlatform(platform))
             {
-                const QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("Download installer"),
+                const QMessageBox::StandardButton ret = QMessageBox::warning(this, "Download installer",
                                                         QStringLiteral(
                                                                 "The platform '%1' does not match your current platform '%2'.\n"
                                                                 "Do you want to continue?").arg(platform, CPlatform::currentPlatform().getPlatformName()),
@@ -197,7 +197,8 @@ namespace BlackGui
             // for XSwiftBus we only show public (unrestricted) ones, as the follow up dialog will only show unrestricted
             const CUpdateInfo updateInfo(m_updateInfo.get());
             const CArtifactList artifactsPilotClient = updateInfo.getArtifactsPilotClient().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
-            const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
+            const CArtifactList artifactsXsb  = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
+            const CArtifact latestPilotClient = artifactsPilotClient.getLatestArtifactOrDefault();
 
             const QStringList sortedPilotClientVersions = artifactsPilotClient.getSortedVersions();
             ui->cb_ArtifactsPilotClient->clear();
@@ -209,6 +210,9 @@ namespace BlackGui
             ui->cb_ArtifactsXsb->insertItems(0, sortedXsbVersions);
             ui->pb_DownloadXSwiftBus->setEnabled(!artifactsXsb.isEmpty());
 
+            // save the settings as this is needed afterwards
+            this->saveSettings();
+
             //! \fixme hardcoded stylesheet color
             const bool newer = this->isNewPilotClientVersionAvailable();
             ui->lbl_StatusInfo->setText(newer ? "New version available" : "Nothing new");
@@ -216,8 +220,12 @@ namespace BlackGui
                                               "background-color: green; color: white;" :
                                               "background-color: red; color: white;");
 
-            this->saveSettings();
             emit this->selectionChanged();
+
+            if (newer && latestPilotClient.isLoadedFromDb())
+            {
+                emit this->newerPilotClientAvailable(latestPilotClient);
+            }
         }
 
         const CPlatform &CUpdateInfoComponent::getSelectedOrDefaultPlatform() const
