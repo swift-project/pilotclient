@@ -178,7 +178,7 @@ namespace BlackMisc
         CAircraftIcaoCode CAircraftIcaoCodeList::findFirstByDesignatorAndRank(const QString &designator) const
         {
             if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
-            CAircraftIcaoCodeList codes(findByDesignator(designator));
+            CAircraftIcaoCodeList codes(this->findByDesignator(designator));
             if (codes.isEmpty()) { return CAircraftIcaoCode(); }
             if (codes.size() < 2) { return codes.front(); }
             codes.sortBy(&CAircraftIcaoCode::getRank, &CAircraftIcaoCode::getDbKey);

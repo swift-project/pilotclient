@@ -167,7 +167,7 @@ namespace BlackMisc
                 else if (this->hasValidCombinedType())
                 {
                     if (this->getEnginesCount() == otherCode.getEnginesCount()) { score += 2; }
-                    if (this->getEngineType()   == otherCode.getEngineType()) { score += 2; }
+                    if (this->getEngineType()   == otherCode.getEngineType())   { score += 2; }
                     if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
                     CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }

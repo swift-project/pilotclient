@@ -661,23 +661,23 @@ namespace BlackCore
             // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
-            vatlibFP.aircraftType = acTypeTemp = toFSDnoColon(flightPlan.getCombinedPrefixIcaoSuffix());
-            vatlibFP.alternateAirport = altAptTemp = toFSDnoColon(flightPlan.getAlternateAirportIcao().asString());
-            vatlibFP.cruiseAltitude = cruiseAltTemp = toFSDnoColon(alt);
-            vatlibFP.departAirport = depAptTemp = toFSDnoColon(flightPlan.getOriginAirportIcao().asString());
+            vatlibFP.aircraftType     = acTypeTemp    = toFSDnoColon(flightPlan.getCombinedPrefixIcaoSuffix());
+            vatlibFP.alternateAirport = altAptTemp    = toFSDnoColon(flightPlan.getAlternateAirportIcao().asString());
+            vatlibFP.cruiseAltitude   = cruiseAltTemp = toFSDnoColon(alt);
+            vatlibFP.departAirport    = depAptTemp    = toFSDnoColon(flightPlan.getOriginAirportIcao().asString());
+            vatlibFP.destAirport      = destAptTemp   = toFSDnoColon(flightPlan.getDestinationAirportIcao().asString());
             vatlibFP.departTimeActual = flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt();
-            vatlibFP.departTime = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
-            vatlibFP.destAirport = destAptTemp = toFSDnoColon(flightPlan.getDestinationAirportIcao().asString());
+            vatlibFP.departTime       = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
 
             QList<int> timeParts = flightPlan.getEnrouteTime().getHrsMinSecParts();
-            vatlibFP.enrouteHrs = timeParts[CTime::Hours];
+            vatlibFP.enrouteHrs  = timeParts[CTime::Hours];
             vatlibFP.enrouteMins = timeParts[CTime::Minutes];
 
             timeParts = flightPlan.getFuelTime().getHrsMinSecParts();
-            vatlibFP.fuelHrs = timeParts[CTime::Hours];
+            vatlibFP.fuelHrs  = timeParts[CTime::Hours];
             vatlibFP.fuelMins = timeParts[CTime::Minutes];
-            vatlibFP.remarks = remarksTemp = toFSDnoColon(remarks);
-            vatlibFP.route = routeTemp = toFSDnoColon(route);
+            vatlibFP.remarks  = remarksTemp = toFSDnoColon(remarks);
+            vatlibFP.route    = routeTemp = toFSDnoColon(route);
             vatlibFP.trueCruisingSpeed = flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts());
             switch (flightPlan.getFlightRules())
             {
