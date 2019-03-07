@@ -69,6 +69,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getClosestMatch(
             const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
+            bool shortLog,
             BlackMisc::CStatusMessageList *log = nullptr) const;
 
         //! Return an valid airline ICAO code
@@ -226,10 +227,13 @@ namespace BlackCore
         bool saveDisabledForMatchingModels();
 
         //! The search based implementation
-        static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,  const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(
+            const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+            const BlackMisc::Simulation::CCategoryMatcher &categoryMatcher, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
+            bool shortLog, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! The score based implementation
-        static BlackMisc::Simulation::CAircraftModelList getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, int &maxScore, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModelList getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, int &maxScore, bool shortLog, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get combined type default model, i.e. get a default model under consideration of the combined code such as "L2J"
         //! \see BlackMisc::Simulation::CSimulatedAircraft::getAircraftIcaoCombinedType

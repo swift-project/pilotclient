@@ -105,7 +105,7 @@ namespace BlackCore
         return code;
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, bool shortLog, CStatusMessageList *log) const
     {
         CAircraftModelList modelSet(m_modelSet); // Models for this matching
         const CAircraftMatcherSetup setup = m_setup;
@@ -202,15 +202,15 @@ namespace BlackCore
             switch (setup.getMatchingAlgorithm())
             {
             case CAircraftMatcherSetup::MatchingStepwiseReduce:
-                candidates = CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(modelSet, setup, remoteAircraft, log);
+                candidates = CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(modelSet, setup, m_categoryMatcher, remoteAircraft, shortLog, log);
                 break;
             case CAircraftMatcherSetup::MatchingScoreBased:
-                candidates = CAircraftMatcher::getClosestMatchScoreImplementation(modelSet, setup, remoteAircraft, maxScore, log);
+                candidates = CAircraftMatcher::getClosestMatchScoreImplementation(modelSet, setup, remoteAircraft, maxScore, shortLog, log);
                 break;
             case CAircraftMatcherSetup::MatchingStepwiseReducePlusScoreBased:
             default:
-                candidates = CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(modelSet, setup, remoteAircraft, log);
-                candidates = CAircraftMatcher::getClosestMatchScoreImplementation(candidates, setup, remoteAircraft, maxScore, log);
+                candidates = CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(modelSet, setup, m_categoryMatcher, remoteAircraft, shortLog, log);
+                candidates = CAircraftMatcher::getClosestMatchScoreImplementation(candidates, setup, remoteAircraft, maxScore, shortLog, log);
                 break;
             }
 
@@ -245,7 +245,7 @@ namespace BlackCore
                     CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Picking among %1 by strategy '%2'").arg(candidates.size()).arg(CAircraftMatcherSetup::strategyToString(usedStrategy)));
                     CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
                                                         summary.arg(
-                                                            remoteAircraft.getAircraftIcaoCode().getCombinedType(), matchedModel.getAircraftIcaoCode().getCombinedType(),
+                                                            remoteAircraft.getAircraftIcaoCode().getCombinedType(),    matchedModel.getAircraftIcaoCode().getCombinedType(),
                                                             remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
                                                             remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey(),
                                                             remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId()
@@ -848,10 +848,11 @@ namespace BlackCore
         return CFileUtils::writeStringToFile(json, CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), QStringLiteral("removed models %1.json").arg(ts)));
     }
 
-    CAircraftModelList CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::getClosestMatchStepwiseReduceImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CCategoryMatcher &categoryMatcher, const CSimulatedAircraft &remoteAircraft, bool shortLog, CStatusMessageList *log)
     {
         CAircraftModelList matchedModels(modelSet);
         CAircraftModel matchedModel(remoteAircraft.getModel());
+        Q_UNUSED(shortLog);
 
         const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         bool reduced = false;
@@ -932,11 +933,12 @@ namespace BlackCore
         return matchedModels;
     }
 
-    CAircraftModelList CAircraftMatcher::getClosestMatchScoreImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, int &maxScore, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::getClosestMatchScoreImplementation(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, int &maxScore, bool shortLog, CStatusMessageList *log)
     {
         CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         const bool noZeroScores = mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros);
         const bool preferColorLiveries = mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries);
+        Q_UNUSED(shortLog);
 
         // VTOL
         ScoredModels map;

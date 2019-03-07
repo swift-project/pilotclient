@@ -586,9 +586,10 @@ namespace BlackCore
             // here we find the best simulator model for a resolved model
             // in the first step we already tried to find accurate ICAO codes etc.
             // coming from CAirspaceMonitor::sendReadyForModelMatching
+            bool shortLog = false;
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
-            CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
+            CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, shortLog, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
             const CLength cg = m_simulatorPlugin.second->getCGPerModelString(aircraftModel.getModelString());
             if (!cg.isNull()) { aircraftModel.setCG(cg); }
