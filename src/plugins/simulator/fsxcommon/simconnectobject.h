@@ -48,9 +48,6 @@ namespace BlackSimPlugin
                               BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
-            //! Destructor
-            ~CSimConnectObject() {}
-
             //! Get callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
