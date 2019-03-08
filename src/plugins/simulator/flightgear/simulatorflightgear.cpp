@@ -87,11 +87,11 @@ namespace BlackSimPlugin
     namespace Flightgear
     {
         CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
-                                           IOwnAircraftProvider *ownAircraftProvider,
-                                           IRemoteAircraftProvider *remoteAircraftProvider,
-                                           IWeatherGridProvider *weatherGridProvider,
-                                           IClientProvider *clientProvider,
-                                           QObject *parent) :
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
+                IWeatherGridProvider *weatherGridProvider,
+                IClientProvider *clientProvider,
+                QObject *parent) :
             CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);

@@ -30,8 +30,8 @@ namespace BlackSimPlugin
 
             //! Constructor providing initial situation/parts
             CFlightgearMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
-                              BlackCore::ISimulator *simulator,
-                              BlackMisc::Simulation::CInterpolationLogger *logger);
+                                  BlackCore::ISimulator *simulator,
+                                  BlackMisc::Simulation::CInterpolationLogger *logger);
 
             //! Destructor
             ~CFlightgearMPAircraft() {}

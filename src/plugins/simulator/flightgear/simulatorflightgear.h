@@ -108,11 +108,11 @@ namespace BlackSimPlugin
         public:
             //! Constructor
             CSimulatorFlightgear(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                             BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                             BlackMisc::Network::IClientProvider *clientProvider,
-                             QObject *parent = nullptr);
+                                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                 BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                                 BlackMisc::Network::IClientProvider *clientProvider,
+                                 QObject *parent = nullptr);
 
             //! Dtor
             virtual ~CSimulatorFlightgear() override;
@@ -236,8 +236,8 @@ namespace BlackSimPlugin
             void resetFlightgearData()
             {
                 m_flightgearData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                 false, false, 0, 0, {}, 0.0, 0.0
-                               };
+                                     false, false, 0, 0, {}, 0.0, 0.0
+                                   };
 
             }
         };

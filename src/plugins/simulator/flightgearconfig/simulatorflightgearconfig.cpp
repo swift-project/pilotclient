@@ -22,7 +22,7 @@ namespace BlackSimPlugin
 
         BlackGui::CPluginConfigWindow *CSimulatorFlightgearConfig::createConfigWindow(QWidget *parent)
         {
-            CSimulatorFlightgearConfigWindow* w = new CSimulatorFlightgearConfigWindow(parent);
+            CSimulatorFlightgearConfigWindow *w = new CSimulatorFlightgearConfigWindow(parent);
             return w;
         }
     }

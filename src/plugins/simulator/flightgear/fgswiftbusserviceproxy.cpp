@@ -40,7 +40,7 @@ namespace BlackSimPlugin
 
         QString CFGSwiftBusServiceProxy::getVersionNumber()
         {
-             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getVersionNumber"));
         }
 
         void CFGSwiftBusServiceProxy::getOwnAircraftSituationData(FlightgearData *o_flightgearData)
