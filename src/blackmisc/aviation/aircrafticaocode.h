@@ -258,6 +258,9 @@ namespace BlackMisc
             //! Get category
             const CAircraftCategory &getCategory() const { return m_category; }
 
+            //! Has category?
+            bool hasCategory() const;
+
             //! Set category
             void setCategory(const CAircraftCategory &category) { m_category = category; }
 
@@ -329,6 +332,9 @@ namespace BlackMisc
 
             //! The unassigned designator ("ZZZZ")
             static const QString &getUnassignedDesignator();
+
+            //! Get the glider designator
+            static const QString &getGliderDesignator();
 
             //! Unassigned ICAO code "ZZZZ"
             static const CAircraftIcaoCode &unassignedIcao();

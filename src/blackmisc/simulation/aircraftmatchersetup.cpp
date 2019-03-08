@@ -112,6 +112,12 @@ namespace BlackMisc
             this->setPickStrategy(PickByOrder);
         }
 
+        bool CAircraftMatcherSetup::useCategoryMatching() const
+        {
+            const MatchingMode mm = this->getMatchingMode();
+            return mm.testFlag(ByCategoryGlider) || mm.testFlag(ByCategoryMilitary);
+        }
+
         const QString &CAircraftMatcherSetup::algorithmToString(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
         {
             static const QString rs("reduce + score based");

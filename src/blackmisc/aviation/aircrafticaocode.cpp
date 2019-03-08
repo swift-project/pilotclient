@@ -499,6 +499,11 @@ namespace BlackMisc
                    this->getDbKeyAsStringInParentheses(" ");
         }
 
+        bool CAircraftIcaoCode::hasCategory() const
+        {
+            return !m_category.isNull();
+        }
+
         bool CAircraftIcaoCode::hasCompleteData() const
         {
             return hasValidCombinedType() && hasDesignator() && hasValidWtc() && hasManufacturer();
@@ -704,8 +709,14 @@ namespace BlackMisc
 
         const QString &CAircraftIcaoCode::getUnassignedDesignator()
         {
-            static const QString i("ZZZZ");
-            return i;
+            static const QString z("ZZZZ");
+            return z;
+        }
+
+        const QString &CAircraftIcaoCode::getGliderDesignator()
+        {
+            static const QString g("GLID");
+            return g;
         }
 
         const CAircraftIcaoCode &CAircraftIcaoCode::unassignedIcao()
@@ -716,7 +727,7 @@ namespace BlackMisc
 
         const QStringList &CAircraftIcaoCode::getSpecialDesignators()
         {
-            static const QStringList s({ "ZZZZ", "SHIP", "BALL", "GLID", "ULAC", "GYRO", "UHEL" });
+            static const QStringList s({ "ZZZZ", "SHIP", "BALL", getGliderDesignator(), "ULAC", "GYRO", "UHEL" });
             return s;
         }
 

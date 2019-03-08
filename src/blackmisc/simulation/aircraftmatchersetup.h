@@ -156,6 +156,9 @@ namespace BlackMisc
             //! Reset
             void reset(MatchingAlgorithm algorithm);
 
+            //! Use category matching
+            bool useCategoryMatching() const;
+
             //! Algorithm to string
             static const QString &algorithmToString(MatchingAlgorithm algorithm);
 
