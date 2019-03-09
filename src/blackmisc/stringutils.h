@@ -204,6 +204,12 @@ namespace BlackMisc
     //! Return string in quotes
     BLACKMISC_EXPORT QString inQuotes(const QString &in, bool ignoreEmpty = false);
 
+    //! Remove surrounding apostrophes 'foo' -> foo
+    BLACKMISC_EXPORT QString removeSurroundingApostrophes(const QString &in);
+
+    //! Remove surrounding quotes "foo" -> foo
+    BLACKMISC_EXPORT QString removeSurroundingQuotes(const QString &in);
+
     //! Bool to on/off
     BLACKMISC_EXPORT const QString &boolToOnOff(bool v);
 

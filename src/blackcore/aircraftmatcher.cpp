@@ -126,8 +126,9 @@ namespace BlackCore
 
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
         if (log) { log->clear(); }
+
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m1.arg(startTime.toString(format)));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m2.arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m2.arg(remoteAircraft.getCallsignAsString(), removeSurroundingApostrophes(remoteAircraft.getModel().toQString())));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m3.arg(modelSet.size()).arg(modelSet.coverageSummaryForModel(remoteAircraft.getModel())));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m4.arg(setup.toQString(true)));
 

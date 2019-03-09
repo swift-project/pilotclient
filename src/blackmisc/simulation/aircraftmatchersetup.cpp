@@ -137,8 +137,8 @@ namespace BlackMisc
         {
             static const QString ms("by model string");
             static const QString icao("by ICAO");
-            static const QString icaoAircraft("by ICAO, aircraft first");
-            static const QString icaoAirline("by ICAO, airline first");
+            static const QString icaoAircraft("by ICAO aircraft first");
+            static const QString icaoAirline("by ICAO airline first");
             static const QString family("by family");
             static const QString forceMil("force military");
             static const QString forceCiv("force civilian");

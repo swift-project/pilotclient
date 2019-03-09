@@ -412,6 +412,27 @@ namespace BlackMisc
         }
         return map;
     }
+
+    QString removeSurroundingApostrophes(const QString &in)
+    {
+        if (in.size() < 2) { return in; }
+        if (in.startsWith("'") && in.endsWith("'"))
+        {
+            return in.mid(1, in.length() - 2);
+        }
+        return in;
+    }
+
+    QString removeSurroundingQuotes(const QString &in)
+    {
+        if (in.size() < 2) { return in; }
+        if (in.startsWith("\"") && in.endsWith("\""))
+        {
+            return in.mid(1, in.length() - 2);
+        }
+        return in;
+    }
+
 } // ns
 
 //! \endcond
