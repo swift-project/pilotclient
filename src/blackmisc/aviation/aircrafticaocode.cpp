@@ -156,19 +156,55 @@ namespace BlackMisc
             {
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
-                    score += 30;
+                    score += 40;
                     CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added family: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
-                    score += 20;
+                    score += 30;
                     CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
-                    if (this->getEnginesCount() == otherCode.getEnginesCount()) { score += 2; }
-                    if (this->getEngineType()   == otherCode.getEngineType())   { score += 2; }
-                    if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
+                    // totally 15
+
+                    // engine count
+                    const int eMy    = this->getEnginesCount();
+                    const int eOther = otherCode.getEnginesCount();
+
+                    if (eMy == eOther && eMy >= 0)
+                    {
+                        score += 4;
+                    }
+                    else if (eMy > 0 && eOther > 0)
+                    {
+                        const int eDiff = qAbs(eMy - eOther);
+                        if (eDiff == 1) { score += 2; }
+                        else if (eDiff == 2) { score += 1; }
+                    }
+
+                    // engine type
+                    const QString tMy    = this->getEngineType();
+                    const QString tOther = this->getEngineType();
+
+                    if (tMy == tOther)
+                    {
+                        score += 4;
+                    }
+                    else if (!tMy.isEmpty() && !tOther.isEmpty())
+                    {
+                        if (isEPTEngineType(tMy[0]) && isEPTEngineType(tOther[0])) { score += 2; }
+                    }
+
+                    // aircraft type
+                    if (this->getAircraftType() == otherCode.getAircraftType())
+                    {
+                        score += 7;
+                    }
+                    else if (this->isVtol() && otherCode.isVtol())
+                    {
+                        score += 4;
+                    }
                     CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
                 }
             }
@@ -189,9 +225,14 @@ namespace BlackMisc
             }
 
             // 0..75 so far
-            if (this->isMilitary() == otherCode.isMilitary())
+            if (this->hasCategory() && otherCode.hasCategory() && this->getCategory() == otherCode.getCategory())
             {
-                score += 10;
+                score += 8;
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+            }
+            else if (this->isMilitary() == otherCode.isMilitary())
+            {
+                score += 8;
                 CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
             }
             // 0..85
@@ -441,8 +482,8 @@ namespace BlackMisc
 
         void CAircraftIcaoCode::setCodeFlags(bool military, bool legacy, bool realWorld)
         {
-            m_military = military;
-            m_legacy = legacy;
+            m_military  = military;
+            m_legacy    = legacy;
             m_realWorld = realWorld;
         }
 
@@ -773,6 +814,12 @@ namespace BlackMisc
                 }
             }
             return codes;
+        }
+
+        bool CAircraftIcaoCode::isEPTEngineType(const QChar engineType)
+        {
+            const QChar e = engineType.toUpper();
+            return e == 'P' || e == 'E' || e == 'T';
         }
 
         CAircraftIcaoCode CAircraftIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

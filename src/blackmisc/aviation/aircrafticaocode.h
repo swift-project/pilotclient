@@ -348,6 +348,9 @@ namespace BlackMisc
             //! Create relaxed combined codes, e.g "L2J" -> "L3J", ...
             static QStringList alternativeCombinedCodes(const QString &combinedCode);
 
+            //! Engine tye is Electric, Piston, TurboProp
+            static bool isEPTEngineType(const QChar engineType);
+
             //! From our database JSON format
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
