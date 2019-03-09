@@ -11,17 +11,26 @@
 #ifndef BLACKMISC_SIMULATION_CATEGORYMATCHER_H
 #define BLACKMISC_SIMULATION_CATEGORYMATCHER_H
 
+#include "aircraftmodellist.h"
 #include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {
+    class CStatusMessageList;
+
     namespace Simulation
     {
+        class CSimulatedAircraft;
+        class CAircraftMatcherSetup;
+
         //! Category matcher, uses the DB categories
         class BLACKMISC_EXPORT CCategoryMatcher
         {
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             CCategoryMatcher() {}
 
@@ -34,7 +43,16 @@ namespace BlackMisc
             const Aviation::CAircraftCategoryList &militaryRotorCategories() const { return m_militaryRotorAircraft; }
             //! @}
 
+            //! Reduce by categories
+            CAircraftModelList reduceByCategories(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log = nullptr) const;
+
         private:
+            //! Glider?
+            bool isGlider(const Aviation::CAircraftIcaoCode &icao) const;
+
+            //! Get the glider top level
+            int gliderFirstLevel() const;
+
             Aviation::CAircraftCategoryList m_all;
             Aviation::CAircraftCategoryList m_gliders;
             Aviation::CAircraftCategoryList m_militaryWingAircraft;

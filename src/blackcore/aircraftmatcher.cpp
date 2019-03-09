@@ -872,6 +872,8 @@ namespace BlackCore
 
             if (setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByIcaoData))
             {
+                // by airline/aircraft or by aircraft/airline depending on setup
+                // family is also considered
                 matchedModels = ifPossibleReduceByIcaoData(remoteAircraft, matchedModels, setup, reduced, log);
             }
             else if (log)
@@ -889,6 +891,16 @@ namespace BlackCore
                 {
                     CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Skipping family match"), getLogCategories());
                 }
+            }
+
+            if (setup.useCategoryMatching())
+            {
+                matchedModels = categoryMatcher.reduceByCategories(modelSet, setup, remoteAircraft, reduced, shortLog, log);
+                // ?? break here ??
+            }
+            else if (log)
+            {
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("category matchig disabled"), getLogCategories());
             }
 
             // if not yet reduced, reduce to VTOL
