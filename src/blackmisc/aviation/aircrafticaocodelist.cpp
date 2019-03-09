@@ -216,7 +216,7 @@ namespace BlackMisc
             this->removeIf(&CAircraftIcaoCode::isDbDuplicate, true);
         }
 
-        QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool sort) const
+        QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool withCategory, bool sort) const
         {
             QStringList c;
             CAircraftIcaoCodeList icaos(*this);
@@ -225,7 +225,7 @@ namespace BlackMisc
             // 3 steps to get a proper sort order of the string list
             for (const CAircraftIcaoCode &icao : as_const(icaos))
             {
-                c.append(icao.getCombinedIcaoStringWithKey());
+                c.append(withCategory ? icao.getCombinedIcaoCategoryStringWithKey() : icao.getCombinedIcaoStringWithKey());
             }
 
             if (withFamily)

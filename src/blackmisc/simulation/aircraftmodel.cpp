@@ -202,7 +202,7 @@ namespace BlackMisc
             if (this->hasValidDbKey())
             {
                 return this->hasModelString() ?
-                       QString(this->getModelString() + this->getDbKeyAsStringInParentheses(" ")) :
+                       this->getModelString() % this->getDbKeyAsStringInParentheses(" ") :
                        this->getDbKeyAsString();
             }
             else
@@ -388,6 +388,11 @@ namespace BlackMisc
         bool CAircraftModel::hasKnownAircraftDesignator() const
         {
             return m_aircraftIcao.hasKnownDesignator();
+        }
+
+        bool CAircraftModel::hasCategory() const
+        {
+            return m_aircraftIcao.hasCategory();
         }
 
         bool CAircraftModel::hasAirlineDesignator() const

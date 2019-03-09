@@ -106,6 +106,12 @@ namespace BlackMisc
             //! Contains VTOL models?
             bool containsVtol() const;
 
+            //! Contains any categorized model?
+            bool containsCategory() const;
+
+            //! Contains any model with 1st level?
+            bool containsCategory(int firstLevel) const;
+
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
@@ -176,6 +182,9 @@ namespace BlackMisc
             //! Models with aircraft family or designator and color livery
             CAircraftModelList findByDesignatorOrFamilyWithColorLivery(const Aviation::CAircraftIcaoCode &icao) const;
 
+            //! Models with aircraft family or designators and color livery
+            CAircraftModelList findByDesignatorsOrFamilyWithColorLivery(const QStringList &designators) const;
+
             //! Find by combined code, wildcards possible, e.g. L*P, *2J
             CAircraftModelList findByCombinedType(const QString &combinedType) const;
 
@@ -207,6 +216,15 @@ namespace BlackMisc
 
             //! Find by model mode
             CAircraftModelList findByModelMode(CAircraftModel::ModelMode mode) const;
+
+            //! Find by first level of category
+            CAircraftModelList findByCategoryFirstLevel(int firstLevel) const;
+
+            //! Find by category
+            CAircraftModelList findByCategory(const Aviation::CAircraftCategory &category) const;
+
+            //! Find by categories
+            CAircraftModelList findByCategories(const Aviation::CAircraftCategoryList &categories) const;
 
             //! Model icon path
             QString findModelIconPathByModelString(const QString &modelString) const;

@@ -242,6 +242,9 @@ namespace BlackMisc
             //! Has known aircraft designator?
             bool hasKnownAircraftDesignator() const;
 
+            //! Assigned a category?
+            bool hasCategory() const;
+
             //! Airline designator?
             bool hasAirlineDesignator() const;
 

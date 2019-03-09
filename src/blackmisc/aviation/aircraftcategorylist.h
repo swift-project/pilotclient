@@ -55,6 +55,9 @@ namespace BlackMisc
             //! Get all level strings
             QSet<QString> getLevelStrings() const;
 
+            //! Get all level strings
+            QString getLevelsString(const QString &separator = ", ") const;
+
             //! All levels sorted
             QList<int> getFirstLevels() const;
 

@@ -119,7 +119,7 @@ namespace BlackMisc
             void removeDuplicates();
 
             //! For selection completion
-            QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
+            QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool withCategory = true, bool sort = true) const;
 
             //! All ICAO codes, no duplicates
             QSet<QString> allDesignators(bool noUnspecified = true) const;

@@ -57,6 +57,13 @@ namespace BlackMisc
             return levels;
         }
 
+        QString CAircraftCategoryList::getLevelsString(const QString &separator) const
+        {
+            const QSet<QString> levels = this->getLevelStrings();
+            if (levels.isEmpty()) {return {}; }
+            return levels.toList().join(separator);
+        }
+
         QList<int> CAircraftCategoryList::getFirstLevels() const
         {
             QSet<int> levels;

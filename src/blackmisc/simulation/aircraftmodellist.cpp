@@ -276,6 +276,17 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByDesignatorsOrFamilyWithColorLivery(const QStringList &designators) const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                if (!model.getLivery().isColorLivery()) { return false; }
+                const CAircraftIcaoCode modelIcao(model.getAircraftIcaoCode());
+                if (designators.contains(modelIcao.getDesignator())) { return true; }
+                return modelIcao.hasFamily() && designators.contains(modelIcao.getFamily());
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByCombinedType(const QString &combinedType) const
         {
             const QString cc(combinedType.trimmed().toUpper());
@@ -353,6 +364,33 @@ namespace BlackMisc
             return this->findBy([ = ](const CAircraftModel & model)
             {
                 return (model.getModelMode() == mode);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByCategoryFirstLevel(int firstLevel) const
+        {
+            if (firstLevel < 0) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.hasCategory() && model.getAircraftIcaoCode().getCategory().getFirstLevel() == firstLevel);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByCategory(const CAircraftCategory &category) const
+        {
+            if (category.isNull()) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.hasCategory() && model.getAircraftIcaoCode().getCategory() == category);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByCategories(const CAircraftCategoryList &categories) const
+        {
+            if (categories.isEmpty()) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.hasCategory() && categories.contains(model.getAircraftIcaoCode().getCategory()));
             });
         }
 
@@ -542,6 +580,23 @@ namespace BlackMisc
             return this->containsBy([ & ](const CAircraftModel & model)
             {
                 return model.isVtol();
+            });
+        }
+
+        bool CAircraftModelList::containsCategory() const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.hasCategory();
+            });
+        }
+
+        bool CAircraftModelList::containsCategory(int firstLevel) const
+        {
+            if (firstLevel < 0) { return false; }
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.hasCategory() && model.getAircraftIcaoCode().getCategory().getFirstLevel() == firstLevel;
             });
         }
 
