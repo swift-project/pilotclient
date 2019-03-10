@@ -249,6 +249,9 @@ namespace BlackMisc
             //! Combined ICAO descriptive string with key
             QString getCombinedIcaoStringWithKey() const;
 
+            //! Combined ICAO descriptive string with category and key
+            QString getCombinedIcaoCategoryStringWithKey() const;
+
             //! Combined IATA descriptive string with key
             QString getCombinedIataStringWithKey() const;
 

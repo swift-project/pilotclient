@@ -69,30 +69,18 @@ namespace BlackGui
             const QString icaoStr(m_display == DisplayIcaoAndId ? setIcao.getDesignatorDbKey() : setIcao.getCombinedIcaoStringWithKey());
             ui->le_Aircraft->setText(icaoStr);
             ui->lbl_Description->setText(setIcao.getManufacturer());
-            if (setIcao != m_currentIcao)
-            {
-                m_currentIcao = setIcao;
-                emit changedAircraftIcao(setIcao);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (setIcao == m_currentIcao) { return false; }
+
+            m_currentIcao = setIcao;
+            emit changedAircraftIcao(setIcao);
+            return true;
         }
 
         bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(int key)
         {
             const CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             ui->lbl_Description->setText("");
-            if (icao.hasCompleteData())
-            {
-                return this->setAircraftIcao(icao);
-            }
-            else
-            {
-                return false;
-            }
+            return icao.hasCompleteData() ? this->setAircraftIcao(icao) : false;
         }
 
         CAircraftIcaoCode CDbAircraftIcaoSelectorComponent::getAircraftIcao() const
@@ -164,7 +152,7 @@ namespace BlackGui
         void CDbAircraftIcaoSelectorComponent::dropEvent(QDropEvent *event)
         {
             if (!event || !acceptDrop(event->mimeData())) { return; }
-            CVariant valueVariant(toCVariant(event->mimeData()));
+            const CVariant valueVariant(toCVariant(event->mimeData()));
             if (valueVariant.isValid())
             {
                 if (valueVariant.canConvert<CAircraftIcaoCode>())
@@ -191,7 +179,7 @@ namespace BlackGui
             {
                 CAircraftIcaoCodeList icaos(sGui->getWebDataServices()->getAircraftIcaoCodes());
                 icaos.removeInvalidCombinedCodes();
-                m_completerStrings = icaos.toCompleterStrings(true, true, true);
+                m_completerStrings = icaos.toCompleterStrings(true, true, true, true);
             }
             return m_completerStrings;
         }

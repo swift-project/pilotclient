@@ -517,7 +517,17 @@ namespace BlackMisc
             return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
                    (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
                    (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
-                   this->getDbKeyAsStringInParentheses(" ");
+                   (this->getDbKeyAsStringInParentheses(" "));
+        }
+
+        QString CAircraftIcaoCode::getCombinedIcaoCategoryStringWithKey() const
+        {
+            if (!this->hasCategory()) { return this->getCombinedIcaoStringWithKey(); }
+            return (this->hasDesignator() ? this->getDesignator() : QStringLiteral("????")) %
+                   (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
+                   (u" ["  % this->getCategory().getNameDbKey() % ']') %
+                   (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
+                   (this->getDbKeyAsStringInParentheses(" "));
         }
 
         QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
@@ -527,7 +537,7 @@ namespace BlackMisc
                    (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                    (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
                    (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
-                   this->getDbKeyAsStringInParentheses(" ");
+                   (this->getDbKeyAsStringInParentheses(" "));
         }
 
         QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
@@ -537,7 +547,7 @@ namespace BlackMisc
                    (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                    (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
                    (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
-                   this->getDbKeyAsStringInParentheses(" ");
+                   (this->getDbKeyAsStringInParentheses(" "));
         }
 
         bool CAircraftIcaoCode::hasCategory() const
@@ -559,7 +569,7 @@ namespace BlackMisc
             {
                 const int r = fuzzyShortStringComparision(this->getDesignator(), d) >= fuzzyMatch;
                 if (result) { *result = r; }
-                return r >= fuzzyMatch;
+                return (r >= fuzzyMatch);
             }
             else
             {
@@ -578,7 +588,7 @@ namespace BlackMisc
             {
                 const int r = fuzzyShortStringComparision(this->getIataCode(), i) >= fuzzyMatch;
                 if (result) { *result = r; }
-                return r >= fuzzyMatch;
+                return (r >= fuzzyMatch);
             }
             else
             {
