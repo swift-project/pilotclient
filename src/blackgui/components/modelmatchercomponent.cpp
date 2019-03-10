@@ -125,6 +125,8 @@ namespace BlackGui
             const CAircraftModel matched = m_matcher.getClosestMatch(remoteAircraft, false, &msgs); // test model matching
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
+            ui->tvp_ResultMessages->fullResizeToContents();
+            ui->tvp_ResultMessages->resizeRowsToContents();
         }
 
         void CModelMatcherComponent::reverseLookup()
@@ -155,7 +157,7 @@ namespace BlackGui
             const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
             if (r == QDialog::Accepted)
             {
-                m_settingsDialog->setMatchingSetup(m_settingsDialog->getMatchingSetup());
+                m_matcher.setSetup(m_settingsDialog->getMatchingSetup());
             }
         }
 
