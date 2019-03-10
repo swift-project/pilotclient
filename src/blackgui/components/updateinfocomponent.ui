@@ -116,12 +116,21 @@
    <item row="0" column="2" rowspan="2">
     <widget class="QPushButton" name="pb_CheckForUpdates">
      <property name="text">
-      <string> check again </string>
+      <string>check again</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pb_CheckForUpdates</tabstop>
+  <tabstop>cb_Channels</tabstop>
+  <tabstop>cb_Platforms</tabstop>
+  <tabstop>cb_ArtifactsPilotClient</tabstop>
+  <tabstop>pb_DownloadInstaller</tabstop>
+  <tabstop>cb_ArtifactsXsb</tabstop>
+  <tabstop>pb_DownloadXSwiftBus</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

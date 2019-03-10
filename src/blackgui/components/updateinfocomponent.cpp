@@ -14,9 +14,11 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 
-#include<QDesktopServices>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 using namespace BlackConfig;
 using namespace BlackCore::Application;
@@ -119,14 +121,23 @@ namespace BlackGui
 
         void CUpdateInfoComponent::downloadXSwiftBusDialog()
         {
+            const QString currentXsb = ui->cb_ArtifactsXsb->currentText();
+            const QString currentSwift = ui->cb_ArtifactsPilotClient->currentText();
+
+            if (!stringCompare(currentXsb, currentSwift, Qt::CaseInsensitive))
+            {
+                const QString msg = QStringLiteral("XSwiftBus '%1' does NOT match swift version, download anyway?").arg(currentXsb, currentSwift);
+                const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Download XSwiftBus"), msg, QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) { return; }
+            }
+
             if (!m_installXSwiftBusDialog)
             {
                 m_installXSwiftBusDialog.reset(new CInstallXSwiftBusDialog(this));
                 m_installXSwiftBusDialog->setModal(true);
             }
 
-            const QString current = ui->cb_ArtifactsXsb->currentText();
-            m_installXSwiftBusDialog->setDefaultDownloadName(current);
+            m_installXSwiftBusDialog->setDefaultDownloadName(currentXsb);
             m_installXSwiftBusDialog->show();
         }
 
