@@ -16,100 +16,94 @@ namespace BlackMisc
         namespace Flightgear
         {
 
-            bool AircraftModelLoaderFlightgear::isLoadingFinished() const
+            bool CAircraftModelLoaderFlightgear::isLoadingFinished() const
             {
                 return !m_parserWorker || m_parserWorker->isFinished();;
             }
 
-            AircraftModelLoaderFlightgear::AircraftModelLoaderFlightgear(QObject *parent) : Simulation::IAircraftModelLoader(Simulation::CSimulatorInfo::fg(), parent)
+            CAircraftModelLoaderFlightgear::CAircraftModelLoaderFlightgear(QObject *parent) : Simulation::IAircraftModelLoader(Simulation::CSimulatorInfo::fg(), parent)
             { }
 
-            AircraftModelLoaderFlightgear::~AircraftModelLoaderFlightgear()
+            CAircraftModelLoaderFlightgear::~CAircraftModelLoaderFlightgear()
             {
                 // that should be safe as long as the worker uses deleteLater (which it does)
                 if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
-            void AircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
+            void CAircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setModelsForSimulator(models, CSimulatorInfo::fg());
                 const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Flightgear updated '%1' models") << models.size();
                 m_loadingMessages.push_back(m);
             }
 
-            Simulation::CAircraftModelList AircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+            CAircraftModelList CAircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 Q_UNUSED(excludeDirectories);
                 if (rootDirectory.isEmpty()) { return {}; }
-                Simulation::CAircraftModelList installedModels;
+                CAircraftModelList installedModels;
 
                 QDir searchPath(rootDirectory);
                 searchPath.setNameFilters(QStringList() << "*-set.xml");
                 QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
-
 
                 while (aircraftIt.hasNext())
                 {
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
                     if (aircraftIt.filePath().toStdString().find("/AI/Aircraft") != std::string::npos) { continue; }
-                    Simulation::CAircraftModel model;
-                    std::string modelName = aircraftIt.fileName().toStdString();
-                    modelName = modelName.substr(0, modelName.find("-set.xml"));
-                    model.setName(QString::fromStdString(modelName));
-                    model.setModelString(QString::fromStdString(getModelString(aircraftIt.fileName().toStdString(), false)));
+                    CAircraftModel model;
+                    QString modelName = aircraftIt.fileName();
+                    modelName = modelName.remove("-set.xml");
+                    model.setName(modelName);
+                    model.setModelString(getModelString(aircraftIt.fileName(), false));
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(CSimulatorInfo::fg());
                     model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
                     model.setModelMode(CAircraftModel::Exclude);
-
                     addUniqueModel(model, installedModels);
-
                 }
 
                 return installedModels;
             }
 
-            CAircraftModelList AircraftModelLoaderFlightgear::parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+            CAircraftModelList CAircraftModelLoaderFlightgear::parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 Q_UNUSED(excludeDirectories);
                 if (rootDirectory.isEmpty()) { return {}; }
 
-                Simulation::CAircraftModelList installedModels;
+                CAircraftModelList installedModels;
 
                 QDir searchPath(rootDirectory);
                 searchPath.setNameFilters(QStringList() << "*.xml");
                 QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-
                 while (aircraftIt.hasNext())
                 {
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
-                    Simulation::CAircraftModel model;
-                    std::string modelName = aircraftIt.fileName().toStdString();
-                    modelName = modelName.substr(0, modelName.find(".xml"));
-                    model.setName(QString::fromStdString(modelName));
-                    model.setModelString(QString::fromStdString(getModelString(aircraftIt.filePath().toStdString(), true)));
+                    CAircraftModel model;
+                    QString modelName = aircraftIt.fileName();
+                    modelName = modelName.remove(".xml");
+                    model.setName(modelName);
+                    model.setModelString(getModelString(aircraftIt.filePath(), true));
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(CSimulatorInfo::fg());
                     model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
                     model.setModelMode(CAircraftModel::Include);
-
                     addUniqueModel(model, installedModels);
-
                 }
 
                 return installedModels;
             }
 
-            void AircraftModelLoaderFlightgear::addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
+            void CAircraftModelLoaderFlightgear::addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
             {
                 //TODO Add check
                 models.push_back(model);
             }
 
-            CAircraftModelList AircraftModelLoaderFlightgear::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
+            CAircraftModelList CAircraftModelLoaderFlightgear::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
             {
                 CAircraftModelList allModels;
                 for (const QString &rootDirectory : rootDirectories)
@@ -124,7 +118,7 @@ namespace BlackMisc
                 return allModels;
             }
 
-            void AircraftModelLoaderFlightgear::startLoadingFromDisk(IAircraftModelLoader::LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+            void CAircraftModelLoaderFlightgear::startLoadingFromDisk(IAircraftModelLoader::LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
             {
                 const CSimulatorInfo simulator = CSimulatorInfo::fg();
                 const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
@@ -159,28 +153,25 @@ namespace BlackMisc
 
             }
 
-            std::string AircraftModelLoaderFlightgear::getModelString(std::string fileName, bool ai)
+            QString CAircraftModelLoaderFlightgear::getModelString(const QString &fileName, bool ai)
             {
-                std::string modelString = "FG ";
+                QString modelString = "FG ";
+                QString f;
                 if (ai)
                 {
                     modelString.append("AI ");
-                    fileName = fileName.substr(fileName.find("Aircraft") + 9);
-                    fileName = fileName.substr(0, fileName.find(".xml"));
-
+                    f = fileName.mid(fileName.indexOf("Aircraft") + 9);
+                    f.remove(".xml");
                 }
                 else
                 {
-                    fileName = fileName.substr(0, fileName.find("-set.xml"));
+                    f = fileName;
+                    f.remove("-set.xml");
                 }
 
-                modelString.append(fileName);
-
-
+                modelString.append(f);
                 return modelString;
             }
-
-
         }
     }
 

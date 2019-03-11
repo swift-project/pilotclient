@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FGSWIFTBUS_SERVICE_PROXY_H
-#define BLACKSIMPLUGIN_FGSWIFTBUS_SERVICE_PROXY_H
+#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
+#define BLACKSIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 
@@ -101,7 +101,7 @@ namespace BlackSimPlugin
             QString getVersionNumber();
 
             //! Get own aircraft situation data
-            void getOwnAircraftSituationData(BlackSimPlugin::Flightgear::FlightgearData *o_flightgearData);
+            void getOwnAircraftSituationData(FlightgearData *o_flightgearData);
 
             //! Add a text message to the on-screen display
             void addTextMessage(const QString &text);

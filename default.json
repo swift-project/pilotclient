@@ -24,7 +24,7 @@
         "p3d": true,
         "fsuipc": true,
         "xplane": true,
-		"fg": true
+        "fg": true
     },
     "profileRelease": true,
     "assertsInRelease": true,

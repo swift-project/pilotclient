@@ -24,6 +24,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Flightgear;
 using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackMisc
@@ -175,7 +176,7 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
             if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
-            if (simulator.isFG())     { return new BlackMisc::Simulation::Flightgear::AircraftModelLoaderFlightgear(parent); }
+            if (simulator.isFG())     { return new CAircraftModelLoaderFlightgear(parent); }
             return CAircraftCfgParser::createModelLoader(simulator, parent);
         }
 

@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FGSWIFTBUS_TRAFFIC_PROXY_H
-#define BLACKSIMPLUGIN_FGSWIFTBUS_TRAFFIC_PROXY_H
+#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
+#define BLACKSIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/aviation/callsign.h"
