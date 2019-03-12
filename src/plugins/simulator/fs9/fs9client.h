@@ -88,7 +88,7 @@ namespace BlackSimPlugin
 
             //! Send functions
             //! @{
-            void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+            void sendMultiplayerPosition();
             void sendMultiplayerParamaters();
             void sendMultiplayerChangePlayerPlane();
             //! @}

@@ -189,16 +189,7 @@ namespace BlackSimPlugin
         {
             Q_UNUSED(event);
 
-            // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
-            if (m_clientStatus == Disconnected) { return; }
-            const bool forceFullUpdate = false;
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign, forceFullUpdate);
-            const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup, 0);
-
-            // Test only for successful position. FS9 requires constant positions
-            if (!result.getInterpolationStatus().hasValidSituation()) { return; }
-
-            sendMultiplayerPosition(result);
+            sendMultiplayerPosition();
             sendMultiplayerParamaters();
         }
 
@@ -318,7 +309,8 @@ namespace BlackSimPlugin
 
             CLogMessage(this).debug() << m_callsign << " connected to session.";
             sendMultiplayerChangePlayerPlane();
-
+            sendMultiplayerPosition();
+            sendMultiplayerParamaters();
             m_timerId = startTimer(m_updateInterval.valueInteger(CTimeUnit::ms()));
 
             m_clientStatus = Connected;
@@ -343,9 +335,18 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        void CFs9Client::sendMultiplayerPosition(const CAircraftSituation &situation)
+        void CFs9Client::sendMultiplayerPosition()
         {
-            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
+            // remark: in FS9 there is no central updateRemoteAircraft() function, each FS9 client updates itself
+            if (m_clientStatus == Disconnected) { return; }
+            const bool forceFullUpdate = false;
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign, forceFullUpdate);
+            const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup, 0);
+
+            // Test only for successful position. FS9 requires constant positions
+            if (!result.getInterpolationStatus().hasValidSituation()) { return; }
+
+            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(result.getInterpolatedSituation());
 
             QByteArray positionMessage;
             MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);
