@@ -315,6 +315,7 @@ namespace BlackSimPlugin
                 {
                     updateOwnAircraftFromSimulator(fsuipcAircraft);
                 }
+                synchronizeTime();
             }
         }
 
@@ -400,6 +401,26 @@ namespace BlackSimPlugin
             {
                 physicallyRemoveRemoteAircraft(fs9Client);
             }
+        }
+
+        void CSimulatorFs9::synchronizeTime()
+        {
+            if (!m_simTimeSynced) { return; }
+            if (!this->isConnected())   { return; }
+            if (!m_useFsuipc || !m_fsuipc) { return; }
+            if (!m_fsuipc->isOpened()) { return; }
+
+            QDateTime myDateTime = QDateTime::currentDateTimeUtc();
+            if (!m_syncTimeOffset.isZeroEpsilonConsidered())
+            {
+                int offsetSeconds = m_syncTimeOffset.valueInteger(CTimeUnit::s());
+                myDateTime = myDateTime.addSecs(offsetSeconds);
+            }
+
+            const QTime myTime = myDateTime.time();
+            const int h = myTime.hour();
+            const int m = myTime.minute();
+            m_fsuipc->setSimulatorTime(h, m);
         }
 
         void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)

@@ -66,6 +66,13 @@ namespace BlackSimPlugin
             return false;
         }
 
+        bool CFsuipc::setSimulatorTime(int hour, int minute)
+        {
+            Q_UNUSED(hour);
+            Q_UNUSED(minute);
+            return false;
+        }
+
         QString CFsuipc::getVersion() const
         {
             return QStringLiteral("N/A");

@@ -330,6 +330,23 @@ namespace BlackSimPlugin
             return true;
         }
 
+        bool CFsuipc::setSimulatorTime(int hour, int minute)
+        {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
+            if (!this->isOpened()) { return false; }
+
+            // should be the same as writing via SimConnect data area
+            DWORD dwResult;
+            quint8 hourRaw = hour;
+            quint8 minuteRaw = minute;
+
+            const bool ok =
+                FSUIPC_Write(0x023b, 1, &hourRaw,  &dwResult) &&
+                FSUIPC_Write(0x023c, 1, &minuteRaw, &dwResult);
+            if (ok) { FSUIPC_Process(&dwResult); }
+            return ok && dwResult == 0;
+        }
+
         QString CFsuipc::getVersion() const
         {
             return m_fsuipcVersion;

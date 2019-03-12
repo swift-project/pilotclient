@@ -53,6 +53,9 @@ namespace BlackSimPlugin
             //! Write weather grid to simulator
             bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
+            //! Set simulator time
+            bool setSimulatorTime(int hour, int minute);
+
             //! Get the version
             QString getVersion() const;
 

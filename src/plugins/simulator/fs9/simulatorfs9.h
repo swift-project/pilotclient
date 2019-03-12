@@ -100,6 +100,9 @@ namespace BlackSimPlugin
             //! Disconnect all clients
             void disconnectAllClients();
 
+            //! Sync time with user's computer
+            void synchronizeTime();
+
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             bool m_simConnected = false; //!< Is simulator connected?
