@@ -49,6 +49,13 @@ The installation will now continue, but swift might not work properly. If this i
                             <value1>${program_exit_code}</value1>
                             <value2>1638</value2>
                         </compareValues>
+
+                        <!-- Restart required -->
+                        <compareValues>
+                            <logic>does_not_equal</logic>
+                            <value1>${program_exit_code}</value1>
+                            <value2>3010</value2>
+                        </compareValues>
                     </ruleList>
                 </showWarning>
             </actionList>
