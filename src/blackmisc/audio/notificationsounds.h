@@ -48,14 +48,23 @@ namespace BlackMisc
                 NotificationNoAudioTransmission   = 1 << 8,
                 PTTClickKeyDown                   = 1 << 9,
                 PTTClickKeyUp                     = 1 << 10,
-                AllTextNotifications              = NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor,
-                AllLoginNotifications             = NotificationLogin | NotificationLogoff,
-                AllVoiceRoomNotifications         = NotificationVoiceRoomJoined | NotificationVoiceRoomLeft | NotificationNoAudioTransmission,
-                AllNotifications                  = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
-                DefaultNotifications              = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
-                All                               = AllNotifications  | PTTClickKeyDown | PTTClickKeyUp
             };
             Q_DECLARE_FLAGS(Notification, NotificationFlag)
+
+            //! All text notification flags
+            constexpr static Notification AllTextNotifications = Notification(NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor);
+
+            //! All login notification flags
+            constexpr static Notification AllLoginNotifications = Notification(NotificationLogin | NotificationLogoff);
+
+            //! All voice room notification flags
+            constexpr static Notification AllVoiceRoomNotifications = Notification(NotificationVoiceRoomJoined | NotificationVoiceRoomLeft);
+
+            //! All notification flags
+            constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications);
+
+            //! Default notification flags
+            constexpr static Notification DefaultNotifications = Notification(AllNotifications);
 
             //! As string
             static const QString &flagToString(NotificationFlag notification);
