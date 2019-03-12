@@ -341,25 +341,6 @@ namespace BlackSimPlugin
                 }
             case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
                 {
-                    MPPositionVelocity mpPositionVelocity;
-                    MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
-                    auto aircraftSituation = aircraftSituationFromFS9(mpPositionVelocity);
-                    updateOwnSituation(aircraftSituation);
-
-                    if (m_isWeatherActivated)
-                    {
-                        const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
-                        if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-                        {
-                            if (m_lastWeatherPosition.isNull() ||
-                                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
-                            {
-                                m_lastWeatherPosition = currentPosition;
-                                const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                                requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
-                            }
-                        }
-                    }
                     break;
                 }
             case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
@@ -390,7 +371,24 @@ namespace BlackSimPlugin
                 m_skipCockpitUpdateCycles--;
             }
 
-            this->updateOwnSituation(simDataOwnAircraft.getSituation());
+            CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
+            this->updateOwnSituation(aircraftSituation);
+
+            if (m_isWeatherActivated)
+            {
+                const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
+                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
+                {
+                    if (m_lastWeatherPosition.isNull() ||
+                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    {
+                        m_lastWeatherPosition = currentPosition;
+                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                        requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
+                    }
+                }
+            }
+
             reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
         }
 
