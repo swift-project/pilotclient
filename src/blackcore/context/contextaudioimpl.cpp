@@ -127,7 +127,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CVoiceRoomList voiceRoomList;
 
-            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
             if (voiceChannelCom1)
             {
                 CVoiceRoom room = voiceChannelCom1->getVoiceRoom();
@@ -138,7 +138,7 @@ namespace BlackCore
                 voiceRoomList.push_back(CVoiceRoom());
             }
 
-            QSharedPointer<IVoiceChannel> voiceChannelCom2 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
+            QSharedPointer<IVoiceChannel> voiceChannelCom2 = m_voiceChannelMapping.value(CComSystem::Com2);
             if (voiceChannelCom2)
             {
                 CVoiceRoom room = voiceChannelCom2->getVoiceRoom();
@@ -150,6 +150,12 @@ namespace BlackCore
             }
 
             return voiceRoomList;
+        }
+
+        bool CContextAudio::canTalk() const
+        {
+            const CVoiceRoomList rooms = this->getComVoiceRoomsWithAudioStatus();
+            return rooms.countCanTalkTo() > 0;
         }
 
         void CContextAudio::leaveAllVoiceRooms()
@@ -295,9 +301,9 @@ namespace BlackCore
             Q_ASSERT(getIContextOwnAircraft());
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
 
-            CVoiceRoomList currentRooms = this->getComVoiceRooms();
-            CVoiceRoom currentRoomCom1 = currentRooms[0];
-            CVoiceRoom currentRoomCom2 = currentRooms[1];
+            const CVoiceRoomList currentRooms = this->getComVoiceRooms();
+            const CVoiceRoom currentRoomCom1 = currentRooms[0];
+            const CVoiceRoom currentRoomCom2 = currentRooms[1];
             CVoiceRoom newRoomCom1 = newRooms[0];
             CVoiceRoom newRoomCom2 = newRooms[1];
             const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
@@ -372,7 +378,7 @@ namespace BlackCore
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                     newVoiceChannel->setUserId(id);
                     bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                    m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com2, newVoiceChannel);
+                    m_voiceChannelMapping.insert(CComSystem::Com2, newVoiceChannel);
 
                     // If the voice channel is not used by anybody else
                     if (!inUse)
@@ -392,7 +398,7 @@ namespace BlackCore
             Q_UNUSED(changed);
         }
 
-        CCallsignSet CContextAudio::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
+        CCallsignSet CContextAudio::getRoomCallsigns(CComSystem::ComUnit comUnitValue) const
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -401,7 +407,7 @@ namespace BlackCore
             return voiceChannel ? voiceChannel->getVoiceRoomCallsigns() : CCallsignSet();
         }
 
-        Network::CUserList CContextAudio::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const
+        Network::CUserList CContextAudio::getRoomUsers(CComSystem::ComUnit comUnit) const
         {
             Q_ASSERT(m_voice);
             Q_ASSERT(this->getRuntime());
@@ -434,8 +440,18 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
-            const bool play = !considerSettings || m_audioSettings.getThreadLocal().isNotificationFlagSet(notification);
-            if (play) { CSoundGenerator::playNotificationSound(90, notification); }
+            const CSettings settings = m_audioSettings.getThreadLocal();
+            const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
+            if (!play) { return; }
+            if (notification == CNotificationSounds::PTTClick && (considerSettings && settings.noAudioTransmission()))
+            {
+                if (!this->canTalk())
+                {
+                    // warning sound
+                    notification = CNotificationSounds::NotificationNoAudioTransmission;
+                }
+            }
+            CSoundGenerator::playNotificationSound(90, notification);
         }
 
         void CContextAudio::initNotificationSounds()

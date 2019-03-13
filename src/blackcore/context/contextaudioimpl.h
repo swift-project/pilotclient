@@ -77,6 +77,7 @@ namespace BlackCore
             //! @{
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
+            virtual bool canTalk() const override;
             virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const override;
             virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
             virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;

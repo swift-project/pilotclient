@@ -32,18 +32,25 @@ namespace BlackCore
             CContextAudioEmpty(CCoreFacade *runtime) : IContextAudio(CCoreFacadeConfig::NotUsed, runtime) {}
 
         public slots:
-            //! \copydoc IContextAudio::getComVoiceRooms()
+            //! \copydoc IContextAudio::getComVoiceRooms
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Audio::CVoiceRoomList();
             }
 
-            //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus()
+            //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Audio::CVoiceRoomList();
+            }
+
+            //! \copydoc IContextAudio::canTalk
+            virtual bool canTalk() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
 
             //! \copydoc IContextAudio::getVoiceRoom

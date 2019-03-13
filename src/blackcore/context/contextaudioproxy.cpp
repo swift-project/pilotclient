@@ -105,6 +105,11 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRoomsWithAudioStatus"));
         }
 
+        bool CContextAudioProxy::canTalk() const
+        {
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("canTalk"));
+        }
+
         CVoiceRoomList CContextAudioProxy::getComVoiceRooms() const
         {
             return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRooms"));

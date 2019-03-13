@@ -112,6 +112,9 @@ namespace BlackCore
             //! Get voice rooms for COM1, COM2:
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
 
+            //! Can talk in any voice room
+            virtual bool canTalk() const = 0;
+
             //! Get voice rooms for COM1, COM2, but without latest audio status
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
 
