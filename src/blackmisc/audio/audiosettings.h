@@ -49,6 +49,7 @@ namespace BlackMisc
             bool textMessagePrivate()    const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
             bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
             bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
+            bool noAudioTransmission()   const { return this->isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission); }
             bool pttClick() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClick); }
             //! @}
 
