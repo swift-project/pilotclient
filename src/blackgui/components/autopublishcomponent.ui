@@ -61,6 +61,9 @@
      <layout class="QHBoxLayout" name="hl_Buttons">
       <item>
        <widget class="QPushButton" name="pb_SendToDB">
+        <property name="toolTip">
+         <string>analyze data and then send to DB</string>
+        </property>
         <property name="text">
          <string>send to DB</string>
         </property>
@@ -81,15 +84,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="pb_DeleteFiles">
+        <property name="toolTip">
+         <string>remove all auto publish files</string>
+        </property>
         <property name="text">
-         <string>clean</string>
+         <string>clean up files</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Analyze">
+        <property name="toolTip">
+         <string>analyze auto publish data</string>
+        </property>
         <property name="text">
-         <string>analyze</string>
+         <string>analyze data</string>
         </property>
        </widget>
       </item>
