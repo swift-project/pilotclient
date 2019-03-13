@@ -39,6 +39,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CVoiceRoomList(const CSequence &other);
 
+            //! Count how many rooms can be talked to
+            int countCanTalkTo() const;
+
             //! Frequently needed for voice room resolutions
             static const CVoiceRoomList &twoEmptyRooms();
         };

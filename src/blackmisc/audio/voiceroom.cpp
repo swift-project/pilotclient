@@ -91,5 +91,10 @@ namespace BlackMisc
         {
             return (m_channel.contains("ATIS", Qt::CaseInsensitive));
         }
+
+        bool CVoiceRoom::canTalkTo() const
+        {
+            return this->isConnected() && !this->isAtis();
+        }
     } // ns
 } // ns

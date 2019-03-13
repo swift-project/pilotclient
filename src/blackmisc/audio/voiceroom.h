@@ -31,7 +31,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexHostname = BlackMisc::CPropertyIndex::GlobalIndexCVoiceRoom,
+                IndexHostname = CPropertyIndex::GlobalIndexCVoiceRoom,
                 IndexChannel,
                 IndexUrl,
                 IndexConnected,
@@ -68,22 +68,25 @@ namespace BlackMisc
             void setVoiceRoomUrl(const QString &serverUrl);
 
             //! Valid voice room object?
-            bool isValid() const { return !this->m_hostname.isEmpty() &&  !this->m_channel.isEmpty(); }
+            bool isValid() const { return !m_hostname.isEmpty() && !m_channel.isEmpty(); }
 
             //! Is connected?
-            bool isConnected() const { return this->isValid() && this->m_connected; }
+            bool isConnected() const { return this->isValid() && m_connected; }
 
             //! Set connection status
-            void setConnected(bool isConnected) { this->m_connected = isConnected; }
+            void setConnected(bool isConnected) { m_connected = isConnected; }
 
             //! Is audio playing in this room?
-            bool isAudioPlaying() const { return this->m_audioPlaying; }
+            bool isAudioPlaying() const { return m_audioPlaying; }
 
             //! Set audio playing
-            void setAudioPlaying(bool playing)  { this->m_audioPlaying = playing; }
+            void setAudioPlaying(bool playing)  { m_audioPlaying = playing; }
 
             //! Is ATIS voice channel
             bool isAtis() const;
+
+            //! Can talk to channel
+            bool canTalkTo() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -115,8 +118,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(audioPlaying)
             );
         };
-    } // Voice
-} // BlackMisc
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Audio::CVoiceRoom)
 

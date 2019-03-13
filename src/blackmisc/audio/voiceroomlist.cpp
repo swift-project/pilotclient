@@ -23,6 +23,16 @@ namespace BlackMisc
             CSequence(other)
         { }
 
+        int CVoiceRoomList::countCanTalkTo() const
+        {
+            int c = 0;
+            for (const CVoiceRoom &r : *this)
+            {
+                if (r.canTalkTo()) { c++; }
+            }
+            return c;
+        }
+
         const CVoiceRoomList &CVoiceRoomList::twoEmptyRooms()
         {
             static CVoiceRoomList emptyRooms;
