@@ -56,6 +56,9 @@ namespace BlackMisc
                                                   Simulation::CAircraftModelList &publishedModels,
                                                   Simulation::CAircraftModelList &skippedModels,
                                                   CStatusMessageList &messages, bool &directWrite);
+
+            //! Auto publish response
+            static bool parseAutoPublishResponse(const QString &jsonResponse, CStatusMessageList &messages);
         };
     } // namespace
 } // namespace

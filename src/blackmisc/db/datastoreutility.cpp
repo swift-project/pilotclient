@@ -158,5 +158,45 @@ namespace BlackMisc
 
             return hasData;
         }
+
+        bool CDatastoreUtility::parseAutoPublishResponse(const QString &jsonResponse, CStatusMessageList &messages)
+        {
+            if (jsonResponse.isEmpty())
+            {
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+                return false;
+            }
+
+            const QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
+
+            // array of messages only
+            if (jsonDoc.isArray())
+            {
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
+                messages.push_back(msgs);
+                return true;
+            }
+
+            // no object -> most likely some fucked up HTML string with the PHP error
+            if (!jsonDoc.isObject())
+            {
+                const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, phpError));
+                return false;
+            }
+
+            QJsonObject json(jsonDoc.object());
+            if (json.contains("msgs"))
+            {
+                const QJsonValue msgJson(json.take("msgs"));
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(msgJson.toArray()));
+                if (!msgs.isEmpty())
+                {
+                    messages.push_back(msgs);
+                    return !messages.hasErrorMessages();
+                }
+            }
+            return false;
+        }
     } // ns
 } // ns
