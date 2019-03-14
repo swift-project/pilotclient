@@ -185,7 +185,7 @@ namespace BlackCore
             if (!m_dbDebugFlag) { return false; }
 
             // further checks could go here
-            const bool f = isDevelopment();
+            const bool f = this->isDevelopment() || CBuildConfig::isLocalDeveloperDebugBuild();
             return f;
         }
 
