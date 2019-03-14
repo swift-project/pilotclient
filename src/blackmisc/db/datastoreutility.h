@@ -11,6 +11,7 @@
 #ifndef BLACKMISC_DB_DATASTOREUTILITY_H
 #define BLACKMISC_DB_DATASTOREUTILITY_H
 
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
@@ -29,6 +30,9 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CDatastoreUtility
         {
         public:
+            //! Log.categories
+            static const CLogCategoryList &getLogCategories();
+
             //! No constructor
             CDatastoreUtility() = delete;
 

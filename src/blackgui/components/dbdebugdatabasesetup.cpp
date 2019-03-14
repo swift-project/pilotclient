@@ -33,14 +33,14 @@ namespace BlackGui
             }
             else
             {
-                connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::ps_debugChanged);
+                connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::onDebugChanged);
             }
         }
 
         CDbDebugDatabaseSetup::~CDbDebugDatabaseSetup()
         { }
 
-        void CDbDebugDatabaseSetup::ps_debugChanged(bool set)
+        void CDbDebugDatabaseSetup::onDebugChanged(bool set)
         {
             CGlobalSetup gs(m_setup.getThreadLocal());
             gs.setServerDebugFlag(set);

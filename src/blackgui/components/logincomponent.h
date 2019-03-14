@@ -34,6 +34,7 @@
 #include <QScopedPointer>
 #include <QString>
 
+namespace Ui { class CLoginComponent; }
 namespace BlackMisc
 {
     namespace Simulation
@@ -42,7 +43,6 @@ namespace BlackMisc
         class CSimulatedAircraft;
     }
 }
-namespace Ui { class CLoginComponent; }
 namespace BlackGui
 {
     namespace Components

@@ -29,6 +29,12 @@ namespace BlackMisc
 {
     namespace Db
     {
+        const CLogCategoryList &CDatastoreUtility::getLogCategories()
+        {
+            static const CLogCategoryList cats({CLogCategory::swiftDbWebservice()});
+            return cats;
+        }
+
         bool CDatastoreUtility::dbBoolStringToBool(const QString &dbBool)
         {
             return BlackMisc::stringToBool(dbBool);
@@ -76,16 +82,15 @@ namespace BlackMisc
 
         bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
         {
-            static const CLogCategoryList cats({CLogCategory::swiftDbWebservice()});
             directWrite = false;
 
             if (jsonResponse.isEmpty())
             {
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
                 return false;
             }
 
-            QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
+            const QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
 
             // array of messages only
             if (jsonDoc.isArray())
@@ -99,7 +104,7 @@ namespace BlackMisc
             if (!jsonDoc.isObject())
             {
                 const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, phpError));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, phpError));
                 return false;
             }
 
@@ -148,7 +153,7 @@ namespace BlackMisc
 
             if (!hasData)
             {
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Received response, but no JSON data"));
+                messages.push_back(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, u"Received response, but no JSON data"));
             }
 
             return hasData;

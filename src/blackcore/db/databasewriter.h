@@ -74,7 +74,7 @@ namespace BlackCore
             BlackMisc::Network::CUrl m_autoPublishUrl;  //!< auto publish data
             QNetworkReply *m_pendingModelPublishReply = nullptr;
             QNetworkReply *m_pendingAutoPublishReply  = nullptr;
-            qint64         m_modelReplyPendingSince = -1;
+            qint64         m_modelReplyPendingSince   = -1;
             qint64         m_autoPublishReplyPendingSince = -1;
             bool           m_shutdown = false;
 

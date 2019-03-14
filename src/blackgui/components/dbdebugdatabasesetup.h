@@ -19,10 +19,7 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CDbDebugDatabaseSetup; }
-
 namespace BlackGui
 {
     namespace Components
@@ -42,11 +39,10 @@ namespace BlackGui
             //! Dstructor
             ~CDbDebugDatabaseSetup();
 
-        private slots:
-            //! Changed the debug checkbox
-            void ps_debugChanged(bool set);
-
         private:
+            //! Changed the debug checkbox
+            void onDebugChanged(bool set);
+
             QScopedPointer<Ui::CDbDebugDatabaseSetup> ui;
             BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this};   //!< data cache
         };
