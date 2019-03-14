@@ -54,6 +54,9 @@ void CSwiftData::initDynamicMenus()
     Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
 
+    //  menu entry for auto publish data
+    ui->menu_Mapping->addAction(CIcons::database16(), "Auto publish data", this, &CSwiftData::checkAutoPublishing);
+
     QString resourceDir(CDirectoryUtils::shareDirectory());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
