@@ -634,4 +634,15 @@ namespace BlackGui
 
         return QStringLiteral("<img src=\"%1\" height=%2>").arg(p, QString::number(height));
     }
+
+    QDialog *CGuiUtility::findParentDialog(QWidget *widget)
+    {
+        if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
+        while (widget->parent())
+        {
+            widget = widget->parentWidget();
+            if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
+        }
+        return nullptr;
+    }
 } // ns

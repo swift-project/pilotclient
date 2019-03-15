@@ -31,6 +31,7 @@ class QLayout;
 class QMimeData;
 class QLineEdit;
 class QTabWidget;
+class QDialog;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
 
@@ -232,6 +233,9 @@ namespace BlackGui
 
         //! CIcon as simple HTML image code segment
         static QString asSimpleHtmlImageHeight(const BlackMisc::CIcon &icon, int height = -1);
+
+        //! Find parent dialog if there is any, otherwise null
+        static QDialog *findParentDialog(QWidget *widget);
 
     private:
         //! No constructor, use static functions only
