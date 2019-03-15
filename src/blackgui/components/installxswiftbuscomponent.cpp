@@ -22,6 +22,7 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QPointer>
 #include <QDesktopServices>
 
 using namespace BlackMisc;
@@ -100,6 +101,8 @@ namespace BlackGui
         {
             const CRemoteFile rf = this->getRemoteFileSelected();
             const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->downloadDir(), rf.getName());
+            QPointer<CInstallXSwiftBusComponent> myself(this);
+
             QFile downloadFile(downloadFileName);
             if (!downloadFile.exists())
             {
@@ -164,6 +167,7 @@ namespace BlackGui
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info(u"Uncompressed xSwiftBus in '%1'") << xSwiftBusDirectory;
                 this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ = ]
                 {
+                    if (!myself) { return; }
                     QFile downloadFile(downloadFileName);
                     if (!downloadFile.exists()) { return; } // removed in meantime
                     const bool removed = downloadFile.remove();
