@@ -68,6 +68,9 @@ namespace BlackCore
             //! Published models, simplified version of publishedModels
             void publishedModelsSimplified(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
 
+            //! Auto publishing completed
+            void autoPublished(bool success, const QString &url, const BlackMisc::CStatusMessageList &msgs);
+
         private:
             BlackMisc::Network::CUrlLogList m_writeLog;
             BlackMisc::Network::CUrl m_modelPublishUrl; //!< model publishing
