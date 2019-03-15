@@ -807,7 +807,9 @@ namespace BlackSimPlugin
             const CLength cg(remoteAircraftModel.cgToGroundFt, CLengthUnit::ft());
             so.setAircraftCG(cg);
             so.setAircraftModelString(modelString);
-            this->insertCG(cg, modelString, cs); // env. provider
+
+            // update in 2 providers
+            this->rememberElevationAndCG(cs, modelString, CElevationPlane::null(), cg); // env. provider
             this->updateCGAndModelString(cs, cg, modelString); // remote aircraft provider
         }
 

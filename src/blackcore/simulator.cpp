@@ -800,7 +800,7 @@ namespace BlackCore
         }
         if (!cg.isNull() && !this->hasSameCG(cg, callsign))
         {
-            this->insertCG(cg, modelString, callsign);
+            this->insertCG(cg, modelString, callsign); // per model string and CG
 
             // here we know we have a valid model and CG
             m_autoPublishing.insert(modelString, cg);
