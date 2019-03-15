@@ -52,6 +52,12 @@ namespace BlackGui
 
             //! Delete all files
             void deleteAllFiles();
+
+            //! Auto publishing completed
+            void onAutoPublished(bool success, const QString &url, const BlackMisc::CStatusMessageList &msgs);
+
+            //! Close parent dialog (if any)
+            void closeParentDialog();
         };
     } // ns
 } // ns

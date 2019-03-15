@@ -9,13 +9,20 @@
 #include "autopublishcomponent.h"
 #include "ui_autopublishcomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+
 #include "blackcore/webdataservices.h"
+#include "blackcore/db/databasewriter.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
 #include <QPushButton>
+#include <QPointer>
+#include <QTimer>
+#include <QDialog>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Db;
 
 namespace BlackGui
 {
@@ -29,6 +36,12 @@ namespace BlackGui
             connect(ui->pb_Analyze,     &QPushButton::released, this, &CAutoPublishComponent::analyzeAgainstDBData, Qt::QueuedConnection);
             connect(ui->pb_SendToDB,    &QPushButton::released, this, &CAutoPublishComponent::sendToDb, Qt::QueuedConnection);
             connect(ui->pb_DeleteFiles, &QPushButton::released, this, &CAutoPublishComponent::deleteAllFiles, Qt::QueuedConnection);
+
+            if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getDatabaseWriter())
+            {
+                CDatabaseWriter *w = sGui->getWebDataServices()->getDatabaseWriter();
+                connect(w, &CDatabaseWriter::autoPublished, this, &CAutoPublishComponent::onAutoPublished, Qt::QueuedConnection);
+            }
         }
 
         CAutoPublishComponent::~CAutoPublishComponent()
@@ -58,6 +71,12 @@ namespace BlackGui
                 return;
             }
 
+            if (!sGui->getWebDataServices())
+            {
+                this->showOverlayHTMLMessage("No publishing web service!", 5000);
+                return;
+            }
+
             const CAircraftModelList dbModels = sGui->getWebDataServices()->getModels();
             CStatusMessageList msgs = m_data.analyzeAgainstDBData(dbModels);
             if (!msgs.hasErrorMessages())
@@ -81,7 +100,39 @@ namespace BlackGui
             {
                 this->showOverlayHTMLMessage(QStringLiteral("Deleted %1 file(s)").arg(c));
             }
-            this->readFiles()   ;
+            this->readFiles();
+        }
+
+        void CAutoPublishComponent::onAutoPublished(bool success, const QString &url, const CStatusMessageList &msgs)
+        {
+            Q_UNUSED(url);
+            Q_UNUSED(success);
+            if (success)
+            {
+                QPointer<CAutoPublishComponent> myself(this);
+                this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [ = ]
+                {
+                    if (!myself) { return; }
+                    const int timeoutMs = 5000;
+                    myself->deleteAllFiles();
+                    myself->showOverlayHTMLMessage("Cleaned auto publish files after uploading them to DB", timeoutMs);
+
+                    QTimer::singleShot(timeoutMs * 1.2, this, [ = ] {
+                        if (!myself) { return; }
+                        myself->closeParentDialog();
+                    });
+                });
+            }
+            else
+            {
+                this->showOverlayMessages(msgs, true);
+            }
+        }
+
+        void CAutoPublishComponent::closeParentDialog()
+        {
+            QDialog *d = CGuiUtility::findParentDialog(this);
+            if (d) { d->close(); }
         }
 
     } // ns
