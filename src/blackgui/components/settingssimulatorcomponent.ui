@@ -2,27 +2,10 @@
 <ui version="4.0">
  <class>CSettingsSimulatorComponent</class>
  <widget class="QFrame" name="CSettingsSimulatorComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>220</width>
-    <height>260</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
-  </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gl_SettingsSimulator" columnstretch="0,3,1">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -201,7 +184,7 @@
       <string>Rendering enabled</string>
      </property>
      <property name="text">
-      <string>Rendering en.</string>
+      <string>Rendering enabled</string>
      </property>
     </widget>
    </item>
@@ -382,10 +365,16 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>pb_Check</tabstop>
   <tabstop>cb_TimeSync</tabstop>
   <tabstop>le_TimeSyncOffset</tabstop>
+  <tabstop>pb_ApplyTimeSync</tabstop>
+  <tabstop>pb_DisableRendering</tabstop>
+  <tabstop>pb_ClearRestrictedRendering</tabstop>
   <tabstop>le_MaxAircraft</tabstop>
+  <tabstop>pb_ApplyMaxAircraft</tabstop>
   <tabstop>le_MaxDistance</tabstop>
+  <tabstop>pb_ApplyMaxDistance</tabstop>
  </tabstops>
  <resources/>
  <connections/>
