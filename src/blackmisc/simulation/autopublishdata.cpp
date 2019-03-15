@@ -53,17 +53,17 @@ namespace BlackMisc
 
             for (const auto pair : makePairsRange(m_modelStringVsCG))
             {
-                json += QStringLiteral("{ \"type\": \"cg\", \"model\": \"%1\", \"cgft\": %2 },\n").arg(pair.first, pair.second.valueRoundedAsString(CLengthUnit::ft(), 1));
+                json += QStringLiteral("{ \"type\": \"cg\", \"modelstring\": \"%1\", \"cgft\": %2 },\n").arg(pair.first, pair.second.valueRoundedAsString(CLengthUnit::ft(), 1));
             }
 
             for (const auto pair : makePairsRange(m_modelStringVsSimulatorInfo))
             {
                 const QString sim = pair.second.toQString(false);
-                json += QStringLiteral("{ \"type\": \"simulator\", \"model\": \"%1\", \"simulator\": \"%2\" },\n").arg(pair.first, sim);
+                json += QStringLiteral("{ \"type\": \"simulatorupdate\", \"modelstring\": \"%1\", \"simulator\": \"%2\" },\n").arg(pair.first, sim);
             }
 
             if (json.isEmpty()) { return {}; }
-            json.chop(2);
+            json.chop(2); // remove 2 chars at end
             return u"[\n" % json % u"\n]\n";
         }
 
@@ -78,7 +78,7 @@ namespace BlackMisc
             {
                 const QJsonObject obj = value.toObject();
                 const QString t = obj["type"].toString();
-                const QString m = obj["model"].toString();
+                const QString m = obj["modelstring"].toString();
                 if (m.isEmpty()) { continue; }
 
                 if (t.startsWith("simulator", Qt::CaseInsensitive))
@@ -203,7 +203,7 @@ namespace BlackMisc
 
         QString CAutoPublishData::getSummary() const
         {
-            return QStringLiteral("CGs: %1 | sim.entries: %2").arg(m_modelStringVsCG.size()).arg(m_modelStringVsSimulatorInfo.size());
+            return QStringLiteral("Changed CGs: %1 | sim.entries: %2").arg(m_modelStringVsCG.size()).arg(m_modelStringVsSimulatorInfo.size());
         }
 
         QSet<QString> CAutoPublishData::allModelStrings() const
