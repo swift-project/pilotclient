@@ -172,6 +172,19 @@ namespace BlackGui
             this->derivedModel()->setHighlightModelStrings(highlightModels);
         }
 
+        void CAircraftModelView::setHighlightModelsForInvalidModels()
+        {
+            this->clearHighlighting();
+            CAircraftModelList invaliddModels;
+            invaliddModels.loadInvalidModels();
+            if (!invaliddModels.isEmpty())
+            {
+                this->setHighlight(true);
+                this->setHighlightColor(Qt::red);
+                this->setHighlightModels(invaliddModels);
+            }
+        }
+
         void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModels)
         {
             this->derivedModel()->setHighlightModels(highlightModels);
@@ -307,6 +320,10 @@ namespace BlackGui
                     {
                         menuActions.addAction(CIcons::disk16(), "Model validation", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
                     }
+                }
+                if (CAircraftModelList::hasInvalidModelFile())
+                {
+                    menuActions.addAction(CIcons::disk16(), "Highlight invalid models (from file)", CMenuAction::pathModel(), { this, &CAircraftModelView::setHighlightModelsForInvalidModels });
                 }
             }
 

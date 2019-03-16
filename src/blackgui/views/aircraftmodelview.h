@@ -100,6 +100,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
             void setHighlightModelStrings(const QStringList &highlightModels);
 
+            //! Set the highlight models based on the saved file
+            void setHighlightModelsForInvalidModels();
+
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlight
             void setHighlight(bool highlight);
 
