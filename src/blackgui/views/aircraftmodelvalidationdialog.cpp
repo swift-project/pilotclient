@@ -12,6 +12,7 @@
 
 #include <QPushButton>
 #include <QDialogButtonBox>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -34,6 +35,16 @@ namespace BlackGui
 
         CAircraftModelValidationDialog::~CAircraftModelValidationDialog()
         { }
+
+        void CAircraftModelValidationDialog::triggerValidation(int delayMs)
+        {
+            QPointer<CAircraftModelValidationDialog> myself(this);
+            QTimer::singleShot(delayMs, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->validate();
+            });
+        }
 
         void CAircraftModelValidationDialog::validate()
         {

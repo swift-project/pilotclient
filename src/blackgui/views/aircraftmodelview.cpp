@@ -300,7 +300,14 @@ namespace BlackGui
             if (!this->isEmpty())
             {
                 menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
-                menuActions.addAction(CIcons::disk16(), "Model validation", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
+                if (m_withValidationContextMenu)
+                {
+                    QDialog *parentDialog = CGuiUtility::findParentDialog(this);
+                    if (!(parentDialog && (qobject_cast<CAircraftModelValidationDialog *>(parentDialog))))
+                    {
+                        menuActions.addAction(CIcons::disk16(), "Model validation", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
+                    }
+                }
             }
 
             // Stash menus
@@ -427,10 +434,12 @@ namespace BlackGui
         void CAircraftModelView::requestTempDisable()
         {
             if (!m_menus.testFlag(MenuDisableModelsTemp)) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
             if (!this->hasSelection()) { return; }
-            const CAircraftModelList models(this->selectedObjects());
-            emit this->requestTempDisableModelsForMatching(models);
-            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Temp.disabled " % models.getModelStringList(true).join(" ")));
+
+            const CAircraftModelList selectedModels(this->selectedObjects());
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Temp.disabled " % selectedModels.getModelStringList(true).join(" ")));
+            emit this->requestTempDisableModelsForMatching(selectedModels);
         }
 
         void CAircraftModelView::displayModelStatisticsDialog()
@@ -444,6 +453,7 @@ namespace BlackGui
         {
             if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
             m_fileValidationDialog->setModels(this->selectedObjects());
+            m_fileValidationDialog->triggerValidation(1000);
             m_fileValidationDialog->exec();
         }
     } // namespace

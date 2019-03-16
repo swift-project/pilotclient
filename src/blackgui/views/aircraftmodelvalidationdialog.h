@@ -22,6 +22,7 @@ namespace BlackGui
     {
         /**
          * Model validation
+         * \remark there is also a more specific validation version BlackGui::Components::CAircraftModelSetValidationDialog
          */
         class CAircraftModelValidationDialog : public QDialog
         {
@@ -36,6 +37,9 @@ namespace BlackGui
 
             //! Models
             void setModels(const BlackMisc::Simulation::CAircraftModelList &models) { m_models = models; }
+
+            //! Trigger a validation
+            void triggerValidation(int delayMs = 2500);
 
         private:
             //! Validate
