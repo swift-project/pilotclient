@@ -589,10 +589,16 @@ namespace BlackMisc
                     msgs.push_back(m);
                 }
 
-                m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("cfg validation, %1 valid models").arg(validModels.size()), true);
-                msgs.push_back(m);
-                m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, %1 invalid models").arg(invalidModels.size()), true);
-                msgs.push_back(m);
+                if (!validModels.isEmpty())
+                {
+                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityInfo, QStringLiteral("cfg validation, valid models: %1").arg(validModels.size()), true);
+                    msgs.push_back(m);
+                }
+                if (!invalidModels.isEmpty())
+                {
+                    m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityWarning, QStringLiteral("cfg validation, invalid models: %1").arg(invalidModels.size()), true);
+                    msgs.push_back(m);
+                }
 
                 // finished
                 return msgs;

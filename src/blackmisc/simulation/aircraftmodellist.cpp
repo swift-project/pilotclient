@@ -1380,8 +1380,8 @@ namespace BlackMisc
             }
 
             // Summary
-            msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size());
-            msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size());
+            if (!validModels.isEmpty())   { msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size()); }
+            if (!invalidModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size()); }
 
             // done
             return msgs;
