@@ -789,8 +789,8 @@ namespace BlackCore
     {
         Q_UNUSED(livery);
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-        if (m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
-        if (sessionId.isEmpty()) { return; }
+        if (m_modelSet.isEmpty())   { return; } // ignore empty sets to not create silly stats
+        if (sessionId.isEmpty())    { return; }
         if (aircraftIcao.isEmpty()) { return; }
 
         QString description;

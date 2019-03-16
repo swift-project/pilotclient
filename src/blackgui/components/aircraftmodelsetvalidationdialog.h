@@ -32,6 +32,7 @@ namespace BlackGui
     {
         /**
          * Dialog for CAircraftModelValidationComponent
+         * \remark aircraft model view has a simplified version BlackGui::Views::CAircraftModelValidationDialog
          */
         class BLACKGUI_EXPORT CAircraftModelSetValidationDialog : public QDialog
         {
