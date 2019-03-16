@@ -40,7 +40,7 @@ namespace BlackMisc
             case NotificationVoiceRoomJoined: return joined;
             case NotificationVoiceRoomLeft:   return left;
             case NotificationNoAudioTransmission: return noaudiotx;
-            case PTTClick:   return ptt;
+            case PTTClickKeyDown:   return ptt;
             case LoadSounds: return load;
             default: break;
             }

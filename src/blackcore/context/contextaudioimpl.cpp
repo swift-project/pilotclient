@@ -443,7 +443,7 @@ namespace BlackCore
             const CSettings settings = m_audioSettings.getThreadLocal();
             const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
             if (!play) { return; }
-            if (notification == CNotificationSounds::PTTClick && (considerSettings && settings.noAudioTransmission()))
+            if (notification == CNotificationSounds::PTTClickKeyDown && (considerSettings && settings.noAudioTransmission()))
             {
                 if (!this->canTalk())
                 {
@@ -451,6 +451,7 @@ namespace BlackCore
                     notification = CNotificationSounds::NotificationNoAudioTransmission;
                 }
             }
+
             CSoundGenerator::playNotificationSound(90, notification);
         }
 

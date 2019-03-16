@@ -149,9 +149,9 @@
       </widget>
      </item>
      <item row="11" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioPTTClick">
+      <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
        <property name="text">
-        <string>PTT click</string>
+        <string>PTT click (key down)</string>
        </property>
       </widget>
      </item>
@@ -173,6 +173,13 @@
       <widget class="QCheckBox" name="cb_SetupAudioNoTransmission">
        <property name="text">
         <string>No audio transmission warning</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioPTTClickUp">
+       <property name="text">
+        <string>PTT click (key up)</string>
        </property>
       </widget>
      </item>
@@ -204,7 +211,7 @@
   <tabstop>cb_SetupAudioNotificationVoiceRoomJoined</tabstop>
   <tabstop>cb_SetupAudioNotificationVoiceRoomLeft</tabstop>
   <tabstop>cb_SetupAudioNoTransmission</tabstop>
-  <tabstop>cb_SetupAudioPTTClick</tabstop>
+  <tabstop>cb_SetupAudioPTTClickDown</tabstop>
  </tabstops>
  <resources/>
  <connections/>

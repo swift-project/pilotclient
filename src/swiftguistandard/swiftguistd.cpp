@@ -489,9 +489,10 @@ void SwiftGuiStd::displayLog()
 
 void SwiftGuiStd::onPttChanged(bool enabled)
 {
-    if (!enabled) { return; }
     if (!sGui || !sGui->getIContextAudio()) { return; }
-    sGui->getIContextAudio()->playNotification(CNotificationSounds::PTTClick, true);
+    sGui->getIContextAudio()->playNotification(
+        enabled ? CNotificationSounds::PTTClickKeyDown : CNotificationSounds::PTTClickKeyUp,
+        true);
 }
 
 void SwiftGuiStd::displayDBusReconnectDialog()

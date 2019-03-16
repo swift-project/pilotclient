@@ -46,14 +46,15 @@ namespace BlackMisc
                 NotificationVoiceRoomJoined       = 1 << 6,
                 NotificationVoiceRoomLeft         = 1 << 7,
                 NotificationNoAudioTransmission   = 1 << 8,
-                PTTClick                          = 1 << 9,
-                LoadSounds                        = 1 << 10, //!< end marker and force loading of sounds, keep as last element
+                PTTClickKeyDown                   = 1 << 9,
+                PTTClickKeyUp                     = 1 << 10,
+                LoadSounds                        = 1 << 11, //!< end marker and force loading of sounds, keep as last element
                 AllTextNotifications              = NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor,
                 AllLoginNotifications             = NotificationLogin | NotificationLogoff,
                 AllVoiceRoomNotifications         = NotificationVoiceRoomJoined | NotificationVoiceRoomLeft | NotificationNoAudioTransmission,
                 AllNotifications                  = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
                 DefaultNotifications              = NotificationError | AllTextNotifications | AllLoginNotifications | AllVoiceRoomNotifications,
-                All                               = AllNotifications  | PTTClick
+                All                               = AllNotifications  | PTTClickKeyDown | PTTClickKeyUp
             };
             Q_DECLARE_FLAGS(Notification, NotificationFlag)
 

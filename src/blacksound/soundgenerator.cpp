@@ -505,6 +505,7 @@ namespace BlackSound
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomleft.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/noaudiotransmission.wav")) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav")) && success;
 
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
