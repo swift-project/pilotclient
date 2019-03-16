@@ -111,8 +111,8 @@ namespace BlackSimPlugin
             m_airportUpdater.start(60 * 1000);
             m_pendingAddedTimer.start(5000);
 
-            this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines", CAircraftModel::TypeModelMatchingDefaultModel,
-                                    "A320 AUA", CAircraftIcaoCode("A320", "L2J")});
+            this->setDefaultModel({ "FG c172p", CAircraftModel::TypeModelMatchingDefaultModel,
+                                    "C172", CAircraftIcaoCode("C172", "L1P")});
             this->resetFlightgearData();
         }
 
