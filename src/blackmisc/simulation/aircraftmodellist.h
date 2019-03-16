@@ -20,12 +20,13 @@
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/db/datastoreobjectlist.h"
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -479,6 +480,13 @@ namespace BlackMisc
 
             //! A HTML summary of the data in the list
             QString htmlStatistics(bool aircraftStats, bool airlineStats) const;
+
+            //! Save/load invalid models @{
+            CStatusMessage saveInvalidModels() const;
+            CStatusMessage loadInvalidModels();
+            static const QString &invalidModelFileAndPath();
+            static bool hasInvalidModelFile();
+            //! @}
 
             //! Newer version
             static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array,

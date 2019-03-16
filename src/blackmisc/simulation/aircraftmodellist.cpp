@@ -13,6 +13,8 @@
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
+#include "fileutils.h"
+#include "directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 
@@ -1560,6 +1562,23 @@ namespace BlackMisc
             return stats;
         }
 
+        CStatusMessage CAircraftModelList::saveInvalidModels() const
+        {
+            if (this->isEmpty()) { return CStatusMessage(this).info(u"No models"); }
+            const QString json = this->toJsonString();
+            const bool s = CFileUtils::writeStringToFile(json, invalidModelFileAndPath());
+            if (!s) { return CStatusMessage(this).error(u"Unable to save %1 entries to '%2'") << this->size() << invalidModelFileAndPath(); }
+            return CStatusMessage(this).info(u"Saved %1 entries to '%2'") << this->size() << invalidModelFileAndPath();
+        }
+
+        CStatusMessage CAircraftModelList::loadInvalidModels()
+        {
+            const QString json = CFileUtils::readFileToString(invalidModelFileAndPath());
+            if (json.isEmpty()) { return CStatusMessage(this).error(u"Unable to read from '%1'") << invalidModelFileAndPath(); }
+            *this = CAircraftModelList::fromJson(json, true);
+            return CStatusMessage(this).info(u"Loaded %1 entries from '%2'") << this->size() << invalidModelFileAndPath();
+        }
+
         CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(
             const QJsonArray &array,
             const CAircraftIcaoCodeList &icaos,
@@ -1580,5 +1599,18 @@ namespace BlackMisc
             }
             return models;
         }
+
+        const QString &CAircraftModelList::invalidModelFileAndPath()
+        {
+            static const QString f = CFileUtils::appendFilePathsAndFixUnc(CDirectoryUtils::logDirectory(), "invalidmodels.json");
+            return f;
+        }
+
+        bool CAircraftModelList::hasInvalidModelFile()
+        {
+            const QFileInfo fi(invalidModelFileAndPath());
+            return fi.exists();
+        }
+
     } // namespace
 } // namespace

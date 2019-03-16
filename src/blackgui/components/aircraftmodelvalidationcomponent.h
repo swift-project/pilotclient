@@ -70,6 +70,9 @@ namespace BlackGui
 
             //! Button has been clicked
             void onButtonClicked();
+
+            //! Save invalid models
+            void saveInvalidModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
         };
     } // ns
 } // ns

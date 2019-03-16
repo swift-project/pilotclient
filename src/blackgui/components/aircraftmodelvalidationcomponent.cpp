@@ -29,6 +29,7 @@ namespace BlackGui
             ui->comp_Simulator->setMode(CSimulatorSelector::ComboBox);
             ui->comp_Simulator->setRememberSelection(false);
             ui->comp_Messages->setNoSorting(); // keep order
+            ui->tvp_InvalidModels->setValidationContextMenu(false);
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
@@ -84,6 +85,7 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
             if (!sGui->getIContextSimulator()) { return; }
             sGui->getIContextSimulator()->disableModelsForMatching(models, true);
+            this->saveInvalidModels(models);
         }
 
         void CAircraftModelValidationComponent::onCheckAtStartupChanged(bool checked)
@@ -131,8 +133,26 @@ namespace BlackGui
         void CAircraftModelValidationComponent::onButtonClicked()
         {
             const QObject *sender = QObject::sender();
-            if (sender == ui->pb_TempDisableInvalid) { this->tempDisableModels(ui->tvp_InvalidModels->container()); }
-            else if (sender == ui->pb_TempDisableSelected) { this->tempDisableModels(ui->tvp_InvalidModels->selectedObjects()); }
+            CAircraftModelList disabledModels;
+            if (sender == ui->pb_TempDisableInvalid)       { disabledModels = ui->tvp_InvalidModels->container(); }
+            else if (sender == ui->pb_TempDisableSelected) { disabledModels = ui->tvp_InvalidModels->selectedObjects(); }
+
+            this->tempDisableModels(disabledModels);
+
+            if (disabledModels.isEmpty())
+            {
+                this->showOverlayHTMLMessage("No models disabled");
+            }
+            else
+            {
+                this->showOverlayHTMLMessage(QStringLiteral("%1 models disabled").arg(disabledModels.size()));
+            }
+        }
+
+        void CAircraftModelValidationComponent::saveInvalidModels(const CAircraftModelList &models) const
+        {
+            const CStatusMessage m = models.saveInvalidModels();
+            Q_UNUSED(m);
         }
     } // ns
 } // ns
