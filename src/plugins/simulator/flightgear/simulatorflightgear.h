@@ -86,7 +86,7 @@ namespace BlackSimPlugin
             int com2ActiveKhz;                  //!< COM2 active [kHz]
             int com2StandbyKhz;                 //!< COM2 standby [kHz]
             int xpdrCode;                       //!< Transpondder code
-            int xpdrMode;                       //!< Transponder mode (off=0,stdby=1,on=2,test=3)
+            int xpdrMode;                       //!< Transponder mode (off=0,stdby=1-2, >2 on)
             bool xpdrIdent;                     //!< Is transponder in ident?
             bool beaconLightsOn;                //!< Beacon lights on?
             bool landingLightsOn;               //!< Landing lights on?

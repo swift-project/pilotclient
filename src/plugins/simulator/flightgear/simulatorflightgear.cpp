@@ -156,17 +156,17 @@ namespace BlackSimPlugin
         }
 
         // convert flightgear squawk mode to swift squawk mode
-        CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
+        CTransponder::TransponderMode xpdrMode(int transponderMode, bool ident)
         {
             if (ident) { return CTransponder::StateIdent; }
-            if (xplaneMode == 0 || xplaneMode == 1) { return CTransponder::StateStandby; }
+            if (transponderMode == 0 || transponderMode == 1 || transponderMode == 2) { return CTransponder::StateStandby; }
             return CTransponder::ModeC;
         }
 
         // convert swift squawk mode to flightgear squawk mode
         int xpdrMode(CTransponder::TransponderMode mode)
         {
-            return mode == CTransponder::StateStandby ? 1 : 2;
+            return mode == CTransponder::StateStandby ? 1 : 4;
         }
 
         void CSimulatorFlightgear::fastTimerTimeout()
