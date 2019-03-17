@@ -18,9 +18,6 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tw_CAircraftModelValidationComponent">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="tb_InvalidModels">
       <attribute name="title">
        <string>Invalid models</string>
