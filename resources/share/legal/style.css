@@ -45,3 +45,26 @@ th {
 	text-align: left;
 	background-color: lightgray;
 }
+
+div.swifttoc table {
+	border-spacing: 0.6em;
+	background-image: url(background.jpeg)	;
+    background-size: 100% auto;
+	border-radius: 15px;
+}
+
+div.swifttoc th {
+	background: rgba(255, 255, 255, .75);
+	border: 2px solid gray;
+	border-radius: 15px;
+	padding: 1.0em;
+}
+
+div.swifttoc td {
+	vertical-align: top;
+	width: 33.3%;
+	border: 2px solid gray;
+	border-radius: 25px;
+	padding: 1em;
+	background: rgba(255, 255, 255, .75);
+}
