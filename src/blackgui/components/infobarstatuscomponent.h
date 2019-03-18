@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
             //!Destructor
-            virtual ~CInfoBarStatusComponent();
+            virtual ~CInfoBarStatusComponent() override;
 
             //! DBus used?
             void setDBusStatus(bool dbus);

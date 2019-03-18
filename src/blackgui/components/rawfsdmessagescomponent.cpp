@@ -81,6 +81,7 @@ namespace BlackGui
 
         void CRawFsdMessagesComponent::enableDisableRawFsdMessages()
         {
+            //! \fixme KB 2019-03 hardcoded style sheet
             bool enable;
             if (ui->pb_EnableDisable->text() == "Enable")
             {

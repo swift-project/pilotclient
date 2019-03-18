@@ -7,7 +7,6 @@
  */
 
 #include "blackgui/components/transpondercodespinbox.h"
-
 #include <QChar>
 
 namespace BlackGui

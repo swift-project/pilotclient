@@ -17,7 +17,6 @@
 #include <QObject>
 
 class QMenu;
-class QWidget;
 
 namespace BlackGui
 {

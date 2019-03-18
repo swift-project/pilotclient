@@ -40,7 +40,8 @@ namespace BlackGui
             QCheckBox *cb = new QCheckBox(parent);
             if (!m_iconCheckedUrl.isEmpty() && !m_iconUncheckedUrl.isEmpty())
             {
-                QString style = CStyleSheetUtility::styleForIconCheckBox(m_iconCheckedUrl, m_iconUncheckedUrl);
+                const QString style = CStyleSheetUtility::styleForIconCheckBox(m_iconCheckedUrl, m_iconUncheckedUrl);
+                cb->setStyleSheet("");
                 cb->setStyleSheet(style);
             }
             return cb;
@@ -48,7 +49,7 @@ namespace BlackGui
 
         void CCheckBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
         {
-            bool v = index.model()->data(index, Qt::UserRole).toBool();
+            const bool v = index.model()->data(index, Qt::UserRole).toBool();
             QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
             cb->setChecked(v);
         }
@@ -56,7 +57,7 @@ namespace BlackGui
         void CCheckBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
         {
             QCheckBox *cb = qobject_cast<QCheckBox *>(editor);
-            bool v = cb->isChecked();
+            const bool v = cb->isChecked();
             model->setData(index, QVariant(v), Qt::EditRole);
         }
 

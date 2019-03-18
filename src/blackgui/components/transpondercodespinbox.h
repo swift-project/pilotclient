@@ -17,8 +17,6 @@
 #include <QSpinBox>
 #include <QString>
 
-class QWidget;
-
 namespace BlackGui
 {
     namespace Components

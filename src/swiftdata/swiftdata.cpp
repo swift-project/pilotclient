@@ -62,6 +62,8 @@ void CSwiftData::initStyleSheet()
         CStyleSheetUtility::fileNameStandardWidget(),
         CStyleSheetUtility::fileNameSwiftData()
     });
+
+    this->setStyleSheet("");
     this->setStyleSheet(s);
 }
 

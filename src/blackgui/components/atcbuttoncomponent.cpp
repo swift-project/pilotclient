@@ -76,7 +76,6 @@ namespace BlackGui
                 QPushButton *button = new QPushButton(this);
                 button->setText(station.getCallsignAsString());
                 if (m_withIcons) { button->setIcon(station.toPixmap()); }
-                // else { button->setStyleSheet("text-align: left;"); }
                 QObject::connect(button, &QPushButton::released, this, &CAtcButtonComponent::onButtonClicked);
                 const CVariant atcv = CVariant::fromValue(station);
                 layout->addWidget(button, row, col++);
