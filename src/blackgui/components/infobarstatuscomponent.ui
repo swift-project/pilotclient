@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CInfoBarStatusComponent</class>
  <widget class="QFrame" name="CInfoBarStatusComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>250</width>
-    <height>20</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
     <width>0</width>
@@ -35,6 +27,16 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
+   <item>
+    <widget class="BlackGui::Components::CTransponderModeComponent" name="comp_XpdrMode">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QLabel" name="lbl_Network">
      <property name="toolTip">
@@ -78,7 +80,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="lb_MapperReady">
+    <widget class="QLabel" name="lbl_MapperReady">
      <property name="toolTip">
       <string>Mappings ready</string>
      </property>
@@ -95,12 +97,6 @@
    </item>
    <item>
     <widget class="QLabel" name="lbl_DBus">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="text">
       <string>DBus</string>
      </property>
@@ -164,7 +160,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>20</width>
+       <width>40</width>
        <height>20</height>
       </size>
      </property>
@@ -177,6 +173,12 @@
    <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CTransponderModeComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/transpondermodecomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

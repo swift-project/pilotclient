@@ -9,14 +9,15 @@
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
+#include "blackgui/guiutility.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/audio/audioutils.h"
-#include "blackmisc/network/server.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/audio/audioutils.h"
 #include "blackconfig/buildconfig.h"
 #include "ui_infobarstatuscomponent.h"
 
@@ -45,6 +46,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->initLeds();
+            this->adjustTextSize();
 
             ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
@@ -103,6 +105,22 @@ namespace BlackGui
             this->onInternetAccessibleChanged(sGui->isInternetAccessible());
         }
 
+        void CInfoBarStatusComponent::adjustTextSize()
+        {
+            CGuiUtility::setElidedText(ui->lbl_Audio, QStringLiteral("audio"), Qt::ElideRight);
+            CGuiUtility::setElidedText(ui->lbl_Network, QStringLiteral("network"), Qt::ElideRight);
+            CGuiUtility::setElidedText(ui->lbl_DBus,  QStringLiteral("DBus"), {}, Qt::ElideRight);
+            CGuiUtility::setElidedText(ui->lbl_MapperReady, QStringLiteral("mapper ready"), Qt::ElideRight);
+            CGuiUtility::setElidedText(ui->lbl_Ptt, QStringLiteral("PTT"), Qt::ElideRight);
+            CGuiUtility::setElidedText(ui->lbl_Simulator, QStringLiteral("simulator"), Qt::ElideRight);
+
+//            CGuiUtility::setElidedText(ui->lbl_Audio, QStringLiteral("au"), QStringLiteral("audio"), Qt::ElideRight);
+//            CGuiUtility::setElidedText(ui->lbl_DBus, QStringLiteral("DBus"), {}, Qt::ElideRight);
+//            CGuiUtility::setElidedText(ui->lbl_MapperReady, QStringLiteral("map"), QStringLiteral("mapper ready"), Qt::ElideRight);
+//            CGuiUtility::setElidedText(ui->lbl_Ptt, QStringLiteral("PTT"), QStringLiteral("push to talk"), Qt::ElideRight);
+//            CGuiUtility::setElidedText(ui->lbl_Simulator, QStringLiteral("sim"), QStringLiteral("simulator"), Qt::ElideRight);
+        }
+
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
         {
             ui->led_DBus->setOn(dbus);
@@ -119,6 +137,12 @@ namespace BlackGui
             {
                 this->layout()->setSpacing(spacing);
             }
+        }
+
+        void CInfoBarStatusComponent::resizeEvent(QResizeEvent *event)
+        {
+            QFrame::resizeEvent(event);
+            m_dsResize.inputSignal();
         }
 
         void CInfoBarStatusComponent::onSimulatorStatusChanged(int status)
