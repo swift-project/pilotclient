@@ -35,17 +35,17 @@ namespace BlackGui
 
             ui->gv_RadarView->setScene(&m_scene);
 
-            ui->cb_RadarRange->addItem(QString::number(0.5) + " nm", 0.5);
+            ui->cb_RadarRange->addItem(QString::number(0.5) % u" nm", 0.5);
             for (qreal r = 1.0; r < 10; r += 1)
             {
-                ui->cb_RadarRange->addItem(QString::number(r) + " nm", r);
+                ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
             }
             for (qreal r = 10; r < 91; r += 10)
             {
-                ui->cb_RadarRange->addItem(QString::number(r) + " nm", r);
+                ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
             }
 
-            ui->cb_RadarRange->setCurrentText(QString::number(m_range) + " nm");
+            ui->cb_RadarRange->setCurrentText(QString::number(m_rangeNM) % u" nm");
 
             connect(ui->gv_RadarView, &CRadarView::radarViewResized, this, &CRadarComponent::fitInView);
             connect(ui->gv_RadarView, &CRadarView::zoomEvent, this, &CRadarComponent::changeRangeInSteps);
@@ -53,7 +53,7 @@ namespace BlackGui
 
             connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
             connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-            connect(ui->cb_Heading, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+            connect(ui->cb_Heading, &QCheckBox::toggled,  this, &CRadarComponent::refreshTargets);
             connect(ui->cb_Altitude, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
             connect(ui->cb_GroundSpeed, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
             connect(ui->cb_Grid, &QCheckBox::toggled, this, &CRadarComponent::toggleGrid);
@@ -142,16 +142,16 @@ namespace BlackGui
 
             qDeleteAll(m_radarTargets.childItems());
 
-            if (sGui->getIContextNetwork()->isConnected())
+            if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
             {
                 if (isVisibleWidget())
                 {
                     const CSimulatedAircraftList aircraft = sGui->getIContextNetwork()->getAircraftInRange();
                     for (const CSimulatedAircraft &sa : aircraft)
                     {
-                        double distanceNM = sa.getRelativeDistance().value(CLengthUnit::NM());
-                        double bearingRad = sa.getRelativeBearing().value(CAngleUnit::rad());
-                        int groundSpeedKts = sa.getGroundSpeed().valueInteger(CSpeedUnit::kts());
+                        const double distanceNM  = sa.getRelativeDistance().value(CLengthUnit::NM());
+                        const double bearingRad  = sa.getRelativeBearing().value(CAngleUnit::rad());
+                        const int groundSpeedKts = sa.getGroundSpeed().valueInteger(CSpeedUnit::kts());
 
                         QPointF position(distanceNM * qSin(bearingRad), -distanceNM * qCos(bearingRad));
 
@@ -165,18 +165,17 @@ namespace BlackGui
                         QString tagText;
                         if (ui->cb_Callsign->isChecked())
                         {
-                            tagText += sa.getCallsignAsString() % QStringLiteral("\n");
+                            tagText += sa.getCallsignAsString() % u"\n";
                         }
                         if (ui->cb_Altitude->isChecked())
                         {
                             int flightLeveL = sa.getAltitude().valueInteger(CLengthUnit::ft()) / 100;
-                            tagText += "FL" % QString("%1").arg(flightLeveL, 3, 10, QChar('0'));
+                            tagText += u"FL" % QStringLiteral("%1").arg(flightLeveL, 3, 10, QChar('0'));
                         }
                         if (ui->cb_GroundSpeed->isChecked())
                         {
-                            if (! tagText.isEmpty()) tagText += QStringLiteral(" ");
-
-                            tagText += QString::number(groundSpeedKts) % " kt";
+                            if (!tagText.isEmpty()) tagText += QStringLiteral(" ");
+                            tagText += QString::number(groundSpeedKts) % u" kt";
                         }
 
                         tag->setPlainText(tagText);
@@ -207,35 +206,35 @@ namespace BlackGui
 
         void CRadarComponent::fitInView()
         {
-            ui->gv_RadarView->fitInView(-m_range, -m_range, 2.0 * m_range, 2.0 * m_range, Qt::KeepAspectRatio);
+            ui->gv_RadarView->fitInView(-m_rangeNM, -m_rangeNM, 2.0 * m_rangeNM, 2.0 * m_rangeNM, Qt::KeepAspectRatio);
         }
 
         void CRadarComponent::changeRangeInSteps(bool zoomIn)
         {
             qreal direction = zoomIn ? 1.0 : -1.0;
             double factor = 10.0;
-            if (m_range < 10.0 || (qFuzzyCompare(m_range, 10.0) && zoomIn))
+            if (m_rangeNM < 10.0 || (qFuzzyCompare(m_rangeNM, 10.0) && zoomIn))
             {
                 factor = 1.0;
             }
 
-            if (m_range < 1.0 || (qFuzzyCompare(m_range, 1.0) && zoomIn))
+            if (m_rangeNM < 1.0 || (qFuzzyCompare(m_rangeNM, 1.0) && zoomIn))
             {
                 factor = 0.5;
             }
 
-            m_range = m_range - direction * factor;
-            m_range = qMin(90.0, qMax(0.5, m_range));
-            ui->cb_RadarRange->setCurrentText(QString::number(m_range) + " nm");
+            m_rangeNM = m_rangeNM - direction * factor;
+            m_rangeNM = qMin(90.0, qMax(0.5, m_rangeNM));
+            ui->cb_RadarRange->setCurrentText(QString::number(m_rangeNM) % u" nm");
             fitInView();
         }
 
         void CRadarComponent::changeRangeFromUserSelection(int index)
         {
             double range = ui->cb_RadarRange->itemData(index).toDouble();
-            if (! qFuzzyCompare(m_range, range))
+            if (! qFuzzyCompare(m_rangeNM, range))
             {
-                m_range = range;
+                m_rangeNM = range;
                 fitInView();
             }
         }
@@ -258,6 +257,5 @@ namespace BlackGui
             });
 
         }
-
-    }
+    } // namespace
 } // namespace

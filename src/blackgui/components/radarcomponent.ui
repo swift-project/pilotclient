@@ -6,59 +6,84 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>305</width>
-    <height>414</height>
+    <width>270</width>
+    <height>259</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Log component</string>
+   <string>Radar screen</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="vl_RadarComponent">
    <property name="leftMargin">
-    <number>1</number>
+    <number>3</number>
    </property>
    <property name="topMargin">
-    <number>1</number>
+    <number>3</number>
    </property>
    <property name="rightMargin">
-    <number>1</number>
+    <number>3</number>
    </property>
    <property name="bottomMargin">
-    <number>1</number>
+    <number>3</number>
    </property>
    <item>
     <widget class="BlackGui::Views::CRadarView" name="gv_RadarView"/>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
+    <widget class="QFrame" name="fr_RadarSettings">
+     <layout class="QGridLayout" name="gl_RadarSettings">
       <property name="leftMargin">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="topMargin">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="rightMargin">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="bottomMargin">
-       <number>1</number>
+       <number>2</number>
       </property>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cb_Heading">
+        <property name="text">
+         <string>Heading Bug</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="cb_Grid">
+        <property name="text">
+         <string>Grid</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="cb_Altitude">
+        <property name="text">
+         <string>Altitude (FL)</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cb_GroundSpeed">
+        <property name="text">
+         <string>GroundSpeed</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="cb_Callsign">
         <property name="text">
@@ -69,60 +94,35 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QCheckBox" name="cb_Heading">
-        <property name="text">
-         <string>Heading Bug</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3" colspan="2">
-       <widget class="QCheckBox" name="cb_Altitude">
-        <property name="text">
-         <string>Altitude (FL)</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2">
-       <widget class="QCheckBox" name="cb_Grid">
-        <property name="text">
-         <string>Grid</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Range</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QComboBox" name="cb_RadarRange"/>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="cb_GroundSpeed">
-        <property name="text">
-         <string>GroundSpeed</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
+       <widget class="QFrame" name="fr_Range">
+        <layout class="QFormLayout" name="fl_Range">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_Range">
+           <property name="text">
+            <string>Range</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="cb_RadarRange"/>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -137,6 +137,15 @@
    <header>blackgui/views/radarview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>gv_RadarView</tabstop>
+  <tabstop>cb_Callsign</tabstop>
+  <tabstop>cb_Heading</tabstop>
+  <tabstop>cb_Altitude</tabstop>
+  <tabstop>cb_GroundSpeed</tabstop>
+  <tabstop>cb_Grid</tabstop>
+  <tabstop>cb_RadarRange</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

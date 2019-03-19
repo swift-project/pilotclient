@@ -69,10 +69,11 @@ namespace BlackGui
 
             QPen m_radarTargetPen = { Qt::green, 1 };
 
-            qreal m_range = 10.0;
+            qreal m_rangeNM = 10.0;
 
             QTimer m_updateTimer;
         };
     } // ns
 } // ns
+
 #endif // guard
