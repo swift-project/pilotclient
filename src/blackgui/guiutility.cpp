@@ -31,6 +31,7 @@
 #include <QTabWidget>
 #include <QThreadStorage>
 #include <QWidget>
+#include <QLabel>
 #include <QTimer>
 #include <Qt>
 #include <QPointer>
@@ -644,5 +645,43 @@ namespace BlackGui
             if (CGuiUtility::isDialog(widget)) { return qobject_cast<QDialog *>(widget); }
         }
         return nullptr;
+    }
+
+    void CGuiUtility::setElidedText(QLabel *label, const QString &text, Qt::TextElideMode mode)
+    {
+        if (!label) { return; }
+
+        label->setToolTip(text);
+        if (mode == Qt::ElideNone)
+        {
+            label->setText(text);
+            return;
+        }
+
+        const QFontMetrics metrics(label->font());
+        const int width = qMax(label->width() - 2, 0);
+        const QString clippedText = metrics.elidedText(text, mode, width);
+        label->setText(clippedText);
+    }
+
+    void CGuiUtility::setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode)
+    {
+        if (!label) { return; }
+        if (shortText.isEmpty()) { CGuiUtility::setElidedText(label, longText, mode); return; }
+        if (longText.isEmpty()) { CGuiUtility::setElidedText(label, shortText, mode); return; }
+
+        label->setToolTip(longText);
+        const QFontMetrics metrics(label->font());
+        const int width = qMax(label->width() - 2, 0);
+        const int wl = metrics.width(longText);
+        if (wl >= width) { label->setText(longText); return; }
+        if (qRound(wl * 0.85) > wl)
+        {
+            const QString clippedText = metrics.elidedText(longText, mode, width);
+            label->setText(clippedText);
+            return;
+        }
+        const QString clippedText = metrics.elidedText(shortText, mode, width);
+        label->setText(clippedText);
     }
 } // ns

@@ -32,6 +32,7 @@ class QMimeData;
 class QLineEdit;
 class QTabWidget;
 class QDialog;
+class QLabel;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
 
@@ -236,6 +237,12 @@ namespace BlackGui
 
         //! Find parent dialog if there is any, otherwise null
         static QDialog *findParentDialog(QWidget *widget);
+
+        //! Set elided text
+        static void setElidedText(QLabel *label, const QString &text, Qt::TextElideMode mode = Qt::ElideMiddle);
+
+        //! Set elided text
+        static void setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode = Qt::ElideMiddle);
 
     private:
         //! No constructor, use static functions only
