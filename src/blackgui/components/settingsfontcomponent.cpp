@@ -31,8 +31,9 @@ namespace BlackGui
             this->initValues(); // most likely default font at ctor call time
             connect(ui->tb_SettingsGuiFontColor,    &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
             connect(ui->tb_SettingsGuiNoFontColor,  &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
-            connect(ui->pb_Ok,                      &QPushButton::clicked, this, &CSettingsFontComponent::changeFont);
-            connect(ui->pb_CancelOrReset,           &QToolButton::clicked, this, &CSettingsFontComponent::resetFont);
+            connect(ui->pb_Ok,                      &QPushButton::clicked, this, &CSettingsFontComponent::changeFont, Qt::QueuedConnection);
+            connect(ui->pb_CancelOrReset,           &QToolButton::clicked, this, &CSettingsFontComponent::resetFontAndReject,   Qt::QueuedConnection);
+            connect(ui->pb_Reset,                   &QToolButton::clicked, this, &CSettingsFontComponent::clearQssAndResetFont, Qt::QueuedConnection);
 
             // only after the complete startup style sheet font overrides are available
             connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
@@ -47,10 +48,12 @@ namespace BlackGui
             if (m == CSettingsFontComponent::DirectUpdate)
             {
                 ui->pb_CancelOrReset->setText("reset");
+                ui->pb_Reset->setVisible(false);
             }
             else
             {
                 ui->pb_CancelOrReset->setText("cancel");
+                ui->pb_Reset->setVisible(true);
             }
         }
 
@@ -111,8 +114,8 @@ namespace BlackGui
 
         void CSettingsFontComponent::fontColorDialog()
         {
-            const QColor c = QColorDialog::getColor(m_selectedColor, this, "Font color");
-            if (c == m_selectedColor) return;
+            const QColor c = QColorDialog::getColor(m_selectedColor.isValid() ? m_selectedColor : m_cancelColor, this, "Font color");
+            if (c == m_selectedColor) { return; }
             m_selectedColor = c;
             ui->le_SettingsGuiFontColor->setText(m_selectedColor.name());
         }
@@ -127,7 +130,8 @@ namespace BlackGui
         {
             // Font
             m_cancelFont = this->font();
-            m_cancelColor = QColor(sGui->getStyleSheetUtility().fontColor());
+            const QString colorString(sGui->getStyleSheetUtility().fontColorString());
+            m_cancelColor = colorString.isEmpty() ? QColor() : QColor(colorString);
             this->initUiValues(m_cancelFont, m_cancelColor);
         }
 
@@ -136,8 +140,10 @@ namespace BlackGui
             ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
             ui->cb_SettingsGuiFont->setCurrentFont(font);
             ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
-            ui->le_SettingsGuiFontColor->setText(color.name());
-            m_selectedColor = color;
+
+            Q_UNUSED(color); // due to the problems with overriding a color (e.g T571) we use "no color" as default
+            m_selectedColor = QColor(); // invalid, no color
+            ui->le_SettingsGuiFontColor->setText(m_selectedColor.isValid() ? m_selectedColor.name() : "");
             m_qss.clear();
         }
 
@@ -149,7 +155,19 @@ namespace BlackGui
             {
                 sGui->resetFont();
             }
+        }
+
+        void CSettingsFontComponent::resetFontAndReject()
+        {
+            this->resetFont();
             emit this->reject();
+        }
+
+        void CSettingsFontComponent::clearQssAndResetFont()
+        {
+            m_qss.clear();
+            this->resetFont();
+            emit this->accept();
         }
     } // ns
 } // ns

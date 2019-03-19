@@ -56,13 +56,13 @@ namespace BlackGui
         bool updateFont(const QString &qss);
 
         //! Update the fonts
-        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColorString);
 
         //! Reset font
         bool resetFont();
 
         //! Current font color from style sheet
-        QString fontColor() const;
+        QString fontColorString() const;
 
         //! Read the *.qss files
         bool read();
@@ -138,7 +138,7 @@ namespace BlackGui
 
         //! Parameters as stylesheet
         static QString asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
-                                    const QString &fontWeight, const QString &fontColor = {});
+                                    const QString &fontWeight, const QString &fontColorString = {});
 
         //! Widget's font as stylesheet
         static QString asStylesheet(const QWidget *widget, int pointSize = -1);

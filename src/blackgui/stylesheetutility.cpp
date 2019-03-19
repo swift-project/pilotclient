@@ -121,13 +121,13 @@ namespace BlackGui
                );
     }
 
-    QString CStyleSheetUtility::fontColor() const
+    QString CStyleSheetUtility::fontColorString() const
     {
         const QString s = this->style(fileNameFonts()).toLower();
-        if (!s.contains("color:")) return "red";
+        if (!s.contains("color:")) return "";
         thread_local const QRegularExpression rx("color:\\s*(#*\\w+);");
         const QString c = rx.match(s).captured(1);
-        return c.isEmpty() ? "red" : c;
+        return c.isEmpty() ? "" : c;
     }
 
     bool CStyleSheetUtility::read()
@@ -253,7 +253,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::resetFont()
     {
-        QFile fontFile(CDirectoryUtils::stylesheetsDirectory() + "/" + fileNameFontsModified());
+        QFile fontFile(CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), fileNameFontsModified()));
         return fontFile.remove();
     }
 

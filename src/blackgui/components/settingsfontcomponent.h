@@ -29,8 +29,8 @@ namespace BlackGui
             //! How to update
             enum Mode
             {
-                DirectUpdate,
-                GenerateQssOnly
+                DirectUpdate,    //!< directly updating a font qss file
+                GenerateQssOnly  //!< builds a qss style string
             };
 
             //! Constructor
@@ -74,6 +74,8 @@ namespace BlackGui
 
             void changeFont();
             void resetFont();
+            void resetFontAndReject();
+            void clearQssAndResetFont();
             void fontColorDialog();
             void noColor();
             void initValues();
