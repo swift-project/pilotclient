@@ -184,6 +184,7 @@ BlackGui--Components--CTextEditDialog,
 BlackGui--Components--CSetupLoadingDialog,
 BlackGui--Components--CDownloadComponent,
 BlackGui--Components--CDownloadDialog,
+BlackGui--Components--CUpdateInfoDialog,
 BlackGui--Components--CRawFsdMessagesComponent,
 BlackGui--Components--CRawFsdMessagesDialog,
 BlackGui--Components--CDbOwnModelsDialog,
@@ -200,7 +201,7 @@ BlackGui--Components--CLegalInfoComponent
 
 /* default for buttons */
 QToolButton {
-  background-color: transparent; /* transparent tool buttons */
+  background-color: rgba(0, 0, 255, 128);
   border: 0px;
 }
 

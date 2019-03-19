@@ -1,14 +1,37 @@
 /** style is applied to a CDockWidgetInfoBar **/
 /** frameless is dynamic property**/
 /** for frameless only use QDockWidget[framelessDockWidget="true"] QFrame **/
+/** "xpdrmode", m_transponder.getTransponderMode **/
+/** "xpdrmodeshort", m_transponder.getModeAsShortString **/
 
-QFrame {
+BlackGui--CDockWidgetInfoBar {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+BlackGui--CDockWidgetInfoBar[floating="true"] {
+  min-width: 50em;
+}
+
+BlackGui--Components--CTransponderModeComponent {
+  min-width:  2em;
+  min-height: 2em;
+}
+
+BlackGui--Components--CInfoBarStatusComponent {
+  padding-left:  1.0em;
+  padding-right: 1.0em;
+}
+
+QLabel {
   margin: 0px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left:  0.5em;
+  padding-right: 0.25em;
   padding-bottom: 0px;
-  padding-top: 0px;
+  padding-top:    0px;
+  border: 0px;
+  /**
   background-color: darkslategray;
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  border: 0px;
+  **/
 }
