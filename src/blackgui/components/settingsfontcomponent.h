@@ -75,6 +75,7 @@ namespace BlackGui
             void changeFont();
             void resetFont();
             void fontColorDialog();
+            void noColor();
             void initValues();
             void initUiValues(const QFont &font, const QColor &color);
         };

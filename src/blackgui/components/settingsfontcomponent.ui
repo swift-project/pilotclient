@@ -26,24 +26,91 @@
    <property name="bottomMargin">
     <number>3</number>
    </property>
-   <item row="0" column="1" colspan="6">
+   <item row="1" column="2">
+    <widget class="QComboBox" name="cb_SettingsGuiFontStyle">
+     <property name="maximumSize">
+      <size>
+       <width>150</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <item>
+      <property name="text">
+       <string>normal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bold</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>italic</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bold italic</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="7">
+    <widget class="QWidget" name="wi_Buttons" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>20</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="vl_Buttons">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Ok">
+        <property name="text">
+         <string>ok</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_CancelOrReset">
+        <property name="text">
+         <string>cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="7">
     <widget class="QFontComboBox" name="cb_SettingsGuiFont">
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToMinimumContentsLength</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_SettingsGuiFontSize">
-     <property name="text">
-      <string>Size/Style:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_SettingsGuiFont">
-     <property name="text">
-      <string>Font:</string>
      </property>
     </widget>
    </item>
@@ -111,10 +178,24 @@
      </item>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_SettingsGuiFontSize">
+     <property name="text">
+      <string>Size/Style:</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="4">
     <widget class="QToolButton" name="tb_SettingsGuiFontColor">
      <property name="text">
       <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_SettingsGuiFont">
+     <property name="text">
+      <string>Font:</string>
      </property>
     </widget>
    </item>
@@ -128,85 +209,11 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QComboBox" name="cb_SettingsGuiFontStyle">
-     <property name="maximumSize">
-      <size>
-       <width>150</width>
-       <height>16777215</height>
-      </size>
+   <item row="1" column="5">
+    <widget class="QToolButton" name="tb_SettingsGuiNoFontColor">
+     <property name="text">
+      <string>None</string>
      </property>
-     <item>
-      <property name="text">
-       <string>normal</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>bold</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>italic</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>bold italic</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="6">
-    <widget class="QWidget" name="wi_Buttons" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <layout class="QHBoxLayout" name="vl_Buttons">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pb_Ok">
-        <property name="text">
-         <string>ok</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pb_CancelOrReset">
-        <property name="text">
-         <string>cancel</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>

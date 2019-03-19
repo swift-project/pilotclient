@@ -29,9 +29,10 @@ namespace BlackGui
             this->setMode(CSettingsFontComponent::DirectUpdate);
 
             this->initValues(); // most likely default font at ctor call time
-            connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
-            connect(ui->pb_Ok, &QPushButton::clicked, this, &CSettingsFontComponent::changeFont);
-            connect(ui->pb_CancelOrReset, &QToolButton::pressed, this, &CSettingsFontComponent::resetFont);
+            connect(ui->tb_SettingsGuiFontColor,    &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
+            connect(ui->tb_SettingsGuiNoFontColor,  &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
+            connect(ui->pb_Ok,                      &QPushButton::clicked, this, &CSettingsFontComponent::changeFont);
+            connect(ui->pb_CancelOrReset,           &QToolButton::clicked, this, &CSettingsFontComponent::resetFont);
 
             // only after the complete startup style sheet font overrides are available
             connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
@@ -69,7 +70,7 @@ namespace BlackGui
             const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
             const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
             const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
-            return QStringList ({ fontFamily, fontSize, fontStyleCombined });
+            return QStringList({ fontFamily, fontSize, fontStyleCombined });
         }
 
         void CSettingsFontComponent::setWithColorSelection(bool withColor)
@@ -88,7 +89,8 @@ namespace BlackGui
             QString fontColor = m_selectedColor.name();
             if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
             {
-                fontColor = sGui->getStyleSheetUtility().fontColor();
+                // fontColor = sGui->getStyleSheetUtility().fontColor();
+                fontColor.clear();
             }
             ui->le_SettingsGuiFontColor->setText(fontColor);
             m_qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
@@ -115,6 +117,12 @@ namespace BlackGui
             ui->le_SettingsGuiFontColor->setText(m_selectedColor.name());
         }
 
+        void CSettingsFontComponent::noColor()
+        {
+            m_selectedColor = QColor(); // invalid color
+            ui->le_SettingsGuiFontColor->clear();
+        }
+
         void CSettingsFontComponent::initValues()
         {
             // Font
@@ -135,6 +143,7 @@ namespace BlackGui
 
         void CSettingsFontComponent::resetFont()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             this->initUiValues(m_cancelFont, m_cancelColor);
             if (m_mode == CSettingsFontComponent::DirectUpdate)
             {
