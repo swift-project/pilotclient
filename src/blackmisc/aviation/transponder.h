@@ -77,6 +77,9 @@ namespace BlackMisc
             //! Transponder mode as string
             QString getModeAsString() const { return modeAsString(this->getTransponderMode()); }
 
+            //! Transponder mode as short string
+            QString getModeAsShortString() const { return modeAsShortString(this->getTransponderMode()); }
+
             //! In any sending mode such as MIL1 oder ModeS
             bool isInNormalSendingMode() const;
 
@@ -97,6 +100,9 @@ namespace BlackMisc
 
             //! Transponder mode as string
             static const QString &modeAsString(TransponderMode mode);
+
+            //! Transponder mode as short string
+            static const QString &modeAsShortString(CTransponder::TransponderMode mode);
 
             //! Transponder code
             int getTransponderCode() const { return m_transponderCode; }

@@ -178,10 +178,38 @@ namespace BlackMisc
 
             switch (mode)
             {
-            case StateIdent: return i;
+            case StateIdent:   return i;
             case StateStandby: return s;
-            case ModeC: return mc;
-            case ModeS: return ms;
+            case ModeC:    return mc;
+            case ModeS:    return ms;
+            case ModeMil1: return m1;
+            case ModeMil2: return m2;
+            case ModeMil3: return m3;
+            case ModeMil4: return m4;
+            case ModeMil5: return m5;
+            default: qFatal("Illegal Transponder Mode");
+            }
+            return i;
+        }
+
+        const QString &CTransponder::modeAsShortString(CTransponder::TransponderMode mode)
+        {
+            static const QString i("I");
+            static const QString s("S");
+            static const QString mc("C");
+            static const QString ms("S");
+            static const QString m1("1");
+            static const QString m2("2");
+            static const QString m3("3");
+            static const QString m4("4");
+            static const QString m5("5");
+
+            switch (mode)
+            {
+            case StateIdent:   return i;
+            case StateStandby: return s;
+            case ModeC:    return mc;
+            case ModeS:    return ms;
             case ModeMil1: return m1;
             case ModeMil2: return m2;
             case ModeMil3: return m3;
