@@ -31,6 +31,9 @@ namespace BlackGui
         //! Constructor
         explicit CDockWidgetInfoBar(QWidget *parent = nullptr);
 
+        //! Force an reload
+        void reloadStyleSheet() { this->onStyleSheetsChanged(); }
+
     protected:
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const override;

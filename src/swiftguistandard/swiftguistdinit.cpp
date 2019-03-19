@@ -156,6 +156,7 @@ void SwiftGuiStd::init()
     // info
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
+    connect(ui->comp_InfoBarStatus, &CInfoBarStatusComponent::transponderModeChanged, ui->dw_InfoBarStatus, &CDockWidgetInfoBar::reloadStyleSheet, Qt::QueuedConnection);
 
     // Show kill button
     ui->fr_CentralFrameInside->showKillButton(true);

@@ -328,7 +328,7 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item alignment="Qt::AlignTop">
+     <item alignment="Qt::AlignLeft|Qt::AlignTop">
       <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
        <property name="minimumSize">
         <size>

@@ -57,6 +57,8 @@ namespace BlackGui
 
             this->setProperty("xpdrmode", m_transponder.getTransponderMode());
             this->setProperty("xpdrmodeshort", m_transponder.getModeAsShortString());
+            ui->tb_TransponderMode->setProperty("xpdrmode", m_transponder.getTransponderMode());
+            ui->tb_TransponderMode->setProperty("xpdrmodeshort", m_transponder.getModeAsShortString());
 
             this->setToolTip(m_transponder.toQString());
         }
@@ -75,6 +77,7 @@ namespace BlackGui
             if (m_transponder == aircraft.getTransponder()) { return; }
             m_transponder = aircraft.getTransponder();
             this->init();
+            emit this->changed();
         }
     } // ns
 } // ns

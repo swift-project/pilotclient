@@ -7,6 +7,7 @@
  */
 
 #include "blackgui/components/infobarstatuscomponent.h"
+#include "blackgui/components/transpondermodecomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
 #include "blackgui/guiutility.h"
@@ -49,7 +50,8 @@ namespace BlackGui
             this->adjustTextSize();
 
             ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
+            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested,     this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
+            connect(ui->comp_XpdrMode, &CTransponderModeComponent::changed, this, &CInfoBarStatusComponent::transponderModeChanged);
 
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             if (sGui->getIContextSimulator())

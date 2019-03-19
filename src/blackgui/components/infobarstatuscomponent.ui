@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CInfoBarStatusComponent</class>
  <widget class="QFrame" name="CInfoBarStatusComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>201</width>
+    <height>20</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>0</width>
@@ -152,19 +160,6 @@
    </item>
    <item alignment="Qt::AlignLeft">
     <widget class="BlackGui::CLedWidget" name="led_Audio" native="true"/>
-   </item>
-   <item>
-    <spacer name="hs_StatusComponent">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

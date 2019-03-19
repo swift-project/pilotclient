@@ -36,6 +36,10 @@ namespace BlackGui
             //! Dtor
             virtual ~CTransponderModeComponent() override;
 
+        signals:
+            //! value has been changed
+            void changed();
+
         private:
             QScopedPointer<Ui::CTransponderModeComponent> ui;
             BlackMisc::Aviation::CTransponder m_transponder;

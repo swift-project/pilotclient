@@ -48,14 +48,18 @@ namespace BlackGui
             //! Set the spacing
             void setSpacing(int spacing);
 
+        signals:
+            //! Mode changed
+            void transponderModeChanged();
+
         protected:
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-            BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
-            BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 25 };
+            BlackCore::CActionBind m_actionPtt  { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
+            BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
             //! Init the LEDs
             void initLeds();
