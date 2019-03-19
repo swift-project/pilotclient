@@ -32,7 +32,7 @@ namespace BlackGui
 
         void CRadarView::wheelEvent(QWheelEvent *event)
         {
-            QPoint delta = event->angleDelta();
+            const QPoint delta = event->angleDelta();
             if (delta.y() > 0)
             {
                 emit zoomEvent(true);
@@ -43,5 +43,5 @@ namespace BlackGui
             }
             event->accept();
         }
-    }
-}
+    } // ns
+} // ns

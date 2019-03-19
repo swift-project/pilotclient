@@ -34,8 +34,6 @@ namespace BlackGui
             //! Signal emitted when the user zoomed in our out
             void zoomEvent(bool zoomIn);
 
-        public:
-
         protected:
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
@@ -43,7 +41,7 @@ namespace BlackGui
             //! \copydoc QWidget::wheelEvent
             virtual void wheelEvent(QWheelEvent *event) override;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard
