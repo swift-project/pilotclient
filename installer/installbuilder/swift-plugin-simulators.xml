@@ -124,5 +124,51 @@ This plugin acts as the interface between swift and X-Plane</detailedDescription
                 </folder>
             </folderList>
         </component>
+        <component>
+            <name>flightgear</name>
+            <description>FlightGear</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>FlightGear Simulator Plugin
+This plugin acts as the interface between swift and FlightGear</detailedDescription>
+            <selected>0</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../../dist/bin/plugins/simulator/*simulatorflightgear*</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
+        <component>
+            <name>emulated</name>
+            <description>Emulated Simulator</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>Emulated Simulator Plugin
+This plugin emulates a running simulator. Use this for testing swift only</detailedDescription>
+            <selected>0</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../../dist/bin/plugins/simulator/*simulatoremulated*</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
     </componentList>
 </componentGroup>
