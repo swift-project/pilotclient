@@ -22,12 +22,12 @@
 #include <QtGlobal>
 #include <QTimer>
 
+namespace Ui { class CAircraftComponent; }
 namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
     namespace Simulation { class CSimulatedAircraft; }
 }
-namespace Ui { class CAircraftComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;

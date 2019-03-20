@@ -32,12 +32,12 @@
 
 class QModelIndex;
 
+namespace Ui { class CMappingComponent; }
 namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
     namespace Simulation { class CSimulatedAircraft; }
 }
-namespace Ui { class CMappingComponent; }
 namespace BlackGui
 {
     namespace Views { class CCheckBoxDelegate; }
