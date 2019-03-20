@@ -12,7 +12,6 @@
 #define BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackgui/components/altitudedialog.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -28,7 +27,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
-#include <QString>
+#include <QStringList>
 #include <QTabWidget>
 #include <QtGlobal>
 #include <QFileDialog>
@@ -38,6 +37,32 @@ namespace BlackGui
 {
     namespace Components
     {
+        namespace FlightPlanSettings
+        {
+            //! Remarks history
+            struct TRemarksHistory : public BlackMisc::TSettingTrait<QStringList>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "flightplan/remarkshistory"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("FP remarks history"); return name; }
+            };
+
+            //! Additional remarks history
+            struct TRemarksHistoryAdditional : public BlackMisc::TSettingTrait<QStringList>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "flightplan/remarkshistoryadd"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("FP remarks history (add)"); return name; }
+            };
+        }
+
+        class CStringListDialog;
+        class CAltitudeDialog;
+
         //! Flight plan widget
         class BLACKGUI_EXPORT CFlightPlanComponent : public COverlayMessagesTabWidget
         {
@@ -66,12 +91,15 @@ namespace BlackGui
             static constexpr int OverlayTimeoutMs = 5000;
             QScopedPointer<Ui::CFlightPlanComponent> ui;
             CAltitudeDialog *m_altitudeDialog = nullptr;
+            CStringListDialog *m_fpRemarksDialog = nullptr;
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model;     //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
-            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
-            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-            BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer>   m_lastServer { this };        //!< recently used server (VATSIM, other)
+            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings>       m_directories    { this }; //!< the swift directories
+            BlackMisc::CSetting<FlightPlanSettings::TRemarksHistory>           m_remarksHistory { this }; //!< remarks history
+            BlackMisc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel>  m_lastAircraftModel { this }; //!< recently used aircraft model
+            BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer>    m_lastServer        { this }; //!< recently used server (VATSIM, other)
 
             //! Validate, generates status messages
             BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
@@ -183,6 +211,15 @@ namespace BlackGui
 
             //! Altitude dialog
             void altitudeDialog();
+
+            //! FP remarks history selection
+            void remarksHistory();
+
+            //! Update the remarks histories
+            void updateRemarksHistories();
+
+            //! Consolidate the new remarks list, latest on front
+            static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);
         };
     } // ns
 } // ns

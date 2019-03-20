@@ -42,7 +42,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-137</y>
          <width>383</width>
          <height>480</height>
         </rect>
@@ -310,13 +310,6 @@
               </widget>
              </item>
             </layout>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="lbl_Remarks">
-            <property name="text">
-             <string>11. Remarks</string>
-            </property>
            </widget>
           </item>
           <item row="14" column="1">
@@ -739,6 +732,13 @@
             </property>
            </widget>
           </item>
+          <item row="9" column="0">
+           <widget class="QPushButton" name="pb_Remarks">
+            <property name="text">
+             <string>11.remarks</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
        </layout>
@@ -773,7 +773,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-93</y>
          <width>383</width>
          <height>436</height>
         </rect>
@@ -811,114 +811,21 @@
           <property name="spacing">
            <number>6</number>
           </property>
-          <item row="9" column="0">
-           <widget class="QLabel" name="lbl_RemarksGenerated">
-            <property name="text">
-             <string>Remarks</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="lbl_RequiredNavigationPerformance">
-            <property name="text">
-             <string>Required Navigation Performance</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="1">
-           <widget class="QFrame" name="fr_Buttons">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="1">
-              <widget class="QPushButton" name="pb_Parse">
-               <property name="text">
-                <string>Parse</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QPushButton" name="pb_CopyOver">
-               <property name="text">
-                <string>Copy over</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QComboBox" name="cb_PilotRating">
+          <item row="6" column="1">
+           <widget class="QComboBox" name="cb_VoiceCapabilities">
             <item>
              <property name="text">
-              <string>P0 - unrated</string>
+              <string>Full voice</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>P1</string>
+              <string>Text only</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>P2</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>P3</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>P4</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>P5</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="le_AirlineOperator"/>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="lbl_PerformanceCategory">
-            <property name="text">
-             <string>Performance category</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="cb_RequiredNavigationPerformance">
-            <item>
-             <property name="text">
-              <string>VFR - not required</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>10 miles radius</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>4 miles radius</string>
+              <string>Receive voice</string>
              </property>
             </item>
            </widget>
@@ -933,40 +840,13 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="1">
-           <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_SelcalCode">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="lbl_AirlineOperator">
+          <item row="9" column="0">
+           <widget class="QLabel" name="lbl_RemarksGenerated">
             <property name="text">
-             <string>Airline operator</string>
+             <string>Remarks</string>
             </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="lbl_PilotRating">
-            <property name="text">
-             <string>Pilot rating</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="lbl_NavigationEquipment">
-            <property name="text">
-             <string>Navigation equipment</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
             </property>
            </widget>
           </item>
@@ -1007,27 +887,22 @@
             </item>
            </widget>
           </item>
-          <item row="6" column="1">
-           <widget class="QComboBox" name="cb_VoiceCapabilities">
-            <item>
-             <property name="text">
-              <string>Full voice</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Text only</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Receive voice</string>
-             </property>
-            </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_NavigationEquipment">
+            <property name="text">
+             <string>Navigation equipment</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_AircraftRegistration"/>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_SidsStars">
+            <property name="text">
+             <string>SIDs / STARs</string>
+            </property>
+           </widget>
           </item>
           <item row="8" column="0">
            <widget class="QLabel" name="lbl_Selcal">
@@ -1036,7 +911,67 @@
             </property>
            </widget>
           </item>
-          <item row="10" column="1">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_AirlineOperator"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="cb_NoSidsStarts">
+            <property name="text">
+             <string>no SIDs / STARs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QComboBox" name="cb_PilotRating">
+            <item>
+             <property name="text">
+              <string>P0 - unrated</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P5</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QPlainTextEdit" name="pte_RemarksGenerated">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>generated remarks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
            <widget class="QPlainTextEdit" name="pte_AdditionalRemarks">
             <property name="maximumSize">
              <size>
@@ -1049,16 +984,101 @@
             </property>
            </widget>
           </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="lbl_AdditionalRemarks">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_AirlineOperator">
             <property name="text">
-             <string>Additional remarks</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <string>Airline operator</string>
             </property>
             <property name="wordWrap">
-             <bool>false</bool>
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbl_PerformanceCategory">
+            <property name="text">
+             <string>Performance category</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QFrame" name="fr_Buttons">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="1" alignment="Qt::AlignRight">
+              <widget class="QPushButton" name="pb_CopyOver">
+               <property name="text">
+                <string>Copy over</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cb_RequiredNavigationPerformance">
+            <item>
+             <property name="text">
+              <string>VFR - not required</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10 miles radius</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4 miles radius</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_AircraftRegistration"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_RequiredNavigationPerformance">
+            <property name="text">
+             <string>Required Navigation Performance</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="lbl_PilotRating">
+            <property name="text">
+             <string>Pilot rating</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_SelcalCode">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbl_VoiceCapabilities">
+            <property name="text">
+             <string>Voice capabilities</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1094,43 +1114,10 @@
             </item>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="cb_NoSidsStarts">
+          <item row="11" column="0" alignment="Qt::AlignTop">
+           <widget class="QPushButton" name="pb_AddRemarks">
             <property name="text">
-             <string>no SIDs / STARs</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="lbl_VoiceCapabilities">
-            <property name="text">
-             <string>Voice capabilities</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="lbl_SidsStars">
-            <property name="text">
-             <string>SIDs / STARs</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QPlainTextEdit" name="pte_RemarksGenerated">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>75</height>
-             </size>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>generated remarks</string>
+             <string>add.remarks</string>
             </property>
            </widget>
           </item>
@@ -1265,7 +1252,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>cb_PilotRating</tabstop>
   <tabstop>pte_RemarksGenerated</tabstop>
   <tabstop>pte_AdditionalRemarks</tabstop>
-  <tabstop>pb_Parse</tabstop>
   <tabstop>pb_CopyOver</tabstop>
   <tabstop>tbr_EquipmentCodes</tabstop>
  </tabstops>

@@ -6,9 +6,11 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "flightplancomponent.h"
+#include "altitudedialog.h"
+#include "selcalcodeselector.h"
+#include "stringlistdialog.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackgui/components/flightplancomponent.h"
-#include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
@@ -134,6 +136,9 @@ namespace BlackGui
             connect(ui->le_EquipmentSuffix, &QLineEdit::editingFinished, this, &CFlightPlanComponent::buildPrefixIcaoSuffix, Qt::QueuedConnection);
             connect(ui->cb_Heavy, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
             connect(ui->cb_Tcas,  &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
+
+            connect(ui->pb_Remarks,    &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
+            connect(ui->pb_AddRemarks, &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
 
             // web services
             connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CFlightPlanComponent::swiftWebDataRead, Qt::QueuedConnection);
@@ -322,7 +327,7 @@ namespace BlackGui
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CStatusMessage(this).validationError(u"No '%1', voice capabilities are mandatory") << ui->lbl_Remarks->text());
+                messages.push_back(CStatusMessage(this).validationError(u"No '%1', voice capabilities are mandatory") << ui->pb_Remarks->text());
             }
             else if (v.length() > CFlightPlan::MaxRemarksLength)
             {
@@ -450,6 +455,7 @@ namespace BlackGui
                 if (m.isSeverityInfoOrLess())
                 {
                     this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
+                    this->updateRemarksHistories(); // all OK, we keep that in history
                 }
                 else
                 {
@@ -665,10 +671,10 @@ namespace BlackGui
             {
                 if (ui->cb_Tcas->isChecked())
                 {
-                    const QPointer<CFlightPlanComponent> guard(this);
+                    const QPointer<CFlightPlanComponent> myself(this);
                     QTimer::singleShot(10, this, [ = ]
                     {
-                        if (guard.isNull()) { return; }
+                        if (!myself) { return; }
                         ui->cb_Heavy->setChecked(false);
                         this->buildPrefixIcaoSuffix();
                     });
@@ -830,6 +836,59 @@ namespace BlackGui
             {
                 ui->lep_CrusingAltitude->setText(m_altitudeDialog->getAltitudeString());
             }
+        }
+
+        void CFlightPlanComponent::updateRemarksHistories()
+        {
+            QString r = ui->pte_Remarks->toPlainText();
+            if (!r.isEmpty())
+            {
+                QStringList h = m_remarksHistory.get();
+                if (consolidateRemarks(h, r))
+                {
+                    CStatusMessage m = m_remarksHistory.setAndSave(h);
+                    CLogMessage::preformatted(m);
+                }
+            }
+
+            r = ui->pte_AdditionalRemarks->toPlainText();
+            if (!r.isEmpty())
+            {
+                QStringList h = m_remarksHistoryAdditional.get();
+                if (consolidateRemarks(h, r))
+                {
+                    CStatusMessage m = m_remarksHistoryAdditional.setAndSave(h);
+                    CLogMessage::preformatted(m);
+                }
+            }
+        }
+
+        bool CFlightPlanComponent::consolidateRemarks(QStringList &remarks, const QString &newRemarks)
+        {
+            if (newRemarks.isEmpty()) { return false; }
+            remarks.removeAll(newRemarks);
+            remarks.push_front(newRemarks);
+            return true;
+        }
+
+        void CFlightPlanComponent::remarksHistory()
+        {
+            const QObject *sender = QObject::sender();
+            if (!m_fpRemarksDialog)
+            {
+                m_fpRemarksDialog = new CStringListDialog(this);
+                m_fpRemarksDialog->setModal(true);
+            }
+            if (sender == ui->pb_Remarks) { m_fpRemarksDialog->setStrings(m_remarksHistory.getThreadLocal()); }
+            else if (sender == ui->pb_AddRemarks) { m_fpRemarksDialog->setStrings(m_remarksHistoryAdditional.getThreadLocal()); }
+
+            const int rv = m_fpRemarksDialog->exec();
+            if (rv != QDialog::Accepted) { return; }
+            const QString remarks = m_fpRemarksDialog->getSelectedValue();
+            if (remarks.isEmpty()) { return; }
+
+            if (sender == ui->pb_Remarks) { ui->pte_Remarks->setPlainText(remarks); }
+            else if (sender == ui->pb_AddRemarks) { ui->pte_AdditionalRemarks->setPlainText(remarks); }
         }
 
         void CFlightPlanComponent::initCompleters()
