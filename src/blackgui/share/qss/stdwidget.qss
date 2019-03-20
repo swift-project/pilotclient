@@ -193,7 +193,8 @@ BlackGui--Components--CFirstModelSetComponent,
 BlackGui--Components--CDbAircraftIcaoComponent,
 BlackGui--Components--CDbLiveryComponent,
 BlackGui--Components--CDbDistributorComponent,
-BlackGui--Components--CLegalInfoComponent
+BlackGui--Components--CLegalInfoComponent,
+BlackGui--Components--CStringListDialog
 {
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
