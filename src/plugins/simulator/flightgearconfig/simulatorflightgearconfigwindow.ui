@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CSimulatorFlightgearConfigWindow</class>
  <widget class="QWidget" name="CSimulatorFlightgearConfigWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>275</width>
-    <height>175</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
     <width>250</width>
@@ -17,7 +9,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Flightgear plugin settings</string>
+   <string>FlightGear plugin settings</string>
   </property>
   <layout class="QGridLayout" name="gl_ConfigWindow">
    <property name="leftMargin">
