@@ -29,7 +29,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "network/trafficservers"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
             };
 

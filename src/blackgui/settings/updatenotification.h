@@ -21,13 +21,13 @@ namespace BlackGui
         //! Trait for directory settings
         struct TUpdateNotificationSettings : public BlackMisc::TSettingTrait<bool>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "guiupdatenotification/%Application%"; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const bool &defaultValue() { static const bool d = true; return d; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Update notification"); return name; }
         };
     } // ns

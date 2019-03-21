@@ -131,10 +131,10 @@ namespace BlackGui
         //! Text message settings
         struct TextMessageSettings : public BlackMisc::TSettingTrait<CTextMessageSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "textmessages"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Text message"); return name; }
         };
     } // ns

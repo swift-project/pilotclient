@@ -24,7 +24,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/inputdevice"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Input device"); return name; }
         };
 
@@ -34,7 +34,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/outputdevice"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Output device"); return name; }
         };
     } // ns

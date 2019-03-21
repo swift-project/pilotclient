@@ -75,26 +75,26 @@ namespace BlackGui
         //! General GUI settings
         struct TGeneralGui : public BlackMisc::TSettingTrait<CGeneralGuiSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "guigeneral"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("General GUI"); return name; }
         };
 
         //! Settings for last manual entries of own aircraft mode
         struct TBackgroundConsolidation : public BlackMisc::TSettingTrait<int>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "backgroundconsolidation"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Background consolidation"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::isValid
+            //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const int &defaultValue() { static const int i = 60; return i; }
 
             //! Minimum

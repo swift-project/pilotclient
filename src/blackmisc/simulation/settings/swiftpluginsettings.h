@@ -91,13 +91,13 @@ namespace BlackMisc
             //! Trait for swift plugin settings
             struct TSwiftPlugin : public BlackMisc::TSettingTrait<CSwiftPluginSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingsswiftplugin"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("swift plugin"); return name; }
 
-                //! \copydoc BlackCore::TSettingTrait::isValid
+                //! \copydoc BlackMisc::TSettingTrait::isValid
                 static bool isValid(const CSwiftPluginSettings &value) { return value.getEmulatedSimulator().isSingleSimulator(); }
             };
         } // ns

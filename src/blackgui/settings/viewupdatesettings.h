@@ -99,13 +99,13 @@ namespace BlackGui
         //! Trait for settings about update rates
         struct TViewUpdateSettings : public BlackMisc::TSettingTrait<CViewUpdateSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "guiviewupdate"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("View update"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::isValid
+            //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const CViewUpdateSettings &settings) { return settings.isValid(); }
         };
     } // ns

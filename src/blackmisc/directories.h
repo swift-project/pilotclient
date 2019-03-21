@@ -120,10 +120,10 @@ namespace BlackMisc
         //! ATC stations settings
         struct TDirectorySettings : public TSettingTrait<CDirectories>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "swiftdirectories"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("swift directories"); return name; }
         };
     }

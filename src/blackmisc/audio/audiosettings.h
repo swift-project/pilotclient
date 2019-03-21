@@ -79,7 +79,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/setup"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Audio"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid

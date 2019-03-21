@@ -86,13 +86,13 @@ namespace BlackCore
         //! Reader settings
         struct TVatsimBookings : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "vatsimreaders/bookings"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("VATSIM bookings"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
                 static const BlackCore::Vatsim::CReaderSettings reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
@@ -103,13 +103,13 @@ namespace BlackCore
         //! Reader settings
         struct TVatsimDataFile : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "vatsimreaders/datafile"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("VATSIM data file"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
                 static const BlackCore::Vatsim::CReaderSettings reader {{25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
@@ -120,13 +120,13 @@ namespace BlackCore
         //! Reader settings
         struct TVatsimMetars : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "vatsimreaders/metars"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("VATSIM METARs"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
                 static const BlackCore::Vatsim::CReaderSettings reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
@@ -195,20 +195,20 @@ namespace BlackCore
         //! Raw FSD message settings
         struct TRawFsdMessageSetting : public BlackMisc::TSettingTrait<CRawFsdMessageSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "network/rawfsdmessagelog"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("FSD message Logging"); return name; }
 
-            /* //! \copydoc BlackCore::TSettingTrait::isValid
+            /* //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const CRawFsdMessageSettings &setting)
             {
                 if (setting.areRawFsdMessagesEnabled()) { return !setting.getFileDir().isEmpty(); }
                 return true;
             }*/
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const CRawFsdMessageSettings &defaultValue()
             {
                 static const CRawFsdMessageSettings setting { false, BlackMisc::CDirectoryUtils::logDirectory() };

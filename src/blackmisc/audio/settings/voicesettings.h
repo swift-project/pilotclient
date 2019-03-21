@@ -27,10 +27,10 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "audio/currentvoicesetup"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Voice setup"); return name; }
 
-                //! \copydoc BlackCore::TSettingTrait::isValid
+                //! \copydoc BlackMisc::TSettingTrait::isValid
                 static bool isValid(const CVoiceSetup &setup) { return setup.validate().isSuccess(); }
             };
         } // ns

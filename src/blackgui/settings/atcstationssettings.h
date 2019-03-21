@@ -77,10 +77,10 @@ namespace BlackGui
         //! ATC stations settings
         struct TAtcStationsSettings : public BlackMisc::TSettingTrait<CAtcStationsSettings>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "atcstations"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("ATC stations"); return name; }
         };
     } // ns

@@ -26,7 +26,7 @@ namespace BlackMisc
                 //! Key in data cache
                 static const char *key() { return "matching"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Model matching"); return name; }
             };
         } // ns

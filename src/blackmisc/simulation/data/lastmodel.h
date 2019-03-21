@@ -23,10 +23,10 @@ namespace BlackMisc
             //! Last model used
             struct TLastModel : public BlackMisc::TDataTrait<CAircraftModel>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "lastaircraftmodel"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Own aircraft model"); return name; }
             };
         } // ns

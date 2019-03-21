@@ -29,7 +29,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/actionhotkeys"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Hotkeys"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
@@ -48,13 +48,13 @@ namespace BlackCore
         //! Selected simulator plugins
         struct TEnabledSimulators : public BlackMisc::TSettingTrait<QStringList>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/enabledsimulators"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Enabled simulators"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const QStringList &defaultValue()
             {
                 // All default simulators
@@ -62,7 +62,7 @@ namespace BlackCore
                 return enabledSimulators;
             }
 
-            //! \copydoc BlackCore::TSettingTrait::isValid
+            //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const QStringList &pluginIdentifiers)
             {
                 for (const QString &pluginIdentifier : pluginIdentifiers)
@@ -83,7 +83,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/crashdump"; }
 
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("Crash dumps"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue

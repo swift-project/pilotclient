@@ -206,30 +206,30 @@ namespace BlackMisc
             //! Trait for simulator settings
             struct TSimulatorFsx : public TSettingTrait<CSimulatorSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorfsx"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("FSX settings"); return name; }
             };
 
             //! Trait for simulator settings
             struct TSimulatorFs9 : public TSettingTrait<CSimulatorSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorfs9"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("FS9 settings"); return name; }
             };
 
             //! Trait for simulator settings
             struct TSimulatorP3D : public TSettingTrait<CSimulatorSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorp3d"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("P3D settings"); return name; }
             };
 
@@ -239,7 +239,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "simulator/p3dversion"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("P3D version"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
@@ -253,20 +253,20 @@ namespace BlackMisc
             //! Trait for simulator settings
             struct TSimulatorXP : public TSettingTrait<CSimulatorSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorxplane"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
             };
 
             //! Trait for simulator settings
             struct TSimulatorFG : public TSettingTrait<CSimulatorSettings>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatorfg"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("FG settings"); return name; }
             };
 
@@ -468,7 +468,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatormessages"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Simulator messages"); return name; }
             };
 
@@ -478,7 +478,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "simulator/selectedweatherscenario"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Weather scenario"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue

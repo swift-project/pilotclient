@@ -65,14 +65,14 @@ namespace BlackMisc
                 //! Key in data cache
                 static const char *key() { return "Models"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Model settings"); return name; }
             };
 
             //! Mapping preferences for model distributor list
             struct TDistributorListPreferences : public TSettingTrait<Simulation::CDistributorListPreferences>
             {
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Distributor preferences"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::key

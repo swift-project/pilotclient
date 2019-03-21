@@ -23,10 +23,10 @@ namespace BlackMisc
             //! Last model used
             struct TInterpolationAndRenderingSetupGlobal : public TSettingTrait<CInterpolationAndRenderingSetupGlobal>
             {
-                //! \copydoc BlackCore::TSettingTrait::key
+                //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingsglobalinterpolationsetup"; }
 
-                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Interpolation setup"); return name; }
             };
         } // ns
