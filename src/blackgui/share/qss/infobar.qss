@@ -7,6 +7,7 @@
 BlackGui--CDockWidgetInfoBar {
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  min-height: 1.25em;
 }
 
 BlackGui--CDockWidgetInfoBar[floating="true"] {
@@ -14,8 +15,8 @@ BlackGui--CDockWidgetInfoBar[floating="true"] {
 }
 
 BlackGui--Components--CTransponderModeComponent {
-  min-width:  2em;
-  min-height: 2em;
+  padding: 0px;
+  margin:  0px;
 }
 
 QToolButton[xpdrmodeshort="I"] {

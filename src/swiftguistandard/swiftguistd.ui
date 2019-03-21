@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
+    <width>375</width>
     <height>600</height>
    </rect>
   </property>
@@ -202,7 +202,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>350</width>
+     <width>375</width>
      <height>19</height>
     </rect>
    </property>
@@ -332,8 +332,8 @@
       <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>20</height>
+         <width>250</width>
+         <height>25</height>
         </size>
        </property>
       </widget>

@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>650</height>
+    <height>675</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>650</height>
+    <height>675</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -99,7 +99,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>299</height>
+               <height>275</height>
               </rect>
              </property>
              <attribute name="label">
@@ -130,7 +130,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>299</height>
+               <height>275</height>
               </rect>
              </property>
              <attribute name="label">
@@ -194,8 +194,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>299</height>
+               <width>371</width>
+               <height>298</height>
               </rect>
              </property>
              <attribute name="label">
@@ -361,7 +361,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>299</height>
+               <height>275</height>
               </rect>
              </property>
              <attribute name="label">
@@ -403,7 +403,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
-                     <height>110</height>
+                     <height>120</height>
                     </size>
                    </property>
                   </widget>
@@ -442,8 +442,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>376</width>
-                      <height>126</height>
+                      <width>380</width>
+                      <height>94</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -494,7 +494,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>299</height>
+               <height>275</height>
               </rect>
              </property>
              <attribute name="label">
@@ -520,18 +520,12 @@
             </widget>
            </widget>
           </item>
-          <item>
+          <item alignment="Qt::AlignBottom">
            <widget class="QToolBox" name="tb_Start">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>160</height>
+              <height>175</height>
              </size>
             </property>
             <property name="currentIndex">
@@ -543,7 +537,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>136</height>
+               <height>144</height>
               </rect>
              </property>
              <attribute name="label">
