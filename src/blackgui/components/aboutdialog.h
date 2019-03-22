@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CAboutDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAboutDialog();
+            virtual ~CAboutDialog() override;
 
         private:
             //! Init values

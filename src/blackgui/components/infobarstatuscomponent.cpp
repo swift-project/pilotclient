@@ -30,6 +30,7 @@
 #include <Qt>
 #include <QtGlobal>
 #include <QPointer>
+#include <QStringBuilder>
 #include <QTimer>
 
 using namespace BlackConfig;
@@ -154,7 +155,7 @@ namespace BlackGui
             {
                 // at least connected
                 const QString s(
-                    sGui->getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
+                    sGui->getIContextSimulator()->getSimulatorPluginInfo().getDescription() % u": " %
                     ISimulator::statusToString(simStatus)
                 );
 
@@ -197,7 +198,7 @@ namespace BlackGui
                 break;
             case INetwork::Connected:
                 ui->led_Network->setOn(true);
-                ui->led_Network->setOnToolTip("Connected: " + sGui->getIContextNetwork()->getConnectedServer().getName());
+                ui->led_Network->setOnToolTip(u"Connected: " % sGui->getIContextNetwork()->getConnectedServer().getName());
                 break;
             case INetwork::Connecting:
                 ui->led_Network->setTriStateColor(CLedWidget::Yellow);

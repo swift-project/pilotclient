@@ -40,7 +40,6 @@ namespace BlackGui
 
             // 1st init when running in distributed environment
             QPointer<CAircraftModelValidationComponent> myself(this);
-
             const qint64 lastResults = m_lastResults;
             QTimer::singleShot(2500, this, [ = ]
             {

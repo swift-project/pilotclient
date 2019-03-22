@@ -17,8 +17,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CAudioComponent; }
 namespace BlackGui
 {
@@ -34,7 +32,7 @@ namespace BlackGui
             explicit CAudioComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAudioComponent();
+            virtual ~CAudioComponent() override;
 
         private:
             QScopedPointer<Ui::CAudioComponent> ui;

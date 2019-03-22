@@ -59,16 +59,6 @@ namespace BlackGui
 
             // init if data already available
             this->onWebDataRead();
-
-            /**
-            //! \todo remove this block when no longer needed after 2019-02
-            //! \fixme hardcoded stylesheet setting per stylesheet does NOT work, this hardcoded stuff should be removed
-            const QString style("background-image: url(:/textures/icons/textures/texture-inner.jpg)");
-            ui->wp2_Aircraft->setStyleSheet(style);
-            ui->wp3_LiveryColor->setStyleSheet(style);
-            ui->wp4_Livery->setStyleSheet(style);
-            ui->wp5_Distributor->setStyleSheet(style);
-            **/
         }
 
         CDbQuickMappingWizard::~CDbQuickMappingWizard()

@@ -16,8 +16,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CShowHideBar; }
 namespace BlackGui
 {

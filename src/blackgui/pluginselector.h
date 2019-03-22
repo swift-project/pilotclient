@@ -52,7 +52,6 @@ namespace BlackGui
         //! Enables/disabled the given plugin.
         void setEnabled(const QString &identifier, bool enabled);
 
-
     private:
         void handlePluginStateChange();
 

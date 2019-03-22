@@ -46,7 +46,7 @@ namespace BlackGui
             explicit CAircraftModelValidationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelValidationComponent();
+            virtual ~CAircraftModelValidationComponent() override;
 
             //! Validated a model set
             void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
