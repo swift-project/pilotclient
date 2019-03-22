@@ -7,60 +7,58 @@
  */
 
 #include "notificationplayer.h"
-#include "blackmisc/directoryutils.h"
-#include <QUrl>
+#include "blackmisc/fileutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 
 namespace BlackSound
 {
-
     CNotificationPlayer::CNotificationPlayer(QObject *parent) :
         QObject(parent)
     {
         QSoundEffect *effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/error.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("error.wav"));
         m_effects[CNotificationSounds::NotificationError] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/login.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("login.wav"));
         m_effects[CNotificationSounds::NotificationLogin] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/logoff.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("logoff.wav"));
         m_effects[CNotificationSounds::NotificationLogoff] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/privatemessage.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("privatemessage.wav"));
         m_effects[CNotificationSounds::NotificationTextMessagePrivate] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/supervisormessage.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("supervisormessage.wav"));
         m_effects[CNotificationSounds::NotificationTextMessageSupervisor] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/callsignmentioned.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("callsignmentioned.wav"));
         m_effects[CNotificationSounds::NotificationTextCallsignMentioned] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomjoined.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("voiceroomjoined.wav"));
         m_effects[CNotificationSounds::NotificationVoiceRoomJoined] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomleft.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("voiceroomleft.wav"));
         m_effects[CNotificationSounds::NotificationVoiceRoomLeft] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/noaudiotransmission.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("noaudiotransmission.wav"));
         m_effects[CNotificationSounds::NotificationNoAudioTransmission] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("pttclick.wav"));
         m_effects[CNotificationSounds::PTTClickKeyDown] = effect;
 
         effect = new QSoundEffect(this);
-        effect->setSource(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/pttclick.wav"));
+        effect->setSource(CFileUtils::soundFileQUrl("pttclick.wav"));
         m_effects[CNotificationSounds::PTTClickKeyUp] = effect;
     }
 
@@ -73,5 +71,4 @@ namespace BlackSound
             effect->play();
         }
     }
-
-}
+} // ns

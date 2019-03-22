@@ -10,6 +10,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
@@ -573,5 +574,17 @@ namespace BlackMisc
     {
         if (fileName.isEmpty()) { return false; }
         return fileName.contains("swift", Qt::CaseInsensitive) && fileName.contains("installer");
+    }
+
+    QString CFileUtils::soundFilePathAndFileName(const QString &name)
+    {
+        if (name.isEmpty()) { return {}; }
+        return CFileUtils::appendFilePaths(CDirectoryUtils::soundFilesDirectory(), name);
+    }
+
+    QUrl CFileUtils::soundFileQUrl(const QString &name)
+    {
+        if (name.isEmpty()) { return {}; }
+        return QUrl::fromLocalFile(CFileUtils::soundFilePathAndFileName(name));
     }
 } // ns

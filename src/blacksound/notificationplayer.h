@@ -18,8 +18,6 @@
 #include <QHash>
 #include <QSoundEffect>
 
-class QTimer;
-
 namespace BlackSound
 {
     //! Player for notification sounds

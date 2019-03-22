@@ -13,12 +13,13 @@
 
 #include "blackmisc/blackmiscexport.h"
 
+#include <QUrl>
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
 #include <QLockFile>
-#include <QString>
 #include <QStringList>
+#include <QString>
 #include <Qt>
 #include <functional>
 
@@ -197,6 +198,12 @@ namespace BlackMisc
 
         //! swift installer
         static bool isSwiftInstaller(const QString &fileName);
+
+        //! Returns the full path and file name for a sound file
+        static QString soundFilePathAndFileName(const QString &name);
+
+        //! QUrl of soundFilePathAndFileName
+        static QUrl soundFileQUrl(const QString &name);
     };
 } // ns
 
