@@ -125,6 +125,11 @@ namespace BlackMisc
                 if (!setup.doVerificationAtStartup()) { break; }
 
                 const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
+                if (models.isEmpty())
+                {
+                    msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, QStringLiteral("No models in set for  '%1'").arg(simulator.toQString(true))));
+                    break;
+                }
                 msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped);
 
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -135,11 +140,11 @@ namespace BlackMisc
                 validated = true;
 
                 QWriteLocker l(&m_lock);
-                m_lastResultValid   = valid;
-                m_lastResultInvalid = invalid;
+                m_lastResultValid      = valid;
+                m_lastResultInvalid    = invalid;
                 m_lastResultWasStopped = wasStopped;
-                m_lastResultSimulator = simulator;
-                m_lastResultMsgs = msgs;
+                m_lastResultSimulator  = simulator;
+                m_lastResultMsgs       = msgs;
                 m_checkedSimulatorMsgs.insert(simulator, msgs);
             }
             while (false);
