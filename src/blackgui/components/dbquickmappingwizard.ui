@@ -22,7 +22,7 @@
   <property name="wizardStyle">
    <enum>QWizard::ClassicStyle</enum>
   </property>
-  <widget class="QWizardPage" name="wp1_Intro">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp1_Intro">
    <property name="title">
     <string>Model</string>
    </property>
@@ -319,7 +319,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp2_Aircraft">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp2_Aircraft">
    <property name="title">
     <string>Aircraft</string>
    </property>
@@ -339,7 +339,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp3_LiveryColor">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp3_LiveryColor">
    <property name="title">
     <string>Livery</string>
    </property>
@@ -402,7 +402,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp4_Livery">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp4_Livery">
    <property name="title">
     <string>Livery</string>
    </property>
@@ -422,7 +422,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp5_Distributor">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp5_Distributor">
    <property name="title">
     <string>Distributor / package</string>
    </property>
@@ -442,7 +442,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp6_Confirmation">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp6_Confirmation">
    <property name="title">
     <string>Confirmation</string>
    </property>
@@ -500,7 +500,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp7_Credentials">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp7_Credentials">
    <property name="title">
     <string>Credentials</string>
    </property>
@@ -535,7 +535,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp8_LastConfirmation">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp8_LastConfirmation">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QLabel" name="lbl_Info">
@@ -555,7 +555,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wp9_SendStatus">
+  <widget class="BlackGui::COverlayMessagesWizardPage" name="wp9_SendStatus">
    <property name="title">
     <string>Status</string>
    </property>
@@ -650,6 +650,12 @@
    <class>BlackGui::Components::CDbLoginComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dblogincomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::COverlayMessagesWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/overlaymessagesframe.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
