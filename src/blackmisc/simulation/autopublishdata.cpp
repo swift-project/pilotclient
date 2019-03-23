@@ -16,6 +16,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -125,7 +126,7 @@ namespace BlackMisc
 
         int CAutoPublishData::readFromJsonFiles(const QString &dirPath)
         {
-            const QStringList fileList = publishFiles(dirPath);
+            const QStringList fileList = findAndCleanupPublishFiles(dirPath);
             if (fileList.isEmpty()) { return 0; }
             this->clear();
 
@@ -247,12 +248,12 @@ namespace BlackMisc
 
         bool CAutoPublishData::existAutoPublishFiles(const QString &dirPath)
         {
-            return publishFiles(dirPath).size() > 0;
+            return findAndCleanupPublishFiles(dirPath).size() > 0;
         }
 
         int CAutoPublishData::deleteAutoPublishFiles(const QString &dirPath)
         {
-            const QStringList fileList = publishFiles(dirPath);
+            const QStringList fileList = findAndCleanupPublishFiles(dirPath);
             if (fileList.isEmpty()) { return 0; }
 
             int c = 0;
@@ -267,7 +268,7 @@ namespace BlackMisc
 
         }
 
-        QStringList CAutoPublishData::publishFiles(const QString &dirPath)
+        QStringList CAutoPublishData::findAndCleanupPublishFiles(const QString &dirPath)
         {
             QDir dir(dirPath);
             if (!dir.exists()) { return {}; }
@@ -277,7 +278,28 @@ namespace BlackMisc
             dir.setNameFilters(filters);
             dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
             const QStringList fileList = dir.entryList();
-            return fileList;
+            if (fileList.isEmpty()) { return fileList; }
+
+            // avoid outdated files (e.g. if format changes)
+            QStringList correctedList;
+            const QDateTime deadline = QDateTime::currentDateTimeUtc().addDays(-30);
+            for (const QString &fn : fileList)
+            {
+                QFileInfo fi(fn);
+                if (!fi.exists()) { continue; }
+                const QDateTime created = fi.created().toUTC();
+                if (deadline < created)
+                {
+                    correctedList << fn;
+                }
+                else
+                {
+                    QFile deleteFile(fn);
+                    deleteFile.remove();
+                }
+            }
+
+            return correctedList;
         }
 
     } // namespace

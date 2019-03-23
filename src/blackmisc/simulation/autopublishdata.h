@@ -87,7 +87,7 @@ namespace BlackMisc
 
         private:
             //! All files matching the pattern
-            static QStringList publishFiles(const QString &dirPath);
+            static QStringList findAndCleanupPublishFiles(const QString &dirPath);
 
             QMap<QString, PhysicalQuantities::CLength> m_modelStringVsCG;
             QMap<QString, CSimulatorInfo> m_modelStringVsSimulatorInfo;
