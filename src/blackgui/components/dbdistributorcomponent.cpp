@@ -68,6 +68,12 @@ namespace BlackGui
             return ui->tvp_Distributors->selectedObjects();
         }
 
+        bool CDbDistributorComponent::selectDistributor(const CDistributor &distributor)
+        {
+            if (ui->tvp_Distributors->isEmpty() || !distributor.isLoadedFromDb()) { return false; }
+            return ui->tvp_Distributors->selectDbKey(distributor.getDbKey());
+        }
+
         bool CDbDistributorComponent::hasSelectedDistributors() const
         {
             return ui->tvp_Distributors->hasSelection();

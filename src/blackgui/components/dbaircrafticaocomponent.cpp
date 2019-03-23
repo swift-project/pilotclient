@@ -59,6 +59,12 @@ namespace BlackGui
             ui->filter_AircraftIcao->filter(icao);
         }
 
+        bool CDbAircraftIcaoComponent::selectAircraftIcao(const CAircraftIcaoCode &icao)
+        {
+            if (!icao.isLoadedFromDb()) { return false; }
+            return ui->tvp_AircraftIcao->selectDbKey(icao.getDbKey());
+        }
+
         void CDbAircraftIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);

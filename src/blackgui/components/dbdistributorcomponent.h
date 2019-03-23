@@ -33,7 +33,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbDistributorComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator
+            public CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CDbDistributorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbDistributorComponent();
+            virtual ~CDbDistributorComponent() override;
 
             //! Get the view
             BlackGui::Views::CDistributorView *view() const;
@@ -52,6 +52,9 @@ namespace BlackGui
 
             //! The selected distributors
             BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
+
+            //! Select the given distributor
+            bool selectDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
             //! Having selected distributors
             bool hasSelectedDistributors() const;

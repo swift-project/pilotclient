@@ -42,13 +42,16 @@ namespace BlackGui
             explicit CDbAircraftIcaoComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAircraftIcaoComponent();
+            virtual ~CDbAircraftIcaoComponent() override;
 
             //! Get the view
             BlackGui::Views::CAircraftIcaoCodeView *view() const;
 
             //! Filter by ICAO as default
             void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+
+            //! Select aircraft ICAO object
+            bool selectAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
         private:
             //! ICAO codes have been read
