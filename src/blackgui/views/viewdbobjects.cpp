@@ -60,16 +60,16 @@ namespace BlackGui
         }
 
         template <class T>
-        void CViewWithDbObjects<T>::selectDbKey(const KeyType &key)
+        bool CViewWithDbObjects<T>::selectDbKey(const KeyType &key)
         {
             const QSet<KeyType> set({key});
-            this->selectDbKeys(set);
+            return this->selectDbKeys(set) > 0;
         }
 
         template <class T>
-        void CViewWithDbObjects<T>::selectDbKeys(const QSet<KeyType> &keys)
+        int CViewWithDbObjects<T>::selectDbKeys(const QSet<KeyType> &keys)
         {
-            if (keys.isEmpty()) { return; }
+            if (keys.isEmpty()) { return 0; }
             this->clearSelection();
             int r = -1;
             QSet<int> rows;
@@ -82,7 +82,7 @@ namespace BlackGui
                     rows.insert(r);
                 }
             }
-            this->selectRows(rows);
+            return this->selectRows(rows);
         }
 
         template <class T>
@@ -119,9 +119,17 @@ namespace BlackGui
             return c;
         }
 
+        template<class T>
+        void CViewWithDbObjects<T>::selectObjects(const ContainerType &selectedObjects)
+        {
+            if (selectedObjects.isEmpty()) { return; }
+            this->selectDbKeys(selectedObjects.toDbKeySet());
+        }
+
         template <class T>
         void CViewWithDbObjects<T>::customMenu(Menus::CMenuActions &menuActions)
         {
+            // extensions would go here
             CViewBase<ModelClass>::customMenu(menuActions);
         }
 
@@ -181,10 +189,8 @@ namespace BlackGui
         template <class T>
         void COrderableViewWithDbObjects<T>::selectObjects(const ContainerType &selectedObjects)
         {
-            if (!selectedObjects.isEmpty())
-            {
-                this->selectDbKeys(selectedObjects.toDbKeySet());
-            }
+            if (selectedObjects.isEmpty()) { return; }
+            this->selectDbKeys(selectedObjects.toDbKeySet());
         }
 
         template <class T>
@@ -232,6 +238,7 @@ namespace BlackGui
 
         // see here for the reason of thess forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+
         template class CViewWithDbObjects<BlackGui::Models::CAircraftIcaoCodeListModel>;
         template class CViewWithDbObjects<BlackGui::Models::CAircraftCategoryListModel>;
         template class CViewWithDbObjects<BlackGui::Models::CAirlineIcaoCodeListModel>;

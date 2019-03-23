@@ -144,10 +144,10 @@ namespace BlackGui
             this->setFilterWidgetImpl(filterWidget);
             if (filterWidget)
             {
-                bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::filterWidgetChangedFilter);
-                Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
-                s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged);
-                Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
+                bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::filterWidgetChangedFilter, Qt::QueuedConnection);
+                Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect changeFilter");
+                s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged, Qt::QueuedConnection);
+                Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect modelDataChanged");
                 Q_UNUSED(s);
             }
         }
@@ -490,11 +490,11 @@ namespace BlackGui
             return unselected;
         }
 
-        void CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
+        int CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
         {
-            if (!this->selectionModel()) { return; }
+            if (!this->selectionModel()) { return 0; }
 
-            // multiple times faster than multiple than this->selectRow()
+            // multiple times faster than multiple this->selectRow()
             this->clearSelection();
             QItemSelection selectedItems;
             const int columns = this->model()->columnCount() - 1;
@@ -503,6 +503,7 @@ namespace BlackGui
                 selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns));
             }
             this->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
+            return selectedItems.size();
         }
 
         int CViewBaseNonTemplate::selectedRowCount() const

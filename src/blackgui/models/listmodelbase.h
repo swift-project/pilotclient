@@ -138,8 +138,8 @@ namespace BlackGui
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
                 int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
-                if (c > 0) { this->emitModelDataChanged();}
                 this->updateFilteredContainer();
+                if (c > 0) { this->emitModelDataChanged();}
                 return c;
             }
 

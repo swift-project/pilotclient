@@ -176,9 +176,10 @@ namespace BlackGui
 
             this->beginResetModel();
             m_container = performSort ? sortedContainer : container;
-            this->updateFilteredContainer();
+            this->updateFilteredContainer(); // use sorted container for filtered if applicable
             this->endResetModel();
 
+            // reselect if implemented in specialized view
             if (!selection.isEmpty())
             {
                 m_selectionModel->selectObjects(selection);
@@ -265,6 +266,12 @@ namespace BlackGui
         template <typename T, bool UseCompare>
         void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter)
         {
+            ContainerType selection;
+            if (m_selectionModel)
+            {
+                selection = m_selectionModel->selectedObjects();
+            }
+
             if (!filter)
             {
                 this->removeFilter(); // clear filter
@@ -282,6 +289,12 @@ namespace BlackGui
             {
                 // invalid filter, so clear filter
                 this->removeFilter();
+            }
+
+            // reselect if implemented in specialized views
+            if (!selection.isEmpty())
+            {
+                m_selectionModel->selectObjects(selection);
             }
         }
 

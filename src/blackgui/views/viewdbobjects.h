@@ -52,10 +52,10 @@ namespace BlackGui
             ObjectType oldestObject() const;
 
             //! Select given DB key
-            void selectDbKey(const KeyType &key);
+            bool selectDbKey(const KeyType &key);
 
             //! Select given DB keys
-            void selectDbKeys(const QSet<KeyType> &keys);
+            int selectDbKeys(const QSet<KeyType> &keys);
 
             //! Get selected DB keys
             QSet<KeyType> selectedDbKeys() const;
@@ -65,6 +65,9 @@ namespace BlackGui
 
             //! Update or insert data (based on DB key)
             int replaceOrAddObjectsByKey(const ContainerType &container);
+
+            //! Select by DB keys
+            virtual void selectObjects(const ContainerType &selectedObjects) override;
 
         protected:
             //! Constructor
@@ -91,15 +94,15 @@ namespace BlackGui
             //! Model DB key type
             using KeyType = typename T::KeyType;
 
+            //! Select by DB keys
+            virtual void selectObjects(const ContainerType &selectedObjects) override;
+
         protected:
             //! Constructor
             explicit COrderableViewWithDbObjects(QWidget *parent = nullptr);
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
-
-            //! Reselect by DB keys
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
 
             //! Move selected items
             void moveSelectedItems(int order);
@@ -124,4 +127,7 @@ namespace BlackGui
         };
     } // namespace
 } // namespace
+
+//! \endcond
+
 #endif // guard

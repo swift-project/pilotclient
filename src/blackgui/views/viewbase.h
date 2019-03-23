@@ -232,7 +232,7 @@ namespace BlackGui
             virtual QModelIndexList unselectedRows() const;
 
             //! Select given rows
-            void selectRows(const QSet<int> &rows);
+            int selectRows(const QSet<int> &rows);
 
             //! Number of selected rows
             int selectedRowCount() const;
@@ -725,7 +725,7 @@ namespace BlackGui
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             virtual void setNoSorting() override { m_model->setNoSorting(); }
             virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
-            virtual int getSortColumn() const override { return m_model->getSortColumn(); }
+            virtual int  getSortColumn() const override { return m_model->getSortColumn(); }
             virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
             virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
@@ -780,7 +780,7 @@ namespace BlackGui
             //! @{
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
             virtual void performModeBasedResizeToContent() override;
-            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+            virtual int  performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
             virtual void updateSortIndicator() override;
             virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
             virtual void drawDropIndicator(bool indicator) override;

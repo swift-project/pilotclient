@@ -583,7 +583,7 @@ namespace BlackGui
                 }
 
                 m_model = model;
-                m_model->setSelectionModel(this);
+                m_model->setSelectionModel(this); // set myself as selection model
                 bool c = connect(m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(m_model, &ModelClass::modelDataChangedDigest, this, &CViewBase::modelDataChangedDigest);
