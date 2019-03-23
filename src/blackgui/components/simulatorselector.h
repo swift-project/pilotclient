@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CSimulatorSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatorSelector();
+            virtual ~CSimulatorSelector() override;
 
             //! How to display
             void setMode(Mode mode, bool forced = false);
@@ -147,7 +147,6 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
-            bool m_withFG = false; //! with FG
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
             bool m_rememberSelection   = false; //!< remember last selection
             BlackMisc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };

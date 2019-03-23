@@ -325,7 +325,7 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_loadActions[3], CMenuAction::pathSimulator());
                 }
-                if (CBuildConfig::supportFlightGear() && sims.isFG())
+                if (sims.isFG())
                 {
                     if (!m_loadActions[4])
                     {
@@ -458,7 +458,7 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[7], CMenuAction::pathSimulatorModelsReload());
                     }
 
-                    if (CBuildConfig::supportFlightGear() && sims.isFG())
+                    if (sims.isFG())
                     {
                         if (!m_reloadActions[8])
                         {
@@ -551,7 +551,7 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_clearCacheActions[3], CMenuAction::pathSimulatorModelsClearCache());
                 }
-                if (CBuildConfig::supportFlightGear() && sims.isFG())
+                if (sims.isFG())
                 {
                     if (!m_clearCacheActions[4])
                     {

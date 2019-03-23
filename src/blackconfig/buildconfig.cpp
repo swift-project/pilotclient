@@ -251,13 +251,6 @@ namespace BlackConfig
         static const int bws = Private::buildWordSizeImpl();
         return bws;
     }
-
-    bool CBuildConfig::supportFlightGear()
-    {
-        // for testing set to "true", never commit with TRUE before FG is completed
-        // this will be removed when FG is fully productive
-        return true; // && isLocalDeveloperDebugBuild();
-    }
 } // ns
 
 //! \endcond

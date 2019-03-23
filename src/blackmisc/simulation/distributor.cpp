@@ -164,7 +164,7 @@ namespace BlackMisc
                 return CDistributor();
             }
 
-            const QString description(json.value(prefix + "description").toString());
+            const QString description(json.value(prefix % u"description").toString());
             if (description.isEmpty())
             {
                 // stub, only key, maybe also timestamps

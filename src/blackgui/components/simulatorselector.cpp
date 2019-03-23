@@ -36,10 +36,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
-            const bool withFG = CBuildConfig::supportFlightGear();
-            this->enableFG(withFG);
             this->addComboxBoxValues();
-
             this->setMode(CheckBoxes, true);
 
             connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
@@ -86,8 +83,8 @@ namespace BlackGui
             switch (m_mode)
             {
             default:
-            case CheckBoxes:   return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), m_withFG && ui->cb_FG->isChecked());
-            case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), m_withFG && ui->rb_FG->isChecked());
+            case CheckBoxes:   return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), ui->cb_FG->isChecked());
+            case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), ui->rb_FG->isChecked());
             case ComboBox:     return CSimulatorInfo(ui->cb_Simulators->currentText());
             }
         }
@@ -112,7 +109,7 @@ namespace BlackGui
             if (simulator.isFS9())    { ui->rb_FS9->setChecked(simulator.isFS9()); return; }
             if (simulator.isXPlane()) { ui->rb_XPlane->setChecked(simulator.isXPlane()); return; }
             if (simulator.isP3D())    { ui->rb_P3D->setChecked(simulator.isP3D()); return; }
-            if (simulator.isFG())     { ui->rb_FG->setChecked(simulator.isFG()); return; }
+            if (simulator.isFG())     { ui->rb_FG->setChecked(simulator.isFG());   return; }
 
         }
 
@@ -181,7 +178,6 @@ namespace BlackGui
 
         void CSimulatorSelector::enableFG(bool enabled)
         {
-            m_withFG = enabled;
             ui->cb_FG->setVisible(enabled);
             ui->rb_FG->setVisible(enabled);
             ui->cb_FG->setChecked(false);
@@ -218,10 +214,10 @@ namespace BlackGui
             {
             default:
             case CheckBoxes:
-                c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked() || (m_withFG && ui->rb_FG->isChecked());
+                c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked() || ui->cb_FG->isChecked();
                 break;
             case RadioButtons:
-                c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() || ui->cb_P3D->isChecked() || (m_withFG && ui->cb_FG->isChecked());
+                c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() || ui->rb_P3D->isChecked() || ui->rb_FG->isChecked();
                 break;
             case ComboBox:
                 const int i = ui->cb_Simulators->currentIndex();
@@ -238,7 +234,7 @@ namespace BlackGui
             {
             default:
             case CheckBoxes:
-                c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked() && (!m_withFG || ui->cb_FG->isChecked());
+                c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked() && ui->cb_FG->isChecked();
                 break;
             case RadioButtons:
                 // actually this should never be true
@@ -377,10 +373,7 @@ namespace BlackGui
             ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fsx().toQString());
             ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::p3d().toQString());
             ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::xplane().toQString());
-            if (m_withFG)
-            {
-                ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fg().toQString());
-            }
+            ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fg().toQString());
         }
     } // ns
 } // ns

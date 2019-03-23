@@ -25,8 +25,7 @@ namespace BlackGui
             // no wildcard, just string matching
             if (!filter.contains('*'))
             {
-                return (v.indexOf(f, 0, cs) == 0) &&
-                       (v.length() == f.length());
+                return (v.indexOf(f, 0, cs) == 0) && (v.length() == f.length());
             }
 
             const QString filterNoWildcard = stripWildcard(f);

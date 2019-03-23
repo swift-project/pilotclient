@@ -149,10 +149,6 @@ namespace BlackConfig
         //! \returns 32, 64 or -1 (in case no info is possible)
         static int buildWordSize();
 
-        //! Ref T430 FG preparations, will be removed later
-        //! \fixme KB 2019-01 remove after FG is fully implemented
-        static bool supportFlightGear();
-
     private:
         //! Major version
         static constexpr int versionMajor(); // defined in buildconfig_gen.inc.in

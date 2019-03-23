@@ -50,7 +50,7 @@ namespace BlackGui
             virtual ContainerType filter(const ContainerType &container) const = 0;
 
             //! Anything to do?
-            bool isValid() const { return this->m_valid; }
+            bool isValid() const { return m_valid; }
 
             //! Enabled?
             virtual bool isEnabled() const { return m_enabled && isValid(); }

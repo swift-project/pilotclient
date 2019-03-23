@@ -73,7 +73,7 @@ namespace BlackGui
 
         void CDistributorFilterBar::connectTriggerFilterSignals()
         {
-            connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter);
+            connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter, Qt::QueuedConnection);
         }
     } // ns
 } // ns
