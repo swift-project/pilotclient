@@ -220,6 +220,16 @@ namespace BlackMisc
             return e;
         }
 
+        CStatusMessage CSimulatorInfo::validateSimulatorsForModel() const
+        {
+            CStatusMessage m(this);
+            if (!this->isAnySimulator()) { return m.validationError(u"No simulator"); }
+            if (this->isMicrosoftOrPrepare3DSimulator() && this->isXPlane()) { return m.validationError(u"Cannot combine XPlane and FS simulators"); }
+            if (this->isMicrosoftOrPrepare3DSimulator() && this->isFG()) { return m.validationError(u"Cannot combine FG and FS simulators"); }
+            if (this->isXPlane() && this->isFG()) { return m.validationError(u"Cannot combine FG and XPlane simulators"); }
+            return m.info(u"Simulators OK for model");
+        }
+
         CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool fsx, bool fs9, bool xp, bool p3d, bool fg)
         {
             Simulator s = fsx ? FSX : None;

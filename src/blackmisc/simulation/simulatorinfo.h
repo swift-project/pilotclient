@@ -11,10 +11,11 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATORINFO_H
 #define BLACKMISC_SIMULATION_SIMULATORINFO_H
 
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QFlag>
 #include <QFlags>
@@ -166,6 +167,9 @@ namespace BlackMisc
 
             //! To plugin indentifier, empty string if not single simulator
             const QString &toPluginIdentifier() const;
+
+            //! Validate simulators for an aircraft model
+            CStatusMessage validateSimulatorsForModel() const;
 
             //! Bool flags to enum
             static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
