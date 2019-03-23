@@ -16,8 +16,11 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/db/databasewriter.h"
+#include "blackcore/webdataservices.h"
+
+#include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
@@ -42,6 +45,8 @@ namespace BlackGui
             ui->selector_AircraftIcaoCode->displayWithIcaoDescription(false);
             ui->selector_AircraftIcaoCode->displayMode(CDbAircraftIcaoSelectorComponent::DisplayCompleterString);
             ui->selector_AirlineIcaoCode->displayWithIcaoDescription(false);
+            ui->selector_Simulator->setNoSelectionMeansAll(false);
+            ui->selector_Simulator->setRememberSelection(false);
             ui->editor_AircraftModel->allowDrop(false);
             ui->editor_AircraftModel->setReadOnly(true);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, true);
@@ -57,6 +62,11 @@ namespace BlackGui
 
             ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
 
+            if (this->button(BackButton)) { this->button(BackButton)->setMinimumWidth(75); }
+            if (this->button(NextButton)) { this->button(NextButton)->setMinimumWidth(75); }
+            if (this->button(CancelButton)) { this->button(CancelButton)->setMinimumWidth(75); }
+            if (this->button(FinishButton)) { this->button(FinishButton)->setMinimumWidth(75); }
+
             // init if data already available
             this->onWebDataRead();
         }
@@ -66,7 +76,7 @@ namespace BlackGui
 
         const CLogCategoryList &CDbQuickMappingWizard::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
             return cats;
         }
 
@@ -84,19 +94,19 @@ namespace BlackGui
             }
         }
 
-        void CDbQuickMappingWizard::presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao)
+        void CDbQuickMappingWizard::presetAircraftIcao(const CAircraftIcaoCode &aircraftIcao)
         {
             this->clear();
             ui->selector_AircraftIcaoCode->setAircraftIcao(aircraftIcao);
             ui->selector_AircraftIcaoCode->setFocus();
         }
 
-        void CDbQuickMappingWizard::presetModel(const BlackMisc::Simulation::CAircraftModel &model)
+        void CDbQuickMappingWizard::presetModel(const CAircraftModel &model)
         {
             QString ms = model.getModelString();
             if (!model.getDescription().isEmpty())
             {
-                ms += " (" + model.getDescription() + ")";
+                ms += u" (" % model.getDescription() % u")";
             }
 
             this->presetAircraftIcao(model.getAircraftIcaoCode());
@@ -131,7 +141,7 @@ namespace BlackGui
             {
                 ui->comp_AircraftIcao->view()->sortByPropertyIndex(CAircraftIcaoCode::IndexRank);
                 ui->comp_AircraftIcao->filter(icao);
-                ui->comp_AircraftIcao->view()->selectDbKey(icao.getDbKey());
+                ui->comp_AircraftIcao->selectAircraftIcao(icao);
             }
         }
 
@@ -156,19 +166,39 @@ namespace BlackGui
             }
         }
 
+        void CDbQuickMappingWizard::setDistributorFilter()
+        {
+            const CSimulatorInfo sims = this->guessSimulator();
+            ui->comp_Distributor->filterBySimulator(sims);
+            if (m_model.getDistributor().isLoadedFromDb())
+            {
+                const bool s = ui->comp_Distributor->selectDistributor(m_model.getDistributor());
+                Q_UNUSED(s);
+            }
+        }
+
         CLivery CDbQuickMappingWizard::getFirstSelectedOrDefaultLivery() const
         {
-            return ui->comp_Livery->view()->firstSelectedOrDefaultObject();
+            const CLivery l = ui->comp_Livery->view()->firstSelectedOrDefaultObject();
+            if (l.isLoadedFromDb()) { return l; }
+            if (m_model.getLivery().isLoadedFromDb()) { return m_model.getLivery(); }
+            return l;
         }
 
         CAircraftIcaoCode CDbQuickMappingWizard::getFirstSelectedOrDefaultAircraftIcao() const
         {
-            return ui->comp_AircraftIcao->view()->firstSelectedOrDefaultObject();
+            const CAircraftIcaoCode icao = ui->comp_AircraftIcao->view()->firstSelectedOrDefaultObject();
+            if (icao.isLoadedFromDb()) { return icao; }
+            if (m_model.getAircraftIcaoCode().isLoadedFromDb()) { return m_model.getAircraftIcaoCode(); }
+            return icao;
         }
 
         BlackMisc::Simulation::CDistributor CDbQuickMappingWizard::getFirstSelectedOrDefaultDistributor() const
         {
-            return ui->comp_Distributor->view()->firstSelectedOrDefaultObject();
+            const CDistributor dist = ui->comp_Distributor->view()->firstSelectedOrDefaultObject();
+            if (dist.isLoadedFromDb()) { return dist; }
+            if (m_model.getDistributor().isLoadedFromDb()) { return m_model.getDistributor(); }
+            return dist;
         }
 
         void CDbQuickMappingWizard::onWebDataRead()
@@ -226,8 +256,15 @@ namespace BlackGui
                     }
                 }
                 break;
+            case PageDistributorSelect:
+                {
+                    this->setDistributorFilter();
+                }
+                break;
             case PageConfirmation:
                 {
+                    const CSimulatorInfo sims = this->guessSimulator();
+                    ui->selector_Simulator->setValue(sims);
                     ui->editor_AircraftModel->setLivery(this->getFirstSelectedOrDefaultLivery());
                     ui->editor_AircraftModel->setDistributor(this->getFirstSelectedOrDefaultDistributor());
                     ui->editor_AircraftModel->setAircraftIcao(this->getFirstSelectedOrDefaultAircraftIcao());
@@ -237,7 +274,7 @@ namespace BlackGui
                     ui->fr_ConfirmationStillErrors->setVisible(!errorFree);
                     if (!errorFree)
                     {
-                        ui->editor_AircraftModel->showOverlayMessages(msgs);
+                        ui->wp6_Confirmation->showOverlayMessages(msgs);
                     }
                 }
                 break;
@@ -271,12 +308,20 @@ namespace BlackGui
             case PageConfirmation:
                 {
                     const CStatusMessageList msgs(this->validateData());
+                    if (!msgs.isEmpty())
+                    {
+                        ui->wp6_Confirmation->showOverlayMessages(msgs);
+                    }
                     ok = !msgs.hasWarningOrErrorMessages();
                 }
                 break;
             case PageCredentials:
                 {
                     ok = ui->comp_DbLogin->isUserAuthenticated();
+                    if (!ok)
+                    {
+                        ui->wp7_Credentials->showOverlayHTMLMessage("No user credentials, read login hints!", 10 * 1000);
+                    }
                 }
                 break;
             default:
@@ -297,21 +342,45 @@ namespace BlackGui
                 const CStatusMessage error(this, CStatusMessage::SeverityError, u"Missing model string", true);
                 msgs.push_back(error);
             }
+
+            const CStatusMessage vMsg = ui->selector_Simulator->getValue().validateSimulatorsForModel();
+            if (vMsg.isWarningOrAbove())
+            {
+                msgs.push_back(vMsg);
+            }
+
             return msgs;
         }
 
-        void CDbQuickMappingWizard::consolidateModel()
+        void CDbQuickMappingWizard::consolidateModelWithUIData()
         {
             CAircraftModel model = m_model;
             model.setAircraftIcaoCode(ui->editor_AircraftModel->getAircraftIcao());
             model.setDistributor(ui->editor_AircraftModel->getDistributor());
             model.setLivery(ui->editor_AircraftModel->getLivery());
+            model.setSimulator(ui->selector_Simulator->getValue());
             m_model = model;
+        }
+
+        CSimulatorInfo CDbQuickMappingWizard::guessSimulator() const
+        {
+            CSimulatorInfo sims = m_model.getSimulator();
+            if (!sims.isAnySimulator() && m_model.hasModelString() && sGui && sGui->hasWebDataServices())
+            {
+                const CAircraftModel m = sGui->getWebDataServices()->getModelForModelString(m_model.getModelString());
+                if (m.isLoadedFromDb()) { sims = m.getSimulator(); }
+            }
+
+            if (sGui && !sGui->isShuttingDown() && sGui->getIContextSimulator() && sGui->getIContextSimulator()->isSimulatorAvailable())
+            {
+                sims.add(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator());
+            }
+            return sims;
         }
 
         void CDbQuickMappingWizard::writeModelToDb()
         {
-            this->consolidateModel();
+            this->consolidateModelWithUIData();
             const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model);
             ui->comp_Log->appendStatusMessagesToList(msgs);
         }
@@ -336,7 +405,7 @@ namespace BlackGui
             {
                 ui->cb_Military->setChecked(icao.isMilitary());
                 // already trigger sorting, if sorting is already correct it does nothing
-                // avoids issue with later selection overridden by sorting/filtering
+                // avoids issue with later selection overidden by sorting/filtering
                 this->setAircraftIcaoFilter();
             }
         }

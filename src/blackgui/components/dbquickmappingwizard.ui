@@ -427,7 +427,7 @@
     <string>Distributor / package</string>
    </property>
    <property name="subTitle">
-    <string>Select the correct package / distributor</string>
+    <string>Select the correct package / distributor. HINT: Use 'ZZZZ' if there is no corresponding simulator-</string>
    </property>
    <layout class="QVBoxLayout" name="vl_DistributorPage">
     <item>
@@ -450,6 +450,25 @@
     <string>Check if the data are correct</string>
    </property>
    <layout class="QVBoxLayout" name="vl_ConfirmationPage">
+    <item>
+     <widget class="QGroupBox" name="gb_SupportedSimulators">
+      <property name="title">
+       <string>Supported simulators</string>
+      </property>
+      <layout class="QHBoxLayout" name="hl_SupportedSimulators">
+       <item alignment="Qt::AlignLeft">
+        <widget class="BlackGui::Components::CSimulatorSelector" name="selector_Simulator">
+         <property name="minimumSize">
+          <size>
+           <width>175</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item>
      <widget class="BlackGui::Editors::CAircraftModelForm" name="editor_AircraftModel">
       <property name="minimumSize">
@@ -656,6 +675,12 @@
    <class>BlackGui::COverlayMessagesWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/overlaymessagesframe.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/simulatorselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

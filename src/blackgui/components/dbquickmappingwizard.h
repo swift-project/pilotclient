@@ -82,6 +82,9 @@ namespace BlackGui
             //! Set color filter
             void setColorFilter();
 
+            //! Set distributor filter
+            void setDistributorFilter();
+
             //! Livery assigned
             BlackMisc::Aviation::CLivery getFirstSelectedOrDefaultLivery() const;
 
@@ -95,7 +98,10 @@ namespace BlackGui
             BlackMisc::CStatusMessageList validateData() const;
 
             //! Consolidate model data
-            void consolidateModel();
+            void consolidateModelWithUIData();
+
+            //! Guess simulator
+            BlackMisc::Simulation::CSimulatorInfo guessSimulator() const;
 
             //! Write the model to DB
             void writeModelToDb();
