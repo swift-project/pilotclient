@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CMatchingForm</class>
  <widget class="QFrame" name="CMatchingForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>293</width>
+    <height>559</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Matching form</string>
   </property>
@@ -97,7 +105,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>130</height>
+       <height>145</height>
       </size>
      </property>
      <property name="title">
