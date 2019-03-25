@@ -900,7 +900,7 @@ namespace BlackCore
             }
             else if (log)
             {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("category matchig disabled"), getLogCategories());
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("category matching disabled"), getLogCategories());
             }
 
             // if not yet reduced, reduce to VTOL

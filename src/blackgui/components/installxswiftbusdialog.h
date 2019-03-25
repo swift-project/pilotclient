@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CInstallXSwiftBusDialog(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CInstallXSwiftBusDialog();
+            virtual ~CInstallXSwiftBusDialog() override;
 
             //! \copydoc CInstallXSwiftBusComponent::setDefaultDownloadName
             void setDefaultDownloadName(const QString &defaultName);

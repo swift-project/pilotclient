@@ -338,7 +338,7 @@ namespace BlackGui
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
-                menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoacIndicatorForced });
+                menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoadIndicatorForced });
             }
 
             if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }

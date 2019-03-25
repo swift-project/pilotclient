@@ -401,7 +401,7 @@ namespace BlackGui
             void hideLoadIndicator(int loadingId = -1);
 
             //! Parameterless version of hideLoadIndicator
-            void hideLoacIndicatorForced() { this->hideLoadIndicator(); }
+            void hideLoadIndicatorForced() { this->hideLoadIndicator(); }
 
             //! Remove selected rows
             virtual int removeSelectedRows() = 0;

@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CSettingsSimulatorBasicsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsSimulatorBasicsComponent();
+            virtual ~CSettingsSimulatorBasicsComponent() override;
 
             //! Show / hide selector
             void hideSelector(bool show);
