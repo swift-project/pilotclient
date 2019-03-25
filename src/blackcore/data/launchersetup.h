@@ -45,7 +45,7 @@ namespace BlackCore
             CLauncherSetup() {}
 
             //! Destructor.
-            ~CLauncherSetup() {}
+            // virtual ~CLauncherSetup() {}
 
             //! DBus address
             const QString &getDBusAddress() const { return m_dBusAddress; }

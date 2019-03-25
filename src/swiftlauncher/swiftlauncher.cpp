@@ -53,29 +53,27 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
     sGui->registerMainApplicationWidget(this);
     ui->setupUi(this);
-    this->init();
-    connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_SwiftGui,   &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_Database,   &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
-    connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
+    this->init(); // reads also defaults from settings
+
+    connect(ui->tb_SwiftCore,           &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_SwiftMappingTool,    &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_SwiftGui,            &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_Database,            &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_BackToMain,          &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
-    connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
+    connect(ui->tb_Launcher,        &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
 
-    connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
-    connect(ui->rb_SwiftCoreAudioOnGui,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
-    connect(ui->rb_SwiftStandalone,      &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+    connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
+    connect(ui->rb_SwiftCoreAudioOnGui,  &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
+    connect(ui->rb_SwiftStandalone,      &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased, Qt::QueuedConnection);
 
-    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::updateInfoAvailable,       this, &CSwiftLauncher::updateInfoAvailable,   Qt::QueuedConnection);
-    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::newerPilotClientAvailable, this, &CSwiftLauncher::setHeaderInfo,         Qt::QueuedConnection);
-    connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,   this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
+    connect(ui->comp_UpdateInfo,   &CUpdateInfoComponent::updateInfoAvailable,       this, &CSwiftLauncher::updateInfoAvailable,   Qt::QueuedConnection);
+    connect(ui->comp_UpdateInfo,   &CUpdateInfoComponent::newerPilotClientAvailable, this, &CSwiftLauncher::setHeaderInfo,         Qt::QueuedConnection);
+    connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished,     this, &CSwiftLauncher::onDBusEditingFinished, Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged, Qt::QueuedConnection);
 
     const QShortcut *logPageShortCut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
     Q_UNUSED(logPageShortCut);
-
-    // default from settings
-    this->setDefaults();
 
     // periodically check
     connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::checkRunningApplicationsAndCore);
@@ -118,9 +116,9 @@ CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
 
 CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
-    if (ui->rb_SwiftStandalone->isChecked()) { return CoreModes::CoreInGuiProcess; }
+    if (ui->rb_SwiftStandalone->isChecked())      { return CoreModes::CoreInGuiProcess; }
     if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { return CoreModes::CoreExternalCoreAudio; }
-    if (ui->rb_SwiftCoreAudioOnGui->isChecked()) { return CoreModes::CoreExternalAudioGui; }
+    if (ui->rb_SwiftCoreAudioOnGui->isChecked())  { return CoreModes::CoreExternalAudioGui; }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
     return CoreModes::CoreInGuiProcess;
@@ -166,6 +164,7 @@ void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 
 void CSwiftLauncher::init()
 {
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
     sGui->initMainApplicationWidget(this);
 
     m_mwaOverlayFrame = ui->fr_SwiftLauncherMain;
@@ -174,6 +173,7 @@ void CSwiftLauncher::init()
 
     this->initStyleSheet();
     this->initLogDisplay();
+    this->setDefaults();
 
     ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
@@ -269,7 +269,6 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
     };
 
-    this->saveSetup();
     if (!this->isStandaloneGuiSelected())
     {
         const QString dBus(ui->comp_DBusSelector->getDBusAddress());
@@ -287,6 +286,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
             return false;
         }
     }
+    this->saveSetup();
     m_executableArgs = sGui->argumentsJoined(args);
     return true;
 }
@@ -307,22 +307,14 @@ void CSwiftLauncher::setDefaults()
     const CLauncherSetup setup(m_setup.get());
     const QString dbus(setup.getDBusAddress().toLower().trimmed());
     ui->comp_DBusSelector->set(dbus);
-    if (setup.useFramelessWindow())
-    {
-        ui->rb_WindowFrameless->setChecked(true);
-    }
-    else
-    {
-        ui->rb_WindowNormal->setChecked(true);
-    }
-    switch (setup.getCoreMode())
-    {
-    case CLauncherSetup::Standalone: ui->rb_SwiftStandalone->setChecked(true); break;
-    case CLauncherSetup::CoreWithAudioOnCore: ui->rb_SwiftCoreAudioOnCore->setChecked(true); break;
-    case CLauncherSetup::CoreWithAudioOnGui: ui->rb_SwiftCoreAudioOnGui->setChecked(true); break;
-    default:
-        break;
-    }
+
+    ui->rb_WindowFrameless->setChecked(setup.useFramelessWindow());
+    ui->rb_WindowNormal->setChecked(!setup.useFramelessWindow());
+
+    const CLauncherSetup::CoreMode mode = setup.getCoreMode();
+    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone ? true : false);
+    ui->rb_SwiftCoreAudioOnCore->setChecked(mode == CLauncherSetup::CoreWithAudioOnCore ? true : false);
+    ui->rb_SwiftCoreAudioOnGui->setChecked(mode == CLauncherSetup::CoreWithAudioOnGui ? true : false);
 }
 
 void CSwiftLauncher::saveSetup()
@@ -340,7 +332,8 @@ void CSwiftLauncher::saveSetup()
     {
         setup.setCoreMode(CLauncherSetup::CoreWithAudioOnGui);
     }
-    m_setup.set(setup);
+    const CStatusMessage msg = m_setup.set(setup);
+    Q_UNUSED(msg);
 }
 
 bool CSwiftLauncher::warnAboutOtherSwiftApplications()
@@ -522,6 +515,7 @@ void CSwiftLauncher::onDBusEditingFinished()
 void CSwiftLauncher::onCoreModeReleased()
 {
     ui->comp_DBusSelector->setEnabled(!ui->rb_SwiftStandalone->isChecked());
+    this->saveSetup();
 }
 
 void CSwiftLauncher::popupExecutableArgs()
