@@ -63,10 +63,10 @@ namespace BlackGui
             Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect models signal");
 
             connect(ui->pb_ModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelSetDialog);
-            connect(ui->pb_Models, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
+            connect(ui->pb_Models,   &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
             connect(ui->pb_ModelsTriggerReload, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
             connect(ui->pb_ChangeModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
-            connect(ui->pb_ClearModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
+            connect(ui->pb_ClearModelDir,  &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
             connect(ui->pb_CreateModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::createModelSet);
         }
 
@@ -77,7 +77,7 @@ namespace BlackGui
         {
             if (!simulator.isSingleSimulator())
             {
-                //! \fixme KB 2019-01 reported by RR/crash dump sometimes happening and leading to ASSERT/CTD avoiding the "crash" to better undes
+                //! \fixme KB 2019-01 reported by RR/crash dump sometimes happening and leading to ASSERT/CTD avoiding the "crash" for better infos
                 if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(false, Q_FUNC_INFO, "Need single simulator"); }
                 CLogMessage(this).error(u"Changing to non-single simulator %1 ignored") << simulator.toQString();
                 return;
@@ -168,8 +168,8 @@ namespace BlackGui
 
         void CFirstModelSetComponent::openOwnModelsDialog()
         {
-            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             if (!m_modelsDialog) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
             const bool reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
 
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();

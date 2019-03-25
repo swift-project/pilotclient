@@ -76,7 +76,7 @@ namespace BlackGui
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             ui->le_Simulator->setText(simulator.toQString(true));
 
-            //! \fixme maybe it would be better to set those in stylesheet file
+            //! \fixme hardcoded style sheet
             ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
@@ -233,8 +233,17 @@ namespace BlackGui
                 const CAircraftModelList ownModelSet(ui->tvp_OwnModelSet->container());
                 if (!ownModelSet.isEmpty())
                 {
-                    const CStatusMessage m = this->setCachedModels(ownModelSet, this->getSelectedSimulator());
+                    const CSimulatorInfo sim = this->getSelectedSimulator();
+                    const CStatusMessage m = this->setCachedModels(ownModelSet, sim);
                     CLogMessage::preformatted(m);
+                    if (m.isSuccess())
+                    {
+                        this->showMappingComponentOverlayHtmlMessage(QStringLiteral("Save model set for '%1'").arg(sim.toQString(true)), 5000);
+                    }
+                    else
+                    {
+                        this->showMappingComponentOverlayMessage(m);
+                    }
                 }
                 return;
             }
@@ -268,7 +277,7 @@ namespace BlackGui
             if (canSave)
             {
                 this->setSaveFileName(this->getModelSetSimulator());
-                ui->pb_SaveAsSetForSimulator->setText(QStringLiteral("save %1").arg(this->getModelSetSimulator().toQString(true)));
+                ui->pb_SaveAsSetForSimulator->setText(QStringLiteral("save '%1'").arg(this->getModelSetSimulator().toQString(true)));
             }
             else
             {

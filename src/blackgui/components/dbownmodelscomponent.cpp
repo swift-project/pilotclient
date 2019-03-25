@@ -627,6 +627,8 @@ namespace BlackGui
         void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
+
+            bool hideIndicator = false; // hide in case loading failed
             if (IAircraftModelLoader::isLoadedInfo(info) && m_modelLoader)
             {
                 const CAircraftModelList models(m_modelLoader->getCachedModels(simulator));
@@ -637,6 +639,7 @@ namespace BlackGui
                 {
                     // loading ok, but no data
                     m = CLogMessage(this).warning(u"Loading completed for simulator '%1', but no models") << simulator;
+                    hideIndicator = true;
                 }
                 else
                 {
@@ -655,10 +658,12 @@ namespace BlackGui
             else if (info == IAircraftModelLoader::LoadingSkipped)
             {
                 CLogMessage(this).error(u"Loading of models skipped, simulator '%1'") << simulator.toQString();
+                hideIndicator = true;
             }
             else
             {
                 ui->tvp_OwnAircraftModels->clear();
+                hideIndicator = true;
                 CLogMessage(this).error(u"Loading of models failed, simulator '%1'") << simulator.toQString();
             }
 
@@ -673,7 +678,9 @@ namespace BlackGui
                 // no issues
                 timeoutMs = 5000;
             }
+
             this->showOverlayMessages(statusMessages, false, timeoutMs);
+            if (hideIndicator) { ui->tvp_OwnAircraftModels->hideLoadIndicatorForced(); }
 
             // cache loads may occur in background, do not adjust UI settings
             if (info == IAircraftModelLoader::CacheLoaded) { return; }
