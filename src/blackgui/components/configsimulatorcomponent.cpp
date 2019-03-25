@@ -7,9 +7,10 @@
  */
 
 #include "configsimulatorcomponent.h"
-#include "blackconfig/buildconfig.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackconfig/buildconfig.h"
 #include "ui_configsimulatorcomponent.h"
 
 using namespace BlackMisc;
@@ -64,21 +65,40 @@ namespace BlackGui
             const bool fsx = (sims.isFSX() || !CFsCommonUtil::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
             const bool fs9 = (sims.isFS9() || !CFsCommonUtil::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
             const bool xp = sims.isXPlane() && CBuildConfig::isCompiledWithXPlaneSupport();
+            const bool fg = sims.isFG() && CBuildConfig::isCompiledWithFGSupport();
 
             ui->cb_P3D->setChecked(p3d);
             ui->cb_FSX->setChecked(fsx);
             ui->cb_FS9->setChecked(fs9);
             ui->cb_XP->setChecked(xp);
+            ui->cb_FG->setChecked(fg);
 
             ui->cb_P3D->setEnabled(CBuildConfig::isCompiledWithP3DSupport());
             ui->cb_FSX->setEnabled(CBuildConfig::isCompiledWithFsxSupport());
             ui->cb_FS9->setEnabled(CBuildConfig::isCompiledWithFs9Support());
             ui->cb_XP->setEnabled(CBuildConfig::isCompiledWithXPlaneSupport());
+            ui->cb_FG->setEnabled(CBuildConfig::isCompiledWithFGSupport());
+
+            CGuiUtility::checkBoxReadOnly(ui->cb_P3D, !CBuildConfig::isCompiledWithP3DSupport());
+            CGuiUtility::checkBoxReadOnly(ui->cb_FSX, !CBuildConfig::isCompiledWithFsxSupport());
+            CGuiUtility::checkBoxReadOnly(ui->cb_FS9, !CBuildConfig::isCompiledWithFs9Support());
+            CGuiUtility::checkBoxReadOnly(ui->cb_XP,  !CBuildConfig::isCompiledWithXPlaneSupport());
+            CGuiUtility::checkBoxReadOnly(ui->cb_FG,  !CBuildConfig::isCompiledWithFGSupport());
+
+            /** does NOT work
+            const qreal fadeOut = 0.25;
+            ui->lbl_P3D->setWindowOpacity(CBuildConfig::isCompiledWithP3DSupport() ? 1.0 : fadeOut);
+            ui->lbl_FSX->setWindowOpacity(CBuildConfig::isCompiledWithFsxSupport() ? 1.0 : fadeOut);
+            ui->lbl_FS9->setWindowOpacity(CBuildConfig::isCompiledWithFs9Support() ? 1.0 : fadeOut);
+            ui->lbl_XP->setWindowOpacity(CBuildConfig::isCompiledWithXPlaneSupport() ? 1.0 : fadeOut);
+            ui->lbl_FG->setWindowOpacity(CBuildConfig::isCompiledWithFGSupport() ? 1.0 : fadeOut);
+            **/
 
             if (p3d) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D)); }
             else if (fsx) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX)); }
             else if (fs9) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9)); }
             else if (xp)  { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
+            else if (fg)  { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FG)); }
         }
 
         QStringList CConfigSimulatorComponent::selectedSimsToPluginIds()
@@ -90,6 +110,7 @@ namespace BlackGui
             if (ui->cb_FSX->isChecked()) { ids << CSimulatorPluginInfo::fsxPluginIdentifier(); }
             if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIdentifier(); }
             if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIdentifier(); }
+            if (ui->cb_FG->isChecked())  { ids << CSimulatorPluginInfo::fgPluginIdentifier(); }
 
             return ids;
         }

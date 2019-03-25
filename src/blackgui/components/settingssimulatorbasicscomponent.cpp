@@ -142,6 +142,15 @@ namespace BlackGui
             s.setModelExcludeDirectories(relativeDirs);
             const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+            if (m.isSuccess())
+            {
+                this->showOverlayHTMLMessage("Saved settings", 5000);
+            }
+            else
+            {
+                this->showOverlayMessage(m);
+            }
+
             m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
 
             // display as saved

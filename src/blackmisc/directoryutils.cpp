@@ -491,16 +491,17 @@ namespace BlackMisc
             return dir.exists();
         }
         const QString machine(CFileUtils::windowsUncMachine(path));
-        if (!CFileUtils::canPingUncMachine(machine)) { return false; }
+        if (!CFileUtils::canPingUncMachine(machine)) { return false; } // avoid long "hanging" if machine is switched off
 
         const QDir dir(path);
-        return dir.exists();
+        const bool e = dir.exists();
+        return e;
     }
 
     bool CDirectoryUtils::isDirExisting(const QDir &dir)
     {
         if (!CFileUtils::isWindowsUncPath(dir.absolutePath())) { return dir.exists(); }
-        return CDirectoryUtils::isDirExisting(dir.absolutePath());
+        return CDirectoryUtils::isDirExisting(dir.absolutePath()); // check for UNC
     }
 
     bool CDirectoryUtils::isSameExistingDirectory(const QString &dir1, const QString &dir2)

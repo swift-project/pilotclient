@@ -44,13 +44,10 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
-      <item row="0" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="lbl_FSX">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
+      <item row="1" column="3" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_XP">
         <property name="text">
-         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/FSX.png&quot;/&gt;</string>
+         <string>XPlane (32,64-bit)</string>
         </property>
        </widget>
       </item>
@@ -64,6 +61,43 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_P3D">
+        <property name="text">
+         <string>P3D (64-bit)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_FSX">
+        <property name="text">
+         <string>FSX (32-bit)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="lbl_FSX">
+        <property name="styleSheet">
+         <string notr="true">background: &quot;lightgrey&quot;</string>
+        </property>
+        <property name="text">
+         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/FSX.png&quot;/&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_FS9">
+        <property name="text">
+         <string>FS9 (32-bit)</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>64</width>
+          <height>64</height>
+         </size>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="3" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="lbl_XP">
         <property name="styleSheet">
@@ -74,40 +108,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FSX">
-        <property name="text">
-         <string>FSX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_XP">
-        <property name="text">
-         <string>XPlane</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FS9">
-        <property name="text">
-         <string>FS9</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>64</width>
-          <height>64</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_P3D">
-        <property name="text">
-         <string>P3D</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_P3D">
         <property name="styleSheet">
@@ -115,6 +115,20 @@
         </property>
         <property name="text">
          <string>&lt;img width=&quot;130&quot; src=&quot;:/simulators/icons/simulators/Prepar3D.png&quot;/&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="lbl_FG">
+        <property name="text">
+         <string>&lt;img width=&quot;50&quot; src=&quot;:/simulators/icons/simulators/FG.png&quot;/&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_FG">
+        <property name="text">
+         <string>FlightGear (64-bit)</string>
         </property>
        </widget>
       </item>
@@ -185,6 +199,13 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>cb_P3D</tabstop>
+  <tabstop>cb_FSX</tabstop>
+  <tabstop>cb_FS9</tabstop>
+  <tabstop>cb_XP</tabstop>
+  <tabstop>cb_FG</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
