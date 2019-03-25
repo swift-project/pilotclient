@@ -61,11 +61,7 @@ namespace BlackGui
             connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
 
             ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
-
-            if (this->button(BackButton)) { this->button(BackButton)->setMinimumWidth(75); }
-            if (this->button(NextButton)) { this->button(NextButton)->setMinimumWidth(75); }
-            if (this->button(CancelButton)) { this->button(CancelButton)->setMinimumWidth(75); }
-            if (this->button(FinishButton)) { this->button(FinishButton)->setMinimumWidth(75); }
+            CGuiUtility::setWizardButtonWidths(this);
 
             // init if data already available
             this->onWebDataRead();

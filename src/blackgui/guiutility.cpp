@@ -31,6 +31,7 @@
 #include <QTabWidget>
 #include <QThreadStorage>
 #include <QWidget>
+#include <QWizard>
 #include <QLabel>
 #include <QTimer>
 #include <Qt>
@@ -683,5 +684,19 @@ namespace BlackGui
         }
         const QString clippedText = metrics.elidedText(shortText, mode, width);
         label->setText(clippedText);
+    }
+
+    void CGuiUtility::setWizardButtonWidths(QWizard *wizard)
+    {
+        if (!wizard) { return; }
+
+        const int minW = qMax(qRound(CGuiUtility::fontMetricsLazyDog43Chars(true).width() * 6.0 / 43.0), 80);
+        if (wizard->button(QWizard::BackButton))    { wizard->button(QWizard::BackButton)->setMinimumWidth(minW);    }
+        if (wizard->button(QWizard::NextButton))    { wizard->button(QWizard::NextButton)->setMinimumWidth(minW);    }
+        if (wizard->button(QWizard::CancelButton))  { wizard->button(QWizard::CancelButton)->setMinimumWidth(minW);  }
+        if (wizard->button(QWizard::FinishButton))  { wizard->button(QWizard::FinishButton)->setMinimumWidth(minW);  }
+        if (wizard->button(QWizard::CustomButton1)) { wizard->button(QWizard::CustomButton1)->setMinimumWidth(minW); }
+        if (wizard->button(QWizard::CustomButton2)) { wizard->button(QWizard::CustomButton2)->setMinimumWidth(minW); }
+        if (wizard->button(QWizard::CustomButton3)) { wizard->button(QWizard::CustomButton3)->setMinimumWidth(minW); }
     }
 } // ns

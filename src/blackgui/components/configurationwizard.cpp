@@ -9,6 +9,7 @@
 #include "configurationwizard.h"
 #include "ui_configurationwizard.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/directoryutils.h"
 #include <QPointer>
@@ -25,7 +26,6 @@ namespace BlackGui
             ui(new Ui::CConfigurationWizard)
         {
             ui->setupUi(this);
-
             this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 
             ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
@@ -64,6 +64,7 @@ namespace BlackGui
             });
 
             this->setScreenGeometry();
+            CGuiUtility::setWizardButtonWidths(this);
         }
 
         CConfigurationWizard::~CConfigurationWizard()

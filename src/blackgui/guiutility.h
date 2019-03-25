@@ -33,6 +33,7 @@ class QLineEdit;
 class QTabWidget;
 class QDialog;
 class QLabel;
+class QWizard;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
 
@@ -243,6 +244,9 @@ namespace BlackGui
 
         //! Set elided text
         static void setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode = Qt::ElideMiddle);
+
+        //! Set button widths for a wizard
+        static void setWizardButtonWidths(QWizard *wizard);
 
     private:
         //! No constructor, use static functions only
