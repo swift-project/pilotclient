@@ -12,6 +12,7 @@
 #define BLACKGUI_COMPONENTS_ABOUTHTMLCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include <QUrl>
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -32,11 +33,14 @@ namespace BlackGui
             explicit CAboutHtmlComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAboutHtmlComponent();
+            virtual ~CAboutHtmlComponent() override;
 
         private:
             //! Load credits and legal info
             void loadAbout();
+
+            //! Anchor has been clicked
+            void onAnchorClicked(const QUrl &url);
 
             QScopedPointer<Ui::CAboutHtmlComponent> ui;
         };
