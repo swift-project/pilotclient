@@ -36,7 +36,7 @@ builders['Build swift Linux'] = {
                     """
                 }
 
-                warnings consoleParsers: [[parserName: 'GNU C Compiler 4 (gcc)']], unstableTotalAll: '0'
+                recordIssues tool: gcc4(id: 'gcc', name: 'GCC', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -50,7 +50,7 @@ builders['Build swift Linux'] = {
                 sh 'cppcheck --xml --xml-version=2 --inline-suppr --std=c++14 -ibuild --enable=style,unusedFunction -i externals ' +
                         '--suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> cppcheck.xml'
 
-                publishCppcheck allowNoReport: true, pattern: 'cppcheck.xml'
+                recordIssues tool: cppCheck(reportEncoding: 'UTF-8', pattern: 'cppcheck.xml'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
             }
 
             stage('Linux Archive') {
@@ -91,7 +91,7 @@ builders['Build swift MacOS'] = {
                     """
                 }
 
-                warnings consoleParsers: [[parserName: 'Clang (LLVM based)']], unstableTotalAll: '0'
+                recordIssues tool: clang(id: 'clang', name: 'Clang', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -135,7 +135,7 @@ builders['Build swift Win32'] = {
                     python -u scripts/jenkins.py -w 32 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
-                warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
+                recordIssues tool: msBuild(id: 'msvc32', name: 'MSVC 32', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -182,7 +182,7 @@ builders['Build swift Win64'] = {
                     python -u scripts/jenkins.py -w 64 -t msvc -d -e ${getEolInMonth()} ${shouldUploadSymbols()} -q SWIFT_CONFIG_JSON+=vatsim.json
                 """
 
-                warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
+                recordIssues tool: msBuild(id: 'msvc64', name: 'MSVC 64', reportEncoding: 'UTF-8'), sourceCodeEncoding: 'UTF-8', unstableTotalAll: 0
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()],
                     tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml',
@@ -353,11 +353,11 @@ def notifyHarbormaster() {
         sh "echo '${json}' | ${arcCmd} harbormaster.sendmessage"
 
         def icon = '{icon question-circle color=orange}'
-        if (currentBuild.result == 'SUCCESS') {
+        if (currentBuild.currentResult == 'SUCCESS') {
             icon = '{icon check color=green}'
-        } else if (currentBuild.result == 'FAILURE') {
+        } else if (currentBuild.currentResult == 'FAILURE') {
             icon = '{icon times color=red}'
-        } else if (currentBuild.result == 'UNSTABLE') {
+        } else if (currentBuild.currentResult == 'UNSTABLE') {
             icon = '{icon exclamation-triangle color=orange}'
         }
         def comment = "${icon} {${params.PHID}} ${currentBuild.currentResult}: ${env.BUILD_URL}"
