@@ -333,7 +333,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool withGroupSeparator, bool i18n) const
         {
-            if (this->isNull()) { return this->convertToQString(i18n); }
+            if (this->isNull()) { return QStringLiteral("null"); }
             return this->valueRoundedWithUnit(m_unit, digits, withGroupSeparator, i18n);
         }
 

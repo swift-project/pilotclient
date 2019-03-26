@@ -65,7 +65,7 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             const QString s =
-                (this->hasAnyModelString() ? inApostrophes(this->getAllModelStringsAndAliases(), true) % QStringLiteral(" ") : QString()) %
+                (this->hasAnyModelString() ? inApostrophes(this->getAllModelStringsAliasesAndDbKey(), true) % QStringLiteral(" ") : QString()) %
                 u" type: '" % this->getModelTypeAsString() %
                 u"' ICAO: '" % this->getAircraftIcaoCode().toQString(i18n) %
                 u" CG: " % this->getCG().valueRoundedWithUnit(1) %
@@ -216,6 +216,13 @@ namespace BlackMisc
             if (!this->hasModelStringAlias()) { return m_modelString; }
             if (!this->hasModelString()) { return m_modelStringAlias; }
             return m_modelString % u", " % m_modelStringAlias;
+        }
+
+        QString CAircraftModel::getAllModelStringsAliasesAndDbKey() const
+        {
+            if (!this->hasModelStringAlias() || m_modelString.isEmpty()) { return this->getModelStringAndDbKey(); }
+            if (!this->isLoadedFromDb()) { return this->getAllModelStringsAndAliases(); }
+            return this->getAllModelStringsAndAliases() % " " % this->getDbKeyAsStringInParentheses();
         }
 
         bool CAircraftModel::isVtol() const
@@ -926,8 +933,10 @@ namespace BlackMisc
             const QString modelName(json.value(prefix % u"name").toString());
             const QString modelMode(json.value(prefix % u"mode").toString());
             const QString parts(json.value(prefix % u"parts").toString());
+
+            // check for undefined to rule out 0ft values
             const QJsonValue cgjv = json.value(prefix % u"cgft");
-            const CLength cg = cgjv.isNull() ? CLength::null() : CLength(cgjv.toDouble(), CLengthUnit::ft());
+            const CLength cg = (cgjv.isNull() || cgjv.isUndefined()) ? CLength::null() : CLength(cgjv.toDouble(), CLengthUnit::ft());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
             CAircraftModel model(modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription);

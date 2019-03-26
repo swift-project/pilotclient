@@ -71,7 +71,7 @@ namespace BlackMisc
                    u' ' % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                    u"[cor] | og: " % this->getOnGroundInfo() %
                    (m_onGroundGuessingDetails.isEmpty() ? QString() : u' ' % m_onGroundGuessingDetails) %
-                   u" | cg: " %
+                   u" | CG: " %
                    (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                    u" | offset: " %
                    (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
@@ -80,7 +80,7 @@ namespace BlackMisc
                    u" | bank: " % m_bank.toQString(i18n) %
                    u" | pitch: " % m_pitch.toQString(i18n) %
                    u" | heading: " % m_heading.toQString(i18n) %
-                   u" | gs: " % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
+                   u" | GS: " % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    u' ' % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
                    u" | elevation [" % this->getGroundElevationInfoAsString() % u"]: " % (m_groundElevationPlane.toQString(i18n));
         }

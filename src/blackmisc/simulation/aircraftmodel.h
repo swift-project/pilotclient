@@ -188,6 +188,9 @@ namespace BlackMisc
             //! Get model string and aliases
             QString getAllModelStringsAndAliases() const;
 
+            //! Get model string and aliases
+            QString getAllModelStringsAliasesAndDbKey() const;
+
             //! Model string alias
             void setModelStringAlias(const QString &alias) { m_modelStringAlias = alias.trimmed().toUpper(); }
 

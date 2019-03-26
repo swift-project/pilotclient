@@ -80,7 +80,9 @@ namespace BlackMisc
         QString CAircraftIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
+            return (this->hasCategory()) ?
+                   QStringLiteral("%1 %2 %3 cat: %4").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc(), this->getCategory().getDbKeyAsString()).trimmed() :
+                   QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
         }
 
         void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
