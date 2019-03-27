@@ -134,6 +134,9 @@ namespace BlackGui
             this->onStashedModelsDataChangedDigest(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
             this->onOwnModelsChangedDigest(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
 
+            // allow to use workbench data
+            ui->comp_ModelMatcher->setWorkbenchView(ui->comp_ModelWorkbench->view());
+
             // how to display forms
             ui->editor_AircraftModel->setSelectOnly();
 

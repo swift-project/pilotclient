@@ -15,6 +15,7 @@
 #include "simulatorselector.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/views/statusmessageview.h"
+#include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -32,8 +33,8 @@
 #include <QCompleter>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QString>
 #include <QStringList>
+#include <QStringBuilder>
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QtGlobal>
@@ -77,7 +78,10 @@ namespace BlackGui
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
             connect(ui->pb_Settings, &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
 
+            connect(ui->cb_UseWorkbench, &QCheckBox::toggled, this, &CModelMatcherComponent::onWorkbenchToggled);
+
             this->redisplay();
+            ui->cb_UseWorkbench->setVisible(false);
         }
 
         CModelMatcherComponent::~CModelMatcherComponent()
@@ -94,12 +98,49 @@ namespace BlackGui
             this->redisplay();
         }
 
+        void CModelMatcherComponent::setWorkbenchView(Views::CAircraftModelView *workbenchView)
+        {
+            if (workbenchView)
+            {
+                ui->cb_UseWorkbench->setVisible(true);
+                m_workbenchView = workbenchView;
+            }
+            else
+            {
+                ui->cb_UseWorkbench->setVisible(false);
+                m_workbenchView.clear();
+            }
+        }
+
         void CModelMatcherComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
-            m_matcher.setModelSet(models, simulator, true);
+
+            ui->tvp_ResultMessages->clear();
+            if (this->useWorkbench())
+            {
+                const CAircraftModelList models = m_workbenchView->container();
+                if (models.isEmpty())
+                {
+                    CStatusMessage m(this, CStatusMessage::SeverityWarning, u"No models in workbench, disabled.");
+                    ui->tvp_ResultMessages->insert(m);
+                    return;
+                }
+                CSimulatorInfo simulator = models.simulatorsWithMaxEntries();
+                m_matcher.setModelSet(models, simulator, true);
+            }
+            else
+            {
+                const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+                m_matcher.setModelSet(models, simulator, true);
+            }
             this->redisplay();
+        }
+
+        void CModelMatcherComponent::onWorkbenchToggled(bool checked)
+        {
+            Q_UNUSED(checked);
+            this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         }
 
         void CModelMatcherComponent::onCacheChanged(CSimulatorInfo &simulator)
@@ -118,7 +159,7 @@ namespace BlackGui
             {
                 const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
                 const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), liveryString, &msgs);
-                remoteAircraft.setModel(reverseModel);
+                remoteAircraft.setModel(reverseModel); // current model
             }
 
             m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
@@ -163,8 +204,8 @@ namespace BlackGui
 
         void CModelMatcherComponent::redisplay()
         {
-            const int c = this->getModelSetModelsCount();
-            ui->le_ModelSetCount->setText(QString::number(c));
+            const int c = this->getMatcherModelsCount();
+            ui->le_ModelSetCount->setText(QString::number(c) % (this->useWorkbench() ? u" (workbench)" : u""));
         }
 
         CAircraftModelList CModelMatcherComponent::getModelSetModels() const
@@ -174,11 +215,14 @@ namespace BlackGui
             return models;
         }
 
-        int CModelMatcherComponent::getModelSetModelsCount() const
+        int CModelMatcherComponent::getMatcherModelsCount() const
         {
-            const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-            const int modelCount = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator);
-            return modelCount;
+            return m_matcher.getModelSetCount();
+        }
+
+        bool CModelMatcherComponent::useWorkbench() const
+        {
+            return ui->cb_UseWorkbench->isChecked() && m_workbenchView;
         }
 
         CSimulatedAircraft CModelMatcherComponent::createAircraft() const

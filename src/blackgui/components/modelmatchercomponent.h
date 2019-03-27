@@ -20,11 +20,13 @@
 
 #include <QFrame>
 #include <QObject>
+#include <QPointer>
 #include <QScopedPointer>
 
 namespace Ui { class CModelMatcherComponent; }
 namespace BlackGui
 {
+    namespace Views { class CAircraftModelView; }
     namespace Components
     {
         class CSettingsMatchingDialog;
@@ -41,14 +43,20 @@ namespace BlackGui
             explicit CModelMatcherComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelMatcherComponent();
+            virtual ~CModelMatcherComponent() override;
 
             //! Tab (where this component is embedded) has been changed
             void tabIndexChanged(int index);
 
+            //! Set an external
+            void setWorkbenchView(Views::CAircraftModelView *workbenchView);
+
         private:
             //! Simulator switched
             void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Workbench toggled
+            void onWorkbenchToggled(bool checked);
 
             //! Cache changed
             void onCacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -72,7 +80,10 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModelList getModelSetModels() const;
 
             //! The current model set models size
-            int getModelSetModelsCount() const;
+            int getMatcherModelsCount() const;
+
+            //! Use workbench data
+            bool useWorkbench() const;
 
             //! Pseudo aircraft created from entries
             BlackMisc::Simulation::CSimulatedAircraft createAircraft() const;
@@ -81,6 +92,8 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
+
+            QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc
             CSettingsMatchingDialog    *m_settingsDialog = nullptr; //!< matching settings as dialog
             BlackCore::CAircraftMatcher m_matcher { this };         //!< used matcher
         };
