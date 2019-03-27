@@ -57,6 +57,16 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CRemoteFile::getName, name);
         }
 
+        CRemoteFile CRemoteFileList::findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const
+        {
+            if (name.isEmpty()) { return CRemoteFile(); }
+            for (const CRemoteFile &rf : *this)
+            {
+                if (rf.getName().contains(name, cs)) { return rf; }
+            }
+            return CRemoteFile();
+        }
+
         CRemoteFile CRemoteFileList::findFirstByMatchingNameOrDefault(const QString &name) const
         {
             if (name.isEmpty()) { return CRemoteFile(); }

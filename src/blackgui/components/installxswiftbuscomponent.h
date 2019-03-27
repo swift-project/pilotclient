@@ -55,7 +55,10 @@ namespace BlackGui
             BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
             BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
             const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
+
+            // the xSwiftBus artifacts
             QString m_defaultDownloadName; //!< default name for download
+            BlackMisc::Db::CArtifactList m_xSwiftBusArtifacts; //!< selectable artifacts
 
             //! Select X-Plane plugin directory
             void selectPluginDirectory();

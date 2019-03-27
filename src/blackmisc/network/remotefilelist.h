@@ -52,6 +52,9 @@ namespace BlackMisc
             //! First by name of default
             CRemoteFile findFirstByNameOrDefault(const QString &name) const;
 
+            //! First by name contained of default
+            CRemoteFile findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const;
+
             //! Find first matching name of default
             CRemoteFile findFirstByMatchingNameOrDefault(const QString &name) const;
 

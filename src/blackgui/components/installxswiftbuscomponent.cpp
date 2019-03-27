@@ -15,6 +15,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -25,6 +26,7 @@
 #include <QPointer>
 #include <QDesktopServices>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -102,8 +104,8 @@ namespace BlackGui
             const CRemoteFile rf = this->getRemoteFileSelected();
             const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->downloadDir(), rf.getName());
             QPointer<CInstallXSwiftBusComponent> myself(this);
-
             QFile downloadFile(downloadFileName);
+
             if (!downloadFile.exists())
             {
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Cannot read downloaded file '%1'") << downloadFileName;
@@ -183,7 +185,7 @@ namespace BlackGui
 
             //! fixme Ref T253, once we have a zip library we will directly unzip
             const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                    "Install swiftXDBus",
+                    "Install XSwiftXBus",
                     "You need to manually unzip XSwiftBus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
                     QMessageBox::Yes | QMessageBox::No);
 
@@ -196,6 +198,20 @@ namespace BlackGui
         void CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile()
         {
             if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
+            const CRemoteFile rf = this->getRemoteFileSelected();
+            if (!rf.getName().contains(CBuildConfig::getVersionString()))
+            {
+                const QMessageBox::StandardButton reply = QMessageBox::question(this,
+                        "Download XSwiftBus",
+                        QStringLiteral(
+                            u"The XSwiftBus versions seems to be for a different version\n"
+                            u"Your version is '%1'. Use this version.\n\n"
+                            u"If not available, you can try the version next to your version number.\n\n"
+                            u"Continue with this version?").arg(CBuildConfig::getVersionString()),
+                        QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) { return; }
+            }
+
             if (!this->existsDownloadDir())
             {
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error(u"Invalid download directory");
@@ -203,7 +219,6 @@ namespace BlackGui
                 return;
             }
 
-            const CRemoteFile rf = this->getRemoteFileSelected();
             const CUrl download = rf.getSmartUrl();
             if (download.isEmpty())
             {
@@ -317,15 +332,22 @@ namespace BlackGui
             if (!remoteFiles.isEmpty())
             {
                 const QStringList xSwiftBusFiles(remoteFiles.getNamesPlusSize(false));
+                m_xSwiftBusArtifacts = artifacts;
                 ui->cb_DownloadFile->addItems(xSwiftBusFiles);
 
                 // current text
-                QString current;
-                if (!m_defaultDownloadName.isEmpty())
+                QString current = xSwiftBusFiles.front(); // default latest first
+                if (m_defaultDownloadName.isEmpty())
+                {
+                    const CRemoteFile rf = remoteFiles.findFirstContainingNameOrDefault(CBuildConfig::getVersionString(), Qt::CaseInsensitive);
+                    if (rf.hasName()) { current = rf.getNameAndSize(); }
+                }
+                else
                 {
                     const CRemoteFile rf = remoteFiles.findFirstByMatchingNameOrDefault(m_defaultDownloadName);
-                    current = rf.getNameAndSize();
+                    if (rf.hasName()) { current = rf.getNameAndSize(); }
                 }
+
                 ui->cb_DownloadFile->setCurrentText(
                     current.isEmpty() ?
                     remoteFiles.frontOrDefault().getNameAndSize() :
