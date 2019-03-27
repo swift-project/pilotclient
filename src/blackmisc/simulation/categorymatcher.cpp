@@ -104,7 +104,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No glider categories of level %1 in set").arg(firstLevel), getLogCategories()); }
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No glider categories of level id %1 in set").arg(firstLevel), getLogCategories()); }
                     static const QStringList substituteIcaos({ "UHEL", "GLID", "ULAC" }); // maybe also GYRO
                     static const QString substituteIcaosStr = substituteIcaos.join(", ");
 

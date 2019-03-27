@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CInfoBarWebReadersStatusSmallComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CInfoBarWebReadersStatusSmallComponent();
+            virtual ~CInfoBarWebReadersStatusSmallComponent() override;
 
         private:
             QScopedPointer<Ui::CInfoBarWebReadersStatusSmallComponent> ui;
