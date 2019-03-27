@@ -35,6 +35,21 @@ namespace XSwiftBus
         emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), acfProperties.modelString, acfProperties.modelName, getAircraftDescription());
     }
 
+    std::string CService::getVersionNumber() const
+    {
+        std::string version(XSWIFTBUS_VERSION);
+        const std::string lastCommitTs(GIT_COMMIT_TS);
+
+        const long long lctsll = std::stoll(lastCommitTs); // at least 64bit
+        // now we have to converto int
+        // max 2147483647 (2^31 - 1)
+        //      1MMddHHmm (years since 2010)
+        const long long yearOffset = 201000000000;
+        const int lctsInt = static_cast<int>(lctsll - yearOffset);
+        version = version + "." + std::to_string(lctsInt);
+        return version;
+    }
+
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
         if (text.empty()) { return; }
