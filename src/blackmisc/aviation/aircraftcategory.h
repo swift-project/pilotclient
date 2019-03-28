@@ -41,6 +41,8 @@ namespace BlackMisc
                 IndexName = CPropertyIndex::GlobalIndexCAircraftCategory,
                 IndexDescription,
                 IndexLevelString,
+                IndexLevelStringAndName,
+                IndexLevelStringAndPath,
                 IndexPath,
                 IndexAssignable
             };
@@ -107,6 +109,9 @@ namespace BlackMisc
 
             //! Level and name
             QString getLevelAndName() const;
+
+            //! Level and path
+            QString getLevelAndPath() const;
 
             //! Matching path?
             bool matchesPath(const QString &path, Qt::CaseSensitivity cs);

@@ -93,7 +93,7 @@ namespace BlackGui
                 }
                 m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
                 m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
-                m_columns.addColumn(CColumn::standardString("cat.", "category", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory, CAircraftCategory::IndexPath }));
+                m_columns.addColumn(CColumn::standardString("cat.", "category", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory, CAircraftCategory::IndexLevelStringAndPath }));
                 m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode}));
                 m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
                 m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));

@@ -123,12 +123,20 @@ namespace BlackMisc
 
         QString CAircraftCategory::getLevelString() const
         {
+            if (this->isNull()) { return {}; }
             return QStringLiteral("%1.%2.%3").arg(m_l1).arg(m_l2).arg(m_l3);
         }
 
         QString CAircraftCategory::getLevelAndName() const
         {
+            if (this->isNull()) { return {}; }
             return QStringLiteral("%1 %2").arg(this->getLevelString(), this->getName());
+        }
+
+        QString CAircraftCategory::getLevelAndPath() const
+        {
+            if (this->isNull()) { return {}; }
+            return QStringLiteral("%1 %2").arg(this->getLevelString(), this->getPath());
         }
 
         bool CAircraftCategory::matchesPath(const QString &path, Qt::CaseSensitivity cs)
@@ -165,6 +173,8 @@ namespace BlackMisc
             case IndexAssignable:  return CVariant::fromValue(m_assignable);
             case IndexPath:        return CVariant::fromValue(m_path);
             case IndexLevelString: return CVariant::fromValue(this->getLevelString());
+            case IndexLevelStringAndName: return CVariant::fromValue(this->getLevelAndName());
+            case IndexLevelStringAndPath: return CVariant::fromValue(this->getLevelAndPath());
             default:               return CValueObject::propertyByIndex(index);
             }
         }
@@ -194,6 +204,8 @@ namespace BlackMisc
             case IndexPath:        return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive);
             case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
             case IndexAssignable:  return Compare::compare(this->isAssignable(), compareValue.isAssignable());
+            case IndexLevelStringAndName:
+            case IndexLevelStringAndPath:
             case IndexLevelString: return this->compareByLevel(compareValue);
             default: return CValueObject::comparePropertyByIndex(index, *this);
             }
