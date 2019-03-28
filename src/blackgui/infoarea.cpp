@@ -541,7 +541,7 @@ namespace BlackGui
             }
         }
 
-        emit changedWholeInfoAreaFloating(floating);
+        emit this->changedWholeInfoAreaFloating(floating);
     }
 
     void CInfoArea::tabifyAllWidgets()
@@ -601,9 +601,9 @@ namespace BlackGui
                 // South does not have any effect
                 m_tabBar->setShape(QTabBar::TriangularSouth);
 
-                // signals
-                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked);
-                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::onTabBarIndexChanged);
+                // signals, use Qt::QueuedConnection to avoid issues during shutdown
+                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked, Qt::QueuedConnection);
+                connect(m_tabBar, &QTabBar::currentChanged,      this, &CInfoArea::onTabBarIndexChanged,  Qt::QueuedConnection);
             }
             else
             {
@@ -657,15 +657,16 @@ namespace BlackGui
 
     void CInfoArea::emitInfoAreaStatus()
     {
+        if (!sGui || sGui->isShuttingDown()) { return; } // avoid access to deleted components
         const int sia = this->getSelectedDockInfoAreaIndex();
         const QList<int> floating = this->getAreaIndexesDockedOrFloating(true);
         const QList<int> docked = this->getAreaIndexesDockedOrFloating(false);
-        emit changedInfoAreaStatus(sia, docked, floating);
+        emit this->changedInfoAreaStatus(sia, docked, floating);
     }
 
     void CInfoArea::onTabBarIndexChanged(int tabBarIndex)
     {
-        emit changedInfoAreaTabBarIndex(tabBarIndex);
+        emit this->changedInfoAreaTabBarIndex(tabBarIndex);
         emitInfoAreaStatus();
     }
 
@@ -804,6 +805,7 @@ namespace BlackGui
     {
         if (m_tabBar)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
             m_tabBar->setStyleSheet(qss);
         }

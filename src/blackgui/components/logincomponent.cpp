@@ -671,6 +671,7 @@ namespace BlackGui
 
         void CLoginComponent::lookupOwnAircraftModel()
         {
+            if (!this->hasValidContexts()) { return; }
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
             this->onSimulatorModelChanged(model);
