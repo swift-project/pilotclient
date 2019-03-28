@@ -71,6 +71,20 @@ namespace BlackMisc
             {
                 levels.insert(category.getFirstLevel());
             }
+            levels.remove(0);
+            QList<int> ll = levels.toList();
+            std::sort(ll.begin(), ll.end());
+            return ll;
+        }
+
+        QList<int> CAircraftCategoryList::getSecondLevels() const
+        {
+            QSet<int> levels;
+            for (const CAircraftCategory &category : *this)
+            {
+                levels.insert(category.getSecondLevel());
+            }
+            levels.remove(0);
             QList<int> ll = levels.toList();
             std::sort(ll.begin(), ll.end());
             return ll;
@@ -117,18 +131,30 @@ namespace BlackMisc
             return categories;
         }
 
-        CAircraftCategoryList CAircraftCategoryList::findByLevel(const QList<int> &level) const
+        CAircraftCategoryList CAircraftCategoryList::findByLevel(const QList<int> &level, bool noRootNode) const
         {
             CAircraftCategoryList categories;
             if (level.isEmpty()) { return categories; }
+            const int ls = level.size();
             for (const CAircraftCategory &category : *this)
             {
+                if (noRootNode && ls == category.getDepth()) { continue; } // ignore root nodes
                 if (category.matchesLevel(level))
                 {
                     categories.push_back(category);
                 }
             }
             return categories;
+        }
+
+        CAircraftCategory CAircraftCategoryList::findByFullLevel(const QList<int> &level) const
+        {
+            if (level.size() != 3) { return {}; }
+            for (const CAircraftCategory &category : *this)
+            {
+                if (category.isLevel(level[0], level[1], level[2])) { return category; }
+            }
+            return {};
         }
 
         CAircraftCategoryList CAircraftCategoryList::findFirstLevels() const
@@ -147,10 +173,30 @@ namespace BlackMisc
             else
             {
                 levels.removeLast();
-                categories = this->findByLevel(levels);
+                categories = this->findByLevel(levels, true);
             }
             categories.remove(category);
             return categories;
+        }
+
+        CAircraftCategoryList CAircraftCategoryList::findInParallelBranch(const CAircraftCategory &category) const
+        {
+            if (category.isNull() || this->isEmpty()) { return {}; }
+            if (category.isFirstLevel()) { return {}; }
+            const bool isL2 = category.getDepth() == 2;
+            const QList<int> loopLevels = isL2 ? this->getFirstLevels() : this->getSecondLevels();
+            if (loopLevels.isEmpty()) { return {}; }
+
+            QList<int> level = category.getLevel();
+            CAircraftCategoryList result;
+            for (int l = loopLevels.front(); loopLevels.back() >= l; ++l)
+            {
+                level[isL2 ? 0 : 1] = l;
+                if (category.isLevel(level)) { continue; } // ignore category itself
+                const CAircraftCategory cat = this->findByFullLevel(level);
+                if (!cat.isNull()) { result.push_back(cat); }
+            }
+            return result;
         }
 
         int CAircraftCategoryList::removeIfLevel(const QList<int> &level)

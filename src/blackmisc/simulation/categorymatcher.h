@@ -53,8 +53,8 @@ namespace BlackMisc
             //! Get the glider top level
             int gliderFirstLevel() const;
 
-            Aviation::CAircraftCategoryList m_all;
-            Aviation::CAircraftCategoryList m_gliders;
+            Aviation::CAircraftCategoryList m_all; //!< sorted by level
+            Aviation::CAircraftCategoryList m_gliders; //!< sorted by level
             Aviation::CAircraftCategoryList m_militaryWingAircraft;
             Aviation::CAircraftCategoryList m_militaryRotorAircraft;
         };

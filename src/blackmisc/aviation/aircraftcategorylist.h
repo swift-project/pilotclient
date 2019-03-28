@@ -61,6 +61,9 @@ namespace BlackMisc
             //! All levels sorted
             QList<int> getFirstLevels() const;
 
+            //! All levels sorted
+            QList<int> getSecondLevels() const;
+
             //! Find highest (top) level of categories
             CAircraftCategoryList findHighestLevels(const CAircraftCategoryList &categories);
 
@@ -68,7 +71,10 @@ namespace BlackMisc
             CAircraftCategoryList findByFirstLevel(int level) const;
 
             //! Find by levels
-            CAircraftCategoryList findByLevel(const QList<int> &level) const;
+            CAircraftCategoryList findByLevel(const QList<int> &level, bool noRootNode = false) const;
+
+            //! Find by exact levels
+            CAircraftCategory findByFullLevel(const QList<int> &level) const;
 
             //! Find first levels
             CAircraftCategoryList findFirstLevels() const;
@@ -76,6 +82,10 @@ namespace BlackMisc
             //! Find siblings
             //! \remark if level is 3.2, siblings are 3.1 and 3.3
             CAircraftCategoryList findSiblings(const CAircraftCategory &category) const;
+
+            //! Find siblings
+            //! \remark if level is 3.2, finds 1.2, 2.2, and 4.2
+            CAircraftCategoryList findInParallelBranch(const CAircraftCategory &category) const;
 
             //! Remove by level
             int removeIfLevel(const QList<int> &level);

@@ -83,6 +83,23 @@ namespace BlackMisc
             m_l3 = l3;
         }
 
+        bool CAircraftCategory::isLevel(int l1, int l2, int l3) const
+        {
+            return l1 == m_l1 && l2 == m_l2 && l3 == m_l3;
+        }
+
+        bool CAircraftCategory::isLevel(const QList<int> &level) const
+        {
+            if (level.size() != 3) { return false;}
+            return m_l1 == level[0] && m_l2 == level[1] && m_l3 == level[2];
+        }
+
+        bool CAircraftCategory::isLevel(const CAircraftCategory &category) const
+        {
+            if (category.isNull()) { return false; }
+            return category.m_l1 == m_l1 && category.m_l2 == m_l2 && category.m_l3 == m_l3;
+        }
+
         QList<int> CAircraftCategory::getLevel() const
         {
             QList<int> l;

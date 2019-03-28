@@ -78,11 +78,23 @@ namespace BlackMisc
             //! Level
             void setLevel(int l1, int l2, int l3);
 
+            //! Is that given level?
+            bool isLevel(int l1, int l2, int l3) const;
+
+            //! Is that given level?
+            bool isLevel(const QList<int> &level) const;
+
+            //! Is that given level?
+            bool isLevel(const CAircraftCategory &category) const;
+
             //! Levels depending on depth, 3.2 -> 3,2 / 1.0 -> 1 / 4.3.1 -> 4,3,1
             QList<int> getLevel() const;
 
             //! First level
             int getFirstLevel() const { return m_l1; }
+
+            //! Second level
+            int getSecondLevel() const { return m_l2; }
 
             //! First level
             bool isFirstLevel() const;

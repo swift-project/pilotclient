@@ -29,6 +29,7 @@ namespace BlackMisc
         void CCategoryMatcher::setCategories(const CAircraftCategoryList &categories)
         {
             m_all = categories;
+            m_all.sortByLevel();
 
             CAircraftCategoryList gliders = categories.findByName("glider").findFirstLevels();
             if (!gliders.isEmpty())
@@ -73,30 +74,52 @@ namespace BlackMisc
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"), getLogCategories());
                 return modelSet;
             }
+            if (!remoteAircraft.getAircraftIcaoCode().hasCategory())
+            {
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No category in remote aircraft"), getLogCategories());
+                return modelSet;
+            }
 
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Remote aircraft has category '%1'").arg(remoteAircraft.getAircraftIcaoCode().getCategory().getNameDbKey()), getLogCategories()); }
             if (!m_gliders.isEmpty() && setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByCategoryGlider) && this->isGlider(remoteAircraft.getAircraftIcaoCode()))
             {
                 // we have a glider
                 const int firstLevel = this->gliderFirstLevel();
-                const CAircraftModelList gliders = modelSet.findByCategoryFirstLevel(firstLevel);
+                const CAircraftModelList gliders = modelSet.findByCategoryFirstLevel(firstLevel); // all gliders from model set
                 if (!gliders.isEmpty())
                 {
                     const CAircraftCategory category = remoteAircraft.getAircraftIcaoCode().getCategory();
-                    reduced = true; // in any case reduced
+                    reduced = true; // in any case reduced (to gliders)
 
-                    const CAircraftModelList sameGliders = modelSet.findByCategory(category);
+                    // find same category
+                    const CAircraftModelList sameGliders = gliders.findByCategory(category);
                     if (!sameGliders.isEmpty())
                     {
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by category : '%2'").arg(sameGliders.size()).arg(category.toQString(true)), getLogCategories()); }
+                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by category: '%2'").arg(sameGliders.size()).arg(category.toQString(true)), getLogCategories()); }
                         return sameGliders;
                     }
 
-                    const CAircraftCategoryList siblings = m_gliders.findSiblings(category);
-                    const CAircraftModelList siblingGliders = modelSet.findByCategories(siblings);
-                    if (!siblings.isEmpty() && !siblingGliders.isEmpty())
+                    // find parallel branch category
+                    const CAircraftCategoryList otherBranches = m_gliders.findInParallelBranch(category);
+                    if (!otherBranches.isEmpty())
                     {
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 sibling models by categories : '%2'").arg(siblingGliders.size()).arg(siblings.getLevelsString()), getLogCategories()); }
-                        return sameGliders;
+                        const CAircraftModelList otherBranchGliders = gliders.findByCategories(otherBranches);
+                        if (!otherBranchGliders.isEmpty())
+                        {
+                            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 parallel branch models of '%2' by categories: '%3'").arg(otherBranchGliders.size()).arg(category.getLevelAndName(), otherBranches.getLevelsString()), getLogCategories()); }
+                            return otherBranchGliders;
+                        }
+                    }
+
+                    const CAircraftCategoryList siblings = m_gliders.findSiblings(category);
+                    if (!siblings.isEmpty())
+                    {
+                        const CAircraftModelList siblingGliders = modelSet.findByCategories(siblings);
+                        if (!siblings.isEmpty() && !siblingGliders.isEmpty())
+                        {
+                            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 sibling models of '%2' by categories: '%3'").arg(siblingGliders.size()).arg(category.getLevelAndName(), siblings.getLevelsString()), getLogCategories()); }
+                            return siblingGliders;
+                        }
                     }
 
                     CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by 'GLIDER' category").arg(sameGliders.size()), getLogCategories());
@@ -104,7 +127,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No glider categories of level id %1 in set").arg(firstLevel), getLogCategories()); }
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No glider category '%1' in set").arg(m_gliders.front().getLevelAndName()), getLogCategories()); }
                     static const QStringList substituteIcaos({ "UHEL", "GLID", "ULAC" }); // maybe also GYRO
                     static const QString substituteIcaosStr = substituteIcaos.join(", ");
 
