@@ -37,12 +37,13 @@ namespace BlackGui
 
             // Widget style
             connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
-            connect(ui->cb_SettingsGuiWidgetStyle, qOverload<const QString &>(&QComboBox::currentIndexChanged),
-                    this, &CSettingsGuiComponent::widgetStyleChanged);
+            connect(ui->cb_SettingsGuiWidgetStyle, qOverload<const QString &>(&QComboBox::currentIndexChanged), this, &CSettingsGuiComponent::widgetStyleChanged);
+
+            ui->comp_SettingsFonts->setStyleSheetDefaultColor();
 
             // selection
             connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
-            connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
+            connect(ui->rb_PreferMultiSelection, &QRadioButton::released,    this, &CSettingsGuiComponent::selectionChanged);
 
             this->guiSettingsChanged();
         }

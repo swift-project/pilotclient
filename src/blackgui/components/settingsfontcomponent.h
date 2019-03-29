@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CSettingsFontComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsFontComponent();
+            virtual ~CSettingsFontComponent() override;
 
             //! Set mode
             void setMode(Mode m);
@@ -57,6 +57,9 @@ namespace BlackGui
             //! With color selection
             void setWithColorSelection(bool withColor);
 
+            //! Set the default color from style sheet
+            void setStyleSheetDefaultColor();
+
         signals:
             //! To be used with dialogs
             void accept();
@@ -70,6 +73,7 @@ namespace BlackGui
             QColor  m_cancelColor;
             QFont   m_cancelFont;
             QString m_qss;
+            bool    m_noColorDefault = true; //!< as of T571 no color default
             Mode    m_mode = DirectUpdate;
 
             void changeFont();

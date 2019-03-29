@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CSettingsFontDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsFontDialog();
+            virtual ~CSettingsFontDialog() override;
 
             //! Get stylesheet
             const QString &getQss() const;

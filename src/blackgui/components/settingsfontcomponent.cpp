@@ -14,6 +14,7 @@
 
 #include <QColorDialog>
 #include <QPushButton>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 
@@ -28,7 +29,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->setMode(CSettingsFontComponent::DirectUpdate);
 
-            this->initValues(); // most likely default font at ctor call time
+            // due to the problems with overriding a color (e.g T571) we use "no color" as default
+            this->initValues();
             connect(ui->tb_SettingsGuiFontColor,    &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
             connect(ui->tb_SettingsGuiNoFontColor,  &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
             connect(ui->pb_Ok,                      &QPushButton::clicked, this, &CSettingsFontComponent::changeFont, Qt::QueuedConnection);
@@ -82,6 +84,13 @@ namespace BlackGui
             ui->tb_SettingsGuiFontColor->setVisible(withColor);
         }
 
+        void CSettingsFontComponent::setStyleSheetDefaultColor()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            m_noColorDefault = false;
+            this->initValues();
+        }
+
         void CSettingsFontComponent::changeFont()
         {
             const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
@@ -92,7 +101,6 @@ namespace BlackGui
             QString fontColor = m_selectedColor.name();
             if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
             {
-                // fontColor = sGui->getStyleSheetUtility().fontColor();
                 fontColor.clear();
             }
             ui->le_SettingsGuiFontColor->setText(fontColor);
@@ -122,17 +130,19 @@ namespace BlackGui
 
         void CSettingsFontComponent::noColor()
         {
-            m_selectedColor = QColor(); // invalid color
+            m_selectedColor  = QColor(); // invalid color
+            m_noColorDefault = true;
             ui->le_SettingsGuiFontColor->clear();
         }
 
         void CSettingsFontComponent::initValues()
         {
             // Font
+            if (!sGui) { return; }
             m_cancelFont = this->font();
             const QString colorString(sGui->getStyleSheetUtility().fontColorString());
             m_cancelColor = colorString.isEmpty() ? QColor() : QColor(colorString);
-            this->initUiValues(m_cancelFont, m_cancelColor);
+            this->initUiValues(m_cancelFont, m_noColorDefault ? QColor() : m_cancelColor);
         }
 
         void CSettingsFontComponent::initUiValues(const QFont &font, const QColor &color)
@@ -141,16 +151,16 @@ namespace BlackGui
             ui->cb_SettingsGuiFont->setCurrentFont(font);
             ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
 
-            Q_UNUSED(color); // due to the problems with overriding a color (e.g T571) we use "no color" as default
-            m_selectedColor = QColor(); // invalid, no color
-            ui->le_SettingsGuiFontColor->setText(m_selectedColor.isValid() ? m_selectedColor.name() : "");
+            const bool valid = color.isValid();
+            m_selectedColor = color; // color
+            ui->le_SettingsGuiFontColor->setText(valid ? m_selectedColor.name() : "");
             m_qss.clear();
         }
 
         void CSettingsFontComponent::resetFont()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            this->initUiValues(m_cancelFont, m_cancelColor);
+            this->initUiValues(m_cancelFont, m_noColorDefault ? QColor() : m_cancelColor);
             if (m_mode == CSettingsFontComponent::DirectUpdate)
             {
                 sGui->resetFont();
