@@ -704,7 +704,10 @@ namespace BlackMisc
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
         bool changed = element.m_timestamp != timestamp || element.m_value.read() != value;
-        if (! changed && ! save && ! ignoreValue) { return {}; }
+        if (! changed && ! save && ! ignoreValue)
+        {
+            return CStatusMessage(this).info(u"Value '%1' not set, same timestamp and value") << element.m_nameWithKey;
+        }
 
         if (ignoreValue) { value = element.m_value.read(); }
         else { ignoreValue = ! changed; }
