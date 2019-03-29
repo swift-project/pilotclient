@@ -96,6 +96,14 @@ namespace BlackMiscTest
 
         CFrequencyUnit fu1 = CFrequencyUnit::Hz();
         QVERIFY2(fu1 != du1, "Hz must not be meter");
+
+        // null comparisons
+        const CLength null(CLength::null());
+        const CLength nonNull(1, CLengthUnit::m());
+        QVERIFY2(null == CLength::null(), "null is equal to null");
+        QVERIFY2(!(null < CLength::null()), "null is equivalent to null");
+        QVERIFY2(null != nonNull, "null is not equal to non-null");
+        QVERIFY2((null < nonNull) != (null > nonNull), "null is ordered wrt non-null");
     }
 
     void CTestPhysicalQuantities::lengthBasics()

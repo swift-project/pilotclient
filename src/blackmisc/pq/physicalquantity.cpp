@@ -222,7 +222,10 @@ namespace BlackMisc
         bool CPhysicalQuantity<MU, PQ>::lessThan(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return false;
-            if (this->isNull() || other.isNull()) return false;
+
+            if (isNull() < other.isNull()) { return true; }
+            if (isNull() > other.isNull()) { return false; }
+            if (isNull() && other.isNull()) { return false; }
 
             return (m_value < other.value(m_unit));
         }
