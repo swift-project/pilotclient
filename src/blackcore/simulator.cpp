@@ -1137,13 +1137,12 @@ namespace BlackCore
         this->reverseLookupAndUpdateOwnAircraftModel(model);
     }
 
-    void ISimulator::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
+    void ISimulator::reverseLookupAndUpdateOwnAircraftModel(const CAircraftModel &model)
     {
-        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
-
         if (!model.hasModelString()) { return; }
         if (this->isShuttingDown())  { return; }
+        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
+
         if (this->getOwnAircraftModel() != model)
         {
             if (CDatabaseUtils::hasDbAircraftData())

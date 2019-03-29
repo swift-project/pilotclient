@@ -150,6 +150,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::onSimulatorStatusChanged(int status)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
             if (simStatus.testFlag(ISimulator::Connected))
             {
