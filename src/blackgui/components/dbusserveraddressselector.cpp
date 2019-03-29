@@ -37,10 +37,10 @@ namespace BlackGui
             this->set(sGui->getCmdDBusAddressValue());
 
             ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
-            connect(ui->rb_DBusP2P, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
-            connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
-            connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
-            connect(ui->le_DBusServerPort, &QLineEdit::editingFinished, this, &CDBusServerAddressSelector::editingFinished);
+            connect(ui->rb_DBusP2P,           &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
+            connect(ui->rb_DBusSession,       &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
+            connect(ui->rb_DBusSystem,        &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
+            connect(ui->le_DBusServerPort,    &QLineEdit::editingFinished,    this, &CDBusServerAddressSelector::editingFinished);
             connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::editingFinished);
         }
 

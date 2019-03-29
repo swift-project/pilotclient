@@ -30,7 +30,7 @@ namespace BlackGui
             explicit CDBusServerAddressSelector(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CDBusServerAddressSelector();
+            virtual ~CDBusServerAddressSelector() override;
 
             //! DBus address for P2P or empty
             QString getP2PAddress() const;
