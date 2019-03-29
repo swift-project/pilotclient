@@ -703,7 +703,7 @@ namespace BlackMisc
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
-        bool changed = element.m_value.read() != value || element.m_timestamp != timestamp;
+        bool changed = element.m_timestamp != timestamp || element.m_value.read() != value;
         if (! changed && ! save && ! ignoreValue) { return {}; }
 
         if (ignoreValue) { value = element.m_value.read(); }
