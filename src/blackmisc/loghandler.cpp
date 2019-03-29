@@ -14,6 +14,10 @@
 #include "blackmisc/worker.h"
 #include "blackconfig/buildconfig.h"
 
+#ifdef BLACK_USE_CRASHPAD
+#include "crashpad/client/simulate_crash.h"
+#endif
+
 #include <QCoreApplication>
 #include <QGlobalStatic>
 #include <QMessageLogContext>
@@ -44,7 +48,13 @@ namespace BlackMisc
         const CStatusMessage statusMessage(type, context, message);
         const auto invokee = [statusMessage] { CLogHandler::instance()->logLocalMessage(statusMessage); };
 #if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
-        if (type == QtFatalMsg) { MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); }
+        if (type == QtFatalMsg)
+        {
+            MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); // display assert dialog in release build
+#   if defined(BLACK_USE_CRASHPAD)
+            CRASHPAD_SIMULATE_CRASH(); // workaround inability to catch __fastfail
+#   endif
+        }
 #endif
         if (type == QtFatalMsg && CLogHandler::instance()->thread() != QThread::currentThread())
         {
