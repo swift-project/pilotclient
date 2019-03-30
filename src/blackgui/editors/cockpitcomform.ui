@@ -6,499 +6,431 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>292</width>
+    <width>276</width>
     <height>95</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Cockpit COM</string>
   </property>
-  <layout class="QHBoxLayout" name="hl_CockpitComForm">
+  <layout class="QGridLayout" name="gl_CockpitComCo" columnstretch="1,1,2">
    <property name="leftMargin">
-    <number>2</number>
+    <number>3</number>
    </property>
    <property name="topMargin">
-    <number>2</number>
+    <number>3</number>
    </property>
    <property name="rightMargin">
-    <number>2</number>
+    <number>3</number>
    </property>
    <property name="bottomMargin">
-    <number>2</number>
+    <number>3</number>
    </property>
-   <item>
-    <widget class="QFrame" name="fr_Com">
-     <layout class="QGridLayout" name="gl_Com">
+   <item row="1" column="2">
+    <widget class="QFrame" name="fr_ComPanelTransponder">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="hl_ComPanelTransponder">
       <property name="leftMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
+      <item>
+       <widget class="BlackGui::Components::CTransponderCodeSpinBox" name="sbp_ComPanelTransponder">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="maximum">
+         <number>7777</number>
+        </property>
+        <property name="value">
+         <number>7000</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="BlackGui::Components::CTransponderModeSelector" name="cbp_ComPanelTransponderMode"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="qw_ComPanelCom1Active" native="true">
+     <layout class="QHBoxLayout" name="hl_ComPanelCom1Active">
       <property name="spacing">
-       <number>4</number>
+       <number>0</number>
       </property>
-      <item row="0" column="1">
-       <widget class="QWidget" name="qw_ComPanelCom2Active" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelCom2Active">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_ComPanelCom2Active">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>COM2:</string>
-           </property>
-           <property name="buddy">
-            <cstring>qw_ComPanelCom2Active</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QDoubleSpinBox" name="ds_ComPanelCom2Active">
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="minimum">
-            <double>118.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>136.974999999999994</double>
-           </property>
-           <property name="singleStep">
-            <double>0.025000000000000</double>
-           </property>
-           <property name="value">
-            <double>119.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" alignment="Qt::AlignHCenter">
-          <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2" native="true"/>
-         </item>
-        </layout>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_ComPanelCom1Active">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>COM1:</string>
+        </property>
+        <property name="buddy">
+         <cstring>qw_ComPanelCom1Active</cstring>
+        </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QWidget" name="qw_ComPanelCom1Standby" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelCom1Standby">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_ComPanelCom1Standby">
-           <property name="text">
-            <string>standby:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="3">
-          <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Standby">
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="minimum">
-            <double>118.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>136.974999999999994</double>
-           </property>
-           <property name="singleStep">
-            <double>0.025000000000000</double>
-           </property>
-           <property name="value">
-            <double>119.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QToolButton" name="tb_ComPanelCom1Toggle">
-           <property name="toolTip">
-            <string>Toggle COM 1 standby/active</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
-             <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QToolButton" name="tb_RequestTextMessageCom1">
-           <property name="toolTip">
-            <string>Overlay text message</string>
-           </property>
-           <property name="whatsThis">
-            <string>Overlay text message</string>
-           </property>
-           <property name="text">
-            <string>T</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      <item alignment="Qt::AlignLeft">
+       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QWidget" name="qw_ComPanelCom1Standby" native="true">
+     <layout class="QHBoxLayout" name="hl_ComPanelCom1Standby">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_ComPanelCom1Standby">
+        <property name="text">
+         <string>standby:</string>
+        </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QWidget" name="qw_ComPanelCom1Active" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelCom1Active">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_ComPanelCom1Active">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>COM1:</string>
-           </property>
-           <property name="buddy">
-            <cstring>qw_ComPanelCom1Active</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Active">
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="minimum">
-            <double>118.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>136.974999999999994</double>
-           </property>
-           <property name="singleStep">
-            <double>0.025000000000000</double>
-           </property>
-           <property name="value">
-            <double>119.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" alignment="Qt::AlignHCenter">
-          <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1" native="true"/>
-         </item>
-        </layout>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QToolButton" name="tb_RequestTextMessageCom1">
+        <property name="toolTip">
+         <string>Overlay text message</string>
+        </property>
+        <property name="whatsThis">
+         <string>Overlay text message</string>
+        </property>
+        <property name="text">
+         <string>T</string>
+        </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QWidget" name="qw_ComPanelCom2Standby" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelCom2Standby">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_ComPanelCom2Standby">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>standby:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="3">
-          <widget class="QDoubleSpinBox" name="ds_ComPanelCom2Standby">
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="minimum">
-            <double>118.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>136.974999999999994</double>
-           </property>
-           <property name="singleStep">
-            <double>0.025000000000000</double>
-           </property>
-           <property name="value">
-            <double>119.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QToolButton" name="tb_ComPanelCom2Toggle">
-           <property name="toolTip">
-            <string>Toggle COM 2 standby/active</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
-             <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QToolButton" name="tb_RequestTextMessageCom2">
-           <property name="toolTip">
-            <string>Overlay text message</string>
-           </property>
-           <property name="whatsThis">
-            <string>Overlay text message</string>
-           </property>
-           <property name="text">
-            <string>T</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QToolButton" name="tb_ComPanelCom1Toggle">
+        <property name="toolTip">
+         <string>Toggle COM 1 standby/active</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QFrame" name="fr_Xpdr">
-     <property name="lineWidth">
-      <number>0</number>
-     </property>
-     <layout class="QGridLayout" name="gl_Xpdr">
+   <item row="2" column="2">
+    <widget class="QFrame" name="fr_ComPanelSelcalTop">
+     <layout class="QFormLayout" name="fl_ComPanelSelcalTop">
       <property name="leftMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>2</number>
-      </property>
-      <property name="spacing">
-       <number>4</number>
+       <number>0</number>
       </property>
       <item row="0" column="0">
-       <widget class="QWidget" name="qw_ComPanelTransponder" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelTransponderTop">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_ComPanelTransponder">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="text">
-            <string>XPDR:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="BlackGui::Components::CCockpitTransponderModeLedsComponent" name="comp_TransponderLeds"/>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QFrame" name="fr_ComPanelTransponder">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="hl_ComPanelTransponder">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="BlackGui::Components::CTransponderCodeSpinBox" name="sbp_ComPanelTransponder">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="maximum">
-               <number>7777</number>
-              </property>
-              <property name="value">
-               <number>7000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="BlackGui::Components::CTransponderModeSelector" name="cbp_ComPanelTransponderMode"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
+       <widget class="QLabel" name="lbl_ComSelcalSelcal">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>SELCAL:</string>
+        </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QWidget" name="qw_ComPanelSelcal" native="true">
-        <layout class="QGridLayout" name="gl_ComPanelSelect">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="verticalSpacing">
-          <number>0</number>
-         </property>
-         <item row="1" column="0" colspan="2">
-          <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalSelector"/>
-         </item>
-         <item row="0" column="0" colspan="2" alignment="Qt::AlignLeft">
-          <widget class="QFrame" name="fr_ComPanelSelcalTop">
-           <layout class="QHBoxLayout" name="hl_ComPanelSelcalTop">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="lbl_ComSelcalSelcal">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>SELCAL:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="tb_ComPanelSelcalTest">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="toolTip">
-               <string>test SELCAL</string>
-              </property>
-              <property name="text">
-               <string>test SELCAL</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
-                <normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</iconset>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
+      <item row="0" column="1">
+       <widget class="QToolButton" name="tb_ComPanelSelcalTest">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>test SELCAL</string>
+        </property>
+        <property name="text">
+         <string>test SELCAL</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Standby">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>118.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>136.974999999999994</double>
+     </property>
+     <property name="singleStep">
+      <double>0.025000000000000</double>
+     </property>
+     <property name="value">
+      <double>119.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QDoubleSpinBox" name="ds_ComPanelCom2Standby">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>118.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>136.974999999999994</double>
+     </property>
+     <property name="singleStep">
+      <double>0.025000000000000</double>
+     </property>
+     <property name="value">
+      <double>119.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalSelector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Active">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>118.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>136.974999999999994</double>
+     </property>
+     <property name="singleStep">
+      <double>0.025000000000000</double>
+     </property>
+     <property name="value">
+      <double>119.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QWidget" name="qw_ComPanelCom2Active" native="true">
+     <layout class="QHBoxLayout" name="hl_ComPanelCom2Active">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_ComPanelCom2Active">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>COM2:</string>
+        </property>
+        <property name="buddy">
+         <cstring>qw_ComPanelCom2Active</cstring>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QDoubleSpinBox" name="ds_ComPanelCom2Active">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>118.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>136.974999999999994</double>
+     </property>
+     <property name="singleStep">
+      <double>0.025000000000000</double>
+     </property>
+     <property name="value">
+      <double>119.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QWidget" name="qw_ComPanelTransponder" native="true">
+     <layout class="QHBoxLayout" name="hl_ComPanelTransponderHeader">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_ComPanelTransponder">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>XPDR:</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="BlackGui::Components::CCockpitTransponderModeLedsComponent" name="comp_TransponderLeds"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QWidget" name="qw_ComPanelCom2Standby" native="true">
+     <layout class="QHBoxLayout" name="hl_ComPanelCom2Standby">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_ComPanelCom2Standby">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>standby:</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QToolButton" name="tb_RequestTextMessageCom2">
+        <property name="toolTip">
+         <string>Overlay text message</string>
+        </property>
+        <property name="whatsThis">
+         <string>Overlay text message</string>
+        </property>
+        <property name="text">
+         <string>T</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QToolButton" name="tb_ComPanelCom2Toggle">
+        <property name="toolTip">
+         <string>Toggle COM 2 standby/active</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
+        </property>
        </widget>
       </item>
      </layout>
