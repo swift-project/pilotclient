@@ -14,6 +14,7 @@
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/network/fsdsetup.h"
+#include "blackmisc/cputime.h"
 // #include "blackmisc/math/mathutils.h"
 // #include "blackmisc/stringutils.h"
 #include "test.h"
@@ -244,6 +245,7 @@ namespace BlackMiscTest
         }
 
         QTime time;
+        int cpuTime = getThreadCpuTimeMs();
         time.start();
         for (int i = 0; i < Loops; ++i)
         {
@@ -254,8 +256,9 @@ namespace BlackMiscTest
                 QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
             }
         }
-        const int noHint = time.elapsed();
+        const auto noHint = std::make_pair(time.elapsed(), getThreadCpuTimeMs() - cpuTime);
 
+        cpuTime = getThreadCpuTimeMs();
         time.start();
         for (int i = 0; i < Loops; ++i)
         {
@@ -266,12 +269,12 @@ namespace BlackMiscTest
                 QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
             }
         }
-        const int hint = time.elapsed();
-        const double ratio = static_cast<double>(hint) / static_cast<double>(noHint); // expected <1.0
+        const auto hint = std::make_pair(time.elapsed(), getThreadCpuTimeMs() - cpuTime);
+        const double ratio = static_cast<double>(hint.second) / static_cast<double>(noHint.second); // expected <1.0
 
         //qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
-        qDebug() << "Access without hint" << noHint << "ms";
-        qDebug() << "Access with hint" << hint << "ms";
+        qDebug() << "Access without hint" << noHint.first << "ms (CPU time" << noHint.second << "ms)";
+        qDebug() << "Access with hint" << hint.first << "ms (CPU time" << hint.second << "ms)";
         qDebug() << "Access ratio" << ratio;
 
 #if 0
