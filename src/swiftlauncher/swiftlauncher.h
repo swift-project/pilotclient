@@ -73,11 +73,11 @@ public:
     bool startDetached();
 
 protected:
-    //! \copydoc QDialog::mousePressEvent
+    //! Mouse events for frameless window @{
     virtual void mousePressEvent(QMouseEvent *event) override;
-
-    //! \copydoc QDialog::mouseMoveEvent
-    void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    //! @}
 
 private slots:
     //! Show the log page

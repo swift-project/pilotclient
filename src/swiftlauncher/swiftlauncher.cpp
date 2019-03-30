@@ -124,9 +124,20 @@ CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
     return CoreModes::CoreInGuiProcess;
 }
 
+void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
+{
+    if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
+}
+
 void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
 {
     if (!handleMouseMoveEvent(event)) { QDialog::mouseMoveEvent(event); }
+}
+
+void CSwiftLauncher::mouseReleaseEvent(QMouseEvent *event)
+{
+    m_framelessDragPosition = QPoint();
+    QDialog::mouseReleaseEvent(event);
 }
 
 void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
@@ -155,11 +166,6 @@ void CSwiftLauncher::updateInfoAvailable()
 {
     this->setHeaderInfo(ui->comp_UpdateInfo->getLatestAvailablePilotClientArtifactForSelection());
     this->loadLatestNews();
-}
-
-void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
-{
-    if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
 }
 
 void CSwiftLauncher::init()

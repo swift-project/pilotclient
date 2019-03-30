@@ -94,6 +94,12 @@ void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
     if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); }
 }
 
+void SwiftGuiStd::mouseReleaseEvent(QMouseEvent *event)
+{
+    m_framelessDragPosition = QPoint();
+    QMainWindow::mouseReleaseEvent(event);
+}
+
 void SwiftGuiStd::performGracefulShutdown()
 {
     if (!m_init) { return; }

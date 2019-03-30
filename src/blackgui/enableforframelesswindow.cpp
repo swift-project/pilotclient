@@ -29,6 +29,8 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QtGlobal>
+#include <QPointer>
+#include <QTimer>
 
 using namespace BlackMisc;
 
@@ -127,6 +129,8 @@ namespace BlackGui
         if (m_isMainApplicationWindow && CGuiUtility::isTopLevelWindow(m_widget))
         {
             m_widget->setAttribute(Qt::WA_NativeWindow);
+
+            // causeing a BLACK background
             m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
             m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless); // causing QTBUG-52206
         }
@@ -181,7 +185,7 @@ namespace BlackGui
     bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
     {
         Q_ASSERT(m_widget);
-        if (m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton)
+        if (m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton && !m_framelessDragPosition.isNull())
         {
             m_widget->move(event->globalPos() - m_framelessDragPosition);
             event->accept();
@@ -194,16 +198,21 @@ namespace BlackGui
     {
         if (event->type() != QEvent::WindowStateChange) { return false; }
         if (m_windowMode != WindowTool) { return false; }
+        if (!m_widget) { return false; }
 
         // make sure a tool window is changed to Normal window so it is show in taskbar
         // here we are already in transition state, so isMinimized means will be minimize right now
         // this check here is needed if minimized is called from somewhere else than ps_showMinimized
+
+        QPointer<QWidget> widgetSelf(m_widget); // almost as good as myself
         if (m_widget->isMinimized())
         {
             // still tool, force normal window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
-            BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+
+            QTimer::singleShot(0, m_widget, [ = ]
             {
+                if (!widgetSelf) { return; }
                 this->showMinimizedModeChecked();
             });
         }
@@ -211,8 +220,9 @@ namespace BlackGui
         {
             // not tool, force tool window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
-            BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+            QTimer::singleShot(0, m_widget, [ = ]
             {
+                if (!widgetSelf) { return; }
                 this->showNormalModeChecked();
             });
         }

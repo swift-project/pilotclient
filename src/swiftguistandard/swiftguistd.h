@@ -85,6 +85,7 @@ protected:
     //! @{
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
     virtual void closeEvent(QCloseEvent *event) override;
     virtual void changeEvent(QEvent *event) override;
     //! @}

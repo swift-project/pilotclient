@@ -87,7 +87,7 @@ namespace BlackGui
         static const QString &windowModeToString(WindowMode m);
 
     protected:
-        QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window */
+        QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window
         QPushButton *m_framelessCloseButton = nullptr;    //!< close button
         WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
         WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
