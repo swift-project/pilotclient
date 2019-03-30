@@ -31,6 +31,7 @@ namespace BlackGui
             ui(new Ui::CCockpitComForm)
         {
             ui->setupUi(this);
+            this->alignUiElementsHeight();
 
             // SELCAL pairs in cockpit
             ui->frp_ComPanelSelcalSelector->clear();
@@ -249,6 +250,7 @@ namespace BlackGui
                 ui->ds_ComPanelCom2Standby->setValue(f);
             }
 
+            this->alignUiElementsHeight();
             const CSimulatedAircraft aircraft = this->cockpitValuesToAircraftObject();
             emit this->changedCockpitValues(aircraft);
         }
@@ -257,6 +259,24 @@ namespace BlackGui
         {
             const CSelcal selcal = ui->frp_ComPanelSelcalSelector->getSelcal();
             emit this->changedSelcal(selcal);
+        }
+
+        void CCockpitComForm::alignUiElementsHeight()
+        {
+            const int selcalH = ui->frp_ComPanelSelcalSelector->getComboBoxHeight();
+            if (selcalH > ui->ds_ComPanelCom1Standby->height())
+            {
+                ui->ds_ComPanelCom1Standby->setMinimumHeight(selcalH);
+                ui->ds_ComPanelCom2Standby->setMinimumHeight(selcalH);
+            }
+
+            const int xpdrH = ui->cbp_ComPanelTransponderMode->height();
+            if (xpdrH > ui->ds_ComPanelCom1Active->height())
+            {
+                ui->ds_ComPanelCom1Active->setMinimumHeight(xpdrH);
+                ui->ds_ComPanelCom2Active->setMinimumHeight(xpdrH);
+                ui->sbp_ComPanelTransponder->setMinimumHeight(xpdrH);
+            }
         }
 
         bool CCockpitComForm::isFrequenceEqual(double f1, double f2)

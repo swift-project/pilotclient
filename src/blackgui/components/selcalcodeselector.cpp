@@ -100,6 +100,11 @@ namespace BlackGui
             ui->cb_SelcalPairs2->setCurrentIndex(0);
         }
 
+        int CSelcalCodeSelector::getComboBoxHeight() const
+        {
+            return ui->cb_SelcalPairs1->height();
+        }
+
         void CSelcalCodeSelector::selcalIndexChanged(int index)
         {
             Q_UNUSED(index);
