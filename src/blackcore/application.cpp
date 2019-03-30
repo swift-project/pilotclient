@@ -1846,6 +1846,7 @@ namespace BlackCore
     {
         if (this->isShuttingDown()) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
+
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(CThreadUtils::isApplicationThreadObjectThread(m_accessManager), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (!CThreadUtils::isCurrentThreadObjectThread(m_accessManager))
@@ -1858,12 +1859,13 @@ namespace BlackCore
         QNetworkRequest copiedRequest = CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
 
         // If URL is one of the shared URLs, add swift client SSL certificate to request
-        CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, this->getGlobalSetup().getSwiftSharedUrls());
+        // CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, this->getGlobalSetup().getSwiftSharedUrls());
 
         QNetworkReply *reply = requestOrPostMethod(*m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         reply->setProperty(CUrlLog::propertyNameId(), QVariant(logId));
         const QUrl url(reply->url());
+        QString urlStr = url.toString();
 
         if (progress)
         {
@@ -1889,6 +1891,7 @@ namespace BlackCore
                     {
                         QNetworkRequest redirectRequest(redirectUrl);
                         const int redirectsLeft = maxRedirects - 1;
+                        CLogMessage(sApp).info(u"Redirecting '%1' to '%2'") << urlStr << redirectUrl.toString();
                         this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, requestOrPostMethod);
                         return;
                     }

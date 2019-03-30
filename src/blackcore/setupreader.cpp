@@ -484,7 +484,7 @@ namespace BlackCore
                     const CUpdateInfo updateInfo = CUpdateInfo::fromDatabaseJson(updateInfoJsonString);
                     if (updateInfo.isEmpty())
                     {
-                        CLogMessage(this).error(u"Loading of update info yielded no data");
+                        CLogMessage(this).error(u"Loading of update info yielded no data, '%1'") << urlString;
                         this->manageUpdateInfoAvailability(false);
                     }
                     else
