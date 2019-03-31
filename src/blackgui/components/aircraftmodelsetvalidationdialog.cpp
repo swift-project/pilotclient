@@ -7,6 +7,7 @@
  */
 
 #include "aircraftmodelsetvalidationdialog.h"
+#include "guiapplication.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "ui_aircraftmodelsetvalidationdialog.h"
 
@@ -22,7 +23,7 @@ namespace BlackGui
             ui(new Ui::CAircraftModelSetValidationDialog)
         {
             ui->setupUi(this);
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+            this->setWindowFlags(this->windowFlags() | Qt::WindowContextHelpButtonHint);
         }
 
         CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog()
@@ -32,6 +33,12 @@ namespace BlackGui
         {
             ui->comp_AircraftModelValidation->validatedModelSet(simulator, valid, invalid, stopped, msgs);
             this->setWindowTitle(QStringLiteral("Model validation for '%1'").arg(simulator.toQString(true)));
+        }
+
+        bool CAircraftModelSetValidationDialog::event(QEvent *event)
+        {
+            if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
+            return QDialog::event(event);
         }
     } // ns
 } // ns

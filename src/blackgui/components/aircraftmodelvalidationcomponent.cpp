@@ -37,6 +37,7 @@ namespace BlackGui
             connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation);
+            connect(ui->pb_help,                &QPushButton::released, this, &CAircraftModelValidationComponent::showHelp);
 
             // 1st init when running in distributed environment
             QPointer<CAircraftModelValidationComponent> myself(this);
@@ -146,6 +147,12 @@ namespace BlackGui
             {
                 this->showOverlayHTMLMessage(QStringLiteral("%1 models disabled").arg(disabledModels.size()));
             }
+        }
+
+        void CAircraftModelValidationComponent::showHelp()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            sGui->showHelp(this);
         }
 
         void CAircraftModelValidationComponent::saveInvalidModels(const CAircraftModelList &models) const
