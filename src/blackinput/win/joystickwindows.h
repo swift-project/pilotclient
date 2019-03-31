@@ -79,9 +79,13 @@ namespace BlackInput
         //! Poll the device buttons
         HRESULT pollDeviceState();
 
+        //! Code as tring
+        static QString hrString(HRESULT hr);
+
         //! Joystick button enumeration callback
         static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
 
+        HRESULT m_lastHRError = S_OK;
         GUID m_guidDevice;     //!< Device GUID
         GUID m_guidProduct;    //!< Product GUID
         QString m_deviceName;  //!< Device name

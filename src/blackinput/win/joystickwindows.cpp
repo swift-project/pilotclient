@@ -8,6 +8,7 @@
 
 #include "joystickwindows.h"
 #include "blackmisc/logmessage.h"
+#include "comdef.h"
 
 // Qt5 defines UNICODE, hence we can expect an wchar_t strings.
 // If it fails to compile, because of char/wchar_t errors, you are most likely
@@ -108,7 +109,9 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->Poll()))
                 {
-                    CLogMessage(this).warning(u"DirectInput error code: ") << hr;
+                    if (m_lastHRError == hr) { return hr; } // avoid flooding with messages
+                    m_lastHRError = hr;
+                    CLogMessage(this).warning(u"DirectInput error code (POLL input lost/notacquired): %1 %2") << hr << hrString(hr);
                     return hr;
                 }
             }
@@ -121,11 +124,15 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
                 {
-                    CLogMessage(this).warning(u"DirectInput error code: ") << hr;
+                    if (m_lastHRError == hr) { return hr; } // avoid flooding with messages
+                    m_lastHRError = hr;
+                    CLogMessage(this).warning(u"DirectInput error code (state input lost/notacquired): %1 %2") << hr << hrString(hr);
                     return hr;
                 }
             }
         }
+
+        m_lastHRError = hr;
 
         for (const CJoystickDeviceInput &input : as_const(m_joystickDeviceInputs))
         {
@@ -137,6 +144,14 @@ namespace BlackInput
 
         }
         return hr;
+    }
+
+    QString CJoystickDevice::hrString(HRESULT hr)
+    {
+        // https://stackoverflow.com/questions/7008047/is-there-a-way-to-get-the-string-representation-of-hresult-value-using-win-api
+        _com_error err(hr);
+        LPCTSTR errMsg = err.ErrorMessage();
+        return QString::fromWCharArray(errMsg);
     }
 
     BOOL CALLBACK CJoystickDevice::enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef)
