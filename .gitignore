@@ -10,6 +10,7 @@ pch.h.cpp
 
 # Visual Studio stuff
 /.vs/
+/.vscode/
 
 # Qt Creator
 *.autosave
