@@ -53,7 +53,7 @@ namespace BlackCore
             {
                 "https://datastore.swift-project.net/shared/",
                 "http://www.siliconmind.de/datastore/shared/",
-                "http://swift-project.org/datastore/shared/"
+                "http://download.swift-project.org/shared/"
             });
 
             m_newsUrls = CUrlList({ "http://swift-project.org/" });
