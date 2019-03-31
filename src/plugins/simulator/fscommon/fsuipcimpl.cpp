@@ -153,20 +153,18 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Open not threadsafe");
             if (!this->isOpened()) { return false; }
 
-            quint16 com1ActiveRaw = aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100;
-            quint16 com2ActiveRaw = aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100;
-            quint16 com1StandbyRaw = aircraft.getCom1System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100;
-            quint16 com2StandbyRaw = aircraft.getCom2System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100;
-            com1ActiveRaw = CBcdConversions::dec2Bcd(com1ActiveRaw - 10000);
-            com2ActiveRaw = CBcdConversions::dec2Bcd(com2ActiveRaw - 10000);
-            com1StandbyRaw = CBcdConversions::dec2Bcd(com1StandbyRaw - 10000);
-            com2StandbyRaw = CBcdConversions::dec2Bcd(com2StandbyRaw - 10000);
+            quint16 com1ActiveRaw  = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz())  * 100);
+            quint16 com2ActiveRaw  = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz())  * 100);
+            quint16 com1StandbyRaw = static_cast<quint16>(aircraft.getCom1System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
+            quint16 com2StandbyRaw = static_cast<quint16>(aircraft.getCom2System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
+            com1ActiveRaw  = static_cast<quint16>(CBcdConversions::dec2Bcd(com1ActiveRaw - 10000));
+            com2ActiveRaw  = static_cast<quint16>(CBcdConversions::dec2Bcd(com2ActiveRaw - 10000));
+            com1StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com1StandbyRaw - 10000));
+            com2StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com2StandbyRaw - 10000));
             quint16 transponderCodeRaw = static_cast<quint16>(aircraft.getTransponderCode());
-
-            transponderCodeRaw = CBcdConversions::dec2Bcd(transponderCodeRaw);
+            transponderCodeRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(transponderCodeRaw));
 
             DWORD dwResult = 0;
-
             bool ok =
                 FSUIPC_Write(0x034e, 2, &com1ActiveRaw,  &dwResult) &&
                 FSUIPC_Write(0x3118, 2, &com2ActiveRaw, &dwResult) &&
@@ -337,8 +335,8 @@ namespace BlackSimPlugin
 
             // should be the same as writing via SimConnect data area
             DWORD dwResult;
-            quint8 hourRaw = hour;
-            quint8 minuteRaw = minute;
+            quint8 hourRaw   = static_cast<quint8>(hour);
+            quint8 minuteRaw = static_cast<quint8>(minute);
 
             const bool ok =
                 FSUIPC_Write(0x023b, 1, &hourRaw,  &dwResult) &&
@@ -384,6 +382,7 @@ namespace BlackSimPlugin
             bool situationN = !situation;
             bool aircraftPartsN = !aircraftParts;
 
+            /**  KB 2019-03 disabled as this should be fixed the whole block can be removed as soon this has been tested
             //! \todo KB 2018-11 BUG fix for broken connection, needs to go as soon as issue is fixed
             //! Seems to be fixed with
             //! a) https://dev.swift-project.org/T471
@@ -400,6 +399,7 @@ namespace BlackSimPlugin
                     CLogMessage(this).warning(u"Used FSUIPC open/close workaround");
                 }
             }
+            **/
 
             if (
                 FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
