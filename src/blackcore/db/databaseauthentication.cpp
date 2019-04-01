@@ -11,7 +11,6 @@
 #include "blackcore/db/databaseauthentication.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logcategory.h"
-#include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/networkutils.h"
@@ -36,6 +35,12 @@ namespace BlackCore
 {
     namespace Db
     {
+        const CLogCategoryList &CDatabaseAuthenticationService::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::swiftDbWebservice() };
+            return cats;
+        }
+
         CDatabaseAuthenticationService::CDatabaseAuthenticationService(QObject *parent) :
             QObject(parent)
         {
@@ -63,9 +68,9 @@ namespace BlackCore
         CStatusMessageList CDatabaseAuthenticationService::login(const QString &username, const QString &password)
         {
             CStatusMessageList msgs;
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            static const CLogCategoryList cats(getLogCategories().join({ CLogCategory::validation() }));
 
-            if (m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress")); return msgs; }
+            if (!sApp || m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress")); return msgs; }
 
             const QString un(username.trimmed());
             const QString pw(password.trimmed());
@@ -96,6 +101,7 @@ namespace BlackCore
 
         void CDatabaseAuthenticationService::logoff()
         {
+            if (!sApp) { return; }
             CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
             url.setQuery("logoff=true");
             QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url));
@@ -133,12 +139,22 @@ namespace BlackCore
 
                 static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
                 const QJsonObject jsonObj(Json::jsonObjectFromString(json));
-                const CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
+                CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
                 CStatusMessageList msgs;
                 if (jsonObj.contains("messages"))
                 {
                     msgs = CStatusMessageList::fromDatabaseJson(jsonObj["messages"].toArray());
                     msgs.setCategories(cats);
+                }
+
+                // allow auto enabled for SSO users
+                if (user.isValid() && !user.isEnabled())
+                {
+                    if (user.getRoles().hasRole("VATSIMUSER"))
+                    {
+                        user.setEnabled(true);
+                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, u"Auto enabled SSO user"));
+                    }
                 }
 
                 if (!user.isAuthenticated() || !user.isValid())

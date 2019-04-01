@@ -31,13 +31,13 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CRole :
             public CValueObject<CRole>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
+            public Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = BlackMisc::CPropertyIndex::GlobalIndexCRole,
+                IndexName = CPropertyIndex::GlobalIndexCRole,
                 IndexDescription
             };
 

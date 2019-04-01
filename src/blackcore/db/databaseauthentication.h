@@ -11,9 +11,10 @@
 #ifndef BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 #define BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/data/authenticateduser.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QObject>
@@ -32,6 +33,9 @@ namespace BlackCore
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             CDatabaseAuthenticationService(QObject *parent = nullptr);
 
@@ -64,7 +68,7 @@ namespace BlackCore
             //! User object changed
             void userChanged();
 
-            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDatabaseAuthenticationService::userChanged};
+            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDatabaseAuthenticationService::userChanged };
             bool m_shutdown = false;
         };
     } // ns

@@ -7,17 +7,18 @@
  */
 
 #include "ui_dblogincomponent.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackgui/components/dblogincomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/htmlutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -31,6 +32,7 @@
 using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackGui;
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -64,10 +66,16 @@ namespace BlackGui
             ui->lbl_DatabaseName->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_DatabaseName->setOpenExternalLinks(true);
 
-            connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
+            connect(ui->pb_Login,  &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::onLogoffClicked);
-            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::onAuthenticationFinished);
             connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::onLoginClicked);
+            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::onAuthenticationFinished, Qt::QueuedConnection);
+
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                const QString url = sApp->getGlobalSetup().getDbLoginServiceUrl().toQString();
+                ui->pb_Login->setToolTip(url);
+            }
 
             // init GUI
             this->setUserInfo(this->getDbUser());

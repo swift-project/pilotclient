@@ -29,6 +29,7 @@ namespace BlackGui
     {
         /**
          * Login to DB
+         * \sa BlackCore::Db::CDatabaseAuthenticationService
          */
         class BLACKGUI_EXPORT CDbLoginComponent :
             public QFrame,
@@ -41,7 +42,7 @@ namespace BlackGui
             explicit CDbLoginComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbLoginComponent();
+            virtual ~CDbLoginComponent() override;
 
             //! DB user
             BlackMisc::Network::CAuthenticatedUser getDbUser() const;
