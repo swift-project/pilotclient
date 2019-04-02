@@ -799,7 +799,7 @@ namespace BlackSimPlugin
             for (const CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
-                Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+                BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
                 planesTransponders.callsigns.push_back(callsign.asString());
                 planesTransponders.codes.push_back(xplaneAircraft.getAircraft().getTransponderCode());
