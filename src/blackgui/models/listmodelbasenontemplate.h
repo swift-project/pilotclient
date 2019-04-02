@@ -165,7 +165,7 @@ namespace BlackGui
 
             CColumns        m_columns;                         //!< columns metadata
             int             m_sortColumn;                      //!< currently sorted column
-            bool            m_modelDestroyed = false;          //!< model is about to be destroyed
+            bool            m_modelDestroyed = false;          //!< \todo rudimentary workaround for T579, can be removed
             Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
             Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
             BlackMisc::CPropertyIndexList m_sortTieBreakers;   //!< how column values are sorted if equal, if no value is given this is random

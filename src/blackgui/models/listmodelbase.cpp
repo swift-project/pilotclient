@@ -545,10 +545,11 @@ namespace BlackGui
             }
 
             // sort the values
+            const auto tieBreakersCopy = m_sortTieBreakers; //! \todo workaround T579 still not thread-safe, but less likely to crash
             const std::integral_constant<bool, UseCompare> marker {};
             const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
             {
-                return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, m_sortTieBreakers, marker);
+                return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, tieBreakersCopy, marker);
             };
 
             return container.sorted(p);
