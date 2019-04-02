@@ -315,6 +315,12 @@ namespace BlackSimPlugin
                 {
                     updateOwnAircraftFromSimulator(fsuipcAircraft);
                 }
+                else
+                {
+                    // FSUIPC read error means almost always that FS9 closed. Shutdown the driver.
+                    CLogMessage(this).debug() << "Lost connection to FSUIPC. Shutting down.";
+                    disconnectFrom();
+                }
                 synchronizeTime();
             }
         }
