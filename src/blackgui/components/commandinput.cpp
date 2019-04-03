@@ -42,14 +42,20 @@ namespace BlackGui
             {
                 if (sGui->getIContextSimulator())
                 {
-                    connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged);
+                    connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged, Qt::QueuedConnection);
                 }
                 if (sGui->getIContextNetwork())
                 {
-                    connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged);
+                    connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
                 }
             }
             connect(this, &CCommandInput::returnPressed, this, &CCommandInput::validateCommand);
+        }
+
+        void CCommandInput::showToolTip(bool show)
+        {
+            m_showToolTip = show;
+            this->setCommandToolTip();
         }
 
         void CCommandInput::validateCommand()
@@ -58,11 +64,8 @@ namespace BlackGui
             if (c.isEmpty()) { return; }
             if (c.startsWith('.'))
             {
-                if (c.contains("help", Qt::CaseInsensitive))
-                {
-                    this->setCommandTooltip();
-                    return;
-                }
+                if (c.contains("help", Qt::CaseInsensitive))    { this->setCommandToolTip(); return; }
+                if (c.contains("tooltip", Qt::CaseInsensitive)) { this->showToolTip(!m_showToolTip); return; }
                 emit this->commandEntered(c, this->identifier());
             }
             else
@@ -71,12 +74,19 @@ namespace BlackGui
             }
         }
 
-        void CCommandInput::setCommandTooltip()
+        void CCommandInput::setCommandToolTip()
         {
             const bool context = (sGui && sGui->getIContextApplication());
-            this->setToolTip(context ?
-                             sGui->getIContextApplication()->dotCommandsHtmlHelp() :
-                             CSimpleCommandParser::commandsHtmlHelp());
+            if (m_showToolTip)
+            {
+                this->setToolTip(context ?
+                                 sGui->getIContextApplication()->dotCommandsHtmlHelp() :
+                                 CSimpleCommandParser::commandsHtmlHelp());
+            }
+            else
+            {
+                this->setToolTip("");
+            }
         }
 
         void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)

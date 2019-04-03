@@ -14,7 +14,7 @@
 #include <QSet>
 #include <Qt>
 #include <QtGlobal>
-
+#include <QStringBuilder>
 #include <algorithm>
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -168,14 +168,13 @@ namespace BlackMisc
 
         static const QString cmdCol(QString().fill('-', 20));
         static const QString textCol(QString().fill('-', 40));
-        rows += "<tr>" + rowHeader.arg("command", "synopsis", "command", "synopsis") + "</tr>\n";
-        rows += "<tr>" + rowHeader.arg(cmdCol, textCol, cmdCol, textCol) + "</tr>\n";
+        rows += u"<tr>" % rowHeader.arg("command", "synopsis", "command", "synopsis") % u"</tr>\n" %
+                u"<tr>" % rowHeader.arg(cmdCol, textCol, cmdCol, textCol) % u"</tr>\n";
 
         for (int i = 0; i < cmds.size(); i++)
         {
             CommandHtmlHelp help = cmds[i];
-            rows += "<tr>";
-            rows += row.arg(help.command, help.help);
+            rows += u"<tr>" % row.arg(help.command, help.help);
             i++;
             if (i < cmds.size())
             {

@@ -21,7 +21,6 @@
 #include <QObject>
 #include <QString>
 
-class QWidget;
 namespace BlackMisc
 {
     namespace Network { class CServer; }
@@ -33,7 +32,7 @@ namespace BlackGui
     {
         //! Specialized line edit for command inputs
         class BLACKGUI_EXPORT CCommandInput :
-            public BlackGui::CLineEditHistory,
+            public CLineEditHistory,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -42,8 +41,8 @@ namespace BlackGui
             //! Constructor
             CCommandInput(QWidget *parent = nullptr);
 
-            //! Destructor
-            virtual ~CCommandInput() {}
+            //! Show tooltip
+            void showToolTip(bool show);
 
         signals:
             //! Command was entered
@@ -57,7 +56,7 @@ namespace BlackGui
             void validateCommand();
 
             //! Command tooltip
-            void setCommandTooltip();
+            void setCommandToolTip();
 
             //! Simulator plugin loaded / unloaded (default info)
             void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
@@ -65,7 +64,8 @@ namespace BlackGui
             //! Connected network server has been changed
             void onConnectedServerChanged(const BlackMisc::Network::CServer &server);
 
-            BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandTooltip, 5000, 2 };
+            bool m_showToolTip = true;
+            BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
         };
     } // ns
 } // ns
