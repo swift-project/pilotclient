@@ -48,7 +48,7 @@
        <item>
         <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput">
          <property name="placeholderText">
-          <string>dot commands</string>
+          <string>.dot commands</string>
          </property>
         </widget>
        </item>
@@ -161,7 +161,7 @@ QTextEdit {
     <item row="1" column="2">
      <widget class="QGroupBox" name="gb_Audio">
       <property name="title">
-       <string>Audio</string>
+       <string>Audio (requires restart)</string>
       </property>
       <layout class="QVBoxLayout" name="vl_Audio">
        <property name="leftMargin">
@@ -209,7 +209,7 @@ QTextEdit {
     <item row="1" column="0" rowspan="2" colspan="2">
      <widget class="QGroupBox" name="gb_DBus">
       <property name="title">
-       <string>DBus Mode</string>
+       <string>DBus Mode (changing requires restart)</string>
       </property>
       <layout class="QVBoxLayout" name="vl_DBus">
        <property name="leftMargin">
@@ -332,6 +332,13 @@ QTextEdit {
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lep_CommandLineInput</tabstop>
+  <tabstop>pb_DisconnectNetwork</tabstop>
+  <tabstop>rb_AudioOnCore</tabstop>
+  <tabstop>rb_AudioOnGui</tabstop>
+  <tabstop>pb_Restart</tabstop>
+ </tabstops>
  <resources>
   <include location="../blackmisc/blackmisc.qrc"/>
  </resources>
