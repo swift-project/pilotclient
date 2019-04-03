@@ -103,7 +103,11 @@ namespace XSwiftBus
 
             // FIXME: make listen address configurable
             std::string listenAddress = "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
-            m_dbusP2PServer->listen(listenAddress);
+            if (! m_dbusP2PServer->listen(listenAddress))
+            {
+                m_service->addTextMessage("XSwiftBus startup failed!", 255, 0, 0);
+                return;
+            }
             m_dbusP2PServer->setDispatcher(&m_dbusDispatcher);
 
             m_dbusP2PServer->setNewConnectionFunc([this](const std::shared_ptr<CDBusConnection> &conn)
@@ -140,7 +144,9 @@ namespace XSwiftBus
             m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
         }
 
+        //! todo RR: Send all logs to the the message window.
         INFO_LOG("XSwiftBus started.");
+        m_service->addTextMessage("XSwiftBus started.", 0, 255, 255);
     }
 
     void CPlugin::onAircraftModelChanged()

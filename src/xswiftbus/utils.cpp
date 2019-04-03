@@ -67,8 +67,8 @@ namespace XSwiftBus
         case WarningMsg:
             ss << "Warning";
             break;
-        case FatalMsg:
-            ss << "Fatal";
+        case ErrorMsg:
+            ss << "Error";
             break;
         }
         ss << ' ';

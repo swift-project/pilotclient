@@ -22,7 +22,6 @@ namespace XSwiftBus
 
     CService::CService() : CDBusObject()
     {
-        addTextMessage("xswiftbus started.", 0, 255, 255);
         updateAirportsInRange();
     }
 

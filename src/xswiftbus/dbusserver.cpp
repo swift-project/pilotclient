@@ -34,23 +34,30 @@ namespace XSwiftBus
         DBusError error;
         dbus_error_init(&error);
         m_server.reset(dbus_server_listen(address.c_str(), &error));
+
+        if (! m_server)
+        {
+            ERROR_LOG("DBus failed to listen for new connections on given address: " + std::string(error.message));
+            return false;
+        }
         dbus_server_set_new_connection_function(m_server.get(), onNewConnection, this, nullptr);
         return true;
     }
 
     bool CDBusServer::isConnected() const
     {
-        return dbus_server_get_is_connected(m_server.get());
+        return m_server ? dbus_server_get_is_connected(m_server.get()) : false;
     }
 
     void CDBusServer::close()
     {
-        dbus_server_disconnect(m_server.get());
+        if (m_server) { dbus_server_disconnect(m_server.get()); }
     }
 
     void CDBusServer::setDispatcher(CDBusDispatcher *dispatcher)
     {
         assert(dispatcher);
+        assert(m_server);
 
         m_dispatcher = dispatcher;
 
