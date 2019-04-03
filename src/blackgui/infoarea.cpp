@@ -99,7 +99,7 @@ namespace BlackGui
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
-            QMenu *subMenuRestore = new QMenu("Restore", menu);
+            QMenu *subMenuRestore = new QMenu("Restore from settings", menu);
             QMenu *subMenuResetPositions = new QMenu("Reset position", menu);
             subMenuRestore->setIcon(CIcons::load16());
             subMenuResetPositions->setIcon(CIcons::refresh16());
@@ -404,8 +404,9 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        Q_ASSERT(action);
-        int index = action->data().toInt();
+        BLACK_VERIFY(action);
+        if (!action) { return; }
+        const int index = action->data().toInt();
         this->selectArea(index);
     }
 
@@ -413,8 +414,9 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        Q_ASSERT(action);
-        int index = action->data().toInt();
+        BLACK_VERIFY(action);
+        if (!action) { return; }
+        const int index = action->data().toInt();
         this->resetPosition(index);
     }
 
@@ -422,18 +424,19 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        Q_ASSERT(action);
-        int index = action->data().toInt();
+        BLACK_VERIFY(action);
+        if (!action) { return; }
+        const int index = action->data().toInt();
         this->toggleFloatingByIndex(index);
     }
 
     void CInfoArea::restoreDockWidgetInfoArea()
     {
         const QObject *sender = QObject::sender();
-        Q_ASSERT(sender);
         const QAction *action = qobject_cast<const QAction *>(sender);
-        Q_ASSERT(action);
-        int index = action->data().toInt();
+        BLACK_VERIFY(action);
+        if (!action) { return; }
+        const int index = action->data().toInt();
         this->restoreDockWidgetInfoAreaByIndex(index);
     }
 
@@ -442,7 +445,7 @@ namespace BlackGui
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(areaIndex);
         Q_ASSERT(dw);
-        if (!dw) return;
+        if (!dw) { return; }
         dw->restoreFromSettings();
     }
 

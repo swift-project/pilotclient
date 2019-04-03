@@ -382,7 +382,7 @@ namespace BlackGui
         }
 
         // State actions (windows state)
-        contextMenu->addAction(CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
+        contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CDockWidget::restoreFromSettings);
         contextMenu->addAction(CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
         contextMenu->addAction(CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
         contextMenu->addAction(CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);

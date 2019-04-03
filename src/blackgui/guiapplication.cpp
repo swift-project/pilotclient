@@ -401,7 +401,6 @@ namespace BlackGui
         }
         if (m_saveMainWidgetState && !this->isSet(m_cmdWindowSizeReset))
         {
-
             const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
             const bool shiftAlt = km.testFlag(Qt::ShiftModifier) && km.testFlag(Qt::AltModifier);
             if (!shiftAlt) { this->restoreWindowGeometryAndState(); }
