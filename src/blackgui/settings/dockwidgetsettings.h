@@ -43,9 +43,6 @@ namespace BlackGui
             //! Default constructor
             CDockWidgetSettings();
 
-            //! Destructor.
-            ~CDockWidgetSettings() {}
-
             //! Reset margins to default
             void resetMarginsToDefault();
 

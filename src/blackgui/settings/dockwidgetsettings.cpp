@@ -32,47 +32,47 @@ namespace BlackGui
         void CDockWidgetSettings::reset()
         {
             this->resetMarginsToDefault();
-            this->m_geometry = "";
+            m_geometry = "";
         }
 
         void CDockWidgetSettings::setMarginsWhenFramelessFloating(const QMargins &margins)
         {
-            this->m_floatingFramelessMargins = CGuiUtility::marginsToString(margins);
+            m_floatingFramelessMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CDockWidgetSettings::getMarginsWhenFramelessFloating() const
         {
-            return CGuiUtility::stringToMargins(this->m_floatingFramelessMargins);
+            return CGuiUtility::stringToMargins(m_floatingFramelessMargins);
         }
 
         void CDockWidgetSettings::setMarginsWhenFloating(const QMargins &margins)
         {
-            this->m_floatingMargins = CGuiUtility::marginsToString(margins);
+            m_floatingMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CDockWidgetSettings::getMarginsWhenFloating() const
         {
-            return CGuiUtility::stringToMargins(this->m_floatingMargins);
+            return CGuiUtility::stringToMargins(m_floatingMargins);
         }
 
         void CDockWidgetSettings::setMarginsWhenDocked(const QMargins &margins)
         {
-            this->m_dockedMargins = CGuiUtility::marginsToString(margins);
+            m_dockedMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CDockWidgetSettings::getMarginsWhenDocked() const
         {
-            return CGuiUtility::stringToMargins(this->m_dockedMargins);
+            return CGuiUtility::stringToMargins(m_dockedMargins);
         }
 
         QByteArray CDockWidgetSettings::getGeometry() const
         {
-            return byteArrayFromHexString(this->m_geometry);
+            return byteArrayFromHexString(m_geometry);
         }
 
         void CDockWidgetSettings::setGeometry(const QByteArray &ba)
         {
-            this->m_geometry = bytesToHexString(ba);
+            m_geometry = bytesToHexString(ba);
         }
 
         QString CDockWidgetSettings::convertToQString(bool i18n) const
@@ -84,19 +84,19 @@ namespace BlackGui
         {
             Q_UNUSED(i18n);
             QString s("floating: ");
-            s.append(this->m_floatingMargins);
+            s.append(m_floatingMargins);
             s.append(separator);
             s.append("floating, frameless: ");
-            s.append(this->m_floatingFramelessMargins);
+            s.append(m_floatingFramelessMargins);
             s.append(separator);
             s.append("docked: ");
-            s.append(this->m_dockedMargins);
+            s.append(m_dockedMargins);
             s.append(separator);
             s.append("frameless: ");
-            s.append(boolToTrueFalse(this->m_frameless));
+            s.append(boolToTrueFalse(m_frameless));
             s.append(separator);
             s.append("floating: ");
-            s.append(boolToTrueFalse(this->m_floating));
+            s.append(boolToTrueFalse(m_floating));
             return s;
         }
 
@@ -107,15 +107,15 @@ namespace BlackGui
             switch (i)
             {
             case IndexFloatingMargins:
-                return CVariant::fromValue(this->m_floatingMargins);
+                return CVariant::fromValue(m_floatingMargins);
             case IndexFloatingFramelessMargins:
-                return CVariant::fromValue(this->m_floatingFramelessMargins);
+                return CVariant::fromValue(m_floatingFramelessMargins);
             case IndexDockedMargins:
-                return CVariant::fromValue(this->m_dockedMargins);
+                return CVariant::fromValue(m_dockedMargins);
             case IndexFrameless:
-                return CVariant::fromValue(this->m_floating);
+                return CVariant::fromValue(m_floating);
             case IndexFloating:
-                return CVariant::fromValue(this->m_floating);
+                return CVariant::fromValue(m_floating);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -129,19 +129,19 @@ namespace BlackGui
             switch (i)
             {
             case IndexFloatingMargins:
-                this->m_floatingMargins = variant.toQString();
+                m_floatingMargins = variant.toQString();
                 break;
             case IndexFloatingFramelessMargins:
-                this->m_floatingFramelessMargins = variant.toQString();
+                m_floatingFramelessMargins = variant.toQString();
                 break;
             case IndexDockedMargins:
-                this->m_dockedMargins = variant.toQString();
+                m_dockedMargins = variant.toQString();
                 break;
             case IndexFloating:
-                this->m_floating = variant.toBool();
+                m_floating = variant.toBool();
                 break;
             case IndexFrameless:
-                this->m_frameless = variant.toBool();
+                m_frameless = variant.toBool();
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);

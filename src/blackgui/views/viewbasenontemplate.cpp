@@ -97,6 +97,7 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
+            // further init could go here
             const bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
             return c;
         }
