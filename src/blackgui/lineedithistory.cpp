@@ -30,15 +30,18 @@ namespace BlackGui
 
     void CLineEditHistory::keyPressEvent(QKeyEvent *event)
     {
-        if (event->key() == Qt::Key_Up)
+        const int key = event->key();
+        bool nonEmpty = false;
+
+        if (key == Qt::Key_Up)
         {
             // move back in history
             if (m_history.size() > m_position)
             {
-                setText(m_history.at(m_position++));
+                this->setText(m_history.at(m_position++));
             }
         }
-        else if (event->key() == Qt::Key_Down)
+        else if (key == Qt::Key_Down)
         {
             // move forward in history
             if (m_position <= 0) { this->clear(); return; }
@@ -48,17 +51,22 @@ namespace BlackGui
                 this->setText(m_history.at(m_position));
             }
         }
-        else if (event->key() == Qt::Key_Return)
+        else if (key == Qt::Key_Return || key == Qt::Key_Enter) // normal and keypad enter
         {
-            if (!text().isEmpty())
+            const QString t = this->text().trimmed();
+            if (!t.isEmpty())
             {
-                m_history.push_front(text());
+                m_history.push_front(t);
                 m_position = 0;
                 this->clear();
+                nonEmpty = true;
             }
         }
         // default handler for event
         QLineEdit::keyPressEvent(event);
+
+        // signal
+        if (nonEmpty) { emit this->returnPressedUnemptyLine(); }
     }
 
     void CLineEditHistory::contextMenuEvent(QContextMenuEvent *event)

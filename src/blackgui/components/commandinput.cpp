@@ -49,7 +49,7 @@ namespace BlackGui
                     connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
                 }
             }
-            connect(this, &CCommandInput::returnPressed, this, &CCommandInput::validateCommand);
+            connect(this, &CCommandInput::returnPressedUnemptyLine, this, &CCommandInput::validateCommand, Qt::QueuedConnection);
         }
 
         void CCommandInput::showToolTip(bool show)
@@ -64,7 +64,7 @@ namespace BlackGui
             if (c.isEmpty()) { return; }
             if (c.startsWith('.'))
             {
-                if (c.contains("help", Qt::CaseInsensitive))    { this->setCommandToolTip(); return; }
+                if (c.contains("help",    Qt::CaseInsensitive)) { this->setCommandToolTip(); return; }
                 if (c.contains("tooltip", Qt::CaseInsensitive)) { this->showToolTip(!m_showToolTip); return; }
                 emit this->commandEntered(c, this->identifier());
             }

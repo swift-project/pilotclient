@@ -19,6 +19,7 @@ namespace BlackGui
 {
     /*!
      * Line edit with history
+     * \details lines are trimmed and empty lines are ignored
      */
     class BLACKGUI_EXPORT CLineEditHistory : public QLineEdit
     {
@@ -36,6 +37,11 @@ namespace BlackGui
 
         //! Clear the history
         void clearHistory();
+
+    signals:
+        //! Return has been pressed, line is NOT empty (spaces are trimmed)
+        //! \details returnPressed alsofires on empty lines, but those are not in the history
+        void returnPressedUnemptyLine();
 
     protected:
         //! \copydoc QLineEdit::keyPressEvent

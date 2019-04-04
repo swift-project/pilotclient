@@ -69,14 +69,14 @@ namespace BlackGui
             ui->comp_AtcStations->setWithIcons(false);
 
             // lep_textMessages is the own line edit
-            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressed, this, &CTextMessageComponent::textMessageEntered);
+            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressedUnemptyLine, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked);
+            c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(ui->gb_MessageTo, &QGroupBox::toggled, this, &CTextMessageComponent::onMessageToChecked);
+            c = connect(ui->gb_MessageTo, &QGroupBox::toggled, this, &CTextMessageComponent::onMessageToChecked, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
-            c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked);
+            c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
             // style sheet
