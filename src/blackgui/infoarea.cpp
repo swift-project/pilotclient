@@ -519,7 +519,7 @@ namespace BlackGui
         m_infoAreaFloating = floating;
         if (m_infoAreaFloating)
         {
-            QPoint p = CGuiUtility::mainWidgetPosition();
+            QPoint p = CGuiUtility::mainWidgetGlobalPosition();
             this->setWindowFlags(Qt::Dialog);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->move(p.rx() + 20, p.ry() + 20);

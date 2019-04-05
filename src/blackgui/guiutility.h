@@ -73,7 +73,7 @@ namespace BlackGui
         static QWidgetList topLevelApplicationWidgetsWithName();
 
         //! Position of main widget
-        static QPoint mainWidgetPosition();
+        static QPoint mainWidgetGlobalPosition();
 
         //! Replace count in name such as "stations (4)"
         static QString replaceTabCountValue(const QString &oldName, int count);

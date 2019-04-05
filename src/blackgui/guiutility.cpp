@@ -54,7 +54,8 @@ namespace BlackGui
         {
             // best choice is to check on frameless window
             CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
-            if (mw && mw->isMainApplicationWindow()) { return mw; }
+            if (!mw) { continue; }
+            if (mw->isMainApplicationWindow()) { return mw; }
         }
         return nullptr;
     }
@@ -314,10 +315,11 @@ namespace BlackGui
         return rl;
     }
 
-    QPoint CGuiUtility::mainWidgetPosition()
+    QPoint CGuiUtility::mainWidgetGlobalPosition()
     {
         CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
-        return (mw) ? mw->getWidget()->pos() : QPoint();
+        if (!mw || !mw->getWidget()) { QPoint(); }
+        return mw->getWidget()->pos(); // is main window, so not mapToGlobal
     }
 
     QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
