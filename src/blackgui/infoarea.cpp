@@ -24,6 +24,7 @@
 #include <QMenu>
 #include <QPixmap>
 #include <QPoint>
+#include <QPointer>
 #include <QScopedPointer>
 #include <QSignalMapper>
 #include <QStatusBar>
@@ -76,6 +77,13 @@ namespace BlackGui
             this->statusBar()->hide();
             this->statusBar()->setMaximumHeight(0);
         }
+
+        // fire an initial status
+        QPointer<CInfoArea> myself(this);
+        QTimer::singleShot(5000, this, [ = ]
+        {
+            if (myself) { myself->emitInfoAreaStatus(); }
+        });
     }
 
     void CInfoArea::addToContextMenu(QMenu *menu) const
@@ -158,7 +166,7 @@ namespace BlackGui
             connect(showTabbar, &QAction::toggled, this, &CInfoArea::showTabBar);
 
             // tab bar position
-            menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, &CInfoArea::toggleTabBarPosition);
+            menu->addAction(CIcons::dockBottom16(), "Toggle tabbar position", this, &CInfoArea::toggleTabBarPosition);
             Q_UNUSED(c);
         }
     }
@@ -672,7 +680,7 @@ namespace BlackGui
     void CInfoArea::onTabBarIndexChanged(int tabBarIndex)
     {
         emit this->changedInfoAreaTabBarIndex(tabBarIndex);
-        emitInfoAreaStatus();
+        this->emitInfoAreaStatus();
     }
 
     int CInfoArea::countDockedWidgetInfoAreas() const
@@ -783,6 +791,12 @@ namespace BlackGui
         CDockWidgetInfoArea *dw = this->getDockWidgetInfoAreaByTabBarIndex(tabBarIndex);
         if (!dw) { return; }
         dw->toggleFloating();
+
+        QPointer<CInfoArea> myself(this);
+        QTimer::singleShot(1000, this, [ = ]
+        {
+            myself->emitInfoAreaStatus();
+        });
     }
 
     void CInfoArea::onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel)
@@ -801,6 +815,7 @@ namespace BlackGui
             this->selectArea(dwia);
         }
 
+        // KB commented out with T592
         // when toplevel is changed, I need a round in the event loop until
         // current tab bar widget is visible
         // QTimer::singleShot(250, this, &CInfoArea::emitInfoAreaStatus);

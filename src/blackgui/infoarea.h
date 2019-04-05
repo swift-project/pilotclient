@@ -189,10 +189,6 @@ namespace BlackGui
         //! Toogle lock tabbar
         void toggleTabBarLocked(bool locked);
 
-    private slots:
-        //! Toggle tab position North - South
-        void toggleTabBarPosition();
-
     private:
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas;
         QList<CInfoArea *> m_childInfoAreas;
@@ -201,6 +197,9 @@ namespace BlackGui
         bool m_infoAreaFloating = false;  //!< whole info area floating?
         bool m_showTabBar       = true;   //!< show the tab bar?
         bool m_lockTabBar       = false;  //!< locked: means double clicks ignored
+
+        //! Toggle tab position North - South
+        void toggleTabBarPosition();
 
         //! Tabify the widgets
         void tabifyAllWidgets();
