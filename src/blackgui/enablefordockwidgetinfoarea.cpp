@@ -62,8 +62,7 @@ namespace BlackGui
 
     bool CEnableForDockWidgetInfoArea::isParentDockWidgetFloating() const
     {
-        Q_ASSERT(m_parentDockableInfoArea);
-        if (!m_parentDockableInfoArea) { return false; }
+        if (!m_parentDockableInfoArea) { return false; } // not floating if not yet initialized
         return m_parentDockableInfoArea->isFloating();
     }
 

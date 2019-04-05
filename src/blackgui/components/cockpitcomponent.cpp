@@ -27,9 +27,9 @@ namespace BlackGui
             ui->setupUi(this);
             m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
 
-            connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
-            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1);
-            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2);
+            connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);
+            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1, Qt::QueuedConnection);
+            connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
         }
 
         CCockpitComponent::~CCockpitComponent()
@@ -41,7 +41,7 @@ namespace BlackGui
             bool ok = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
             if (ok && parentDockableWidget)
             {
-                ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating);
+                ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating, Qt::QueuedConnection);
             }
             return ok;
         }

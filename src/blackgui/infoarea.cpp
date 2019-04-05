@@ -256,7 +256,7 @@ namespace BlackGui
             QAction *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaToggleFloatingActions:").append(wt));
-            connect(action, &QAction::triggered, this, &CInfoArea::toggleAreaFloatingByAction);
+            connect(action, &QAction::triggered, this, &CInfoArea::toggleAreaFloatingByAction, Qt::QueuedConnection);
             actions.append(action);
             i++;
         }
@@ -643,7 +643,7 @@ namespace BlackGui
     {
         for (CDockWidgetInfoArea *dw : as_const(m_dockWidgetInfoAreas))
         {
-            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged);
+            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged, Qt::QueuedConnection);
         }
     }
 

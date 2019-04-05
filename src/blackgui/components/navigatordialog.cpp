@@ -285,14 +285,14 @@ namespace BlackGui
 
             // save
             a = new QAction(CIcons::save16(), "Save state", this);
-            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::saveToSettings);
+            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::saveToSettings, Qt::QueuedConnection);
             Q_ASSERT(c);
             this->addAction(a);
 
             // close
             const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton), Qt::white, QSize(16, 16)));
             a = new QAction(i, "Close", this);
-            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::close);
+            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::close, Qt::QueuedConnection);
             Q_ASSERT(c);
             this->addAction(a);
         }

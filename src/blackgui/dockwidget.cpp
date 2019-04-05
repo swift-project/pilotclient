@@ -59,15 +59,15 @@ namespace BlackGui
         m_fontMenu = new CFontMenu(this, Qt::WidgetWithChildrenShortcut);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu);
-        connect(m_input, &CMarginsInput::changedMargins, this, &CDockWidget::menuChangeMargins);
+        connect(this,    &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu,   Qt::QueuedConnection);
+        connect(m_input, &CMarginsInput::changedMargins,           this, &CDockWidget::menuChangeMargins, Qt::QueuedConnection);
 
         // connect
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
-        connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged);
-        connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged);
-        connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus);
-        connect(m_fontMenu, &CFontMenu::fontSizePlus, this, &CDockWidget::fontSizePlus);
+        connect(this, &QDockWidget::topLevelChanged,   this, &CDockWidget::onTopLevelChanged,   Qt::QueuedConnection);
+        connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged, Qt::QueuedConnection);
+        connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus,       Qt::QueuedConnection);
+        connect(m_fontMenu, &CFontMenu::fontSizePlus,  this, &CDockWidget::fontSizePlus,        Qt::QueuedConnection);
     }
 
     void CDockWidget::setMargins()
@@ -363,15 +363,15 @@ namespace BlackGui
         {
             const bool frameless = this->isFrameless();
 
-            contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
-            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
-            contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop);
-            contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
-            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update));
+            contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating, Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless, Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop, Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop, Qt::QueuedConnection);
+            contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update), Qt::QueuedConnection);
         }
         else
         {
-            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
+            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating, Qt::QueuedConnection);
         }
 
         // Font actions

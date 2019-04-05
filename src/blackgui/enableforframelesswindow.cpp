@@ -263,7 +263,7 @@ namespace BlackGui
             m_framelessCloseButton = new QPushButton(m_widget);
             m_framelessCloseButton->setObjectName("pb_FramelessCloseButton");
             m_framelessCloseButton->setIcon(CIcons::close16());
-            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, m_widget, &QWidget::close);
+            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, m_widget, &QWidget::close, Qt::QueuedConnection);
         }
 
         QHBoxLayout *menuBarLayout = new QHBoxLayout;
