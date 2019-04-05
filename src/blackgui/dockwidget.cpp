@@ -14,6 +14,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QCloseEvent>
 #include <QFrame>
@@ -404,6 +405,7 @@ namespace BlackGui
         this->initStatusBarAndProperties();
 
         // for the first time resize
+        BLACK_VERIFY(!m_preferredSizeWhenFloating.isNull());
         if (!m_preferredSizeWhenFloating.isNull())
         {
             m_initialDockedMinimumSize = this->minimumSize();
@@ -584,14 +586,22 @@ namespace BlackGui
 
     CDockWidgetSettings CDockWidget::getSettings() const
     {
-        Q_ASSERT_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        if (this->objectName().isEmpty()) { return CDockWidgetSettings(); }
+
+        // we need object name for settings %OwnerName%"
         const CDockWidgetSettings s = m_settings.get();
         return s;
     }
 
     void CDockWidget::saveSettings(const CDockWidgetSettings &settings)
     {
-        Q_ASSERT_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        BLACK_VERIFY_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        if (this->objectName().isEmpty())
+        {
+            CStatusMessage(this).error(u"Settings cannot be saved!");
+            return;
+        }
+
         const CStatusMessage m = m_settings.setAndSave(settings);
         if (m.isFailure())
         {
