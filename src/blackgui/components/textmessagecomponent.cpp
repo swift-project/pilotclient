@@ -64,12 +64,12 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->tw_TextMessages->setCurrentIndex(0);
-            ui->lep_textMessages->setVisible(false);
+            ui->fr_TextMessage->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
             ui->comp_AtcStations->setWithIcons(false);
 
             // lep_textMessages is the own line edit
-            bool c = connect(ui->lep_textMessages, &CLineEditHistory::returnPressedUnemptyLine, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
+            bool c = connect(ui->lep_TextMessages, &CLineEditHistory::returnPressedUnemptyLine, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
@@ -542,15 +542,15 @@ namespace BlackGui
         {
             // own input field if floating window
             Q_UNUSED(widget);
-            ui->lep_textMessages->setVisible(topLevel);
+            ui->fr_TextMessage->setVisible(topLevel);
         }
 
         void CTextMessageComponent::textMessageEntered()
         {
-            if (!ui->lep_textMessages->isVisible()) { return; }
+            if (!ui->fr_TextMessage->isVisible() || !ui->lep_TextMessages->isVisible()) { return; }
             if (!this->isVisible()) { return; }
 
-            const QString cl(ui->lep_textMessages->getLastEnteredLineFormatted());
+            const QString cl(ui->lep_TextMessages->getLastEnteredLineFormatted());
             if (!cl.isEmpty())
             {
                 this->handleEnteredTextMessage(cl);
@@ -754,13 +754,13 @@ namespace BlackGui
 
         void CTextMessageComponent::showTextMessageEntry(bool show)
         {
-            ui->lep_textMessages->setVisible(show);
+            ui->fr_TextMessage->setVisible(show);
         }
 
         void CTextMessageComponent::focusTextEntry()
         {
-            if (!ui->lep_textMessages->isVisible()) { return; }
-            ui->lep_textMessages->setFocus();
+            if (!ui->lep_TextMessages->isVisible()) { return; }
+            ui->lep_TextMessages->setFocus();
         }
 
         void CTextMessageComponent::removeAllMessagesTab()

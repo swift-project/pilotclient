@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CTextMessageComponent</class>
  <widget class="QFrame" name="CTextMessageComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>260</width>
-    <height>297</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Text messages</string>
   </property>
@@ -297,13 +289,25 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLineEditHistory" name="lep_textMessages">
-     <property name="toolTip">
-      <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+    <widget class="QFrame" name="fr_TextMessage">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="placeholderText">
-      <string>text message text goes here</string>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
+     <layout class="QHBoxLayout" name="hl_TextMessage">
+      <item>
+       <widget class="BlackGui::CLineEditHistory" name="lep_TextMessages">
+        <property name="toolTip">
+         <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+        </property>
+        <property name="placeholderText">
+         <string>text message text goes here</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -346,11 +350,12 @@
  <tabstops>
   <tabstop>tw_TextMessages</tabstop>
   <tabstop>tvp_TextMessagesAll</tabstop>
+  <tabstop>gb_MessageTo</tabstop>
   <tabstop>gb_Settings</tabstop>
-  <tabstop>lep_textMessages</tabstop>
+  <tabstop>lep_TextMessages</tabstop>
+  <tabstop>tep_TextMessagesUnicom</tabstop>
   <tabstop>tep_TextMessagesCOM1</tabstop>
   <tabstop>tep_TextMessagesCOM2</tabstop>
-  <tabstop>tep_TextMessagesUnicom</tabstop>
  </tabstops>
  <resources/>
  <connections/>
