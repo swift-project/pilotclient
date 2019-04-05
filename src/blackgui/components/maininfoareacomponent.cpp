@@ -162,6 +162,7 @@ namespace BlackGui
             case InfoAreaSettings:
             case InfoAreaTextMessages:
             case InfoAreaWeather:
+            case InfoAreaRadar:
                 return QSize(600, 400);
             case InfoAreaFlightPlan:
                 return QSize(625, 500);
@@ -197,9 +198,9 @@ namespace BlackGui
             case InfoAreaSimulator:  return CIcons::appSimulator16();
             case InfoAreaMapping:    return CIcons::appMappings16();
             case InfoAreaLog:        return CIcons::appLog16();
+            case InfoAreaRadar:      return CIcons::appRadar16();
             case InfoAreaTextMessages:  return CIcons::appTextMessages16();
             case InfoAreaInterpolation: return CIcons::appInterpolation16();
-            case InfoAreaRadar:      return CIcons::appRadar16();
             default: return CIcons::empty();
             }
         }
