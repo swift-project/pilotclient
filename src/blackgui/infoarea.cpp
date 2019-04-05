@@ -565,15 +565,16 @@ namespace BlackGui
             {
                 // float
                 QPoint offset(i * 25, i * 20);
-                after->setVisible(false);
-                after->setFloating(true);
+                // after->setVisible(false);
+                // after->setFloating(true);
                 after->setOffsetWhenFloating(offset);
-                QSize floatingSize = this->getPreferredSizeWhenFloating(i);
+                const QSize floatingSize = this->getPreferredSizeWhenFloating(i);
                 after->setPreferredSizeWhenFloating(floatingSize);
+                after->initialFloating();
 
                 // dock again
-                after->setFloating(false);
-                after->setVisible(true);
+                // after->setFloating(false);
+                // after->setVisible(true);
 
                 // reset floating flag, we want new resizing and position for first real floating
                 after->resetWasAlreadyFloating();
@@ -802,7 +803,7 @@ namespace BlackGui
 
         // when toplevel is changed, I need a round in the event loop until
         // current tab bar widget is visible
-        QTimer::singleShot(250, this, &CInfoArea::emitInfoAreaStatus);
+        // QTimer::singleShot(250, this, &CInfoArea::emitInfoAreaStatus);
     }
 
     void CInfoArea::onStyleSheetChanged()

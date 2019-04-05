@@ -518,6 +518,9 @@ namespace BlackGui
         QSizePolicy sizePolicy = compWidget->sizePolicy();
         sizePolicy.setVerticalStretch(1); // make the original widget occupying maximum space
         compWidget->setSizePolicy(sizePolicy);
+
+        // hide status bar if not floating T592 no longer init floating
+        if (!this->isFloating()) { m_statusBar.hide(); }
     }
 
     void CDockWidget::showContextMenu(const QPoint &pos)
