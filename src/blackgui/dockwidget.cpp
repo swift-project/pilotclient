@@ -250,8 +250,14 @@ namespace BlackGui
     {
         const bool floating = !this->isFloating();
         if (!floating) { this->setFrameless(false); } // remove frameless if not floating
+
+        const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+        const bool shift = km.testFlag(Qt::ShiftModifier);
+
         this->setFloating(floating);
-        this->setAlwaysOnTop(m_alwaysOnTop);
+        this->setAlwaysOnTop(m_alwaysOnTop && floating);
+
+        if (shift && floating) { this->resetPosition(); }
     }
 
     void CDockWidget::toggleVisibility()
