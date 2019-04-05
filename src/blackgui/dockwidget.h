@@ -236,7 +236,10 @@ namespace BlackGui
         QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
         QSize m_initialDockedMinimumSize;             //!< minimum size before first floating
+        QSize m_lastFloatingSize;                     //!< last floating position
         QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
+        QPoint m_lastFloatingPosition;                //!< last floating position
+
         BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
 
         //! Top level has been chaged
@@ -266,8 +269,17 @@ namespace BlackGui
         //! Force a style sheet update
         void forceStyleSheetUpdate();
 
+        //! Size and position in floating mode
+        void rememberFloatingSizeAndPosition();
+
+        //! Size and position of floating window
+        void restoreFloatingSizeAndPosition();
+
+        //! Size and position of floating window
+        void restoreFloatingSizeAndPositionDeferred();
+
         //! This widget`s settings
-        BlackGui::Settings::CDockWidgetSettings getSettings() const;
+        Settings::CDockWidgetSettings getSettings() const;
 
         //! Save settings
         void saveSettings(const BlackGui::Settings::CDockWidgetSettings &settings);

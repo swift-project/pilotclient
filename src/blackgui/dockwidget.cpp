@@ -32,6 +32,8 @@
 #include <QWidgetAction>
 #include <QWidget>
 #include <Qt>
+#include <QTimer>
+#include <QPointer>
 #include <QtGlobal>
 #include <QApplication>
 #include <QDesktopWidget>
@@ -167,13 +169,13 @@ namespace BlackGui
         QDockWidget::setWindowTitle(title);
     }
 
-    void CDockWidget::displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
+    void CDockWidget::displayStatusMessage(const CStatusMessage &statusMessage)
     {
         if (!m_allowStatusBar || !this->isFloating()) { return; }
         m_statusBar.displayStatusMessage(statusMessage);
     }
 
-    void CDockWidget::displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
+    void CDockWidget::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
         if (!m_allowStatusBar || !this->isFloating()) { return; }
         m_statusBar.displayStatusMessages(statusMessages);
@@ -263,14 +265,7 @@ namespace BlackGui
 
     void CDockWidget::toggleVisibility()
     {
-        if (this->isVisible())
-        {
-            this->hide();
-        }
-        else
-        {
-            this->show();
-        }
+        this->setVisible(!this->isVisible());
     }
 
     void CDockWidget::toggleFrameless()
@@ -323,7 +318,8 @@ namespace BlackGui
         const QByteArray geo(s.getGeometry());
         if (!geo.isEmpty())
         {
-            return this->restoreGeometry(geo);
+            const bool ok = this->restoreGeometry(geo);
+            if (ok) { this->rememberFloatingSizeAndPosition(); }
         }
         this->setMargins();
         return true;
@@ -346,11 +342,12 @@ namespace BlackGui
     {
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameDockWidget);
         QDockWidget::paintEvent(event);
+        this->rememberFloatingSizeAndPosition();
     }
 
     void CDockWidget::mouseMoveEvent(QMouseEvent *event)
     {
-        if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); } ;
+        if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); }
     }
 
     void CDockWidget::keyPressEvent(QKeyEvent *event)
@@ -430,7 +427,7 @@ namespace BlackGui
         QThread::msleep(100);
 #       endif
 
-        this->setMargins();
+        this->setMargins(); // from settings or default
         if (topLevel)
         {
             if (m_windowTitleBackup != QDockWidget::windowTitle())
@@ -441,10 +438,12 @@ namespace BlackGui
             if (!m_wasAlreadyFloating)
             {
                 this->initialFloating();
+                this->rememberFloatingSizeAndPosition();
             }
             else
             {
                 if (m_wasFrameless) { this->setFrameless(true); }
+                this->restoreFloatingSizeAndPositionDeferred(); // after everything was applied move and resize
             }
             m_statusBar.show();
             m_wasAlreadyFloating = true;
@@ -582,6 +581,30 @@ namespace BlackGui
         const QString qss = this->styleSheet();
         this->setStyleSheet(qss.isEmpty() ? QStringLiteral(" ") : QString());
         this->setStyleSheet(qss);
+    }
+
+    void CDockWidget::rememberFloatingSizeAndPosition()
+    {
+        if (!this->isFloating()) { return; }
+        m_lastFloatingSize = this->size();
+        m_lastFloatingPosition = this->pos();
+    }
+
+    void CDockWidget::restoreFloatingSizeAndPosition()
+    {
+        if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
+        this->resize(m_lastFloatingSize);
+        this->move(m_lastFloatingPosition);
+    }
+
+    void CDockWidget::restoreFloatingSizeAndPositionDeferred()
+    {
+        if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
+        QPointer<CDockWidget> myself(this);
+        QTimer::singleShot(1000, this, [ = ]
+        {
+            if (myself) { myself->restoreFloatingSizeAndPosition(); }
+        });
     }
 
     CDockWidgetSettings CDockWidget::getSettings() const
