@@ -57,7 +57,7 @@ namespace BlackGui
         case QSystemTrayIcon::MiddleClick:
             break;
         default:
-            ;
+            break;
         }
     }
 
@@ -99,9 +99,9 @@ namespace BlackGui
     void CSystemTrayWindow::changeEvent(QEvent *event)
     {
         QMainWindow::changeEvent(event);
-        if(event->type() == QEvent::WindowStateChange)
+        if (event->type() == QEvent::WindowStateChange)
         {
-            if(isMinimized()) { hide(); }
+            if (isMinimized()) { hide(); }
         }
     }
 
