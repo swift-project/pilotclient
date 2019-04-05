@@ -183,12 +183,42 @@ namespace BlackGui
 
         void CNavigatorDialog::mouseMoveEvent(QMouseEvent *event)
         {
-            if (!handleMouseMoveEvent(event)) { QDialog::mouseMoveEvent(event); } ;
+            if (handleMouseMoveEvent(event)) { return; }
+
+            // frameless has moving already, but here we also do it dor dialog
+            if (!this->isFrameless())
+            {
+                if (event->buttons() & Qt::LeftButton)
+                {
+                    this->move(event->globalPos() - m_framelessDragPosition);
+                    event->accept();
+                    return;
+                }
+            }
+            QDialog::mouseMoveEvent(event);
         }
 
         void CNavigatorDialog::mousePressEvent(QMouseEvent *event)
         {
-            if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
+            if (handleMousePressEvent(event)) { return; }
+
+            // frameless has moving already, but here we also do it dor dialog
+            if (!this->isFrameless())
+            {
+                if (event->buttons() & Qt::LeftButton)
+                {
+                    m_framelessDragPosition = this->mapToParent(event->pos());
+                    event->accept();
+                    return;
+                }
+            }
+            QDialog::mousePressEvent(event);
+        }
+
+        void CNavigatorDialog::mouseReleaseEvent(QMouseEvent *event)
+        {
+            m_framelessDragPosition = QPoint();
+            QDialog::mouseReleaseEvent(event);
         }
 
         void CNavigatorDialog::changeEvent(QEvent *evt)
@@ -264,8 +294,8 @@ namespace BlackGui
         void CNavigatorDialog::insertOwnActions()
         {
             // add some space for frameless navigators where I can move the navigator
-            QAction *a = new QAction(CIcons::empty16(), "move navigator here", this);
-            if (this->actions().isEmpty())
+            QAction *a = nullptr; // new QAction(CIcons::empty16(), "move navigator here", this);
+            if (a && this->actions().isEmpty())
             {
                 this->addAction(a);
             }
@@ -274,7 +304,7 @@ namespace BlackGui
                 this->insertAction(this->actions().first(), a);
             }
 
-            bool c;
+            bool c = false;
             if (sGui)
             {
                 a = new QAction(CIcons::swiftLauncher16(), "Start launcher", this);
@@ -319,7 +349,7 @@ namespace BlackGui
             int h = 16 * gridLayout->rowCount();
 
             // margins
-            QMargins margins = gridLayout->contentsMargins() + this->contentsMargins();
+            const QMargins margins = gridLayout->contentsMargins() + this->contentsMargins();
             h = h + margins.top() + margins.bottom();
             w = w + margins.left() + margins.right();
 
@@ -352,7 +382,7 @@ namespace BlackGui
             contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::dummyFunction);
             contextMenu->addAction(m_marginMenuAction);
             contextMenu->addSeparator();
-            contextMenu->addAction(CIcons::load16(), "Restore state", this, &CNavigatorDialog::restoreFromSettings);
+            contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CNavigatorDialog::restoreFromSettings);
             contextMenu->addAction(CIcons::save16(), "Save state", this, &CNavigatorDialog::saveToSettings);
         }
     } // ns

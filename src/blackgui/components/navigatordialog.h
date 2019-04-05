@@ -22,11 +22,11 @@
 #include <QTimer>
 #include <QGridLayout>
 #include <QTimer>
+#include <QPoint>
 
 class QEvent;
 class QMenu;
 class QMouseEvent;
-class QPoint;
 class QWidget;
 
 namespace Ui { class CNavigatorDialog; }
@@ -82,6 +82,7 @@ namespace BlackGui
             //! @{
             virtual void mouseMoveEvent(QMouseEvent *event) override;
             virtual void mousePressEvent(QMouseEvent *event) override;
+            virtual void mouseReleaseEvent(QMouseEvent *event) override;
             virtual void changeEvent(QEvent *evt) override;
             virtual void windowFlagsChanged() override;
             virtual void paintEvent(QPaintEvent *event) override;
