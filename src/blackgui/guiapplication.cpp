@@ -1086,7 +1086,15 @@ namespace BlackGui
                 }
                 else
                 {
-                    QApplication::setStyle(QStyleFactory::create(widgetStyle));
+                    QStyle *style = QApplication::setStyle(currentWidgetStyle);
+                    if (style)
+                    {
+                        CLogMessage(this).info(u"Changed style to '%1', req.: '%2'") << style->objectName() << currentWidgetStyle;
+                    }
+                    else
+                    {
+                        CLogMessage(this).error(u"Unable to set requested style '%1'") << currentWidgetStyle;
+                    }
                 }
             }
         }
