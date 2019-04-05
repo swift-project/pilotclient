@@ -62,6 +62,9 @@ namespace BlackGui
             //! The height of the combobox
             int getComboBoxHeight() const;
 
+            //! Set the combobox height
+            void setComboBoxMinimumHeight(int h);
+
         signals:
             //! Value has been changed
             void valueChanged();

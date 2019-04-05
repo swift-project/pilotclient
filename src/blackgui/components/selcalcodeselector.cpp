@@ -105,6 +105,12 @@ namespace BlackGui
             return ui->cb_SelcalPairs1->height();
         }
 
+        void CSelcalCodeSelector::setComboBoxMinimumHeight(int h)
+        {
+            ui->cb_SelcalPairs1->setMinimumHeight(h);
+            ui->cb_SelcalPairs2->setMinimumHeight(h);
+        }
+
         void CSelcalCodeSelector::selcalIndexChanged(int index)
         {
             Q_UNUSED(index);

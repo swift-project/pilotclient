@@ -200,6 +200,10 @@ BlackGui--Components--CStringListDialog
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+BlackGui--Components--CCockpitComComponent {
+  min-height: 7em;
+}
+
 /* default for buttons */
 QToolButton {
   background-color: rgba(0, 0, 255, 128);

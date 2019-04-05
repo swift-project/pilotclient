@@ -28,8 +28,8 @@
 class QPaintEvent;
 class QWidget;
 
-namespace BlackMisc { namespace Aviation { class CComSystem; } }
 namespace Ui { class CCockpitComComponent; }
+namespace BlackMisc { namespace Aviation { class CComSystem; } }
 namespace BlackGui
 {
     namespace Components

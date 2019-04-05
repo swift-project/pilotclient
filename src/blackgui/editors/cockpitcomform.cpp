@@ -134,6 +134,7 @@ namespace BlackGui
             this->setFrequencies(aircraft.getCom1System(), aircraft.getCom2System());
             this->setSelcal(aircraft.getSelcal());
             this->setTransponder(aircraft.getTransponder());
+            this->alignUiElementsHeight();
         }
 
         CSelcal CCockpitComForm::getSelcal() const
