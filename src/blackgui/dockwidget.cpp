@@ -411,13 +411,7 @@ namespace BlackGui
         }
 
         // and move
-        QPoint mainWindowPos = BlackGui::CGuiUtility::mainWidgetPosition();
-        if (!mainWindowPos.isNull())
-        {
-            int x = mainWindowPos.x() + m_offsetWhenFloating.x();
-            int y = mainWindowPos.y() + m_offsetWhenFloating.y();
-            this->move(x, y);
-        }
+        this->resetPosition();
     }
 
     QString CDockWidget::windowTitleOrBackup() const
@@ -623,6 +617,17 @@ namespace BlackGui
     {
         // center on screen when floating
         if (!this->isFloating()) { return; }
-        this->move(sGui->currentScreen()->geometry().center() - this->rect().center());
+        if (!sGui) { return; }
+
+        // pos can be null during init
+        QPoint pos = CGuiUtility::mainWidgetGlobalPosition();
+        if (pos.isNull())
+        {
+            pos = sGui->currentScreen()->geometry().center() - this->rect().center();
+        }
+
+        const int x = pos.x() + m_offsetWhenFloating.x();
+        const int y = pos.y() + m_offsetWhenFloating.y();
+        this->move(x, y);
     }
 } // namespace
