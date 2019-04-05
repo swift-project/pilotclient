@@ -41,34 +41,34 @@ namespace BlackGui
             // Info areas
             // pressed collides, as this toggles button again
             // using toggle collides, as checking/unchecking toggles again -> infinite loop
-            connect(ui->pb_MainAircrafts, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainAtc, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainCockpit, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainFlightplan, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainLog, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainMappings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainAircrafts,     &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainAtc,           &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainCockpit,       &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainFlightplan,    &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainLog,           &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainMappings,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainInterpolation, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainRadar, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainSettings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainSimulator, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainTextMessages, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainUsers, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_MainWeather, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainRadar,         &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainSettings,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainSimulator,     &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainTextMessages,  &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainUsers,         &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainWeather,       &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
             // non info areas
-            connect(ui->pb_Connect, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_Connect, &QPushButton::pressed, this, &CMainKeypadAreaComponent::disableButtonBriefly);
-            connect(ui->pb_CockpitIdent, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_Opacity050, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_Opacity100, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_SoundMaxVolume, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_SoundMute, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-            connect(ui->pb_Audio, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_Connect,        &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_Connect,        &QPushButton::pressed,  this, &CMainKeypadAreaComponent::disableButtonBriefly);
+            connect(ui->pb_Opacity050,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_Opacity100,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_SoundMaxVolume, &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_CockpitIdent,   &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_SoundMute,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_Audio,          &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
             // command line
             ui->lep_CommandLineInput->setIdentifier(m_identifier);
             connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
-            connect(ui->lep_CommandLineInput, &CCommandInput::textEntered, this, &CMainKeypadAreaComponent::textEntered);
+            connect(ui->lep_CommandLineInput, &CCommandInput::textEntered,    this, &CMainKeypadAreaComponent::textEntered);
 
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
@@ -99,6 +99,7 @@ namespace BlackGui
                 }
             }
 
+            // check the floating
             for (int floatingIndex : floatingIndexes)
             {
                 QPushButton *pb = this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(floatingIndex));

@@ -102,7 +102,7 @@ namespace BlackGui
             QString m_floatingFramelessMargins {"0:0:0:0"}; //!< margins, when floating and frameless
             QString m_dockedMargins {"0:0:0:0"};            //!< margins, when docked
             QString m_geometry;                             //!< geometry as HEX values
-            bool m_floating = false;                        //!< floating
+            bool m_floating  = false;                       //!< floating
             bool m_frameless = false;                       //!< frameless
 
             BLACK_METACLASS(

@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CMainKeypadAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CMainKeypadAreaComponent();
+            virtual ~CMainKeypadAreaComponent() override;
 
             //! Main info area changed
             void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);

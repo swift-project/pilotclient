@@ -25,6 +25,7 @@ namespace BlackGui
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
+            ui->wip_CockpitComPanelShowHideBar->setVisible(false);
             m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
 
             connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);

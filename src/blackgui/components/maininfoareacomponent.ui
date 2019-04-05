@@ -2,16 +2,11 @@
 <ui version="4.0">
  <class>CMainInfoAreaComponent</class>
  <widget class="QMainWindow" name="CMainInfoAreaComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1779</width>
-    <height>79</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Main info area</string>
+   <string>Main info area of swift</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="qw_centralWidgetEmptyUsedAsPadding">
    <property name="enabled">

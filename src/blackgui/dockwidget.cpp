@@ -442,7 +442,7 @@ namespace BlackGui
             }
             else
             {
-                if (m_wasFrameless) { setFrameless(true); }
+                if (m_wasFrameless) { this->setFrameless(true); }
             }
             m_statusBar.show();
             m_wasAlreadyFloating = true;

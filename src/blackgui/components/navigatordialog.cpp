@@ -94,7 +94,7 @@ namespace BlackGui
             int r = 0;
             int c = 0;
 
-            // remark:
+            // remark: the actions will be set from the main UI
             for (QAction *action : this->actions())
             {
                 if (!action) { continue; }
@@ -193,7 +193,7 @@ namespace BlackGui
 
         void CNavigatorDialog::changeEvent(QEvent *evt)
         {
-            QEvent::Type t = evt->type();
+            const QEvent::Type t = evt->type();
             if (t == QEvent::WindowStateChange)
             {
                 evt->ignore();

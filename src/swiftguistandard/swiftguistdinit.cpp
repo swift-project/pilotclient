@@ -205,7 +205,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::textEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLineText);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::audioPressed, ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectAudioTab);
-    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
+    connect(ui->comp_MainInfoArea,   &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
     // audio
     connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestAudioWidget, ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectAudioTab);
@@ -217,12 +217,12 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
 
-    connect(ui->menu_WindowFont, &QAction::triggered,        this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_WindowMinimize, &QAction::triggered,    this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_WindowFont,        &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_WindowMinimize,    &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigatorVisibility);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_MovingMap, &QAction::triggered,     this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_MovingMap,     &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed);
 
     // settings (GUI component), styles

@@ -537,7 +537,7 @@ namespace BlackGui
             // RW: The line below is commented to prevent making this widget visible as a top window
             // in case it is constructed without parent or anchestor widget. Contrary to the comment,
             // it does not seem to be necessary https://dev.vatsim-germany.org/issues/738
-            // KB 2018-12 with T447 T452 re-eanled the line again, but wit parent condition
+            // KB 2018-12 with T447 T452 re-eanled the line again, but with parent condition
             if (this->parentWidget()) // this line
             {
                 this->setVisible(true); // after redocking this is required
@@ -549,6 +549,7 @@ namespace BlackGui
 
     void CInfoArea::tabifyAllWidgets()
     {
+        if (!sGui || sGui->isShuttingDown()) { return; }
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
         bool init = m_tabBar ? false : true;
 
@@ -585,13 +586,13 @@ namespace BlackGui
             this->tabifyDockWidget(first, after);
         }
 
-        // as now tabified, now set tab
+        // as now tabified, set tab
         if (init)
         {
             m_tabBar = this->findChild<QTabBar *>();
 
             // if we have > 1 docked widgets, we have a tab bar
-            if (m_tabBar)
+            if (m_tabBar && sGui)
             {
                 const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
                 m_tabBar->setStyleSheet(qss);
