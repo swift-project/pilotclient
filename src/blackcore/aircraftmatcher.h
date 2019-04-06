@@ -44,6 +44,25 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! What to log
+        enum MatchingLogFlag
+        {
+            LogNothing             = 0,
+            LogModelstring         = 1 << 0,
+            LogStepwiseReduce      = 1 << 1,
+            LogScoring             = 1 << 2,
+            LogCombinedDefaultType = 1 << 3,
+            LogMinimal             = 1 << 10,
+            LogAll = LogModelstring | LogStepwiseReduce | LogScoring | LogCombinedDefaultType
+        };
+        Q_DECLARE_FLAGS(MatchingLog, MatchingLogFlag)
+
+        //! Log flag to string
+        static const QString &matchingLogFlagToString(MatchingLogFlag logFlag);
+
+        //! Log flag to string
+        static const QString matchingLogToString(MatchingLog log);
+
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
@@ -55,7 +74,7 @@ namespace BlackCore
 
         //! Destructor
         //! \remark saves a log of removed models if any
-        virtual ~CAircraftMatcher();
+        virtual ~CAircraftMatcher() override;
 
         //! Set the setup
         bool setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
@@ -69,7 +88,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getClosestMatch(
             const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-            bool shortLog,
+            MatchingLog whatToLog,
             BlackMisc::CStatusMessageList *log = nullptr) const;
 
         //! Return an valid airline ICAO code
@@ -230,19 +249,19 @@ namespace BlackCore
         static BlackMisc::Simulation::CAircraftModelList getClosestMatchStepwiseReduceImplementation(
             const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
             const BlackMisc::Simulation::CCategoryMatcher &categoryMatcher, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-            bool shortLog, BlackMisc::CStatusMessageList *log = nullptr);
+            MatchingLog whatToLog, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! The score based implementation
-        static BlackMisc::Simulation::CAircraftModelList getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, int &maxScore, bool shortLog, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModelList getClosestMatchScoreImplementation(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, int &maxScore, BlackCore::CAircraftMatcher::MatchingLog whatToLog, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get combined type default model, i.e. get a default model under consideration of the combined code such as "L2J"
         //! \see BlackMisc::Simulation::CSimulatedAircraft::getAircraftIcaoCombinedType
         //! \remark in any case a (default) model is returned
-        static BlackMisc::Simulation::CAircraftModel getCombinedTypeDefaultModel(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModel &defaultModel, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel getCombinedTypeDefaultModel(const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModel &defaultModel, MatchingLog whatToLog, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Search in models by key (aka model string)
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel matchByExactModelString(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &models, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModel matchByExactModelString(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &models, MatchingLog whatToLog, BlackMisc::CStatusMessageList *log);
 
         //! Installed models by ICAO data
         //! \threadsafe
@@ -318,5 +337,8 @@ namespace BlackCore
         QString                                      m_modelSetInfo;    //!< info string
     };
 } // namespace
+
+Q_DECLARE_METATYPE(BlackCore::CAircraftMatcher::MatchingLogFlag)
+Q_DECLARE_METATYPE(BlackCore::CAircraftMatcher::MatchingLog)
 
 #endif // guard
