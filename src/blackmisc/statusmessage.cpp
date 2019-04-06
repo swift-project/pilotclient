@@ -35,6 +35,7 @@ namespace BlackMisc
             QString &temp = t_tempBuffer.localData();
             temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
 
+            quint64 unusedArgs = (1ULL << std::min(63, args.size())) - 1;
             for (auto it = format.begin(); ; )
             {
                 const auto pc = std::find(it, format.end(), u'%');
@@ -49,10 +50,13 @@ namespace BlackMisc
                     Q_ASSERT(n >= 0 && n <= 9);
                     if (++it != format.end() && is09(*it)) { n = n * 10 + it->unicode() - u'0'; ++it; }
                     Q_ASSERT(n >= 0 && n <= 99);
-                    if (n <= args.size()) { temp += args[n - 1]; } else { temp += u'%' % QString::number(n); }
+                    if (n <= args.size()) { temp += args[n - 1]; unusedArgs &= ~(1ULL << (n - 1)); }
+                    else { temp += u'%' % QString::number(n); }
                 }
                 else { temp += u'%'; }
             }
+            if (unusedArgs) { temp += QStringLiteral(" [SOME MESSAGE ARGUMENT(S) UNUSED]"); }
+
             QString result = temp;
             result.squeeze(); // release unused capacity and implicitly detach so temp keeps its capacity for next time
             return result;
