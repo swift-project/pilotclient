@@ -55,6 +55,7 @@ namespace BlackGui
 
         void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
         {
+            // BlackMisc::Simulation::CBackgroundValidation
             Q_UNUSED(simulator);
             Q_UNUSED(valid);
             m_lastResults = QDateTime::currentMSecsSinceEpoch();

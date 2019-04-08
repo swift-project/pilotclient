@@ -97,10 +97,10 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTempDisableModelsForMatching, this, &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
-            connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
-            connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
-            connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
-            connect(ui->pb_DoMatchingAgain, &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
+            connect(ui->pb_SaveAircraft,     &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
+            connect(ui->pb_ResetAircraft,    &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
+            connect(ui->pb_LoadModels,       &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
+            connect(ui->pb_DoMatchingAgain,  &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
             connect(ui->pb_ValidateModelSet, &QPushButton::clicked, this, &CMappingComponent::requestValidationDialog);
 
             m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);

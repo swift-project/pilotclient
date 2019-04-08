@@ -49,6 +49,7 @@ namespace BlackGui
             virtual ~CAircraftModelValidationComponent() override;
 
             //! Validated a model set
+            //! \remark coming from BlackMisc::Simulation::CBackgroundValidation
             void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
         private:
