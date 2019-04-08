@@ -17,6 +17,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -27,14 +28,15 @@ namespace BlackGui
             ui(new Ui::CModelMatcherLogEnable)
         {
             ui->setupUi(this);
-            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged);
-            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged);
+            connect(ui->cb_LogReverseLookup,    &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
+            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
+            connect(ui->cb_LogDetailed,         &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
 
             if (this->hasContexts())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(),   &IContextNetwork::changedLogOrDebugSettings,   this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(),   &IContextNetwork::connectionStatusChanged,     this, &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
             }
 
             QPointer<CModelMatcherLogEnable> myself(this);
@@ -62,13 +64,28 @@ namespace BlackGui
         {
             if (!this->hasContexts()) { return; }
             const QObject *sender = QObject::sender();
-            if (sender == ui->cb_LogReverseLookup)
+
+            const bool detailed  = (sender == ui->cb_LogDetailed)         ? enabled : ui->cb_LogDetailed->isChecked();
+            const bool reverse   = (sender == ui->cb_LogReverseLookup)    ? enabled : ui->cb_LogReverseLookup->isChecked();
+            const bool matching  = (sender == ui->cb_LogMatchingMessages) ? enabled : ui->cb_LogMatchingMessages->isChecked();
+            const bool simplified = !detailed;
+
+            if (sender == ui->cb_LogReverseLookup || sender == ui->cb_LogDetailed)
             {
-                sGui->getIContextNetwork()->enableReverseLookupMessages(enabled);
+                ReverseLookupLogging revLog = RevLogDisabled;
+                if (reverse && simplified) { revLog = RevLogEnabledSimplified; }
+                else if (reverse) { revLog = RevLogEnabled; }
+
+                sGui->getIContextNetwork()->enableReverseLookupMessages(revLog);
             }
-            else if (sender == ui->cb_LogMatchingMessages)
+
+            if (sender == ui->cb_LogMatchingMessages || sender == ui->cb_LogDetailed)
             {
-                sGui->getIContextSimulator()->enableMatchingMessages(enabled);
+                MatchingLog matchingLog = MatchingLogNothing;
+                if (matching && simplified) { matchingLog = MatchingLogSimplified; }
+                else if (matching) { matchingLog = MatchingLogAll; }
+
+                sGui->getIContextSimulator()->enableMatchingMessages(matchingLog);
             }
         }
 
@@ -77,17 +94,17 @@ namespace BlackGui
             if (this->hasContexts())
             {
                 // avoid signal roundtrips
-                bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
-                if (c != ui->cb_LogReverseLookup->isChecked())
-                {
-                    ui->cb_LogReverseLookup->setChecked(c);
-                }
+                const ReverseLookupLogging revLog = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
+                const bool revLogEnabled = revLog.testFlag(RevLogEnabled);
+                if (revLogEnabled != ui->cb_LogReverseLookup->isChecked()) { ui->cb_LogReverseLookup->setChecked(revLogEnabled); }
 
-                c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
-                if (c != ui->cb_LogMatchingMessages->isChecked())
-                {
-                    ui->cb_LogMatchingMessages->setChecked(c);
-                }
+                const MatchingLog matchingLog = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
+                const bool matchingLogEnabled = matchingLog > 0;
+                if (matchingLogEnabled != ui->cb_LogMatchingMessages->isChecked()) { ui->cb_LogMatchingMessages->setChecked(matchingLogEnabled); }
+
+                const bool simplified = revLog.testFlag(RevLogSimplifiedInfo) || matchingLog == MatchingLogSimplified;
+                const bool detailed = !simplified;
+                if (detailed != ui->cb_LogDetailed->isChecked()) { ui->cb_LogDetailed->setChecked(detailed); }
             }
         }
 

@@ -30,7 +30,7 @@ namespace BlackGui
             explicit CModelMatcherLogEnable(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelMatcherLogEnable();
+            virtual ~CModelMatcherLogEnable() override;
 
             //! Reverse lookup enabled?
             bool isReverseLookupLogEnabled() const;

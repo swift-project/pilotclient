@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>276</width>
+    <width>287</width>
     <height>20</height>
    </rect>
   </property>
@@ -45,7 +45,7 @@
       <string>enable logging of reverse lookup messages</string>
      </property>
      <property name="text">
-      <string>rev. lookup msgs.</string>
+      <string>rev. lookup</string>
      </property>
     </widget>
    </item>
@@ -55,7 +55,17 @@
       <string>enable matching messages</string>
      </property>
      <property name="text">
-      <string>matching msgs.</string>
+      <string>matching</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cb_LogDetailed">
+     <property name="toolTip">
+      <string>a simplified matching log (faster) or a detailed log (slower)</string>
+     </property>
+     <property name="text">
+      <string>detailed</string>
      </property>
     </widget>
    </item>
