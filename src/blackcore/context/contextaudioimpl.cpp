@@ -56,12 +56,12 @@ namespace BlackCore
             //! \todo KB 2018-11 those are supposed to be Qt::QueuedConnection, but not yet changed (risk to break something)
             m_channel1 = m_voice->createVoiceChannel();
             connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::onUserLeftRoom);
+            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
             m_channel2 = m_voice->createVoiceChannel();
             connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::onUserLeftRoom);
+            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
 
             m_voiceInputDevice  = m_voice->createInputDevice();
             m_voiceOutputDevice = m_voice->createOutputDevice();
@@ -523,8 +523,8 @@ namespace BlackCore
         void CContextAudio::setVoiceTransmission(bool enable)
         {
             // FIXME: Use the 'active' channel instead of hardcoded COM1
-            if (!m_voiceChannelMapping.contains(BlackMisc::Aviation::CComSystem::Com1)) { return; }
-            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
+            if (!m_voiceChannelMapping.contains(CComSystem::Com1)) { return; }
+            QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
             IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom1);
             if (enable)
             {

@@ -339,7 +339,7 @@ namespace BlackInput
 
     void CJoystickWindows::joystickButtonChanged(const CJoystickButton &joystickButton, bool isPressed)
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
+        CHotkeyCombination oldCombination(m_buttonCombination);
         if (isPressed) { m_buttonCombination.addJoystickButton(joystickButton); }
         else { m_buttonCombination.removeJoystickButton(joystickButton); }
 

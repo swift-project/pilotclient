@@ -151,7 +151,7 @@ namespace BlackCore
             QSharedPointer<IVoiceChannel> m_channel1;
             QSharedPointer<IVoiceChannel> m_channel2;
             std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
-            std::unique_ptr<IAudioInputDevice> m_voiceInputDevice;
+            std::unique_ptr<IAudioInputDevice>  m_voiceInputDevice;
 
             QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
             QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;

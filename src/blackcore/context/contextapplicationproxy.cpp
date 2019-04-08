@@ -251,9 +251,9 @@ namespace BlackCore
             return ok;
         }
 
-        void CContextApplicationProxy::processRemoteHotkeyActionCall(const QString &action, bool argument, const BlackMisc::CIdentifier &origin)
+        void CContextApplicationProxy::processRemoteHotkeyActionCall(const QString &action, bool argument, const CIdentifier &origin)
         {
-            if (origin.isFromLocalMachine()) { return; }
+            if (!sApp || origin.isFromLocalMachine()) { return; }
             sApp->getInputManager()->callFunctionsBy(action, argument);
             CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
         }
