@@ -173,6 +173,7 @@ namespace BlackGui
 
         void CNavigatorDialog::onStyleSheetsChanged()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const QString fn(CStyleSheetUtility::fileNameNavigator());
             const QString qss(sGui->getStyleSheetUtility().style(fn));
             this->setStyleSheet("");
@@ -190,7 +191,8 @@ namespace BlackGui
             {
                 if (event->buttons() & Qt::LeftButton)
                 {
-                    this->move(event->globalPos() - m_framelessDragPosition);
+                    const QPoint pos = this->mapToParent(event->pos() - m_framelessDragPosition);
+                    this->move(pos);
                     event->accept();
                     return;
                 }
@@ -207,7 +209,7 @@ namespace BlackGui
             {
                 if (event->buttons() & Qt::LeftButton)
                 {
-                    m_framelessDragPosition = this->mapToParent(event->pos());
+                    m_framelessDragPosition = event->pos();
                     event->accept();
                     return;
                 }

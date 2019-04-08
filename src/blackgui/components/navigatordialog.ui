@@ -21,16 +21,16 @@
   </property>
   <layout class="QGridLayout" name="gl_NavigatorDialog">
    <property name="leftMargin">
-    <number>3</number>
+    <number>5</number>
    </property>
    <property name="topMargin">
-    <number>3</number>
+    <number>5</number>
    </property>
    <property name="rightMargin">
-    <number>3</number>
+    <number>5</number>
    </property>
    <property name="bottomMargin">
-    <number>3</number>
+    <number>5</number>
    </property>
    <item row="0" column="0">
     <widget class="QFrame" name="fr_NavigatorDialogInner"/>
