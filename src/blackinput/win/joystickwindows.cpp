@@ -70,7 +70,9 @@ namespace BlackInput
         // Filter devices with 0 buttons
         if (deviceCaps.dwButtons == 0) { return false; }
 
-        if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_BUTTON)))
+        // fix for the toggle button issue T585
+        // if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_BUTTON)))
+        if (FAILED(hr = m_directInputDevice->EnumObjects(enumObjectsCallback, this, DIDFT_PSHBUTTON)))
         {
             CLogMessage(this).warning(u"IDirectInputDevice8::EnumObjects failed: ") << hr;
             return false;
