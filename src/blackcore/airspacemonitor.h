@@ -11,10 +11,11 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/matchinglog.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"

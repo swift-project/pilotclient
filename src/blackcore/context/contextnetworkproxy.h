@@ -120,8 +120,8 @@ namespace BlackCore
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
             virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual bool isReverseLookupMessagesEnabled() const override;
-            virtual void enableReverseLookupMessages(bool enabled) override;
+            virtual BlackMisc::Simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
+            virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) override;
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual QString getLibraryInfo(bool detailed) const override;

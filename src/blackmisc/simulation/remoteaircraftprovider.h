@@ -13,7 +13,7 @@
 
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/reverselookup.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
@@ -206,11 +206,11 @@ namespace BlackMisc
 
             //! Enabled reverse lookup logging?
             //! \threadsafe
-            virtual bool isReverseLookupMessagesEnabled() const = 0;
+            virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const = 0;
 
             //! Enable reverse lookup logging
             //! \threadsafe
-            virtual void enableReverseLookupMessages(bool enabled) = 0;
+            virtual void enableReverseLookupMessages(ReverseLookupLogging enable) = 0;
 
             //! Get aircraft parts history
             //! \threadsafe
@@ -344,8 +344,8 @@ namespace BlackMisc
             //! \ingroup remoteaircraftprovider
             //! \ingroup reverselookup
             //! @{
-            virtual void enableReverseLookupMessages(bool enabled) override;
-            virtual bool isReverseLookupMessagesEnabled() const override;
+            virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
+            virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
 
@@ -450,6 +450,10 @@ namespace BlackMisc
             //! Add an offset for testing
             Aviation::CAircraftSituation addTestAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
 
+            //! What to log?
+            //! \threadsafe
+            ReverseLookupLogging whatToReverseLog() const;
+
         private:
             //! Store the latest changes
             //! \remark latest first
@@ -465,6 +469,7 @@ namespace BlackMisc
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
             int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
 
+            ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo;     //!< shall we log. information about the matching process
             Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;     //!< aircraft, thread safe access required
             Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
             Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages; //!< status messages for parts history
@@ -472,8 +477,7 @@ namespace BlackMisc
             Aviation::CTimestampPerCallsign m_partsLastModified;             //!< when parts last modified
             Aviation::CLengthPerCallsign    m_testOffset;                    //!< offsets
 
-            bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
-            bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
+            bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
 
             // locks
             mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign

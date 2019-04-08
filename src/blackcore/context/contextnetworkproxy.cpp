@@ -273,14 +273,16 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getReverseLookupMessages"), callsign);
         }
 
-        bool CContextNetworkProxy::isReverseLookupMessagesEnabled() const
+        ReverseLookupLogging CContextNetworkProxy::isReverseLookupMessagesEnabled() const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isReverseLookupMessagesEnabled"));
+            //! \fixme KB 2019-04 directly return MatchingLog causes issues with QDbusArgument
+            const int r = m_dBusInterface->callDBusRet<int>(QLatin1String("isReverseLookupMessagesEnabled"));
+            return static_cast<ReverseLookupLogging>(r);
         }
 
-        void CContextNetworkProxy::enableReverseLookupMessages(bool enabled)
+        void CContextNetworkProxy::enableReverseLookupMessages(ReverseLookupLogging enable)
         {
-            m_dBusInterface->callDBus(QLatin1String("enableReverseLookupMessages"), enabled);
+            m_dBusInterface->callDBus(QLatin1String("enableReverseLookupMessages"), enable);
         }
 
         CStatusMessageList CContextNetworkProxy::getAircraftPartsHistory(const CCallsign &callsign) const

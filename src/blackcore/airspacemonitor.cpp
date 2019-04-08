@@ -512,11 +512,12 @@ namespace BlackCore
                                   (remoteAircraft.hasModelString()) // we cannot expect more info
                               );
 
+        const ReverseLookupLogging revLogEnabled = this->whatToReverseLog();
         if (trial < 5 && !complete)
         {
             static const QString ws("Wait for further data, trial %1 ts %2");
             static const QString format("hh:mm:ss.zzz");
-            this->addReverseLookupMessage(callsign, ws.arg(trial).arg(QDateTime::currentDateTimeUtc().toString(format)));
+            if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(trial).arg(QDateTime::currentDateTimeUtc().toString(format))); }
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(1500, this, [ = ]()
             {
@@ -701,8 +702,9 @@ namespace BlackCore
 
         if (isAircraft)
         {
+            const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
             CStatusMessageList reverseLookupMessages;
-            CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
+            CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
             CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign,
                                                 QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
                                                 arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
@@ -720,8 +722,9 @@ namespace BlackCore
 
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
+        const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
-        CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
+        CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
         CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("Data from network: aircraft '%1', airline '%2', livery '%3'").
                                             arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                             CAirspaceMonitor::getLogCategories());

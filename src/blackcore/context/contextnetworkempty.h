@@ -427,17 +427,17 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::isReverseLookupMessagesEnabled
-            virtual bool isReverseLookupMessagesEnabled() const override
+            virtual BlackMisc::Simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
+                return BlackMisc::Simulation::RevLogDisabled;
             }
 
             //! \copydoc IContextNetwork::enableReverseLookupMessages
-            virtual void enableReverseLookupMessages(bool enabled) override
+            virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                Q_UNUSED(enabled);
+                Q_UNUSED(enable);
             }
 
             //! \copydoc IContextNetwork::getAircraftPartsHistory

@@ -697,17 +697,18 @@ namespace BlackCore
             return m_airspace->getReverseLookupMessages(callsign);
         }
 
-        bool CContextNetwork::isReverseLookupMessagesEnabled() const
+        ReverseLookupLogging CContextNetwork::isReverseLookupMessagesEnabled() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->isReverseLookupMessagesEnabled();
         }
 
-        void CContextNetwork::enableReverseLookupMessages(bool enabled)
+        void CContextNetwork::enableReverseLookupMessages(ReverseLookupLogging enable)
         {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << enabled; }
-            if (m_airspace->isReverseLookupMessagesEnabled() == enabled) { return; }
-            m_airspace->enableReverseLookupMessages(enabled);
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << enable; }
+            const ReverseLookupLogging revEnabled = m_airspace->isReverseLookupMessagesEnabled();
+            if (revEnabled == enable) { return; }
+            m_airspace->enableReverseLookupMessages(enable);
             emit CContext::changedLogOrDebugSettings();
         }
 

@@ -608,13 +608,13 @@ namespace BlackMisc
             }
         }
 
-        void CRemoteAircraftProvider::enableReverseLookupMessages(bool enabled)
+        void CRemoteAircraftProvider::enableReverseLookupMessages(ReverseLookupLogging enable)
         {
             QWriteLocker l(&m_lockMessages);
-            m_enableReverseLookupMsgs = enabled;
+            m_enableReverseLookupMsgs = enable;
         }
 
-        bool CRemoteAircraftProvider::isReverseLookupMessagesEnabled() const
+        ReverseLookupLogging CRemoteAircraftProvider::isReverseLookupMessagesEnabled() const
         {
             QReadLocker l(&m_lockMessages);
             return m_enableReverseLookupMsgs;
@@ -646,14 +646,14 @@ namespace BlackMisc
         void CRemoteAircraftProvider::addReverseLookupMessage(const CCallsign &callsign, const CStatusMessage &message)
         {
             if (callsign.isEmpty()) { return; }
-            if (message.isEmpty()) { return; }
+            if (message.isEmpty())  { return; }
             this->addReverseLookupMessages(callsign, CStatusMessageList({ message }));
         }
 
         void CRemoteAircraftProvider::addReverseLookupMessage(const CCallsign &callsign, const QString &message, CStatusMessage::StatusSeverity severity)
         {
             if (callsign.isEmpty()) { return; }
-            if (message.isEmpty()) { return; }
+            if (message.isEmpty())  { return; }
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, message, getLogCategories(), severity);
             this->addReverseLookupMessage(callsign, m);
         }
@@ -686,6 +686,12 @@ namespace BlackMisc
             const CLength os = m_testOffset.contains(cs) ? m_testOffset.value(cs) : m_testOffset.value(testAltitudeOffsetCallsign());
             if (os.isNull() || os.isZeroEpsilonConsidered()) { return situation; }
             return situation.withAltitudeOffset(os);
+        }
+
+        ReverseLookupLogging CRemoteAircraftProvider::whatToReverseLog() const
+        {
+            QReadLocker l(&m_lockMessages);
+            return m_enableReverseLookupMsgs;
         }
 
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const

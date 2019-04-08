@@ -11,15 +11,12 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXT_CONTEXTNETWORK_H
 
-#include <QObject>
-#include <QString>
-
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/network.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/airporticaocode.h"
@@ -40,6 +37,8 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/metar.h"
 
+#include <QObject>
+#include <QString>
 #include <functional>
 
 // clazy:excludeall=const-signal-or-slot
@@ -304,10 +303,10 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Enabled reverse lookup logging?
-            virtual bool isReverseLookupMessagesEnabled() const = 0;
+            virtual BlackMisc::Simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const = 0;
 
             //! Enable reverse lookup logging
-            virtual void enableReverseLookupMessages(bool enabled) = 0;
+            virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) = 0;
 
             //! Get aircraft parts history
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
