@@ -72,25 +72,25 @@ namespace BlackCore
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
-        this->enableReverseLookupMessages(sApp->isDeveloperFlagSet());
+        this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
-        connect(m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::onAtcPositionUpdate);
-        connect(m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
-        connect(m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
-        connect(m_network, &INetwork::flightPlanReplyReceived, this, &CAirspaceMonitor::onFlightPlanReceived);
-        connect(m_network, &INetwork::realNameReplyReceived, this, &CAirspaceMonitor::onRealNameReplyReceived);
-        connect(m_network, &INetwork::icaoCodesReplyReceived, this, &CAirspaceMonitor::onIcaoCodesReceived);
-        connect(m_network, &INetwork::pilotDisconnected, this, &CAirspaceMonitor::onPilotDisconnected);
-        connect(m_network, &INetwork::atcDisconnected, this, &CAirspaceMonitor::onAtcControllerDisconnected);
-        connect(m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::onAircraftUpdateReceived);
+        connect(m_network, &INetwork::atcPositionUpdate,             this, &CAirspaceMonitor::onAtcPositionUpdate);
+        connect(m_network, &INetwork::atisReplyReceived,             this, &CAirspaceMonitor::onAtisReceived);
+        connect(m_network, &INetwork::atisVoiceRoomReplyReceived,    this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
+        connect(m_network, &INetwork::atisLogoffTimeReplyReceived,   this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_network, &INetwork::flightPlanReplyReceived,       this, &CAirspaceMonitor::onFlightPlanReceived);
+        connect(m_network, &INetwork::realNameReplyReceived,         this, &CAirspaceMonitor::onRealNameReplyReceived);
+        connect(m_network, &INetwork::icaoCodesReplyReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
+        connect(m_network, &INetwork::pilotDisconnected,             this, &CAirspaceMonitor::onPilotDisconnected);
+        connect(m_network, &INetwork::atcDisconnected,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
+        connect(m_network, &INetwork::aircraftPositionUpdate,        this, &CAirspaceMonitor::onAircraftUpdateReceived);
         connect(m_network, &INetwork::aircraftInterimPositionUpdate, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        connect(m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::onFrequencyReceived);
-        connect(m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        connect(m_network, &INetwork::customFSInnPacketReceived, this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
-        connect(m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::onServerReplyReceived);
-        connect(m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
-        connect(m_network, &INetwork::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_network, &INetwork::frequencyReplyReceived,        this, &CAirspaceMonitor::onFrequencyReceived);
+        connect(m_network, &INetwork::capabilitiesReplyReceived,     this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_network, &INetwork::customFSInnPacketReceived,     this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_network, &INetwork::serverReplyReceived,           this, &CAirspaceMonitor::onServerReplyReceived);
+        connect(m_network, &INetwork::aircraftConfigPacketReceived,  this, &CAirspaceMonitor::onAircraftConfigReceived);
+        connect(m_network, &INetwork::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -98,7 +98,7 @@ namespace BlackCore
         // optional readers
         if (sApp->getWebDataServices()->getBookingReader())
         {
-            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::onReceivedAtcBookings);
+            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead,          this, &CAirspaceMonitor::onReceivedAtcBookings);
             connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
         }
 
@@ -325,7 +325,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::requestAtcBookingsUpdate()
     {
-        Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "missing reader");
+        if (!sApp || sApp->isShuttingDown()) { return; }
         sApp->getWebDataServices()->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
         m_bookingsRequested = true;
     }
@@ -395,7 +395,7 @@ namespace BlackCore
         }
 
         // Client
-        if (!sApp || !sApp->getWebDataServices()) { return; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CClient::IndexUser, CUser::IndexRealName }, realname);
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
@@ -483,6 +483,7 @@ namespace BlackCore
     void CAirspaceMonitor::onReceivedVatsimDataFile()
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
         CClientList clients(this->getClients()); // copy
         bool changed = false;
         for (auto client = clients.begin(); client != clients.end(); ++client)
