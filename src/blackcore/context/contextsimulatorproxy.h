@@ -98,8 +98,8 @@ namespace BlackCore
             virtual void setWeatherActivated(bool activated) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual bool isMatchingMessagesEnabled() const override;
-            virtual void enableMatchingMessages(bool enabled) override;
+            virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const override;
+            virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             virtual int doMatchingsAgain() override;
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;

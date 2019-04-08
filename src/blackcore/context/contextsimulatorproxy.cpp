@@ -307,12 +307,14 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("getMatchingMessages"), callsign);
         }
 
-        bool CContextSimulatorProxy::isMatchingMessagesEnabled() const
+        MatchingLog CContextSimulatorProxy::isMatchingMessagesEnabled() const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isMatchingMessagesEnabled"));
+            //! \fixme KB 2019-04 directly return MatchingLog causes issues with QDbusArgument
+            const int r = m_dBusInterface->callDBusRet<int>(QLatin1String("isMatchingMessagesEnabled"));
+            return static_cast<MatchingLog>(r);
         }
 
-        void CContextSimulatorProxy::enableMatchingMessages(bool enabled)
+        void CContextSimulatorProxy::enableMatchingMessages(MatchingLog enabled)
         {
             m_dBusInterface->callDBus(QLatin1String("enableMatchingMessages"), enabled);
         }

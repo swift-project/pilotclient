@@ -11,16 +11,16 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_H
 #define BLACKCORE_CONTEXTSIMULATOR_H
 
-#include "blackconfig/buildconfig.h"
-#include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/matchingstatistics.h"
+#include "blackmisc/simulation/matchinglog.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
@@ -31,6 +31,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QObject>
 #include <QString>
@@ -261,10 +262,10 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Enabled mapping logging?
-            virtual bool isMatchingMessagesEnabled() const = 0;
+            virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const = 0;
 
             //! Enable mapping logging
-            virtual void enableMatchingMessages(bool enabled) = 0;
+            virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) = 0;
 
             //! Highlight aircraft in simulator
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;

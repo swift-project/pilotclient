@@ -117,8 +117,8 @@ namespace BlackCore
             virtual int  doMatchingsAgain() override;
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual bool isMatchingMessagesEnabled() const override;
-            virtual void enableMatchingMessages(bool enabled) override;
+            virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const override;
+            virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) override;
             virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
             virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override;
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
@@ -267,8 +267,8 @@ namespace BlackCore
 
             bool m_wasSimulating          = false;
             bool m_initallyAddAircraft    = false;
-            bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated     = false; // used to activate after plugin is loaded
+            BlackMisc::Simulation::MatchingLog m_logMatchingMessages = BlackMisc::Simulation::MatchingLogSimplified;
 
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)
             BlackMisc::Simulation::CBackgroundValidation *m_validator = nullptr;

@@ -34,43 +34,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    const QString &CAircraftMatcher::matchingLogFlagToString(CAircraftMatcher::MatchingLogFlag logFlag)
-    {
-        static const QString logNothing("nothing");
-        static const QString logModelstring("model string");
-        static const QString logStepwiseReduce("step wise reduce");
-        static const QString logScoring("scoring");
-        static const QString logCombinedDefaultType("combined default type");
-        static const QString logMinimal("minimal");
-        static const QString logAll("all");
-
-        switch (logFlag)
-        {
-        case LogCombinedDefaultType: return logCombinedDefaultType;
-        case LogNothing:        return logNothing;
-        case LogModelstring:    return logModelstring;
-        case LogStepwiseReduce: return logStepwiseReduce;
-        case LogScoring:        return logScoring;
-        case LogMinimal:        return logMinimal;
-        case LogAll:            return logAll;
-        default: break;
-        }
-
-        static const QString unknown("unknown");
-        return unknown;
-    }
-
-    const QString CAircraftMatcher::matchingLogToString(MatchingLog log)
-    {
-        if (log == LogNothing) { return matchingLogFlagToString(LogNothing); }
-        QStringList l;
-        if (log.testFlag(LogCombinedDefaultType)) { l << matchingLogFlagToString(LogCombinedDefaultType); }
-        if (log.testFlag(LogModelstring))    { l << matchingLogFlagToString(LogModelstring); }
-        if (log.testFlag(LogStepwiseReduce)) { l << matchingLogFlagToString(LogStepwiseReduce); }
-        if (log.testFlag(LogScoring))        { l << matchingLogFlagToString(LogScoring); }
-        return l.join(", ");
-    }
-
     const CLogCategoryList &CAircraftMatcher::getLogCategories()
     {
         static const CLogCategoryList cats { CLogCategory::matching() };
@@ -162,7 +125,7 @@ namespace BlackCore
             "-----------------------------------------\n");
 
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
-        if (whatToLog == LogNothing) { log = nullptr; }
+        if (whatToLog == MatchingLogNothing) { log = nullptr; }
         if (log) { log->clear(); }
 
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m1.arg(startTime.toString(format)));
@@ -894,7 +857,7 @@ namespace BlackCore
         Q_UNUSED(whatToLog);
 
         const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
-        CStatusMessageList *reduceLog = log && whatToLog.testFlag(LogStepwiseReduce) ? log : nullptr;
+        CStatusMessageList *reduceLog = log && whatToLog.testFlag(MatchingLogStepwiseReduce) ? log : nullptr;
         bool reduced = false;
         do
         {
@@ -990,15 +953,15 @@ namespace BlackCore
         CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         const bool noZeroScores = mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros);
         const bool preferColorLiveries = mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries);
+        CStatusMessageList *scoreLog = log && whatToLog.testFlag(MatchingLogScoring) ? log : nullptr;
 
         // VTOL
         ScoredModels map;
-        map = modelSet.scoreFull(remoteAircraft.getModel(), preferColorLiveries, noZeroScores, whatToLog.testFlag(LogScoring) ? log : nullptr);
+        map = modelSet.scoreFull(remoteAircraft.getModel(), preferColorLiveries, noZeroScores, scoreLog);
 
         CAircraftModel matchedModel;
         if (map.isEmpty()) { return CAircraftModelList(); }
 
-        CStatusMessageList *scoreLog = log && whatToLog.testFlag(LogScoring) ? log : nullptr;
         maxScore = map.lastKey();
         const CAircraftModelList maxScoreAircraft(map.values(maxScore));
         CMatchingUtils::addLogDetailsToList(scoreLog, remoteAircraft, QStringLiteral("Scores: %1").arg(scoresToString(map)), getLogCategories());
@@ -1009,7 +972,7 @@ namespace BlackCore
     CAircraftModel CAircraftMatcher::getCombinedTypeDefaultModel(const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, const CAircraftModel &defaultModel, MatchingLog whatToLog, CStatusMessageList *log)
     {
         const QString combinedType = remoteAircraft.getAircraftIcaoCombinedType();
-        CStatusMessageList *combinedLog = log && whatToLog.testFlag(LogCombinedDefaultType) ? log : nullptr;
+        CStatusMessageList *combinedLog = log && whatToLog.testFlag(MatchingLogCombinedDefaultType) ? log : nullptr;
 
         if (combinedType.isEmpty())
         {
@@ -1045,7 +1008,7 @@ namespace BlackCore
 
     CAircraftModel CAircraftMatcher::matchByExactModelString(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, MatchingLog whatToLog, CStatusMessageList *log)
     {
-        CStatusMessageList *msLog = log && whatToLog.testFlag(LogModelstring) ? log : nullptr;
+        CStatusMessageList *msLog = log && whatToLog.testFlag(MatchingLogModelstring) ? log : nullptr;
         if (remoteAircraft.getModelString().isEmpty())
         {
             if (msLog) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No model string, no exact match possible")); }

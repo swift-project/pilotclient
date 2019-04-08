@@ -349,17 +349,17 @@ namespace BlackCore
             }
 
             //! \copydoc IContextSimulator::enableMatchingMessages
-            virtual void enableMatchingMessages(bool enable) override
+            virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enable) override
             {
                 Q_UNUSED(enable);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::isMatchingMessagesEnabled
-            virtual bool isMatchingMessagesEnabled() const override
+            virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
+                return BlackMisc::Simulation::MatchingLogNothing;
             }
 
             //! \copydoc IContextSimulator::parseCommandLine

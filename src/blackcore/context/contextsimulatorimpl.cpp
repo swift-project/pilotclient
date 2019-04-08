@@ -70,7 +70,8 @@ namespace BlackCore
             CContextSimulator::registerHelp();
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-            m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild(); // can be slow with huge model sets
+            MatchingLog logMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ? MatchingLogAll : MatchingLogSimplified;
+            m_logMatchingMessages = logMatchingMessages;
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
@@ -87,7 +88,7 @@ namespace BlackCore
                 m_aircraftMatcher.setSetup(m_matchingSettings.get());
                 if (m_aircraftMatcher.getModelSetCount() <= MatchingLogMaxModelSetSize)
                 {
-                    this->enableMatchingMessages(true);
+                    this->enableMatchingMessages(logMatchingMessages);
                 }
             });
 
@@ -586,9 +587,9 @@ namespace BlackCore
             // here we find the best simulator model for a resolved model
             // in the first step we already tried to find accurate ICAO codes etc.
             // coming from CAirspaceMonitor::sendReadyForModelMatching
-            CAircraftMatcher::MatchingLog whatToLog = CAircraftMatcher::LogAll;
+            MatchingLog whatToLog = m_logMatchingMessages;
             CStatusMessageList matchingMessages;
-            CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
+            CStatusMessageList *pMatchingMessages = m_logMatchingMessages > 0 ? &matchingMessages : nullptr;
             CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
             const CLength cg = m_simulatorPlugin.second->getCGPerModelString(aircraftModel.getModelString());
@@ -837,17 +838,17 @@ namespace BlackCore
             return m_matchingMessages[callsign];
         }
 
-        bool CContextSimulator::isMatchingMessagesEnabled() const
+        MatchingLog CContextSimulator::isMatchingMessagesEnabled() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_enableMatchingMessages;
+            return m_logMatchingMessages;
         }
 
-        void CContextSimulator::enableMatchingMessages(bool enabled)
+        void CContextSimulator::enableMatchingMessages(MatchingLog enabled)
         {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enabled; }
-            if (m_enableMatchingMessages == enabled) { return; }
-            m_enableMatchingMessages = enabled;
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << matchingLogToString(enabled); }
+            if (m_logMatchingMessages == enabled) { return; }
+            m_logMatchingMessages = enabled;
             emit CContext::changedLogOrDebugSettings();
         }
 
@@ -1045,7 +1046,7 @@ namespace BlackCore
             this->loadSimulatorPlugin(info);
 
             // if we have enabled messages, we will disable if size getting too high
-            if (m_enableMatchingMessages)
+            if (m_logMatchingMessages)
             {
                 const QPointer<CContextSimulator> myself(this);
                 QTimer::singleShot(5000, this, [ = ]
@@ -1087,7 +1088,7 @@ namespace BlackCore
         {
             if (callsign.isEmpty()) { return; }
             if (messages.isEmpty()) { return; }
-            if (!m_enableMatchingMessages) { return; }
+            if (!m_logMatchingMessages) { return; }
             if (m_matchingMessages.contains(callsign))
             {
                 CStatusMessageList &msgs = m_matchingMessages[callsign];
