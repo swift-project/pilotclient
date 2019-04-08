@@ -28,7 +28,6 @@ namespace BlackMisc
             CDistributor::registerMetadata();
             CDistributorList::registerMetadata();
             CDistributorListPreferences::registerMetadata();
-            qDBusRegisterMetaType<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             CInterpolationAndRenderingSetupPerCallsign::registerMetadata();
             CInterpolationAndRenderingSetupGlobal::registerMetadata();
             CInterpolationSetupList::registerMetadata();
@@ -48,14 +47,24 @@ namespace BlackMisc
             CSwiftPluginSettings::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
+            CAircraftMatcherSetup::registerMetadata();
+
             qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingMode>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qRegisterMetaType<MatchingLog>();
+            qRegisterMetaType<MatchingLogFlag>();
             qRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
+            qRegisterMetaType<ReverseLookupLoggingFlag>();
+            qRegisterMetaType<ReverseLookupLogging>();
+
+            // the ones generate with Q_DECLARE_FLAGS fail here
+            qDBusRegisterMetaType<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qDBusRegisterMetaType<MatchingLogFlag>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
-            CAircraftMatcherSetup::registerMetadata();
+            qDBusRegisterMetaType<ReverseLookupLoggingFlag>();
         }
     } // ns
 } // ns

@@ -22,6 +22,8 @@
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
+#include "blackmisc/simulation/matchinglog.h"
+#include "blackmisc/simulation/reverselookup.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorinfolist.h"
