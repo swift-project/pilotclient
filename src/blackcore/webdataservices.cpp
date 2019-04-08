@@ -30,6 +30,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/threadutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDir>
 #include <QFlags>
@@ -45,6 +46,7 @@ using namespace BlackCore::Db;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
 using namespace BlackCore::Context;
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation;
@@ -1409,8 +1411,12 @@ namespace BlackCore
         if (m_shuttingDown) { return false; }
 
         Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
+
+        // in a dev build all symbols are loaded which sometimes causes unnecessary timeout
+        const int timeOutMs = CBuildConfig::isLocalDeveloperDebugBuild() ? 30 * 1000 : 15 * 1000;
+
         if (m_dbInfoDataReader->areAllInfoObjectsRead()) { return true; }
-        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(15 * 1000); }
+        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
         return read;
     }
