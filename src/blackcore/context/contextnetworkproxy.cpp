@@ -275,9 +275,7 @@ namespace BlackCore
 
         ReverseLookupLogging CContextNetworkProxy::isReverseLookupMessagesEnabled() const
         {
-            //! \fixme KB 2019-04 directly return MatchingLog causes issues with QDbusArgument
-            const int r = m_dBusInterface->callDBusRet<int>(QLatin1String("isReverseLookupMessagesEnabled"));
-            return static_cast<ReverseLookupLogging>(r);
+            return m_dBusInterface->callDBusRet<ReverseLookupLogging>(QLatin1String("isReverseLookupMessagesEnabled"));
         }
 
         void CContextNetworkProxy::enableReverseLookupMessages(ReverseLookupLogging enable)

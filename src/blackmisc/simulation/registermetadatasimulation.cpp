@@ -58,13 +58,15 @@ namespace BlackMisc
             qRegisterMetaType<ReverseLookupLoggingFlag>();
             qRegisterMetaType<ReverseLookupLogging>();
 
-            // the ones generate with Q_DECLARE_FLAGS fail here
+            // the ones generate with Q_DECLARE_FLAGS and no streamin operator fail here
             qDBusRegisterMetaType<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
             qDBusRegisterMetaType<MatchingLogFlag>();
+            qDBusRegisterMetaType<MatchingLog>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qDBusRegisterMetaType<ReverseLookupLoggingFlag>();
+            qDBusRegisterMetaType<ReverseLookupLogging>();
         }
     } // ns
 } // ns
