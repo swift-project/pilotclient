@@ -2,18 +2,69 @@
 <ui version="4.0">
  <class>CSettingsSimulatorBasicsComponent</class>
  <widget class="QFrame" name="CSettingsSimulatorBasicsComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>472</width>
-    <height>355</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Simulator basic settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_SimulatorBasics">
+  <layout class="QGridLayout" name="gl_SimulatorBasics" columnstretch="0,1,0,0">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <item row="9" column="3">
+    <widget class="QPushButton" name="pb_CopyDefaults">
+     <property name="toolTip">
+      <string>copy (materialize) defaults</string>
+     </property>
+     <property name="text">
+      <string>copy def.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_Simulator">
+     <property name="text">
+      <string>Simulator:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="pb_SimulatorFileDialog">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <spacer name="hs_Buttons">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>50</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="8" column="3">
+    <widget class="QPushButton" name="pb_Reset">
+     <property name="text">
+      <string>reset</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="2">
     <widget class="QLineEdit" name="le_SimulatorDirectory">
      <property name="placeholderText">
@@ -21,10 +72,10 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_SimulatorDirectory">
+   <item row="7" column="3">
+    <widget class="QPushButton" name="pb_ExcludeFileDialog">
      <property name="text">
-      <string>Simulator directory:</string>
+      <string>...</string>
      </property>
     </widget>
    </item>
@@ -35,7 +86,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2" rowspan="4">
+   <item row="2" column="3">
+    <widget class="QPushButton" name="pb_ModelFileDialog">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2" rowspan="4">
     <widget class="QPlainTextEdit" name="pte_ExcludeDirectories">
      <property name="documentTitle">
       <string>Excluded directory patterns</string>
@@ -48,55 +106,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2" rowspan="3">
-    <widget class="QPlainTextEdit" name="pte_ModelDirectories">
-     <property name="placeholderText">
-      <string>Model directories</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" rowspan="4" alignment="Qt::AlignTop">
-    <widget class="QLabel" name="lbl_ExcludeDirectories">
-     <property name="toolTip">
-      <string>Excluded from model loading</string>
-     </property>
-     <property name="text">
-      <string>Exclude directory patterns:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Simulator">
-     <property name="text">
-      <string>Simulator:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1" colspan="2" alignment="Qt::AlignLeft">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
-     <property name="minimumSize">
-      <size>
-       <width>150</width>
-       <height>25</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pb_SimulatorFileDialog">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="pb_ModelFileDialog">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="3">
+   <item row="5" column="3">
     <widget class="QPushButton" name="pb_AdjustModelDirectory">
      <property name="toolTip">
       <string>remove redundant directories, fix file paths ...</string>
@@ -106,34 +116,44 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="3">
-    <widget class="QPushButton" name="pb_ExcludeFileDialog">
-     <property name="text">
-      <string>...</string>
+   <item row="2" column="2" rowspan="4">
+    <widget class="QPlainTextEdit" name="pte_ModelDirectories">
+     <property name="placeholderText">
+      <string>Model directories</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="3">
-    <widget class="QPushButton" name="pb_Reset">
-     <property name="text">
-      <string>reset</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="3">
-    <widget class="QPushButton" name="pb_CopyDefaults">
+   <item row="7" column="0" rowspan="4" alignment="Qt::AlignTop">
+    <widget class="QLabel" name="lbl_ExcludeDirectories">
      <property name="toolTip">
-      <string>copy (materialize) defaults</string>
+      <string>Excluded from model loading</string>
      </property>
      <property name="text">
-      <string>copy def.</string>
+      <string>Exclude directory patterns:</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="3">
+   <item row="10" column="3">
     <widget class="QPushButton" name="pb_Save">
      <property name="text">
       <string>save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="3" alignment="Qt::AlignLeft">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>25</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_SimulatorDirectory">
+     <property name="text">
+      <string>Simulator directory:</string>
      </property>
     </widget>
    </item>
