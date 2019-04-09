@@ -742,7 +742,9 @@ namespace BlackMisc
         {
             if (!this->hasFileName()) { return false; }
             const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
-            return (fi.exists() && fi.isReadable());
+            if (!fi.exists()) { return false; }
+            const bool r = fi.isReadable();
+            return r;
         }
 
         QDir CAircraftModel::getFileDirectory() const

@@ -1325,7 +1325,11 @@ namespace BlackMisc
             if (!alreadySortedByFn) { sorted.sortByFileName(); }
 
             const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
-            const QString rDir = caseSensitive ? rootDirectory : rootDirectory.toLower();
+            const QString rDir = CFileUtils::normalizeFilePathToQtStandard(
+                                     CFileUtils::stripLeadingSlashOrDriveLetter(
+                                         caseSensitive ? rootDirectory : rootDirectory.toLower()
+                                     )
+                                 );
 
             for (const CAircraftModel &model : as_const(sorted))
             {

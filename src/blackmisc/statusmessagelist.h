@@ -95,6 +95,9 @@ namespace BlackMisc
         //! Sort by severity, lowest first
         void sortBySeverity();
 
+        //! Sort by severity, highest first
+        void sortBySeverityHighestFirst();
+
         //! Remove warnings and below
         void removeWarningsAndBelow();
 

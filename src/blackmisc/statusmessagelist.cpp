@@ -133,6 +133,12 @@ namespace BlackMisc
         this->sortBy(&CStatusMessage::getSeverity);
     }
 
+    void CStatusMessageList::sortBySeverityHighestFirst()
+    {
+        this->sortBy(&CStatusMessage::getSeverity);
+        this->reverse();
+    }
+
     void CStatusMessageList::removeWarningsAndBelow()
     {
         if (this->isEmpty()) { return; }

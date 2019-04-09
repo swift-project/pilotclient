@@ -169,7 +169,7 @@ namespace BlackMisc
     QString CFileUtils::lastPathSegment(const QString &path)
     {
         if (path.isEmpty()) { return {}; }
-        if (path.endsWith('/')) { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
+        if (path.endsWith('/'))  { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
         if (!path.contains('/')) { return path; }
         return path.mid(path.lastIndexOf('/') + 1);
     }
