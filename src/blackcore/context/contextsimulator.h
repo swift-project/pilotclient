@@ -136,7 +136,7 @@ namespace BlackCore
             //! Request a console message (whatever the console maybe)
             void requestUiConsoleMessage(const QString &driverMessage, bool clear);
 
-            //! Validate model set
+            //! Validated model set
             void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator,
                                    const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
                                    bool stopped, const BlackMisc::CStatusMessageList &msgs);

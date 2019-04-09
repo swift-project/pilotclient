@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CStatusMessagesDetail(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CStatusMessagesDetail();
+            virtual ~CStatusMessagesDetail() override;
 
             //! Add message
             void appendStatusMessageToList(const BlackMisc::CStatusMessage &message);
