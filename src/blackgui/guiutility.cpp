@@ -572,6 +572,29 @@ namespace BlackGui
         return QSizeF(w, h);
     }
 
+    void CGuiUtility::centerWidget(QWidget *widget)
+    {
+        const QRect screenGeometry = QApplication::desktop()->screenGeometry();
+        const int x = (screenGeometry.width()  - widget->width())  / 2;
+        const int y = (screenGeometry.height() - widget->height()) / 2;
+        widget->move(x, y);
+    }
+
+    void CGuiUtility::centerWidget(QWidget *widget, QWidget *host)
+    {
+        if (!host) { host = widget->parentWidget(); }
+
+        if (host)
+        {
+            const QRect hostRect = host->geometry();
+            widget->move(hostRect.center() - widget->rect().center());
+        }
+        else
+        {
+            CGuiUtility::centerWidget(widget);
+        }
+    }
+
     QString CGuiUtility::metricsInfo()
     {
         static const QString s("%1 %2 %3 | 80 chars: w%4 h%5 | 43 chars: w%6 h%7");

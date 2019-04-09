@@ -506,6 +506,7 @@ void CSwiftLauncher::startWizard()
         m_wizard.reset(new CConfigurationWizard(this));
     }
     m_wizard->show();
+    CGuiUtility::centerWidget(m_wizard.data(), this);
 }
 
 void CSwiftLauncher::onStyleSheetsChanged()

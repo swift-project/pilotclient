@@ -218,6 +218,12 @@ namespace BlackGui
         //! Estimate size based on current font
         static QSizeF fontMetricsEstimateSize(int xCharacters, int yCharacters, bool withRatio = false);
 
+        //! Center widget to host or screen
+        static void centerWidget(QWidget *widget);
+
+        //! Center widget to screen
+        static void centerWidget(QWidget *widget, QWidget *host);
+
         //! Some info about font metrics
         static QString metricsInfo();
 
