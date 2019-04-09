@@ -35,10 +35,11 @@ namespace BlackMisc
             m_updateTimer.setInterval(60 * 1000);
         }
 
-        void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator)
+        void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory)
         {
             QWriteLocker l(&m_lock);
-            m_simulator = simulator;
+            m_simulator    = simulator;
+            m_simDirectory = simDirectory;
         }
 
         bool CBackgroundValidation::wasAlreadyChecked(const CSimulatorInfo &simulator) const
@@ -130,7 +131,7 @@ namespace BlackMisc
                     msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, QStringLiteral("No models in set for  '%1'").arg(simulator.toQString(true))));
                     break;
                 }
-                msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped);
+                msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped, m_simDirectory);
 
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 const qint64 deltaTimeMs = now - started;

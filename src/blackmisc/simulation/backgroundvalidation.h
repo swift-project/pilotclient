@@ -41,7 +41,7 @@ namespace BlackMisc
 
             //! Corresponding simulator
             //! \threadsafe
-            void setCurrentSimulator(const CSimulatorInfo &simulator);
+            void setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory);
 
             //! Was already checked for simulator?
             //! \threadsafe
@@ -76,9 +76,10 @@ namespace BlackMisc
             void validated(const CSimulatorInfo &simulator, const CAircraftModelList &validModels, const CAircraftModelList &invalidModels, bool stopped, const CStatusMessageList &msgs);
 
         private:
-            mutable QReadWriteLock m_lock;       //!< lock snapshot
-            std::atomic_bool m_inWork { false }; //!< indicates a running update
-            CSimulatorInfo m_simulator;
+            mutable QReadWriteLock m_lock;        //!< lock snapshot
+            std::atomic_bool m_inWork { false };  //!< indicates a running update
+            CSimulatorInfo   m_simulator;         //!< simulator
+            QString          m_simDirectory;      //!< corresponding sim directory
 
             // last result values, mostly needed when running in the distributed swift system and we want to get the values
             CAircraftModelList m_lastResultValid;
