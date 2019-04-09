@@ -59,6 +59,7 @@ namespace BlackGui
             bool wasStopped = false;
             const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, "");
             ui->comp_StatusMessage->clear();
+            ui->comp_StatusMessage->setNoSorting(); // we use the pre-sorted list
             ui->comp_StatusMessage->appendStatusMessagesToList(msgs);
         }
 
