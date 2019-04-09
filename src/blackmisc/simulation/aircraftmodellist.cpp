@@ -657,7 +657,7 @@ namespace BlackMisc
             return Private::isLikelyImpl(this->countPerSimulator().getCountForFsxFamilySimulators(), this->size());
         }
 
-        bool CAircraftModelList::isLikelyXplaneModelList() const
+        bool CAircraftModelList::isLikelyXPlaneModelList() const
         {
             if (this->isEmpty()) { return false; } // avoid DIV 0
             return Private::isLikelyImpl(this->countPerSimulator().getCount(CSimulatorInfo::xplane()), this->size());
@@ -1309,7 +1309,7 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, bool alreadySorted) const
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn) const
         {
             invalidModels.clear();
             validModels.clear();
@@ -1322,9 +1322,11 @@ namespace BlackMisc
 
             // sorting allows to skip multiple files as once when a file fails
             CAircraftModelList sorted(*this);
-            if (!alreadySorted) { sorted.sortByFileName(); }
+            if (!alreadySortedByFn) { sorted.sortByFileName(); }
 
             const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
+            const QString rDir = caseSensitive ? rootDirectory : rootDirectory.toLower();
+
             for (const CAircraftModel &model : as_const(sorted))
             {
                 bool ok = false;
@@ -1352,10 +1354,20 @@ namespace BlackMisc
 
                     if (workingFiles.contains(fn) || model.hasExistingCorrespondingFile())
                     {
-                        ok = true;
-                        workingFiles.insert(fn);
-                        // msgs.push_back(CStatusMessage(this).validationInfo(u"'%1', file '%2' existing") << model.getModelStringAndDbKey() << model.getFileName());
-                        break;
+                        if (!rootDirectory.isEmpty()  && !fn.contains(rDir))
+                        {
+                            msgs.push_back(CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped") << model.getModelStringAndDbKey() << rDir << model.getFileName());
+                            failedFiles.insert(fn);
+                            failedFilesCount++;
+                            break;
+                        }
+                        else
+                        {
+                            ok = true;
+                            workingFiles.insert(fn);
+                            // msgs.push_back(CStatusMessage(this).validationInfo(u"'%1', file '%2' existing") << model.getModelStringAndDbKey() << model.getFileName());
+                            break;
+                        }
                     }
 
                     failedFiles.insert(fn);

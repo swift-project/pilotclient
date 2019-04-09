@@ -26,6 +26,7 @@ namespace BlackMisc
             CAircraftModelUtilities() = delete;
 
             //! Merge with vPilot data if possible
+            //! \deprecated vPilot parts might be removed
             static bool mergeWithVPilotData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &vPilotModels, bool force = false);
 
             //! Matrix airlines/aircraft ICAOs
@@ -35,7 +36,7 @@ namespace BlackMisc
             static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
 
             //! Validate aircraft.cfg entries
-            static CStatusMessageList validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped);
+            static CStatusMessageList validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
         };
     } //namespace
 } // namespace

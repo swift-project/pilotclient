@@ -270,7 +270,7 @@ namespace BlackMisc
             bool isLikelyFsxFamilyModelList() const;
 
             //! Is this here a XPlane model list?
-            bool isLikelyXplaneModelList() const;
+            bool isLikelyXPlaneModelList() const;
 
             //! Set mode for all elements
             int setModelMode(CAircraftModel::ModelMode mode);
@@ -453,8 +453,8 @@ namespace BlackMisc
             //! Validate distributors
             CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
-            //! Validate distributors
-            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, bool alreadySorted = false) const;
+            //! Validate files (file exists etc.)
+            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn = false) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;

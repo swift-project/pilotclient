@@ -140,12 +140,45 @@ namespace BlackMisc
             return ok ? dir.absoluteFilePath(fn) : "";
         }
 
-        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped)
+        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
         {
-            // specifi checks for XPlane/FG would go here
-            return models.isLikelyFsFamilyModelList() ?
-                   FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped) :
-                   models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+            // some generic tests
+            CStatusMessageList msgs;
+            if (models.isEmpty())
+            {
+                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityError, u"No models", true));
+                return msgs;
+            }
+
+            const int noDb = models.size() - models.countWithValidDbKey();
+            if (noDb > 0)
+            {
+                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("%1 models without DB data, is this intended?").arg(noDb), true));
+            }
+
+            const int noExcluded = models.countByMode(CAircraftModel::Exclude);
+            if (noExcluded > 0)
+            {
+                msgs.push_back(CStatusMessage(CLogCategory::matching(), CStatusMessage::SeverityWarning, QStringLiteral("%1 models marked as excluded, is this intended?").arg(noExcluded), true));
+            }
+
+            // specific checks for FSX/XPlane/FG
+            CStatusMessageList specificTests;
+            if (models.isLikelyFsFamilyModelList())
+            {
+                specificTests = FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+            }
+            else if (models.isLikelyXPlaneModelList())
+            {
+                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
+            }
+            else
+            {
+                specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, {});
+            }
+
+            msgs.push_back(specificTests);
+            return msgs;
         }
     } // ns
 } // ns
