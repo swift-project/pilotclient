@@ -60,7 +60,7 @@ namespace BlackMisc
             return m_simulator;
         }
 
-        bool CBackgroundValidation::triggerValidation(const CSimulatorInfo &simulator)
+        bool CBackgroundValidation::triggerValidation(const CSimulatorInfo &simulator, const QString &simDirectory)
         {
             const QPointer<CBackgroundValidation> myself(this);
             if (simulator.isNoSimulator())
@@ -71,7 +71,8 @@ namespace BlackMisc
             {
                 QWriteLocker l(&m_lock);
                 if (m_inWork) { return false; }
-                m_simulator = simulator;
+                m_simulator    = simulator;
+                m_simDirectory = simDirectory;
                 m_checkedSimulatorMsgs.remove(simulator);
             }
             QTimer::singleShot(0, this, [ = ]
@@ -136,8 +137,8 @@ namespace BlackMisc
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 const qint64 deltaTimeMs = now - started;
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
+                msgs.sortBySeverityHighestFirst();
                 msgs.freezeOrder();
-
                 validated = true;
 
                 QWriteLocker l(&m_lock);

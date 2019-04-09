@@ -61,7 +61,7 @@ namespace BlackMisc
 
             //! Trigger a validation, returns false if "work in progress"
             //! \threadsafe
-            bool triggerValidation(const CSimulatorInfo &simulator);
+            bool triggerValidation(const CSimulatorInfo &simulator, const QString &simDirectory);
 
             //! Request last results (again), if there are any
             //! \remark emits CBackgroundValidation::validated signal

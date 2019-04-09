@@ -304,7 +304,8 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!m_validator) { return false; }
-            return m_validator->triggerValidation(simulator);
+            const QString simDir = simulator.isSingleSimulator() ? m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator) : "";
+            return m_validator->triggerValidation(simulator, simDir);
         }
 
         CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
