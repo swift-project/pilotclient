@@ -548,7 +548,7 @@ namespace BlackMisc
                 CStatusMessage m;
                 sorted.sortByFileName();
                 stopped = false;
-                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, true);
+                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, "", true);
                 if (stopped || validModels.isEmpty()) { return msgs; }
 
                 const CAircraftModelList nonFsModels = validModels.findNonFsFamilyModels();

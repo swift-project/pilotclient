@@ -94,12 +94,25 @@ namespace BlackCore
 
             // Validation
             m_validator = new CBackgroundValidation(this);
-            m_validator->setCurrentSimulator(this->getSimulatorPluginInfo().getSimulator());
-            connect(this, &CContextSimulator::simulatorChanged, m_validator, &CBackgroundValidation::setCurrentSimulator);
+            this->setValidator(this->getSimulatorPluginInfo().getSimulator());
+            connect(this, &CContextSimulator::simulatorChanged, this, &CContextSimulator::setValidator);
             connect(m_validator, &CBackgroundValidation::validated, this, &CContextSimulator::validatedModelSet, Qt::QueuedConnection);
 
             m_validator->start(QThread::LowestPriority);
             m_validator->startUpdating(60);
+        }
+
+        void CContextSimulator::setValidator(const CSimulatorInfo &simulator)
+        {
+            if (simulator.isSingleSimulator())
+            {
+                const QString simDir = m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator);
+                m_validator->setCurrentSimulator(simulator, simDir);
+            }
+            else
+            {
+                m_validator->setCurrentSimulator(CSimulatorInfo::None, {});
+            }
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
@@ -1054,7 +1067,8 @@ namespace BlackCore
                     if (!myself) { return; }
                     if (m_aircraftMatcher.getModelSetCount() > MatchingLogMaxModelSetSize)
                     {
-                        this->enableMatchingMessages(false);
+                        const MatchingLog log = CBuildConfig::isDebugBuild() ? MatchingLogAll : MatchingLogSimplified;
+                        this->enableMatchingMessages(log);
                     }
                 });
             }

@@ -257,6 +257,9 @@ namespace BlackCore
             //! Load the last know model set
             void initByLastUsedModelSet();
 
+            //! Init and set validator
+            void setValidator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;     //!< all matching log messages per callsign
             QMap<BlackMisc::Aviation::CCallsign, int> m_failoverAddingCounts;

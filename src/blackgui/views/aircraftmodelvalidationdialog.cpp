@@ -48,15 +48,16 @@ namespace BlackGui
 
         void CAircraftModelValidationDialog::validate()
         {
+            // in view validation of models
             ui->comp_StatusMessage->clear();
             if (m_models.isEmpty()) { return; }
 
             CAircraftModelList valid;
             CAircraftModelList invalid;
             const bool ignoreEmpty = false;
-            const int maxFailedFiles = 25;
+            const int  maxFailedFiles = 25;
             bool wasStopped = false;
-            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped);
+            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, "");
             ui->comp_StatusMessage->clear();
             ui->comp_StatusMessage->appendStatusMessagesToList(msgs);
         }
