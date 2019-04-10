@@ -1010,6 +1010,13 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::roleDeparture()
+    {
+        // currently same icons as APP
+        static const QPixmap pm(QPixmap(":/own/icons/own/app.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
     const QPixmap &CIcons::roleFss()
     {
         return info16();
@@ -1165,13 +1172,14 @@ namespace BlackMisc
         case NetworkCapabilityUnknown: return capabilityUnknown();
         case NetworkCapabilityVoice: return capabilityVoice();
         case NetworkCapabilityVoiceBackground: return capabilityVoiceBackground();
-        case NetworkCapabilityVoiceReceiveOnly:           return capabilityVoiceReceiveOnly();
+        case NetworkCapabilityVoiceReceiveOnly: return capabilityVoiceReceiveOnly();
         case NetworkCapabilityVoiceReceiveOnlyBackground: return capabilityVoiceReceiveOnlyBackground();
         case NetworkRoleApproach: return roleApproach();
         case NetworkRoleC1: return roleC1();
         case NetworkRoleC3: return roleC3();
         case NetworkRoleCenter: return roleCenter();
         case NetworkRoleDelivery: return roleDelivery();
+        case NetworkRoleDeparture: return roleDeparture();
         case NetworkRoleFss: return roleFss();
         case NetworkRoleGround: return roleGround();
         case NetworkRoleI1: return roleI1();

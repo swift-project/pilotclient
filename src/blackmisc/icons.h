@@ -74,6 +74,7 @@ namespace BlackMisc
             NetworkRoleC3,
             NetworkRoleCenter,
             NetworkRoleDelivery,
+            NetworkRoleDeparture,
             NetworkRoleFss,
             NetworkRoleGround,
             NetworkRoleI1,
@@ -691,6 +692,9 @@ namespace BlackMisc
 
         //! Delivery
         static const QPixmap &roleDelivery();
+
+        //! Departure
+        static const QPixmap &roleDeparture();
 
         //! FSS (flight service staion)
         static const QPixmap &roleFss();

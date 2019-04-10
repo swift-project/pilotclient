@@ -86,18 +86,19 @@ namespace BlackMisc
         {
             if (suffix.length() < 3) { return CIcon::iconByIndex(CIcons::NetworkRoleUnknown); }
             const QString sfx = suffix.toUpper();
-            if ("APP" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
-            if ("GND" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
-            if ("TWR" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
-            if ("DEL" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
-            if ("CTR" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
-            if ("SUP" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
-            if ("OBS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
-            if ("INS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-            if ("FSS" == sfx)  { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
-            if ("ATIS" == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
-            if ("EXAM" == sfx)   { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-            if ("VATSIM" == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
+            if (QStringView(u"APP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
+            if (QStringView(u"DEP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDeparture); }
+            if (QStringView(u"GND")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
+            if (QStringView(u"TWR")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
+            if (QStringView(u"DEL")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
+            if (QStringView(u"CTR")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
+            if (QStringView(u"SUP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+            if (QStringView(u"OBS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
+            if (QStringView(u"INS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if (QStringView(u"FSS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
+            if (QStringView(u"ATIS") == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
+            if (QStringView(u"EXAM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
             return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
         }
 

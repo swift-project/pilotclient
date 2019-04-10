@@ -79,6 +79,7 @@ namespace BlackMisc
             CIcon(CIcons::NetworkRoleC3, "C3"),
             CIcon(CIcons::NetworkRoleCenter, "ATC center"),
             CIcon(CIcons::NetworkRoleDelivery, "ATC delivery"),
+            CIcon(CIcons::NetworkRoleDeparture, "ATC departure"),
             CIcon(CIcons::NetworkRoleFss, "FSS"),
             CIcon(CIcons::NetworkRoleGround, "ATC ground"),
             CIcon(CIcons::NetworkRoleI1, "I1 (instructor)"),
