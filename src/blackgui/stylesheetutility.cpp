@@ -151,7 +151,7 @@ namespace BlackGui
             {
                 if (needsWatcher) { m_fileWatcher.addPath(absolutePath); }
                 QTextStream in(&file);
-                const QString c = in.readAll();
+                const QString c = removeComments(in.readAll(), true, true);
                 const QString f = fileInfo.fileName().toLower();
 
                 // keep even empty files as placeholders

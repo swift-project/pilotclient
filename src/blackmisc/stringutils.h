@@ -289,6 +289,9 @@ namespace BlackMisc
     //! Convert string to bool
     BLACKMISC_EXPORT QString joinStringSet(const QSet<QString> &set, const QString &separator);
 
+    //! Remove comments such as /** **/ or //
+    BLACKMISC_EXPORT QString removeComments(const QString &in, bool removeSlash, bool removeDoubleSlash);
+
     namespace Mixin
     {
         /*!

@@ -433,6 +433,19 @@ namespace BlackMisc
         return in;
     }
 
+    QString removeComments(const QString &in, bool removeSlashStar, bool removeDoubleSlash)
+    {
+        QString copy(in);
+
+        thread_local const QRegularExpression re1("\\/\\*(.|\\n)*?\\*\\/");
+        if (removeSlashStar) { copy.remove(re1); }
+
+        thread_local const QRegularExpression re2("\\/\\/.*");
+        if (removeDoubleSlash) { copy.remove(re2); }
+
+        return copy;
+    }
+
 } // ns
 
 //! \endcond
