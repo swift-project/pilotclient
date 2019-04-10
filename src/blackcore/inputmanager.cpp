@@ -10,6 +10,7 @@
 #include "blackmisc/compare.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/input/actionhotkey.h"
+#include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
 
 #include <limits.h>
@@ -151,26 +152,43 @@ namespace BlackCore
         return info.m_index;
     }
 
-    void CInputManager::processCombination(const CHotkeyCombination &combination)
+    void CInputManager::processCombination(const CHotkeyCombination &currentCombination)
     {
         if (m_captureActive)
         {
-            if (combination.size() < m_capturedCombination.size())
+            if (currentCombination.size() < m_capturedCombination.size())
             {
                 emit combinationSelectionFinished(m_capturedCombination);
                 m_captureActive = false;
             }
             else
             {
-                emit combinationSelectionChanged(combination);
-                m_capturedCombination = combination;
+                emit combinationSelectionChanged(currentCombination);
+                m_capturedCombination = currentCombination;
             }
         }
 
-        QString previousAction = m_configuredActions.value(m_lastCombination);
-        QString action = m_configuredActions.value(combination);
-        m_lastCombination = combination;
-        callFunctionsBy(previousAction, false);
-        callFunctionsBy(action, true);
+        for (const CHotkeyCombination &combination : makeKeysRange(as_const(m_configuredActions)))
+        {
+            QString action = m_configuredActions.value(combination);
+            if (combination.isSubsetOf(currentCombination))
+            {
+                if (!m_activeActions.contains(action))
+                {
+                    m_activeActions.insert(action);
+                    callFunctionsBy(action, true);
+                }
+            }
+            else
+            {
+                if (m_activeActions.contains(action))
+                {
+                    callFunctionsBy(action, false);
+                    m_activeActions.remove(action);
+                }
+            }
+        }
+
+        m_lastCombination = currentCombination;
     }
 }

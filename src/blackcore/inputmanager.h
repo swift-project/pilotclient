@@ -140,6 +140,7 @@ namespace BlackCore
 
         QMap<QString, QPixmap> m_availableActions;
         QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
+        QSet<QString> m_activeActions;
         QVector<BindInfo> m_boundActions;
 
         bool m_actionRelayingEnabled = false;
