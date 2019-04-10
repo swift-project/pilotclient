@@ -297,15 +297,6 @@ namespace BlackGui
         {
             // add some space for frameless navigators where I can move the navigator
             QAction *a = nullptr; // new QAction(CIcons::empty16(), "move navigator here", this);
-            if (a && this->actions().isEmpty())
-            {
-                this->addAction(a);
-            }
-            else
-            {
-                this->insertAction(this->actions().first(), a);
-            }
-
             bool c = false;
             if (sGui)
             {
