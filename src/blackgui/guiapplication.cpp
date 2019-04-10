@@ -20,6 +20,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/slot.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategory.h"
@@ -1074,9 +1075,10 @@ namespace BlackGui
         // changing widget style is slow, so I try to prevent setting it when nothing changed
         const QString widgetStyle = m_guiSettings.get().getWidgetStyle();
         const QString currentWidgetStyle(this->getWidgetStyle());
-        if (!(currentWidgetStyle.length() == widgetStyle.length() && currentWidgetStyle.startsWith(widgetStyle, Qt::CaseInsensitive)))
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");
+        if (!stringCompare(widgetStyle, currentWidgetStyle, Qt::CaseInsensitive))
         {
-            const auto availableStyles = QStyleFactory::keys();
+            const QStringList availableStyles = QStyleFactory::keys();
             if (availableStyles.contains(widgetStyle))
             {
                 // changing style freezes the application, so it must not be done in flight mode
@@ -1086,17 +1088,19 @@ namespace BlackGui
                 }
                 else
                 {
-                    QStyle *style = QApplication::setStyle(currentWidgetStyle);
+                    // QStyle *style = QApplication::setStyle(widgetStyle);
+                    QStyle *style = QStyleFactory::create(widgetStyle);
+                    QApplication::setStyle(style); // subject of crash
                     if (style)
                     {
-                        CLogMessage(this).info(u"Changed style to '%1', req.: '%2'") << style->objectName() << currentWidgetStyle;
+                        CLogMessage(this).info(u"Changed style to '%1', req.: '%2'") << style->objectName() << widgetStyle;
                     }
                     else
                     {
-                        CLogMessage(this).error(u"Unable to set requested style '%1'") << currentWidgetStyle;
+                        CLogMessage(this).error(u"Unable to set requested style '%1'") << widgetStyle;
                     }
                 }
-            }
+            } // valid style
         }
     }
 
