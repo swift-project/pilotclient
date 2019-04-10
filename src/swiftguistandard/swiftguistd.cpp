@@ -445,6 +445,7 @@ void SwiftGuiStd::verifyPrerequisites()
 
 void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     this->displayValidationDialog();
     m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);
 }
