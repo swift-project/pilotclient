@@ -166,6 +166,7 @@ namespace BlackCore
                 emit combinationSelectionChanged(currentCombination);
                 m_capturedCombination = currentCombination;
             }
+            return;
         }
 
         for (const CHotkeyCombination &combination : makeKeysRange(as_const(m_configuredActions)))
