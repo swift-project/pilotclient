@@ -185,7 +185,17 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::hotkeySlot(bool keyDown)
         {
-            if (keyDown) { QMessageBox::information(this, "Test", "Hotkey test"); }
+            if (keyDown)
+            {
+                QMessageBox* msgBox = new QMessageBox(this);
+                msgBox->setAttribute(Qt::WA_DeleteOnClose);
+                msgBox->setStandardButtons(QMessageBox::Ok);
+                msgBox->setWindowTitle("Test");
+                msgBox->setText("Hotkey test");
+                msgBox->setIcon(QMessageBox::Information);
+                msgBox->setModal(false);
+                msgBox->open();
+            }
         }
 
         bool CConfigHotkeyWizardPage::validatePage()

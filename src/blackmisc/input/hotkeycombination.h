@@ -55,10 +55,16 @@ namespace BlackMisc
             CJoystickButtonList getJoystickButtons() const { return m_joystickButtons; }
 
             //! Add keyboard key
-            void addKeyboardKey(CKeyboardKey key);
+            void addKeyboardKey(const CKeyboardKey &key);
 
             //! Add joystick button
-            void addJoystickButton(CJoystickButton button);
+            void addJoystickButton(const CJoystickButton &button);
+
+            //! Does combination contain key?
+            bool containsKeyboardKey(const CKeyboardKey &key) const;
+
+            //! Does combination contain button?
+            bool containsJoystickButton(const CJoystickButton &button) const;
 
             //! Replace oldKey with newKey
             void replaceKey(CKeyboardKey oldKey, CKeyboardKey newKey);
@@ -81,6 +87,9 @@ namespace BlackMisc
             //! Is sequence a subset of other?
             //! E.g. CTRL would be a subset of CTRL+D
             bool isSubsetOf(const CHotkeyCombination &other) const;
+
+            //! Returns the delta (removing all keys and buttons contained in other)
+            CHotkeyCombination getDeltaComparedTo(const CHotkeyCombination &other) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

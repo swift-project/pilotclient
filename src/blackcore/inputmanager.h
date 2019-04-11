@@ -147,6 +147,7 @@ namespace BlackCore
         bool m_captureActive = false;
         BlackMisc::Input::CHotkeyCombination m_lastCombination;
         BlackMisc::Input::CHotkeyCombination m_capturedCombination;
+        BlackMisc::Input::CHotkeyCombination m_combinationBeforeCapture;
 
         BlackMisc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
     };

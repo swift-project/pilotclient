@@ -93,6 +93,7 @@ namespace BlackCore
     {
         m_captureActive = true;
         m_capturedCombination = {};
+        m_combinationBeforeCapture = m_lastCombination;
     }
 
     void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown, bool shouldEmit)
@@ -156,15 +157,20 @@ namespace BlackCore
     {
         if (m_captureActive)
         {
-            if (currentCombination.size() < m_capturedCombination.size())
+            CHotkeyCombination deltaCombination = currentCombination.getDeltaComparedTo(m_combinationBeforeCapture);
+
+            // Don't continue if there is no relevant combination yet
+            if (m_capturedCombination.isEmpty() && deltaCombination.isEmpty()) { return; }
+
+            if (deltaCombination.size() < m_capturedCombination.size())
             {
                 emit combinationSelectionFinished(m_capturedCombination);
                 m_captureActive = false;
             }
             else
             {
-                emit combinationSelectionChanged(currentCombination);
-                m_capturedCombination = currentCombination;
+                emit combinationSelectionChanged(deltaCombination);
+                m_capturedCombination = deltaCombination;
             }
             return;
         }

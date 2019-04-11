@@ -25,18 +25,28 @@ namespace BlackMisc
         CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)
         { }
 
-        void CHotkeyCombination::addKeyboardKey(CKeyboardKey key)
+        void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
         {
             if (m_keyboardKeys.contains(key)) { return; }
             m_keyboardKeys.push_back(key);
             m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
         }
 
-        void CHotkeyCombination::addJoystickButton(CJoystickButton button)
+        void CHotkeyCombination::addJoystickButton(const CJoystickButton &button)
         {
             if (m_joystickButtons.contains(button)) { return; }
             m_joystickButtons.push_back(button);
             m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
+        }
+
+        bool CHotkeyCombination::containsKeyboardKey(const CKeyboardKey &key) const
+        {
+            return m_keyboardKeys.contains(key);
+        }
+
+        bool CHotkeyCombination::containsJoystickButton(const CJoystickButton &button) const
+        {
+            return m_joystickButtons.contains(button);
         }
 
         void CHotkeyCombination::replaceKey(CKeyboardKey oldKey, CKeyboardKey newKey)
@@ -70,7 +80,24 @@ namespace BlackMisc
         bool CHotkeyCombination::isSubsetOf(const CHotkeyCombination &other) const
         {
             return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey & k) { return other.m_keyboardKeys.contains(k); }) &&
-            std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton & b) { return other.m_joystickButtons.contains(b); });
+                   std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton & b) { return other.m_joystickButtons.contains(b); });
+        }
+
+        CHotkeyCombination CHotkeyCombination::getDeltaComparedTo(const CHotkeyCombination &other) const
+        {
+            CHotkeyCombination combination(*this);
+            const CKeyboardKeyList otherKeys = other.getKeyboardKeys();
+            for (const CKeyboardKey &key : otherKeys)
+            {
+                if (containsKeyboardKey(key)) { combination.removeKeyboardKey(key); }
+            }
+
+            const CJoystickButtonList otherButtons = other.getJoystickButtons();
+            for (const CJoystickButton &button : otherButtons)
+            {
+                if (containsJoystickButton(button)) { combination.removeJoystickButton(button); }
+            }
+            return combination;
         }
 
         QString CHotkeyCombination::convertToQString(bool i18n) const
