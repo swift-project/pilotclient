@@ -175,27 +175,30 @@ namespace BlackCore
             return;
         }
 
-        for (const CHotkeyCombination &combination : makeKeysRange(as_const(m_configuredActions)))
+        QSet<QString> newActiveActions;
+        for (const auto pair : makePairsRange(as_const(m_configuredActions)))
         {
-            QString action = m_configuredActions.value(combination);
+            const CHotkeyCombination &combination = pair.first;
+            const QString &action = pair.second;
             if (combination.isSubsetOf(currentCombination))
             {
-                if (!m_activeActions.contains(action))
-                {
-                    m_activeActions.insert(action);
-                    callFunctionsBy(action, true);
-                }
-            }
-            else
-            {
-                if (m_activeActions.contains(action))
-                {
-                    callFunctionsBy(action, false);
-                    m_activeActions.remove(action);
-                }
+                newActiveActions.insert(action);
             }
         }
 
+        const QSet<QString> pressedActions = newActiveActions - m_activeActions;
+        const QSet<QString> releasedActions = m_activeActions - newActiveActions;
+        m_activeActions = newActiveActions;
+        for (const QString &action : pressedActions)
+        {
+            callFunctionsBy(action, true);
+        }
+        for (const QString &action : releasedActions)
+        {
+            callFunctionsBy(action, false);
+        }
+
+        // combination
         m_lastCombination = currentCombination;
     }
 }
