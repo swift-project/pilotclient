@@ -695,9 +695,14 @@ namespace BlackGui
         {
             // a close event might already trigger a shutdown
             if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!this->mainApplicationWidget()) { return; }
             this->mainApplicationWidget()->close();
-            this->gracefulShutdown();
-        });
+
+            // T596, do not shutdown here, as close can be canceled
+            // if shutdown is called, there is no way back
+            // this->gracefulShutdown();
+        },
+        Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
     }
