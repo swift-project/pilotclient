@@ -331,9 +331,8 @@ namespace BlackMisc
 
         void ISimulationEnvironmentProvider::setSimulationProviderEnabled(bool elvEnabled, bool cgEnabled)
         {
-            QWriteLocker l(&m_lockElvCoordinates);
-            m_enableElevation = elvEnabled;
-            m_enableCG = cgEnabled;
+            setElevationProviderEnabled(elvEnabled);
+            setCgProviderEnabled(cgEnabled);
         }
 
         void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
