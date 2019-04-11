@@ -58,26 +58,46 @@ namespace BlackGui
             // BlackMisc::Simulation::CBackgroundValidation
             Q_UNUSED(simulator);
             Q_UNUSED(valid);
+
+            constexpr int MsgTimeout = 15000;
             m_lastResults = QDateTime::currentMSecsSinceEpoch();
             ui->tvp_InvalidModels->updateContainerMaybeAsync(invalid);
             ui->comp_Simulator->setValue(simulator);
             ui->comp_Messages->clear();
+            if (!msgs.isEmpty()) { ui->comp_Messages->appendStatusMessagesToList(msgs); }
 
-            if (!msgs.isEmpty())
+            // pre-select tab
+            if (invalid.isEmpty() && !msgs.isEmpty())
             {
-                ui->comp_Messages->appendStatusMessagesToList(msgs.isSortedLatestLast() ? CStatusMessageList(msgs.reversed()) : msgs);
+                // messages but no invalid models
+                ui->tw_CAircraftModelValidationComponent->setCurrentWidget(ui->tb_Messages);
             }
-
-            const QString msg = stopped ?
-                                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible").arg(simulator.toQString(true)) :
-                                QStringLiteral("Validated for '%1'. Valid: %2 Invalid: %3").arg(simulator.toQString(true)).arg(valid.size()).arg(invalid.size());
-            ui->lbl_Summay->setText(msg);
-            if (stopped) { this->showOverlayHTMLMessage(msg, 5000); }
+            else
+            {
+                ui->tw_CAircraftModelValidationComponent->setCurrentWidget(ui->tb_InvalidModels);
+            }
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
             ui->pb_TempDisableInvalid->setEnabled(!invalid.isEmpty());
             ui->pb_TempDisableSelected->setEnabled(!invalid.isEmpty());
+
+            const QString msg = stopped ?
+                                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible").arg(simulator.toQString(true)) :
+                                QStringLiteral("Validated for '%1'. Valid: %2 Invalid: %3").arg(simulator.toQString(true)).arg(valid.size()).arg(invalid.size());
+            ui->lbl_Summay->setText(msg);
+            if (stopped)
+            {
+                this->showOverlayHTMLMessage(msg, MsgTimeout);
+            }
+            else if (msgs.hasWarningOrErrorMessages() || !invalid.isEmpty())
+            {
+                this->showOverlayHTMLMessage(u"There are warnings or errors, please check the messages and invalid models.", MsgTimeout);
+            }
+            else
+            {
+                this->showOverlayHTMLMessage(u"There are NO warnings or errors, your set looks good.", MsgTimeout);
+            }
         }
 
         void CAircraftModelValidationComponent::tempDisableModels(const CAircraftModelList &models)
