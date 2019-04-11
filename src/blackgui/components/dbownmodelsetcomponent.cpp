@@ -551,15 +551,15 @@ namespace BlackGui
                     }
 
                     QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged, Qt::QueuedConnection);
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::delete16(), "Reduce models (remove duplicates)", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::reduceModels);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::reduceModels, Qt::QueuedConnection);
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::delete16(), "Remove excluded models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::removeExcludedModels);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::removeExcludedModels, Qt::QueuedConnection);
                     m_setActions.append(a);
                 }
                 menuActions.addMenuModelSet();

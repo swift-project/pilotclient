@@ -660,6 +660,12 @@ namespace BlackGui
             //! Access to container
             const ContainerType &container() const;
 
+            //! The rows of the given objects
+            QList<int> rowsOf(const ContainerType &container) const;
+
+            //! The row of the given object
+            int rowOf(const ObjectType &obj) const;
+
             //! \copydoc BlackGui::Models::CListModelBase::containerOrFilteredContainer
             const ContainerType &containerOrFilteredContainer(bool *filtered = nullptr) const;
 

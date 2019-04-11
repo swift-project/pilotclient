@@ -182,6 +182,10 @@ namespace BlackGui
                 this->setHighlight(true);
                 this->setHighlightColor(Qt::red);
                 this->setHighlightModels(invaliddModels);
+
+                const int r = this->rowOf(invaliddModels.front());
+                const QModelIndex i = m_model->index(r, 0);
+                this->scrollTo(i);
             }
         }
 

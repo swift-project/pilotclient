@@ -218,6 +218,32 @@ namespace BlackGui
             return m_model->container();
         }
 
+        template<class T>
+        QList<int> CViewBase<T>::rowsOf(const ContainerType &container) const
+        {
+            QList<int> rows;
+            for (const ObjectType &o : container)
+            {
+                const int i = this->rowOf(o);
+                if (i >= 0) { rows.push_back(i); }
+            }
+            return rows;
+        }
+
+        template<class T>
+        int CViewBase<T>::rowOf(const ObjectType &obj) const
+        {
+            //! \fixme KB 4-19 any smarter solution?
+            const ContainerType objects = m_model->containerOrFilteredContainer();
+            int i = 0;
+            for (const ObjectType &o : objects)
+            {
+                if (o == obj) { return i; }
+                ++i;
+            }
+            return -1;
+        }
+
         template <class T>
         const typename CViewBase<T>::ContainerType &CViewBase<T>::containerOrFilteredContainer(bool *filtered) const
         {
