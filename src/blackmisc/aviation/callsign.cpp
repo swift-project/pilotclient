@@ -50,18 +50,21 @@ namespace BlackMisc
 
         int CCallsign::suffixToSortOrder(const QString &suffix)
         {
-            if ("CTR" == suffix)  { return 1; }
-            if ("APP" == suffix)  { return 2; }
-            if ("FSS" == suffix)  { return 3; }
-            if ("TWR" == suffix)  { return 5; }
-            if ("GND" == suffix)  { return 6; }
-            if ("DEL" == suffix)  { return 7; }
-            if ("ATIS" == suffix) { return 8; }
-            if ("SUP" == suffix)  { return 10; }
-            if ("OBS" == suffix)  { return 11; }
-            if ("INS" == suffix)  { return 13; } // instructor/mentor
-            if ("EXAM" == suffix)   { return 14; }
-            if ("VATSIM" == suffix) { return 14; }
+            if (QStringView(u"FSS")  == suffix) { return 1; }
+            if (QStringView(u"CTR")  == suffix) { return 2; }
+            if (QStringView(u"APP")  == suffix) { return 3; }
+            if (QStringView(u"DEP")  == suffix) { return 4; }
+            if (QStringView(u"TWR")  == suffix) { return 5; }
+            if (QStringView(u"GND")  == suffix) { return 6; }
+            if (QStringView(u"DEL")  == suffix) { return 7; }
+            if (QStringView(u"ATIS") == suffix) { return 8; }
+            if (QStringView(u"SUP")  == suffix) { return 9; }
+            if (QStringView(u"OBS")  == suffix) { return 10; }
+            if (QStringView(u"INS")  == suffix) { return 11; } // instructor/mentor
+            if (QStringView(u"ADM")  == suffix) { return 12; } // admin
+            if (QStringView(u"VATGOV") == suffix) { return 13; } // VATSIM governors
+            if (QStringView(u"VATSIM") == suffix) { return 14; } // VATSIM founder
+            if (QStringView(u"EXAM")   == suffix) { return 15; }
             return std::numeric_limits<int>::max();
         }
 
