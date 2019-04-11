@@ -100,10 +100,18 @@ namespace BlackGui
             const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
             if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
 
+            /** because of crash (chnage style crashes UI) we require restart
             const int ret = QMessageBox::information(this,
                             tr("Change style?"),
                             tr("Changing style is slow.\nThe GUI will hang for some seconds.\nDo you want to save your changes?"),
                             QMessageBox::Ok | QMessageBox::Cancel);
+
+            **/
+            const int ret = QMessageBox::information(this,
+                            tr("Change style?"),
+                            tr("Changing style requires a restart.\nChanges will be visible a the next start.\nDo you want to save your changes?"),
+                            QMessageBox::Ok | QMessageBox::Cancel);
+
             if (ret != QMessageBox::Ok)
             {
                 ui->cb_SettingsGuiWidgetStyle->setCurrentText(settings.getWidgetStyle());
