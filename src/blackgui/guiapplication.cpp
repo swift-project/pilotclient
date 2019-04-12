@@ -17,6 +17,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/networkwatchdog.h"
+#include "blackcore/db/infodatareader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/slot.h"
@@ -54,6 +55,7 @@
 #include <QMessageBox>
 #include <QStyleFactory>
 #include <QStringList>
+#include <QStringBuilder>
 #include <QStyle>
 #include <QSysInfo>
 #include <QUrl>
@@ -608,7 +610,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files = CApplication::clearCaches();
-            this->displayTextInConsole("Cleared caches! " + QString::number(files.size()) + " files");
+            this->displayTextInConsole(u"Cleared caches! " % QString::number(files.size()) + " files");
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -709,23 +711,23 @@ namespace BlackGui
 
     void CGuiApplication::addMenuInternals(QMenu &menu)
     {
-        QMenu *sm = menu.addMenu("Templates");
+        QMenu *sm = menu.addMenu("JSON files/Templates");
         QAction *a = sm->addAction("JSON bootstrap");
         bool c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const CGlobalSetup s = this->getGlobalSetup();
             this->displayTextInConsole(s.toJsonString());
-        });
+        }, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = sm->addAction("JSON update info (for info only)");
+        a = sm->addAction("JSON version update info (for info only)");
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const CUpdateInfo info = this->getUpdateInfo();
             this->displayTextInConsole(info.toJsonString());
-        });
+        }, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         if (this->hasWebDataServices())
@@ -736,7 +738,27 @@ namespace BlackGui
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
                 CLogMessage(this).info(u"Displayed services log.");
-            });
+            }, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+            a = sm->addAction("JSON DB info (for info only)");
+            c = connect(a, &QAction::triggered, this, [ = ]()
+            {
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
+                this->displayTextInConsole(u"DB info:\n" % info.toJsonString());
+            }, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+            a = sm->addAction("JSON shared info (for info only)");
+            c = connect(a, &QAction::triggered, this, [ = ]()
+            {
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
+                this->displayTextInConsole(u"Shared info:\n" % info.toJsonString());
+            }, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         }
 
@@ -745,7 +767,7 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->displayTextInConsole(getAllUserMetatypesTypes());
-        });
+        }, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
     }
