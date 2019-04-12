@@ -22,6 +22,7 @@ COPY_FILES += $$PWD/share/images/airlines/*.png
 COPY_FILES += $$PWD/share/html/*.*
 COPY_FILES += $$PWD/share/legal/*.*
 COPY_FILES += $$PWD/share/test/*.*
+COPY_FILES += $$PWD/share/misc/*.*
 # COPY_FILES += $$PWD/share/simulator/*.*
 COPY_FILES += $$PWD/share/simulator/swiftTerrainProbe/*.*
 COPY_FILES += $$PWD/share/simulator/swiftTerrainProbe/model/*.*

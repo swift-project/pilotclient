@@ -223,6 +223,12 @@ namespace BlackMisc
         return test;
     }
 
+    const QString &CDirectoryUtils::shareMiscDirectory()
+    {
+        static const QString misc(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "misc"));
+        return misc;
+    }
+
     const QString &CDirectoryUtils::shareTerrainProbeDirectory()
     {
         static const QString tpd(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "simulator/swiftTerrainProbe"));
