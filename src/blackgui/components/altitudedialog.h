@@ -48,7 +48,7 @@ namespace BlackGui
             explicit CAltitudeDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAltitudeDialog();
+            virtual ~CAltitudeDialog() override;
 
             //! Get mode
             Mode getMode() const;

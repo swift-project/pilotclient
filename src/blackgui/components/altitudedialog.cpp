@@ -18,6 +18,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -146,7 +147,10 @@ namespace BlackGui
             {
                 if (mode == AltitudeInMetersConvertedToFeet)
                 {
-                    m_altitude = m_altitude.roundedToNearest100ft(true);
+                    const int ft = CAltitude::findAltitudeForMetricAltitude(m_altitude.valueInteger(CLengthUnit::m()));
+                    m_altitude = ft < 0 ?
+                                 m_altitude.roundedToNearest100ft(true) :
+                                 m_altitude = CAltitude(ft, CAltitude::MeanSeaLevel, CLengthUnit::ft());
                     m_altitudeStr = m_altitude.valueRoundedWithUnit(0);
                 }
 
