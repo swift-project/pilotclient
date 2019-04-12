@@ -1095,8 +1095,8 @@ namespace BlackGui
                 {
                     // QStyle *style = QApplication::setStyle(widgetStyle);
                     QStyle *style = QStyleFactory::create(widgetStyle);
-                    // Disaabled because of crash
-                    // QApplication::setStyle(style); // subject of crash
+                    // That can crash
+                    QApplication::setStyle(style); // subject of crash
                     if (style)
                     {
                         CLogMessage(this).info(u"Changed style to '%1', req.: '%2'") << style->objectName() << widgetStyle;
