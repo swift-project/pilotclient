@@ -1216,7 +1216,11 @@ namespace BlackSimPlugin
 
             QString swiftVersion = BlackConfig::CBuildConfig::getVersionString();
             QString xswiftbusVersion = service.getVersionNumber();
-            if (swiftVersion != xswiftbusVersion)
+            if (xswiftbusVersion.isEmpty())
+            {
+                CLogMessage(this).warning(u"Could not determine which version of XSwiftBus is running. Mismatched versions might cause instability.");
+            }
+            else if (swiftVersion != xswiftbusVersion)
             {
                 CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. The version of XSwiftBus must match the version of swift being %1.") << swiftVersion;
                 return;
