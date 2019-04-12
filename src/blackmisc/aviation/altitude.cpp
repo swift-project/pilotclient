@@ -11,6 +11,9 @@
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
@@ -27,11 +30,39 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        namespace Private
+        {
+            QVector<CAltitude::MetricTuple> initMetricValues()
+            {
+                QVector<CAltitude::MetricTuple> v;
+                const QString f = CFileUtils::appendFilePaths(CDirectoryUtils::shareMiscDirectory(), "Metric Altitudes.csv");
+                const QString ma = CFileUtils::readFileToString(f);
+                const QStringList values = splitLines(ma);
+                for (const QString &value : values)
+                {
+                    const QStringList alts = value.split(";");
+                    int v1 = -1, v2 = -1, v3 = -1;
+                    if (alts.size() >= 1) { v1 = alts[0].toInt(); }
+                    if (alts.size() >= 2) { v2 = alts[1].toInt(); }
+                    if (alts.size() >= 3) { v3 = alts[2].toInt(); }
+                    const CAltitude::MetricTuple m(v1, v2, v3);
+                    v.push_back(m);
+                }
+                return v;
+            }
+        }
+
         void CAltitude::registerMetadata()
         {
             Mixin::MetaType<CAltitude>::registerMetadata();
             qRegisterMetaType<CAltitude::ReferenceDatum>();
             qRegisterMetaType<CAltitude::AltitudeType>();
+        }
+
+        const QVector<CAltitude::MetricTuple> &CAltitude::metricTuples()
+        {
+            static const QVector<MetricTuple> v = Private::initMetricValues();
+            return v;
         }
 
         CAltitude::CAltitude(const QString &altitudeAsString, CPqString::SeparatorMode mode) : CLength(0, CLengthUnit::m()), m_datum(MeanSeaLevel)
@@ -386,6 +417,26 @@ namespace BlackMisc
             const int ftR = roundDown ? static_cast<int>(floor(ft)) * 100 : qRound(ft) * 100;
             a.setValueSameUnit(ftR);
             return a;
+        }
+
+        int CAltitude::findMetricAltitude(int feet)
+        {
+            // m/ft/FL
+            for (const MetricTuple &m : metricTuples())
+            {
+                if (std::get<1>(m) == feet) return std::get<0>(m);
+            }
+            return -1;
+        }
+
+        int CAltitude::findAltitudeForMetricAltitude(int metric)
+        {
+            // m/ft/FL
+            for (const MetricTuple &m : metricTuples())
+            {
+                if (std::get<0>(m) == metric) return std::get<1>(m);
+            }
+            return -1;
         }
 
         const CAltitude &CAltitude::null()

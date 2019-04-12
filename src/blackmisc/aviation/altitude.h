@@ -30,6 +30,8 @@
 #include <QMetaType>
 #include <QString>
 #include <QRegularExpression>
+#include <QVector>
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -56,6 +58,9 @@ namespace BlackMisc
         public:
             //! Base type
             using base_type = PhysicalQuantities::CLength;
+
+            //! Metric tuple
+            using MetricTuple = std::tuple<int, int, int>;
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)
@@ -196,6 +201,11 @@ namespace BlackMisc
             //! \remark https://en.wikipedia.org/wiki/Flight_level
             CAltitude roundedToNearest100ft(bool roundDown) const;
 
+            //! Search the corresponding feet <-> metric / metric <-> feet @{
+            static int findMetricAltitude(int feet);
+            static int findAltitudeForMetricAltitude(int metric);
+            //! @}
+
             //! Null altitude (MSL)
             static const CAltitude &null();
 
@@ -212,6 +222,9 @@ namespace BlackMisc
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?
             AltitudeType m_altitudeType = TrueAltitude; //!< type
+
+            //! The metric tuples m/ft/FL
+            static const QVector<MetricTuple> &metricTuples();
 
             BLACK_METACLASS(
                 CAltitude,
