@@ -147,7 +147,7 @@ void SwiftGuiStd::initMenus()
         c = connect(a, &QAction::triggered, this, [ = ]
         {
             this->copyXSwiftBusDialog(false);
-        });
+        }, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
     }
 

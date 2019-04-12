@@ -223,7 +223,10 @@ namespace BlackGui
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             if (withShortcut && i < keys.length())
             {
-                action->setShortcut(QKeySequence(QStringLiteral("Ctrl+%1").arg(keys.at(i))));
+                // T600 The strings "Ctrl", "Shift", "Alt" and "Meta" are recognized
+                // https://doc.qt.io/archives/qt-4.8/qkeysequence.html Standard shortcuts already used
+                // "Ctrl+Shift+%1" als works
+                action->setShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+%1").arg(keys.at(i))));
             }
 
             connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);
