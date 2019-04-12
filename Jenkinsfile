@@ -268,7 +268,8 @@ node('master') {
 
 node('master') {
     try {
-        if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
+        if (env.BRANCH_NAME && (env.BRANCH_NAME ==~ regexDevBranch
+                             || env.BRANCH_NAME ==~ regexReleaseBranch)) {
             stage('Publish') {
                 unstash name: 'swift-linux-64'
                 unstash name: 'swift-macos-64'
