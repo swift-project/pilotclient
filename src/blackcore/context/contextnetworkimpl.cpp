@@ -280,13 +280,13 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize" });
+            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
-            if (parser.matchesCommand(".msg", ".m"))
+            if (parser.matchesCommand(".msg", ".m", ".chat"))
             {
-                if (!this->getIContextNetwork()->isConnected())
+                if (!this->getIContextNetwork() || !this->getIContextNetwork()->isConnected())
                 {
                     CLogMessage(this).validationError(u"Network needs to be connected");
                     return false;

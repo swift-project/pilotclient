@@ -1485,7 +1485,7 @@ namespace BlackCore
             {
             case vatServerErrorCsInUs:          CLogMessage(self).error(u"The requested callsign is already taken"); emit self->terminate(); break;
             case vatServerErrorCallsignInvalid: CLogMessage(self).error(u"The requested callsign is not valid"); emit self->terminate(); break;
-            case vatServerErrorCidInvalid:      CLogMessage(self).error(u"Wrong user ID or password"); emit self->terminate(); break;
+            case vatServerErrorCidInvalid:      CLogMessage(self).error(u"Wrong user ID or password, inactive account"); emit self->terminate(); break;
             case vatServerErrorRevision:        CLogMessage(self).error(u"This server does not support our protocol version"); emit self->terminate(); break;
             case vatServerErrorLevel:           CLogMessage(self).error(u"You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
             case vatServerErrorServFull:        CLogMessage(self).error(u"The server is full"); emit self->terminate(); break;

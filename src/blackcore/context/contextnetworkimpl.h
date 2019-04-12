@@ -207,7 +207,7 @@ namespace BlackCore
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .m .msg                 message text
+            //! .m .msg .chat           message text
             //! .altos .altoffset       altitude offset for testing
             //! .reinit .reinitialize   re-initialize all aircraft
             //! .watchdog on|off        watchdog on/off
@@ -221,7 +221,7 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextNetwork")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg, .chat"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign|? offsetvalue", "set altitude offset value (testing)"});
