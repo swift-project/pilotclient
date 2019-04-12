@@ -414,8 +414,6 @@ def getEolInMonth() {
 }
 
 def shouldUploadSymbols() {
-    def regexDevBranch = /develop\/\d+\.\d+\.\d+/
-    def regexReleaseBranch = /release\/\d+\.\d+/
     if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         return '-u'
     } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexReleaseBranch) {
