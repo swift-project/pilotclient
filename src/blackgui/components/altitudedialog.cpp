@@ -146,7 +146,7 @@ namespace BlackGui
             {
                 if (mode == AltitudeInMetersConvertedToFeet)
                 {
-                    m_altitude = m_altitude.roundedToNearest100ft();
+                    m_altitude = m_altitude.roundedToNearest100ft(true);
                     m_altitudeStr = m_altitude.valueRoundedWithUnit(0);
                 }
 

@@ -194,7 +194,7 @@ namespace BlackMisc
 
             //! Round to the nearest 100ft, like needed for China and Russia
             //! \remark https://en.wikipedia.org/wiki/Flight_level
-            CAltitude roundedToNearest100ft() const;
+            CAltitude roundedToNearest100ft(bool roundDown) const;
 
             //! Null altitude (MSL)
             static const CAltitude &null();

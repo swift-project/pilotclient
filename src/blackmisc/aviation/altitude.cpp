@@ -341,7 +341,7 @@ namespace BlackMisc
             // the M/A formats are not supported by VATSIM, means by other clients
 
             // as feed, as none of the other clients
-            const CAltitude a = this->roundedToNearest100ft();
+            const CAltitude a = this->roundedToNearest100ft(false);
             return a.valueRoundedWithUnit(CLengthUnit::ft(), 0);
         }
 
@@ -378,12 +378,12 @@ namespace BlackMisc
             return CLength::compare(*this, otherAltitude);
         }
 
-        CAltitude CAltitude::roundedToNearest100ft() const
+        CAltitude CAltitude::roundedToNearest100ft(bool roundDown) const
         {
             // 23453 => 234.53
             CAltitude a = this->switchedUnit(CLengthUnit::ft());
             const double ft = a.value(CLengthUnit::ft()) / 100.0;
-            const int ftR = qRound(ft) * 100;
+            const int ftR = roundDown ? static_cast<int>(floor(ft)) * 100 : qRound(ft) * 100;
             a.setValueSameUnit(ftR);
             return a;
         }
