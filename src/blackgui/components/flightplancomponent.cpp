@@ -11,6 +11,7 @@
 #include "selcalcodeselector.h"
 #include "stringlistdialog.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackgui/eventfilter.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
@@ -82,14 +83,15 @@ namespace BlackGui
             this->showKillButton(false);
 
             // validators
-            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            ui->le_Callsign->setValidator(ucv);
-            ui->le_AircraftType->setValidator(ucv);
-            ui->le_DestinationAirport->setValidator(ucv);
-            ui->le_AlternateAirport->setValidator(ucv);
-            ui->le_OriginAirport->setValidator(ucv);
+            ui->le_Callsign->setValidator(new CUpperCaseValidator(ui->le_Callsign));
+            ui->le_AircraftType->setValidator(new CUpperCaseValidator(ui->le_AircraftType));
+            ui->le_DestinationAirport->setValidator(new CUpperCaseValidator(ui->le_DestinationAirport));
+            ui->le_AlternateAirport->setValidator(new CUpperCaseValidator(ui->le_AlternateAirport));
+            ui->le_OriginAirport->setValidator(new CUpperCaseValidator(ui->le_OriginAirport));
+            ui->le_AirlineOperator->setValidator(new CUpperCaseValidator(ui->le_AirlineOperator));
+            ui->le_AircraftRegistration->setValidator(new CUpperCaseValidator(ui->le_AircraftRegistration));
 
-            ucv = new CUpperCaseValidator(true, 0, 1, ui->le_EquipmentSuffix);
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(true, 0, 1, ui->le_EquipmentSuffix);
             ucv->setRestrictions(CFlightPlan::equipmentCodes());
             ui->le_EquipmentSuffix->setValidator(ucv);
             ui->le_EquipmentSuffix->setToolTip(ui->tbr_EquipmentCodes->toHtml());
@@ -98,6 +100,15 @@ namespace BlackGui
             completer->popup()->setMinimumWidth(225);
             completer->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_EquipmentSuffix->setCompleter(completer);
+
+            CUpperCaseEventFilter *ef = new CUpperCaseEventFilter(ui->pte_Route);
+            ui->pte_Route->installEventFilter(ef);
+            ef = new CUpperCaseEventFilter(ui->pte_Remarks);
+            ui->pte_Remarks->installEventFilter(ef);
+            ef = new CUpperCaseEventFilter(ui->pte_AdditionalRemarks);
+            ui->pte_AdditionalRemarks->installEventFilter(ef);
+            ef = new CUpperCaseEventFilter(ui->pte_RemarksGenerated);
+            ui->pte_RemarksGenerated->installEventFilter(ef);
 
             // connect
             connect(ui->pb_Send, &QPushButton::pressed,  this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
