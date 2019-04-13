@@ -19,11 +19,13 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/webdataservices.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -376,8 +378,16 @@ namespace BlackGui
 
         void CDbQuickMappingWizard::writeModelToDb()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices() || !sGui->getWebDataServices()->getDatabaseWriter()) { return; }
             this->consolidateModelWithUIData();
-            const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model);
+
+            // make sure the model is correctly excluded for XP etc.
+            static const QString qmw(u"[swift QMW " % CBuildConfig::getVersionString() % u"]");
+            if (m_model.getSimulator().isXPlane()) { m_model.setModelMode(CAircraftModel::Exclude); }
+            m_model.setVersion(CBuildConfig::getVersionString());
+            const QString extraInfo = QString(m_model.getDescription() % u" " % qmw).simplified().trimmed();
+
+            const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model, extraInfo);
             ui->comp_Log->appendStatusMessagesToList(msgs);
         }
 

@@ -165,7 +165,7 @@ namespace BlackCore
 
     CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &modelsToBePublished) const
     {
-        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished);}
+        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished, "");}
         return CStatusMessageList();
     }
 

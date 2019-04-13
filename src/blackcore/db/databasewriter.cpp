@@ -25,6 +25,7 @@
 #include <QScopedPointerDeleteLater>
 #include <QString>
 #include <QUrl>
+#include <QByteArray>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -45,12 +46,12 @@ namespace BlackCore
             // void
         }
 
-        CStatusMessageList CDatabaseWriter::asyncPublishModel(const CAircraftModel &model)
+        CStatusMessageList CDatabaseWriter::asyncPublishModel(const CAircraftModel &model, const QString &extraInfo)
         {
-            return this->asyncPublishModels(CAircraftModelList({ model }));
+            return this->asyncPublishModels(CAircraftModelList({ model }), extraInfo);
         }
 
-        CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models)
+        CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models, const QString &extraInfo)
         {
             CStatusMessageList msgs;
             if (m_shutdown || !sApp)
@@ -80,6 +81,7 @@ namespace BlackCore
             const bool compress = models.size() > 3;
             QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
             multiPart->append(CDatabaseUtils::getJsonTextMultipart(models.toDatabaseJson(), compress));
+
             if (sApp->getGlobalSetup().dbDebugFlag())
             {
                 multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag());
@@ -89,6 +91,8 @@ namespace BlackCore
             if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
             QNetworkRequest request(url);
             CNetworkUtils::ignoreSslVerification(request);
+            const QByteArray eInfo = extraInfo.toLatin1();
+            request.setRawHeader(QByteArray("swift-extrainfo"), eInfo);
             const int logId = m_writeLog.addPendingUrl(url);
             m_pendingModelPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse});
             m_modelReplyPendingSince = QDateTime::currentMSecsSinceEpoch();

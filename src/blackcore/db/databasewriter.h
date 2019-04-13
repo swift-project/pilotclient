@@ -38,10 +38,10 @@ namespace BlackCore
             CDatabaseWriter(const BlackMisc::Network::CUrl &baseUrl, QObject *parent);
 
             //! Write model to DB
-            BlackMisc::CStatusMessageList asyncPublishModel(const BlackMisc::Simulation::CAircraftModel &model);
+            BlackMisc::CStatusMessageList asyncPublishModel(const BlackMisc::Simulation::CAircraftModel &model, const QString &extraInfo);
 
             //! Write models to DB
-            BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models);
+            BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models, const QString &extraInfo);
 
             //! Write auto publis data
             BlackMisc::CStatusMessageList asyncAutoPublish(const BlackMisc::Simulation::CAutoPublishData &data);
