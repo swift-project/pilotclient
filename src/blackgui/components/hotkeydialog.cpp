@@ -314,6 +314,7 @@ namespace BlackGui
 
         void CHotkeyDialog::setupAdvancedFrame()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             this->clearAdvancedFrame();
             const CKeyboardKeyList allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
             const CJoystickButtonList allAvailableButtons = sGui->getInputManager()->getAllAvailableJoystickButtons();

@@ -68,6 +68,9 @@ namespace BlackMisc
             case Key_Numpad7: return QStringLiteral("Num7");
             case Key_Numpad8: return QStringLiteral("Num8");
             case Key_Numpad9: return QStringLiteral("Num9");
+            case Key_Esc:     return QStringLiteral("ESC");
+            case Key_Tab:     return QStringLiteral("Tab");
+            case Key_Back:    return QStringLiteral("Backspace");
             default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
             }
         }
@@ -105,7 +108,7 @@ namespace BlackMisc
         void CKeyboardKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CKeyboardKey>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexKey:

@@ -73,6 +73,9 @@ namespace BlackInput
         { XK_period, Key_Period },
         { XK_KP_Divide, Key_Divide },
         { XK_KP_Multiply, Key_Multiply },
+        { XK_BackSpace, Key_Back },
+        { XK_Tab, Key_Tab },
+        { XK_Escape, Key_Esc },
         { XK_comma, Key_Comma },
     };
 
