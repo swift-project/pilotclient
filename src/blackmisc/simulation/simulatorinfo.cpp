@@ -321,7 +321,7 @@ namespace BlackMisc
         CSimulatorInfo guessDefaultSimulatorImpl()
         {
             static const CSimulatorInfo locallyInstalled(CSimulatorInfo::getLocallyInstalledSimulators());
-            if (CBuildConfig::isRunningOnLinuxPlatform())
+            if (CBuildConfig::isRunningOnLinuxPlatform() || CBuildConfig::isRunningOnMacOSPlatform())
             {
                 return CSimulatorInfo::xplane();
             }

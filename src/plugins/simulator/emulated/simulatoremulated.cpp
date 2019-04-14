@@ -352,14 +352,21 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::onSettingsChanged()
         {
+            if (!sApp || sApp->isShuttingDown()) { return; }
             const CSwiftPluginSettings settings(m_pluginSettings.get());
             m_log = settings.isLoggingFunctionCalls();
 
-            const CSimulatorInfo simulator = settings.getEmulatedSimulator();
+            CSimulatorInfo simulator = settings.getEmulatedSimulator();
+            if (!simulator.isSingleSimulator())
+            {
+                // this will always be the same
+                simulator = CSimulatorInfo::guessDefaultSimulator();
+            }
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+
             const CSimulatorPluginInfoList plugins = sApp->getIContextSimulator()->getAvailableSimulatorPlugins();
             const CSimulatorPluginInfo plugin = plugins.findBySimulator(simulator);
 
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
             if (plugin.isValid())
             {
                 // ? restart driver, disconnect/reconnect
@@ -386,7 +393,7 @@ namespace BlackSimPlugin
             },
             Qt::QueuedConnection));
 
-            m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](const CAircraftModel &model)
+            m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](const CAircraftModel & model)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
