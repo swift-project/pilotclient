@@ -23,16 +23,16 @@ namespace BlackGui
             ui(new Ui::CSettingsSimulatorMessagesComponent)
         {
             ui->setupUi(this);
-            connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorMessagesComponent::ps_save);
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CSettingsSimulatorMessagesComponent::ps_load);
+            connect(ui->pb_Save,   &QPushButton::clicked, this, &CSettingsSimulatorMessagesComponent::save, Qt::QueuedConnection);
+            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CSettingsSimulatorMessagesComponent::load, Qt::QueuedConnection);
 
-            this->ps_load();
+            this->load();
         }
 
         CSettingsSimulatorMessagesComponent::~CSettingsSimulatorMessagesComponent()
         { }
 
-        void CSettingsSimulatorMessagesComponent::ps_save()
+        void CSettingsSimulatorMessagesComponent::save()
         {
             CSimulatorMessagesSettings settings;
             settings.setGloballyEnabled(ui->cb_Messages->isChecked());
@@ -53,8 +53,10 @@ namespace BlackGui
                 settings.setTechnicalLogSeverity(CStatusMessage::SeverityInfo);
             }
 
+            settings.setGloballyEnabled(ui->cb_Messages->isChecked());
             CSimulatorMessagesSettings::TextMessageType mt = CSimulatorMessagesSettings::NoTextMessages;
-            if (ui->cb_PrivateMessages->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagePrivate; }
+
+            if (ui->cb_PrivateMessages->isChecked())    { mt |= CSimulatorMessagesSettings::TextMessagePrivate; }
             if (ui->cb_SupervisorMessages->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessageSupervisor; }
             if (ui->cb_Com1->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom1; }
             if (ui->cb_Com2->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom2; };
@@ -64,7 +66,7 @@ namespace BlackGui
             this->m_settings.setAndSave(settings);
         }
 
-        void CSettingsSimulatorMessagesComponent::ps_load()
+        void CSettingsSimulatorMessagesComponent::load()
         {
             const CSimulatorMessagesSettings settings(this->m_settings.get());
             ui->cb_Messages->setChecked(settings.isGloballyEnabled());

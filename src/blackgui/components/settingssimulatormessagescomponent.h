@@ -32,14 +32,14 @@ namespace BlackGui
             explicit CSettingsSimulatorMessagesComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsSimulatorMessagesComponent();
+            virtual ~CSettingsSimulatorMessagesComponent() override;
 
-        private slots:
+        private:
             //! Save the data
-            void ps_save();
+            void save();
 
             //! Load data
-            void ps_load();
+            void load();
 
         private:
             QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
