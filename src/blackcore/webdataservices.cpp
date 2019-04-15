@@ -1411,10 +1411,13 @@ namespace BlackCore
         Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
 
         // in a dev build all symbols are loaded which sometimes causes unnecessary timeout
-        const int timeOutMs = CBuildConfig::isLocalDeveloperDebugBuild() ? 30 * 1000 : 15 * 1000;
-
         if (m_dbInfoDataReader->areAllInfoObjectsRead()) { return true; }
-        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs); }
+        const int timeOutMs = 30 * 1000;
+        if (!m_dbInfoObjectTimeout.isValid())
+        {
+            m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs);
+            CLogMessage(this).info(u"Set DbInfoObjects timeout %1ms to %2") << timeOutMs << m_dbInfoObjectTimeout.toString("dd.MM.yyyy hh:mm:ss");
+        }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
         return read;
     }
@@ -1425,7 +1428,12 @@ namespace BlackCore
 
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "need reader");
         if (m_sharedInfoDataReader->areAllInfoObjectsRead()) { return true; }
-        if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(15 * 1000); }
+        const int timeOutMs = 30 * 1000;
+        if (!m_sharedInfoObjectsTimeout.isValid())
+        {
+            m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs);
+            CLogMessage(this).info(u"Set SharedInfoObjects timeout %1ms to %2") << timeOutMs << m_sharedInfoObjectsTimeout.toString("dd.MM.yyyy hh:mm:ss");
+        }
         const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
         return read;
     }
