@@ -28,75 +28,87 @@ namespace BlackMisc
         template <class AVIO>
         void CModulator<AVIO>::toggleActiveStandby()
         {
-            const CFrequency a = this->m_frequencyActive;
-            this->m_frequencyActive = this->m_frequencyStandby;
-            this->m_frequencyStandby = a;
+            const CFrequency a = m_frequencyActive;
+            m_frequencyActive  = m_frequencyStandby;
+            m_frequencyStandby = a;
         }
 
         template <class AVIO>
         BlackMisc::PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyActive() const
         {
-            return this->m_frequencyActive;
+            return m_frequencyActive;
         }
 
         template <class AVIO>
         BlackMisc::PhysicalQuantities::CFrequency CModulator<AVIO>::getFrequencyStandby() const
         {
-            return this->m_frequencyStandby;
+            return m_frequencyStandby;
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
         {
-            this->m_frequencyActive = frequency;
+            m_frequencyActive = frequency;
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
         {
-            this->m_frequencyStandby = frequency;
+            m_frequencyStandby = frequency;
         }
 
         template <class AVIO>
         int CModulator<AVIO>::getVolumeOutput() const
         {
-            return this->m_volumeOutput;
+            return m_volumeOutput;
         }
 
         template <class AVIO>
         int CModulator<AVIO>::getVolumeInput() const
         {
-            return this->m_volumeInput;
+            return m_volumeInput;
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setVolumeOutput(int volume)
         {
-            this->m_volumeOutput = volume;
+            m_volumeOutput = volume;
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setVolumeInput(int volume)
         {
-            this->m_volumeInput = volume;
+            m_volumeInput = volume;
         }
 
         template <class AVIO>
-        bool CModulator<AVIO>::isEnabled() const
+        bool CModulator<AVIO>::isSendEnabled() const
         {
-            return this->m_enabled;
+            return m_sendEnabled;
+        }
+
+        template<class AVIO>
+        bool CModulator<AVIO>::isReceiveEnabled() const
+        {
+            return m_receiveEnabled;
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setEnabled(bool enable)
+        void CModulator<AVIO>::setSendEnabled(bool enable)
         {
-            this->m_enabled = enable;
+            m_sendEnabled = enable;
+        }
+
+        template<class AVIO>
+        void CModulator<AVIO>::setReceiveEnabled(bool enable)
+        {
+            m_receiveEnabled = enable;
         }
 
         template <class AVIO>
         QString CModulator<AVIO>::getName() const
         {
-            return this->m_name;
+            return m_name;
         }
 
         template <class AVIO>
@@ -106,16 +118,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexActiveFrequency:
-                return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
-            case IndexStandbyFrequency:
-                return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
-            case IndexEnabled:
-                return CVariant::from(this->isEnabled());
-            case IndexInputVolume:
-                return CVariant::from(this->getVolumeInput());
-            case IndexOutputVolume:
-                return CVariant::from(this->getVolumeOutput());
+            case IndexActiveFrequency:  return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
+            case IndexStandbyFrequency: return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
+            case IndexEnabledSend:      return CVariant::from(this->isSendEnabled());
+            case IndexEnabledReceive:   return CVariant::from(this->isReceiveEnabled());
+            case IndexInputVolume:      return CVariant::from(this->getVolumeInput());
+            case IndexOutputVolume:     return CVariant::from(this->getVolumeOutput());
             default:
                 return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
             }
@@ -128,21 +136,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexActiveFrequency:
-                this->m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexStandbyFrequency:
-                this->m_frequencyStandby.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexEnabled:
-                this->setEnabled(variant.toBool());
-                break;
-            case IndexInputVolume:
-                this->setVolumeInput(variant.toInt());
-                break;
-            case IndexOutputVolume:
-                this->setVolumeOutput(variant.toInt());
-                break;
+            case IndexActiveFrequency:  m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexStandbyFrequency: m_frequencyStandby.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexEnabledSend:      this->setSendEnabled(variant.toBool()); break;
+            case IndexEnabledReceive:   this->setReceiveEnabled(variant.toBool()); break;
+            case IndexInputVolume:      this->setVolumeInput(variant.toInt());  break;
+            case IndexOutputVolume:     this->setVolumeOutput(variant.toInt()); break;
             default:
                 CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant);
                 break;
@@ -152,22 +151,17 @@ namespace BlackMisc
         template <class AVIO>
         int CModulator<AVIO>::comparePropertyByIndex(const CPropertyIndex &index, const AVIO &compareValue) const
         {
-            if (index.isMyself()) { return this->m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive); }
+            if (index.isMyself()) { return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexActiveFrequency:
-                return this->m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
-            case IndexStandbyFrequency:
-                return this->m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
-            case IndexEnabled:
-                return Compare::compare(this->isEnabled(), compareValue.isEnabled());
-            case IndexInputVolume:
-                return Compare::compare(this->getVolumeInput(), compareValue.getVolumeInput());
-            case IndexOutputVolume:
-                return Compare::compare(this->getVolumeOutput(), compareValue.getVolumeOutput());
-            default:
-                break;
+            case IndexActiveFrequency:  return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
+            case IndexStandbyFrequency: return m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
+            case IndexEnabledSend:      return Compare::compare(this->isSendEnabled(), compareValue.isSendEnabled());
+            case IndexEnabledReceive:   return Compare::compare(this->isReceiveEnabled(), compareValue.isReceiveEnabled());
+            case IndexInputVolume:      return Compare::compare(this->getVolumeInput(), compareValue.getVolumeInput());
+            case IndexOutputVolume:     return Compare::compare(this->getVolumeOutput(), compareValue.getVolumeOutput());
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
@@ -190,21 +184,21 @@ namespace BlackMisc
         QString CModulator<AVIO>::convertToQString(bool i18n) const
         {
             QString s(this->getName());
-            s.append(" Active: ").append(this->m_frequencyActive.valueRoundedWithUnit(3, i18n));
-            s.append(" Standby: ").append(this->m_frequencyStandby.valueRoundedWithUnit(3, i18n));
+            s.append(" Active: ").append(m_frequencyActive.valueRoundedWithUnit(3, i18n));
+            s.append(" Standby: ").append(m_frequencyStandby.valueRoundedWithUnit(3, i18n));
             return s;
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setFrequencyActiveKHz(double frequencyKHz)
         {
-            this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
+            m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
         }
 
         template <class AVIO>
         void CModulator<AVIO>::setFrequencyStandbyKHz(double frequencyKHz)
         {
-            this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
+            m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
         }
 
         template <class AVIO>

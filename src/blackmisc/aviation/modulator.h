@@ -29,7 +29,8 @@ namespace BlackMisc
                 IndexStandbyFrequency,
                 IndexOutputVolume,
                 IndexInputVolume,
-                IndexEnabled
+                IndexEnabledSend,
+                IndexEnabledReceive
             };
 
             //! Toggle active and standby frequencies
@@ -57,10 +58,16 @@ namespace BlackMisc
             QString getName() const;
 
             //! Enabled?
-            bool isEnabled() const;
+            bool isSendEnabled() const;
 
             //! Enabled?
-            void setEnabled(bool enable);
+            bool isReceiveEnabled() const;
+
+            //! Enabled?
+            void setSendEnabled(bool enable);
+
+            //! Enabled?
+            void setReceiveEnabled(bool enable);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -121,9 +128,10 @@ namespace BlackMisc
             QString m_name; //!< name of the unit
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
-            int m_volumeInput = 0;  //!< volume input
-            int m_volumeOutput = 0; //!< volume output
-            bool m_enabled = true;  //!< is enabled, used e.g. for mute etc.
+            int m_volumeInput     = 0;     //!< volume input
+            int m_volumeOutput    = 0;     //!< volume output
+            bool m_sendEnabled    = true;  //!< is enabled, used e.g. for mute etc.
+            bool m_receiveEnabled = true;  //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO const *derived() const
@@ -144,7 +152,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(frequencyStandby),
                 BLACK_METAMEMBER(volumeInput),
                 BLACK_METAMEMBER(volumeOutput),
-                BLACK_METAMEMBER(enabled)
+                BLACK_METAMEMBER(sendEnabled),
+                BLACK_METAMEMBER(receiveEnabled)
             );
         };
 
