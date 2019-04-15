@@ -870,9 +870,12 @@ namespace BlackGui
     bool CGuiApplication::triggerShowHelp(const QWidget *widget, QEvent *event)
     {
         if (!widget) { return false; }
-        if (!event) { return false; }
-        if (event->type() != QEvent::EnterWhatsThisMode) { return false; }
+        if (!event)  { return false; }
+        const QEvent::Type t = event->type();
+        if (t != QEvent::EnterWhatsThisMode) { return false; }
         QWhatsThis::leaveWhatsThisMode();
+        event->accept();
+        if (!widget->isVisible()) { return true; } // ignore invisble ones
         const QPointer<const QWidget> wp(widget);
         QTimer::singleShot(0, sGui, [ = ]
         {
