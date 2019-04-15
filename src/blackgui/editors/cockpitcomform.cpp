@@ -39,7 +39,7 @@ namespace BlackGui
             connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onSelcalChanged);
 
             // XPdr
-            connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::transponderModeChanged);
+            connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged,     this, &CCockpitComForm::transponderModeChanged);
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComForm::transponderStateIdentEnded);
 
             // COM GUI events
@@ -59,6 +59,8 @@ namespace BlackGui
             ui->led_ComPanelCom2->setShape(CLedWidget::Rounded);
             ui->tb_RequestTextMessageCom1->setIcon(CIcons::appTextMessages16());
             ui->tb_RequestTextMessageCom2->setIcon(CIcons::appTextMessages16());
+
+            this->initLeds();
         }
 
         CCockpitComForm::~CCockpitComForm()
@@ -150,8 +152,14 @@ namespace BlackGui
         void CCockpitComForm::initLeds()
         {
             const CLedWidget::LedShape shape = CLedWidget::Rounded;
-            ui->led_ComPanelCom1->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 connected", "COM1 disconnected", 14);
-            ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected", "COM2 disconnected", 14);
+            ui->led_ComPanelCom1->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 connected to station", "COM1 disconnected", 14);
+            ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected to station", "COM2 disconnected", 14);
+
+            ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
+            ui->led_ComPanelCom1S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 trasmit (sim)", "COM1 not transmitting", 14);
+
+            ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)", "COM2 not receiving", 14);
+            ui->led_ComPanelCom2S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 trasmit (sim)", "COM2 not transmitting", 14);
         }
 
         CSimulatedAircraft CCockpitComForm::cockpitValuesToAircraftObject()
