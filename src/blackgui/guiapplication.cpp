@@ -1052,7 +1052,7 @@ namespace BlackGui
             m_updateDialog = new CUpdateInfoDialog(this->mainApplicationWidget());
         }
 
-        if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) return;
+        if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) { return; }
         const int result = m_updateDialog->exec();
         if (result != QDialog::Accepted) { return; }
     }

@@ -26,7 +26,7 @@ namespace BlackGui
             ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
             ui->cb_DontShowAgain->setChecked(!m_setting.get());
             this->selectionChanged();
-            connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
+            connect(ui->comp_UpdateInfo,  &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
             connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CUpdateInfoDialog::onDontShowAgain);
         }
 

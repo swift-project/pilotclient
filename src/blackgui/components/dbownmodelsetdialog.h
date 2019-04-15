@@ -32,7 +32,7 @@ namespace BlackGui
             explicit CDbOwnModelSetDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelSetDialog();
+            virtual ~CDbOwnModelSetDialog() override;
 
             //! \copydoc CDbOwnModelSetComponent::setSimulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);

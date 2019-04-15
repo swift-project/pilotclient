@@ -43,7 +43,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
-            connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
+            connect(ui->pb_Ok,     &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
             connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetFormDialog::simulatorChanged);
         }
 

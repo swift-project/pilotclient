@@ -19,10 +19,8 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
-namespace BlackMisc { class CLogCategoryList; }
 namespace Ui { class CDbOwnModelSetFormDialog; }
+namespace BlackMisc { class CLogCategoryList; }
 namespace BlackGui
 {
     namespace Components

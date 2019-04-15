@@ -61,14 +61,14 @@ namespace BlackGui
             this->updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
 
             // COM form
-            connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
-            connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
-            connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CCockpitComComponent::updateSelcalInContext);
+            connect(ui->editor_Com, &CCockpitComForm::testSelcal,             this, &CCockpitComComponent::testSelcal);
+            connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues,   this, &CCockpitComComponent::updateOwnCockpitInContext);
+            connect(ui->editor_Com, &CCockpitComForm::changedSelcal,          this, &CCockpitComComponent::updateSelcalInContext);
             connect(ui->editor_Com, &CCockpitComForm::requestCom1TextMessage, this, &CCockpitComComponent::requestCom1TextMessage);
             connect(ui->editor_Com, &CCockpitComForm::requestCom2TextMessage, this, &CCockpitComComponent::requestCom2TextMessage);
 
             // Relay COM form signals
-            connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
+            connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged,     this, &CCockpitComComponent::transponderModeChanged);
             connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
             // hook up with changes from own aircraft context
@@ -110,7 +110,7 @@ namespace BlackGui
             ui->editor_Com->setTransponder(transponder);
 
             // selected stations
-            if (sGui->getIContextNetwork())
+            if (sGui && sGui->getIContextNetwork())
             {
                 const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
                 ui->editor_Com->setSelectedAtcStations(selectedStations);
