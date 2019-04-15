@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>376</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -176,7 +176,7 @@
       <item row="3" column="1">
        <widget class="QRadioButton" name="rb_DistributorsSelected">
         <property name="text">
-         <string>selected</string>
+         <string>selected from below</string>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">bg_Distributors</string>
@@ -186,7 +186,7 @@
       <item row="3" column="3">
        <widget class="QRadioButton" name="rb_DistributorsAll">
         <property name="text">
-         <string>all</string>
+         <string>all from below</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -202,7 +202,7 @@
    <item>
     <widget class="QGroupBox" name="gb_Distributors">
      <property name="title">
-      <string>Distributors</string>
+      <string>Distributor selection</string>
      </property>
      <layout class="QVBoxLayout" name="vl_Distributors">
       <item>
@@ -305,9 +305,9 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_SourceSet"/>
-  <buttongroup name="bg_Distributors"/>
-  <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_Displayed"/>
+  <buttongroup name="bg_SourceSet"/>
+  <buttongroup name="bg_Mode"/>
+  <buttongroup name="bg_Distributors"/>
  </buttongroups>
 </ui>

@@ -117,6 +117,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_Clear">
+        <property name="text">
+         <string>clear set</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_CreateNewSet">
         <property name="minimumSize">
          <size>
@@ -196,6 +203,17 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tvp_OwnModelSet</tabstop>
+  <tabstop>le_Simulator</tabstop>
+  <tabstop>pb_ShowStatistics</tabstop>
+  <tabstop>pb_Clear</tabstop>
+  <tabstop>pb_CreateNewSet</tabstop>
+  <tabstop>pb_FirstSet</tabstop>
+  <tabstop>pb_CopyFromAnotherSwift</tabstop>
+  <tabstop>pb_LoadExistingSet</tabstop>
+  <tabstop>pb_SaveAsSetForSimulator</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

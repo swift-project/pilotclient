@@ -79,17 +79,19 @@ namespace BlackGui
             //! \fixme hardcoded style sheet
             ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
 
-            connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_ShowStatistics, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::requestUpdate, this, &CDbOwnModelSetComponent::updateViewToCurrentModels);
+            connect(ui->pb_CreateNewSet,    &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_ShowStatistics,  &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_FirstSet,        &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_Clear,           &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_CopyFromAnotherSwift,  &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+            connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed,   this, &CDbOwnModelSetComponent::setSimulator,      Qt::QueuedConnection);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged, Qt::QueuedConnection);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged,     this, &CDbOwnModelSetComponent::viewModelChanged,  Qt::QueuedConnection);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::requestUpdate,    this, &CDbOwnModelSetComponent::updateViewToCurrentModels,    Qt::QueuedConnection);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded, Qt::QueuedConnection);
 
             this->triggerSetSimulatorDeferred(simulator);
         }
@@ -263,6 +265,12 @@ namespace BlackGui
             if (sender == ui->pb_CopyFromAnotherSwift)
             {
                 this->copyFromAnotherSwift();
+                return;
+            }
+
+            if (sender == ui->pb_Clear)
+            {
+                ui->tvp_OwnModelSet->clear();
                 return;
             }
         }
