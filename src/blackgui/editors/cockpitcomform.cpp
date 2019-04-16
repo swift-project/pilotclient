@@ -43,20 +43,18 @@ namespace BlackGui
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComForm::transponderStateIdentEnded);
 
             // COM GUI events
-            connect(ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->tb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->tb_ComPanelCom1Toggle,   &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->tb_ComPanelCom2Toggle,   &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->ds_ComPanelCom1Active,   &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->ds_ComPanelCom2Active,   &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->ds_ComPanelCom1Standby,  &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->ds_ComPanelCom2Standby,  &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->tb_RequestTextMessageCom1, &QToolButton::released, this, &CCockpitComForm::requestCom1TextMessage);
-            connect(ui->tb_RequestTextMessageCom2, &QToolButton::released, this, &CCockpitComForm::requestCom2TextMessage);
+            connect(ui->frp_ComPanelSelcalSelector,  &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->tb_RequestTextMessageCom1,   &QToolButton::released, this, &CCockpitComForm::requestCom1TextMessage);
+            connect(ui->tb_RequestTextMessageCom2,   &QToolButton::released, this, &CCockpitComForm::requestCom2TextMessage);
 
-            ui->led_ComPanelCom1->setShape(CLedWidget::Rounded);
-            ui->led_ComPanelCom2->setShape(CLedWidget::Rounded);
             ui->tb_RequestTextMessageCom1->setIcon(CIcons::appTextMessages16());
             ui->tb_RequestTextMessageCom2->setIcon(CIcons::appTextMessages16());
 
@@ -224,6 +222,8 @@ namespace BlackGui
             {
                 ui->ds_ComPanelCom2Standby->setValue(freq);
             }
+
+            this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isSendEnabled(), com1.isReceiveEnabled(), com2.isSendEnabled(), com2.isReceiveEnabled());
         }
 
         void CCockpitComForm::setTransponder(const CTransponder &transponder)
@@ -285,6 +285,24 @@ namespace BlackGui
                 ui->ds_ComPanelCom1Active->setMinimumHeight(xpdrH);
                 ui->ds_ComPanelCom2Active->setMinimumHeight(xpdrH);
                 ui->sbp_ComPanelTransponder->setMinimumHeight(xpdrH);
+            }
+        }
+
+        void CCockpitComForm::updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R)
+        {
+            if (!integratedWithSim)
+            {
+                ui->led_ComPanelCom1R->setTriState();
+                ui->led_ComPanelCom1S->setTriState();
+                ui->led_ComPanelCom2R->setTriState();
+                ui->led_ComPanelCom2S->setTriState();
+            }
+            else
+            {
+                ui->led_ComPanelCom1R->setOn(com1R);
+                ui->led_ComPanelCom1S->setOn(com1S);
+                ui->led_ComPanelCom2R->setOn(com2R);
+                ui->led_ComPanelCom2S->setOn(com2S);
             }
         }
 

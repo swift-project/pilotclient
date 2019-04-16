@@ -106,6 +106,9 @@ namespace BlackGui
             //! Align the heights
             void alignUiElementsHeight();
 
+            //! Update UI for COM unit
+            void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R);
+
             //! Compare 2 frequencies (consider epsilon)
             static bool isFrequenceEqual(double f1, double f2);
 
