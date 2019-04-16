@@ -53,18 +53,25 @@ namespace BlackSimPlugin
             double com1ActiveMHz;     //!< COM1 active frequency
             double com2ActiveMHz;     //!< COM2 active frequency
             double com1StandbyMHz;    //!< COM1 standby frequency
-            double com2StandbyMHz;    //!< COM1 standby frequency
-            // 23
+            double com2StandbyMHz;    //!< COM2 standby frequency
+            double comTransmit1;      //!< COM1 transmit, means also receiving
+            double comTransmit2;      //!< COM2 transmit, means also receiving
+            double comReceiveAll;     //!< all COMs receiving, or COM:x transmitting or receiving
+            double comTest1;          //!< COM1 test
+            double comTest2;          //!< COM2 test
+            double comStatus1;        //!< COM1 status
+            double comStatus2;        //!< COM2 status
+            // 30
             double flapsHandlePosition;    //!< Flaps handle position in percent
             double spoilersHandlePosition; //!< Spoilers out? (flag)
             double gearHandlePosition;     //!< Gear handle position (flag)
-            // 26
+            // 33
             double numberOfEngines;   //!< Number of engines
             double engine1Combustion; //!< Engine 1 combustion flag
             double engine2Combustion; //!< Engine 2 combustion flag
             double engine3Combustion; //!< Engine 3 combustion flag
             double engine4Combustion; //!< Engine 4 combustion flag
-            //31
+            // 38
         };
 
         //! Data struct of aircraft position

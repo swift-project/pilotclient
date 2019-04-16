@@ -659,16 +659,32 @@ namespace BlackSimPlugin
                 CComSystem com1(myAircraft.getCom1System()); // set defaults
                 CComSystem com2(myAircraft.getCom2System());
 
-                // updates
+                // updates: https://www.fsdeveloper.com/forum/threads/com-unit-receiving-status-com-transmit-x-com-test-1-and-volume.445187/
+                // COM: If you're set to transmit on a unit, you WILL receive that unit.
+                // Otherwise if you're NOT set to transmit on a unit, then it will only receive if COM RECEIVE ALL is true.
+                // There is no control of COM volume.
                 com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
                 com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
+                const bool comReceiveAll = dtb(simulatorOwnAircraft.comReceiveAll);
+                const bool com1Test      = dtb(simulatorOwnAircraft.comTest1);
+                const bool com1Transmit  = dtb(simulatorOwnAircraft.comTransmit1);
+                const int  com1Status    = qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
+                com1.setSendEnabled(com1Status == 0 && com1Transmit);
+                com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
                 m_simCom1 = com1;
+                Q_UNUSED(com1Test);
 
                 com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
+                const bool com2Test     = dtb(simulatorOwnAircraft.comTest2);
+                const bool com2Transmit = dtb(simulatorOwnAircraft.comTransmit2);
+                const int  com2Status   = qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
+                com2.setSendEnabled(com2Status == 0 && com2Transmit);
+                com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
                 m_simCom2 = com2;
+                Q_UNUSED(com2Test);
 
                 CTransponder transponder(myAircraft.getTransponder());
                 transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));

@@ -36,9 +36,9 @@ namespace BlackSimPlugin
             {
             case RequestOwnAircraft: return ownAircraft;
             case RequestOwnAircraftTitle: return title;
-            case RequestSimEnvironment: return simEnv;
-            case RequestSbData: return sbData;
-            case RequestFacility: return facility;
+            case RequestSimEnvironment:   return simEnv;
+            case RequestSbData:    return sbData;
+            case RequestFacility:  return facility;
             case RequestEndMarker: return end;
             default: break;
             }
@@ -60,12 +60,12 @@ namespace BlackSimPlugin
             switch (simObjectRequest)
             {
             case SimObjectBaseId: return baseId;
-            case SimObjectAdd: return add;
+            case SimObjectAdd:    return add;
             case SimObjectRemove: return remove;
             case SimObjectLights: return lights;
             case SimObjectPositionData: return pos;
-            case SimObjectModel: return model;
-            case SimObjectMisc: return misc;
+            case SimObjectModel:  return model;
+            case SimObjectMisc:   return misc;
             case SimObjectEndMarker: return end;
             default: break;
             }
@@ -87,6 +87,8 @@ namespace BlackSimPlugin
 
         HRESULT CSimConnectDefinitions::initOwnAircraft(const HANDLE hSimConnect)
         {
+            // FSX vars: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526981(v%3dmsdn.10)
+            // all the VARS here should be FSX/P3D
             HRESULT hr = s_ok();
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
@@ -111,6 +113,13 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:2", "MHz");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:2", "MHz");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:1", "Bool");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:2", "Bool");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM RECEIVE ALL", "Bool");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:1", "Bool");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:2", "Bool");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:1", "Enum");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:2", "Enum");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "FLAPS HANDLE PERCENT", "Percent Over 100");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SPOILERS HANDLE POSITION", "Percent Over 100");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GEAR HANDLE POSITION", "Bool");
