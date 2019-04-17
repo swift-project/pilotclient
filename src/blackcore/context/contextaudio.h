@@ -72,12 +72,6 @@ namespace BlackCore
             //! Object path
             static const QString &ObjectPath();
 
-            //! Hotkey identifier for PTT (push to talk)
-            static const QString &pttHotkeyAction();
-
-            //! Hotkey icon for PTT (push to talk)
-            static const QPixmap &pttHotkeyIcon();
-
             //! \copydoc CContext::getPathAndContextId()
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 

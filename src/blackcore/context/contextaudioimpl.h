@@ -22,6 +22,7 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
@@ -140,7 +141,7 @@ namespace BlackCore
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-            CActionBind m_actionPtt { pttHotkeyAction(), pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmission };
+            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmission };
 
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;

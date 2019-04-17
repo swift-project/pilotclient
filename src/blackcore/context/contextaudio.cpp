@@ -33,17 +33,6 @@ namespace BlackCore
             return s;
         }
 
-        const QString &IContextAudio::pttHotkeyAction()
-        {
-            static const QString s("/Voice/Activate push-to-talk");
-            return s;
-        }
-
-        const QPixmap &IContextAudio::pttHotkeyIcon()
-        {
-            return CIcons::radio16();
-        }
-
         IContextAudio *IContextAudio::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
             switch (mode)

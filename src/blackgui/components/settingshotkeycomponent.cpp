@@ -13,6 +13,7 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/inputmanager.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 #include "ui_settingshotkeycomponent.h"
 
 #include <QAbstractItemModel>
@@ -67,7 +68,7 @@ namespace BlackGui
         void CSettingsHotkeyComponent::registerDummyPttEntry()
         {
             Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-            sApp->getInputManager()->registerAction(IContextAudio::pttHotkeyAction(), IContextAudio::pttHotkeyIcon());
+            sApp->getInputManager()->registerAction(pttHotkeyAction(), pttHotkeyIcon());
         }
 
         void CSettingsHotkeyComponent::addEntry()

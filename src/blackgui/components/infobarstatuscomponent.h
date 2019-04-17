@@ -14,6 +14,7 @@
 #include "blackcore/actionbind.h"
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 
 #include <QFrame>
 #include <QObject>
@@ -58,7 +59,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-            BlackCore::CActionBind m_actionPtt  { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
+            BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
             BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
             //! Init the LEDs
