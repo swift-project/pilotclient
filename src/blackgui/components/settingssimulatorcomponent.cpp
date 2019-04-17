@@ -241,6 +241,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::onApplyTimeSync()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             const bool timeSync = ui->cb_TimeSync->isChecked();
             const QString os = ui->le_TimeSyncOffset->text();
             CTime ost(0, CTimeUnit::hrmin());

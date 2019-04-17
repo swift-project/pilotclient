@@ -39,7 +39,7 @@ namespace BlackGui
             CSettingsHotkeyComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsHotkeyComponent();
+            virtual ~CSettingsHotkeyComponent() override;
 
             //! Save settings
             void saveSettings();

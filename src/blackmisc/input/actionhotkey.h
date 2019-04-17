@@ -11,13 +11,13 @@
 #ifndef BLACKMISC_INPUT_ACTIONHOTKEY_H
 #define BLACKMISC_INPUT_ACTIONHOTKEY_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
