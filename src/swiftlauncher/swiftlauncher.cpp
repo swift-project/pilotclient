@@ -80,16 +80,14 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     m_checkTimer.setInterval(2500);
     m_checkTimer.start();
 
-    // auto launch wizard
-    if (sGui->isInstallerOptionSet())
+    // auto launch wizard nd other init parts
+    const QPointer<CSwiftLauncher> myself(this);
+    QTimer::singleShot(2500, this, [ = ]
     {
-        const QPointer<CSwiftLauncher> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
-            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
-            myself->startWizard();
-        });
-    }
+        if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+        this->onCoreModeReleased();
+        if (sGui->isInstallerOptionSet()) { myself->startWizard(); }
+    });
 }
 
 CSwiftLauncher::~CSwiftLauncher()
@@ -491,8 +489,9 @@ void CSwiftLauncher::checkRunningApplicationsAndCore()
     const bool foundLocalCore = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
     const bool foundLocalMappingTool = runningApps.containsApplication(CApplicationInfo::MappingTool);
     const bool foundLocalPilotClientGui = runningApps.containsApplication(CApplicationInfo::PilotClientGui);
+    const bool standalone = ui->rb_SwiftStandalone->isChecked();
 
-    ui->tb_SwiftCore->setEnabled(!foundLocalCore && m_startCoreWaitCycles < 1);
+    ui->tb_SwiftCore->setEnabled(!standalone && !foundLocalCore && m_startCoreWaitCycles < 1);
     ui->tb_SwiftMappingTool->setEnabled(!foundLocalMappingTool && m_startMappingToolWaitCycles < 1);
     ui->tb_SwiftGui->setEnabled(!foundLocalPilotClientGui && m_startGuiWaitCycles < 1);
 }
@@ -521,7 +520,9 @@ void CSwiftLauncher::onDBusEditingFinished()
 
 void CSwiftLauncher::onCoreModeReleased()
 {
-    ui->comp_DBusSelector->setEnabled(!ui->rb_SwiftStandalone->isChecked());
+    const bool sa = ui->rb_SwiftStandalone->isChecked();
+    ui->comp_DBusSelector->setEnabled(!sa);
+    ui->tb_SwiftCore->setEnabled(!sa);
     this->saveSetup();
 }
 
