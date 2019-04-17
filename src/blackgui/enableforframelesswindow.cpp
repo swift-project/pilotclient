@@ -304,7 +304,7 @@ namespace BlackGui
             return (Qt::Tool | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         case WindowNormal:
         default:
-            return (Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+            return (Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
 } // namespace
