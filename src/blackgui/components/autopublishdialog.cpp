@@ -7,7 +7,9 @@
  */
 
 #include "autopublishdialog.h"
+#include "blackgui/guiapplication.h"
 #include "ui_autopublishdialog.h"
+
 
 namespace BlackGui
 {
@@ -33,8 +35,8 @@ namespace BlackGui
         {
             const int r = ui->comp_AutoPublish->readFiles();
             this->show();
+            CGuiApplication::modalWindowToFront();
             return r;
         }
-
     } // ns
 } // ns

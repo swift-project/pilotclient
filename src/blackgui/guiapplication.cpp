@@ -60,6 +60,7 @@
 #include <QSysInfo>
 #include <QUrl>
 #include <QWidget>
+#include <QWindow>
 #include <QMainWindow>
 #include <QtGlobal>
 #include <QWhatsThis>
@@ -355,6 +356,12 @@ namespace BlackGui
     {
         const QScreen *s = currentScreen();
         return s->geometry();
+    }
+
+    void CGuiApplication::modalWindowToFront()
+    {
+        if (!QGuiApplication::modalWindow()) { return; }
+        QGuiApplication::modalWindow()->raise();
     }
 
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const

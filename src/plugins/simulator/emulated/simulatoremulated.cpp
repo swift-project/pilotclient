@@ -63,9 +63,10 @@ namespace BlackSimPlugin
             const QPointer<CSimulatorEmulated> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
-                if (myself.isNull()) { return; }
+                if (myself.isNull() || !sGui || sGui->isShuttingDown()) { return; }
                 this->emitSimulatorCombinedStatus();
                 m_monitorWidget->show();
+                CGuiApplication::modalWindowToFront();
             });
 
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }

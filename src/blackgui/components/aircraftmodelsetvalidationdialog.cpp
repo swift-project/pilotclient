@@ -31,8 +31,10 @@ namespace BlackGui
 
         void CAircraftModelSetValidationDialog::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
         {
+            if (!sGui) { return; }
             ui->comp_AircraftModelValidation->validatedModelSet(simulator, valid, invalid, stopped, msgs);
             this->setWindowTitle(QStringLiteral("Model validation for '%1'").arg(simulator.toQString(true)));
+            CGuiApplication::modalWindowToFront();
         }
 
         bool CAircraftModelSetValidationDialog::event(QEvent *event)

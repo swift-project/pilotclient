@@ -57,6 +57,7 @@ namespace BlackGui
         bool CDbLoadDataDialog::newerOrEmptyEntitiesDetected(CEntityFlags::Entity loadEntities)
         {
             this->show();
+            CGuiApplication::modalWindowToFront();
             if (m_consolidating) { return false; }
             if (m_pendingEntities != CEntityFlags::NoEntity) { return false; } // already loading
             if (loadEntities == CEntityFlags::NoEntity) { return false; }

@@ -11,13 +11,13 @@
 #ifndef BLACKGUI_GUIAPPLICATION_H
 #define BLACKGUI_GUIAPPLICATION_H
 
-#include "blackcore/application.h"
-#include "blackgui/blackguiexport.h"
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/mainwindowaccess.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/settings/updatenotification.h"
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/mainwindowaccess.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/statusmessage.h"
@@ -265,6 +265,9 @@ namespace BlackGui
         //! Current screen resolution
         //! \remark logical resolution, not physical resolution
         static QRect currentScreenGeometry();
+
+        //! Bring any modal dialog to front
+        static void modalWindowToFront();
 
         //! Parse scale factor if any
         static double parseScaleFactor(int argc, char *argv[]);
