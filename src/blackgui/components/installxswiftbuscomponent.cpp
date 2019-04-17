@@ -166,7 +166,7 @@ namespace BlackGui
             if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
             {
                 // capture values by copy!
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info(u"Uncompressed xSwiftBus in '%1'") << xSwiftBusDirectory;
+                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info(u"Uncompressed XSwiftBus in '%1'") << xSwiftBusDirectory;
                 this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ = ]
                 {
                     if (!myself) { return; }

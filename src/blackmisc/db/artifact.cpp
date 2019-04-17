@@ -185,7 +185,7 @@ namespace BlackMisc
 
         const QString &CArtifact::typeToString(CArtifact::ArtifactType type)
         {
-            static const QString xswb("xSwiftBus");
+            static const QString xswb("XSwiftBus");
             static const QString installer("pilot client installer");
             static const QString symbols("symbols");
             static const QString unknown("unknown");
