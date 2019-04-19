@@ -40,9 +40,9 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -68,20 +68,23 @@ namespace BlackGui
             ui->le_MaxDistance->setValidator(new QIntValidator(ui->le_MaxDistance));
 
             // connects
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::simulatorPluginChanged);
-            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::pluginStateChanged);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,       this, &CSettingsSimulatorComponent::simulatorPluginChanged);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged,     this, &CSettingsSimulatorComponent::pluginStateChanged);
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
-            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::showPluginConfig);
-            connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
-            connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync);
-            connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested,  this, &CSettingsSimulatorComponent::showPluginConfig);
+
+            connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
+            connect(ui->pb_ApplyTimeSync,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync, Qt::QueuedConnection);
+            connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
+            connect(ui->pb_ApplyComSync,     &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,             Qt::QueuedConnection);
+
             connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
             connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
             connect(ui->pb_Check, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
             connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
             connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
-            connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
-            connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+            connect(ui->le_MaxAircraft, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+            connect(ui->le_MaxDistance, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
             // list all available simulators
             for (const auto &p : getAvailablePlugins())
@@ -91,10 +94,13 @@ namespace BlackGui
             }
 
             // config
-            reloadPluginConfig();
+            this->reloadPluginConfig();
 
             // init
-            simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+            if (sGui && sGui->getIContextSimulator())
+            {
+                this->simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+            }
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
@@ -110,6 +116,10 @@ namespace BlackGui
             ui->le_TimeSyncOffset->setEnabled(m_pluginLoaded);
             ui->pb_ApplyTimeSync->setEnabled(m_pluginLoaded);
 
+            // COM unit
+            ui->pb_ApplyComSync->setEnabled(m_pluginLoaded);
+            ui->cb_ComSync->setEnabled(m_pluginLoaded);
+
             // led
             ui->led_RestrictedRendering->setOn(m_pluginLoaded ? setup.isRenderingRestricted() : false);
             ui->lbl_RestrictionText->setText(m_pluginLoaded ? setup.getRenderRestrictionText() : "");
@@ -124,11 +134,17 @@ namespace BlackGui
 
             if (m_pluginLoaded)
             {
-                const bool timeSynced = sGui->getIContextSimulator()->isTimeSynchronized();
+                const IContextSimulator *sim = sGui->getIContextSimulator();
+                const bool timeSynced = sim->isTimeSynchronized();
                 ui->cb_TimeSync->setChecked(timeSynced);
-                const CTime timeOffset = sGui->getIContextSimulator()->getTimeSynchronizationOffset();
+                const CTime timeOffset = sim->getTimeSynchronizationOffset();
                 ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
+                // settings
+                const CSimulatorSettings settings = sim->getSimulatorSettings();
+                ui->cb_ComSync->setChecked(settings.isComIntegrated());
+
+                // rendering
                 const int maxAircraft = setup.getMaxRenderedAircraft();
                 ui->le_MaxAircraft->setText(setup.isMaxAircraftRestricted() ? QString::number(maxAircraft) : "");
 
@@ -144,6 +160,7 @@ namespace BlackGui
 
         CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins() const
         {
+            if (!sGui || !sGui->getIContextSimulator()) { return {}; }
             return sGui->getIContextSimulator()->getAvailableSimulatorPlugins();
         }
 
@@ -182,6 +199,8 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::onApplyMaxRenderedAircraft()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
             // get initial aircraft to render
             CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             const int noRequested = ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
@@ -209,6 +228,8 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::onApplyMaxRenderedDistance()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
             // get initial aircraft to render
             CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             CLength newDistance(0, nullptr);
@@ -218,21 +239,18 @@ namespace BlackGui
             }
 
             CLength currentDistance(setup.getMaxRenderedDistance());
-            if (currentDistance == newDistance)
-            {
-                return;
-            }
-            else
-            {
-                CLogMessage(this).info(u"Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
-                setup.setMaxRenderedDistance(newDistance);
-                sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
-                this->setGuiValues();
-            }
+            if (currentDistance == newDistance) { return; }
+
+            CLogMessage(this).info(u"Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
+            setup.setMaxRenderedDistance(newDistance);
+            sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
+            this->setGuiValues();
         }
 
         void CSettingsSimulatorComponent::onApplyDisableRendering()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
             CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             setup.disableRendering();
             sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
@@ -241,7 +259,8 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::onApplyTimeSync()
         {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
             const bool timeSync = ui->cb_TimeSync->isChecked();
             const QString os = ui->le_TimeSyncOffset->text();
             CTime ost(0, CTimeUnit::hrmin());
@@ -259,8 +278,23 @@ namespace BlackGui
             }
         }
 
+        void CSettingsSimulatorComponent::onApplyComSync()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
+            IContextSimulator *sim = sGui->getIContextSimulator();
+            const CSimulatorInfo simulator = sim->getSimulatorPluginInfo().getSimulatorInfo();
+            if (!simulator.isSingleSimulator()) { return; }
+            CSimulatorSettings settings = sim->getSimulatorSettings();
+            if (settings.isComIntegrated() == ui->cb_ComSync->isChecked()) { return; }
+            settings.setComIntegrated(ui->cb_ComSync->isChecked());
+            sim->setSimulatorSettings(settings, simulator);
+        }
+
         void CSettingsSimulatorComponent::clearRestricedRendering()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
             CInterpolationAndRenderingSetupGlobal setup;
             setup.clearAllRenderingRestrictions();
             sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);

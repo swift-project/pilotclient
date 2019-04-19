@@ -38,7 +38,7 @@ namespace BlackGui
             explicit CSettingsSimulatorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CSettingsSimulatorComponent();
+            virtual ~CSettingsSimulatorComponent() override;
 
         private:
             //! Driver plugin enabled/disabled
@@ -55,6 +55,9 @@ namespace BlackGui
 
             //! Apply time synchronization
             void onApplyTimeSync();
+
+            //! Apply COM sync
+            void onApplyComSync();
 
             //! Clear restricted rendering
             void clearRestricedRendering();
@@ -82,7 +85,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded?
-            BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
+            BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::reloadPluginConfig };
         };
     }
