@@ -163,10 +163,16 @@ namespace BlackGui
         this->setLed();
     }
 
-    void CLedWidget::setTriStateToolTip(const QString &triState)
+    void CLedWidget::setTriStateToolTip(const QString &triStateTooltip)
     {
-        m_tooltipTriState = triState;
+        m_tooltipTriState = triStateTooltip;
         this->setLed();
+    }
+
+    void CLedWidget::setTriStateValues(CLedWidget::LedColor color, const QString &tooltip)
+    {
+        m_tooltipTriState = tooltip;
+        m_colorTriState = color;
     }
 
     void CLedWidget::setOnColor(LedColor color)

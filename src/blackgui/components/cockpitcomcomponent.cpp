@@ -8,6 +8,7 @@
 
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/cockpitcomcomponent.h"
 #include "blackgui/components/selcalcodeselector.h"
@@ -72,11 +73,14 @@ namespace BlackGui
             connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
             // hook up with changes from own aircraft context
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::updateSelcalFromContext, Qt::QueuedConnection);
+            if (sGui)
+            {
+                connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
+                connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal,          this, &CCockpitComComponent::updateSelcalFromContext,  Qt::QueuedConnection);
 
-            // hook up with audio context
-            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
+                // hook up with audio context
+                connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
+            }
         }
 
         CCockpitComComponent::~CCockpitComComponent()
@@ -110,10 +114,13 @@ namespace BlackGui
             ui->editor_Com->setTransponder(transponder);
 
             // selected stations
-            if (sGui && sGui->getIContextNetwork())
+            if (sGui)
             {
-                const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
-                ui->editor_Com->setSelectedAtcStations(selectedStations);
+                if (sGui->getIContextNetwork())
+                {
+                    const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
+                    ui->editor_Com->setSelectedAtcStations(selectedStations);
+                }
             }
         }
 

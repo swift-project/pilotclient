@@ -26,7 +26,6 @@
 #include <QScopedPointer>
 
 class QPaintEvent;
-class QWidget;
 
 namespace Ui { class CCockpitComComponent; }
 namespace BlackMisc { namespace Aviation { class CComSystem; } }

@@ -119,7 +119,10 @@ namespace BlackGui
         void setOffToolTip(const QString &off);
 
         //! Tri-state tool tip
-        void setTriStateToolTip(const QString &triState);
+        void setTriStateToolTip(const QString &triStateTooltip);
+
+        //! Tri-state
+        void setTriStateValues(LedColor color, const QString &tooltip);
 
         //! New values dual state
         void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);

@@ -8,6 +8,8 @@
 
 #include "cockpitcomform.h"
 #include "ui_cockpitcomform.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
@@ -38,7 +40,7 @@ namespace BlackGui
             connect(ui->tb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComForm::testSelcal);
             connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onSelcalChanged);
 
-            // XPdr
+            // XPDR
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged,     this, &CCockpitComForm::transponderModeChanged);
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComForm::transponderStateIdentEnded);
 
@@ -155,9 +157,13 @@ namespace BlackGui
 
             ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
             ui->led_ComPanelCom1S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 trasmit (sim)", "COM1 not transmitting", 14);
+            ui->led_ComPanelCom1R->setTriStateValues(CLedWidget::Blue, "receive not synced");
+            ui->led_ComPanelCom1S->setTriStateValues(CLedWidget::Blue, "transmit not synced");
 
             ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)", "COM2 not receiving", 14);
             ui->led_ComPanelCom2S->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 trasmit (sim)", "COM2 not transmitting", 14);
+            ui->led_ComPanelCom2R->setTriStateValues(CLedWidget::Blue, "receive not synced");
+            ui->led_ComPanelCom2S->setTriStateValues(CLedWidget::Blue, "transmit not synced");
         }
 
         CSimulatedAircraft CCockpitComForm::cockpitValuesToAircraftObject()
@@ -223,6 +229,7 @@ namespace BlackGui
                 ui->ds_ComPanelCom2Standby->setValue(freq);
             }
 
+            this->updateIntegrateFromSimulatorContext();
             this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isSendEnabled(), com1.isReceiveEnabled(), com2.isSendEnabled(), com2.isReceiveEnabled());
         }
 
@@ -304,6 +311,17 @@ namespace BlackGui
                 ui->led_ComPanelCom2R->setOn(com2R);
                 ui->led_ComPanelCom2S->setOn(com2S);
             }
+        }
+
+        void CCockpitComForm::updateIntegrateFromSimulatorContext()
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+            {
+                m_integratedWithSim = false;
+                return;
+            }
+            const bool integrated = sGui->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
+            m_integratedWithSim = integrated;
         }
 
         bool CCockpitComForm::isFrequenceEqual(double f1, double f2)

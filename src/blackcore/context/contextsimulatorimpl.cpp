@@ -343,7 +343,7 @@ namespace BlackCore
             const bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
             if (!c) { return false; }
 
-            CLogMessage(this).info(enable ? QStringLiteral("Set time syncronization to %1").arg(offset.toQString()) : QStringLiteral("Disabled time syncrhonization"));
+            CLogMessage(this).info(enable ? QStringLiteral("Set time synchronization to %1").arg(offset.toQString()) : QStringLiteral("Disabled time syncrhonization"));
             return true;
         }
 

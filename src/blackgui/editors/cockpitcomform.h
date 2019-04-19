@@ -91,6 +91,8 @@ namespace BlackGui
             //! @}
 
         private:
+            bool m_integratedWithSim = false; //!< Synced with simulator
+
             //! Init LEDs
             void initLeds();
 
@@ -108,6 +110,9 @@ namespace BlackGui
 
             //! Update UI for COM unit
             void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R);
+
+            //! Update from simulator context
+            void updateIntegrateFromSimulatorContext();
 
             //! Compare 2 frequencies (consider epsilon)
             static bool isFrequenceEqual(double f1, double f2);
