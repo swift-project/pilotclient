@@ -16,6 +16,8 @@ if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexNocacheBranch) {
 
 abortPreviousRunningBuilds()
 
+properties([buildDiscarder(logRotator(numToKeepStr: '4'))])
+
 def builders = [:]
 def buildResults = [:]
 
