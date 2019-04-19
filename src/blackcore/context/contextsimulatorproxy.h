@@ -59,6 +59,8 @@ namespace BlackCore
             //! @{
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
+            virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const override;
+            virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo) override;
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual int checkListeners() override;

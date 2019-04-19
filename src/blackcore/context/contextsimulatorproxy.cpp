@@ -23,6 +23,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackCore
 {
@@ -46,6 +47,8 @@ namespace BlackCore
 
         void CContextSimulatorProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
         {
+            // the types here have to be fully qualifed
+
             bool s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                         "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
             Q_ASSERT(s);
@@ -107,6 +110,16 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<CSimulatorPluginInfoList>(QLatin1String("getAvailableSimulatorPlugins"));
         }
 
+        CSimulatorSettings CContextSimulatorProxy::getSimulatorSettings() const
+        {
+            return m_dBusInterface->callDBusRet<CSimulatorSettings>(QLatin1String("getSimulatorSettings"));
+        }
+
+        bool CContextSimulatorProxy::setSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulatorInfo)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setSimulatorSettings"), settings, simulatorInfo);
+        }
+
         int CContextSimulatorProxy::getSimulatorStatus() const
         {
             return m_dBusInterface->callDBusRet<int>(QLatin1String("getSimulatorStatus"));
@@ -114,17 +127,17 @@ namespace BlackCore
 
         CAirportList CContextSimulatorProxy::getAirportsInRange(bool recalculatePosition) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1String("getAirportsInRange"), recalculatePosition);
+            return m_dBusInterface->callDBusRet<CAirportList>(QLatin1String("getAirportsInRange"), recalculatePosition);
         }
 
         CAircraftModelList CContextSimulatorProxy::getModelSet() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getModelSet"));
+            return m_dBusInterface->callDBusRet<CAircraftModelList>(QLatin1String("getModelSet"));
         }
 
         CSimulatorInfo CContextSimulatorProxy::simulatorsWithInitializedModelSet() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("simulatorsWithInitializedModelSet"));
+            return m_dBusInterface->callDBusRet<CSimulatorInfo>(QLatin1String("simulatorsWithInitializedModelSet"));
         }
 
         CStatusMessageList CContextSimulatorProxy::verifyPrerequisites() const
@@ -134,7 +147,7 @@ namespace BlackCore
 
         CSimulatorInfo CContextSimulatorProxy::getModelSetLoaderSimulator() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("getModelSetLoaderSimulator"));
+            return m_dBusInterface->callDBusRet<CSimulatorInfo>(QLatin1String("getModelSetLoaderSimulator"));
         }
 
         void CContextSimulatorProxy::setModelSetLoaderSimulator(const CSimulatorInfo &simulator)
@@ -159,7 +172,7 @@ namespace BlackCore
 
         CAircraftModelList CContextSimulatorProxy::getModelSetModelsStartingWith(const QString &modelString) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getModelSetModelsStartingWith"), modelString);
+            return m_dBusInterface->callDBusRet<CAircraftModelList>(QLatin1String("getModelSetModelsStartingWith"), modelString);
         }
 
         int CContextSimulatorProxy::getModelSetCount() const
@@ -167,14 +180,14 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<int>(QLatin1String("getModelSetCount"));
         }
 
-        BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
+        CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1String("getSimulatorPluginInfo"));
+            return m_dBusInterface->callDBusRet<CSimulatorPluginInfo>(QLatin1String("getSimulatorPluginInfo"));
         }
 
         CSimulatorInternals CContextSimulatorProxy::getSimulatorInternals() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInternals>(QLatin1String("getSimulatorInternals"));
+            return m_dBusInterface->callDBusRet<CSimulatorInternals>(QLatin1String("getSimulatorInternals"));
         }
 
         void CContextSimulatorProxy::disableModelsForMatching(const CAircraftModelList &removedModels, bool incremental)
@@ -184,7 +197,7 @@ namespace BlackCore
 
         CAircraftModelList CContextSimulatorProxy::getDisabledModelsForMatching() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getDisabledModelsForMatching"));
+            return m_dBusInterface->callDBusRet<CAircraftModelList>(QLatin1String("getDisabledModelsForMatching"));
         }
 
         bool CContextSimulatorProxy::triggerModelSetValidation(const CSimulatorInfo &simulator)

@@ -39,7 +39,8 @@ namespace BlackMisc
                 {
                     IndexSimulatorDirectory = CPropertyIndex::GlobalIndexCSimulatorSettings,
                     IndexModelDirectories,
-                    IndexModelExcludeDirectoryPatterns
+                    IndexModelExcludeDirectoryPatterns,
+                    IndexComIntegration //!< COM unit integration
                 };
 
                 //! Default constructor
@@ -84,6 +85,12 @@ namespace BlackMisc
                 //! Having model exclude directoy patterns?
                 bool hasModelExcludeDirectoryPatterns() const { return !this->getModelExcludeDirectoryPatterns().isEmpty(); }
 
+                //! COM unit integration
+                bool isComIntegrated() const { return m_comIntegration; }
+
+                //! COM unit integration
+                void setComIntegrated(bool integrated) { m_comIntegration = integrated; }
+
                 //! Reset the paths
                 void resetPaths();
 
@@ -103,12 +110,14 @@ namespace BlackMisc
                 QString     m_simulatorDirectory;       //!< Simulator directory
                 QStringList m_modelDirectories;         //!< Model directory
                 QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
+                bool        m_comIntegration = false;   //!< COM integration
 
                 BLACK_METACLASS(
                     CSimulatorSettings,
                     BLACK_METAMEMBER(simulatorDirectory),
                     BLACK_METAMEMBER(modelDirectories),
-                    BLACK_METAMEMBER(excludeDirectoryPatterns)
+                    BLACK_METAMEMBER(excludeDirectoryPatterns),
+                    BLACK_METAMEMBER(comIntegration)
                 );
             };
 

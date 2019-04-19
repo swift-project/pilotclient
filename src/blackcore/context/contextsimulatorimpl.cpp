@@ -143,6 +143,25 @@ namespace BlackCore
             return m_plugins->getAvailableSimulatorPlugins();
         }
 
+        CSimulatorSettings CContextSimulator::getSimulatorSettings() const
+        {
+            const CSimulatorPluginInfo p = this->getSimulatorPluginInfo();
+            if (!p.isValid()) { return {}; }
+            const CSimulatorInfo sim = p.getSimulatorInfo();
+            if (!sim.isSingleSimulator()) { return {}; }
+            return m_simulatorSettings.getSettings(sim);
+        }
+
+        bool CContextSimulator::setSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+        {
+            if (!simulator.isSingleSimulator()) { return false; }
+            CSimulatorSettings simSettings = m_simulatorSettings.getSettings(simulator);
+            if (simSettings == settings) { return false; }
+            const CStatusMessage msg = m_simulatorSettings.setSettings(settings, simulator);
+            CLogMessage::preformatted(msg);
+            return true;
+        }
+
         bool CContextSimulator::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
         {
             return this->listenForSimulator(simulatorInfo);

@@ -45,6 +45,22 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatorPluginInfoList();
             }
 
+            //! \copydoc IContextSimulator::getSimulatorSettings
+            virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::Settings::CSimulatorSettings();
+            }
+
+            //! \copydoc IContextSimulator::setSimulatorSettings
+            virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo) override
+            {
+                Q_UNUSED(settings);
+                Q_UNUSED(simulatorInfo);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::startSimulatorPlugin
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
             {

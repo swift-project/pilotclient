@@ -17,6 +17,7 @@
 #include "blackcore/simulator.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/matchingstatistics.h"
@@ -147,6 +148,12 @@ namespace BlackCore
 
             //! Return list of available simulator plugins
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
+
+            //! Get the current simulator settings
+            virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const = 0;
+
+            //! Set settings for give simulator
+            virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
             //! Check all listeners enabled if simulator is connected
             virtual int checkListeners() = 0;
