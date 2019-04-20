@@ -48,7 +48,7 @@
 namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
-    namespace Network { class CTextMessage; }
+    namespace Network  { class CTextMessage; }
 }
 
 namespace BlackCore

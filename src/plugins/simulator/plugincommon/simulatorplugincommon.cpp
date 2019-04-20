@@ -25,10 +25,10 @@ namespace BlackSimPlugin
     {
         CSimulatorPluginCommon::CSimulatorPluginCommon(
             const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
+            IOwnAircraftProvider    *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider,
+            IWeatherGridProvider    *weatherGridProvider,
+            IClientProvider         *clientProvider,
             QObject *parent) :
             ISimulator(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
