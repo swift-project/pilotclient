@@ -557,6 +557,24 @@ namespace BlackGui
                         });
                         m_setNewActions.append(a);
                     }
+                    if (sims.isFG())
+                    {
+                        QAction *a = new QAction(CIcons::appModels16(), "FG models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FG));
+                        });
+                        m_setActions.append(a);
+
+                        a = new QAction(CIcons::appModels16(), "New set FG models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FG));
+                        });
+                        m_setNewActions.append(a);
+                    }
 
                     QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
                     connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged, Qt::QueuedConnection);
