@@ -362,8 +362,15 @@ namespace BlackGui
         void CDbOwnModelSetComponent::createNewSet()
         {
             // make sure both tabs display the same simulator
-            // since we use the componet also in the launcher wizard, mc might not be existing
+            // since we use the component also in the launcher wizard, mc might not be existing
             const CSimulatorInfo simulator(this->getModelSetSimulator());
+            if (!simulator.isSingleSimulator())
+            {
+                // Ref T630, avoid invalid simulator
+                CLogMessage(this).error(u"No single simulator!");
+                return;
+            }
+
             CDbMappingComponent *mc = this->getMappingComponent();
             if (!mc)
             {
@@ -434,7 +441,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::triggerSetSimulatorDeferred(const CSimulatorInfo &simulator)
         {
-            this->admitCache(simulator);
+            this->admitCache(simulator); // trigger loading
 
             QPointer<CDbOwnModelSetComponent> myself(this);
             QTimer::singleShot(1000, this, [ = ]
