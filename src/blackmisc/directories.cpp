@@ -96,6 +96,7 @@ namespace BlackMisc
 
     QString CDirectories::existingOrDefaultDir(const QString &checkDir, const QString &defaultDir) const
     {
+        if (checkDir.isEmpty()) { return defaultDir; } // empty dir returns true ????
         const QDir d(checkDir);
         if (d.exists()) { return checkDir; }
         return defaultDir;

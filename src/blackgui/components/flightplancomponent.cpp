@@ -46,6 +46,7 @@
 #include <QCompleter>
 #include <QStringBuilder>
 #include <QPointer>
+#include <QMessageBox>
 #include <Qt>
 
 using namespace BlackMisc;
@@ -535,6 +536,19 @@ namespace BlackGui
                     m = CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true);
                     break;
                 }
+
+                QFileInfo fi(fileName);
+                QDir fpDir = fi.absoluteDir();
+                if (CDirectoryUtils::isInApplicationDirectory(fpDir.absolutePath()))
+                {
+                    const int ret = QMessageBox::warning(this, "swift flight plan",
+                                                         "You try to save inside the swift directory '" + fpDir.absolutePath() +
+                                                         "'\n\nThis is not recommended!"
+                                                         "\n\nDo you want to really do this?",
+                                                         QMessageBox::Save | QMessageBox::Cancel);
+                    if (ret != QMessageBox::Save) { return; }
+                }
+
                 CFlightPlan fp;
                 this->validateAndInitializeFlightPlan(fp); // get data
 

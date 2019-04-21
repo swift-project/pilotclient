@@ -39,6 +39,12 @@ namespace BlackMisc
         return binDir;
     }
 
+    bool CDirectoryUtils::isInApplicationDirectory(const QString &path)
+    {
+        if (path.isEmpty()) { return false; }
+        return path.contains(qApp->applicationDirPath(), CFileUtils::osFileNameCaseSensitivity());
+    }
+
     const QString &CDirectoryUtils::pluginsDirectory()
     {
         static const QString pDir(CFileUtils::appendFilePaths(binDirectory(), "plugins"));
@@ -386,7 +392,7 @@ namespace BlackMisc
     {
         const QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
         QString d = pathes.first();
-        d = QDir::cleanPath(d + QDir::separator() + "swift");
+        d = QDir::cleanPath(CFileUtils::appendFilePaths(d, "swift"));
         QDir dir(d);
         if (dir.exists()) { return dir.absolutePath(); }
         return pathes.first();

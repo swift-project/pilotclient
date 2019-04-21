@@ -37,6 +37,9 @@ namespace BlackMisc
         //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
         static const QString &binDirectory();
 
+        //! Path in application directory
+        static bool isInApplicationDirectory(const QString &path);
+
         //! Plugins directory
         static const QString &pluginsDirectory();
 
