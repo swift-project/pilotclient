@@ -153,7 +153,7 @@ namespace BlackMisc
                 // excluded?
                 if (CFileUtils::isExcludedDirectory(directory, excludeDirectories) || isExcludedSubDirectory(directory))
                 {
-                    CLogMessage(this).debug() << "Skipping directory " << directory;
+                    CLogMessage(this).debug() << "Skipping directory (excluded)" << directory;
                     return CAircraftCfgEntriesList();
                 }
 
