@@ -535,6 +535,9 @@ namespace BlackCore
         //! Own model has been changed
         virtual void onOwnModelChanged(const BlackMisc::Simulation::CAircraftModel &newModel);
 
+        //! Get the model set
+        BlackMisc::Simulation::CAircraftModelList getModelSet() const;
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 

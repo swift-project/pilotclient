@@ -540,7 +540,7 @@ namespace BlackSimPlugin
             QList<Prefix> packages;
 
             Q_ASSERT(isConnected());
-            const CAircraftModelList models = m_modelSet.getThreadLocal();
+            const CAircraftModelList models = this->getModelSet();
             for (const auto &model : models)
             {
                 const QString &modelFile = model.getFileName();

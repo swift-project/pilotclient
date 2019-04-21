@@ -235,7 +235,6 @@ namespace BlackSimPlugin
             QTimer m_airportUpdater;
             QTimer m_pendingAddedTimer;
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
-            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this }; //!< XPlane model set
             BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
             QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed; //! aircraft for which adding failed

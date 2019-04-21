@@ -10,6 +10,7 @@
 #include "blackcore/simulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
@@ -34,6 +35,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -1052,6 +1054,15 @@ namespace BlackCore
         // can be overridden
     }
 
+    CAircraftModelList ISimulator::getModelSet() const
+    {
+        const CSimulatorInfo simulator = this->getSimulatorInfo();
+        if (!simulator.isSingleSimulator()) { return CAircraftModelList(); }
+
+        CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
+        return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+    }
+
     QString ISimulator::latestLoggedDataFormatted(const CCallsign &cs) const
     {
         const SituationLog s = m_interpolationLogger.getLastSituationLog(cs);
@@ -1062,8 +1073,8 @@ namespace BlackCore
         if (s.tsCurrent > 0)
         {
             dm = u"Setup: " % s.usedSetup.toQString(true) %
-                 u"\n\n" %
-                 u"Situation: " % s.toQString(false, true, true, true, true, sep);
+                    u"\n\n" %
+                    u"Situation: " % s.toQString(false, true, true, true, true, sep);
         }
         if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? u"Parts: " : u"\n\nParts: ") % p.toQString(sep); }
         return dm;
