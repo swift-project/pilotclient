@@ -327,12 +327,12 @@ namespace BlackSimPlugin
             if (isConnected()) { return true; }
             QString dbusAddress = m_xswiftbusServerSetting.getThreadLocal();
 
-            if (BlackMisc::CDBusServer::isSessionOrSystemAddress(dbusAddress))
+            if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
             {
                 m_dBusConnection = connectionFromString(dbusAddress);
                 m_dbusMode = Session;
             }
-            else if (BlackMisc::CDBusServer::isQtDBusAddress(dbusAddress))
+            else if (CDBusServer::isQtDBusAddress(dbusAddress))
             {
                 m_dBusConnection = QDBusConnection::connectToPeer(dbusAddress, "xswiftbus");
                 if (! m_dBusConnection.isConnected()) { return false; }
@@ -600,7 +600,15 @@ namespace BlackSimPlugin
                 const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 m_addingInProgressAircraft.insert(newRemoteAircraft.getCallsign(), now);
                 const QString callsign = newRemoteAircraft.getCallsign().asString();
-                const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+                if (aircraftModel.getCallsign() != newRemoteAircraft.getCallsign())
+                {
+                    CLogMessage(this).warning(u"Model for '%1' has no callsign, maybe using a default model") << callsign;
+                    aircraftModel.setCallsign(callsign); // fix callsign to avoid follow up issues
+
+                    // we could disable the aircraft?
+                }
+
                 const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
                 m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
                                          newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
@@ -799,7 +807,13 @@ namespace BlackSimPlugin
             for (const CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
-                BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+                const bool hasCallsign = !callsign.isEmpty();
+                if (!hasCallsign)
+                {
+                    // does not make sense to continue here
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
+                    continue;
+                }
 
                 planesTransponders.callsigns.push_back(callsign.asString());
                 planesTransponders.codes.push_back(xplaneAircraft.getAircraft().getTransponderCode());
@@ -901,10 +915,12 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
         {
             if (callsigns.isEmpty()) { return; }
-            if (this->isShuttingDown()) { return; }
+            if (!m_trafficProxy || this->isShuttingDown()) { return; }
             const QStringList csStrings = callsigns.getCallsignStrings();
+            QPointer<CSimulatorXPlane> myself(this);
             m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QDoubleList & verticalOffsetsMeters)
             {
+                if (!myself) { return; }
                 this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, verticalOffsetsMeters);
             });
         }

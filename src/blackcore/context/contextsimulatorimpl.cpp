@@ -239,7 +239,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (this->isSimulatorAvailable()) { return; }
             m_modelSetSimulator.set(simulator);
-            const CAircraftModelList models = this->getModelSet();
+            const CAircraftModelList models = this->getModelSet(); // cache synced
             m_aircraftMatcher.setModelSet(models, simulator, false);
         }
 
@@ -451,7 +451,7 @@ namespace BlackCore
             Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
 
             m_modelSetSimulator.set(simInfo);
-            const CAircraftModelList modelSetModels = this->getModelSet();
+            const CAircraftModelList modelSetModels = this->getModelSet(); // synced
             m_aircraftMatcher.setModelSet(modelSetModels, simInfo, true);
             m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
@@ -1152,7 +1152,7 @@ namespace BlackCore
             // no models in matcher, but in cache, we can set them as default
             const CSimulatorInfo simulator(m_modelSetSimulator.get());
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
-            const CAircraftModelList models(this->getModelSet());
+            const CAircraftModelList models(this->getModelSet()); //synced
             CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
             m_aircraftMatcher.setModelSet(models, simulator, false);
         }
