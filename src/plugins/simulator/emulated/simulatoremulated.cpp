@@ -313,6 +313,7 @@ namespace BlackSimPlugin
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
             m_interpolators.remove(callsign);
             const int c = m_renderedAircraft.removeByCallsign(callsign);
+            this->updateAircraftRendered(callsign, false); // in provider
             return c > 0;
         }
 
