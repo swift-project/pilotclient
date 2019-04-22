@@ -144,13 +144,18 @@ namespace BlackCore
 
     void ISimulator::reloadWeatherSettings()
     {
+        // log crash info about weather
+        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
         if (!m_isWeatherActivated) { return; }
-        const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+        const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
         if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
         {
             m_lastWeatherPosition = {};
             this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
         }
+
+        // log crash info about weather
+        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
     }
 
     void ISimulator::clearAllRemoteAircraftData()
@@ -1073,8 +1078,8 @@ namespace BlackCore
         if (s.tsCurrent > 0)
         {
             dm = u"Setup: " % s.usedSetup.toQString(true) %
-                    u"\n\n" %
-                    u"Situation: " % s.toQString(false, true, true, true, true, sep);
+                 u"\n\n" %
+                 u"Situation: " % s.toQString(false, true, true, true, true, sep);
         }
         if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? u"Parts: " : u"\n\nParts: ") % p.toQString(sep); }
         return dm;
