@@ -854,6 +854,7 @@ namespace BlackCore
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
+        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
         return true;
     }
