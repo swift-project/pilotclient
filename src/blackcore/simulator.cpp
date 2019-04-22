@@ -679,7 +679,7 @@ namespace BlackCore
 
     void ISimulator::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        if (!snapshot.isValidSnapshot()) { return;}
+        if (!snapshot.isValidSnapshot()) { return; }
 
         // for unrestricted values all add/remove actions are directly linked
         // when changing back from restricted->unrestricted an one time update is required
@@ -692,9 +692,12 @@ namespace BlackCore
         bool changed = false;
         if (snapshot.isRenderingEnabled())
         {
+            // make sure not to add aircraft again which are no longer in range
+            const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
+            const CCallsignSet callsignsEnabledAndStillInRange = snapshot.getEnabledAircraftCallsignsByDistance().intersection(callsignsInRange);
             const CCallsignSet callsignsInSimulator(this->physicallyRenderedAircraft()); // state in simulator
-            const CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
-            const CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
+            const CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(callsignsEnabledAndStillInRange));
+            const CCallsignSet callsignsToBeAdded(callsignsEnabledAndStillInRange.difference(callsignsInSimulator));
             if (!callsignsToBeRemoved.isEmpty())
             {
                 const int r = this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
