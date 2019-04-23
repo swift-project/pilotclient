@@ -102,6 +102,7 @@ namespace BlackMisc
             if (QStringView(u"ATIS") == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
             if (QStringView(u"EXAM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
             if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
+            if (QStringView(u"VATGOV") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
             return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
         }
 
