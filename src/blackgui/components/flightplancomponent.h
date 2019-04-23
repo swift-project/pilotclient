@@ -73,7 +73,7 @@ namespace BlackGui
             explicit CFlightPlanComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CFlightPlanComponent();
+            virtual ~CFlightPlanComponent() override;
 
             //! Login data were set
             void loginDataSet();

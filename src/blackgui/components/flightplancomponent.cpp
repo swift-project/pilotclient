@@ -319,6 +319,7 @@ namespace BlackGui
 
             // route
             v = ui->pte_Route->toPlainText().trimmed();
+            const int routeLength = v.length();
             if (v.isEmpty())
             {
                 messages.push_back(CStatusMessage(this).validation(
@@ -326,7 +327,7 @@ namespace BlackGui
                                        CStatusMessage::SeverityInfo :
                                        CStatusMessage::SeverityWarning, u"Missing '%1'") << ui->lbl_Route->text());
             }
-            else if (v.length() > CFlightPlan::MaxRouteLength)
+            else if (routeLength > CFlightPlan::MaxRouteLength)
             {
                 messages.push_back(CStatusMessage(this).validationError(u"Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
@@ -337,17 +338,24 @@ namespace BlackGui
 
             // remarks
             v = ui->pte_Remarks->toPlainText().trimmed();
+            const int remarksLength = v.length();
             if (v.isEmpty())
             {
                 messages.push_back(CStatusMessage(this).validationError(u"No '%1', voice capabilities are mandatory") << ui->pb_Remarks->text());
             }
-            else if (v.length() > CFlightPlan::MaxRemarksLength)
+            else if (remarksLength > CFlightPlan::MaxRemarksLength)
             {
                 messages.push_back(CStatusMessage(this).validationError(u"Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
             {
                 flightPlan.setRemarks(v);
+            }
+
+            // Total length
+            if ((remarksLength + routeLength) > CFlightPlan::MaxRouteAndRemarksLength)
+            {
+                messages.push_back(CStatusMessage(this).validationError(u"Flight plan route (%1) and remarks (%2) length exceeded (%3 chars max.)") << routeLength << remarksLength << CFlightPlan::MaxRemarksLength);
             }
 
             // time enroute

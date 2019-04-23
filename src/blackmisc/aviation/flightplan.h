@@ -171,8 +171,10 @@ namespace BlackMisc
 
             //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part of the underlying network layers
             //  https://forums.vatsim.net/viewtopic.php?f=6&t=63416
-            static constexpr int MaxRemarksLength = 256; //!< Max.remarks length
-            static constexpr int MaxRouteLength   = 256; //!< Max.route length
+            static constexpr int MaxRemarksLength = 512; //!< Max.remarks length
+            static constexpr int MaxRouteLength   = 512; //!< Max.route length
+            static constexpr int MaxRouteAndRemarksLength = 624; //!< Max.length for Route and Remarks
+
 
             //! Default constructor
             CFlightPlan();
