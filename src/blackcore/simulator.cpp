@@ -81,9 +81,16 @@ namespace BlackCore
 
     bool ISimulator::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
-        Q_ASSERT_X(remoteAircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
-        Q_ASSERT_X(remoteAircraft.hasCallsign(), Q_FUNC_INFO, "Missing callsign");
+        if (!this->validateModelOfAircraft(remoteAircraft))
+        {
+            const CCallsign cs = remoteAircraft.getCallsign();
+            CLogMessage(this).warning(u"Invalid aircraft detected, which will be disabled: '%1' '%2'") << cs << remoteAircraft.getModelString();
+            this->updateAircraftEnabled(cs, false);
+            this->updateAircraftRendered(cs, false);
+            return false;
+        }
 
+        // no invalid model should ever reach this place here
         const bool renderingRestricted = this->getInterpolationSetupGlobal().isRenderingRestricted();
         if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Restricted: %1 cs: '%2' enabled: %3").arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(), boolToYesNo(remoteAircraft.isEnabled()))); }
         if (!remoteAircraft.isEnabled()) { return false; }
@@ -1070,6 +1077,27 @@ namespace BlackCore
 
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
         return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+    }
+
+    bool ISimulator::validateModelOfAircraft(const CSimulatedAircraft &aircraft) const
+    {
+        const CAircraftModel model = aircraft.getModel();
+        if (!aircraft.hasCallsign())
+        {
+            CLogMessage(this).warning(u"Missing callsign for '%1'") << aircraft.getModelString();
+            return false;
+        }
+        if (!model.hasModelString())
+        {
+            CLogMessage(this).warning(u"No model string for callsign '%1'") << aircraft.getCallsign();
+            return false;
+        }
+        if (model.isCallsignEmpty())
+        {
+            CLogMessage(this).warning(u"No callsign for model of aircraft '%1'") << aircraft.getCallsign();
+            return false;
+        }
+        return true;
     }
 
     QString ISimulator::latestLoggedDataFormatted(const CCallsign &cs) const
