@@ -119,6 +119,9 @@ namespace BlackMisc
 
             //! Number of aircraft with parts
             int countAircraftPartsSynchronized() const;
+
+            //! Same as sortByDistanceToReferencePosition, but consider callsign and rendered as secondary criteria
+            void sortByDistanceToReferencePositionRenderedCallsign();
         };
 
         //! Aircraft per callsign
