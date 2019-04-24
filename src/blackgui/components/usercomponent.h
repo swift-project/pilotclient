@@ -39,7 +39,7 @@ namespace BlackGui
             explicit CUserComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CUserComponent();
+            virtual ~CUserComponent() override;
 
             //! Number of clients
             int countClients() const;

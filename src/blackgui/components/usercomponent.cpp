@@ -6,18 +6,20 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/network.h"
 #include "blackgui/components/usercomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/views/clientview.h"
 #include "blackgui/views/userview.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/network.h"
+#include "blackmisc/network/userlist.h"
 #include "ui_usercomponent.h"
 
 #include <QString>
 #include <QTabBar>
 
+using namespace BlackMisc::Network;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
@@ -62,7 +64,7 @@ namespace BlackGui
 
         void CUserComponent::update()
         {
-            if (!sGui || !sGui->getIContextNetwork()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
             Q_ASSERT(ui->tvp_AllUsers);
             Q_ASSERT(ui->tvp_Clients);
 
@@ -76,8 +78,9 @@ namespace BlackGui
                 }
 
                 // load data
-                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getClients());
-                ui->tvp_AllUsers->updateContainer(sGui->getIContextNetwork()->getUsers());
+                const CUserList users = sGui->getIContextNetwork()->getUsers();
+                ui->tvp_AllUsers->updateContainer(users);
+                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getClientsForCallsigns(users.getCallsigns()));
             }
         }
 
