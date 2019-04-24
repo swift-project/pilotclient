@@ -557,7 +557,7 @@ namespace BlackGui
             int m_skipResizeThreshold                 = 40;                    //!< when to skip resize (rows count)
             int m_resizeAutoNthTime                   = 1;                     //!< with ResizeAuto, resize every n-th time
             int m_loadIndicatorTimeoutMsDefault       = 30 * 1000;             //!< default time for timeout
-            bool m_forceStretchLastColumnWhenResized  = false;                 //!< a small table might (few columns) might to fail stretching, force again
+            bool m_forceStretchLastColumnWhenResized  = true;                  //!< a small table might (few columns) fail stretching, force again
             bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
             bool m_enabledLoadIndicator               = true;                  //!< loading indicator enabled/disabled
             bool m_acceptClickSelection               = false;                 //!< clicked

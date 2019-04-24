@@ -760,6 +760,10 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
+            //! \fixme 2019-04 Disabled the magic FOO trick for resizing
+            //! Not working anymore and NOT needed ??? anymore, seems like
+
+            /**
             // resize to maximum magic trick from:
             // http://stackoverflow.com/q/3433664/356726
             this->setVisible(false);
@@ -773,6 +777,7 @@ namespace BlackGui
                 vpNew.setWidth(screenGeometry.width());
                 this->viewport()->setGeometry(vpNew);
             }
+            **/
 
             this->resizeColumnsToContents(); // columns
 
@@ -784,12 +789,19 @@ namespace BlackGui
             m_resizeCount++;
 
             // re-stretch
-            if (m_forceStretchLastColumnWhenResized) { this->horizontalHeader()->setStretchLastSection(true); }
-            if (m_forceColumnsToMaxSize) { this->viewport()->setGeometry(vpOriginal); }
+            if (m_forceStretchLastColumnWhenResized)
+            {
+                // toggling forces the stretch, otherwise not working
+                this->horizontalHeader()->setStretchLastSection(false);
+                this->horizontalHeader()->setStretchLastSection(true);
+            }
 
+            /** Magic FOO
+            // if (m_forceColumnsToMaxSize) { this->viewport()->setGeometry(vpOriginal); }
             // if I store the original visibility and then
             // set it back here, the whole view disappears
-            this->setVisible(true);
+            // this->setVisible(true);
+            **/
         }
 
         void CViewBaseNonTemplate::customMenuRequested(const QPoint &pos)
