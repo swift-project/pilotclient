@@ -146,7 +146,7 @@ namespace BlackSimPlugin
 
         CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
         {
-            if (!m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+            if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
             const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, false);
             return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
         }
@@ -311,7 +311,8 @@ namespace BlackSimPlugin
                 for (CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
                 {
                     // Update remote aircraft to have the latest transponder modes, codes etc.
-                    CSimulatedAircraft simulatedAircraft = this->getAircraftInRangeForCallsign(xplaneAircraft.getCallsign());
+                    const CSimulatedAircraft simulatedAircraft = this->getAircraftInRangeForCallsign(xplaneAircraft.getCallsign());
+                    if (!simulatedAircraft.hasCallsign()) { continue; } // removed in provider
                     xplaneAircraft.setSimulatedAircraft(simulatedAircraft);
                 }
             }
@@ -954,9 +955,15 @@ namespace BlackSimPlugin
             const CCallsignSet logCallsigns = this->getLogCallsigns();
             for (int i = 0; i < size; i++)
             {
+                const bool emptyCs = callsigns[i].isEmpty();
+                BLACK_VERIFY_X(!emptyCs, Q_FUNC_INFO, "Need callsign");
+                if (emptyCs) { continue; }
+
                 const CCallsign cs(callsigns[i]);
                 if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
                 const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
+                BLACK_VERIFY_X(xpAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
+                if (!xpAircraft.hasCallsign()) { continue; }
 
                 const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
                 const CAltitude elevationAlt(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
@@ -993,6 +1000,8 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)
         {
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+            if (callsign.isEmpty()) { return; }
             const CCallsign cs(callsign);
             CSimulatedAircraft addedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
 
@@ -1029,13 +1038,16 @@ namespace BlackSimPlugin
             this->triggerRequestRemoteAircraftDataFromXPlane(cs);
             this->triggerAddNextPendingAircraft();
 
-            m_xplaneAircraftObjects.insert(addedRemoteAircraft.getCallsign(), CXPlaneMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
+            Q_ASSERT_X(addedRemoteAircraft.hasCallsign(), Q_FUNC_INFO, "No callsign"); // already checked above, MUST never happen
+            Q_ASSERT_X(addedRemoteAircraft.getCallsign() == cs, Q_FUNC_INFO, "No callsign"); // already checked above, MUST never happen
+            m_xplaneAircraftObjects.insert(cs, CXPlaneMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
             emit this->aircraftRenderingChanged(addedRemoteAircraft);
         }
 
         void CSimulatorXPlane::onRemoteAircraftAddingFailed(const QString &callsign)
         {
-
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+            if (callsign.isEmpty()) { return; }
             const CCallsign cs(callsign);
             CSimulatedAircraft failedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
 

@@ -42,6 +42,9 @@ namespace BlackSimPlugin
             //! Get callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
+            //! Has callsign
+            bool hasCallsign() const { return m_aircraft.hasCallsign(); }
+
             //! Simulated aircraft (as added)
             const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
