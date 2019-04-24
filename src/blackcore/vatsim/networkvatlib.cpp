@@ -1512,9 +1512,9 @@ namespace BlackCore
 
         void CNetworkVatlib::onPilotInfoRequestReceived(VatFsdClient *, const char *callsignChar, void *cbvar)
         {
-            auto *self = cbvar_cast(cbvar);
+            QPointer<CNetworkVatlib> self(cbvar_cast(cbvar));
             const CCallsign callsign(self->fromFSD(callsignChar));
-            QTimer::singleShot(0, self, [ = ]() { self->sendAircraftInfo(callsign); });
+            QTimer::singleShot(0, self, [ = ]() { if (self) { self->sendAircraftInfo(callsign); }});
         }
 
         void CNetworkVatlib::onPilotInfoReceived(VatFsdClient *, const char *callsignChar, const VatAircraftInfo *aircraftInfo, void *cbvar)
