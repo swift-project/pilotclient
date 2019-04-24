@@ -63,10 +63,12 @@ namespace BlackMisc
             return this->getId();
         }
 
-        void CUser::setCallsign(const CCallsign &callsign)
+        bool CUser::setCallsign(const CCallsign &callsign)
         {
+            if (m_callsign == callsign) { return false; }
             m_callsign = callsign;
             this->deriveHomeBaseFromCallsign();
+            return true;
         }
 
         QString CUser::convertToQString(bool i18n) const

@@ -43,6 +43,8 @@ namespace BlackMisc
     {
         class CClient;
         class CClientList;
+        class CUser;
+        class CUserList;
     }
 
     namespace Aviation
@@ -142,6 +144,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         //! \endcond
 
     } //namespace

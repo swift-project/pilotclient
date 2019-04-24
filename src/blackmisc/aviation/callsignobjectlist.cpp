@@ -14,6 +14,7 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/flightplanlist.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/predicates.h"
 
 #include <QtGlobal>
@@ -303,6 +304,7 @@ namespace BlackMisc
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         //! \endcond
 
     } // namespace

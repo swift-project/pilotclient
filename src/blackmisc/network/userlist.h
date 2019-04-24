@@ -11,11 +11,13 @@
 #ifndef BLACKMISC_NETWORK_USERLIST_H
 #define BLACKMISC_NETWORK_USERLIST_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/collection.h"
+#include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
+
 #include <QMetaType>
 
 namespace BlackMisc
@@ -25,7 +27,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CUserList :
             public CSequence<CUser>,
-            public BlackMisc::Mixin::MetaType<CUserList>
+            public Aviation::ICallsignObjectList<CUser, CUserList>,
+            public Mixin::MetaType<CUserList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUserList)

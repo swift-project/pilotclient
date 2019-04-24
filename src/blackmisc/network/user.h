@@ -146,7 +146,7 @@ namespace BlackMisc
             const Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
             //! Set associated callsign
-            void setCallsign(const Aviation::CCallsign &callsign);
+            bool setCallsign(const Aviation::CCallsign &callsign);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             CIcon toIcon() const { return this->getCallsign().toIcon(); }
