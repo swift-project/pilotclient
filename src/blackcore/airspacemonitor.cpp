@@ -1070,9 +1070,12 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         this->storeAircraftParts(callsign, jsonObject, currentOffsetMs);
+        BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        if (callsign.isEmpty()) { return; }
 
         // update client capability
         CClient client = this->getClientOrDefaultForCallsign(callsign);
+        client.setUserCallsign(callsign); // make valid by setting a callsign
         if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
         client.addCapability(CClient::FsdWithAircraftConfig);
         this->setOtherClient(client);

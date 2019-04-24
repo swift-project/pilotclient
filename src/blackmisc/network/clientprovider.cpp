@@ -8,6 +8,7 @@
 
 #include "clientprovider.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -40,17 +41,25 @@ namespace BlackMisc
 
         CClientList CClientProvider::getClientsForCallsigns(const CCallsignSet &callsigns) const
         {
+            if (callsigns.isEmpty()) { return {}; }
             return this->getClients().findByCallsigns(callsigns);
         }
 
         CClient CClientProvider::getClientOrDefaultForCallsign(const CCallsign &callsign) const
         {
-            QReadLocker l(&m_lockClient);
-            return m_clients.value(callsign);
+            if (callsign.isEmpty()) { return {}; }
+            {
+                QReadLocker l(&m_lockClient);
+                if (m_clients.contains(callsign)) { return m_clients.value(callsign); }
+            }
+            return CClient();
         }
 
         bool CClientProvider::setOtherClient(const CClient &client)
         {
+            const bool hasCallsign = !client.getCallsign().isEmpty();
+            BLACK_VERIFY_X(hasCallsign, Q_FUNC_INFO, "Need callsign in client");
+            if (!hasCallsign) { return false; }
             QWriteLocker l(&m_lockClient);
             m_clients[client.getCallsign()] = client;
             return true;
@@ -58,6 +67,7 @@ namespace BlackMisc
 
         bool CClientProvider::hasClientInfo(const CCallsign &callsign) const
         {
+            if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockClient);
             return m_clients.contains(callsign);
         }
@@ -65,7 +75,8 @@ namespace BlackMisc
         bool CClientProvider::addNewClient(const CClient &client)
         {
             const CCallsign callsign = client.getCallsign();
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "invalid callsign");
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+            if (callsign.isEmpty()) { return false; }
             if (this->hasClientInfo(callsign)) { return false; }
             QWriteLocker l(&m_lockClient);
             m_clients[callsign] = client;
@@ -74,7 +85,8 @@ namespace BlackMisc
 
         int CClientProvider::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
         {
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+            if (callsign.isEmpty()) { return 0; }
             int c = 0;
             if (this->hasClientInfo(callsign))
             {
@@ -113,6 +125,9 @@ namespace BlackMisc
 
         bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
         {
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+            if (callsign.isEmpty()) { return 0; }
+
             CClient client = this->getClientOrDefaultForCallsign(callsign);
 
             // need to change?
@@ -133,6 +148,7 @@ namespace BlackMisc
 
         void CClientProvider::markAsSwiftClient(const CCallsign &callsign)
         {
+            if (callsign.isEmpty()) { return; }
             QWriteLocker l(&m_lockClient);
             if (!m_clients.contains(callsign)) { return; }
             m_clients[callsign].setSwiftClient(true);

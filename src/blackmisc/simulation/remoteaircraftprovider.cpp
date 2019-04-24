@@ -402,9 +402,14 @@ namespace BlackMisc
         {
             const CSimulatedAircraft remoteAircraft(this->getAircraftInRangeForCallsign(callsign));
             const bool isFull = jsonObject.value(CAircraftParts::attributeNameIsFullJson()).toBool();
+            const bool validCs = remoteAircraft.hasValidCallsign();
+            if (!validCs)
+            {
+                if (!isFull) { return; } // incremental parts broadcasting
+                return; // suspicious
+            }
 
             // If we are not yet synchronized, we throw away any incremental packet
-            if (!remoteAircraft.hasValidCallsign()) { return; }
             if (!remoteAircraft.isPartsSynchronized() && !isFull) { return; }
 
             CAircraftParts parts;
