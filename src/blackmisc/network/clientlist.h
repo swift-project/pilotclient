@@ -45,6 +45,9 @@ namespace BlackMisc
 
             //! Capabilities of client for callsign
             CClient::Capabilities getCapabilities(const Aviation::CCallsign &callsign) const;
+
+            //! Filter pilots by callsign in set
+            CClientList filterPilotsByCallsign(const Aviation::CCallsignSet &callsigns) const;
         };
 
         //! Client per callsign

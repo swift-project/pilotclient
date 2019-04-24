@@ -121,7 +121,7 @@ namespace BlackMisc
             void setUser(const CUser &user) { m_user = user;}
 
             //! User's callsign
-            void setUserCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            bool setUserCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Server
             const QString &getServer() const { return m_server; }

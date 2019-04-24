@@ -85,9 +85,9 @@ namespace BlackMisc
             return this->hasCapability(FsdWithGroundFlag);
         }
 
-        void CClient::setUserCallsign(const Aviation::CCallsign &callsign)
+        bool CClient::setUserCallsign(const Aviation::CCallsign &callsign)
         {
-            m_user.setCallsign(callsign);
+            return m_user.setCallsign(callsign);
         }
 
         void CClient::setQueriedModelString(const QString &modelString)
