@@ -75,6 +75,7 @@ namespace BlackMisc
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
+            if (callsign.m_callsign.startsWith(QStringView(u"VATGOV"))) { return CIcon::iconByIndex(CIcons::NetworkRolePilot); }
             if (callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix())
             {
                 return CIcon::iconByIndex(CIcons::NetworkRolePilot);
