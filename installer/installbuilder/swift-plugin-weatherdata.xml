@@ -22,6 +22,7 @@
                         <distributionFile>
                             <allowWildcards>1</allowWildcards>
                             <origin>../../dist/bin/plugins/weatherdata/*weatherdatagfs*</origin>
+                            <excludeFiles>*/*.pdb;*/*.debug;*/*.dSYM</excludeFiles>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

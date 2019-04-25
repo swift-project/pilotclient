@@ -15,6 +15,7 @@
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/sample*</origin>
+                    <excludeFiles>*/*.pdb;*/*.debug;*/*.dSYM</excludeFiles>
                 </distributionFile>
             </distributionFileList>
         </folder>

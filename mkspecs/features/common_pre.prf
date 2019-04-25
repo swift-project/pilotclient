@@ -77,6 +77,10 @@ swiftConfig(releaseWithDebugInfo) {
         QMAKE_CXXFLAGS_RELEASE *= /Z7
         QMAKE_LFLAGS_RELEASE *= /DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF
     }
+    unix {
+        CONFIG += force_debug_info
+        CONFIG += separate_debug_info
+    }
 }
 swiftConfig(profileRelease) {
     msvc {

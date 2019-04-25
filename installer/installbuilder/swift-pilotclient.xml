@@ -11,23 +11,55 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <description>bin</description>
             <destination>${installdir}/bin</destination>
             <name>bin_linux</name>
-            <platforms>linux linux-x64 osx</platforms>
+            <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/swiftcore*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/swiftdata*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/swiftguistd*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/swiftlauncher*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftcore*</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftdata*</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftguistd*</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftlauncher*</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -90,31 +122,75 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <description>lib</description>
             <destination>${installdir}/lib</destination>
             <name>lib_linux</name>
-            <platforms>linux linux-x64 osx</platforms>
+            <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libblackcore*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libblackgui*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libblackinput*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libblackmisc*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libblacksound*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libsimulatorplugincommon*</origin>
+                    <excludeFiles>*/*.debug</excludeFiles>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackcore*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackgui*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackinput*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackmisc*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblacksound*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libsimulatorplugincommon*.dylib</origin>
+                    <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
             </distributionFileList>
         </folder>

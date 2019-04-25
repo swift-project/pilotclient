@@ -19,7 +19,7 @@ import requests
 import subprocess
 import sys
 import datastore
-import symbolstore
+import tarfile
 from lib.util import get_vs_env
 
 if sys.version_info < (3, 0):
@@ -149,16 +149,46 @@ class Builder:
             build_path = self._get_swift_build_path()
             os.chdir(build_path)
             print('Creating symbols')
-            symbol_path = path.abspath(path.join(build_path, 'symbols'))
             binary_path = path.abspath(path.join(build_path, 'out'))
-            symbolstore.Dumper.global_init()
-            dumper = symbolstore.get_platform_specific_dumper(dump_syms=self.dump_syms, symbol_path=symbol_path)
-            dumper.process(binary_path)
-            dumper.finish()
+
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
-            tar_filename = '-'.join(['swiftsymbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
+            tar_filename = '-'.join(
+                ['swiftsymbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
             tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
-            dumper.pack(tar_path)
+            tar = tarfile.open(tar_path, "w:gz")
+
+            ignore_list = ['sample', 'test', 'win', 'liblin.so', 'libmac.dylib']
+            for root, dirs, files in os.walk(binary_path):
+                if platform.system() == 'Windows':
+                    for f in files:
+                        if f.endswith('.pdb') and not f.startswith(tuple(ignore_list)):
+                            symbol_path = path.abspath(path.join(root, f))
+                            print('Adding ' + symbol_path)
+                            tar.add(symbol_path, f)
+                            if self.word_size == '64':
+                                # Add also *.exe/*.dll with the same name if existing
+                                exe_path = symbol_path.replace('.pdb', '.exe')
+                                if os.path.isfile(exe_path):
+                                    print('Adding ' + exe_path)
+                                    tar.add(exe_path, f.replace('.pdb', '.exe'))
+                                dll_path = symbol_path.replace('.pdb', '.dll')
+                                if os.path.isfile(dll_path):
+                                    print('Adding ' + dll_path)
+                                    tar.add(dll_path, f.replace('.pdb', '.dll'))
+                elif platform.system() == 'Darwin':
+                    for d in dirs:
+                        if d.endswith('.dSYM') and not d.startswith(tuple(ignore_list)):
+                            symbol_path = path.abspath(path.join(root, d))
+                            print('Adding ' + symbol_path)
+                            tar.add(symbol_path, d)
+                elif platform.system() == 'Linux':
+                    for f in files:
+                        if f.endswith('.debug') and not f.startswith(tuple(ignore_list)):
+                            symbol_path = path.abspath(path.join(root, f))
+                            print('Adding ' + symbol_path)
+                            tar.add(symbol_path, f)
+            tar.close()
+
             if upload_symbols:
                 self.__upload_symbol_files(tar_path)
 

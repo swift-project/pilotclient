@@ -119,6 +119,7 @@ This plugin acts as the interface between swift and X-Plane</detailedDescription
                         <distributionFile>
                             <allowWildcards>1</allowWildcards>
                             <origin>../../dist/bin/plugins/simulator/*simulatorxplane*</origin>
+                            <excludeFiles>*/*.pdb;*/*.debug;*/*.dSYM</excludeFiles>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -142,6 +143,7 @@ This plugin acts as the interface between swift and FlightGear</detailedDescript
                         <distributionFile>
                             <allowWildcards>1</allowWildcards>
                             <origin>../../dist/bin/plugins/simulator/*simulatorflightgear*</origin>
+                            <excludeFiles>*/*.pdb;*/*.debug;*/*.dSYM</excludeFiles>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -165,6 +167,7 @@ This plugin emulates a running simulator. Use this for testing swift only</detai
                         <distributionFile>
                             <allowWildcards>1</allowWildcards>
                             <origin>../../dist/bin/plugins/simulator/*simulatoremulated*</origin>
+                            <excludeFiles>*/*.pdb;*/*.debug;*/*.dSYM</excludeFiles>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
