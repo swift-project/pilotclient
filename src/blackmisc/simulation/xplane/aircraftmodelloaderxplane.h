@@ -82,6 +82,8 @@ namespace BlackMisc
                     QString livery;   //!< Livery identifier. Can be empty.
 
                     ObjectVersion objectVersion;
+
+                    bool hasErrors = false;
                 };
 
                 //! CSL package

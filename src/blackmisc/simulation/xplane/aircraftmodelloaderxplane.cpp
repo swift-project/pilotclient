@@ -377,6 +377,8 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
+                package.planes.push_back(CSLPlane());
+
                 if (tokens.size() != 2)
                 {
                     const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJECT command requires 1 argument.") << path << lineNum;
@@ -422,7 +424,6 @@ namespace BlackMisc
 
                 objFile.close();
 
-                package.planes.push_back(CSLPlane());
                 QFileInfo fileInfo(fullPath);
 
                 QStringList dirNames;
@@ -465,7 +466,7 @@ namespace BlackMisc
                 QFileInfo fileInfo(absoluteTexPath);
                 if (!fileInfo.exists())
                 {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%1' does not exist.") << path << lineNum << absoluteTexPath;
+                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%3' does not exist.") << path << lineNum << absoluteTexPath;
                     m_loadingMessages.push_back(m);
                     return false;
                 }
@@ -493,6 +494,8 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
+                package.planes.push_back(CSLPlane());
+
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
@@ -500,8 +503,6 @@ namespace BlackMisc
                     m_loadingMessages.push_back(m);
                     return false;
                 }
-
-                package.planes.push_back(CSLPlane());
                 return true;
             }
 
@@ -560,7 +561,7 @@ namespace BlackMisc
                     QFileInfo fileInfo(absoluteTexPath);
                     if (!fileInfo.exists())
                     {
-                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%1' does not exist.") << path << lineNum << absoluteTexPath;
+                        const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Texture '%3' does not exist.") << path << lineNum << absoluteTexPath;
                         m_loadingMessages.push_back(m);
                         return false;
                     }
@@ -703,26 +704,29 @@ namespace BlackMisc
                     auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
                     if (!tokens.empty())
                     {
-                        const CStatusMessage parserErrorMessage = CStatusMessage(this).error(u"Ignoring rest of CSL package '%1' due to previous parser error. Please fix the error and reload the model cache!") << package.name;
                         auto it = commands.find(tokens[0]);
                         if (it != commands.end())
                         {
                             bool result = it.value()(tokens, package, package.path, lineNum);
                             if (!result)
                             {
-                                m_loadingMessages.push_back(parserErrorMessage);
-                                break;
+                                package.planes.back().hasErrors = true;
                             }
                         }
                         else
                         {
                             const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unrecognized CSL command: '%3'") << package.path << lineNum << tokens[0];
                             m_loadingMessages.push_back(m);
-                            m_loadingMessages.push_back(parserErrorMessage);
-                            break;
                         }
                     }
                 }
+
+                // Remove all planes with errors
+                auto it = std::remove_if(package.planes.begin(), package.planes.end(), [](const CSLPlane &plane)
+                {
+                    return plane.hasErrors;
+                });
+                package.planes.erase(it, package.planes.end());
             }
 
             const QString &CAircraftModelLoaderXPlane::fileFilterFlyable()
