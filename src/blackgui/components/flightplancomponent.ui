@@ -318,7 +318,7 @@
              <string>Load flight plan from network</string>
             </property>
             <property name="text">
-             <string>Load</string>
+             <string>Download</string>
             </property>
             <property name="icon">
              <iconset resource="../../blackmisc/blackmisc.qrc">
@@ -773,7 +773,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-93</y>
+         <y>0</y>
          <width>383</width>
          <height>436</height>
         </rect>

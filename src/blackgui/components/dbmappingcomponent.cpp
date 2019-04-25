@@ -648,22 +648,6 @@ namespace BlackGui
             ui->comp_ModelWorkbench->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_Workbench));
         }
 
-        void CDbMappingComponent::onOwnModelsChangedDigest(int count, bool withFilter)
-        {
-            Q_UNUSED(count);
-            Q_UNUSED(withFilter);
-
-            // non standard with sim
-            const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModels);
-            static const QString ot(ui->tw_ModelsToBeMapped->tabText(i));
-            QString o(ot);
-            const QString sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator().toQString(true));
-            if (!sim.isEmpty()) { o = o.append(" ").append(sim); }
-            const QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnAircraftModels->view()->rowCount()) + f;
-            ui->tw_ModelsToBeMapped->setTabText(i, o);
-        }
-
         void CDbMappingComponent::ps_addToOwnModelSet()
         {
             if (!this->canAddToModelSetTab()) { return; }
@@ -731,9 +715,25 @@ namespace BlackGui
 
             // none standard with simulator
             int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModelSet);
-            QString o = "Model set " + ui->comp_OwnModelSet->getModelSetSimulator().toQString(true);
+            QString o = "Active model set " + ui->comp_OwnModelSet->getModelSetSimulator().toQString(true);
             const QString f = ui->comp_OwnModelSet->view()->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnModelSet->view()->rowCount()) + f;
+            ui->tw_ModelsToBeMapped->setTabText(i, o);
+        }
+
+        void CDbMappingComponent::onOwnModelsChangedDigest(int count, bool withFilter)
+        {
+            Q_UNUSED(count);
+            Q_UNUSED(withFilter);
+
+            // non standard with sim
+            const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModels);
+            static const QString ot("Stored own models");
+            QString o(ot);
+            const QString sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator().toQString(true));
+            if (!sim.isEmpty()) { o = o.append(" ").append(sim); }
+            const QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnAircraftModels->view()->rowCount()) + f;
             ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 

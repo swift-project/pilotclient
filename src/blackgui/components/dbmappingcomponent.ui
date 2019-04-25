@@ -71,10 +71,16 @@
        </property>
        <item>
         <widget class="QTabWidget" name="tw_ModelsToBeMapped">
+         <property name="toolTip">
+          <string>Models installed and found for your simulator</string>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
          <widget class="QWidget" name="tab_OwnModelSet">
+          <property name="toolTip">
+           <string>This is the model set swift will use for model matching</string>
+          </property>
           <attribute name="title">
            <string>My model set</string>
           </attribute>
