@@ -176,6 +176,7 @@ namespace BlackMisc
             GlobalIndexSwiftCore                        = 17100,
             GlobalIndexSwiftLauncher                    = 17200,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
+            GlobalIndexEmpty                            = 20001
         };
 
         //! Default constructor.

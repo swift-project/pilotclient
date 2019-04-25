@@ -118,6 +118,9 @@ namespace BlackGui
             //! Get a standard integer value formatted column
             static CColumn standardInteger(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignRightVCenter());
 
+            //! An empty column
+            static CColumn emptyColumn();
+
         private:
             QString m_translationContext;
             QString m_columnName;
@@ -219,6 +222,12 @@ namespace BlackGui
 
             //! Calculate the absolute width
             QList<int> calculateWidths(int totalWidth) const;
+
+            //! Insert an empty column
+            void insertEmptyColumn();
+
+            //! Ending with an empty column
+            bool endsWithEmptyColumn() const;
 
         private:
             QList<CColumn> m_columns;

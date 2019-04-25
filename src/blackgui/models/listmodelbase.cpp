@@ -102,9 +102,14 @@ namespace BlackGui
             const int row = index.row();
             const int col = index.column();
             const CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
-            if (static_cast<int>(CPropertyIndex::GlobalIndexLineNumber) == propertyIndex.frontCasted<int>())
+            const int propertyIndexFront = propertyIndex.frontCasted<int>();
+
+            // special cases
+            switch (propertyIndexFront)
             {
-                return QVariant::fromValue(row + 1);
+            case CPropertyIndex::GlobalIndexLineNumber: return QVariant::fromValue(row + 1);
+            case CPropertyIndex::GlobalIndexEmpty: return {};
+            default: break; // continue here
             }
 
             // Formatted data

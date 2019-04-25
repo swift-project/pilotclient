@@ -421,5 +421,13 @@ namespace BlackGui
             if (ok) { return QString::number(i); }
             return CVariant();
         }
+
+        CVariant CEmptyFormatter::displayRole(const CVariant &dataCVariant) const
+        {
+            Q_UNUSED(dataCVariant);
+            static const CVariant empty("");
+            return empty;
+        }
+
     } // namespace
 } // namespace

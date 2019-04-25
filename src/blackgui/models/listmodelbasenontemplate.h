@@ -129,6 +129,9 @@ namespace BlackGui
             //! The columns
             const CColumns &getColumns() const { return m_columns; }
 
+            //! Using void column at the end?
+            bool endsWithEmptyColumn() const { return m_columns.endsWithEmptyColumn(); }
+
         signals:
             //! Asynchronous update finished
             void asyncUpdateFinished();

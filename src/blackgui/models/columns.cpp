@@ -73,6 +73,13 @@ namespace BlackGui
             return CColumn(headerName, toolTip, propertyIndex, new CIntegerFormatter(alignment));
         }
 
+        CColumn CColumn::emptyColumn()
+        {
+            CColumn col = CColumn("", "", CPropertyIndex::GlobalIndexEmpty, new CEmptyFormatter());
+            col.setWidthPercentage(1);
+            return col;
+        }
+
         // --------------- columns ----------------------------------------------
 
         CColumns::CColumns(const QString &translationContext, QObject *parent) :
@@ -234,6 +241,19 @@ namespace BlackGui
             }
 
             return widths;
+        }
+
+        void CColumns::insertEmptyColumn()
+        {
+            if (this->endsWithEmptyColumn()) { return; }
+            this->addColumn(CColumn::emptyColumn());
+        }
+
+        bool CColumns::endsWithEmptyColumn() const
+        {
+            if (m_columns.isEmpty()) { return false; }
+            const CColumn c = m_columns.last();
+            return c.getPropertyIndex() == CPropertyIndex::GlobalIndexEmpty;
         }
 
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const

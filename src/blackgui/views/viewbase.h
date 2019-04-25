@@ -186,6 +186,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::hasValidSortColumn
             virtual bool hasValidSortColumn() const = 0;
 
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::endsWithEmptyColumn
+            virtual bool endsWithEmptyColumn() const = 0;
+
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortOrder
             virtual Qt::SortOrder getSortOrder() const = 0;
 
@@ -736,6 +739,7 @@ namespace BlackGui
             virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
             virtual int  getSortColumn() const override { return m_model->getSortColumn(); }
             virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
+            virtual bool endsWithEmptyColumn() const override { return m_model->endsWithEmptyColumn(); }
             virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
 

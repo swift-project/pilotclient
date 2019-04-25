@@ -105,6 +105,7 @@ namespace BlackGui
                 }
                 break;
             }
+            // m_columns.insertEmptyColumn();
 
             // sorting
             if (CStatusMessageListModel::sortedByTimestampOrOrder(oldIndex))
