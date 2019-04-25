@@ -15,6 +15,7 @@
 
 #include <QFlag>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -62,7 +63,7 @@ namespace BlackCore
 
         bool IContextSimulator::isSimulatorAvailable() const
         {
-            return BlackConfig::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified();
+            return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified();
         }
 
         bool IContextSimulator::isSimulatorSimulating() const

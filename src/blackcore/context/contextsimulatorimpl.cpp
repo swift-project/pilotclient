@@ -815,7 +815,8 @@ namespace BlackCore
 
         void CContextSimulator::relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
         {
-            if (!this->isSimulatorAvailable()) { return; }
+            if (!this->isSimulatorAvailable())   { return; }
+            if (!sApp || sApp->isShuttingDown()) { return; }
             const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
             if (simMsg.relayThisStatusMessage(message) && m_simulatorPlugin.second)
             {

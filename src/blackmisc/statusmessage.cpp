@@ -36,7 +36,7 @@ namespace BlackMisc
             temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
 
             quint64 unusedArgs = (1ULL << std::min(63, args.size())) - 1;
-            for (auto it = format.begin(); ; )
+            for (auto it = format.begin(); ;)
             {
                 const auto pc = std::find(it, format.end(), u'%');
                 temp.append(&*it, std::distance(it, pc));
@@ -475,18 +475,16 @@ namespace BlackMisc
         switch (i)
         {
         case IndexMessageAsHtml:
-        case IndexMessage:
-            return this->getMessage().compare(compareValue.getMessage());
+        case IndexMessage: return this->getMessage().compare(compareValue.getMessage());
         case IndexSeverityAsString:
         case IndexSeverityAsIcon:
-        case IndexSeverity: return Compare::compare(this->getSeverity(), compareValue.getSeverity());
+        case IndexSeverity:           return Compare::compare(this->getSeverity(), compareValue.getSeverity());
         case IndexCategoriesAsString: return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
-        case IndexCategoriesHumanReadableAsString: return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
+        case IndexCategoriesHumanReadableAsString:          return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString: return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
         default: break;
         }
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");
-        return 0;
+        return CValueObject::comparePropertyByIndex(index, compareValue);
     }
 
     QString CStatusMessage::toHtml(bool withIcon, bool withColors) const

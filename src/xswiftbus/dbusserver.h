@@ -38,7 +38,7 @@ namespace XSwiftBus
         CDBusServer();
 
         //! Destructor
-        ~CDBusServer();
+        ~CDBusServer() override;
 
         //! Set the dispatcher
         void setDispatcher(CDBusDispatcher *dispatcher);

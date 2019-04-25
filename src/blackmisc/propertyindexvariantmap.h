@@ -304,7 +304,7 @@ namespace BlackMisc
             case IndexPixmap:
             case IndexString:
             default:
-                break;
+                break; // also covers
             }
 
             // slow, only last resort
