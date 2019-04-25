@@ -137,12 +137,14 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::displayStatusMessage(const CStatusMessage &message) const
         {
+            if (!canDisplay()) { return; }
             if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString()); }
             m_monitorWidget->displayStatusMessage(message);
         }
 
         void CSimulatorEmulated::displayTextMessage(const CTextMessage &message) const
         {
+            if (!canDisplay()) { return; }
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString());
             m_monitorWidget->displayTextMessage(message);
         }
@@ -341,7 +343,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::canLog() const
         {
-            return sApp && !sApp->isShuttingDown() && m_log && m_monitorWidget;
+            return this->canDisplay() && m_log;
+        }
+
+        bool CSimulatorEmulated::canDisplay() const
+        {
+            return sApp && !sApp->isShuttingDown() && m_monitorWidget;
         }
 
         void CSimulatorEmulated::closeMonitor()

@@ -137,6 +137,9 @@ namespace BlackSimPlugin
             //! Can append log messages?
             bool canLog() const;
 
+            //! Can display
+            bool canDisplay() const;
+
             //! Close window
             void closeMonitor();
 
