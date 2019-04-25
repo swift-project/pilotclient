@@ -188,20 +188,23 @@ namespace BlackGui
             //! View resizing
             static const QString &pathViewResize() { static const QString p("View.15.Resize"); return p; }
 
+            //! View word wrap
+            static const QString &pathViewWordWrap() { static const QString p("View.16.WordWrap"); return p; }
+
             //! View clear highlighting
-            static const QString &pathViewClearHighlighting() { static const QString p("View.16.ClearHighlight"); return p; }
+            static const QString &pathViewClearHighlighting() { static const QString p("View.17.ClearHighlight"); return p; }
 
             //! View filter
-            static const QString &pathViewFilter() { static const QString p("View.17.Filter"); return p; }
+            static const QString &pathViewFilter() { static const QString p("View.18.Filter"); return p; }
 
             //! View update
-            static const QString &pathViewUpdates() { static const QString p("View.18.Updates"); return p; }
+            static const QString &pathViewUpdates() { static const QString p("View.19.Updates"); return p; }
 
             //! View load/save
-            static const QString &pathViewLoadSave() { static const QString p("View.18.LoadSave"); return p; }
+            static const QString &pathViewLoadSave() { static const QString p("View.19.LoadSave"); return p; }
 
             //! View cut and paste
-            static const QString &pathViewCutPaste() { static const QString p("View.18.CutPaste"); return p; }
+            static const QString &pathViewCutPaste() { static const QString p("View.19.CutPaste"); return p; }
 
             // ---- nested dock widgets ----
 

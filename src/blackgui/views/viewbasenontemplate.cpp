@@ -19,6 +19,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/shortcut.h"
 #include "blackmisc/logmessage.h"
+#include "viewbase.h"
 
 #include <QApplication>
 #include <QAction>
@@ -85,7 +86,7 @@ namespace BlackGui
             copy->setContext(Qt::WidgetShortcut);
 
             QShortcut *resize = new QShortcut(CShortcut::keyResizeView(), this);
-            connect(resize, &QShortcut::activated, this, &CViewBaseNonTemplate::fullResizeToContents);
+            connect(resize, &QShortcut::activated, this, &CViewBaseNonTemplate::resizeToContents);
             resize->setObjectName("Resize view shortcut for " + this->objectName());
             resize->setContext(Qt::WidgetShortcut);
         }
@@ -436,13 +437,19 @@ namespace BlackGui
                 }
             }
 
-
-            QAction *actionInteractiveResize = menuActions.addAction(CIcons::viewMultiColumn(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
+            QAction *actionInteractiveResize = menuActions.addAction(CIcons::viewTile(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
             actionInteractiveResize->setObjectName(this->objectName().append("ActionResizing"));
             actionInteractiveResize->setCheckable(true);
             actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::toggleResizeMode);
+
+            QAction *actionWordWrap = menuActions.addAction(CIcons::viewMultiColumn(), "Word wrap (multiline)", CMenuAction::pathViewResize(), nullptr);
+            actionWordWrap->setObjectName(this->objectName().append("ActionResizing"));
+            actionWordWrap->setCheckable(true);
+            actionWordWrap->setChecked(this->wordWrap());
+            actionWordWrap->setEnabled(true);
+            connect(actionWordWrap, &QAction::toggled, this, &CViewBaseNonTemplate::toggleWordWrap);
         }
 
         void CViewBaseNonTemplate::resizeEvent(QResizeEvent *event)
@@ -834,6 +841,13 @@ namespace BlackGui
         void CViewBaseNonTemplate::toggleResizeMode(bool checked)
         {
             m_resizeMode = checked ? ResizingAuto : ResizingOff;
+        }
+
+        void CViewBaseNonTemplate::toggleWordWrap(bool checked)
+        {
+            if (this->wordWrap() == checked) { return; }
+            this->setWordWrap(checked);
+            this->resizeRowsToContents();
         }
 
         void CViewBaseNonTemplate::toggleAutoDisplay()

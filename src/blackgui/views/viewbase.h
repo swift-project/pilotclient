@@ -596,6 +596,9 @@ namespace BlackGui
             //! Toggle the resize mode
             void toggleResizeMode(bool checked);
 
+            //! Toggle the resize mode
+            void toggleWordWrap(bool checked);
+
             //! Set the filter widget internally
             //! \remarks used for dialog and filter widget
             void setFilterWidgetImpl(QWidget *filterWidget);
