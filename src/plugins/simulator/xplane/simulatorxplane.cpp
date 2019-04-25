@@ -308,12 +308,27 @@ namespace BlackSimPlugin
                 this->updateOwnParts(parts);
                 this->requestRemoteAircraftDataFromXPlane();
 
+                CCallsignSet invalid;
                 for (CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
                 {
                     // Update remote aircraft to have the latest transponder modes, codes etc.
-                    const CSimulatedAircraft simulatedAircraft = this->getAircraftInRangeForCallsign(xplaneAircraft.getCallsign());
-                    if (!simulatedAircraft.hasCallsign()) { continue; } // removed in provider
+                    const CCallsign cs = xplaneAircraft.getCallsign();
+                    const CSimulatedAircraft simulatedAircraft = this->getAircraftInRangeForCallsign(cs);
+                    if (!simulatedAircraft.hasCallsign())
+                    {
+                        // removed in provider
+                        if (!cs.isEmpty()) { invalid.insert(cs); }
+                        continue;
+                    }
                     xplaneAircraft.setSimulatedAircraft(simulatedAircraft);
+                }
+
+                int i = 0;
+
+                // remove the invalid ones
+                for (const CCallsign &cs : invalid)
+                {
+                    this->triggerRemoveAircraft(cs, ++i * 100);
                 }
             }
         }
@@ -656,17 +671,20 @@ namespace BlackSimPlugin
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
-                else if (m_addingInProgressAircraft.contains(callsign))
+            }
+
+            // if adding in progress, postpone
+            if (m_addingInProgressAircraft.contains(callsign))
+            {
+                // we are just about to add that aircraft
+                QPointer<CSimulatorXPlane> myself(this);
+                QTimer::singleShot(TimeoutAdding, this, [ = ]
                 {
-                    // we are just about to add that aircraft
-                    QPointer<CSimulatorXPlane> myself(this);
-                    QTimer::singleShot(TimeoutAdding, this, [ = ]
-                    {
-                        if (!myself) { return; }
-                        m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
-                        this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
-                    });
-                }
+                    if (!myself) { return; }
+                    m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
+                    this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
+                });
+                return false; // do nothing right now
             }
 
             m_trafficProxy->removePlane(callsign.asString());
@@ -805,6 +823,7 @@ namespace BlackSimPlugin
 
             int aircraftNumber = 0;
             const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
+            const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
             for (const CXPlaneMPAircraft &xplaneAircraft : m_xplaneAircraftObjects)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
@@ -815,6 +834,9 @@ namespace BlackSimPlugin
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
                     continue;
                 }
+
+                // skip no longer in range
+                if (!callsignsInRange.contains(callsign)) { continue; }
 
                 planesTransponders.callsigns.push_back(callsign.asString());
                 planesTransponders.codes.push_back(xplaneAircraft.getAircraft().getTransponderCode());
@@ -1242,7 +1264,7 @@ namespace BlackSimPlugin
             bool result = service.isValid() && traffic.isValid() && weather.isValid();
             if (! result) { return; }
 
-            QString swiftVersion = BlackConfig::CBuildConfig::getVersionString();
+            QString swiftVersion = CBuildConfig::getVersionString();
             QString xswiftbusVersion = service.getVersionNumber();
             if (xswiftbusVersion.isEmpty())
             {
