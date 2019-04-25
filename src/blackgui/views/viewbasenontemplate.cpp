@@ -412,20 +412,22 @@ namespace BlackGui
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
-            const bool enabled = !this->reachedResizeThreshold();
+            // const bool enabled = !this->reachedResizeThreshold();
+            const bool enabled = true;
             const bool autoResize = (m_resizeMode == ResizingAuto);
 
             // when not set to auto, then lets set how we want to resize rows
-            if (m_rowResizeMode == Interactive)
-            {
-                QAction *a = menuActions.addAction(CIcons::resizeVertical16(), " Resize rows to content (auto), can be slow", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
-                a->setEnabled(enabled && !autoResize);
-            }
-            else
-            {
-                QAction *a = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
-                a->setEnabled(!autoResize);
-            }
+            // for auto this is too slow
+            const bool ww = this->wordWrap();
+            QAction *resizeRowsAction = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::resizeRowsToContents });
+            resizeRowsAction->setEnabled(ww);
+
+            /**
+            QAction *a1 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content (auto), can be slow", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
+            a1->setEnabled(ww && m_rowResizeMode == Interactive && enabled && !autoResize);
+            QAction *a2 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
+            a2->setEnabled(ww && m_rowResizeMode == Content && !autoResize);
+            **/
 
             // export actions, display in text edit
             if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -681,6 +683,17 @@ namespace BlackGui
             verticalHeader->setSectionResizeMode(QHeaderView::Interactive);
             verticalHeader->setDefaultSectionSize(height);
             m_rowResizeMode = Interactive;
+            this->showVerticalHeader();
+        }
+
+        void CViewBaseNonTemplate::showVerticalHeader()
+        {
+            QHeaderView *verticalHeader = this->verticalHeader();
+            verticalHeader->setVisible(
+                this->wordWrap() &&
+                m_resizeMode != ResizingAuto &&
+                m_rowResizeMode == Interactive);
+            verticalHeader->setFixedWidth(16);
         }
 
         void CViewBaseNonTemplate::rowsResizeModeToContent()
@@ -689,6 +702,7 @@ namespace BlackGui
             Q_ASSERT(verticalHeader);
             verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
             m_rowResizeMode = Content;
+            this->showVerticalHeader();
         }
 
         void CViewBaseNonTemplate::rowsResizeModeBasedOnThreshold(int elements)
@@ -767,12 +781,10 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
-            //! \fixme 2019-04 Disabled the magic FOO trick for resizing
-            //! Not working anymore and NOT needed ??? anymore, seems like
-
             /**
-            // resize to maximum magic trick from:
-            // http://stackoverflow.com/q/3433664/356726
+            //! \fixme 2019-04 Disabled the magic FOO trick for resizing
+            // Not working anymore and NOT needed ??? anymore, seems like
+            // resize to maximum magic trick from: http://stackoverflow.com/q/3433664/356726
             this->setVisible(false);
             const QRect vpOriginal = this->viewport()->geometry();
             if (m_forceColumnsToMaxSize)
@@ -785,8 +797,6 @@ namespace BlackGui
                 this->viewport()->setGeometry(vpNew);
             }
             **/
-
-            this->resizeColumnsToContents(); // columns
 
             // useless if mode is Interactive
             if (m_rowResizeMode == Content)
@@ -802,6 +812,12 @@ namespace BlackGui
                 this->horizontalHeader()->setStretchLastSection(false);
                 this->horizontalHeader()->setStretchLastSection(true);
             }
+
+            // const int cols = this->colorCount();
+            // if (this->endsWithEmptyColumn()) { this->setColumnWidth(cols - 1, 10); }
+            // gives a weird NO METRICS warning
+
+            this->resizeColumnsToContents(); // columns
 
             /** Magic FOO
             // if (m_forceColumnsToMaxSize) { this->viewport()->setGeometry(vpOriginal); }
@@ -841,13 +857,26 @@ namespace BlackGui
         void CViewBaseNonTemplate::toggleResizeMode(bool checked)
         {
             m_resizeMode = checked ? ResizingAuto : ResizingOff;
+            if (m_resizeMode == ResizingAuto)
+            {
+                // make sure not use this one here
+                this->rowsResizeModeToInteractive();
+            }
+            else
+            {
+                this->showVerticalHeader();
+            }
         }
 
         void CViewBaseNonTemplate::toggleWordWrap(bool checked)
         {
             if (this->wordWrap() == checked) { return; }
+            if (checked)
+            {
+                // menuAddItems()
+            }
             this->setWordWrap(checked);
-            this->resizeRowsToContents();
+            this->showVerticalHeader(); // can be slow
         }
 
         void CViewBaseNonTemplate::toggleAutoDisplay()

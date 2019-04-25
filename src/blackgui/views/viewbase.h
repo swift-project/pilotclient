@@ -317,7 +317,11 @@ namespace BlackGui
 
             //! Force that columns are extended to full viewport width.
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
-            void setForceColumnsToMaxSize(bool force) { m_forceColumnsToMaxSize = force; }
+            //! \deprecated use setWordWrap
+            void setForceColumnsToMaxSize(bool force)
+            {
+                this->setWordWrap(!force);
+            }
 
             //! Resize mode
             void setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode);
@@ -543,6 +547,9 @@ namespace BlackGui
 
             //! Remove filter
             virtual void removeFilter() = 0;
+
+            //! Vertical header
+            void showVerticalHeader();
 
             //! Filter dialog finished
             virtual bool filterDialogFinished(int status) = 0;

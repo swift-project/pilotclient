@@ -946,5 +946,6 @@ namespace BlackGui
             if (!index.isValid()) { return; }
             emit this->objectSelected(CVariant::fromValue(at(index)));
         }
+
     } // namespace
 } // namespace

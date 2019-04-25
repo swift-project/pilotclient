@@ -605,6 +605,7 @@ QHeaderView::section {
 
 QHeaderView {
   border-width: 0px;
+  background-color: darkslategray;
 }
 
 /* style the sort indicator */
