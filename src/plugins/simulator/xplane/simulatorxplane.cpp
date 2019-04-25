@@ -1272,8 +1272,7 @@ namespace BlackSimPlugin
             }
             else if (swiftVersion != xswiftbusVersion)
             {
-                CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. The version of XSwiftBus must match the version of swift being %1.") << swiftVersion;
-                return;
+                CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. The version of XSwiftBus (%1) should match the version of swift (%2). Consider upgrading!") << xswiftbusVersion << swiftVersion;
             }
 
             if (!traffic.initialize())
