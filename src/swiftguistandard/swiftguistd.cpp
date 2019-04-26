@@ -231,7 +231,8 @@ void SwiftGuiStd::loginRequested()
     if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
         // already main page, we fake a re-trigger here
-        emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
+        // emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
+        ui->comp_Login->toggleNetworkConnection();
     }
     else
     {

@@ -72,7 +72,7 @@ namespace BlackGui
             explicit CLoginComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CLoginComponent();
+            virtual ~CLoginComponent() override;
 
             //! Automatically popup
             void setAutoPopupWizad(bool autoPopup);
@@ -82,6 +82,9 @@ namespace BlackGui
 
             //! Set a logoff time
             void setLogoffCountdown(int timeoutSeconds = -1);
+
+            //! Login requested
+            void toggleNetworkConnection();
 
         signals:
             //! Login
@@ -158,9 +161,6 @@ namespace BlackGui
             //! Login cancelled
             void loginCancelled();
 
-            //! Login requested
-            void toggleNetworkConnection();
-
             //! VATSIM data file was loaded
             void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
@@ -198,7 +198,7 @@ namespace BlackGui
             void setUiLoginState(bool connected);
 
             //! Own model and ICAO data for GUI and own aircraft
-            void setOwnModelAndIcaoValues();
+            void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});
 
             //! Set OK button string
             void setOkButtonString(bool connected);

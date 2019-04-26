@@ -91,11 +91,11 @@ namespace BlackGui
             connect(ui->comp_OtherServers,  &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->pb_RefreshOtherServers, &QToolButton::clicked, this, &CLoginComponent::reloadOtherServersSetup);
-            connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled);
-            connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection);
+            connect(ui->tw_Network, &QTabWidget::currentChanged,       this, &CLoginComponent::onServerTabWidgetChanged);
+            connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginComponent::loginCancelled,          Qt::QueuedConnection);
+            connect(ui->pb_Ok,      &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-            connect(ui->pb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
+            connect(ui->pb_MappingWizard, &QToolButton::clicked,   this, &CLoginComponent::mappingWizard,           Qt::QueuedConnection);
             connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
             ui->form_FsdDetails->showEnableInfo(true);
@@ -184,19 +184,20 @@ namespace BlackGui
             m_logoffCountdownTimer.stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
-                const bool wasVisible = m_visible;
+                // const bool wasVisible = m_visible;
                 m_visible = false;
                 m_logoffCountdownTimer.stop();
 
-                if (wasVisible)
+                /** T639
+                if (!wasVisible)
                 {
                     // set own values, and send signals
                     this->setOwnModelAndIcaoValues();
                 }
+                **/
             }
             else
             {
-                this->setOwnModelAndIcaoValues();
                 if (m_visible)
                 {
                     // already visible:
@@ -206,6 +207,7 @@ namespace BlackGui
                 else
                 {
                     m_visible = true;
+                    this->setOwnModelAndIcaoValues();
                     const bool isConnected = sGui->getIContextNetwork()->isConnected();
                     this->setUiLoginState(isConnected);
                     if (isConnected) { this->startLogoffTimerCountdown(); }
@@ -503,15 +505,18 @@ namespace BlackGui
             m_logoffCountdownTimer.start();
         }
 
-        void CLoginComponent::setOwnModelAndIcaoValues()
+        void CLoginComponent::setOwnModelAndIcaoValues(const CAircraftModel &ownModel)
         {
             if (!this->hasValidContexts()) { return; }
-            CAircraftModel model;
+            CAircraftModel model = ownModel;
             const bool simulating = sGui->getIContextSimulator() &&
                                     (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
             if (simulating)
             {
-                model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
+                if (!model.hasModelString())
+                {
+                    model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
+                }
                 const QString modelAndKey(model.getModelStringAndDbKey());
                 ui->le_SimulatorModel->setText(modelAndKey);
                 ui->le_SimulatorModel->home(false);
@@ -524,7 +529,10 @@ namespace BlackGui
             }
             else
             {
-                model = this->getPrefillModel();
+                if (!model.hasModelString())
+                {
+                    model = this->getPrefillModel();
+                }
                 ui->le_SimulatorModel->clear();
                 this->highlightModelField();
             }
@@ -698,7 +706,7 @@ namespace BlackGui
                 CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
                 return;
             }
-            this->setOwnModelAndIcaoValues();
+            this->setOwnModelAndIcaoValues(reverseModel);
 
             // open dialog for model mapping
             if (m_autoPopupWizard && !reverseModel.isLoadedFromDb())

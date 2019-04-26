@@ -245,7 +245,7 @@ void SwiftGuiStd::initGuiSignals()
         if (!sApp || sApp->isShuttingDown()) { return; }
         ui->sw_MainMiddle->setCurrentIndex(MainPageLogin);
     });
-    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
+    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged, Qt::QueuedConnection);
 
     // text messages
     connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab, Qt::QueuedConnection);
