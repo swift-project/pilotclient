@@ -9,6 +9,7 @@
 #include "joystickwindows.h"
 #include "blackmisc/logmessage.h"
 #include "comdef.h"
+#include "Dbt.h"
 
 // Qt5 defines UNICODE, hence we can expect an wchar_t strings.
 // If it fails to compile, because of char/wchar_t errors, you are most likely
@@ -101,40 +102,24 @@ namespace BlackInput
 
     HRESULT CJoystickDevice::pollDeviceState()
     {
+        m_directInputDevice->Poll();
+
         DIJOYSTATE2 state;
-        HRESULT hr = S_OK;
-
-        if (FAILED(hr = m_directInputDevice->Poll()))
+        HRESULT hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state);
+        if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
         {
-            if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
-            {
-                m_directInputDevice->Acquire();
-                if (FAILED(hr = m_directInputDevice->Poll()))
-                {
-                    if (m_lastHRError == hr) { return hr; } // avoid flooding with messages
-                    m_lastHRError = hr;
-                    CLogMessage(this).warning(u"DirectInput error code (POLL input lost/notacquired): %1 %2") << hr << hrString(hr);
-                    return hr;
-                }
-            }
+            m_directInputDevice->Acquire();
+            m_directInputDevice->Poll();
+            hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state);
         }
 
-        if (FAILED(hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
-        {
-            if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
-            {
-                m_directInputDevice->Acquire();
-                if (FAILED(hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
-                {
-                    if (m_lastHRError == hr) { return hr; } // avoid flooding with messages
-                    m_lastHRError = hr;
-                    CLogMessage(this).warning(u"DirectInput error code (state input lost/notacquired): %1 %2") << hr << hrString(hr);
-                    return hr;
-                }
-            }
-        }
 
-        m_lastHRError = hr;
+        if (FAILED(hr))
+        {
+            CLogMessage(this).warning(u"Cannot acquire and poll joystick device %1. Removing it.") << m_deviceName;
+            emit connectionLost(m_guidDevice);
+            return hr;
+        }
 
         for (const CJoystickDeviceInput &input : as_const(m_joystickDeviceInputs))
         {
@@ -199,6 +184,7 @@ namespace BlackInput
             {
                 this->initDirectInput();
                 this->enumJoystickDevices();
+                this->requestDeviceNotification();
             }
         }
         else
@@ -218,6 +204,7 @@ namespace BlackInput
         m_joystickDevices.clear();
         m_directInput.reset();
         if (m_coInitializeSucceeded) { CoUninitialize(); }
+        if (hDevNotify) { UnregisterDeviceNotification(hDevNotify); }
         destroyHelperWindow();
     }
 
@@ -273,24 +260,22 @@ namespace BlackInput
 
     int CJoystickWindows::createHelperWindow()
     {
-        HINSTANCE hInstance = GetModuleHandle(nullptr);
-        WNDCLASS wce;
-
         // Make sure window isn't created twice
         if (helperWindow != nullptr)
         {
             return 0;
         }
 
-        // Create the class
-        ZeroMemory(&wce, sizeof(WNDCLASS));
-        wce.lpfnWndProc = DefWindowProc;
+        HINSTANCE hInstance = GetModuleHandle(nullptr);
+        WNDCLASSEX wce;
+        ZeroMemory(&wce, sizeof(wce));
+        wce.cbSize = sizeof(wce);
+        wce.lpfnWndProc = windowProc;
         wce.lpszClassName = (LPCWSTR) helperWindowClassName;
         wce.hInstance = hInstance;
 
         /* Register the class. */
-        helperWindowClass = RegisterClass(&wce);
-        if (helperWindowClass == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
+        if (! RegisterClassEx(&wce))
         {
             return -1;
         }
@@ -308,7 +293,18 @@ namespace BlackInput
             return -1;
         }
 
+        SetProp(helperWindow, L"CJoystickWindows", this);
+
         return 0;
+    }
+
+    void CJoystickWindows::requestDeviceNotification()
+    {
+        DEV_BROADCAST_DEVICEINTERFACE notificationFilter;
+        ZeroMemory(&notificationFilter, sizeof(notificationFilter));
+        notificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
+        notificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+        hDevNotify = RegisterDeviceNotification(helperWindow, &notificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
     }
 
     void CJoystickWindows::destroyHelperWindow()
@@ -321,7 +317,6 @@ namespace BlackInput
         helperWindow = nullptr;
 
         UnregisterClass(helperWindowClassName, hInstance);
-        helperWindowClass = 0;
     }
 
     void CJoystickWindows::addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance)
@@ -331,12 +326,26 @@ namespace BlackInput
         if (success)
         {
             connect(device, &CJoystickDevice::buttonChanged, this, &CJoystickWindows::joystickButtonChanged);
+            connect(device, &CJoystickDevice::connectionLost, this, &CJoystickWindows::removeJoystickDevice);
             m_joystickDevices.push_back(device);
         }
         else
         {
             delete device;
         }
+    }
+
+    bool CJoystickWindows::isJoystickAlreadyAdded(const DIDEVICEINSTANCE *pdidInstance) const
+    {
+        for (const CJoystickDevice *device : m_joystickDevices)
+        {
+            if (IsEqualGUID(device->getDeviceGuid(), pdidInstance->guidInstance))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void CJoystickWindows::joystickButtonChanged(const CJoystickButton &joystickButton, bool isPressed)
@@ -351,6 +360,47 @@ namespace BlackInput
         }
     }
 
+    void CJoystickWindows::removeJoystickDevice(const GUID &guid)
+    {
+        for (auto it = m_joystickDevices.begin(); it != m_joystickDevices.end(); ++it)
+        {
+            CJoystickDevice *device = *it;
+            if (IsEqualGUID(guid, device->getDeviceGuid()))
+            {
+                device->deleteLater();
+                m_joystickDevices.erase(it);
+                break;
+            }
+        }
+    }
+
+    // Window callback function (handles window messages)
+    //
+    LRESULT CALLBACK CJoystickWindows::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        CJoystickWindows* joystickWindows = static_cast<CJoystickWindows*>(GetProp(hWnd, L"CJoystickWindows"));
+
+        if (joystickWindows)
+        {
+            switch (uMsg)
+            {
+            case WM_DEVICECHANGE:
+            {
+                if (wParam == DBT_DEVICEARRIVAL)
+                {
+                    DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*) lParam;
+                    if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    {
+                        joystickWindows->enumJoystickDevices();
+                    }
+                }
+            }
+            }
+        }
+
+        return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    }
+
     BOOL CALLBACK CJoystickWindows::enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext)
     {
         CJoystickWindows *obj = static_cast<CJoystickWindows *>(pContext);
@@ -358,9 +408,12 @@ namespace BlackInput
         /* ignore XInput devices here, keep going. */
         //if (isXInputDevice( &pdidInstance->guidProduct )) return DIENUM_CONTINUE;
 
-        obj->addJoystickDevice(pdidInstance);
-        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
-        return true;
+        if (! obj->isJoystickAlreadyAdded(pdidInstance))
+        {
+            obj->addJoystickDevice(pdidInstance);
+            CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
+        }
+        return DIENUM_CONTINUE;
     }
 
     bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs)

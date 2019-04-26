@@ -51,9 +51,15 @@ namespace BlackInput
         //! Get all available device buttons
         BlackMisc::Input::CJoystickButtonList getDeviceButtons() const;
 
+        //! Get device GUID
+        GUID getDeviceGuid() const { return m_guidDevice; }
+
     signals:
         //! Joystick button changed
         void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+
+        //! Connection to joystick lost. Probably unplugged.
+        void connectionLost(const GUID &guid);
 
     protected:
         //! Timer based updates
@@ -85,7 +91,6 @@ namespace BlackInput
         //! Joystick button enumeration callback
         static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
 
-        HRESULT m_lastHRError = S_OK;
         GUID m_guidDevice;     //!< Device GUID
         GUID m_guidProduct;    //!< Product GUID
         QString m_deviceName;  //!< Device name
@@ -131,19 +136,31 @@ namespace BlackInput
         //! Creates a hidden DI helper window
         int createHelperWindow();
 
+        //! Request USB device notifications sent to our helper window.
+        //! This is required for joystick hotplug support
+        void requestDeviceNotification();
+
         //! Destroys a hidden DI helper window
         void destroyHelperWindow();
 
         //! Add new joystick device
         void addJoystickDevice(const DIDEVICEINSTANCE *pdidInstance);
 
+        //! Remove joystick device
+        void removeJoystickDevice(const GUID &guid);
+
+        //! Is joystick instance already added?
+        bool isJoystickAlreadyAdded(const DIDEVICEINSTANCE *pdidInstance) const;
+
         void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+
+        static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
         //! Joystick enumeration callback
         static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
 
-        ATOM helperWindowClass = 0;
         HWND helperWindow = nullptr;
+        HDEVNOTIFY hDevNotify = nullptr;
 
         const TCHAR *helperWindowClassName = TEXT("HelperWindow");
         const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
