@@ -25,6 +25,17 @@ namespace BlackMisc
 {
     CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) : QObject(parent)
     {
+        // Application Options:
+        // -h, –host=HOSTNAME Hostname or IP of the remote host
+        // -p, –port-ssh=PORT-SSH SSH port on the remote host
+        // -u, –username=USERNAME SSH username on the remote host
+        // -w, –password=PASSWORD SSH password on the remote host
+        // -m, –method=DBUS_TRANSPORT_METHOD The D-Bus transport method to use (TCP, UNIX, abstract-UNIX)
+        // -b, –bind=HOSTNAME The bind-address to listen for D-Bus client connections on
+        // -d, –bus-address=BUS_ADDRESS The DBus session bus address of the remote D-Bus daemon
+        // -t, –port-tcp=PORT-TCP The TCP port to listen for DBus client connections on
+        // -v, –verbose=VERBOSE Set verbosity level (3, 2, 1, 0, -1)=(packet,protocol,functions,important,none)
+
         static const QString desc("Mode: %1 Address: '%2' Service: '%3'");
         m_serverMode = CDBusServer::modeOfAddress(address);
         this->setObjectName(desc.arg(CDBusServer::modeToString(m_serverMode), address, service.isEmpty() ? "-" : service));
