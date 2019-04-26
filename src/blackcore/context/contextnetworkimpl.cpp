@@ -280,7 +280,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize" });
+            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -418,6 +418,22 @@ namespace BlackCore
                 const QString wallopMsg = parser.part(1).simplified().trimmed();
                 m_network->sendWallopMessage(wallopMsg);
                 return true;
+            }
+            else if (parser.matchesCommand(".enable", ".unignore"))
+            {
+                if (parser.countParts() < 2) { return false; }
+                if (!m_network) { return false; }
+                if (!this->isConnected()) { return false; }
+                const CCallsign cs(parser.part(1));
+                if (cs.isValid()) { this->updateAircraftEnabled(cs, true); }
+            }
+            else if (parser.matchesCommand(".disable", ".ignore"))
+            {
+                if (parser.countParts() < 2) { return false; }
+                if (!m_network) { return false; }
+                if (!this->isConnected()) { return false; }
+                const CCallsign cs(parser.part(1));
+                if (cs.isValid()) { this->updateAircraftEnabled(cs, false); }
             }
 
             return false;

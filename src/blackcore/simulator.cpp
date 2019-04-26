@@ -565,7 +565,7 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)"});
         CSimpleCommandParser::registerCommand({".drv aircraft readd callsign", "add again (re-add) a given callsign"});
         CSimpleCommandParser::registerCommand({".drv aircraft readd all", "add again (re-add) all aircraft"});
-        CSimpleCommandParser::registerCommand({".drv aircraft rm callsign", "remove a given callsign"});
+        CSimpleCommandParser::registerCommand({".drv aircraft rm callsign", "remove a given callsign from simulator"});
 
         if (CBuildConfig::isCompiledWithFsuipcSupport())
         {

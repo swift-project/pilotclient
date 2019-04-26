@@ -228,6 +228,10 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".wallop message", "send a wallop message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".reinit", "re-initialize all aircraft"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".enable", "alias: .unignore"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".enable callsign", "enable/unignore callsign"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".disable", "alias: .ignore"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".disable callsign", "disable/ignore callsign"});
             }
 
             //! \publicsection
