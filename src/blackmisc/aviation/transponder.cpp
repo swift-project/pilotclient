@@ -22,6 +22,7 @@ namespace BlackMisc
         {
             CValueObject<CTransponder>::registerMetadata();
             qRegisterMetaType<TransponderMode>();
+            qDBusRegisterMetaType<CTransponder::TransponderMode>();
         }
 
         CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode) :
