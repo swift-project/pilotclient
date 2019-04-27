@@ -659,7 +659,7 @@ namespace BlackGui
         QPoint pos = CGuiUtility::mainWidgetGlobalPosition();
         if (pos.isNull())
         {
-            pos = sGui->currentScreen()->geometry().center() - this->rect().center();
+            pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center();
         }
 
         const int x = pos.x() + m_offsetWhenFloating.x();

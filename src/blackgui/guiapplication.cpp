@@ -355,7 +355,8 @@ namespace BlackGui
     QRect CGuiApplication::currentScreenGeometry()
     {
         const QScreen *s = currentScreen();
-        return s->geometry();
+        if (s) return s->geometry();
+        return {};
     }
 
     void CGuiApplication::modalWindowToFront()

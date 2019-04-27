@@ -317,9 +317,13 @@ namespace BlackGui
 
     QPoint CGuiUtility::mainWidgetGlobalPosition()
     {
-        CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
-        if (!mw || !mw->getWidget()) { QPoint(); }
-        return mw->getWidget()->pos(); // is main window, so not mapToGlobal
+        QWidget *mw = CGuiUtility::mainApplicationWidget();
+        if (mw) { return mw->pos(); }
+
+        // fallback, can be mfw it is not found
+        CEnableForFramelessWindow *mfw = CGuiUtility::mainFramelessEnabledWindow();
+        if (!mfw || !mfw->getWidget()) { return QPoint(); }
+        return mfw->getWidget()->pos(); // is main window, so not mapToGlobal
     }
 
     QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
@@ -353,7 +357,7 @@ namespace BlackGui
                     delete widget;
                 }
             }
-            else {delete item;}
+            else { delete item; }
         }
 
         // then finally
