@@ -123,7 +123,7 @@ namespace BlackGui
             if (m_current.isNull())
             {
                 const QString icao = this->getIcaoText();
-                if (CAirportIcaoCode::isValidIcaoDesignator(icao))
+                if (CAirportIcaoCode::isValidIcaoDesignator(icao, true))
                 {
                     const CAirport airport = sGui->getWebDataServices()->getAirportForIcaoDesignator(icao);
                     if (!airport.isNull()) { this->setAirport(airport); }

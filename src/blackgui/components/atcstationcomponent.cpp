@@ -266,7 +266,7 @@ namespace BlackGui
             if (!this->canAccessContext()) { return; }
             const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
             ui->le_AtcStationsOnlineMetar->setText(icao.asString());
-            if (!icao.hasValidIcaoCode()) { return; }
+            if (!icao.hasValidIcaoCode(true)) { return; }
             const CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
             if (metar.hasMessage())
             {

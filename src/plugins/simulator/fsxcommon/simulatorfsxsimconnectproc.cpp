@@ -362,7 +362,7 @@ namespace BlackSimPlugin
                         if (!pFacilityAirport) { break; }
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
-                        if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields/strips in simulator
+                        if (!CAirportIcaoCode::isValidIcaoDesignator(icao, true)) { continue; } // tiny airfields/strips in simulator
                         if (CAirportIcaoCode::containsNumbers(icao)) { continue; } // tiny airfields/strips in simulator
                         const CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         const CAirport airport(CAirportIcaoCode(icao), pos);

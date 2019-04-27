@@ -15,9 +15,9 @@ namespace BlackMisc
             return m_icaoCode;
         }
 
-        bool CAirportIcaoCode::hasValidIcaoCode() const
+        bool CAirportIcaoCode::hasValidIcaoCode(bool strict) const
         {
-            return CAirportIcaoCode::isValidIcaoDesignator(this->getIcaoCode());
+            return CAirportIcaoCode::isValidIcaoDesignator(this->getIcaoCode(), strict);
         }
 
         bool CAirportIcaoCode::equalsString(const QString &icaoCode) const
@@ -29,15 +29,15 @@ namespace BlackMisc
         QString CAirportIcaoCode::unifyAirportCode(const QString &icaoCode)
         {
             const QString code = icaoCode.trimmed().toUpper();
-            if (code.length() != 4) return {};
+            if (!validCodeLength(icaoCode.length(), false)) return {};
             if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return {}; }
             return code;
         }
 
-        bool CAirportIcaoCode::isValidIcaoDesignator(const QString &icaoCode)
+        bool CAirportIcaoCode::isValidIcaoDesignator(const QString &icaoCode, bool strict)
         {
             const QString icao = unifyAirportCode(icaoCode);
-            return icao.length() == 4;
+            return validCodeLength(icao.length(), strict);
         }
 
         bool CAirportIcaoCode::containsNumbers(const QString &icaoCode)
@@ -63,5 +63,16 @@ namespace BlackMisc
             return m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);
         }
 
+        bool CAirportIcaoCode::validCodeLength(int l, bool strict)
+        {
+            // FAA code 3
+            // ICAO code 4
+            if (strict) { return l == 4; }
+            return l >= 3 && l <= 6;
+
+            // https://en.wikipedia.org/wiki/Location_identifier#FAA_identifier says can be up to 5 characters
+            // https://en.wikipedia.org/wiki/ICAO_airport_code#Pseudo_ICAO-codes says France has some 6-character airport codes
+            // and ZZZZ can be used in a flight plan as ICAO code for any airport that doesn't have one
+        }
     } // namespace
 } // namespace

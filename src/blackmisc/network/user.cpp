@@ -138,7 +138,7 @@ namespace BlackMisc
 
         bool CUser::hasValidHomeBase() const
         {
-            return m_homebase.hasValidIcaoCode();
+            return m_homebase.hasValidIcaoCode(false);
         }
 
         CStatusMessageList CUser::validate() const

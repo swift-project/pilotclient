@@ -41,7 +41,7 @@ namespace BlackMisc
             bool isEmpty() const { return this->m_icaoCode.isEmpty(); }
 
             //! Has valid code?
-            bool hasValidIcaoCode() const;
+            bool hasValidIcaoCode(bool strict) const;
 
             //! Get code.
             const QString &asString() const { return this->m_icaoCode; }
@@ -56,7 +56,7 @@ namespace BlackMisc
             static QString unifyAirportCode(const QString &icaoCode);
 
             //! Valid ICAO designator
-            static bool isValidIcaoDesignator(const QString &icaoCode);
+            static bool isValidIcaoDesignator(const QString &icaoCode, bool strict);
 
             //! Containing numbers (normally indicator for small airfield/strip)
             static bool containsNumbers(const QString &icaoCode);
@@ -72,6 +72,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAirportIcaoCode &compareValue) const;
+
+            //! Valid code lenght
+            static bool validCodeLength(int l, bool strict);
 
         private:
             QString m_icaoCode;

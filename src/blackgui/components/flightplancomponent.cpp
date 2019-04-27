@@ -399,6 +399,14 @@ namespace BlackGui
             else
             {
                 flightPlan.setDestinationAirportIcao(v);
+                if (strict && !flightPlan.getDestinationAirportIcao().hasValidIcaoCode(true))
+                {
+                    messages.push_back(CStatusMessage(this).validationError(u"Invalid destination ICAO code '%1'") << v);
+                }
+                else if (!flightPlan.getDestinationAirportIcao().hasValidIcaoCode(false))
+                {
+                    messages.push_back(CStatusMessage(this).validationWarning(u"Wrong or missing '%1'") << ui->lbl_DestinationAirport->text());
+                }
             }
 
             // origin airport
@@ -411,6 +419,14 @@ namespace BlackGui
             else
             {
                 flightPlan.setOriginAirportIcao(v);
+                if (strict && !flightPlan.getOriginAirportIcao().hasValidIcaoCode(true))
+                {
+                    messages.push_back(CStatusMessage(this).validationError(u"Invalid origin ICAO code '%1'") << v);
+                }
+                else if (!flightPlan.getOriginAirportIcao().hasValidIcaoCode(false))
+                {
+                    messages.push_back(CStatusMessage(this).validationWarning(u"Wrong or missing '%1'") << ui->lbl_DestinationAirport->text());
+                }
             }
 
             // TAS
