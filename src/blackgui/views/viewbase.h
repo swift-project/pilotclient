@@ -814,13 +814,13 @@ namespace BlackGui
             virtual void removeFilter() override;
             //! @}
 
-            //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
+            //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::loadJson
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
 
-            //! Verify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
+            //! Verify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::loadJson
             virtual BlackMisc::CStatusMessage validateLoadedJsonData(const ContainerType &data) const;
 
-            //! In BlackGui::Views::CViewBaseNonTemplate::ps_loadJson the view has been updated because of loaded JSON data
+            //! In BlackGui::Views::CViewBaseNonTemplate::loadJson the view has been updated because of loaded JSON data
             //! \remark I cannot use a signal with a template parameter, so this functions serves as callback
             virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
