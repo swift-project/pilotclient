@@ -700,7 +700,7 @@ namespace BlackGui
 
         menu.addSeparator();
         a = menu.addAction("E&xit");
-        a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
+        // a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q)); // avoid accidentally closing
         c = connect(a, &QAction::triggered, this, [ = ]()
         {
             // a close event might already trigger a shutdown
