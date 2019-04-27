@@ -146,10 +146,12 @@ namespace BlackGui
             {
                 this->addOrUpdateLiveDataByName("simulator", m_simulator.toQString(true), m_simulator.toIcon());
             }
-            this->addOrUpdateLiveDataByName("latitude", s.latitude().toQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName("latitude",  s.latitude().toQString(),  iconLatLng);
             this->addOrUpdateLiveDataByName("longitude", s.longitude().toQString(), iconLatLng);
-            this->addOrUpdateLiveDataByName("altitude (ft)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-            this->addOrUpdateLiveDataByName("altitude (m)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude, true (ft)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude, true (m)",  s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude, pressure (ft)", s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+            this->addOrUpdateLiveDataByName("altitude, pressure (m)",  s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
 
             if (s.hasGroundElevation())
             {
