@@ -84,7 +84,6 @@ namespace BlackGui
             const CGlobalSetup setup = sApp->getGlobalSetup();
             if (setup.wasLoadedFromWeb())
             {
-                QPointer<CSetupLoadingDialog> myself(this);
                 QTimer::singleShot(250, this, [ = ]
                 {
                     const CUrlList bootstrapUrls = setup.getSwiftBootstrapFileUrls();

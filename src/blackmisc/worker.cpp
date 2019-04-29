@@ -200,16 +200,12 @@ namespace BlackMisc
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             // shift in correct thread
-            if (!this->isFinished())
+            QPointer<CContinuousWorker> myself(this);
+            QTimer::singleShot(0, this, [ = ]
             {
-                QPointer<CContinuousWorker> myself(this);
-                QTimer::singleShot(0, this, [ = ]
-                {
-                    if (!myself) { return; }
-                    if (this->isFinished()) { return; }
-                    this->startUpdating(updateTimeSecs);
-                });
-            }
+                if (!myself) { return; }
+                this->doIfNotFinished([ = ] { startUpdating(updateTimeSecs); });
+            });
             return;
         }
 

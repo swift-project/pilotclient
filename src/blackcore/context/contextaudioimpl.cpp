@@ -475,7 +475,7 @@ namespace BlackCore
             if (ms > 10)
             {
                 // As of https://dev.swift-project.org/T558 play additional notification
-                const QPointer<CContextAudio> myself(const_cast<CContextAudio *>(this)); //! \fixme KB 2019-03 add bit hacky as I need non-const and do not want to change all signatures
+                const QPointer<const CContextAudio> myself(this);
                 QTimer::singleShot(ms, this, [ = ]
                 {
                     if (!sApp || sApp->isShuttingDown() || !myself) { return; }
