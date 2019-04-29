@@ -6,21 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>216</width>
-    <height>322</height>
+    <width>277</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Audio setup</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
   </property>
   <layout class="QVBoxLayout" name="vl_AudioSetup">
    <property name="leftMargin">
@@ -118,6 +109,52 @@
       </widget>
      </item>
      <item row="5" column="0">
+      <widget class="QLabel" name="lbl_SoundDirectory">
+       <property name="text">
+        <string>Dir.:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QWidget" name="wi_SoundDir" native="true">
+       <layout class="QHBoxLayout" name="hl_SoundDir" stretch="0,0,0">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="le_SoundDir">
+          <property name="placeholderText">
+           <string>your private sound directory</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SoundReset">
+          <property name="text">
+           <string>reset</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignRight">
+         <widget class="QPushButton" name="pb_SoundDir">
+          <property name="text">
+           <string>[...]</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="6" column="0">
       <widget class="QLabel" name="lbl_Notifications">
        <property name="toolTip">
         <string>Notifications</string>
@@ -127,7 +164,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessagePrivate">
        <property name="text">
         <string>notification for private text messages</string>
@@ -135,41 +172,34 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
-       <property name="text">
-        <string>notfication for text msg. with my callsign</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomJoined">
-       <property name="text">
-        <string>notification joining a voice room</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
-       <property name="text">
-        <string>PTT click (key down)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomLeft">
-       <property name="text">
-        <string>notification leaving a voice room</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessageSupervisor">
        <property name="text">
         <string>supervisor messages</string>
        </property>
       </widget>
      </item>
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextCallsignMentioned">
+       <property name="text">
+        <string>notfication for text msg. with my callsign</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomJoined">
+       <property name="text">
+        <string>notification joining a voice room</string>
+       </property>
+      </widget>
+     </item>
      <item row="10" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoomLeft">
+       <property name="text">
+        <string>notification leaving a voice room</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioNoTransmission">
        <property name="text">
         <string>No audio transmission warning</string>
@@ -177,6 +207,13 @@
       </widget>
      </item>
      <item row="12" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
+       <property name="text">
+        <string>PTT click (key down)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
       <widget class="QCheckBox" name="cb_SetupAudioPTTClickUp">
        <property name="text">
         <string>PTT click (key up)</string>
@@ -205,6 +242,9 @@
   <tabstop>cb_SetupAudioInputDevice</tabstop>
   <tabstop>cb_SetupAudioOutputDevice</tabstop>
   <tabstop>cb_SetupAudioLoopback</tabstop>
+  <tabstop>le_SoundDir</tabstop>
+  <tabstop>pb_SoundReset</tabstop>
+  <tabstop>pb_SoundDir</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessagePrivate</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessageSupervisor</tabstop>
   <tabstop>cb_SetupAudioNotificationTextCallsignMentioned</tabstop>
@@ -212,6 +252,7 @@
   <tabstop>cb_SetupAudioNotificationVoiceRoomLeft</tabstop>
   <tabstop>cb_SetupAudioNoTransmission</tabstop>
   <tabstop>cb_SetupAudioPTTClickDown</tabstop>
+  <tabstop>cb_SetupAudioPTTClickUp</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CAudioSetupComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAudioSetupComponent();
+            virtual ~CAudioSetupComponent() override;
 
             //! Play any sounds?
             bool playNotificationSounds() const;
@@ -63,6 +63,12 @@ namespace BlackGui
 
             //! Notification flags toggled
             void onNotificationsToggled(bool checked);
+
+            //! Notification sounds dir
+            void selectNotificationSoundsDir();
+
+            //! Notification sounds dir
+            void resetNotificationSoundsDir();
 
             //! Audio device lists from settings
             void initAudioDeviceLists();

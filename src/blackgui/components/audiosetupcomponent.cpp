@@ -20,6 +20,7 @@
 #include <QToolButton>
 #include <QtGlobal>
 #include <QPointer>
+#include <QFileDialog>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -51,8 +52,7 @@ namespace BlackGui
 
         void CAudioSetupComponent::init()
         {
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-            Q_ASSERT_X(sGui->getIContextAudio(), Q_FUNC_INFO, "Missing Audio context");
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
 
             // audio is optional
             const bool audio = this->hasAudio();
@@ -84,21 +84,25 @@ namespace BlackGui
                 Q_ASSERT(c);
 
                 // checkboxes for notifications
-                c = connect(ui->cb_SetupAudioPTTClickDown, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioPTTClickDown,                      &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioPTTClickUp, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioPTTClickUp,                        &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNotificationVoiceRoomLeft, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNotificationVoiceRoomLeft,         &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNotificationVoiceRoomJoined, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNotificationVoiceRoomJoined,       &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate,    &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNotificationTextMessageSupervisor, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNotificationTextMessageSupervisor, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNotificationTextCallsignMentioned, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNotificationTextCallsignMentioned, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioNoTransmission, &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled);
+                c = connect(ui->cb_SetupAudioNoTransmission,                    &QCheckBox::toggled, this, &CAudioSetupComponent::onNotificationsToggled, Qt::QueuedConnection);
+                Q_ASSERT(c);
+                c = connect(ui->pb_SoundReset, &QPushButton::released, this, &CAudioSetupComponent::resetNotificationSoundsDir, Qt::QueuedConnection);
+                Q_ASSERT(c);
+                c = connect(ui->pb_SoundDir,   &QPushButton::released, this, &CAudioSetupComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
                 Q_ASSERT(c);
             }
             Q_UNUSED(c);
@@ -129,6 +133,8 @@ namespace BlackGui
             ui->cb_SetupAudioNotificationTextMessageSupervisor->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor));
             ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
             ui->cb_SetupAudioNoTransmission->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission));
+
+            ui->le_SoundDir->setText(as.getNotificationSoundDirectory());
         }
 
         void CAudioSetupComponent::initAudioDeviceLists()
@@ -248,6 +254,29 @@ namespace BlackGui
                 const CNotificationSounds::NotificationFlag f = this->checkBoxToFlag(sender);
                 sGui->getIContextAudio()->playNotification(f, false);
             }
+        }
+
+        void CAudioSetupComponent::selectNotificationSoundsDir()
+        {
+            CSettings s = m_audioSettings.get();
+            const QString dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Open directory"), s.getNotificationSoundDirectory(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            const QDir d(dir);
+            if (d.exists())
+            {
+                s.setNotificationSoundDirectory(dir);
+                ui->le_SoundDir->setText(s.getNotificationSoundDirectory());
+                const CStatusMessage m = m_audioSettings.setAndSave(s);
+                CLogMessage::preformatted(m);
+            }
+        }
+
+        void CAudioSetupComponent::resetNotificationSoundsDir()
+        {
+            CSettings s = m_audioSettings.get();
+            s.setNotificationSoundDirectory("");
+            const CStatusMessage m = m_audioSettings.setAndSave(s);
+            CLogMessage::preformatted(m);
+            ui->le_SoundDir->clear();
         }
     } // namespace
 } // namespace
