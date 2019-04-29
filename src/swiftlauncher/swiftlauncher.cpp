@@ -246,10 +246,8 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
     if (!sGui || sGui->isShuttingDown()) { return false; }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    if (ui->rb_SwiftCoreAudioOnCore->isChecked())
-    {
-        args.append("--coreaudio");
-    }
+    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { args.append("--coreaudio"); }
+    if (ui->cb_resetWindow->isChecked())          { args.append("--resetsize"); }
 
     m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
@@ -273,6 +271,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
     };
 
+    if (ui->cb_resetWindow->isChecked()) { args << "--resetsize"; }
     if (!this->isStandaloneGuiSelected())
     {
         const QString dBus(ui->comp_DBusSelector->getDBusAddress());

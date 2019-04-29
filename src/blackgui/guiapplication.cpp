@@ -378,13 +378,14 @@ namespace BlackGui
     {
         if (!window) { return false; }
         const QSettings settings("swift-project.org", this->getApplicationName());
+        const QString location = settings.fileName();
+        CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
+
         const QByteArray g = settings.value("geometry").toByteArray();
         const QByteArray s = settings.value("windowState").toByteArray();
         if (g.isEmpty() || s.isEmpty()) { return false; }
         window->restoreGeometry(g);
         window->restoreState(s);
-        const QString location = settings.fileName();
-        CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
         return true;
     }
 

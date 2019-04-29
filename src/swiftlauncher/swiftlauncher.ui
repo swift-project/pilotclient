@@ -559,16 +559,6 @@
               <property name="verticalSpacing">
                <number>1</number>
               </property>
-              <item row="0" column="0" colspan="5">
-               <widget class="BlackGui::Components::CScaleScreenFactor" name="comp_Scale">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
                <widget class="QToolButton" name="tb_SwiftGui">
                 <property name="toolTip">
@@ -701,6 +691,23 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="0" colspan="3">
+               <widget class="BlackGui::Components::CScaleScreenFactor" name="comp_Scale">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3" colspan="2">
+               <widget class="QCheckBox" name="cb_resetWindow">
+                <property name="text">
+                 <string>reset window</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </widget>
@@ -756,9 +763,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::COverlayMessagesFrame</class>
+   <class>BlackGui::Components::CDbLoadOverviewComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/overlaymessagesframe.h</header>
+   <header>blackgui/components/dbloadoverviewcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -768,9 +775,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDbLoadOverviewComponent</class>
+   <class>BlackGui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbloadoverviewcomponent.h</header>
+   <header>blackgui/overlaymessagesframe.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
