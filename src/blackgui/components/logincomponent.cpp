@@ -213,6 +213,12 @@ namespace BlackGui
                     if (isConnected) { this->startLogoffTimerCountdown(); }
                 }
             }
+
+            // we decided to make it difficult for users to disable it
+            if (!CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                ui->cb_AutoLogoff->setChecked(true);
+            }
         }
 
         void CLoginComponent::setLogoffCountdown(int timeoutSeconds)
