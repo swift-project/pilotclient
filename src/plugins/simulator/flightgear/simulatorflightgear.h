@@ -75,8 +75,8 @@ namespace BlackSimPlugin
             QString aircraftIcaoCode;           //!< Aircraft ICAO code
             double latitudeDeg;                 //!< Longitude [deg]
             double longitudeDeg;                //!< Latitude [deg]
-            double altitudeM;                   //!< Altitude [m]
-            double groundspeedMs;               //!< Ground speed [m/s]
+            double altitudeFt;                  //!< Altitude [ft]
+            double groundspeedKts;              //!< Ground speed [kts]
             double pitchDeg;                    //!< Pitch [deg]
             double rollDeg;                     //!< Roll [deg]
             double trueHeadingDeg;              //!< True heading [deg]

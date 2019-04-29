@@ -49,8 +49,8 @@ namespace BlackSimPlugin
                 {
                     o_flightgearData->latitudeDeg = reply.argumentAt<0>();
                     o_flightgearData->longitudeDeg = reply.argumentAt<1>();
-                    o_flightgearData->altitudeM = reply.argumentAt<2>();
-                    o_flightgearData->groundspeedMs = reply.argumentAt<3>();
+                    o_flightgearData->altitudeFt = reply.argumentAt<2>();
+                    o_flightgearData->groundspeedKts = reply.argumentAt<3>();
                     o_flightgearData->pitchDeg = reply.argumentAt<4>();
                     o_flightgearData->rollDeg = reply.argumentAt<5>();
                     o_flightgearData->trueHeadingDeg = reply.argumentAt<6>();

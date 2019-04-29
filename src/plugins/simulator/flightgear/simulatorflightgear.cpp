@@ -185,12 +185,12 @@ namespace BlackSimPlugin
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
-                situation.setAltitude({ m_flightgearData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::ft() });
+                situation.setAltitude({ m_flightgearData.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft() });
                 situation.setPressureAltitude({m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()});
                 situation.setHeading({ m_flightgearData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
                 situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
-                situation.setGroundSpeed({ m_flightgearData.groundspeedMs, CSpeedUnit::kts() });
+                situation.setGroundSpeed({ m_flightgearData.groundspeedKts, CSpeedUnit::kts() });
 
                 // Updates
                 // Do not update ICAO codes, as this overrides reverse lookups
