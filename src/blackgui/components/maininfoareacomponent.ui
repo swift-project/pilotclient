@@ -5,9 +5,6 @@
   <property name="windowTitle">
    <string>Main info area of swift</string>
   </property>
-  <property name="dockOptions">
-   <set>QMainWindow::AnimatedDocks</set>
-  </property>
   <widget class="QWidget" name="qw_centralWidgetEmptyUsedAsPadding">
    <property name="enabled">
     <bool>false</bool>
@@ -26,8 +23,11 @@
      <height>33</height>
     </size>
    </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Cockpit</string>
@@ -99,7 +99,7 @@
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Aircraft</string>
@@ -171,7 +171,7 @@
     <bool>false</bool>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>ATC stations</string>
@@ -246,7 +246,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Users</string>
@@ -315,7 +315,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Text messages</string>
@@ -364,7 +364,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Simulator</string>
@@ -490,7 +490,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Weather</string>
@@ -550,7 +550,7 @@
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Rendering">
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Models</string>
@@ -604,7 +604,7 @@
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Interpolation">
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Interpolation</string>
@@ -665,7 +665,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Settings</string>
@@ -734,7 +734,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Log</string>
@@ -794,7 +794,7 @@
     </size>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Radar</string>

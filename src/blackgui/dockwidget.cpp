@@ -260,6 +260,12 @@ namespace BlackGui
         this->setFloating(floating);
         this->setAlwaysOnTop(m_alwaysOnTop && floating);
 
+        // disable the interactive docking
+        if (floating)
+        {
+            this->setAllowedAreas(Qt::NoDockWidgetArea);
+        }
+
         if (shift && floating) { this->resetPosition(); }
     }
 
