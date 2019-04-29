@@ -16,6 +16,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
+#include <QFileInfo>
 #include <QFlags>
 #include <QIODevice>
 #include <QList>
@@ -582,9 +583,15 @@ namespace BlackMisc
         return CFileUtils::appendFilePaths(CDirectoryUtils::soundFilesDirectory(), name);
     }
 
-    QUrl CFileUtils::soundFileQUrl(const QString &name)
+    QUrl CFileUtils::soundFileQUrl(const QString &directory, const QString &name)
     {
         if (name.isEmpty()) { return {}; }
+        if (!directory.isEmpty())
+        {
+            const QString f = CFileUtils::appendFilePathsAndFixUnc(directory, name);
+            const QFileInfo fi(f);
+            if (fi.exists()) { return QUrl::fromLocalFile(f); }
+        }
         return QUrl::fromLocalFile(CFileUtils::soundFilePathAndFileName(name));
     }
 } // ns

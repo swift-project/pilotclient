@@ -57,6 +57,12 @@ namespace BlackMisc
             //! Settings value
             CStatusMessage value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
 
+            //! Directory
+            void setNotificationSoundDirectory(const QString &dir);
+
+            //! Notification directory
+            const QString &getNotificationSoundDirectory() const { return m_notificationSoundDir; }
+
             //! Init with meaningful default values
             void initDefaultValues();
 
@@ -64,11 +70,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
+            QString m_notificationSoundDir;
             int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
             void initNotificationFlags(); //!< init flags
 
             BLACK_METACLASS(
                 CSettings,
+                BLACK_METAMEMBER(notificationSoundDir),
                 BLACK_METAMEMBER(notification)
             );
         };

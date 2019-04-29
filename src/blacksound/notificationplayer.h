@@ -35,8 +35,15 @@ namespace BlackSound
         //! Play notification sound
         void play(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, int volume = 100) const;
 
+        //! Update the directory
+        void updateDirectory(const QString &directory);
+
     private:
         QHash<BlackMisc::Audio::CNotificationSounds::NotificationFlag, QSoundEffect *> m_effects;
+        QString m_directory;
+
+        //! Update an effect
+        void updateEffect(BlackMisc::Audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
     };
 }
 

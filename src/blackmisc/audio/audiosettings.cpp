@@ -12,6 +12,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
+#include "blackmisc/fileutils.h"
+
 using namespace BlackMisc::Audio;
 
 namespace BlackMisc
@@ -38,6 +40,19 @@ namespace BlackMisc
             {
                 m_notification &= ~notification;
             }
+        }
+
+        void CSettings::setNotificationSoundDirectory(const QString &dir)
+        {
+            QString d = dir.trimmed();
+            if (d.isEmpty())
+            {
+                // reset
+                m_notificationSoundDir.clear();
+                return;
+            }
+            d = CFileUtils::fixWindowsUncPath(d);
+            m_notificationSoundDir = d;
         }
 
         QString CSettings::convertToQString(bool i18n) const

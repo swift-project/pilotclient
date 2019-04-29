@@ -601,6 +601,12 @@ namespace BlackCore
             }
         }
 
+        void CContextAudio::onChangedAudioSettings()
+        {
+            const QString dir = m_audioSettings.get().getNotificationSoundDirectory();
+            m_notificationPlayer.updateDirectory(dir);
+        }
+
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
         {
             QSharedPointer<IVoiceChannel> voiceChannel;

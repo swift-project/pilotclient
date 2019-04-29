@@ -203,7 +203,7 @@ namespace BlackMisc
         static QString soundFilePathAndFileName(const QString &name);
 
         //! QUrl of soundFilePathAndFileName
-        static QUrl soundFileQUrl(const QString &name);
+        static QUrl soundFileQUrl(const QString &directory, const QString &name);
     };
 } // ns
 
