@@ -227,6 +227,9 @@ namespace BlackGui
         //! Save widget's geometry and state
         bool saveWindowGeometryAndState(const QMainWindow *window = CGuiApplication::mainApplicationWindow()) const;
 
+        //! Reset the saved values
+        void resetWindowGeometryAndState();
+
         //! Restore widget's geometry and state
         bool restoreWindowGeometryAndState(QMainWindow *window = CGuiApplication::mainApplicationWindow());
 

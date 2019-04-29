@@ -27,6 +27,7 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/loghandler.h"
 #include "blackmisc/metadatautils.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/settingscache.h"
@@ -62,6 +63,7 @@
 #include <QWidget>
 #include <QWindow>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QtGlobal>
 #include <QWhatsThis>
 
@@ -374,6 +376,14 @@ namespace BlackGui
         return true;
     }
 
+    void CGuiApplication::resetWindowGeometryAndState()
+    {
+        QByteArray ba;
+        QSettings settings("swift-project.org", this->getApplicationName());
+        settings.setValue("geometry", ba);
+        settings.setValue("windowState", ba);
+    }
+
     bool CGuiApplication::restoreWindowGeometryAndState(QMainWindow *window)
     {
         if (!window) { return false; }
@@ -384,8 +394,36 @@ namespace BlackGui
         const QByteArray g = settings.value("geometry").toByteArray();
         const QByteArray s = settings.value("windowState").toByteArray();
         if (g.isEmpty() || s.isEmpty()) { return false; }
-        window->restoreGeometry(g);
-        window->restoreState(s);
+
+        // block for subscriber
+        {
+            const auto pattern = CLogPattern().withSeverity(CStatusMessage::SeverityError);
+            const QString parameter = m_cmdWindowSizeReset.names().first();
+            CLogSubscriber logSub(this, [&](const CStatusMessage & message)
+            {
+                // handles an error in restoreGeometry/State
+                const int ret = QMessageBox::critical(sGui->mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
+                                                      QStringLiteral(
+                                                              "Restoring the window state/geometry failed!\n"
+                                                              "You need to reset the window size (command -%1).\n\n"
+                                                              "Original msg: %2\n\n"
+                                                              "We can try to reset the values and restart\n"
+                                                              "Do you want to try?"
+                                                      ).arg(parameter, message.getMessage()),
+                                                      QMessageBox::Yes | QMessageBox::No);
+                if (ret == QMessageBox::Yes)
+                {
+                    this->resetWindowGeometryAndState();
+                    this->restartApplication();
+                }
+                // most likely crashing if we do nothing
+
+            });
+            logSub.changeSubscription(pattern);
+
+            window->restoreGeometry(g);
+            window->restoreState(s);
+        }
         return true;
     }
 
