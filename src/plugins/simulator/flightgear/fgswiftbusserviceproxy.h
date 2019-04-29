@@ -271,10 +271,10 @@ namespace BlackSimPlugin
             void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
             //! @}
 
-            //! Get barometric pressure at sea level in inches of mercury.
+            //! Get pressure altitude in feet.
             //! @{
-            double getQNHInHg() const;
-            void getQNHInHgAsync(double *o_qnh);
+            double getPressureAltitudeFt() const;
+            void getPressureAltitudeFtAsync(double *o_qnh);
             //! @}
 
             //! Set the current COM1 active frequency in kHz

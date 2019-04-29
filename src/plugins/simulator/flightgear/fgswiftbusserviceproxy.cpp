@@ -54,7 +54,7 @@ namespace BlackSimPlugin
                     o_flightgearData->pitchDeg = reply.argumentAt<4>();
                     o_flightgearData->rollDeg = reply.argumentAt<5>();
                     o_flightgearData->trueHeadingDeg = reply.argumentAt<6>();
-                    o_flightgearData->seaLevelPressureInHg = reply.argumentAt<7>();
+                    o_flightgearData->pressureAltitudeFt = reply.argumentAt<7>();
                 }
                 watcher->deleteLater();
             };
@@ -324,15 +324,14 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getTaxiLightsOn"), setterCallback(o_taxiLightsOn));
         }
 
-
-        double CFGSwiftBusServiceProxy::getQNHInHg() const
+        double CFGSwiftBusServiceProxy::getPressureAltitudeFt() const
         {
-            return m_dbusInterface->callDBusRet<double>(QLatin1String("getQNHInHg"));
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getPressureAltitudeFt"));
         }
 
-        void CFGSwiftBusServiceProxy::getQNHInHgAsync(double *o_qnh)
+        void CFGSwiftBusServiceProxy::getPressureAltitudeFtAsync(double *o_qnh)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getQNHInHg"), setterCallback(o_qnh));
+            m_dbusInterface->callDBusAsync(QLatin1String("getPressureAltitudeFt"), setterCallback(o_qnh));
         }
 
 

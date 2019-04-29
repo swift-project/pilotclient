@@ -185,11 +185,8 @@ namespace BlackSimPlugin
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
-                CAltitude altitude { m_flightgearData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::ft() };
                 situation.setAltitude({ m_flightgearData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::ft() });
-                CPressure seaLevelPressure({ m_flightgearData.seaLevelPressureInHg, CPressureUnit::inHg() });
-                CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
-                situation.setPressureAltitude(pressureAltitude);
+                situation.setPressureAltitude({m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()});
                 situation.setHeading({ m_flightgearData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
                 situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });

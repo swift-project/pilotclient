@@ -97,7 +97,7 @@ namespace BlackSimPlugin
             double gearReployRatio;             //!< Gear deployment ratio [%]
             QList<double> enginesN1Percentage;  //!< N1 per engine [%]
             double speedBrakeRatio;             //!< Speed break ratio [%]
-            double seaLevelPressureInHg;        //!< Sea level pressure [inhg]
+            double pressureAltitudeFt;          //!< Pressure altitude [inhg]
         };
 
         //! Flightgear ISimulator implementation
