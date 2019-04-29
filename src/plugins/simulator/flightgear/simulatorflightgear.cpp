@@ -955,6 +955,13 @@ namespace BlackSimPlugin
             bool result = service.isValid() && traffic.isValid();
             if (! result) { return; }
 
+            QString flightgearVersion = service.getVersionNumber();
+            QString flightgearVersionMinimum = "2019.2.0";
+
+            if(flightgearVersion < flightgearVersionMinimum){
+                CLogMessage(this).error(u"You are using Flightgear %1. This version of swift is only compatible with Flightgear %2 or newer. Consider upgrading!") << flightgearVersion << flightgearVersionMinimum;
+                return;
+            }
             if (!traffic.initialize())
             {
                 CLogMessage(this).error(u"Connection to FGSwiftBus successful, but could not initialize FGSwiftBus.");
