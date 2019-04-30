@@ -868,7 +868,7 @@ namespace BlackCore
         QPointer<CAirspaceMonitor> myself(this);
         for (const CSimulatedAircraft &ac : aircraft)
         {
-            QTimer::singleShot(c * 25, this, [ = ]
+            QTimer::singleShot(c++ * 25, this, [ = ]
             {
                 if (!myself) { return; }
                 myself->addNewAircraftInRange(ac);
