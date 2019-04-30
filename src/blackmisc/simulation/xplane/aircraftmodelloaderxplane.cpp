@@ -499,9 +499,12 @@ namespace BlackMisc
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+                    const CStatusMessage m = CStatusMessage(this).warning(u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
                     m_loadingMessages.push_back(m);
-                    return false;
+                    if (tokens.size() < 2)
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }
