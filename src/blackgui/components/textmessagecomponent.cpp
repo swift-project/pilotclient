@@ -467,7 +467,7 @@ namespace BlackGui
 
             // sound
             const bool playSound = !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
-            if (playSound)
+            if (sGui && sGui->getIContextAudio() && playSound)
             {
                 const CSettings settings = m_audioSettings.get();
                 if (textMessage.isSupervisorMessage() && settings.textMessageSupervisor())

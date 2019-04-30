@@ -55,15 +55,24 @@ namespace BlackMisc
             m_notificationSoundDir = d;
         }
 
+        void CSettings::setNotificationVolume(int volume)
+        {
+            m_notificationVolume = volume;
+            if (m_notificationVolume < 0) { m_notificationVolume = 0; }
+            else if (m_notificationVolume > 100) { m_notificationVolume = 100; }
+        }
+
         QString CSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return u"Notification flags: " % CNotificationSounds::toString(this->getNotification());
+            return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
+                   u" volume: " % QString::number(m_notificationVolume);
         }
 
         void CSettings::initDefaultValues()
         {
             this->setNotification(CNotificationSounds::AllNotifications);
+            m_notificationVolume = 90;
         }
     } // namespace
 } // namespace

@@ -449,7 +449,9 @@ namespace BlackCore
                 }
             }
 
-            m_notificationPlayer.play(notification, 90);
+            int volume = 90;
+            if (considerSettings) { volume = qMax(25, settings.getNotificationVolume()); }
+            m_notificationPlayer.play(notification, 100);
         }
 
         void CContextAudio::enableAudioLoopback(bool enable)
