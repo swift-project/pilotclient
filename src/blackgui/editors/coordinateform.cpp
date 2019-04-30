@@ -122,6 +122,10 @@ namespace BlackGui
             ui->le_Elevation->setText(elvString);
             ui->lblp_ElvCheck->setTicked(!elvString.isEmpty());
 
+            std::array<double, 3> v = coordinate.normalVectorDouble();
+            ui->le_X->setText(QString::number(v[0]));
+            ui->le_Y->setText(QString::number(v[1]));
+            ui->le_Z->setText(QString::number(v[2]));
             return true;
         }
 
