@@ -188,8 +188,9 @@ namespace BlackMisc
         QThread *workerThread = thread(); // must be before quit()
         this->quit();
 
-        bool ok = workerThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
-        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
+        // T647, discussed here: https://discordapp.com/channels/539048679160676382/539925070550794240/573260844004016148
+        const bool ok = workerThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        BLACK_AUDIT_X(ok, Q_FUNC_INFO, "Wait timeout"); // MS 2019-05 VERIFY because we want a stack trace of all threads, via breakpad
         Q_UNUSED(ok);
     }
 
