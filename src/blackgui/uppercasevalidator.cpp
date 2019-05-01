@@ -30,11 +30,17 @@ namespace BlackGui
         if (minLength < 1) { m_optionalValue = true; };
     }
 
+    void CUpperCaseValidator::setAllowedCharacters09AZ()
+    {
+        static const QString chars("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        this->setAllowedCharacters(chars);
+    }
+
     QValidator::State CUpperCaseValidator::validate(QString &input, int &pos) const
     {
         Q_UNUSED(input);
         Q_UNUSED(pos);
-        fixup(input);
+        this->fixup(input);
 
         if (m_optionalValue && input.isEmpty()) { return Acceptable; }
         if (input.length() > m_maxLength) { return Invalid; }

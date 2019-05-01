@@ -122,8 +122,12 @@ namespace BlackGui
             // So I use no ranges in the CUpperCaseValidators, as this disables the signals for invalid values
 
             // own aircraft
-            ui->le_Callsign->setMaxLength(LogoffIntervalSeconds);
-            ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
+            constexpr int MaxLength = 10;
+            constexpr int MinLength = 0;
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Callsign);
+            // ucv->setAllowedCharacters09AZ();
+            ui->le_Callsign->setMaxLength(MaxLength);
+            ui->le_Callsign->setValidator(ucv);
             connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
 
             ui->le_AircraftCombinedType->setMaxLength(3);

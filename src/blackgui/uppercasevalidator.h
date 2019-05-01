@@ -38,6 +38,9 @@ namespace BlackGui
         //! Allowed characters
         void setAllowedCharacters(const QString &chars) { m_allowedCharacters = chars.toUpper(); }
 
+        //! Set the allowed characters as 0-9 and A-Z
+        void setAllowedCharacters09AZ();
+
         //! \copydoc QValidator::validate
         virtual State validate(QString &input, int &pos) const override;
 
