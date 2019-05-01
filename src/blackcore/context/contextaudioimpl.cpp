@@ -87,7 +87,7 @@ namespace BlackCore
 
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
-            changeDeviceSettings();
+            this->changeDeviceSettings();
         }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
@@ -160,17 +160,23 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;}
             m_voiceChannelMapping.clear();
-            m_channel1->leaveVoiceRoom();
-            m_channel2->leaveVoiceRoom();
-            m_unusedVoiceChannels.push_back(m_channel1);
-            m_unusedVoiceChannels.push_back(m_channel2);
+            if (m_channel1)
+            {
+                m_channel1->leaveVoiceRoom();
+                m_unusedVoiceChannels.push_back(m_channel1);
+            }
+            if (m_channel2)
+            {
+                m_channel2->leaveVoiceRoom();
+                m_unusedVoiceChannels.push_back(m_channel2);
+            }
         }
 
         CIdentifier CContextAudio::audioRunsWhere() const
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            static const BlackMisc::CIdentifier i("CContextAudio");
+            static const CIdentifier i("CContextAudio");
             return i;
         }
 
@@ -299,8 +305,8 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
 
             const CVoiceRoomList currentRooms = this->getComVoiceRooms();
-            const CVoiceRoom currentRoomCom1 = currentRooms[0];
-            const CVoiceRoom currentRoomCom2 = currentRooms[1];
+            const CVoiceRoom currentRoomCom1  = currentRooms[0];
+            const CVoiceRoom currentRoomCom2  = currentRooms[1];
             CVoiceRoom newRoomCom1 = newRooms[0];
             CVoiceRoom newRoomCom2 = newRooms[1];
             const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());

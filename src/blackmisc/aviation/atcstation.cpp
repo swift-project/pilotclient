@@ -280,6 +280,11 @@ namespace BlackMisc
             return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
         }
 
+        bool CAtcStation::isComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+        {
+            return comUnit.isActiveFrequencyWithinChannelSpacing(this->getFrequency());
+        }
+
         bool CAtcStation::isFrequencyWithinChannelSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing) const
         {
             return CComSystem::isWithinChannelSpacing(frequency, this->getFrequency(), spacing);

@@ -89,6 +89,12 @@ namespace BlackGui
             //! Update voice room related information
             void updateVoiceRoomStatusFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
+            //! Update the cockpit from aircraft context
+            void forceCockpitUpdateFromOwnAircraftContext();
+
+            //! Stations changed
+            void onAtcStationsChanged();
+
             QScopedPointer<Ui::CCockpitComComponent> ui;
         };
     } // namespace

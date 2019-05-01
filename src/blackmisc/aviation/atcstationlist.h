@@ -46,8 +46,11 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAtcStationList(const CSequence<CAtcStation> &other);
 
-            //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
+            //! Find 0..n stations tune in frequency of COM unit (with 25kHz channel spacing)
             CAtcStationList findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const;
+
+            //! Find 0..n stations tune in frequency of COM unit (with channel spacing)
+            CAtcStationList findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const;
 
             //! Find 0..n stations within channel spacing
             CAtcStationList findIfFrequencyIsWithinSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing);

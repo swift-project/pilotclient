@@ -195,7 +195,7 @@ namespace BlackCore
             if (!m_voiceRoom1UrlOverride.isEmpty()) { rooms[0] = CVoiceRoom(m_voiceRoom1UrlOverride); }
             if (!m_voiceRoom2UrlOverride.isEmpty()) { rooms[1] = CVoiceRoom(m_voiceRoom2UrlOverride); }
 
-            // set the rooms
+            // set the rooms on the side where the audio is located
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
         }
 
@@ -442,7 +442,7 @@ namespace BlackCore
             const CSimulatedAircraft myAircraft(this->getOwnAircraft());
 
             // relevant frequency
-            if (myAircraft.getCom1System().isActiveFrequencyWithin8_33kHzChannel(atcStation.getFrequency()) || myAircraft.getCom2System().isActiveFrequencyWithin8_33kHzChannel(atcStation.getFrequency()))
+            if (myAircraft.getCom1System().isActiveFrequencyWithinChannelSpacing(atcStation.getFrequency()) || myAircraft.getCom2System().isActiveFrequencyWithinChannelSpacing(atcStation.getFrequency()))
             {
                 this->resolveVoiceRooms(); // online status changed
             }

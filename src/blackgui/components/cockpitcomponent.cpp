@@ -79,7 +79,7 @@ namespace BlackGui
             static const QSize defaultSizeHidden(300, 150);
 
             // keep old size
-            QSize manuallySetSize = this->window()->size();
+            const QSize manuallySetSize = this->window()->size();
 
             // hide area
             ui->comp_CockpitInfoArea->setVisible(show);
@@ -132,6 +132,11 @@ namespace BlackGui
         void CCockpitComponent::onRequestTextMessageCom2()
         {
             this->requestTextMessageEntryTab(TextMessagesCom2);
+        }
+
+        void CCockpitComponent::onATCStationsChanged()
+        {
+            // void
         }
 
         void CCockpitComponent::onToggleFloating(bool floating)

@@ -58,8 +58,7 @@ namespace BlackGui
             ui->setupUi(this);
 
             // init from aircraft
-            const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
-            this->updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
+            this->forceCockpitUpdateFromOwnAircraftContext();
 
             // COM form
             connect(ui->editor_Com, &CCockpitComForm::testSelcal,             this, &CCockpitComComponent::testSelcal);
@@ -75,11 +74,15 @@ namespace BlackGui
             // hook up with changes from own aircraft context
             if (sGui)
             {
+                // own aircraft
                 connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
                 connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal,          this, &CCockpitComComponent::updateSelcalFromContext,  Qt::QueuedConnection);
 
                 // hook up with audio context
                 connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
+
+                // network
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
             }
         }
 
@@ -169,6 +172,18 @@ namespace BlackGui
             Q_ASSERT(selectedVoiceRooms.size() == 2);
             Q_UNUSED(connected);
             ui->editor_Com->setVoiceRoomStatus(selectedVoiceRooms);
+        }
+
+        void CCockpitComComponent::forceCockpitUpdateFromOwnAircraftContext()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+            this->updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
+        }
+
+        void CCockpitComComponent::onAtcStationsChanged()
+        {
+            // void
         }
 
         void CCockpitComComponent::updateSelcalInContext(const CSelcal &selcal)

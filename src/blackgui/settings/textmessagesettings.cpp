@@ -56,7 +56,7 @@ namespace BlackGui
             if (textMessage.isRadioMessage())
             {
                 if (!this->popupFrequencyMessages()) { return false; }
-                if (ownAircraft.isActiveFrequencyWithin25kHzChannel(textMessage.getFrequency())) { return true; }
+                if (ownAircraft.isActiveFrequencyWithinChannelSpacing(textMessage.getFrequency())) { return true; }
             }
             return false;
         }

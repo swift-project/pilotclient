@@ -204,6 +204,9 @@ namespace BlackMisc
             //! Tuned in within 25KHz channel spacing
             bool isComUnitTunedIn25KHz(const Aviation::CComSystem &comUnit) const;
 
+            //! Tuned in within channel spacing
+            bool isComUnitTunedInChannelSpacing(const Aviation::CComSystem &comUnit) const;
+
             //! Is frequency within channel spacing
             bool isFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing) const;
 

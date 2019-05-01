@@ -39,6 +39,14 @@ namespace BlackMisc
             });
         }
 
+        CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
+        {
+            return this->findBy([&](const CAtcStation & atcStation)
+            {
+                return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+            });
+        }
+
         CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
         {
             if (frequency.isNull()) { return CAtcStationList(); }

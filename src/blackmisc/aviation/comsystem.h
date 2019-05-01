@@ -96,8 +96,8 @@ namespace BlackMisc
             //! Is active frequency within 25kHz channel?
             bool isActiveFrequencyWithin50kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
 
-            //! Is active frequency within 25kHz channel?
-            bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency, CComSystem::ChannelSpacing channelSpacing) const;
+            //! Is active frequency within the channel spacing?
+            bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency) const;
 
             //! Set UNICOM frequency as active
             void setActiveUnicom();
@@ -105,13 +105,18 @@ namespace BlackMisc
             //! Set International Air Distress 121.5MHz
             void setActiveInternationalAirDistress();
 
+            //! Get channel spacing
+            ChannelSpacing getChannelSpacing() const { return m_channelSpacing; }
+
+            //! Set channel spacing
+            void setChannelSpacing(ChannelSpacing spacing) { m_channelSpacing = spacing; }
+
             //! COM1 unit
             static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
             //! COM1 unit
             static CComSystem getCom1System(const PhysicalQuantities::CFrequency &activeFrequency,
                                             const PhysicalQuantities::CFrequency &standbyFrequency = { 0, PhysicalQuantities::CFrequencyUnit::nullUnit() });
-
             //! COM2 unit
             static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 

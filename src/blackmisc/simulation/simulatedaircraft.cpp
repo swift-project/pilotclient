@@ -565,6 +565,12 @@ namespace BlackMisc
                    m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
         }
 
+        bool CSimulatedAircraft::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
+        {
+            return m_com1system.isActiveFrequencyWithinChannelSpacing(comFrequency) ||
+                   m_com2system.isActiveFrequencyWithinChannelSpacing(comFrequency);
+        }
+
         bool CSimulatedAircraft::setTransponderMode(CTransponder::TransponderMode mode)
         {
             return (m_transponder.setTransponderMode(mode));
@@ -580,7 +586,7 @@ namespace BlackMisc
                               u' ' % m_transponder.toQString(i18n) %
                               u" enabled: " % BlackMisc::boolToYesNo(this->isEnabled()) %
                               u" rendered: " % BlackMisc::boolToYesNo(this->isRendered()) %
-                              u' '% this->getModel().toQString(i18n);
+                              u' ' % this->getModel().toQString(i18n);
             return s;
         }
     } // namespace

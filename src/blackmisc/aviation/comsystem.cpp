@@ -73,9 +73,9 @@ namespace BlackMisc
             return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing50KHz);
         }
 
-        bool CComSystem::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency, CComSystem::ChannelSpacing channelSpacing) const
+        bool CComSystem::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
         {
-            return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, channelSpacing);
+            return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, m_channelSpacing);
         }
 
         void CComSystem::setActiveUnicom()
@@ -149,7 +149,7 @@ namespace BlackMisc
         bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
         {
             if (setFrequency.isNull() || compareFrequency.isNull()) { return false; }
-            if (setFrequency == compareFrequency) return true; // shortcut for many of such comparisons
+            if (setFrequency == compareFrequency) { return true; } // shortcut for many of such comparisons
             const double channelSpacingKHz = 0.5 * CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
             const double compareFrequencyKHz = compareFrequency.value(CFrequencyUnit::kHz());
             const double setFrequencyKHz = setFrequency.value(CFrequencyUnit::kHz());

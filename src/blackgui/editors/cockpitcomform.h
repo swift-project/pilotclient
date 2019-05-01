@@ -112,7 +112,7 @@ namespace BlackGui
             void updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1S, bool com1R, bool com2S, bool com2R);
 
             //! Update from simulator context
-            void updateIntegrateFromSimulatorContext();
+            void updateIntegratedFlagFromSimulatorContext();
 
             //! Compare 2 frequencies (consider epsilon)
             static bool isFrequenceEqual(double f1, double f2);

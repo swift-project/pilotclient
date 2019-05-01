@@ -22,6 +22,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 using namespace BlackGui::Components;
 
 namespace BlackGui
@@ -90,7 +91,7 @@ namespace BlackGui
             return msgs;
         }
 
-        void CCockpitComForm::setVoiceRoomStatus(const Audio::CVoiceRoomList &selectedVoiceRooms)
+        void CCockpitComForm::setVoiceRoomStatus(const CVoiceRoomList &selectedVoiceRooms)
         {
             Q_ASSERT_X(selectedVoiceRooms.size() == 2, Q_FUNC_INFO, "Expect 2 voice rooms");
             const CVoiceRoom room1 = selectedVoiceRooms[0];
@@ -229,7 +230,7 @@ namespace BlackGui
                 ui->ds_ComPanelCom2Standby->setValue(freq);
             }
 
-            this->updateIntegrateFromSimulatorContext();
+            this->updateIntegratedFlagFromSimulatorContext();
             this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isSendEnabled(), com1.isReceiveEnabled(), com2.isSendEnabled(), com2.isReceiveEnabled());
         }
 
@@ -313,7 +314,7 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComForm::updateIntegrateFromSimulatorContext()
+        void CCockpitComForm::updateIntegratedFlagFromSimulatorContext()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
             {

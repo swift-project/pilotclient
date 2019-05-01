@@ -290,6 +290,9 @@ namespace BlackMisc
             //! Is any (COM1/2) active frequency within 25kHz channel?
             bool isActiveFrequencyWithin25kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
 
+            //! Is any (COM1/2) active frequency within the COM units channel spacing?
+            bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency) const;
+
             //! Get transponder
             const Aviation::CTransponder &getTransponder() const { return m_transponder; }
 

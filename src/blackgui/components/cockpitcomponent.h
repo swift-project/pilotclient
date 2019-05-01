@@ -69,6 +69,9 @@ namespace BlackGui
             void onRequestTextMessageCom2();
             //! @}
 
+            //! ATC stations have been changed
+            void onATCStationsChanged();
+
             QScopedPointer<Ui::CCockpitComponent> ui;
             QSize m_sizeFloatingShown;    //! size when info area is shown
             QSize m_sizeFloatingHidden;   //! size when info area is hidden

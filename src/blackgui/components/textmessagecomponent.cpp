@@ -66,6 +66,7 @@ namespace BlackGui
             ui->tw_TextMessages->setCurrentIndex(0);
             ui->fr_TextMessage->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
+            ui->tvp_TextMessagesAll->setWordWrap(false);
             ui->comp_AtcStations->setWithIcons(false);
 
             // lep_textMessages is the own line edit
@@ -499,11 +500,11 @@ namespace BlackGui
             if (!station.getCallsign().isEmpty())
             {
                 const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-                if (ownAircraft.getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                if (ownAircraft.getCom1System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
                 {
                     return this->getTabWidget(TextMessagesCom1);
                 }
-                else if (ownAircraft.getCom2System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                else if (ownAircraft.getCom2System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
                 {
                     return this->getTabWidget(TextMessagesCom2);
                 }

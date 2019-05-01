@@ -288,7 +288,7 @@ namespace BlackCore
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem) const
     {
         CAtcStation station;
-        CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedIn25KHz(comSystem);
+        CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedInChannelSpacing(comSystem);
         if (stations.isEmpty()) { return station; }
         stations.sortByDistanceToReferencePosition();
         return stations.front();
