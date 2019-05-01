@@ -7,13 +7,15 @@
  */
 
 
-#include "blackcore/audiodevice.h"
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/application.h"
+#include "blackcore/audiodevice.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/voice.h"
 #include "blackcore/vatsim/voicevatlib.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
@@ -25,7 +27,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
 #include "blacksound/soundgenerator.h"
 
@@ -88,6 +89,13 @@ namespace BlackCore
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
             this->changeDeviceSettings();
+            QPointer<CContextAudio> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself) { return; }
+                if (!sApp || sApp->isShuttingDown()) { return; }
+                myself->onChangedAudioSettings();
+            });
         }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
