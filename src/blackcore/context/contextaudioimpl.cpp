@@ -438,7 +438,7 @@ namespace BlackCore
             }
         }
 
-        void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings) const
+        void CContextAudio::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume) const
         {
             Q_ASSERT(m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
@@ -455,9 +455,12 @@ namespace BlackCore
                 }
             }
 
-            int volume = 90;
-            if (considerSettings) { volume = qMax(25, settings.getNotificationVolume()); }
-            m_notificationPlayer.play(notification, 100);
+            if (volume < 0 || volume > 100)
+            {
+                volume = 90;
+                if (considerSettings) { volume = qMax(25, settings.getNotificationVolume()); }
+            }
+            m_notificationPlayer.play(notification, volume);
         }
 
         void CContextAudio::enableAudioLoopback(bool enable)

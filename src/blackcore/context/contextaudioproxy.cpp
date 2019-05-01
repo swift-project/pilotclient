@@ -130,9 +130,9 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1String("playSelcalTone"), selcal);
         }
 
-        void CContextAudioProxy::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings) const
+        void CContextAudioProxy::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume) const
         {
-            this->m_dBusInterface->callDBus(QLatin1String("playNotification"), notification, considerSettings);
+            this->m_dBusInterface->callDBus(QLatin1String("playNotification"), notification, considerSettings, volume);
         }
 
         void CContextAudioProxy::setVoiceOutputVolume(int volume)

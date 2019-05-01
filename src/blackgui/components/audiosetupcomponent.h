@@ -76,6 +76,9 @@ namespace BlackGui
             //! Audio is optional, check if available
             bool hasAudio() const;
 
+            //! Volume has been changed
+            void onVolumeChanged(int volume);
+
             //! CheckBox to flag
             BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 

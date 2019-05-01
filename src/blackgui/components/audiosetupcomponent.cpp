@@ -104,6 +104,8 @@ namespace BlackGui
                 Q_ASSERT(c);
                 c = connect(ui->pb_SoundDir,   &QPushButton::released, this, &CAudioSetupComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
                 Q_ASSERT(c);
+                c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioSetupComponent::onVolumeChanged);
+                Q_ASSERT(c);
             }
             Q_UNUSED(c);
         }
@@ -135,6 +137,7 @@ namespace BlackGui
             ui->cb_SetupAudioNoTransmission->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission));
 
             ui->le_SoundDir->setText(as.getNotificationSoundDirectory());
+            ui->sb_NotificationValueVolume->setValue(as.getNotificationVolume());
         }
 
         void CAudioSetupComponent::initAudioDeviceLists()
@@ -147,6 +150,15 @@ namespace BlackGui
         bool CAudioSetupComponent::hasAudio() const
         {
             return sGui && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
+        }
+
+        void CAudioSetupComponent::onVolumeChanged(int volume)
+        {
+            volume = qMax(25, qMin(100, volume));
+            CSettings as(m_audioSettings.getThreadLocal());
+            if (as.getNotificationVolume() == volume) { return; }
+            as.setNotificationVolume(volume);
+            m_audioSettings.set(as);
         }
 
         CNotificationSounds::NotificationFlag CAudioSetupComponent::checkBoxToFlag(const QCheckBox *cb) const
@@ -252,7 +264,7 @@ namespace BlackGui
             if (checked && this->hasAudio() && sender)
             {
                 const CNotificationSounds::NotificationFlag f = this->checkBoxToFlag(sender);
-                sGui->getIContextAudio()->playNotification(f, false);
+                sGui->getIContextAudio()->playNotification(f, false, as.getNotificationVolume());
             }
         }
 
