@@ -344,6 +344,8 @@ namespace BlackMisc
             if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
+                CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") <<
+                        currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
             }
             if (!valid) { return CAircraftSituation::null(); }
 

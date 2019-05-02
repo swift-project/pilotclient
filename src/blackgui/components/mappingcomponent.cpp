@@ -131,19 +131,19 @@ namespace BlackGui
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);
 
             // connect
-            connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::onModelSetChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::tokenBucketUpdate, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CMappingComponent::onAddingRemoteAircraftFailed, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CMappingComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CMappingComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedGndFlagCapability, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CMappingComponent::tokenBucketUpdate, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onConnectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged,          this, &CMappingComponent::onModelSetChanged,            Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted,   this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled,  this, &CMappingComponent::tokenBucketUpdate,            Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed,  this, &CMappingComponent::onAddingRemoteAircraftFailed, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,   this, &CMappingComponent::onSimulatorPluginChanged,     Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,   this, &CMappingComponent::onSimulatorStatusChanged,     Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::changedGndFlagCapability,   this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::removedAircraft,            this, &CMappingComponent::tokenBucketUpdate,            Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(),   &IContextNetwork::connectionStatusChanged,    this, &CMappingComponent::onConnectionStatusChanged,    Qt::QueuedConnection);
 
             connect(ui->tw_SpecializedViews, &QTabWidget::currentChanged, this, &CMappingComponent::onTabWidgetChanged);
 
