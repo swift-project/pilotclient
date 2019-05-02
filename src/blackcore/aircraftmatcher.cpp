@@ -836,7 +836,11 @@ namespace BlackCore
             const QString modelString = remoteAircraft.getModelString();
             const CAircraftModelList disabledModels({ remoteAircraft.getModel() });
             this->disableModelsForMatching(disabledModels, true);
-            CLogMessage(this).warning(u"Disabled model '%1' for matching") << modelString;
+            CLogMessage(this).warning(u"Disabled CS: '%1' model '%2' for matching") << remoteAircraft.getCallsignAsString() << modelString;
+        }
+        else
+        {
+            CLogMessage(this).warning(u"Disabled '%1' for matching") << remoteAircraft.toQString(true);
         }
     }
 
