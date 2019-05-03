@@ -73,6 +73,7 @@ namespace BlackSimPlugin
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
             pbhstrct.bank  = ~pbhstrct.bank;
+            pbhstrct.onground = newSituation.isOnGround() ? 1 : 0;
             positionVelocity.pbh = pbhstrct.pbh;
 
             // Ground velocity
@@ -129,6 +130,8 @@ namespace BlackSimPlugin
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
             pbhstrct.bank = ~pbhstrct.bank;
+
+            pbhstrct.onground = situation.isOnGround() ? 1 : 0;
             positionSlewMode.pbh = pbhstrct.pbh;
 
             return positionSlewMode;
