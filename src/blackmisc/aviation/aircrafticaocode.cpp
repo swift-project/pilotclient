@@ -468,7 +468,8 @@ namespace BlackMisc
             if (!m_combinedType.isEmpty())
             {
                 if (
-                    m_combinedType.startsWith('G') || // gyrocopter
+                    // Ref T654, G is GLIDER at the moment, G as gyrocopyter will be used as in future
+                    // m_combinedType.startsWith('G') || // gyrocopter
                     m_combinedType.startsWith('H') || // helicopter
                     m_combinedType.startsWith('T')    // tilt wing
                 ) { return true; }
