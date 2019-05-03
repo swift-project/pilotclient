@@ -9,6 +9,8 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/crashhandler.h"
+#include "blackmisc/appstarttime.h"
 #include "swiftguistd.h"
 #include "swiftguistdapplication.h"
 
@@ -25,6 +27,8 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // application init needed
+
+    CCrashHandler::instance()->init();
     CSwiftGuiStdApplication a; // application with contexts
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swift256());

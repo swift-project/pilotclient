@@ -43,10 +43,6 @@
 #include <atomic>
 #include <functional>
 
-#if !defined(Q_CC_MINGW)
-#define BLACK_USE_CRASHPAD
-#endif
-
 class QHttpMultiPart;
 class QNetworkReply;
 class QNetworkRequest;
@@ -55,12 +51,6 @@ namespace BlackMisc
 {
     class CFileLogger;
     class CLogCategoryList;
-}
-
-namespace crashpad
-{
-    class CrashpadClient;
-    class CrashReportDatabase;
 }
 
 namespace BlackCore
@@ -303,26 +293,6 @@ namespace BlackCore
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
         //! @}
 
-        // ----------------------- Crash info ---------------------------------
-
-        //! Extra annotation for crash to easier identify annotation
-        void setCrashInfo(const BlackMisc::CCrashInfo &info);
-
-        //! User name for crash info
-        void crashAndLogInfoUserName(const QString &name);
-
-        //! Simulator string
-        void crashAndLogInfoSimulator(const QString &simulator);
-
-        //! Flight network
-        void crashAndLogInfoFlightNetwork(const QString &flightNetwork);
-
-        //! Append crash info
-        void crashAndLogAppendInfo(const QString &info);
-
-        //! Get the crash info
-        const BlackMisc::CCrashInfo &getCrashInfo() const { return m_crashAndLogInfo; }
-
         //! Simulate a crash
         //! \private only for testing purposes
         void simulateCrash();
@@ -330,9 +300,6 @@ namespace BlackCore
         //! Enable crash upload
         //! \remark only change for testing
         void enableCrashDumpUpload(bool enable);
-
-        //! Is crash dump upload enabled
-        bool isCrashDumpUploadEnabled() const;
 
         //! Has crashpad support?
         bool isSupportingCrashpad() const;
@@ -727,22 +694,10 @@ namespace BlackCore
         bool m_localSettingsLoaded    = false; //!< local settings loaded?
 
         // -------------- crashpad -----------------
-        //! Init the crash handler
-        BlackMisc::CStatusMessageList initCrashHandler();
+        BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
 
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();
-
-#ifdef BLACK_USE_CRASHPAD
-        std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
-        std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
-        BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
-#endif
-        // crash info
-        void triggerCrashInfoWrite();
-
-        BlackMisc::CCrashInfo m_crashAndLogInfo; //!< info representing details
-        BlackMisc::CDigestSignal m_dsCrashAndLogInfo { this, &CApplication::triggerCrashInfoWrite, 10000, 5 };
     };
 } // namespace
 

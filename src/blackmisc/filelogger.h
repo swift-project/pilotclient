@@ -32,16 +32,6 @@ namespace BlackMisc
         //! Filename defaults to QCoreApplication::applicationName() and path to "."
         CFileLogger(QObject *parent = nullptr);
 
-        /*!
-         * Constructor
-         * \param applicationName Use the applications name without any extension.
-         *                        A timestamp and extension will be added automatically.
-         * \param logPath Path the log files is written to. If you leave this empty, the
-         *                file will be written in the working directory of the binary.
-         * \param parent QObject parent
-         */
-        CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent = nullptr);
-
         //! Destructor.
         virtual ~CFileLogger();
 
@@ -51,20 +41,18 @@ namespace BlackMisc
         //! Close file
         void close();
 
-        //! Get the current log file path
-        QString getLogFilePath() const { return m_logFile.fileName(); }
+        //! Get the log file name
+        static QString getLogFileName();
 
-        //! Get the current log file name
-        QString getLogFileName() const { return m_fileName; }
+        //! Get the log file path (including its name)
+        static QString getLogFilePath();
 
     private slots:
         //! Write single status message to file
         void ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
 
     private:
-        QString getFullFileName();
         void removeOldLogFiles();
-
         void writeHeaderToFile();
         void writeContentToFile(const QString &content);
 
@@ -72,8 +60,6 @@ namespace BlackMisc
         QFile m_logFile;
         QString m_fileName;
         QTextStream m_stream;
-        QString m_applicationName;
-        QString m_logPath; //!< Empty by default. Hence the working directory "." is used
         QString m_previousCategories;
     };
 }

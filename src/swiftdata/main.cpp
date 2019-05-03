@@ -10,6 +10,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/crashhandler.h"
+#include "blackmisc/appstarttime.h"
 #include "swiftdata.h"
 
 #include <stdlib.h>
@@ -26,6 +28,8 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa);
+
+    CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swiftDatabase256());

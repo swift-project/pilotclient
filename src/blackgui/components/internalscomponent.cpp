@@ -25,6 +25,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/crashhandler.h"
 #include "blackconfig/buildconfig.h"
 
 #include "ui_internalscomponent.h"
@@ -93,7 +94,7 @@ namespace BlackGui
 
             if (sGui && sGui->isSupportingCrashpad())
             {
-                ui->cb_CrashDumpUpload->setChecked(sGui->isCrashDumpUploadEnabled());
+                ui->cb_CrashDumpUpload->setChecked(CCrashHandler::instance()->isCrashDumpUploadEnabled());
                 connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash);
                 connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled, this, &CInternalsComponent::onCrashDumpUploadToggled);
             }
@@ -348,7 +349,7 @@ namespace BlackGui
         {
             if (sGui && sGui->isSupportingCrashpad())
             {
-                const bool current = sGui->isCrashDumpUploadEnabled();
+                const bool current = CCrashHandler::instance()->isCrashDumpUploadEnabled();
                 if (current == checked) { return; }
                 sGui->enableCrashDumpUpload(checked);
             }

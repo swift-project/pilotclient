@@ -14,6 +14,7 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/crashhandler.h"
 
 #include <QVersionNumber>
 #include <QJsonObject>
@@ -165,7 +166,7 @@ namespace BlackCore
             if (CBuildConfig::isLocalDeveloperDebugBuild()) { pingUrl.appendQuery("dev", "true"); }
             if (sApp)
             {
-                const CCrashInfo ci = sApp->getCrashInfo();
+                const CCrashInfo ci = CCrashHandler::instance()->getCrashInfo();
                 pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
                 if (!ci.getSimulatorString().isEmpty()) { pingUrl.appendQuery("fs", ci.getSimulatorString()); }
                 if (!ci.getFlightNetworkString().isEmpty()) { pingUrl.appendQuery("network", ci.getFlightNetworkString()); }

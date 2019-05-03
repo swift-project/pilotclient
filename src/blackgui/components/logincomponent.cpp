@@ -35,6 +35,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/crashhandler.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QDialogButtonBox>
@@ -324,9 +325,9 @@ namespace BlackGui
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
                     sGui->setExtraWindowTitle(QStringLiteral("[%1]").arg(ownAircraft.getCallsignAsString()));
-                    sGui->crashAndLogInfoUserName(currentServer.getUser().getRealNameAndId());
-                    sGui->crashAndLogInfoFlightNetwork(currentServer.getEcosystem().toQString(true));
-                    sGui->crashAndLogAppendInfo(currentServer.getServerSessionId(false));
+                    CCrashHandler::instance()->crashAndLogInfoUserName(currentServer.getUser().getRealNameAndId());
+                    CCrashHandler::instance()->crashAndLogInfoFlightNetwork(currentServer.getEcosystem().toQString(true));
+                    CCrashHandler::instance()->crashAndLogAppendInfo(currentServer.getServerSessionId(false));
                     m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
                     ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
@@ -550,7 +551,7 @@ namespace BlackGui
                 const CSimulatorInfo sim = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
                 const CSimulatorInternals simulatorInternals = sGui->getIContextSimulator()->getSimulatorInternals();
                 const QString simStr = sim.toQString() + QStringLiteral(" ") + simulatorInternals.getSimulatorVersion();
-                sGui->crashAndLogInfoSimulator(simStr);
+                CCrashHandler::instance()->crashAndLogInfoSimulator(simStr);
             }
             else
             {

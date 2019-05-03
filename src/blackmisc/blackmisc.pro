@@ -70,6 +70,10 @@ SOURCES +=  *.cpp \
             $$PWD/test/*.cpp \
             $$PWD/weather/*.cpp
 
+
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad/mini_chromium
+
 win32 {
     LIBS *= -lShell32 -lDbghelp -lversion
     # Remove the one below once the Reg functions are removed again from CIdentifier
@@ -78,6 +82,13 @@ win32 {
 win32-g++ {
     LIBS *= -lpsapi
 }
+
+msvc {
+    CONFIG(debug, debug|release): LIBS *= -lclientd -lutild -lbased -lRpcrt4 -lAdvapi32
+    CONFIG(release, debug|release): LIBS *= -lclient -lutil -lbase -lRpcrt4 -lAdvapi32
+}
+macx: LIBS += -lclient -lutil -lbase -lbsm -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation
+unix:!macx: LIBS *= -lclient -lutil -lbase
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin

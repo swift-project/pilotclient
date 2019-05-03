@@ -18,6 +18,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/crashhandler.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QLabel>
@@ -164,8 +165,8 @@ namespace BlackGui
                 }
 
                 // crashpad info
-                sGui->crashAndLogInfoUserName(user.getRealNameAndId());
-                sGui->crashAndLogAppendInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
+                CCrashHandler::instance()->crashAndLogInfoUserName(user.getRealNameAndId());
+                CCrashHandler::instance()->crashAndLogAppendInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
             }
             else
             {

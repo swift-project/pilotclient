@@ -12,6 +12,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/crashhandler.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
@@ -153,7 +154,7 @@ namespace BlackCore
     void ISimulator::reloadWeatherSettings()
     {
         // log crash info about weather
-        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
+        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
         if (!m_isWeatherActivated) { return; }
         const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
         if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
@@ -163,7 +164,7 @@ namespace BlackCore
         }
 
         // log crash info about weather
-        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
+        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
     }
 
     void ISimulator::clearAllRemoteAircraftData()
@@ -872,7 +873,7 @@ namespace BlackCore
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
-        if (sApp && !sApp->isShuttingDown()) { sApp->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
+        if (sApp && !sApp->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
         return true;
     }

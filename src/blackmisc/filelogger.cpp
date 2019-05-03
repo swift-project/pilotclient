@@ -7,8 +7,10 @@
  */
 
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/appstarttime.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/directoryutils.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -26,22 +28,33 @@ using namespace BlackConfig;
 
 namespace BlackMisc
 {
-    CFileLogger::CFileLogger(QObject *parent) :
-        CFileLogger(QCoreApplication::applicationName(), QString(), parent)
+    //! Get application name
+    QString applicationName()
     {
-        // void
+        static const QString applicationName = QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName();
+        return applicationName;
     }
 
-    CFileLogger::CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent) :
-        QObject(parent),
-        m_logFile(this),
-        m_applicationName(applicationName),
-        m_logPath(logPath)
+    //! Get log file name
+    QString logFileName()
     {
-        if (!m_logPath.isEmpty()) { QDir::root().mkpath(m_logPath); }
+        static const QString fileName = applicationName() %
+                QLatin1String("_") %
+                getApplicationStartTimeUtc().toString(QStringLiteral("yyMMddhhmmss")) %
+                QLatin1String("_") %
+                QString::number(QCoreApplication::applicationPid()) %
+                QLatin1String(".log");
+        return fileName;
+    }
+
+    CFileLogger::CFileLogger(QObject *parent) :
+        QObject(parent),
+        m_logFile(this)
+    {
+        Q_ASSERT(! applicationName().isEmpty());
+        QDir::root().mkpath(CDirectoryUtils::logDirectory());
         removeOldLogFiles();
-        if (!m_logPath.isEmpty() && !m_logPath.endsWith('/')) { m_logPath += '/'; }
-        m_logFile.setFileName(getFullFileName());
+        m_logFile.setFileName(getLogFilePath());
         m_logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
         m_stream.setDevice(&m_logFile);
         m_stream.setCodec("UTF-8");
@@ -66,6 +79,11 @@ namespace BlackMisc
         }
     }
 
+    QString CFileLogger::getLogFileName()
+    {
+        return logFileName();
+    }
+
     void CFileLogger::ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
     {
         if (statusMessage.isEmpty()) { return; }
@@ -85,26 +103,17 @@ namespace BlackMisc
         writeContentToFile(finalContent);
     }
 
-    QString CFileLogger::getFullFileName()
+    QString CFileLogger::getLogFilePath()
     {
-        QString filePath;
-        Q_ASSERT(!m_applicationName.isEmpty());
-        if (!m_logPath.isEmpty()) filePath += m_logPath;
-
-        m_fileName += m_applicationName;
-        m_fileName += QLatin1String("_");
-        m_fileName += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
-        m_fileName += QLatin1String("_");
-        m_fileName += QString::number(QCoreApplication::applicationPid());
-        m_fileName += QLatin1String(".log");
-        return filePath + m_fileName;
+        QString filePath = CDirectoryUtils::logDirectory() % '/' % logFileName();
+        return filePath;
     }
 
     void CFileLogger::removeOldLogFiles()
     {
-        QString nameFilter(m_applicationName);
+        QString nameFilter(applicationName());
         nameFilter += QLatin1String("*.log");
-        QDir dir(m_logPath, nameFilter, QDir::Name, QDir::Files);
+        QDir dir(CDirectoryUtils::logDirectory(), nameFilter, QDir::Name, QDir::Files);
 
         QDateTime now = QDateTime::currentDateTime();
         for (const auto &logFileInfo : dir.entryInfoList())
@@ -118,7 +127,7 @@ namespace BlackMisc
 
     void CFileLogger::writeHeaderToFile()
     {
-        m_stream << "This is " << m_applicationName;
+        m_stream << "This is " << applicationName();
         m_stream << " version " << CBuildConfig::getVersionString();
         m_stream << " running on " << QSysInfo::prettyProductName();
         m_stream << " " << QSysInfo::currentCpuArchitecture() << endl;

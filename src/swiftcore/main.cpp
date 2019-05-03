@@ -10,6 +10,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/crashhandler.h"
+#include "blackmisc/appstarttime.h"
 #include "swiftcore.h"
 
 #include <stdlib.h>
@@ -28,6 +30,8 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // init of qa is required, but qa not used
+
+    CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();

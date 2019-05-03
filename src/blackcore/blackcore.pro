@@ -20,9 +20,6 @@ INCLUDEPATH += pch
 
 DEFINES += LOG_IN_FILE BUILD_BLACKCORE_LIB
 
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad/mini_chromium
-
 HEADERS += *.h
 HEADERS += $$PWD/application/*.h
 HEADERS += $$PWD/audio/*.h
@@ -40,13 +37,6 @@ SOURCES += $$PWD/vatsim/*.cpp
 LIBS *= -lvatlib
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
-
-msvc {
-    CONFIG(debug, debug|release): LIBS *= -lclientd -lutild -lbased -lRpcrt4 -lAdvapi32
-    CONFIG(release, debug|release): LIBS *= -lclient -lutil -lbase -lRpcrt4 -lAdvapi32
-}
-macx: LIBS *= -lclient -lutil -lbase -lbsm -framework Security
-unix:!macx: LIBS *= -lclient -lutil -lbase
 
 OTHER_FILES += readme.txt *.xml
 
