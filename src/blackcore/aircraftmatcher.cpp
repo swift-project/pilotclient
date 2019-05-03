@@ -1088,7 +1088,11 @@ namespace BlackCore
 
             // not finding anything so far means we have no valid aircraft/airline ICAO combination
             // but it can happen we found B738, and for DLH there is no B738 but B737, so we search again
-            if (!r2 && mode.testFlag(CAircraftMatcherSetup::ByFamily))
+            if (!remoteAircraft.hasAirlineDesignator())
+            {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No airline, no secondary search for airline/aircraft", getLogCategories()); }
+            }
+            else if (!r2 && mode.testFlag(CAircraftMatcherSetup::ByFamily))
             {
                 if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, u"No exact ICAO match of '" % remoteAircraft.getAirlineAndAircraftIcaoCodeDesignators() % u"', will try family combination", getLogCategories()); }
 
