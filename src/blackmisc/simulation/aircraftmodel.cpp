@@ -258,7 +258,7 @@ namespace BlackMisc
             case IndexSupportedParts:        return CVariant(m_supportedParts);
             case IndexFileTimestamp:         return CVariant::fromValue(this->getFileTimestamp());
             case IndexFileTimestampFormattedYmdhms: return CVariant::fromValue(this->getFormattedFileTimestampYmdhms());
-            case IndexIconPath:              return CVariant(m_iconPath);
+            case IndexIconPath:              return CVariant(m_iconFile);
             case IndexAircraftIcaoCode:      return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexLivery:                return m_livery.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:              return m_callsign.propertyByIndex(index.copyFrontRemoved());
@@ -284,7 +284,7 @@ namespace BlackMisc
             case IndexDescription:      m_description = variant.toQString(); break;
             case IndexSimulatorInfo:    m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexName:             m_name = variant.toQString(); break;
-            case IndexIconPath:         m_iconPath = variant.toQString(); break;
+            case IndexIconPath:         m_iconFile = variant.toQString(); break;
             case IndexCG:               m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexSupportedParts:   this->setSupportedParts(variant.toQString()); break;
             case IndexModelType:        m_modelType = variant.value<ModelType>(); break;
@@ -345,7 +345,7 @@ namespace BlackMisc
             case IndexName:             return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexCallsign:         return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexFileName:         return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
-            case IndexIconPath:         return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
+            case IndexIconPath:         return m_iconFile.compare(compareValue.getIconFile(), Qt::CaseInsensitive);
             case IndexCG:               return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
             case IndexSupportedParts:   return m_supportedParts.compare(compareValue.getSupportedParts());
             case IndexModelTypeAsString:
@@ -567,10 +567,10 @@ namespace BlackMisc
         CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
         {
             static const CStatusMessage noIcon(this, CStatusMessage::SeverityInfo, u"no icon");
-            if (m_iconPath.isEmpty()) { success = noIcon; return CPixmap(); }
+            if (m_iconFile.isEmpty()) { success = noIcon; return CPixmap(); }
 
             // load from file
-            const CPixmap pm(CPixmap::loadFromFile(m_iconPath, success));
+            const CPixmap pm(CPixmap::loadFromFile(m_iconFile, success));
             return pm;
         }
 
@@ -659,6 +659,12 @@ namespace BlackMisc
             m_distributor.updateMissingParts(otherModel.getDistributor());
         }
 
+        void CAircraftModel::updateByExistingDirectories(const CAircraftModel &otherModel)
+        {
+            if (otherModel.hasExistingCorrespondingFile()) { this->setFileName(otherModel.getFileName()); }
+            if (otherModel.hasExistingIconFile()) { this->setIconFile(otherModel.getIconFile()); }
+        }
+
         bool CAircraftModel::hasQueriedModelString() const
         {
             return m_modelType == TypeQueriedFromNetwork && this->hasModelString();
@@ -710,13 +716,13 @@ namespace BlackMisc
             {
                 // other local, priority
                 this->setFileName(model.getFileName());
-                this->setIconPath(model.getIconPath());
+                this->setIconFile(model.getIconFile());
                 return;
             }
 
             // both not local, override empty values
             if (m_fileName.isEmpty()) { this->setFileName(model.getFileName()); }
-            if (m_iconPath.isEmpty()) { this->setIconPath(model.getIconPath()); }
+            if (m_iconFile.isEmpty()) { this->setIconFile(model.getIconFile()); }
         }
 
         bool CAircraftModel::adjustLocalFileNames(const QString &newModelDir, const QString &stripModelDirIndicator)
@@ -758,6 +764,13 @@ namespace BlackMisc
         {
             if (!this->hasFileName()) { return QStringLiteral(""); }
             return this->getFileDirectory().absolutePath();
+        }
+
+        bool CAircraftModel::hasExistingIconFile() const
+        {
+            if (m_iconFile.isEmpty()) { return false; }
+            const QFileInfo fi(m_iconFile);
+            return fi.exists();
         }
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const

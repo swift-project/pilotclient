@@ -100,7 +100,7 @@ namespace BlackGui
                     }
                 }
 
-                if (m_messageFrame && !model.getIconPath().isEmpty())
+                if (m_messageFrame && !model.getIconFile().isEmpty())
                 {
                     added = true;
                     menuActions.addMenuSimulator();
@@ -133,7 +133,7 @@ namespace BlackGui
             const CAircraftModelView *mv = modelView();
             if (!mv->hasSingleSelectedRow()) { return; }
             const CAircraftModel model(mv->selectedObject());
-            if (model.getIconPath().isEmpty()) { return; }
+            if (model.getIconFile().isEmpty()) { return; }
             CStatusMessage msg(this);
             const CPixmap pm(model.loadIcon(msg));
             if (msg.isSuccess())
@@ -288,11 +288,14 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
+            // consolidate
             m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
-            if (mv->hasSelection())
-            {
-                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
-            }
+            if (mv->hasSelection()) { m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData }); }
+
+            // update directories
+            m_updateDirsAll = menuActions.addAction(m_updateDirsAll, CIcons::disk16(), "Update all directories", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::updateDirectoryData });
+            if (mv->hasSelection()) { m_updateDirsSelected = menuActions.addAction(m_updateDirsSelected, CIcons::disk16(), "Update directories for selected", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::updateDirectorySelectedData }); }
+
             this->nestedCustomMenu(menuActions);
         }
 
@@ -343,6 +346,64 @@ namespace BlackGui
             QStringList removedModelStrings;
             const int i = this->modelView()->showLoadIndicator();
             const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+            const CSimulatorInfo sim(this->getSimulator());
+
+            this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
+            this->modelView()->hideLoadIndicator(i);
+            if (!removedModelStrings.isEmpty() && this->getMappingComponent())
+            {
+                const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
+                this->getMappingComponent()->showOverlayMessage(m, 5000);
+            }
+        }
+
+        void CConsolidateWithSimulatorModels::updateDirectoryData()
+        {
+            bool filtered = false;
+            const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
+            if (models.isEmpty()) { return; }
+            QStringList removedModelStrings;
+            const int i = this->modelView()->showLoadIndicator();
+            const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+            const CSimulatorInfo sim(this->getSimulator());
+
+            if (!filtered)
+            {
+                this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
+            }
+            else
+            {
+                if (!this->modelsTargetUpdatable())
+                {
+                    CLogMessage(this).warning(u"No updatable target");
+                }
+                else
+                {
+                    this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
+                }
+            }
+            this->modelView()->hideLoadIndicator(i);
+            if (!removedModelStrings.isEmpty() && this->getMappingComponent())
+            {
+                const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
+                this->getMappingComponent()->showOverlayMessage(m, 5000);
+            }
+        }
+
+        void CConsolidateWithSimulatorModels::updateDirectorySelectedData()
+        {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            const CAircraftModelList models(this->getSelectedAircraftModels());
+            if (models.isEmpty()) { return; }
+            if (!this->modelsTargetUpdatable())
+            {
+                CLogMessage(this).warning(u"No updatable target");
+                return;
+            }
+
+            QStringList removedModelStrings;
+            const int i = this->modelView()->showLoadIndicator();
+            const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
             const CSimulatorInfo sim(this->getSimulator());
 
             this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);

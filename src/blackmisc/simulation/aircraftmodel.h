@@ -366,6 +366,10 @@ namespace BlackMisc
             //! Update missing parts from another model
             void updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority = true);
 
+            //! Update the directories from other model
+            //! \sa updateLocalFileNames
+            void updateByExistingDirectories(const CAircraftModel &otherModel);
+
             //! Queried model string?
             bool hasQueriedModelString() const;
 
@@ -450,11 +454,14 @@ namespace BlackMisc
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
-            //! File representing model
-            const QString &getIconPath() const { return m_iconPath; }
+            //! Icon file representing model
+            const QString &getIconFile() const { return m_iconFile; }
 
-            //! File representing model
-            void setIconPath(const QString &iconFile) { m_iconPath = iconFile; }
+            //! Icon file representing model
+            void setIconFile(const QString &iconFile) { m_iconFile = iconFile; }
+
+            //! Is the icon file existing?
+            bool hasExistingIconFile() const;
 
             //! Get timestamp
             QDateTime getFileTimestamp() const;
@@ -544,7 +551,7 @@ namespace BlackMisc
             QString        m_name;                      //!< Model name
             QString        m_description;               //!< descriptive text
             QString        m_fileName;                  //!< file name
-            QString        m_iconPath;                  //!< a file representing the aircraft as icon
+            QString        m_iconFile;                  //!< a file representing the aircraft as icon
             QString        m_supportedParts;            //!< supported parts
             qint64         m_fileTimestamp = -1;        //!< file timestamp of originating file (if applicable)
             ModelType      m_modelType = TypeUnknown;   //!< model string is coming representing ...?
@@ -568,7 +575,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(description, 0, DisabledForComparison),
                 BLACK_METAMEMBER(fileName, 0, DisabledForComparison),
-                BLACK_METAMEMBER(iconPath, 0, DisabledForComparison),
+                BLACK_METAMEMBER(iconFile, 0, DisabledForComparison),
                 BLACK_METAMEMBER(fileTimestamp, 0, DisabledForComparison),
                 BLACK_METAMEMBER(modelType),
                 BLACK_METAMEMBER(modelMode)

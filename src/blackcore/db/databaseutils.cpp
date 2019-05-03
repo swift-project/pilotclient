@@ -200,6 +200,56 @@ namespace BlackCore
             return consolidatedModels;
         }
 
+        CAircraftModelList CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, QStringList &removedModelStrings, bool processEvents)
+        {
+            if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
+
+            QTime timer;
+            timer.start();
+            const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
+            CAircraftModelList consolidatedModels;
+            removedModelStrings.clear();
+
+            int c = 0;
+            for (const CAircraftModel &model : models)
+            {
+                c++;
+                if (processEvents && c % 125 == 0)
+                {
+                    if (!sApp || sApp->isShuttingDown()) { return models; }
+                    sApp->processEventsFor(25);
+                }
+
+                const QString ms(model.getModelString());
+                if (ms.isEmpty()) { continue; }
+                if (!allOwnModelsModelStrings.contains(ms))
+                {
+                    removedModelStrings.push_back(ms);
+                    continue;
+                }
+                CAircraftModel consolidated = simulatorModels.findFirstByModelStringAliasOrDefault(ms);
+                if (consolidated.hasModelString())
+                {
+                    if (consolidated.hasExistingCorrespondingFile())
+                    {
+                        // update by existing one
+                        consolidatedModels.push_back(consolidated);
+                    }
+                    else
+                    {
+                        // keep
+                        consolidatedModels.push_back(model);
+                    }
+                }
+                else
+                {
+                    consolidatedModels.push_back(model);
+                }
+            }
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Updated directories %1 vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
+            return consolidatedModels;
+        }
+
         int CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(CAircraftModelList &models, bool force, bool processEvents)
         {
             QTime timer;

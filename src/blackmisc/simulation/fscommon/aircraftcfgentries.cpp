@@ -133,7 +133,7 @@ namespace BlackMisc
                 model.setName(this->getSimName());
                 model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch); // aircraft.cfg file timestamp
                 model.setFileTimestamp(m_timestampMSecsSinceEpoch);
-                model.setIconPath(this->getThumbnailFileNameChecked());
+                model.setIconFile(this->getThumbnailFileNameChecked());
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
                 CAircraftIcaoCode aircraft(

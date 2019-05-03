@@ -491,14 +491,14 @@ namespace BlackMisc
         {
             if (modelString.isEmpty()) { return {}; }
             const CAircraftModel m(findFirstByModelStringOrDefault(modelString, Qt::CaseInsensitive));
-            return m.getIconPath();
+            return m.getIconFile();
         }
 
         QString CAircraftModelList::findModelIconPathByCallsign(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return {}; }
             const CAircraftModel m(findFirstByCallsignOrDefault(callsign));
-            return m.getIconPath();
+            return m.getIconFile();
         }
 
         CAircraftModelList CAircraftModelList::findModelsWithoutExistingFile() const

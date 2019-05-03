@@ -112,7 +112,7 @@ namespace BlackGui
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
         };
 
-        //! Merge with simulator models (e.g. remove no longer existing models)
+        //! Merge/update with simulator models (e.g. remove no longer existing models)
         class CConsolidateWithSimulatorModels : public IAircraftModelViewMenu
         {
             Q_OBJECT
@@ -136,6 +136,8 @@ namespace BlackGui
         private:
             void consolidateData();
             void consolidateSelectedData();
+            void updateDirectoryData();
+            void updateDirectorySelectedData();
 
             //! Get models
             BlackMisc::Simulation::CAircraftModelList getSimulatorModels() const;
@@ -151,6 +153,8 @@ namespace BlackGui
             QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
             QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
+            QAction *m_updateDirsAll       = nullptr; //!< consolidate file name/dir (all)
+            QAction *m_updateDirsSelected  = nullptr; //!< consolidate file name/dir (selected)
         };
     } // ns
 } // ns

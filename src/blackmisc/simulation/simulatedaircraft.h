@@ -381,7 +381,7 @@ namespace BlackMisc
             QString getNetworkModelLiveryDifference() const;
 
             //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
-            const QString &getIconPath() const { return m_models[CurrentModel].getIconPath(); }
+            const QString &getIconFile() const { return m_models[CurrentModel].getIconFile(); }
 
             //! Get model string
             const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
