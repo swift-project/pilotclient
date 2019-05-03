@@ -186,7 +186,7 @@ console=1
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_P3DVersion">
         <property name="text">
-         <string>P3V 64 bit version</string>
+         <string>P3D 64 bit version</string>
         </property>
        </widget>
       </item>
