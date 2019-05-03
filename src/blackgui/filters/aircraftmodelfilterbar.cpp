@@ -87,7 +87,7 @@ namespace BlackGui
                 mf = CAircraftModel::Exclude;
             }
 
-            BlackMisc::Db::DbKeyStateFilter dbf = BlackMisc::Db::All;
+            DbKeyStateFilter dbf = BlackMisc::Db::All;
             if (ui->cbt_Db->checkState() == Qt::Checked)
             {
                 dbf = BlackMisc::Db::Valid;
@@ -111,6 +111,7 @@ namespace BlackGui
                        ui->le_AirlineName->text(),
                        ui->le_LiveryCode->text(),
                        ui->le_FileName->text(),
+                       ui->comp_CombinedType->getCombinedType(),
                        ui->comp_SimulatorSelector->getValue(),
                        ui->comp_DistributorSelector->getDistributor()
                    );
@@ -133,6 +134,7 @@ namespace BlackGui
             ui->le_FileName->clear();
             ui->comp_SimulatorSelector->checkAll();
             ui->comp_DistributorSelector->clear();
+            ui->comp_CombinedType->clear();
             ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
             ui->cbt_Db->setCheckState(Qt::PartiallyChecked);
             ui->cbt_Military->setCheckState(Qt::PartiallyChecked);
@@ -151,6 +153,12 @@ namespace BlackGui
             this->triggerFilter();
         }
 
+        void CAircraftModelFilterBar::onCombinedTypeChanged(const QString &combinedType)
+        {
+            Q_UNUSED(combinedType);
+            this->triggerFilter();
+        }
+
         void CAircraftModelFilterBar::onCheckBoxChanged(bool state)
         {
             Q_UNUSED(state);
@@ -163,7 +171,7 @@ namespace BlackGui
             connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_AirlineIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-            connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_LiveryCode,  &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -174,8 +182,9 @@ namespace BlackGui
             connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
             connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
+            connect(ui->comp_SimulatorSelector,   &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
             connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::onDistributorChanged);
+            connect(ui->comp_CombinedType,        &CAircraftCombinedTypeSelector::changedCombinedType,  this, &CAircraftModelFilterBar::onCombinedTypeChanged);
         }
     } // ns
 } // ns

@@ -19,10 +19,8 @@
 #include <QScopedPointer>
 #include <QString>
 
-class QWidget;
-
-namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CAircraftCombinedTypeSelector; }
+namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace BlackGui
 {
     namespace Components
@@ -39,7 +37,7 @@ namespace BlackGui
             explicit CAircraftCombinedTypeSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftCombinedTypeSelector();
+            virtual ~CAircraftCombinedTypeSelector() override;
 
             //! Set comined code, e.g. L1P
             void setCombinedType(const QString &combinedCode);
@@ -56,6 +54,10 @@ namespace BlackGui
             //! Get the combined type, e.g. "L2P"
             QString getCombinedType() const;
 
+        signals:
+            //! Combined type has beend changed
+            void changedCombinedType(const QString &cominedType);
+
         private:
             //! Code has been entered
             void combinedTypeEntered();
@@ -66,6 +68,7 @@ namespace BlackGui
             //! Combined type from comboboxes
             QString getCombinedTypeFromComboBoxes() const;
 
+            QString m_cc;
             QScopedPointer<Ui::CAircraftCombinedTypeSelector> ui;
         };
     } // ns

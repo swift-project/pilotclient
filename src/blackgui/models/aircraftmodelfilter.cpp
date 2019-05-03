@@ -22,8 +22,9 @@ namespace BlackGui
                 CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
                 Qt::CheckState military, Qt::CheckState colorLiveries,
                 const QString &aircraftIcao, const QString &aircraftManufacturer,
-                const QString &airlineIcao, const QString &airlineName,
-                const QString &liveryCode, const QString &fileName,
+                const QString &airlineIcao,  const QString &airlineName,
+                const QString &liveryCode,   const QString &fileName,
+                const QString &combinedType,
                 const CSimulatorInfo &simInfo,
                 const CDistributor &distributor) :
             m_id(id),
@@ -33,13 +34,14 @@ namespace BlackGui
             m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
             m_liveryCode(liveryCode.trimmed().toUpper()),
             m_fileName(fileName),
+            m_combinedType(combinedType),
             m_simulatorInfo(simInfo),
             m_distributor(distributor)
         {
-            m_valid = valid();
+            m_valid = this->valid();
         }
 
-        BlackMisc::Simulation::CAircraftModelList CAircraftModelFilter::filter(const CAircraftModelList &inContainer) const
+        CAircraftModelList CAircraftModelFilter::filter(const CAircraftModelList &inContainer) const
         {
             if (!this->isEnabled()) { return inContainer; }
             CAircraftModelList outContainer;
@@ -58,90 +60,95 @@ namespace BlackGui
 
                 if (!m_simulatorInfo.isAllSimulators())
                 {
-                    if (!this->m_simulatorInfo.matchesAny(model.getSimulator())) { continue; }
+                    if (!m_simulatorInfo.matchesAny(model.getSimulator())) { continue; }
                 }
 
-                if (!this->m_modelKey.isEmpty())
+                if (!m_modelKey.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getModelString(), this->m_modelKey)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getModelString(), m_modelKey)) { continue; }
                 }
 
-                if (this->m_military != Qt::PartiallyChecked)
+                if (m_military != Qt::PartiallyChecked)
                 {
-                    if (this->m_military == Qt::Checked)
+                    if (m_military == Qt::Checked)
                     {
                         // military only
                         if (!model.isMilitary()) { continue; }
                     }
-                    else if (this->m_military == Qt::Unchecked)
+                    else if (m_military == Qt::Unchecked)
                     {
                         // civilian only
                         if (model.isMilitary()) { continue; }
                     }
                 }
 
-                if (this->m_colorLiveries != Qt::PartiallyChecked)
+                if (m_colorLiveries != Qt::PartiallyChecked)
                 {
-                    if (this->m_colorLiveries == Qt::Checked)
+                    if (m_colorLiveries == Qt::Checked)
                     {
                         // only color liveries
                         if (!model.getLivery().isColorLivery()) { continue; }
                     }
-                    else if (this->m_colorLiveries == Qt::Unchecked)
+                    else if (m_colorLiveries == Qt::Unchecked)
                     {
                         // Only airline liveries
                         if (model.getLivery().isColorLivery()) { continue; }
                     }
                 }
 
-                if (!this->m_description.isEmpty())
+                if (!m_description.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getDescription(), this->m_description)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getDescription(), m_description)) { continue; }
                 }
 
-                if (this->m_modelMode != CAircraftModel::All && this->m_modelMode != CAircraftModel::Undefined)
+                if (m_modelMode != CAircraftModel::All && m_modelMode != CAircraftModel::Undefined)
                 {
-                    if (!model.matchesMode(this->m_modelMode)) { continue; }
+                    if (!model.matchesMode(m_modelMode)) { continue; }
                 }
 
-                if (this->m_dbKeyFilter != BlackMisc::Db::All && this->m_dbKeyFilter != BlackMisc::Db::Undefined)
+                if (m_dbKeyFilter != BlackMisc::Db::All && m_dbKeyFilter != BlackMisc::Db::Undefined)
                 {
-                    if (!model.matchesDbKeyState(this->m_dbKeyFilter)) { continue; }
+                    if (!model.matchesDbKeyState(m_dbKeyFilter)) { continue; }
                 }
 
-                if (!this->m_fileName.isEmpty())
+                if (!m_fileName.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getFileName(), this->m_fileName)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getFileName(), m_fileName)) { continue; }
                 }
 
-                if (!this->m_aircraftIcao.isEmpty())
+                if (!m_aircraftIcao.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getAircraftIcaoCodeDesignator(), this->m_aircraftIcao)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getAircraftIcaoCodeDesignator(), m_aircraftIcao)) { continue; }
                 }
 
-                if (!this->m_aircraftManufacturer.isEmpty())
+                if (!m_aircraftManufacturer.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getAircraftIcaoCode().getManufacturer(), this->m_aircraftManufacturer)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getAircraftIcaoCode().getManufacturer(), m_aircraftManufacturer)) { continue; }
                 }
 
-                if (!this->m_airlineIcao.isEmpty())
+                if (!m_airlineIcao.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getAirlineIcaoCodeDesignator(), this->m_airlineIcao)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getAirlineIcaoCodeDesignator(), m_airlineIcao)) { continue; }
                 }
 
-                if (!this->m_airlineName.isEmpty())
+                if (!m_airlineName.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getAirlineIcaoCode().getName(), this->m_airlineName)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getAirlineIcaoCode().getName(), m_airlineName)) { continue; }
                 }
 
-                if (!this->m_liveryCode.isEmpty())
+                if (!m_liveryCode.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(model.getLivery().getCombinedCode(), this->m_liveryCode)) { continue; }
+                    if (!this->stringMatchesFilterExpression(model.getLivery().getCombinedCode(), m_liveryCode)) { continue; }
                 }
 
-                if (this->m_distributor.hasValidDbKey())
+                if (m_distributor.hasValidDbKey())
                 {
-                    if (!model.getDistributor().matchesKeyOrAlias(this->m_distributor)) { continue; }
+                    if (!model.getDistributor().matchesKeyOrAlias(m_distributor)) { continue; }
+                }
+
+                if (!m_combinedType.isEmpty())
+                {
+                    if (!model.getAircraftIcaoCode().matchesCombinedType(m_combinedType)) { continue; }
                 }
 
                 outContainer.push_back(model);
@@ -153,17 +160,17 @@ namespace BlackGui
         {
             const bool allEmpty =
                 m_id < 0 &&
-                this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
-                this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
-                this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
-                this->m_liveryCode.isEmpty() && this->m_fileName.isEmpty();
+                m_modelKey.isEmpty() && m_description.isEmpty() &&
+                m_aircraftManufacturer.isEmpty() && m_aircraftIcao.isEmpty() &&
+                m_airlineIcao.isEmpty() && m_airlineName.isEmpty() &&
+                m_liveryCode.isEmpty() && m_fileName.isEmpty() && m_combinedType.isEmpty();
             if (!allEmpty) { return true; }
-            const bool noSim = this->m_simulatorInfo.isNoSimulator() || this->m_simulatorInfo.isAllSimulators();
-            const bool noModelMode = this->m_modelMode == CAircraftModel::Undefined || this->m_modelMode == CAircraftModel::All;
-            const bool noDbState = this->m_dbKeyFilter == BlackMisc::Db::Undefined || this->m_dbKeyFilter == BlackMisc::Db::All;
-            const bool noKey = !this->m_distributor.hasValidDbKey();
-            const bool noColorRestriction = this->m_colorLiveries == Qt::PartiallyChecked;
-            const bool noMilitary = this->m_military == Qt::PartiallyChecked;
+            const bool noSim = m_simulatorInfo.isNoSimulator() || m_simulatorInfo.isAllSimulators();
+            const bool noModelMode = (m_modelMode == CAircraftModel::Undefined || m_modelMode == CAircraftModel::All);
+            const bool noDbState   = (m_dbKeyFilter == BlackMisc::Db::Undefined || m_dbKeyFilter == BlackMisc::Db::All);
+            const bool noKey = !m_distributor.hasValidDbKey();
+            const bool noColorRestriction = (m_colorLiveries == Qt::PartiallyChecked);
+            const bool noMilitary = (m_military == Qt::PartiallyChecked);
             return !(noSim && noModelMode && noDbState && noKey && noMilitary && noColorRestriction);
         }
     } // namespace

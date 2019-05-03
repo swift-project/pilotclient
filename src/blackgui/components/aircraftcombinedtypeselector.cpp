@@ -14,6 +14,7 @@
 
 #include <QComboBox>
 #include <QLineEdit>
+#include <QStringBuilder>
 #include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
@@ -28,11 +29,11 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
-            connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
+            connect(ui->le_CombinedType, &QLineEdit::returnPressed,   this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
 
             connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
-            connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
-            connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_EngineType, &QComboBox::currentTextChanged,  this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_Type, &QComboBox::currentTextChanged,        this, &CAircraftCombinedTypeSelector::changedComboBox);
 
             ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
         }
@@ -43,19 +44,26 @@ namespace BlackGui
         void CAircraftCombinedTypeSelector::setCombinedType(const QString &combinedCode)
         {
             QString engineCount, engineType, aircraftType;
-            QString cc(combinedCode.trimmed().toUpper().left(3));
+            const QString cc(combinedCode.trimmed().toUpper().left(3));
+            if (m_cc == cc) { return; }
+            m_cc = cc;
+
             if (cc.length() > 0) { aircraftType = cc.left(1); }
-            if (cc.length() > 1) { engineCount = cc.mid(1, 1); }
-            if (cc.length() > 2) { engineType = cc.mid(2, 1); }
+            if (cc.length() > 1) { engineCount  = cc.mid(1, 1); }
+            if (cc.length() > 2) { engineType   = cc.mid(2, 1); }
 
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineCount, engineCount, "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineType, engineType, "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type, aircraftType, "unspecified");
+            if (this->getCombinedTypeFromComboBoxes() != cc)
+            {
+                CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineCount, engineCount,  "unspecified");
+                CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineType,  engineType,   "unspecified");
+                CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type,        aircraftType, "unspecified");
+            }
 
-            ui->le_CombinedType->setText(cc);
+            if (ui->le_CombinedType->text() != cc) { ui->le_CombinedType->setText(cc); }
+            emit this->changedCombinedType(cc);
         }
 
-        void CAircraftCombinedTypeSelector::setCombinedType(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
+        void CAircraftCombinedTypeSelector::setCombinedType(const CAircraftIcaoCode &icao)
         {
             this->setCombinedType(icao.getCombinedType());
         }
@@ -77,6 +85,7 @@ namespace BlackGui
         QString CAircraftCombinedTypeSelector::getCombinedType() const
         {
             QString ct(ui->le_CombinedType->text().trimmed().toUpper());
+            if (ct.isEmpty() || ct == QStringView(u"---")) { return {}; }
             if (CAircraftIcaoCode::isValidCombinedType(ct)) { return ct; }
 
             QString ct2(getCombinedTypeFromComboBoxes());
@@ -85,15 +94,17 @@ namespace BlackGui
 
         void CAircraftCombinedTypeSelector::combinedTypeEntered()
         {
-            QString cc(ui->le_CombinedType->text().trimmed().toUpper());
-            this->setCombinedType(cc);
+            const QString cc(ui->le_CombinedType->text().trimmed().toUpper() % u"---");
+            this->setCombinedType(cc.left(3));
         }
 
         void CAircraftCombinedTypeSelector::changedComboBox(const QString &text)
         {
             Q_UNUSED(text);
-            QString ct(getCombinedTypeFromComboBoxes());
+            const QString ct(this->getCombinedTypeFromComboBoxes());
+            if (ui->le_CombinedType->text() == ct) { return; }
             ui->le_CombinedType->setText(ct);
+            emit this->changedCombinedType(ct);
         }
 
         QString CAircraftCombinedTypeSelector::getCombinedTypeFromComboBoxes() const

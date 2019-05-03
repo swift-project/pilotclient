@@ -63,6 +63,9 @@ namespace BlackGui
             //! Distributor changed
             void onDistributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
 
+            //! Combined type changed
+            void onCombinedTypeChanged(const QString &combinedType);
+
             //! Checkbox has been changed
             void onCheckBoxChanged(bool state);
 
