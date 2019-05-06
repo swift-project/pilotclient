@@ -102,7 +102,7 @@ namespace BlackSimPlugin
             bool isForProbe() const { return simObject.getType() == CSimConnectObject::TerrainProbe; }
 
             //! For aircraft
-            bool isForAircraft() const { return simObject.getType() == CSimConnectObject::Aircraft; }
+            bool isForAircraft() const { return simObject.getType() == CSimConnectObject::AircraftNonAtc; }
 
             //! Invalid trace?
             bool isInvalid() const { return sendId == 0 && simObject.isInvalid() == 0 && comment.isEmpty(); }
@@ -181,6 +181,12 @@ namespace BlackSimPlugin
             //! Number of received SB4 packets
             //! \remark if this is increasing, SB4 is supported
             int receivedSBPackets() const { return m_sbDataReceived; }
+
+            //! Allow adding as simulated object instead of non ATC
+            bool isAddingAsSimulatedObjectEnabled() const { return m_useAddSimulatedObj; }
+
+            //! Allow adding as simulated object instead of non ATC
+            void setAddingAsSimulatedObjectEnabled(bool enabled) { m_useAddSimulatedObj = enabled; }
 
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
@@ -344,7 +350,7 @@ namespace BlackSimPlugin
 
             //! Implementation of add remote aircraft, which also handles FSX specific adding one by one
             //! \remark main purpose of this function is to only add one aircraft at a time, and only if simulator is not paused/stopped
-            bool physicallyAddRemoteAircraftImpl(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft, AircraftAddMode addMode);
+            bool physicallyAddRemoteAircraftImpl(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft, AircraftAddMode addMode, const CSimConnectObject &correspondingSimObject = {});
 
             //! Add AI object for terrain probe
             //! \remark experimental
@@ -433,6 +439,9 @@ namespace BlackSimPlugin
             //! Send parts to simulator
             //! \remark does not send if there is no change
             bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
+
+            //! Send ATC data (callsign etc.) to simulator
+            bool sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject);
 
             //! Send lights to simulator (those which have to be toggled)
             //! \remark challenge here is that I can only sent those value if I have already obtained the current light state from simulator
@@ -534,7 +543,9 @@ namespace BlackSimPlugin
             int removeAllProbes();
 
             //! Insert a new SimConnect object
-            CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId, const CSimConnectObject &removedPendingObject = {});
+            CSimConnectObject insertNewSimConnectObject(
+                const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId,
+                CSimConnectObject::SimObjectType type, const CSimConnectObject &removedPendingObject = {});
 
             //! Used for terrain probes
             static const BlackMisc::Aviation::CAltitude &terrainProbeAltitude();
@@ -571,6 +582,7 @@ namespace BlackSimPlugin
             bool m_simSimulating = false;        //!< Simulator running?
             bool m_useSbOffsets  = true;         //!< with SB offsets
             bool m_traceSendId   = false;        //!< trace the send ids, meant for debugging
+            bool m_useAddSimulatedObj = false;   //!< simulated object use if AI Non ATC object fails
             qint64 m_traceAutoUntilTs = -1;      //!< allows to automatically trace for some time
             qint64 m_simulatingChangedTs = -1;   //!< timestamp, when simulating changed (used to avoid jitter)
             int m_sbDataReceived = 0;            //!< SB3 area data received

@@ -39,8 +39,8 @@ namespace BlackSimPluginFsxP3D
     void CSimPluginFsxP3d::requestIds()
     {
         DWORD objectId = 666;
-        DWORD requestId = CSimulatorFsxCommon::unitTestRequestId(CSimConnectObject::Aircraft);
-        CSimConnectObject simObject(CSimConnectObject::Aircraft);
+        DWORD requestId = CSimulatorFsxCommon::unitTestRequestId(CSimConnectObject::AircraftNonAtc);
+        CSimConnectObject simObject(CSimConnectObject::AircraftNonAtc);
         simObject.setRequestId(requestId);
         simObject.setObjectId(objectId);
 

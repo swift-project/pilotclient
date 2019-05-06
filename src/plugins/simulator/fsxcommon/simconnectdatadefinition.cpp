@@ -80,6 +80,7 @@ namespace BlackSimPlugin
             hr += initOwnAircraft(hSimConnect);
             hr += initRemoteAircraft(hSimConnect);
             hr += initRemoteAircraftSimData(hSimConnect);
+            hr += initRemoteAircraftSimDataSet(hSimConnect);
             hr += initSimulatorEnvironment(hSimConnect);
             hr += initSbDataArea(hSimConnect);
             return hr;
@@ -207,7 +208,20 @@ namespace BlackSimPlugin
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initRemoteAircraftSimData DataRemoteAircraftModelData %1") << hr;
             }
+            return hr;
+        }
 
+        HRESULT CSimConnectDefinitions::initRemoteAircraftSimDataSet(const HANDLE hSimConnect)
+        {
+            HRESULT hr = s_ok();
+
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetData, "ATC ID", nullptr, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetData, "ATC AIRLINE", nullptr, SIMCONNECT_DATATYPE_STRING64);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetData, "ATC FLIGHT NUMBER", nullptr, SIMCONNECT_DATATYPE_STRING8);
+            if (isFailure(hr))
+            {
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initRemoteAircraftSimDataSet DataRemoteAircraftModelData %1") << hr;
+            }
             return hr;
         }
 
@@ -313,9 +327,9 @@ namespace BlackSimPlugin
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetAllFlaps()
         {
-            flapsLeadingEdgeLeftPercent = 0;
-            flapsLeadingEdgeRightPercent = 0;
-            flapsTrailingEdgeLeftPercent = 0;
+            flapsLeadingEdgeLeftPercent   = 0;
+            flapsLeadingEdgeRightPercent  = 0;
+            flapsTrailingEdgeLeftPercent  = 0;
             flapsTrailingEdgeRightPercent = 0;
         }
 
@@ -326,9 +340,9 @@ namespace BlackSimPlugin
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetToInvalid()
         {
-            flapsLeadingEdgeLeftPercent = -1;
-            flapsLeadingEdgeRightPercent = -1;
-            flapsTrailingEdgeLeftPercent = -1;
+            flapsLeadingEdgeLeftPercent   = -1;
+            flapsLeadingEdgeRightPercent  = -1;
+            flapsTrailingEdgeLeftPercent  = -1;
             flapsTrailingEdgeRightPercent = -1;
             gearHandlePosition = -1;
             spoilersHandlePosition = -1;
@@ -342,7 +356,7 @@ namespace BlackSimPlugin
         {
             gearHandlePosition = parts.isGearDown() ? 1.0 : 0.0;
             flapsTrailingEdgeLeftPercent = flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            flapsLeadingEdgeLeftPercent = flapsLeadingEdgeRightPercent = parts.getFlapsPercent() * 0.2 / 100.0;
+            flapsLeadingEdgeLeftPercent  = flapsLeadingEdgeRightPercent  = parts.getFlapsPercent() * 0.2 / 100.0;
             spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
             this->setAllEngines(false); // init
 

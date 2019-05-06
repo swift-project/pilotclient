@@ -92,6 +92,29 @@ namespace BlackSimPlugin
             char title[256];           //!< Aircraft model string
         };
 
+        //! Data struct of aircraft data (setable)
+        struct DataDefinitionRemoteAtc
+        {
+            // length here is from SimConnect_AddToDataDefinition
+            char atcId[32];            //!< ID used by ATC
+            char atcAirline[64];       //!< Airline used by ATC
+            char atcFlightNumber[8];   //!< Flight Number used by ATC
+
+            //! Copy the strings, length from docu @{
+            void copyAtcId(const char *c)        { strncpy_s(atcId, c, 10);          atcId[9] = 0; }
+            void copyAtcAirline(const char *c)   { strncpy_s(atcAirline, c, 50);     atcAirline[49] = 0; }
+            void copyFlightNumber(const char *c) { strncpy_s(atcFlightNumber, c, 6); atcFlightNumber[5] = 0; }
+            //! @}
+
+            //! Set default values
+            void setDefaultValues()
+            {
+                std::fill(atcId, atcId + 10, static_cast<byte>(0));
+                std::fill(atcAirline, atcAirline + 50, static_cast<byte>(0));
+                std::fill(atcFlightNumber, atcFlightNumber + 6, static_cast<byte>(0));
+            }
+        };
+
         //! Data struct of remote aircraft parts
         struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftPartsWithoutLights
         {
@@ -226,6 +249,7 @@ namespace BlackSimPlugin
                 DataRemoteAircraftSetPosition, //!< the position which will be set
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
+                DataRemoteAircraftSetData,     //!< set model data such as airline
                 DataSimEnvironment,
                 DataClientAreaSb,          //!< whole SB area, see http://squawkbox.ca/doc/sdk/fsuipc.php
                 DataClientAreaSbIdent,     //!< SB ident single value 0x7b93/19
@@ -277,8 +301,11 @@ namespace BlackSimPlugin
             //! Initialize data definition for remote aircraft
             static HRESULT initRemoteAircraft(const HANDLE hSimConnect);
 
-            //! Initialize data for remote aircraft queried from simulator
+            //! Initialize data for setting remote aircraft airline etc.
             static HRESULT initRemoteAircraftSimData(const HANDLE hSimConnect);
+
+            //! Initialize data for remote aircraft queried from simulator
+            static HRESULT initRemoteAircraftSimDataSet(const HANDLE hSimConnect);
 
             //! Initialize data definition for Simulator environment
             static HRESULT initSimulatorEnvironment(const HANDLE hSimConnect);

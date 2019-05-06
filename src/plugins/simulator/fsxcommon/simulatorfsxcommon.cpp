@@ -733,6 +733,9 @@ namespace BlackSimPlugin
                 // SB3 offsets updating
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3"), boolToEnabledDisabled(m_useSbOffsets));
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
+
+                // Simulated objects instead of NON ATC
+                m_simulatorInternals.setValue(QStringLiteral("fsx/addAsSimulatedObject"), boolToEnabledDisabled(m_useAddSimulatedObj));
             }
 
             m_ownAircraftUpdateCycles++; // with 50updates/sec long enough even for 32bit
@@ -953,13 +956,22 @@ namespace BlackSimPlugin
                 const bool updated = this->updateAircraftRendered(callsign, true);
                 if (updated)
                 {
-                    emit this->aircraftRenderingChanged(simObject.getAircraft());
                     static const QString debugMsg("CS: '%1' model: '%2' verified, request/object id: %3 %4");
                     if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, debugMsg.arg(callsign.toQString(), remoteAircraft.getModelString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
+
+                    this->sendRemoteAircraftAtcDataToSimulator(simObject);
+                    emit this->aircraftRenderingChanged(simObject.getAircraft());
                 }
                 else
                 {
                     CLogMessage(this).warning(u"Verified aircraft '%1' model '%2', request/object id: %3 %4 was already marked rendered") << callsign.asString() << remoteAircraft.getModelString() << simObject.getRequestId() << simObject.getObjectId();
+                }
+
+                if (simObject.isConfirmedAdded() && simObject.getType() == CSimConnectObject::AircraftSimulatedObject)
+                {
+                    const CStatusMessage soMsg = CLogMessage(this).warning(u"Confirm added model '%1' '%2', but as '%3'") << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString() << simObject.getTypeAsString();
+                    this->triggerAutoTraceSendId(); // trace for some time (issues regarding this workaround)
+                    Q_UNUSED(soMsg);
                 }
             }
             while (false);
@@ -992,20 +1004,25 @@ namespace BlackSimPlugin
             const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
             if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
-            if (!verifiedAircraft || simObject.getAddingExceptions() >= ThresholdAddException)
+            CSimConnectObject simObjAddAgain(simObject);
+            simObjAddAgain.increaseAddingExceptions();
+            if (!simObject.hasCallsign())
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing callsign");
+                return;
+            }
+
+            if (!verifiedAircraft || simObjAddAgain.getAddingExceptions() > ThresholdAddException)
             {
                 const CStatusMessage msg = verifiedAircraft ?
-                                           CLogMessage(this).warning(u"Model '%1' %2 failed %3 time(s) before and will be disabled") << simObject.getAircraftModelString() << simObject.toQString() << simObject.getAddingExceptions() :
-                                           CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled") << simObject.getAircraftModelString() << simObject.toQString();
-                this->updateAircraftEnabled(simObject.getCallsign(), false); // disable
-                emit this->physicallyAddingRemoteModelFailed(simObject.getAircraft(), true, true, msg); // verify failed
+                                           CLogMessage(this).warning(u"Model '%1' %2 failed %3 time(s) before and will be disabled") << simObjAddAgain.getAircraftModelString() << simObjAddAgain.toQString() << simObjAddAgain.getAddingExceptions() :
+                                           CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled") << simObjAddAgain.getAircraftModelString() << simObjAddAgain.toQString();
+                this->updateAircraftEnabled(simObjAddAgain.getCallsign(), false); // disable
+                emit this->physicallyAddingRemoteModelFailed(simObjAddAgain.getAircraft(), true, true, msg); // verify failed
             }
             else
             {
                 CLogMessage(this).info(u"Will try '%1' again, aircraft: %2") << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-                CSimConnectObject simObjAddAgain(simObject);
-                simObjAddAgain.increaseAddingExceptions();
-
                 QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(2000, this, [ = ]
                 {
@@ -1120,9 +1137,11 @@ namespace BlackSimPlugin
             const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
             CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
             CCallsignSet toBeRemovedCallsigns;
+
             for (const CSimConnectObject &pendingSimObj : as_const(m_addPendingAircraft))
             {
-                Q_ASSERT_X(!pendingSimObj.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
+                BLACK_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
+                if (!pendingSimObj.hasCallsign()) { continue; }
                 if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))
                 {
                     toBeAddedAircraft.insert(pendingSimObj.getAircraft());
@@ -1149,7 +1168,7 @@ namespace BlackSimPlugin
                     {
                         if (!myself) { return; }
                         if (this->isShuttingDownDisconnectedOrNoAircraft(nextPendingAircraft.isTerrainProbe())) { return; }
-                        this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode);
+                        this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode, oldestSimObject);
                     });
                 }
                 else
@@ -1404,7 +1423,7 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft, CSimulatorFsxCommon::AircraftAddMode addMode)
+        bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft, CSimulatorFsxCommon::AircraftAddMode addMode, const CSimConnectObject &correspondingSimObject)
         {
             const CCallsign callsign(newRemoteAircraft.getCallsign());
             const bool probe = newRemoteAircraft.isTerrainProbe();
@@ -1422,10 +1441,10 @@ namespace BlackSimPlugin
             if (!outdatedAdded.isEmpty())
             {
                 const CCallsignSet callsigns = outdatedAdded.getAllCallsigns(false);
-                CLogMessage(this).warning(u"Removed %1 outdated objects pending for added: %2") << outdatedAdded.size() << callsigns.getCallsignsAsString(true);
+                CLogMessage(this).warning(u"Removed %1 outdated object(s) pending for added: %2") << outdatedAdded.size() << callsigns.getCallsignsAsString(true);
                 this->updateMultipleAircraftEnabled(callsigns, false);
 
-                static const QString msgText("%1 oudated adding, %2");
+                static const QString msgText("%1 outdated adding, %2");
                 for (const CSimConnectObject &simObjOutdated : outdatedAdded)
                 {
                     const CStatusMessage msg = CStatusMessage(this).warning(msgText.arg(simObjOutdated.getCallsign().asString(), simObjOutdated.toQString()));
@@ -1551,9 +1570,28 @@ namespace BlackSimPlugin
 
             const QByteArray modelStringBa = toFsxChar(modelString);
             const QByteArray csBa = toFsxChar(callsign.toQString().left(12));
-            const HRESULT hr = probe ?
-                               SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition, requestId) :
-                               SimConnect_AICreateNonATCAircraft(m_hSimConnect, modelStringBa.constData(), csBa.constData(), initialPosition, requestId);
+            CSimConnectObject::SimObjectType type = CSimConnectObject::AircraftNonAtc;
+            HRESULT hr = S_OK;
+
+            if (probe)
+            {
+                hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition, requestId);
+                type = CSimConnectObject::TerrainProbe;
+            }
+            else
+            {
+                if (this->isAddingAsSimulatedObjectEnabled() && correspondingSimObject.hasCallsign() && correspondingSimObject.getAddingExceptions() > 0 && correspondingSimObject.getType() == CSimConnectObject::AircraftNonAtc)
+                {
+                    CStatusMessage(this).warning(u"Model '%1' for '%2' failed %1 time(s) before, using AICreateSimulatedObject now") << newRemoteAircraft.getModelString() << callsign.toQString();
+                    hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition, requestId);
+                    type = CSimConnectObject::AircraftSimulatedObject;
+                }
+                else
+                {
+                    hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, modelStringBa.constData(), csBa.constData(), initialPosition, requestId);
+                    type = CSimConnectObject::AircraftNonAtc;
+                }
+            }
 
             if (!underflowStatus.isEmpty())
             {
@@ -1570,7 +1608,7 @@ namespace BlackSimPlugin
             {
                 // we will request a new aircraft by request ID, later we will receive its object id
                 // so far this object id is 0 (DWORD)
-                const CSimConnectObject simObject = this->insertNewSimConnectObject(newRemoteAircraft, requestId, removedPendingObj);
+                const CSimConnectObject simObject = this->insertNewSimConnectObject(newRemoteAircraft, requestId, type, removedPendingObj);
                 this->traceSendId(simObject, Q_FUNC_INFO, QStringLiteral("mode: %1").arg(CSimulatorFsxCommon::modeToString(addMode)), true);
                 adding = true;
             }
@@ -1867,7 +1905,7 @@ namespace BlackSimPlugin
                                                traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
                         if (isOk(hr))
                         {
-                            this->rememberLastSent(result); // remember
+                            this->rememberLastSent(result); // remember situation
                         }
                     }
                 }
@@ -1885,7 +1923,8 @@ namespace BlackSimPlugin
                 }
 
                 // Interpolated parts
-                this->updateRemoteAircraftParts(simObject, result);
+                const bool updatedParts = this->updateRemoteAircraftParts(simObject, result);
+                Q_UNUSED(updatedParts);
 
             } // all callsigns
 
@@ -1896,14 +1935,19 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (!simObject.isConfirmedAdded()) { return false; }
 
             const CAircraftParts parts = result;
             if (parts.isNull()) { return false; }
             if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
-            if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, simObject.getCallsign())) { return true; }
+
+            const CCallsign cs = simObject.getCallsign();
+            if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, cs)) { return true; }
 
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
-            return this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
+            const bool ok = this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
+            if (ok) { this->rememberLastSent(parts, cs); }
+            return ok;
         }
 
         void CSimulatorFsxCommon::triggerUpdateAirports(const CAirportList &airports)
@@ -1943,30 +1987,32 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
         {
             Q_ASSERT(m_hSimConnect);
-
             if (!simObject.isReadyToSend()) { return false; }
 
             const DWORD objectId = simObject.getObjectId();
             const bool traceId = this->isTracingSendId();
+            const bool simObjectAircraftType = simObject.isAircraftSimulatedObject();
 
             // in case we sent, we sent everything
-            HRESULT hr1 = this->logAndTraceSendId(
-                              SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
-                                      static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
-                                      sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
-                              traceId, simObject, "Failed so set parts", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+            const HRESULT hr1 = simObjectAircraftType ?
+                                S_OK :
+                                this->logAndTraceSendId(
+                                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
+                                            static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                                            sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
+                                    traceId, simObject, "Failed so set parts", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
 
             // lights we can set directly
-            HRESULT hr2 = this->logAndTraceSendId(
-                              SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet, lights.isLandingOn() ? 1.0 : 0.0,
-                                      SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                              traceId, simObject, "Failed so set landing lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventLandingLightsSet");
+            const HRESULT hr2 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet, lights.isLandingOn() ? 1.0 : 0.0,
+                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed so set landing lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventLandingLightsSet");
 
 
-            HRESULT hr3 = this->logAndTraceSendId(
-                              SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0,
-                                      SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                              traceId, simObject, "Failed to set strobe lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventStrobesSet");
+            const HRESULT hr3 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0,
+                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set strobe lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventStrobesSet");
 
             // lights we need to toggle
             // (potential risk with quickly changing values that we accidentally toggle back, also we need the light state before we can toggle)
@@ -1974,6 +2020,35 @@ namespace BlackSimPlugin
 
             // done
             return isOk(hr1, hr2, hr3);
+        }
+
+        bool CSimulatorFsxCommon::sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject)
+        {
+            if (!simObject.isReadyToSend()) { return false; }
+            if (simObject.isTerrainProbe()) { return false; }
+            // if (simObject.getType() != CSimConnectObject::AircraftNonAtc) { return false; } // otherwise errors
+
+            const DWORD objectId = simObject.getObjectId();
+            const bool traceId = this->isTracingSendId();
+
+            DataDefinitionRemoteAtc ddAtc;
+            ddAtc.setDefaultValues();
+            const QByteArray csBa = simObject.getCallsignByteArray();
+            const QByteArray airlineBa = simObject.getAircraft().getAirlineIcaoCode().getName().toLatin1();
+            const QByteArray flightNumberBa = QString::number(simObject.getObjectId()).toLatin1();
+
+            ddAtc.copyAtcId(csBa.constData());
+            ddAtc.copyAtcAirline(airlineBa.constData());
+            ddAtc.copyFlightNumber(flightNumberBa.constData());
+
+            // in case we sent, we sent everything
+            const HRESULT hr = this->logAndTraceSendId(
+                                   SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetData,
+                                           static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                                           sizeof(DataDefinitionRemoteAtc), &ddAtc),
+                                   traceId, simObject, "Failed so aircraft ATC data", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+            // done
+            return isOk(hr);
         }
 
         void CSimulatorFsxCommon::sendToggledLightsToSimulator(const CSimConnectObject &simObj, const CAircraftLights &lightsWanted, bool force)
@@ -2500,7 +2575,7 @@ namespace BlackSimPlugin
             return c;
         }
 
-        CSimConnectObject CSimulatorFsxCommon::insertNewSimConnectObject(const CSimulatedAircraft &aircraft, DWORD requestId, const CSimConnectObject &removedPendingObject)
+        CSimConnectObject CSimulatorFsxCommon::insertNewSimConnectObject(const CSimulatedAircraft &aircraft, DWORD requestId, CSimConnectObject::SimObjectType type, const CSimConnectObject &removedPendingObject)
         {
             if (m_simConnectObjects.contains(aircraft.getCallsign()))
             {
@@ -2527,6 +2602,7 @@ namespace BlackSimPlugin
                 simObject = CSimConnectObject(aircraft, requestId, this, this, this->getRemoteAircraftProvider(), &m_interpolationLogger);
             }
             simObject.copyAddingFailureCounters(removedPendingObject);
+            simObject.setType(type);
             m_simConnectObjects.insert(simObject, true); // update timestamp
             return simObject;
         }
@@ -2565,7 +2641,8 @@ namespace BlackSimPlugin
             case CSimConnectObject::TerrainProbe:
                 start = RequestSimObjTerrainProbeStart; end = RequestSimObjTerrainProbeEnd;
                 break;
-            case CSimConnectObject::Aircraft:
+            case CSimConnectObject::AircraftNonAtc:
+            case CSimConnectObject::AircraftSimulatedObject:
             default:
                 start = RequestSimObjAircraftStart; end = RequestSimObjAircraftEnd;
                 break;
