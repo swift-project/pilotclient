@@ -356,7 +356,7 @@ namespace BlackGui
             const bool enabled = ui->cb_AircraftEnabled->isChecked();
             bool changed = false;
 
-            // changed  model?
+            // changed model?
             if (aircraftFromBackend.getModelString() != modelString)
             {
                 const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
@@ -382,6 +382,9 @@ namespace BlackGui
                 }
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info(u"Requesting changes for '%1'") << callsign.asString();
+
+                // enable in any case
+                sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), true);
                 changed = sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
             }
             if (aircraftFromBackend.isEnabled() != enabled)
