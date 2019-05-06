@@ -85,6 +85,12 @@ namespace XSwiftBus
     {
         if (! s_legacyDataOK) { return false; }
 
+        findAllCslPackages(g_xplanePath);
+        for (const auto &package : m_cslPackages)
+        {
+            loadPlanesPackage(package);
+        }
+
         if (! m_initialized)
         {
             auto err = XPMPMultiplayerInit(preferences, preferences);
@@ -136,6 +142,34 @@ namespace XSwiftBus
         {
             m_initialized = false;
             XPMPMultiplayerCleanup();
+        }
+    }
+
+    void CTraffic::findAllCslPackages(const std::string &path)
+    {
+        char nameBuffer[65536];
+        char *indices[4096];
+        int returnedFiles;
+        int totalFiles;
+
+        // Remove trailing /
+        std::string dir = path.substr(0, path.size() - 1);
+        XPLMGetDirectoryContents(dir.c_str(), 0, nameBuffer, sizeof(nameBuffer), indices, sizeof(indices) / sizeof(char*), &totalFiles, &returnedFiles);
+        for (int i = 0; i < returnedFiles; i++)
+        {
+            std::string fileName(indices[i]);
+            if (fileName == "xsb_aircraft.txt")
+            {
+                const std::string seperator = "/\\";
+                const std::size_t sepPos = dir.find_last_of(seperator);
+                std::string parentPath = dir.substr(0, sepPos);
+                m_cslPackages.insert(parentPath);
+            }
+            else
+            {
+                std::string filePath(path + fileName + g_sep);
+                findAllCslPackages(filePath);
+            }
         }
     }
 
@@ -524,16 +558,6 @@ namespace XSwiftBus
                 queueDBusCall([ = ]()
                 {
                     cleanup();
-                });
-            }
-            else if (message.getMethodName() == "loadPlanesPackage")
-            {
-                std::string path;
-                message.beginArgumentRead();
-                message.getArgument(path);
-                queueDBusCall([ = ]()
-                {
-                    sendDBusReply(sender, serial, loadPlanesPackage(path));
                 });
             }
             else if (message.getMethodName() == "setDefaultIcao")

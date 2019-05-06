@@ -21,6 +21,7 @@
 #include <XPLM/XPLMDisplay.h>
 #include <functional>
 #include <utility>
+#include <set>
 
 //! \cond PRIVATE
 #define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
@@ -146,7 +147,9 @@ namespace XSwiftBus
         bool m_initialized = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
+        std::set<std::string> m_cslPackages;
 
+        void findAllCslPackages(const std::string &path);
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
