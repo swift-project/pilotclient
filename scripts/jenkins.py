@@ -145,6 +145,10 @@ class Builder:
         """
         Generates the binary symbols and archives them into a gzip archive, located in the swift source root.
         """
+        # Do not even generate symbols if they aren't used. They got so big now, that we cannot afford to archive them in Jenkins
+        if not upload_symbols:
+            return
+        
         if self._should_create_symbols():
             build_path = self._get_swift_build_path()
             os.chdir(build_path)
@@ -188,9 +192,7 @@ class Builder:
                             print('Adding ' + symbol_path)
                             tar.add(symbol_path, f)
             tar.close()
-
-            if upload_symbols:
-                self.__upload_symbol_files(tar_path)
+            self.__upload_symbol_files(tar_path)
 
     def _get_swift_source_path(self):
         return self.__source_path
