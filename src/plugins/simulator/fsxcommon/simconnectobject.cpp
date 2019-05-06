@@ -42,7 +42,7 @@ namespace BlackSimPlugin
             m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
         {
             this->resetCameraPositions();
-            m_type = aircraft.isTerrainProbe() ? TerrainProbe : Aircraft;
+            m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
             m_interpolator->initCorrespondingModel(aircraft.getModel());
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
         }
@@ -51,7 +51,7 @@ namespace BlackSimPlugin
         {
             m_aircraft = aircraft;
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
-            m_type = aircraft.isTerrainProbe() ? TerrainProbe : Aircraft;
+            m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
         }
 
         void CSimConnectObject::setAircraftModelString(const QString &modelString)
@@ -79,7 +79,8 @@ namespace BlackSimPlugin
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 const SimObjectType type = requestIdToType(m_requestId);
-                Q_ASSERT_X(type == this->getType(), Q_FUNC_INFO, "Type mismatch");
+                const bool same = CSimConnectObject::isSameTypeGroup(type, this->getType());
+                Q_ASSERT_X(same, Q_FUNC_INFO, "Type mismatch");
             }
 
             DWORD os = 0;
@@ -88,7 +89,8 @@ namespace BlackSimPlugin
             case TerrainProbe:
                 os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjTerrainProbe(offset));
                 break;
-            case Aircraft:
+            case AircraftNonAtc:
+            case AircraftSimulatedObject:
             default:
                 os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjAircraft(offset));
                 break;
@@ -239,23 +241,36 @@ namespace BlackSimPlugin
         CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
         {
             if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
-            if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId)) { return Aircraft; }
+            if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))     { return AircraftNonAtc; }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong range");
-            return Aircraft;
+            return AircraftNonAtc;
         }
 
         const QString &CSimConnectObject::typeToString(CSimConnectObject::SimObjectType type)
         {
-            static const QString a("aircraft");
+            static const QString a1("aircraft (non ATC)");
+            static const QString a2("aircraft (sim.object)");
             static const QString p("probe");
             static const QString u("unknown");
             switch (type)
             {
-            case Aircraft: return a;
-            case TerrainProbe: return p;
+            case AircraftNonAtc:    return a1;
+            case AircraftSimulatedObject: return a2;
+            case TerrainProbe:      return p;
             default: break;
             }
             return u;
+        }
+
+        bool CSimConnectObject::isSameTypeGroup(CSimConnectObject::SimObjectType t1, CSimConnectObject::SimObjectType t2)
+        {
+            if (t1 == t2) { return true; }
+            return isAircraft(t1) && isAircraft(t2);
+        }
+
+        bool CSimConnectObject::isAircraft(CSimConnectObject::SimObjectType type)
+        {
+            return CSimConnectObject::AircraftNonAtc == type || CSimConnectObject::AircraftSimulatedObject;
         }
 
         bool CSimConnectObjects::insert(const CSimConnectObject &simObject, bool updateTimestamp)
@@ -465,6 +480,13 @@ namespace BlackSimPlugin
             return objs;
         }
 
+        QList<CSimConnectObject> CSimConnectObjects::getAircraft() const
+        {
+            QList<CSimConnectObject> l = this->getByType(CSimConnectObject::AircraftNonAtc);
+            l.append(this->getByType(CSimConnectObject::AircraftSimulatedObject));
+            return l;
+        }
+
         CSimConnectObject CSimConnectObjects::getNotPendingProbe() const
         {
             for (const CSimConnectObject &simObject : *this)
@@ -497,6 +519,11 @@ namespace BlackSimPlugin
                 if (simObject.getType() == type) { return true; }
             }
             return false;
+        }
+
+        bool CSimConnectObjects::containsAircraft() const
+        {
+            return this->containsType(CSimConnectObject::AircraftNonAtc) || this->containsType(CSimConnectObject::AircraftSimulatedObject);
         }
 
         int CSimConnectObjects::removeCallsigns(const CCallsignSet &callsigns)

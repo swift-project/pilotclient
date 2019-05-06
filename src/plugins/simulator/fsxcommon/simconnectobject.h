@@ -30,7 +30,8 @@ namespace BlackSimPlugin
             //! Type
             enum SimObjectType
             {
-                Aircraft,
+                AircraftNonAtc,
+                AircraftSimulatedObject,
                 TerrainProbe,
                 AllTypes
             };
@@ -69,8 +70,17 @@ namespace BlackSimPlugin
             //! Object type
             SimObjectType getType() const { return m_type; }
 
+            //! Type as string
+            const QString &getTypeAsString() const { return typeToString(m_type); }
+
             //! Aircraft?
-            bool isAircraft() const { return this->getType() == Aircraft; }
+            bool isAircraft() const { return this->getType() == AircraftNonAtc || this->getType() == AircraftSimulatedObject; }
+
+            //! Aircraft simulated object?
+            bool isAircraftSimulatedObject() const { return this->getType() == AircraftSimulatedObject; }
+
+            //! Aircraft NON ATC?
+            bool isAircraftNonAtc() const { return this->getType() == AircraftNonAtc; }
 
             //! Probe?
             bool isTerrainProbe() const { return this->getType() == TerrainProbe; }
@@ -282,9 +292,15 @@ namespace BlackSimPlugin
             //! Type to string
             static const QString &typeToString(SimObjectType type);
 
+            //! Same type
+            static bool isSameTypeGroup(SimObjectType t1, SimObjectType t2);
+
+            //! Aircraft?
+            static bool isAircraft(SimObjectType type);
+
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
-            SimObjectType m_type = Aircraft;
+            SimObjectType m_type = AircraftNonAtc;
             DWORD m_requestId = 0;
             DWORD m_objectId  = 0;
             bool m_validRequestId = false;
@@ -297,13 +313,13 @@ namespace BlackSimPlugin
             int  m_addingExceptions      = 0; //!< exception when added
             int  m_addingDirectlyRemoved = 0; //!< added, but removed directly afterwards
             qint64 m_tsCreated = -1;
-            GUID m_cameraGuid;
+            GUID   m_cameraGuid;
             SIMCONNECT_DATA_XYZ m_cameraPosition;
             SIMCONNECT_DATA_PBH m_cameraRotation;
             QByteArray m_callsignByteArray;
             QString m_observerName;
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
-            BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };          //!< lights as sent to simulator
+            BlackMisc::Aviation::CAircraftLights m_lightsAsSent       { nullptr };    //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation
             QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
         };
@@ -387,6 +403,9 @@ namespace BlackSimPlugin
             //! All probes
             QList<CSimConnectObject> getProbes() const { return this->getByType(CSimConnectObject::TerrainProbe); }
 
+            //! All aircraft
+            QList<CSimConnectObject> getAircraft() const;
+
             //! Get a non pending probe
             CSimConnectObject getNotPendingProbe() const;
 
@@ -395,6 +414,12 @@ namespace BlackSimPlugin
 
             //! Contains object of type
             bool containsType(CSimConnectObject::SimObjectType type) const;
+
+            //! Probe?
+            bool containsProbe() const { return this->containsType(CSimConnectObject::TerrainProbe); }
+
+            //! Aircraft?
+            bool containsAircraft() const;
         };
     } // namespace
 } // namespace
