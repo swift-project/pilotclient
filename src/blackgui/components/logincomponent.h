@@ -221,6 +221,9 @@ namespace BlackGui
             //! Server changed
             void onSelectedServerChanged(const BlackMisc::Network::CServer &server);
 
+            //! Simulator status changed
+            void onSimulatorStatusChanged(int status);
+
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);
 

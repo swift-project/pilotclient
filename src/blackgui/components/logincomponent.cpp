@@ -133,15 +133,16 @@ namespace BlackGui
             ui->le_AircraftCombinedType->setMaxLength(3);
             ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
-            connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao, Qt::QueuedConnection);
-            connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao, Qt::QueuedConnection);
-            connect(ui->pb_SimulatorLookup, &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
-            connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
+            connect(ui->selector_AircraftIcao,   &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao, Qt::QueuedConnection);
+            connect(ui->selector_AirlineIcao,    &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao, Qt::QueuedConnection);
+            connect(ui->pb_SimulatorLookup,      &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
+            connect(ui->tw_Details,              &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
             if (sGui && sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged, Qt::QueuedConnection);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginComponent::autoLogoffDetection, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
             }
 
             // server and UI elements when in disconnect state
@@ -422,6 +423,20 @@ namespace BlackGui
             ui->form_Pilot->setUser(user, true);
         }
 
+        void CLoginComponent::onSimulatorStatusChanged(int status)
+        {
+            ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
+            if (!this->hasValidContexts()) { return; }
+            if (sGui->getIContextNetwork()->isConnected())
+            {
+                if (!s.testFlag(ISimulator::Connected))
+                {
+                    // sim NOT connected but network connected
+                    this->autoLogoffDetection();
+                }
+            }
+        }
+
         void CLoginComponent::onServerTabWidgetChanged(int index)
         {
             Q_UNUSED(index);
@@ -679,8 +694,8 @@ namespace BlackGui
             if (!this->hasValidContexts()) { return; }
             if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
-            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress");
-            const int delaySecs = 45;
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
+            const int delaySecs = 30;
             this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
             this->setLogoffCountdown(delaySecs);
 
