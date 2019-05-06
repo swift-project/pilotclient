@@ -7,14 +7,65 @@
     <x>0</x>
     <y>0</y>
     <width>254</width>
-    <height>174</height>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FSX/P3D settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_Settings" columnstretch="0,0">
-   <item row="5" column="1">
+  <layout class="QGridLayout" name="gl_Settings" columnstretch="0,0,0">
+   <item row="3" column="2">
+    <widget class="QLabel" name="lbl_SBOffsets">
+     <property name="text">
+      <string>Enable SB SimConnect offsets. Those are needed to detect &quot;Ident&quot; and &quot;Standby&quot; from your transponder (supported by some vendors as PMDG).</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="lbl_TraceSimConnectCalls">
+     <property name="text">
+      <string>Trace simConnect calls (this will trace sendId calls and provide further information)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="lbl_NoLocalSimulator">
+     <property name="text">
+      <string>Looks like you are running a remote GUI, these settings only work locally. Use core settings.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="cb_UseFsuipc">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="cb_AddingAsSimulatedObject">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
     <widget class="QWidget" name="wi_Buttons" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item alignment="Qt::AlignRight">
@@ -47,51 +98,24 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="lbl_TraceSimConnectCalls">
-     <property name="text">
-      <string>Trace simConnect calls (this will trace sendId calls and provide further information)</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="lbl_SBOffsets">
-     <property name="text">
-      <string>Enable SB SimConnect offsets. Those are needed to detect &quot;Ident&quot; and &quot;Standby&quot; from your transponder (supported by some vendors as PMDG).</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QCheckBox" name="cb_UseFsuipc">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QCheckBox" name="cb_TraceSimConnectCalls">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
+   <item row="5" column="2">
     <widget class="QLabel" name="lbl_TraceTerrainProbe">
      <property name="text">
       <string>Use the terrain probe (32bit only)</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="2">
     <widget class="QLabel" name="lbl_UseFsuipc">
      <property name="text">
       <string>Enable FSUIPC support</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="cb_EnableTerrainProbe">
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -102,17 +126,10 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="cb_EnableTerrainProbe">
+   <item row="4" column="2">
+    <widget class="QLabel" name="lbl_FailedUseSimulatedObjects">
      <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lbl_NoLocalSimulator">
-     <property name="text">
-      <string>Looks like you are running a remote GUI, these settings only work locally. Use core settings.</string>
+      <string>If SimConnect NonATC AI aircraft adding fails, use simulated objects. You cannot see those in the aircraft menu, but might work for some helicopters etc.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -125,6 +142,7 @@
   <tabstop>cb_TraceSimConnectCalls</tabstop>
   <tabstop>cb_UseFsuipc</tabstop>
   <tabstop>cb_SBOffsets</tabstop>
+  <tabstop>cb_AddingAsSimulatedObject</tabstop>
   <tabstop>cb_EnableTerrainProbe</tabstop>
   <tabstop>pb_CopyTerrainProbe</tabstop>
   <tabstop>pb_Refresh</tabstop>

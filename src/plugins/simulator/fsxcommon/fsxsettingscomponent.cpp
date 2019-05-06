@@ -35,12 +35,13 @@ namespace BlackSimPlugin
             ui->setupUi(this);
             ui->cb_TraceSimConnectCalls->setChecked(false);
 
+            connect(ui->cb_AddingAsSimulatedObject, &QCheckBox::released, this, &CFsxSettingsComponent::onSimulatedObjectChanged);
             connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
-            connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
-            connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
-            connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
-            connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
-            connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
+            connect(ui->cb_EnableTerrainProbe,   &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+            connect(ui->cb_UseFsuipc,            &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
+            connect(ui->cb_SBOffsets,            &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
+            connect(ui->pb_CopyTerrainProbe,     &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
+            connect(ui->pb_Refresh,              &QPushButton::released, this, &CFsxSettingsComponent::refresh);
 
             if (sGui && sGui->getIContextSimulator())
             {
@@ -75,6 +76,7 @@ namespace BlackSimPlugin
                 ui->cb_EnableTerrainProbe->setChecked(fsxOrP3D->isUsingFsxTerrainProbe());
                 ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
                 ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcOpened());
+                ui->cb_AddingAsSimulatedObject->setChecked(fsxOrP3D->isAddingAsSimulatedObjectEnabled());
             }
 
             ui->lbl_NoLocalSimulator->setVisible(!localSim);
@@ -93,6 +95,13 @@ namespace BlackSimPlugin
             CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
             if (!fsxOrP3D) { return; }
             fsxOrP3D->setTractingSendId(ui->cb_TraceSimConnectCalls->isChecked());
+        }
+
+        void CFsxSettingsComponent::onSimulatedObjectChanged()
+        {
+            CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
+            if (!fsxOrP3D) { return; }
+            fsxOrP3D->setAddingAsSimulatedObjectEnabled(ui->cb_AddingAsSimulatedObject->isChecked());
         }
 
         void CFsxSettingsComponent::onEnableTerrainProbeChanged()

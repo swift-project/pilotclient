@@ -35,7 +35,7 @@ namespace BlackSimPlugin
             explicit CFsxSettingsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CFsxSettingsComponent();
+            virtual ~CFsxSettingsComponent() override;
 
             //! Simulator, P3D/FSX
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
@@ -52,6 +52,9 @@ namespace BlackSimPlugin
 
             //! Terrain probe checkbox changed
             void onEnableTerrainProbeChanged();
+
+            //! Using simulated objects
+            void onSimulatedObjectChanged();
 
             //! FSUIPC setting changed
             void onFsuipcChanged();
