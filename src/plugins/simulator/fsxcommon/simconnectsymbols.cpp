@@ -47,6 +47,8 @@ typedef HRESULT(__stdcall *PfnSimConnect_AIRemoveObject)(HANDLE, SIMCONNECT_OBJE
 typedef HRESULT(__stdcall *PfnSimConnect_SetDataOnSimObject)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_SET_FLAG, DWORD, DWORD, void *);
 typedef HRESULT(__stdcall *PfnSimConnect_AIReleaseControl)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
 typedef HRESULT(__stdcall *PfnSimConnect_AICreateNonATCAircraft)(HANDLE, const char *, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
+typedef HRESULT(__stdcall *PfnSimConnect_AICreateEnrouteATCAircraft)(HANDLE, const char *, const char *, int, const char *, double, BOOL, SIMCONNECT_DATA_REQUEST_ID);
+typedef HRESULT(__stdcall *PfnSimConnect_AICreateParkedATCAircraft)(HANDLE, const char *, const char *, const char *, SIMCONNECT_DATA_REQUEST_ID);
 typedef HRESULT(__stdcall *PfnSimConnect_AICreateSimulatedObject)(HANDLE, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
 typedef HRESULT(__stdcall *PfnSimConnect_MapClientDataNameToID)(HANDLE, const char *, SIMCONNECT_CLIENT_DATA_ID);
 typedef HRESULT(__stdcall *PfnSimConnect_CreateClientData)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, DWORD, SIMCONNECT_CREATE_CLIENT_DATA_FLAG);
@@ -91,6 +93,8 @@ struct SimConnectSymbols
     PfnSimConnect_SetDataOnSimObject SimConnect_SetDataOnSimObject = nullptr;
     PfnSimConnect_AIReleaseControl SimConnect_AIReleaseControl = nullptr;
     PfnSimConnect_AICreateNonATCAircraft SimConnect_AICreateNonATCAircraft = nullptr;
+    PfnSimConnect_AICreateParkedATCAircraft SimConnect_AICreateParkedATCAircraft = nullptr;
+    PfnSimConnect_AICreateEnrouteATCAircraft SimConnect_AICreateEnrouteATCAircraft = nullptr;
     PfnSimConnect_AICreateSimulatedObject SimConnect_AICreateSimulatedObject = nullptr;
     PfnSimConnect_MapClientDataNameToID SimConnect_MapClientDataNameToID = nullptr;
     PfnSimConnect_CreateClientData SimConnect_CreateClientData = nullptr;
@@ -148,6 +152,8 @@ bool resolveCommonSimConnectSymbols(QLibrary &simConnectDll)
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_SetDataOnSimObject, "SimConnect_SetDataOnSimObject");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AIReleaseControl, "SimConnect_AIReleaseControl");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateNonATCAircraft, "SimConnect_AICreateNonATCAircraft");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateEnrouteATCAircraft, "SimConnect_AICreateEnrouteATCAircraft");
+    resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateParkedATCAircraft, "SimConnect_AICreateParkedATCAircraft");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AICreateSimulatedObject, "SimConnect_AICreateSimulatedObject");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_MapClientDataNameToID, "SimConnect_MapClientDataNameToID");
     resolveSuccess = resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_CreateClientData, "SimConnect_CreateClientData");
@@ -393,6 +399,16 @@ SIMCONNECTAPI SimConnect_AIReleaseControl(HANDLE hSimConnect, SIMCONNECT_OBJECT_
 SIMCONNECTAPI SimConnect_AICreateNonATCAircraft(HANDLE hSimConnect, const char *szContainerTitle, const char *szTailNumber, SIMCONNECT_DATA_INITPOSITION InitPos, SIMCONNECT_DATA_REQUEST_ID RequestID)
 {
     return gSymbols.SimConnect_AICreateNonATCAircraft(hSimConnect, szContainerTitle, szTailNumber, InitPos, RequestID);
+}
+
+SIMCONNECTAPI SimConnect_AICreateEnrouteATCAircraft(HANDLE hSimConnect, const char *szContainerTitle, const char *szTailNumber, int iFlightNumber, const char *szFlightPlanPath, double dFlightPlanPosition, BOOL bTouchAndGo, SIMCONNECT_DATA_REQUEST_ID RequestID)
+{
+    return gSymbols.SimConnect_AICreateEnrouteATCAircraft(hSimConnect, szContainerTitle, szTailNumber, iFlightNumber, szFlightPlanPath, dFlightPlanPosition, bTouchAndGo, RequestID);
+}
+
+SIMCONNECTAPI SimConnect_AICreateParkedATCAircraft(HANDLE hSimConnect, const char *szContainerTitle, const char *szTailNumber, const char *szAirportID, SIMCONNECT_DATA_REQUEST_ID RequestID)
+{
+    return gSymbols.SimConnect_AICreateParkedATCAircraft(hSimConnect, szContainerTitle, szTailNumber, szAirportID, RequestID);
 }
 
 SIMCONNECTAPI SimConnect_AICreateSimulatedObject(HANDLE hSimConnect, const char *szContainerTitle, SIMCONNECT_DATA_INITPOSITION InitPos, SIMCONNECT_DATA_REQUEST_ID RequestID)
