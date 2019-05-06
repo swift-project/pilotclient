@@ -28,6 +28,9 @@ target.path = $$PREFIX/bin
 INSTALLS += target
 
 macx {
+    QMAKE_TARGET_BUNDLE_PREFIX = "org.swift-project"
+    QMAKE_INFO_PLIST = Info.plist
+
     # Modifies plugin path
     qtconf.path = $$PREFIX/bin/swiftcore.app/Contents/Resources
     qtconf.files = qt.conf

@@ -43,6 +43,30 @@ namespace BlackCore
         virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
     };
 
+    class BLACKCORE_EXPORT CAudioInputDeviceDummy : public IAudioInputDevice
+    {
+        Q_OBJECT
+    public:
+        //! Constructor
+        CAudioInputDeviceDummy(QObject *parent = nullptr) : IAudioInputDevice(parent) {}
+
+        //! Destructor
+        virtual ~CAudioInputDeviceDummy() override = default;
+
+        //! \copydoc IAudioInputDevice::getInputDevices
+        virtual const BlackMisc::Audio::CAudioDeviceInfoList &getInputDevices() const override { return m_devices; }
+
+        //! \copydoc IAudioInputDevice::getCurrentInputDevice
+        virtual const BlackMisc::Audio::CAudioDeviceInfo &getCurrentInputDevice() const override { return m_currentDevice; }
+
+        //! \copydoc IAudioInputDevice::setInputDevice
+        virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override { m_currentDevice = device; }
+
+    private:
+        BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
+        BlackMisc::Audio::CAudioDeviceInfo m_currentDevice;
+    };
+
     //! Audio Output Device
     class IAudioOutputDevice : public QObject
     {

@@ -30,6 +30,7 @@
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/macos/microphoneaccess.h"
 #include "blacksound/selcalplayer.h"
 #include "blacksound/notificationplayer.h"
 
@@ -120,6 +121,12 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
+            void initVoiceChannels();
+            void initInputDevice();
+            void initOutputDevice();
+            void initAudioMixer();
+            void initVoiceVatlib(bool allocateInput = true);
+
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
@@ -151,6 +158,11 @@ namespace BlackCore
             std::unique_ptr<IAudioMixer> m_audioMixer;
             const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
             int m_outVolumeBeforeMute = 90;
+
+        #ifdef Q_OS_MAC
+            BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+            void delayedInitMicrophone();
+            #endif
 
             // For easy access.
             QSharedPointer<IVoiceChannel> m_channel1;

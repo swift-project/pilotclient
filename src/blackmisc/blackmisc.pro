@@ -70,6 +70,10 @@ SOURCES +=  *.cpp \
             $$PWD/test/*.cpp \
             $$PWD/weather/*.cpp
 
+macx {
+    HEADERS += $$PWD/macos/microphoneaccess.h
+    OBJECTIVE_SOURCES += $$PWD/macos/microphoneaccess.mm
+}
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad/mini_chromium
@@ -87,7 +91,7 @@ msvc {
     CONFIG(debug, debug|release): LIBS *= -lclientd -lutild -lbased -lRpcrt4 -lAdvapi32
     CONFIG(release, debug|release): LIBS *= -lclient -lutil -lbase -lRpcrt4 -lAdvapi32
 }
-macx: LIBS += -lclient -lutil -lbase -lbsm -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation
+macx: LIBS += -lclient -lutil -lbase -lbsm -framework AVFoundation -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation
 unix:!macx: LIBS *= -lclient -lutil -lbase
 
 DESTDIR = $$DestRoot/lib

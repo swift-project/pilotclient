@@ -54,37 +54,12 @@ namespace BlackCore
             IContextAudio(mode, runtime),
             m_voice(new CVoiceVatlib())
         {
-            //! \todo KB 2018-11 those are supposed to be Qt::QueuedConnection, but not yet changed (risk to break something)
-            m_channel1 = m_voice->createVoiceChannel();
-            connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
-            m_channel2 = m_voice->createVoiceChannel();
-            connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
-            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
-            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
+            initVoiceChannels();
+            initInputDevice();
+            initOutputDevice();
+            initAudioMixer();
 
-            m_voiceInputDevice  = m_voice->createInputDevice();
-            m_voiceOutputDevice = m_voice->createOutputDevice();
-
-            m_audioMixer = m_voice->createAudioMixer();
-
-            m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
-            m_voice->connectVoice(m_channel1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
-            m_voice->connectVoice(m_channel2.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_voiceOutputDevice.get());
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channel1.data());
-            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
-
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
-            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
             this->setVoiceOutputVolume(90);
-
-            m_unusedVoiceChannels.push_back(m_channel1);
-            m_unusedVoiceChannels.push_back(m_channel2);
-
-            m_voiceChannelOutputPortMapping[m_channel1] = IAudioMixer::OutputVoiceChannel1;
-            m_voiceChannelOutputPortMapping[m_channel2] = IAudioMixer::OutputVoiceChannel2;
 
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
@@ -103,6 +78,69 @@ namespace BlackCore
             if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
+        }
+
+        void CContextAudio::initVoiceChannels()
+        {
+            //! \todo KB 2018-11 those are supposed to be Qt::QueuedConnection, but not yet changed (risk to break something)
+            m_channel1 = m_voice->createVoiceChannel();
+            connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
+            connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel1.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
+            m_channel2 = m_voice->createVoiceChannel();
+            connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::onConnectionStatusChanged);
+            connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom,          this, &CContextAudio::onUserJoinedRoom);
+            connect(m_channel2.data(), &IVoiceChannel::userLeftRoom,            this, &CContextAudio::onUserLeftRoom);
+
+            m_unusedVoiceChannels.push_back(m_channel1);
+            m_unusedVoiceChannels.push_back(m_channel2);
+
+            m_voiceChannelOutputPortMapping[m_channel1] = IAudioMixer::OutputVoiceChannel1;
+            m_voiceChannelOutputPortMapping[m_channel2] = IAudioMixer::OutputVoiceChannel2;
+        }
+
+        void CContextAudio::initInputDevice()
+        {
+        #ifdef Q_OS_MAC
+           CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
+           if (status == CMacOSMicrophoneAccess::Authorized)
+           {
+               m_voiceInputDevice = m_voice->createInputDevice();
+           }
+           else if (status == CMacOSMicrophoneAccess::NotDetermined)
+           {
+               m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
+               connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CContextAudio::delayedInitMicrophone);
+               m_micAccess.requestAccess();
+           }
+           else
+           {
+               m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
+               CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
+           }
+        #else
+           m_voiceInputDevice = m_voice->createInputDevice();
+        #endif
+        }
+
+        void CContextAudio::initOutputDevice()
+        {
+            m_voiceOutputDevice = m_voice->createOutputDevice();
+        }
+
+        void CContextAudio::initAudioMixer()
+        {
+            m_audioMixer = m_voice->createAudioMixer();
+
+            m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+            m_voice->connectVoice(m_channel1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
+            m_voice->connectVoice(m_channel2.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
+            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_voiceOutputDevice.get());
+            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channel1.data());
+            m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
+
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
         }
 
         CContextAudio::~CContextAudio()
@@ -643,5 +681,14 @@ namespace BlackCore
 
             return voiceChannel;
         }
+
+
+    #ifdef Q_OS_MAC
+        void CContextAudio::delayedInitMicrophone()
+        {
+            m_voiceInputDevice = m_voice->createInputDevice();
+            m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+        }
+    #endif
     } // namespace
 } // namespace
