@@ -641,6 +641,45 @@ namespace BlackMisc
             {
                 return CFileUtils::appendFilePathsAndFixUnc(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPathName());
             }
+
+            QString CFsxP3DSettings::convertToQString(bool i18n) const
+            {
+                Q_UNUSED(i18n);
+                return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding);
+            }
+
+            CVariant CFsxP3DSettings::propertyByIndex(const CPropertyIndex &index) const
+            {
+                Q_UNUSED(index);
+                return {};
+            }
+
+            void CFsxP3DSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            {
+                Q_UNUSED(index);
+                Q_UNUSED(variant);
+            }
+
+            CFsxP3DSettings CMultiSimulatorDetailsSettings::getSettings(const CSimulatorInfo &sim) const
+            {
+                Q_ASSERT_X(sim.isFsxP3DFamily(), Q_FUNC_INFO, "Only for FSX/P3D");
+                if (sim == CSimulatorInfo::p3d()) { return m_simP3D.get(); }
+                return m_simFsx.get();
+            }
+
+            CStatusMessage CMultiSimulatorDetailsSettings::setSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isFsxP3DFamily(), Q_FUNC_INFO, "Only for FSX/P3D");
+                if (simulator == CSimulatorInfo::p3d()) { return m_simP3D.set(settings); }
+                return m_simFsx.set(settings);
+            }
+
+            CStatusMessage CMultiSimulatorDetailsSettings::setAndSaveSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isFsxP3DFamily(), Q_FUNC_INFO, "Only for FSX/P3D");
+                if (simulator == CSimulatorInfo::p3d()) { return m_simP3D.setAndSave(settings); }
+                return m_simFsx.setAndSave(settings);
+            }
         } // ns
     } // ns
 } // ns

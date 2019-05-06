@@ -338,6 +338,15 @@ namespace BlackSimPlugin
             m_traceAutoUntilTs = -1;
         }
 
+        void CSimulatorFsxCommon::setAddingAsSimulatedObjectEnabled(bool enabled)
+        {
+            m_useAddSimulatedObj = enabled;
+            const CSimulatorInfo sim = this->getSimulatorInfo();
+            CFsxP3DSettings settings = m_detailsSettings.getSettings(sim);
+            settings.setAddingAsSimulatedObjectEnabled(enabled);
+            m_detailsSettings.setSettings(settings, sim);
+        }
+
         void CSimulatorFsxCommon::resetAircraftStatistics()
         {
             m_dispatchProcCount = 0;
@@ -439,7 +448,9 @@ namespace BlackSimPlugin
             if (m_simSimulating) { return; } // already simulatig
             if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
             m_simSimulating = true; // only place where this should be set to true
-            m_simConnected = true;
+            m_simConnected  = true;
+            m_useAddSimulatedObj = m_detailsSettings.getSettings(this->getSimulatorInfo()).isAddingAsSimulatedObjectEnabled();
+
             HRESULT hr1 = this->logAndTraceSendId(
                               SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                                       CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),

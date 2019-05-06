@@ -1,4 +1,4 @@
-/* Copyright (C) 2016
+﻿/* Copyright (C) 2016
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -30,7 +30,7 @@ namespace BlackMisc
         namespace Settings
         {
             //! Settings for simulator
-            //! Driver independent part also used in loaders (such as directories)
+            //! Driver independent parts (such as directories), also used in model loaders
             class BLACKMISC_EXPORT CSimulatorSettings : public CValueObject<CSimulatorSettings>
             {
             public:
@@ -118,6 +118,37 @@ namespace BlackMisc
                     BLACK_METAMEMBER(modelDirectories),
                     BLACK_METAMEMBER(excludeDirectoryPatterns),
                     BLACK_METAMEMBER(comIntegration)
+                );
+            };
+
+            //! Some P3D/FSX settings
+            class BLACKMISC_EXPORT CFsxP3DSettings : public CValueObject<CFsxP3DSettings>
+            {
+            public:
+                //! Default constructor
+                CFsxP3DSettings() {}
+
+                //! Use simulated object adding
+                void setAddingAsSimulatedObjectEnabled(bool enable) { m_useSimulatedObjectAdding = enable; }
+
+                //! Use simulated object adding
+                bool isAddingAsSimulatedObjectEnabled() const { return m_useSimulatedObjectAdding; }
+
+                //! \copydoc BlackMisc::Mixin::String::toQString
+                QString convertToQString(bool i18n = false) const;
+
+                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+                CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            private:
+                bool m_useSimulatedObjectAdding = false;   //!< COM integration
+
+                BLACK_METACLASS(
+                    CFsxP3DSettings,
+                    BLACK_METAMEMBER(useSimulatedObjectAdding)
                 );
             };
 
@@ -254,8 +285,42 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static const QString &defaultValue()
                 {
-                    static const QString version("4.2");
+                    static const QString version("4.3");
                     return version;
+                }
+            };
+
+            //! Some details for FSX
+            struct TFsxDetailsSettings : public TSettingTrait<CFsxP3DSettings>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "simulator/fsxdetailsettings"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("FSX details"); return name; }
+
+                //! \copydoc BlackMisc::TSettingTrait::defaultValue
+                static const CFsxP3DSettings &defaultValue()
+                {
+                    static const CFsxP3DSettings d;
+                    return d;
+                }
+            };
+
+            //! Some details for P3D
+            struct TP3DDetailsSettings : public TSettingTrait<CFsxP3DSettings>
+            {
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "simulator/p3ddetailsettings"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("P3D details"); return name; }
+
+                //! \copydoc BlackMisc::TSettingTrait::defaultValue
+                static const CFsxP3DSettings &defaultValue()
+                {
+                    static const CFsxP3DSettings d;
+                    return d;
                 }
             };
 
@@ -277,6 +342,24 @@ namespace BlackMisc
 
                 //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("FG settings"); return name; }
+            };
+
+            //! Bundle of detail settings
+            class BLACKMISC_EXPORT CMultiSimulatorDetailsSettings : public QObject
+            {
+            public:
+                //! Settings per simulator
+                CFsxP3DSettings getSettings(const CSimulatorInfo &sim) const;
+
+                //! Set settings per simulator
+                CStatusMessage setSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator);
+
+                //! Set settings per simulator
+                CStatusMessage setAndSaveSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator);
+
+            private:
+                CSetting<TFsxDetailsSettings> m_simFsx { this }; //!< FSX settings
+                CSetting<TP3DDetailsSettings> m_simP3D { this }; //!< P3D settings
             };
 
             //! Bundle of settings for all simulators
@@ -502,6 +585,7 @@ namespace BlackMisc
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSimulatorSettings)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CFsxP3DSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CSimulatorSettings>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CSimulatorSettings>)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSimulatorMessagesSettings)

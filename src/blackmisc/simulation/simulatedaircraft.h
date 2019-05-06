@@ -380,7 +380,7 @@ namespace BlackMisc
             //! Difference of network and (rendered) livery code
             QString getNetworkModelLiveryDifference() const;
 
-            //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
+            //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconFile
             const QString &getIconFile() const { return m_models[CurrentModel].getIconFile(); }
 
             //! Get model string

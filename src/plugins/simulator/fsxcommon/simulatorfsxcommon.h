@@ -186,7 +186,7 @@ namespace BlackSimPlugin
             bool isAddingAsSimulatedObjectEnabled() const { return m_useAddSimulatedObj; }
 
             //! Allow adding as simulated object instead of non ATC
-            void setAddingAsSimulatedObjectEnabled(bool enabled) { m_useAddSimulatedObj = enabled; }
+            void setAddingAsSimulatedObjectEnabled(bool enabled);
 
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
@@ -608,6 +608,9 @@ namespace BlackSimPlugin
             QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging, latest first
             int m_receiveExceptionCount = 0;      //!< exceptions
             int m_requestSimObjectDataCount  = 0; //!< requested SimObjects
+
+            // settings
+            BlackMisc::Simulation::Settings::CMultiSimulatorDetailsSettings m_detailsSettings;
 
             // objects
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
