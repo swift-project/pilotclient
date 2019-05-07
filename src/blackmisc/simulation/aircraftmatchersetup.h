@@ -59,6 +59,7 @@ namespace BlackMisc
                 // --- model set ---
                 ModelSetRemoveFailedModel        = 1 << 15,
                 ModelVerificationAtStartup       = 1 << 16,
+                ModelVerificationOnlyWarnError   = 1 << 18, // later added, hence 18
                 ModelFailoverIfNoModelCanBeAdded = 1 << 17,
 
                 // --- others ---
@@ -115,6 +116,10 @@ namespace BlackMisc
             //! Verification at startup?
             //! \sa ModelVerificationOnStartup
             bool doVerificationAtStartup() const { return this->getMatchingMode().testFlag(ModelVerificationAtStartup); }
+
+            //! Verification only shown for warning/errors?
+            //! \sa ModelVerificationOnlyWarnError
+            bool onlyShowVerificationWarningsAndErrors() const { return this->getMatchingMode().testFlag(ModelVerificationOnlyWarnError); }
 
             //! Failover if model cannot be loaded
             //! \sa ModelFailoverIfNoModelCanBeAdded
@@ -177,7 +182,7 @@ namespace BlackMisc
                                              bool byForceMilitary, bool byForceCivilian,
                                              bool byVtol, bool byGliderCategory, bool byMilitaryCategory,
                                              bool scoreIgnoreZeros,  bool scorePreferColorLiveries,  bool excludeNoDbData, bool excludeNoExcluded,
-                                             bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover);
+                                             bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
 
         private:
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);

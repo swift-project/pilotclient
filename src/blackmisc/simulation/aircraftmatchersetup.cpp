@@ -151,6 +151,7 @@ namespace BlackMisc
             static const QString exExcl("excl.excluded");
             static const QString removeFromModelSet("rem.from model set");
             static const QString verification("Verify models at startup");
+            static const QString verificationWarn("Show only validation warnings/errors");
             static const QString modelFailedAdded("Replace models failed to be added");
             static const QString categoryGlider("glider categories");
             static const QString categoryMilitary("military categories");
@@ -175,6 +176,7 @@ namespace BlackMisc
             case ExcludeNoExcluded:          return exExcl;
             case ModelSetRemoveFailedModel:  return removeFromModelSet;
             case ModelVerificationAtStartup: return verification;
+            case ModelVerificationOnlyWarnError:   return verificationWarn;
             case ModelFailoverIfNoModelCanBeAdded: return modelFailedAdded;
             default: break;
             }
@@ -202,6 +204,7 @@ namespace BlackMisc
             if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
             if (mode.testFlag(ModelSetRemoveFailedModel))  { modes << modeFlagToString(ModelSetRemoveFailedModel); }
             if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
+            if (mode.testFlag(ModelVerificationOnlyWarnError))   { modes << modeFlagToString(ModelVerificationOnlyWarnError); }
             if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
 
             return modes.join(", ");
@@ -231,7 +234,8 @@ namespace BlackMisc
             bool byGliderCategory, bool byMilitaryCategory,
             bool scoreIgnoreZeros, bool scorePreferColorLiveries,
             bool excludeNoDbData, bool excludeNoExcluded,
-            bool modelVerification, bool modelSetRemoveFailedModel, bool modelFailover)
+            bool modelVerification, bool modelVerificationWarnError,
+            bool modelSetRemoveFailedModel, bool modelFailover)
         {
             if (modelFailover) { modelSetRemoveFailedModel = true; } // otherwise this does not make sense
 
@@ -252,7 +256,8 @@ namespace BlackMisc
             if (excludeNoExcluded)         { mode |= ExcludeNoExcluded; }
             if (modelSetRemoveFailedModel) { mode |= ModelSetRemoveFailedModel; }
             if (modelVerification)         { mode |= ModelVerificationAtStartup; }
-            if (modelFailover)             { mode |= ModelFailoverIfNoModelCanBeAdded; }
+            if (modelVerificationWarnError) { mode |= ModelVerificationOnlyWarnError; }
+            if (modelFailover)              { mode |= ModelFailoverIfNoModelCanBeAdded; }
             return mode;
         }
     } // namespace

@@ -247,6 +247,13 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cb_ModelSetVerificationOnlyErrorWarning">
+        <property name="text">
+         <string>dialog only if wanrings/error</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -305,7 +312,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>rb_Reduction</tabstop>
   <tabstop>rb_ScoreOnly</tabstop>
   <tabstop>rb_ScoreAndReduction</tabstop>
   <tabstop>pb_ResetAlgorithm</tabstop>
@@ -324,12 +330,15 @@
   <tabstop>cb_CategoryGlider</tabstop>
   <tabstop>cb_CategoryMilitaryAircraft</tabstop>
   <tabstop>cb_ModelSetVerification</tabstop>
+  <tabstop>cb_ModelSetVerificationOnlyErrorWarning</tabstop>
   <tabstop>cb_ModelSetRemoveFailed</tabstop>
   <tabstop>cb_ModelFailedFailover</tabstop>
   <tabstop>cb_ExclNoExcludedModels</tabstop>
   <tabstop>cb_ExclNoDbData</tabstop>
   <tabstop>cb_ScorePreferColorLiveries</tabstop>
   <tabstop>cb_ScoreIgnoreZeros</tabstop>
+  <tabstop>pb_ResetAll</tabstop>
+  <tabstop>rb_Reduction</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -24,11 +24,11 @@ namespace BlackGui
             ui(new Ui::CMatchingForm)
         {
             ui->setupUi(this);
-            connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->rb_Reduction,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-            connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-            connect(ui->pb_ResetAlgorithm, &QPushButton::released, this, &CMatchingForm::resetByAlgorithm, Qt::QueuedConnection);
-            connect(ui->pb_ResetAll, &QPushButton::released, this, &CMatchingForm::resetAll, Qt::QueuedConnection);
+            connect(ui->rb_ScoreOnly,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->pb_ResetAlgorithm,    &QPushButton::released,  this, &CMatchingForm::resetByAlgorithm,   Qt::QueuedConnection);
+            connect(ui->pb_ResetAll,          &QPushButton::released,  this, &CMatchingForm::resetAll,           Qt::QueuedConnection);
         }
 
         CMatchingForm::~CMatchingForm()
@@ -48,6 +48,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetRemoveFailed, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelFailedFailover, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetVerification, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetVerificationOnlyErrorWarning, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_CategoryGlider, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_CategoryMilitaryAircraft, readonly);
 
@@ -89,6 +90,7 @@ namespace BlackGui
             ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel) || mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
+            ui->cb_ModelSetVerificationOnlyErrorWarning->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationOnlyWarnError));
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
@@ -138,7 +140,8 @@ namespace BlackGui
                        ui->cb_CategoryMilitaryAircraft->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
                        ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
-                       ui->cb_ModelSetVerification->isChecked(), ui->cb_ModelSetRemoveFailed->isChecked(),
+                       ui->cb_ModelSetVerification->isChecked(),  ui->cb_ModelSetVerificationOnlyErrorWarning->isChecked(),
+                       ui->cb_ModelSetRemoveFailed->isChecked(),
                        ui->cb_ModelFailedFailover->isChecked()
                    );
         }
