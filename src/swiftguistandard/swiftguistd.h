@@ -27,6 +27,7 @@
 #include "blackcore/network.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/loghandler.h"
@@ -104,7 +105,7 @@ private:
     QScopedPointer<BlackGui::Components::CNavigatorDialog>  m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
     QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
-    BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
+    BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
