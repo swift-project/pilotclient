@@ -115,6 +115,7 @@ namespace BlackMisc
             CStatusMessageList msgs;
             bool wasStopped = false;
             bool validated  = false;
+            bool onlyErrorsAndWarnings = false;
             const CSimulatorInfo simulator = this->getCurrentSimulator();
             const qint64 started = QDateTime::currentMSecsSinceEpoch();
 
@@ -126,6 +127,7 @@ namespace BlackMisc
                 const CAircraftMatcherSetup setup = m_matchingSettings.get();
                 if (!setup.doVerificationAtStartup()) { break; }
 
+                onlyErrorsAndWarnings = setup.onlyShowVerificationWarningsAndErrors();
                 const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
                 if (models.isEmpty())
                 {
@@ -155,7 +157,8 @@ namespace BlackMisc
             emit this->validating(false);
             if (validated)
             {
-                emit this->validated(simulator, valid, invalid, wasStopped, msgs);
+                const bool e = !onlyErrorsAndWarnings || (!invalid.isEmpty() || msgs.hasWarningOrErrorMessages());
+                if (e) { emit this->validated(simulator, valid, invalid, wasStopped, msgs); }
             }
         }
     } // ns
