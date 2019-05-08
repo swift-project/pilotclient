@@ -44,6 +44,7 @@ namespace BlackMisc
             CSimulatorPluginInfo::registerMetadata();
             CSimulatorPluginInfoList::registerMetadata();
             CSimulatorSettings::registerMetadata();
+            CFsxP3DSettings::registerMetadata();
             CSwiftPluginSettings::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
