@@ -122,7 +122,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            m_simSimulating = false; // treat as stopped, just setting the flag here avoids overhead of on onSimStopped
+            m_simSimulating = false; // thread as stopped, just setting the flag here avoids overhead of on onSimStopped
             m_traceAutoUntilTs = -1;
             m_traceSendId = false;
             this->reset(); // mark as disconnected and reset all values
