@@ -65,10 +65,10 @@
    <item>
     <widget class="QWidget" name="wi_Buttons" native="true">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="4">
-       <widget class="QPushButton" name="pb_TempDisableInvalid">
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pb_TempDisableSelected">
         <property name="text">
-         <string>temp.disable invalid</string>
+         <string>temp.disable selected</string>
         </property>
        </widget>
       </item>
@@ -88,20 +88,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="cb_EnableStartupCheck">
-        <property name="text">
-         <string>check at startup</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="pb_TempDisableSelected">
-        <property name="text">
-         <string>temp.disable selected</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QPushButton" name="pb_TriggerValidation">
         <property name="text">
@@ -109,10 +95,31 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pb_TempDisableInvalid">
+        <property name="text">
+         <string>temp.disable invalid</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="pb_help">
         <property name="text">
          <string>help</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="cb_EnableStartupCheck">
+        <property name="text">
+         <string>check at startup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QCheckBox" name="cb_OnlyIfErrorsOrWarnings">
+        <property name="text">
+         <string>only if errors/warnings</string>
         </property>
        </widget>
       </item>
@@ -143,11 +150,12 @@
  <tabstops>
   <tabstop>tw_CAircraftModelValidationComponent</tabstop>
   <tabstop>tvp_InvalidModels</tabstop>
-  <tabstop>cb_EnableStartupCheck</tabstop>
   <tabstop>pb_help</tabstop>
   <tabstop>pb_TriggerValidation</tabstop>
   <tabstop>pb_TempDisableInvalid</tabstop>
   <tabstop>pb_TempDisableSelected</tabstop>
+  <tabstop>cb_EnableStartupCheck</tabstop>
+  <tabstop>cb_OnlyIfErrorsOrWarnings</tabstop>
  </tabstops>
  <resources/>
  <connections/>

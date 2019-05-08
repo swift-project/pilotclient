@@ -128,6 +128,9 @@ namespace BlackMisc
             //! Set startup verification
             void setVerificationAtStartup(bool verify);
 
+            //! Set the "show only errors" mode
+            void setOnlyShowVerificationWarningsAndErrors(bool only);
+
             //! Matching mode as string
             QString getMatchingModeAsString() const { return modeToString(this->getMatchingMode()); }
 

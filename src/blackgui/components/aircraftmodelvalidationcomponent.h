@@ -63,6 +63,9 @@ namespace BlackGui
             //! Enable/disable startup check
             void onCheckAtStartupChanged(bool checked);
 
+            //! Only show ieth warnings/errors
+            void onOnlyErrorWarningChanged(bool checked);
+
             //! Trigger new validation
             void triggerValidation();
 

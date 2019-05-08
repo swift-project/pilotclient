@@ -51,6 +51,13 @@ namespace BlackMisc
             this->setMatchingMode(m);
         }
 
+        void CAircraftMatcherSetup::setOnlyShowVerificationWarningsAndErrors(bool only)
+        {
+            MatchingMode m = this->getMatchingMode();
+            m.setFlag(ModelVerificationOnlyWarnError, only);
+            this->setMatchingMode(m);
+        }
+
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

@@ -33,7 +33,11 @@ namespace BlackGui
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
             ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
-            connect(ui->cb_EnableStartupCheck,  &QCheckBox::toggled,    this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
+            ui->cb_OnlyIfErrorsOrWarnings->setChecked(setup.onlyShowVerificationWarningsAndErrors());
+
+            connect(ui->cb_EnableStartupCheck,     &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
+            connect(ui->cb_OnlyIfErrorsOrWarnings, &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onOnlyErrorWarningChanged);
+
             connect(ui->pb_TempDisableInvalid,  &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onButtonClicked);
             connect(ui->pb_TriggerValidation,   &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation);
@@ -114,6 +118,15 @@ namespace BlackGui
             CAircraftMatcherSetup setup = m_matchingSettings.get();
             if (setup.doVerificationAtStartup() == checked) { return; }
             setup.setVerificationAtStartup(checked);
+            const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
+            Q_UNUSED(msg);
+        }
+
+        void CAircraftModelValidationComponent::onOnlyErrorWarningChanged(bool checked)
+        {
+            CAircraftMatcherSetup setup = m_matchingSettings.get();
+            if (setup.onlyShowVerificationWarningsAndErrors() == checked) { return; }
+            setup.setOnlyShowVerificationWarningsAndErrors(checked);
             const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
             Q_UNUSED(msg);
         }
