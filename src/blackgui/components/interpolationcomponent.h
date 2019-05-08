@@ -11,10 +11,9 @@
 #ifndef BLACKGUI_COMPONENTS_INTERPOLATIONCOMPONENT_H
 #define BLACKGUI_COMPONENTS_INTERPOLATIONCOMPONENT_H
 
-#include "blackmisc/aviation/callsign.h"
+#include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
-#include "blackgui/blackguiexport.h"
 
 namespace Ui { class CInterpolationComponent; }
 namespace BlackGui
@@ -31,7 +30,7 @@ namespace BlackGui
             explicit CInterpolationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInterpolationComponent();
+            virtual ~CInterpolationComponent() override;
 
         signals:
             //! Request redering restrictions widget

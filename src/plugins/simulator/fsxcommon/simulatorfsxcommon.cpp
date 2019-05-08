@@ -1914,6 +1914,7 @@ namespace BlackSimPlugin
                 const bool sendGround = setup.isSendingGndFlagToSimulator();
 
                 // Interpolated situation
+                // simObjectNumber is passed to equally distributed steps like guessing parts
                 const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup, simObjectNumber++);
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
@@ -1936,13 +1937,6 @@ namespace BlackSimPlugin
                 {
                     // already logged in interpolator
                     continue;
-
-                    /** KB removed 2018-11 as already logged in interpolator
-                    static const QString so("SimObject id: %1");
-                    const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(objectId));
-                    const CStatusMessage sm(this, CStatusMessage::SeverityWarning, msg);
-                    this->clampedLog(callsign, sm);
-                    **/
                 }
 
                 // Interpolated parts

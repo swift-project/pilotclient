@@ -275,9 +275,11 @@ namespace BlackMisc
                     }
                     if (!m.isEmpty())
                     {
-                        if (m_interpolationMessages.isEmpty())
+                        if (m_interpolationMessages.sizeInt() == 2)
                         {
-                            // display first message as a hint in the general log
+                            // display second message as a hint in the general log
+                            // we DO NOT display the first message, as this can happen due to pilot logging off
+                            // if it happens twice we consider it worth displaying
                             CLogMessage::preformatted(m);
                         }
                         m_interpolationMessages.push_back(m);
