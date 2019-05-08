@@ -41,6 +41,7 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -399,6 +400,9 @@ namespace BlackGui
 
             ui->tw_TextMessages->setTabText(ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM1), f1);
             ui->tw_TextMessages->setTabText(ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM2), f2);
+
+            // update tabs
+            this->updateAllTabs();
         }
 
         QWidget *CTextMessageComponent::addNewTextMessageTab(const CCallsign &callsign)
@@ -411,7 +415,8 @@ namespace BlackGui
             const QString style = this->getStyleSheet();
             const bool supervisor = callsign.isSupervisorCallsign();
             QWidget *newTabWidget = new QWidget(this);
-            newTabWidget->setObjectName("Tab widget " + tabName);
+            newTabWidget->setObjectName(u"Tab widget " % tabName);
+            newTabWidget->setProperty("callsign", callsign.asString());
             QPushButton *closeButton = new QPushButton("Close", newTabWidget);
             QVBoxLayout *layout = new QVBoxLayout(newTabWidget);
             CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTabWidget);
@@ -426,7 +431,7 @@ namespace BlackGui
             textEdit->setProperty("supervisormsg", supervisor);
             textEdit->setStyleSheetForContent(style);
 
-            const int index = ui->tw_TextMessages->addTab(newTabWidget, tabName);
+            const int index = ui->tw_TextMessages->addTab(newTabWidget, this->getCallsignAndRealName(callsign));
             QToolButton *closeButtonInTab = new QToolButton(newTabWidget);
             closeButtonInTab->setText("[X]");
             closeButtonInTab->setProperty("supervisormsg", supervisor);
@@ -442,15 +447,52 @@ namespace BlackGui
             closeButtonInTab->setProperty("tabName", tabName);
             closeButton->setProperty("tabName", tabName);
 
-            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
+            connect(closeButton,      &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
 
+            this->setTabWidgetDescription(callsign, index);
+            return newTabWidget;
+        }
+
+        void CTextMessageComponent::setTabWidgetDescription(const CCallsign &callsign, int widgetIndex)
+        {
+            if (callsign.isEmpty()) { return; }
+
+            QString realName;
             if (sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
             {
-                const QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
-                if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(index, realName); }
+                realName = sGui->getIContextNetwork()->getUserForCallsign(callsign).getRealName();
+                if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(widgetIndex, realName); }
             }
-            return newTabWidget;
+            const QString tt = realName.isEmpty() ? callsign.asString() : callsign.asString() % u": " % realName;
+            ui->tw_TextMessages->setTabText(widgetIndex, tt);
+        }
+
+        QString CTextMessageComponent::getCallsignAndRealName(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return {}; }
+            if (m_showRealNames && sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
+            {
+                const QString realName = sGui->getIContextNetwork()->getUserForCallsign(callsign).getRealName();
+                if (!realName.isEmpty())
+                {
+                    return callsign.asString() % u": " % realName;
+                }
+            }
+            return callsign.asString();
+        }
+
+        void CTextMessageComponent::updateAllTabs()
+        {
+            for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
+            {
+                QWidget *tab = ui->tw_TextMessages->widget(index);
+                if (!tab) { continue; }
+                if (!tab->toolTip().isEmpty()) { continue; }
+                const QString cs = tab->property("callsign").toString();
+                if (cs.isEmpty()) { continue; }
+                this->setTabWidgetDescription(CCallsign(cs), index);
+            }
         }
 
         void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
@@ -490,6 +532,16 @@ namespace BlackGui
 
         QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign, bool callsignResolution) const
         {
+            // search the private message tabs by property first
+            for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
+            {
+                QWidget *tab = ui->tw_TextMessages->widget(index);
+                if (tab && tab->property("callsign").toString() == callsign.asString())
+                {
+                    return tab;
+                }
+            }
+
             QWidget *w = this->findTextMessageTabByName(callsign.asString());
             if (w) { return w; }
             if (!callsignResolution) { return nullptr; }
@@ -618,7 +670,7 @@ namespace BlackGui
                 {
                     // not a standard channel
                     bool isNumber;
-                    const QString selectedTabText = ui->tw_TextMessages->tabText(index).trimmed();
+                    const QString selectedTabText = firstPartOfTabText(ui->tw_TextMessages->tabText(index).trimmed());
                     const double frequency = selectedTabText.toDouble(&isNumber);
                     if (isNumber)
                     {
@@ -637,8 +689,7 @@ namespace BlackGui
                         cmd.append(selectedTabText);
                     }
                 }
-                cmd.append(" ").append(enteredLine);
-                return cmd;
+                return cmd % u" " % enteredLine;
             }
         }
 
@@ -775,5 +826,16 @@ namespace BlackGui
             m_activeReceive = receive;
         }
 
+        QString CTextMessageComponent::firstPartOfTabText(const QString &tabText)
+        {
+            if (tabText.isEmpty()) { return {}; }
+            int index = tabText.indexOf(':');
+            if (index < 0) { index = tabText.indexOf(' '); }
+            if (index >= 0)
+            {
+                return tabText.left(index);
+            }
+            return tabText;
+        }
     } // namespace
 } // namespace

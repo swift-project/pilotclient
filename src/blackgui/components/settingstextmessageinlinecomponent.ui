@@ -32,7 +32,7 @@
       <string>Overlay</string>
      </property>
      <property name="text">
-      <string>Ovl.:</string>
+      <string>Overlay:</string>
      </property>
     </widget>
    </item>

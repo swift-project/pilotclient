@@ -84,6 +84,12 @@ namespace BlackGui
             //! Remove the all tab, the operation cannot be undone
             void removeAllMessagesTab();
 
+            //! Showing real names
+            bool isShowingRealNames() const { return m_showRealNames; }
+
+            //! Showing real names
+            void setShowingRealNames(bool show) { m_showRealNames = show; }
+
             // ---------- overlay test messages -------------
 
             //! Used as overlay and not dock widget
@@ -120,6 +126,7 @@ namespace BlackGui
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
             bool m_activeSend          = true;  //!< ignore sent messages
             bool m_activeReceive       = true;  //!< ignore received messages
+            bool m_showRealNames       = true;
 
             //! Enum to widget
             QWidget *getTabWidget(TextMessageTab tab) const;
@@ -210,17 +217,29 @@ namespace BlackGui
             //! Close text message tab
             void closeTextMessageTab();
 
+            //! Update all tabs
+            void updateAllTabs();
+
             //! Top level was changed (used to enable elements when floating)
             void topLevelChanged(QWidget *widget, bool topLevel);
 
             //! Command line entered
             void textMessageEntered();
 
+            //! Set the real name widget tooltip
+            void setTabWidgetDescription(const BlackMisc::Aviation::CCallsign &callsign, int widgetIndex);
+
+            //! Callsign and relanme if possible
+            QString getCallsignAndRealName(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! Visible widget hack
             bool isVisibleWidgetHack() const;
 
             //! Emit the display in info window signal
             void emitDisplayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs);
+
+            //! Get the 1st part of the tab text, "DAMBZ: Joe Doe" -> "DAMBZ", "123.45 Foo" -> "123.45"
+            static QString firstPartOfTabText(const QString &tabText);
         };
     } // ns
 } // ns
