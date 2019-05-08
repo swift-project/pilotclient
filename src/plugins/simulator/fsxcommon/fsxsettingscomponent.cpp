@@ -72,7 +72,7 @@ namespace BlackSimPlugin
             const bool localSim = fsxOrP3D;
             if (fsxOrP3D)
             {
-                ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTracingSendId());
+                ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTraceSendId());
                 ui->cb_EnableTerrainProbe->setChecked(fsxOrP3D->isUsingFsxTerrainProbe());
                 ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
                 ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcOpened());

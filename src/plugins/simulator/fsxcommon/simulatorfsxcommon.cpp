@@ -347,6 +347,15 @@ namespace BlackSimPlugin
             m_detailsSettings.setSettings(settings, sim);
         }
 
+        void CSimulatorFsxCommon::setUsingSbOffsetValues(bool enabled)
+        {
+            m_useSbOffsets = enabled;
+            const CSimulatorInfo sim = this->getSimulatorInfo();
+            CFsxP3DSettings settings = m_detailsSettings.getSettings(sim);
+            settings.setSbOffsetsEnabled(enabled);
+            m_detailsSettings.setSettings(settings, sim);
+        }
+
         void CSimulatorFsxCommon::resetAircraftStatistics()
         {
             m_dispatchProcCount = 0;
@@ -449,7 +458,10 @@ namespace BlackSimPlugin
             if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
             m_simSimulating = true; // only place where this should be set to true
             m_simConnected  = true;
-            m_useAddSimulatedObj = m_detailsSettings.getSettings(this->getSimulatorInfo()).isAddingAsSimulatedObjectEnabled();
+
+            const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
+            m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
+            m_useSbOffsets = settings.isSbOffsetsEnabled();
 
             HRESULT hr1 = this->logAndTraceSendId(
                               SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,

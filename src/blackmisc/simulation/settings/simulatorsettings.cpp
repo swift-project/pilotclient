@@ -645,7 +645,8 @@ namespace BlackMisc
             QString CFsxP3DSettings::convertToQString(bool i18n) const
             {
                 Q_UNUSED(i18n);
-                return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding);
+                return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding) %
+                       u" SB offsets: " % boolToYesNo(m_useSbOffsets);
             }
 
             CVariant CFsxP3DSettings::propertyByIndex(const CPropertyIndex &index) const

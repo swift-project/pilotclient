@@ -128,11 +128,23 @@ namespace BlackMisc
                 //! Default constructor
                 CFsxP3DSettings() {}
 
+                //! Constructor
+                CFsxP3DSettings(bool simulatedObject, bool sbOffsets) :
+                    m_useSimulatedObjectAdding(simulatedObject),
+                    m_useSbOffsets(sbOffsets)
+                {}
+
                 //! Use simulated object adding
                 void setAddingAsSimulatedObjectEnabled(bool enable) { m_useSimulatedObjectAdding = enable; }
 
                 //! Use simulated object adding
                 bool isAddingAsSimulatedObjectEnabled() const { return m_useSimulatedObjectAdding; }
+
+                //! Use SB offsets?
+                void setSbOffsetsEnabled(bool enable) { m_useSbOffsets = enable; }
+
+                //! Are SB offsets enabled
+                bool isSbOffsetsEnabled() const { return m_useSbOffsets; }
 
                 //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
@@ -144,11 +156,13 @@ namespace BlackMisc
                 void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                bool m_useSimulatedObjectAdding = false;   //!< COM integration
+                bool m_useSimulatedObjectAdding = false; //!< COM integration
+                bool m_useSbOffsets = true;              //!< use the SB offset
 
                 BLACK_METACLASS(
                     CFsxP3DSettings,
-                    BLACK_METAMEMBER(useSimulatedObjectAdding)
+                    BLACK_METAMEMBER(useSimulatedObjectAdding),
+                    BLACK_METAMEMBER(useSbOffsets)
                 );
             };
 
@@ -302,7 +316,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static const CFsxP3DSettings &defaultValue()
                 {
-                    static const CFsxP3DSettings d;
+                    static const CFsxP3DSettings d(true, true);
                     return d;
                 }
             };
@@ -319,7 +333,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static const CFsxP3DSettings &defaultValue()
                 {
-                    static const CFsxP3DSettings d;
+                    static const CFsxP3DSettings d(false, true);
                     return d;
                 }
             };

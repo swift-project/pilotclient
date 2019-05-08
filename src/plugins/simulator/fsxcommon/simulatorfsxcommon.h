@@ -159,8 +159,11 @@ namespace BlackSimPlugin
             //! \sa CSimulatorFsxCommon::is
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &aircraftCallsign) override;
 
-            //! Tracing?
+            //! Tracing right now?
             bool isTracingSendId() const;
+
+            //! Trace enable (can be auto enable also)
+            bool isTraceSendId() const { return m_traceSendId; }
 
             //! Set tracing on/off
             void setTractingSendId(bool trace);
@@ -176,7 +179,7 @@ namespace BlackSimPlugin
             bool isUsingSbOffsetValues() const { return m_useSbOffsets; }
 
             //! Use SB offset values
-            void setUsingSbOffsetValues(bool use) { m_useSbOffsets = use; }
+            void setUsingSbOffsetValues(bool use);
 
             //! Number of received SB4 packets
             //! \remark if this is increasing, SB4 is supported
