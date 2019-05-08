@@ -1407,18 +1407,22 @@ namespace BlackSimPlugin
             // error handling
             if (isFailure(hr))
             {
+                const SimulatorStatus simStatus = this->getSimulatorStatus();
+                const bool disconnectedOrPaused = simStatus.testFlag(Disconnected) || simStatus.testFlag(Paused);
+                Q_UNUSED(disconnectedOrPaused);
+
                 m_dispatchErrors++;
                 this->triggerAutoTraceSendId();
                 if (m_dispatchErrors == 2)
                 {
                     // 2nd time, an error / avoid multiple messages
                     // idea: if it happens once ignore
-                    CLogMessage(this).error(u"%1: Dispatch error") << this->getSimulatorPluginInfo().getIdentifier();
+                    CLogMessage(this).error(u"%1: Dispatch error, sim.status: %2") << this->getSimulatorPluginInfo().getIdentifier() << ISimulator::statusToString(simStatus);
                 }
                 else if (m_dispatchErrors > 5)
                 {
                     // this normally happens during a FSX crash or shutdown with simconnect
-                    CLogMessage(this).error(u"%1: Multiple dispatch errors, disconnecting") << this->getSimulatorPluginInfo().getIdentifier();
+                    CLogMessage(this).error(u"%1: Multiple dispatch errors, disconnecting. Sim.status: %2") << this->getSimulatorPluginInfo().getIdentifier() << ISimulator::statusToString(simStatus);
                     this->disconnectFrom();
                 }
                 return;
