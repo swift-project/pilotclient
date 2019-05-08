@@ -11,10 +11,11 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/math/mathutils.h"
+#include "blackmisc/verify.h"
 
 #include <QFlag>
 #include <Qt>
@@ -601,13 +602,20 @@ namespace BlackCore
 
     void ISimulator::rememberLastSent(const CAircraftSituation &sent)
     {
-        Q_ASSERT_X(sent.hasCallsign(), Q_FUNC_INFO, "Need callsign");
+        // normally we should never end up without callsign, but it has happened in real world scenarios
+        // https://discordapp.com/channels/539048679160676382/568904623151382546/575712119513677826
+        const bool hasCs = sent.hasCallsign();
+        BLACK_VERIFY_X(hasCs, Q_FUNC_INFO, "Need callsign");
+        if (!hasCs) { return; }
         m_lastSentSituations.insert(sent.getCallsign(), sent);
     }
 
     void ISimulator::rememberLastSent(const CAircraftParts &sent, const CCallsign &callsign)
     {
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        // normally we should never end up without callsign, but it has happened in real world scenarios
+        // https://discordapp.com/channels/539048679160676382/568904623151382546/575712119513677826
+        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        if (callsign.isEmpty()) { return; }
         m_lastSentParts.insert(callsign, sent);
     }
 
