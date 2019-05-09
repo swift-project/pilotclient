@@ -79,7 +79,7 @@ namespace BlackMisc
         private:
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_top;
-            PhysicalQuantities::CLength m_visibility { 10, PhysicalQuantities::CLengthUnit::km() };
+            PhysicalQuantities::CLength m_visibility { 100 , PhysicalQuantities::CLengthUnit::km() };
 
             BLACK_METACLASS(
                 CVisibilityLayer,
