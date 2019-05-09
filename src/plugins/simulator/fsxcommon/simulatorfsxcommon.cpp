@@ -1407,9 +1407,10 @@ namespace BlackSimPlugin
             // error handling
             if (isFailure(hr))
             {
+                // on FSX we normally receive this one here when simulator goes down, and NOT onSimExit
+                // in that case sim status is Connected, but not PAUSED or SIMULATING
                 const SimulatorStatus simStatus = this->getSimulatorStatus();
-                const bool disconnectedOrPaused = simStatus.testFlag(Disconnected) || simStatus.testFlag(Paused);
-                Q_UNUSED(disconnectedOrPaused);
+                const bool disconnectedOrNotSimulating = simStatus.testFlag(Disconnected) || !simStatus.testFlag(Simulating);
 
                 m_dispatchErrors++;
                 this->triggerAutoTraceSendId();
@@ -1417,12 +1418,14 @@ namespace BlackSimPlugin
                 {
                     // 2nd time, an error / avoid multiple messages
                     // idea: if it happens once ignore
-                    CLogMessage(this).error(u"%1: Dispatch error, sim.status: %2") << this->getSimulatorPluginInfo().getIdentifier() << ISimulator::statusToString(simStatus);
+                    const QString msg = QStringLiteral(u"%1: Dispatch error, sim.status: %2").arg(this->getSimulatorPluginInfo().getIdentifier(), ISimulator::statusToString(simStatus));
+                    CLogMessage(this).log(disconnectedOrNotSimulating ? CStatusMessage::SeverityWarning : CStatusMessage::SeverityError, msg);
                 }
                 else if (m_dispatchErrors > 5)
                 {
                     // this normally happens during a FSX crash or shutdown with simconnect
-                    CLogMessage(this).error(u"%1: Multiple dispatch errors, disconnecting. Sim.status: %2") << this->getSimulatorPluginInfo().getIdentifier() << ISimulator::statusToString(simStatus);
+                    const QString msg = QStringLiteral(u"%1: Multiple dispatch errors, disconnecting. Sim.status: %2").arg(this->getSimulatorPluginInfo().getIdentifier(), ISimulator::statusToString(simStatus));
+                    CLogMessage(this).log(disconnectedOrNotSimulating ? CStatusMessage::SeverityWarning : CStatusMessage::SeverityError, msg);
                     this->disconnectFrom();
                 }
                 return;
