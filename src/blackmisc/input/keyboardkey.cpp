@@ -58,19 +58,21 @@ namespace BlackMisc
             {
             case Key_Multiply: return QStringLiteral("NumMultiply"); // return QStringLiteral(u"×");
             case Key_Divide:   return QStringLiteral("NumDivide");   // return QStringLiteral(u"÷");
-            case Key_Numpad0: return QStringLiteral("Num0");
-            case Key_Numpad1: return QStringLiteral("Num1");
-            case Key_Numpad2: return QStringLiteral("Num2");
-            case Key_Numpad3: return QStringLiteral("Num3");
-            case Key_Numpad4: return QStringLiteral("Num4");
-            case Key_Numpad5: return QStringLiteral("Num5");
-            case Key_Numpad6: return QStringLiteral("Num6");
-            case Key_Numpad7: return QStringLiteral("Num7");
-            case Key_Numpad8: return QStringLiteral("Num8");
-            case Key_Numpad9: return QStringLiteral("Num9");
-            case Key_Esc:     return QStringLiteral("ESC");
-            case Key_Tab:     return QStringLiteral("Tab");
-            case Key_Back:    return QStringLiteral("Backspace");
+            case Key_Numpad0:  return QStringLiteral("Num0");
+            case Key_Numpad1:  return QStringLiteral("Num1");
+            case Key_Numpad2:  return QStringLiteral("Num2");
+            case Key_Numpad3:  return QStringLiteral("Num3");
+            case Key_Numpad4:  return QStringLiteral("Num4");
+            case Key_Numpad5:  return QStringLiteral("Num5");
+            case Key_Numpad6:  return QStringLiteral("Num6");
+            case Key_Numpad7:  return QStringLiteral("Num7");
+            case Key_Numpad8:  return QStringLiteral("Num8");
+            case Key_Numpad9:  return QStringLiteral("Num9");
+            case Key_Esc:      return QStringLiteral("ESC");
+            case Key_Space:    return QStringLiteral("Space");
+            case Key_DeadGrave: return QStringLiteral("DeadGrave");
+            case Key_Tab:      return QStringLiteral("Tab");
+            case Key_Back:     return QStringLiteral("Backspace");
             default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
             }
         }

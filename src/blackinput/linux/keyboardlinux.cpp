@@ -21,7 +21,7 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-
+    // https://www.cl.cam.ac.uk/~mgk25/ucs/keysymdef.h
     static QHash<int, Input::KeyCode> keyMapping
     {
         { XK_0, Key_0 },
@@ -76,6 +76,8 @@ namespace BlackInput
         { XK_BackSpace, Key_Back },
         { XK_Tab, Key_Tab },
         { XK_Escape, Key_Esc },
+        { XK_space, Key_Space },
+        { XK_dead_grave, Key_DeadGrave },
         { XK_comma, Key_Comma },
     };
 

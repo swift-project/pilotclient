@@ -29,7 +29,9 @@ namespace BlackMisc
             Key_AltRight,
             Key_Back,
             Key_Tab,
-            Key_Esc,
+            Key_Esc = 27,
+            Key_Space = 32,
+            Key_DeadGrave, // message is sent for a combining key, such as a diacritic.
             Key_Plus = 43,
             Key_Comma,
             Key_Minus,

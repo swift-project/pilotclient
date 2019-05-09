@@ -19,7 +19,7 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-
+    // https://developer.apple.com/documentation/iokit/1592915-anonymous?language=objc
     static QHash<quint32, KeyCode> keyMapping
     {
         { kHIDUsage_Keyboard0, Key_0 },
@@ -67,6 +67,8 @@ namespace BlackInput
         { kHIDUsage_KeyboardDeleteOrBackspace, Key_Back },
         { kHIDUsage_KeyboardTab, Key_Tab },
         { kHIDUsage_KeyboardEscape, Key_Esc },
+        { kHIDUsage_KeyboardSpacebar, Key_Space },
+        { kHIDUsage_KeyboardGraveAccentAndTilde, Key_DeadGrave },
         { kHIDUsage_KeyboardComma, Key_Comma },
         { kHIDUsage_Keypad0, Key_Numpad0 },
         { kHIDUsage_Keypad1, Key_Numpad1 },

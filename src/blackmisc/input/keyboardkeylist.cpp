@@ -48,6 +48,8 @@ namespace BlackMisc
                 CKeyboardKey(Key_Back),
                 CKeyboardKey(Key_Tab),
                 CKeyboardKey(Key_Esc),
+                CKeyboardKey(Key_Space),
+                CKeyboardKey(Key_DeadGrave),
                 CKeyboardKey(Key_A),
                 CKeyboardKey(Key_B),
                 CKeyboardKey(Key_C),

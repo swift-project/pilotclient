@@ -67,6 +67,8 @@ namespace BlackInput
             { VK_BACK, Key_Back },
             { VK_TAB, Key_Tab },
             { VK_ESCAPE, Key_Esc },
+            { VK_SPACE, Key_Space },
+            { WM_DEADCHAR, Key_DeadGrave },
             { VK_MULTIPLY, Key_Multiply },
             { VK_OEM_COMMA, Key_Comma },
             { VK_NUMPAD0, Key_Numpad0 },
