@@ -87,6 +87,7 @@ namespace BlackMisc
             CSimulatorInfo     m_lastResultSimulator;
             CStatusMessageList m_lastResultMsgs;
             bool               m_lastResultWasStopped = false;
+            std::atomic_int    m_timerBasedRuns{0};
 
             QMap<CSimulatorInfo, CStatusMessageList> m_checkedSimulatorMsgs; //!< all simulators ever checked
             CSetting<Settings::TModelMatching> m_matchingSettings { this };  //!< settings

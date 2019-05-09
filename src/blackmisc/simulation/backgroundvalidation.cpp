@@ -110,6 +110,7 @@ namespace BlackMisc
             m_inWork = true;
             emit this->validating(true);
 
+            const bool isTimerBased = (QObject::sender() == &m_updateTimer);
             CAircraftModelList valid;
             CAircraftModelList invalid;
             CStatusMessageList msgs;
@@ -154,11 +155,22 @@ namespace BlackMisc
             while (false);
 
             m_inWork = false;
+            if (isTimerBased)
+            {
+                m_timerBasedRuns++;
+
+                // stop timer after some runs
+                if (m_timerBasedRuns > 3)
+                {
+                    m_updateTimer.stop();
+                }
+            }
+
             emit this->validating(false);
             if (validated)
             {
                 const bool e = !onlyErrorsAndWarnings || (!invalid.isEmpty() || msgs.hasWarningOrErrorMessages());
-                if (e) { emit this->validated(simulator, valid, invalid, wasStopped, msgs); }
+                if (e || !isTimerBased) { emit this->validated(simulator, valid, invalid, wasStopped, msgs); }
             }
         }
     } // ns
