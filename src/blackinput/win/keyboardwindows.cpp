@@ -117,16 +117,16 @@ namespace BlackInput
 
     void CKeyboardWindows::processKeyEvent(DWORD vkcode, WPARAM event)
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
+        CHotkeyCombination oldCombination(m_keyCombination);
         if ((event == WM_KEYDOWN) || (event == WM_SYSKEYDOWN))
         {
-            auto key = keyMapping().value(vkcode);
+            auto key = keyMapping().value(static_cast<int>(vkcode));
             if (key == Key_Unknown) { return; }
             m_keyCombination.addKeyboardKey(CKeyboardKey(key));
         }
         else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP))
         {
-            auto key = keyMapping().value(vkcode);
+            auto key = keyMapping().value(static_cast<int>(vkcode));
             if (key == Key_Unknown) { return; }
             m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
         }
@@ -139,7 +139,7 @@ namespace BlackInput
 
     void CKeyboardWindows::pollKeyboardState()
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
+        CHotkeyCombination oldCombination(m_keyCombination);
         QList<int> vkeys = keyMapping().keys();
         for (int vkey : vkeys)
         {

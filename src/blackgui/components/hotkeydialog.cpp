@@ -104,10 +104,10 @@ namespace BlackGui
                 ui->cb_Identifier->setCurrentIndex(index);
             }
 
-            connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
+            connect(ui->pb_AdvancedMode,   &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
             connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::captureHotkey);
-            connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
+            connect(ui->pb_Accept,         &QPushButton::clicked, this, &CHotkeyDialog::accept);
+            connect(ui->pb_Cancel,         &QPushButton::clicked, this, &CHotkeyDialog::reject);
             connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
             connect(ui->cb_Identifier, qOverload<int>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
