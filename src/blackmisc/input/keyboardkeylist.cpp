@@ -49,6 +49,8 @@ namespace BlackMisc
                 CKeyboardKey(Key_Tab),
                 CKeyboardKey(Key_Esc),
                 CKeyboardKey(Key_Space),
+                CKeyboardKey(Key_Delete),
+                CKeyboardKey(Key_Insert),
                 CKeyboardKey(Key_DeadGrave),
                 CKeyboardKey(Key_A),
                 CKeyboardKey(Key_B),
@@ -95,7 +97,17 @@ namespace BlackMisc
                 CKeyboardKey(Key_Numpad6),
                 CKeyboardKey(Key_Numpad7),
                 CKeyboardKey(Key_Numpad8),
-                CKeyboardKey(Key_Numpad9)
+                CKeyboardKey(Key_Numpad9),
+                CKeyboardKey(Key_NumpadEqual),
+                CKeyboardKey(Key_OEM1),
+                CKeyboardKey(Key_OEM2),
+                CKeyboardKey(Key_OEM3),
+                CKeyboardKey(Key_OEM4),
+                CKeyboardKey(Key_OEM5),
+                CKeyboardKey(Key_OEM6),
+                CKeyboardKey(Key_OEM7),
+                CKeyboardKey(Key_OEM8),
+                CKeyboardKey(Key_OEM102)
             };
 
             return allKeys;

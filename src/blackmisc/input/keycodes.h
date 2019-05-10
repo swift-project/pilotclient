@@ -18,6 +18,7 @@ namespace BlackMisc
     namespace Input
     {
         //! Key code
+        //! http://www.kbdlayout.info/
         enum KeyCode
         {
             Key_Unknown,
@@ -29,6 +30,8 @@ namespace BlackMisc
             Key_AltRight,
             Key_Back,
             Key_Tab,
+            Key_Insert,
+            Key_Delete,
             Key_Esc = 27,
             Key_Space = 32,
             Key_DeadGrave, // message is sent for a combining key, such as a diacritic.
@@ -87,6 +90,17 @@ namespace BlackMisc
             Key_Numpad7,
             Key_Numpad8,
             Key_Numpad9,
+            Key_NumpadEqual,
+            // OEM Keys
+            Key_OEM1,
+            Key_OEM2,
+            Key_OEM3,
+            Key_OEM4,
+            Key_OEM5,
+            Key_OEM6,
+            Key_OEM7,
+            Key_OEM8,
+            Key_OEM102
         };
 
     } //namespace

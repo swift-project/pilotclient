@@ -356,7 +356,7 @@ namespace BlackGui
 
         void CHotkeyDialog::advancedKeyChanged(int oldIndex, int newIndex)
         {
-            CKeySelectionBox *ksb = qobject_cast<CKeySelectionBox *>(sender());
+            const CKeySelectionBox *ksb = qobject_cast<CKeySelectionBox *>(sender());
             Q_ASSERT(ksb);
 
             if (ksb->itemData(oldIndex).canConvert<CKeyboardKey>() && ksb->itemData(newIndex).canConvert<CKeyboardKey>())

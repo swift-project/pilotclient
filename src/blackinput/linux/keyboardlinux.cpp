@@ -78,7 +78,24 @@ namespace BlackInput
         { XK_Escape, Key_Esc },
         { XK_space, Key_Space },
         { XK_dead_grave, Key_DeadGrave },
-        { XK_comma, Key_Comma },
+        { XK_comma, Key_Comma }
+
+        /** fixme Missing ones
+        Key_Insert,
+        Key_Delete,
+        Key_Esc = 27,
+        Key_Space = 32,
+        CKeyboardKey(Key_NumpadEqual),
+        CKeyboardKey(Key_OEM1),
+        CKeyboardKey(Key_OEM2),
+        CKeyboardKey(Key_OEM3),
+        CKeyboardKey(Key_OEM4),
+        CKeyboardKey(Key_OEM5),
+        CKeyboardKey(Key_OEM6),
+        CKeyboardKey(Key_OEM7),
+        CKeyboardKey(Key_OEM8),
+        CKeyboardKey(Key_OEM102)
+        **/
     };
 
     CKeyboardLinux::CKeyboardLinux(QObject *parent) :
@@ -106,7 +123,7 @@ namespace BlackInput
     {
         QDir eventFiles(dir, QLatin1String("event*"), QDir::Name, QDir::System);
 
-        foreach(QFileInfo fileInfo, eventFiles.entryInfoList())
+        foreach (QFileInfo fileInfo, eventFiles.entryInfoList())
         {
             QString path = fileInfo.absoluteFilePath();
             if (!m_keyboardDevices.contains(path))
@@ -270,12 +287,12 @@ namespace BlackInput
     {
         switch (keyCode)
         {
-            case BTN_LEFT:
-            case BTN_RIGHT:
-            case BTN_MIDDLE:
-                return true;
-            default:
-                return false;
+        case BTN_LEFT:
+        case BTN_RIGHT:
+        case BTN_MIDDLE:
+            return true;
+        default:
+            return false;
         }
     }
 }

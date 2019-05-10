@@ -68,11 +68,23 @@ namespace BlackMisc
             case Key_Numpad7:  return QStringLiteral("Num7");
             case Key_Numpad8:  return QStringLiteral("Num8");
             case Key_Numpad9:  return QStringLiteral("Num9");
+            case Key_NumpadEqual: return QStringLiteral("Num=");
             case Key_Esc:      return QStringLiteral("ESC");
             case Key_Space:    return QStringLiteral("Space");
-            case Key_DeadGrave: return QStringLiteral("DeadGrave");
             case Key_Tab:      return QStringLiteral("Tab");
             case Key_Back:     return QStringLiteral("Backspace");
+            case Key_Insert:   return QStringLiteral("Insert");
+            case Key_Delete:   return QStringLiteral("Delete");
+            case Key_OEM1:     return QStringLiteral("OEM1");
+            case Key_OEM2:     return QStringLiteral("OEM2");
+            case Key_OEM3:     return QStringLiteral("OEM3");
+            case Key_OEM4:     return QStringLiteral("OEM4");
+            case Key_OEM5:     return QStringLiteral("OEM5");
+            case Key_OEM6:     return QStringLiteral("OEM6");
+            case Key_OEM7:     return QStringLiteral("OEM7");
+            case Key_OEM8:     return QStringLiteral("OEM8");
+            case Key_OEM102:   return QStringLiteral("OEM102");
+            case Key_DeadGrave: return QStringLiteral("DeadGrave");
             default: return QChar::fromLatin1(static_cast<char>(m_keyCode));
             }
         }

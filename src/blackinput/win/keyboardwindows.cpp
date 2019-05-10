@@ -68,9 +68,9 @@ namespace BlackInput
             { VK_TAB, Key_Tab },
             { VK_ESCAPE, Key_Esc },
             { VK_SPACE, Key_Space },
-            { WM_DEADCHAR, Key_DeadGrave },
+            { VK_INSERT, Key_Insert },
+            { VK_DELETE, Key_Delete },
             { VK_MULTIPLY, Key_Multiply },
-            { VK_OEM_COMMA, Key_Comma },
             { VK_NUMPAD0, Key_Numpad0 },
             { VK_NUMPAD1, Key_Numpad1 },
             { VK_NUMPAD2, Key_Numpad2 },
@@ -81,6 +81,17 @@ namespace BlackInput
             { VK_NUMPAD7, Key_Numpad7 },
             { VK_NUMPAD8, Key_Numpad8 },
             { VK_NUMPAD9, Key_Numpad9 },
+            { VK_OEM_NEC_EQUAL, Key_NumpadEqual },
+            { VK_OEM_COMMA, Key_Comma },
+            { VK_OEM_1,   Key_OEM1 },
+            { VK_OEM_2,   Key_OEM2 },
+            { VK_OEM_3,   Key_OEM3 },
+            { VK_OEM_4,   Key_OEM4 },
+            { VK_OEM_5,   Key_OEM5 },
+            { VK_OEM_6,   Key_OEM6 },
+            { VK_OEM_7,   Key_OEM7 },
+            { VK_OEM_8,   Key_OEM8 },
+            { VK_OEM_102, Key_OEM102 }
         };
         return hash;
     }

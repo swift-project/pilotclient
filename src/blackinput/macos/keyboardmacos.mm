@@ -83,7 +83,24 @@ namespace BlackInput
         { kHIDUsage_KeyboardRightControl, Key_ControlRight },
         { kHIDUsage_KeyboardLeftControl, Key_ControlLeft },
         { kHIDUsage_KeyboardRightAlt, Key_AltRight },
-        { kHIDUsage_KeyboardLeftAlt, Key_AltLeft },
+        { kHIDUsage_KeyboardLeftAlt, Key_AltLeft }
+
+        /** fixme Missing ones
+        Key_Insert,
+        Key_Delete,
+        Key_Esc = 27,
+        Key_Space = 32,
+        CKeyboardKey(Key_NumpadEqual),
+        CKeyboardKey(Key_OEM1),
+        CKeyboardKey(Key_OEM2),
+        CKeyboardKey(Key_OEM3),
+        CKeyboardKey(Key_OEM4),
+        CKeyboardKey(Key_OEM5),
+        CKeyboardKey(Key_OEM6),
+        CKeyboardKey(Key_OEM7),
+        CKeyboardKey(Key_OEM8),
+        CKeyboardKey(Key_OEM102)
+        **/
     };
 
     CKeyboardMacOS::CKeyboardMacOS(QObject *parent) : IKeyboard(parent)
