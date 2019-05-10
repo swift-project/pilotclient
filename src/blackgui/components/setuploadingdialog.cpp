@@ -84,13 +84,18 @@ namespace BlackGui
             const CGlobalSetup setup = sApp->getGlobalSetup();
             if (setup.wasLoadedFromWeb())
             {
+                QPointer<CSetupLoadingDialog> myself(this);
                 QTimer::singleShot(250, this, [ = ]
                 {
+                    if (!myself) { return; }
                     const CUrlList bootstrapUrls = setup.getSwiftBootstrapFileUrls();
                     for (const CUrl &url : bootstrapUrls)
                     {
-                        const CStatusMessage msg = CNetworkUtils::canConnect(url) ?
-                        CStatusMessage(this).info(u"Can connect to '%1'") << url.getFullUrl() : CStatusMessage(this).warning(u"Cannot connect to '%1'") << url.getFullUrl();
+                        const bool cc = CNetworkUtils::canConnect(url);
+                        if (!myself) { return; } // because of CEventLoop::processEventsUntil
+                        const CStatusMessage msg = cc ?
+                                                   CStatusMessage(this).info(u"Can connect to '%1'") << url.getFullUrl() :
+                                                   CStatusMessage(this).warning(u"Cannot connect to '%1'") << url.getFullUrl();
                         ui->comp_Messages->appendStatusMessageToList(msg);
                     }
                 });
