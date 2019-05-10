@@ -9,7 +9,9 @@
 #include "ui_matchingform.h"
 #include "matchingform.h"
 #include "guiutility.h"
+
 #include <QPushButton>
+#include <QFileDialog>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -29,6 +31,8 @@ namespace BlackGui
             connect(ui->rb_ScoreOnly,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
             connect(ui->pb_ResetAlgorithm,    &QPushButton::released,  this, &CMatchingForm::resetByAlgorithm,   Qt::QueuedConnection);
             connect(ui->pb_ResetAll,          &QPushButton::released,  this, &CMatchingForm::resetAll,           Qt::QueuedConnection);
+            connect(ui->pb_MsNetwork,         &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
+            connect(ui->pb_MsMatching,        &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
         }
 
         CMatchingForm::~CMatchingForm()
@@ -61,6 +65,11 @@ namespace BlackGui
             ui->rb_PickFirst->setEnabled(enabled);
             ui->rb_PickByOrder->setEnabled(enabled);
             ui->rb_PickRandom->setEnabled(enabled);
+
+            ui->le_MsNetwork->setEnabled(enabled);
+            ui->le_MsMatching->setEnabled(enabled);
+            CGuiUtility::checkBoxReadOnly(ui->cb_MsNetwork, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_MsMatching, readonly);
         }
 
         CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
@@ -94,11 +103,20 @@ namespace BlackGui
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
+
+            ui->cb_MsNetwork->setChecked(setup.isMsNetworkEntryEnabled());
+            ui->cb_MsMatching->setChecked(setup.isMsMatchingStageEnabled());
+            ui->le_MsNetwork->setText(setup.getMsNetworkEntryFile());
+            ui->le_MsMatching->setText(setup.getMsMatchingStageFile());
         }
 
         CAircraftMatcherSetup CMatchingForm::value() const
         {
-            const CAircraftMatcherSetup setup(algorithm(), matchingMode(), pickStrategy());
+            CAircraftMatcherSetup setup(algorithm(), matchingMode(), pickStrategy());
+            setup.setMsNetworkEntryFile(ui->le_MsNetwork->text());
+            setup.setMsMatchingStageFile(ui->le_MsMatching->text());
+            setup.setMsNetworkEntryEnabled(ui->cb_MsNetwork->isChecked());
+            setup.setMsMatchingStageEnabled(ui->cb_MsMatching->isChecked());
             return setup;
         }
 
@@ -117,6 +135,23 @@ namespace BlackGui
         {
             const CAircraftMatcherSetup s;
             this->setValue(s);
+        }
+
+        void CMatchingForm::fileDialog()
+        {
+            const bool nw = (QObject::sender() == ui->pb_MsNetwork);
+            QString fn = nw ? ui->le_MsNetwork->text() : ui->le_MsMatching->text();
+            fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"), fn, "Matching script (*.js)");
+            const QFileInfo fi(fn);
+            if (!fi.exists()) { return; }
+            if (nw)
+            {
+                ui->le_MsNetwork->setText(fi.absoluteFilePath());
+            }
+            else
+            {
+                ui->le_MsMatching->setText(fi.absoluteFilePath());
+            }
         }
 
         CAircraftMatcherSetup::MatchingAlgorithm CMatchingForm::algorithm() const
@@ -193,6 +228,5 @@ namespace BlackGui
             const CAircraftMatcherSetup setup = this->value();
             this->setValue(setup);
         }
-
     } // ns
 } // ns

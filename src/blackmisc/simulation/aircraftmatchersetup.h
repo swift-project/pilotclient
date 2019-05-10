@@ -94,7 +94,11 @@ namespace BlackMisc
             {
                 IndexMatchingAlgorithm = CPropertyIndex::GlobalIndexCAircraftMatcherSetup,
                 IndexMatchingMode,
-                IndexPickStrategy
+                IndexPickStrategy,
+                IndexMsNetworkEntryFile,
+                IndexMsMatchingStageFile,
+                IndexMsNetworkEnabled,
+                IndexMsMatchingStageEnabled
             };
 
             //! Constructor
@@ -117,6 +121,26 @@ namespace BlackMisc
 
             //! Matching mode
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
+
+            //! Get matching files @{
+            const QString &getMsNetworkEntryFile()  const { return m_msNetworkEntryFile; }
+            const QString &getMsMatchingStageFile() const { return m_msMatchingStageFile; }
+            //! @}
+
+            //! Set matching files @{
+            void setMsNetworkEntryFile(const QString &file)  { m_msNetworkEntryFile = file; }
+            void setMsMatchingStageFile(const QString &file) { m_msMatchingStageFile = file; }
+            //! @}
+
+            //! Is matching script enabled @{
+            bool isMsNetworkEntryEnabled()  const { return m_msNetworkEnabled; }
+            bool isMsMatchingStageEnabled() const { return m_msMatchingEnabled; }
+            //! @}
+
+            //! Is matching script enabled @{
+            void setMsNetworkEntryEnabled(bool enabled)  { m_msNetworkEnabled  = enabled; }
+            void setMsMatchingStageEnabled(bool enabled) { m_msMatchingEnabled = enabled; }
+            //! @}
 
             //! Verification at startup?
             //! \sa ModelVerificationOnStartup
@@ -199,12 +223,20 @@ namespace BlackMisc
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
             int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
             int m_strategy  = static_cast<int>(PickByOrder);
+            QString m_msNetworkEntryFile;  //!< network entry matching script file
+            QString m_msMatchingStageFile; //!< matching stage matching script file
+            bool m_msNetworkEnabled  = false; //!< enable network matching script
+            bool m_msMatchingEnabled = false; //!< enable matching stage matching script
 
             BLACK_METACLASS(
                 CAircraftMatcherSetup,
                 BLACK_METAMEMBER(algorithm),
                 BLACK_METAMEMBER(mode),
-                BLACK_METAMEMBER(strategy)
+                BLACK_METAMEMBER(strategy),
+                BLACK_METAMEMBER(msNetworkEntryFile),
+                BLACK_METAMEMBER(msMatchingStageFile),
+                BLACK_METAMEMBER(msNetworkEnabled),
+                BLACK_METAMEMBER(msMatchingEnabled)
             );
         };
     } // ns

@@ -71,6 +71,9 @@ namespace BlackGui
             void resetAll();
             //! }
 
+            //! Directory browser
+            void fileDialog();
+
             QScopedPointer<Ui::CMatchingForm> ui;
         };
     } // ns

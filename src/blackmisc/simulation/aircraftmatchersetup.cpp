@@ -71,7 +71,7 @@ namespace BlackMisc
             return u"algorithm: '" % this->getMatchingAlgorithmAsString() %
                    u"' mode: '" % this->getMatchingModeAsString() %
                    u"' strategy: '" % this->getPickStrategyAsString() %
-                   u'\'';
+                   u"\' matching script: " % boolToOnOff(m_msNetworkEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
         }
 
         CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
@@ -80,9 +80,13 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMatchingAlgorithm: return CVariant::fromValue(m_algorithm);
-            case IndexMatchingMode:      return CVariant::fromValue(m_mode);
-            case IndexPickStrategy:      return CVariant::fromValue(m_strategy);
+            case IndexMatchingAlgorithm:   return CVariant::fromValue(m_algorithm);
+            case IndexMatchingMode:        return CVariant::fromValue(m_mode);
+            case IndexPickStrategy:        return CVariant::fromValue(m_strategy);
+            case IndexMsNetworkEntryFile:  return CVariant::fromValue(m_msNetworkEntryFile);
+            case IndexMsMatchingStageFile: return CVariant::fromValue(m_msMatchingStageFile);
+            case IndexMsNetworkEnabled:    return CVariant::fromValue(m_msNetworkEnabled);
+            case IndexMsMatchingStageEnabled: return CVariant::fromValue(m_msMatchingEnabled);
             default: break;
             }
             return CValueObject::propertyByIndex(index);
@@ -97,6 +101,10 @@ namespace BlackMisc
             case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
             case IndexMatchingMode:      m_mode = variant.toInt(); break;
             case IndexPickStrategy:      m_strategy = variant.toInt(); break;
+            case IndexMsNetworkEntryFile:     m_msNetworkEntryFile  = variant.toQString(); break;
+            case IndexMsMatchingStageFile:    m_msMatchingStageFile = variant.toQString(); break;
+            case IndexMsNetworkEnabled:       m_msNetworkEnabled = variant.toBool(); break;
+            case IndexMsMatchingStageEnabled: m_msNetworkEnabled = variant.toBool(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
@@ -105,6 +113,10 @@ namespace BlackMisc
         void CAircraftMatcherSetup::reset()
         {
             this->reset(MatchingStepwiseReducePlusScoreBased);
+            m_msNetworkEntryFile.clear();
+            m_msMatchingStageFile.clear();
+            m_msNetworkEnabled = false;
+            m_msMatchingEnabled = false;
         }
 
         void CAircraftMatcherSetup::reset(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
