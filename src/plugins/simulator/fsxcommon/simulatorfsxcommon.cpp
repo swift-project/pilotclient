@@ -383,7 +383,7 @@ namespace BlackSimPlugin
 
             // update SB area network connected
             byte sbNetworkConnected = connected ? 1u : 0u;
-            HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
+            const HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbConnected, SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
             if (isFailure(hr))
             {
                 CLogMessage(this).warning(u"Setting network connected failed (SB offsets)");
@@ -463,29 +463,29 @@ namespace BlackSimPlugin
             m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
             m_useSbOffsets = settings.isSbOffsetsEnabled();
 
-            HRESULT hr1 = this->logAndTraceSendId(
-                              SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
-                                      CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),
-                              "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+            const HRESULT hr1 = this->logAndTraceSendId(
+                                    SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
+                                            CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),
+                                    "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-            HRESULT hr2 = this->logAndTraceSendId(
-                              SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
-                                      CSimConnectDefinitions::DataOwnAircraftTitle,
-                                      SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                              "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+            const HRESULT hr2 = this->logAndTraceSendId(
+                                    SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
+                                            CSimConnectDefinitions::DataOwnAircraftTitle,
+                                            SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+                                    "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-            HRESULT hr3 = this->logAndTraceSendId(
-                              SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
-                                      CSimConnectDefinitions::DataSimEnvironment,
-                                      SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                              "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+            const HRESULT hr3 = this->logAndTraceSendId(
+                                    SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
+                                            CSimConnectDefinitions::DataSimEnvironment,
+                                            SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+                                    "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
             // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
             // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
-            HRESULT hr4 = this->logAndTraceSendId(
-                              SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
-                                      CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
-                              "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+            const HRESULT hr4 = this->logAndTraceSendId(
+                                    SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
+                                            CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
+                                    "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
 
             if (isFailure(hr1, hr2, hr3, hr4)) { return; }
             this->emitSimulatorCombinedStatus(); // force sending status
