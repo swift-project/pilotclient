@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CNetworkDetailsComponent</class>
+ <widget class="QFrame" name="CNetworkDetailsComponent">
+  <property name="windowTitle">
+   <string>Network details</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_FsdDetailsComponent">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tw_Details">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_LoginMode">
+      <attribute name="title">
+       <string>Mode</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_LoginMode">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item alignment="Qt::AlignTop">
+        <widget class="BlackGui::CLoginModeButtons" name="frp_LoginMode"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_FsdDetails">
+      <attribute name="title">
+       <string>FSD details</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_FsdDetails">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="sa_FsdDetails">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="qw_FsdDetails">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>192</width>
+            <height>55</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="vl_ScrollAreaFsdDetails">
+           <property name="leftMargin">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Voice">
+      <attribute name="title">
+       <string>Voice</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Voice">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item alignment="Qt::AlignTop">
+        <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_MatchingLog">
+      <attribute name="title">
+       <string>Matching log</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_MatchingLog">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item alignment="Qt::AlignTop">
+        <widget class="BlackGui::Components::CModelMatcherLogEnable" name="comp_MatchingLogEnabled"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Editors::CFsdSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/fsdsetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CVoiceSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/voicesetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CModelMatcherLogEnable</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/modelmatcherlogenable.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CLoginModeButtons</class>
+   <extends>QFrame</extends>
+   <header>blackgui/loginmodebuttons.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
