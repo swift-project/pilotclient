@@ -17,8 +17,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class CLoginModeButtons; }
 namespace BlackGui
 {
@@ -32,7 +30,7 @@ namespace BlackGui
         explicit CLoginModeButtons(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLoginModeButtons();
+        virtual ~CLoginModeButtons() override;
 
         //! Get login mode, \sa BlackCore::INetwork::LoginMode
         BlackCore::INetwork::LoginMode getLoginMode() const;

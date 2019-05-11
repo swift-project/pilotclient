@@ -43,6 +43,7 @@ namespace BlackCore
         virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
     };
 
+    //! Dummy inout device
     class BLACKCORE_EXPORT CAudioInputDeviceDummy : public IAudioInputDevice
     {
         Q_OBJECT

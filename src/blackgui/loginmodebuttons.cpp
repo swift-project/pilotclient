@@ -35,7 +35,7 @@ namespace BlackGui
     CLoginModeButtons::~CLoginModeButtons()
     { }
 
-    BlackCore::INetwork::LoginMode BlackGui::CLoginModeButtons::getLoginMode() const
+    INetwork::LoginMode BlackGui::CLoginModeButtons::getLoginMode() const
     {
         INetwork::LoginMode mode = INetwork::LoginNormal;
         if (ui->rb_LoginStealth->isChecked())
