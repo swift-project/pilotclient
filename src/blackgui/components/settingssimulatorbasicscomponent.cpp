@@ -325,10 +325,6 @@ namespace BlackGui
             const QString simDir = this->getFileBrowserSimulatorDirectory();
             ui->le_SimulatorDirectory->setPlaceholderText(simDir.isEmpty() ? "Simulator directory" : simDir);
 
-            //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
-            // cppcheck-suppress knownConditionTrueFalse
-            constexpr bool BrokenMultilinePlaceholder = true; // last checked with Qt 5.10
-
             // we take the settings and update to latest sim.directory
             CSpecializedSimulatorSettings settings = m_settings.getSpecializedSettings(simulator);
             settings.setSimulatorDirectory(simDir);
@@ -340,17 +336,8 @@ namespace BlackGui
             }
             else
             {
-                const QString ms = m.join("<br>");
-                // cppcheck-suppress knownConditionTrueFalse
-                if (BrokenMultilinePlaceholder && m.size() > 1)
-                {
-                    ui->pte_ModelDirectories->setToolTip(unwrappedTooltip(ms));
-                    ui->pte_ModelDirectories->setPlaceholderText("See tooltip for defaults");
-                }
-                else
-                {
-                    ui->pte_ModelDirectories->setPlaceholderText(ms);
-                }
+                const QString ms = m.join("\n");
+                ui->pte_ModelDirectories->setPlaceholderText(ms);
             }
 
             const QStringList e = settings.getDefaultModelExcludeDirectoryPatterns();
@@ -360,17 +347,8 @@ namespace BlackGui
             }
             else
             {
-                const QString es = e.join("<br>");
-                if (BrokenMultilinePlaceholder && e.size() > 1)
-                {
-                    //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
-                    ui->pte_ExcludeDirectories->setToolTip(unwrappedTooltip(es));
-                    ui->pte_ExcludeDirectories->setPlaceholderText("See tooltip for defaults");
-                }
-                else
-                {
-                    ui->pte_ExcludeDirectories->setPlaceholderText(es);
-                }
+                const QString es = e.join("\n");
+                ui->pte_ExcludeDirectories->setPlaceholderText(es);
             }
         }
 
