@@ -137,6 +137,11 @@ namespace BlackMisc
             bool isMsMatchingStageEnabled() const { return m_msMatchingEnabled; }
             //! @}
 
+            //! Run the scripts @{
+            bool doRunMsNetworkEntryScript() const;
+            bool doRunMsMatchingStageScript() const;
+            //! @}
+
             //! Is matching script enabled @{
             void setMsNetworkEntryEnabled(bool enabled)  { m_msNetworkEnabled  = enabled; }
             void setMsMatchingStageEnabled(bool enabled) { m_msMatchingEnabled = enabled; }

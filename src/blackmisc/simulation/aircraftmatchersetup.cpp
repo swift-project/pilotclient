@@ -44,6 +44,16 @@ namespace BlackMisc
             return true;
         }
 
+        bool CAircraftMatcherSetup::doRunMsNetworkEntryScript() const
+        {
+            return m_msNetworkEnabled && !m_msNetworkEntryFile.isEmpty();
+        }
+
+        bool CAircraftMatcherSetup::doRunMsMatchingStageScript() const
+        {
+            return m_msMatchingEnabled && !m_msMatchingStageFile.isEmpty();
+        }
+
         void CAircraftMatcherSetup::setVerificationAtStartup(bool verify)
         {
             MatchingMode m = this->getMatchingMode();
@@ -115,7 +125,7 @@ namespace BlackMisc
             this->reset(MatchingStepwiseReducePlusScoreBased);
             m_msNetworkEntryFile.clear();
             m_msMatchingStageFile.clear();
-            m_msNetworkEnabled = false;
+            m_msNetworkEnabled  = false;
             m_msMatchingEnabled = false;
         }
 

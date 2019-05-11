@@ -2,7 +2,7 @@ load(common_pre)
 
 # GUI is required for the matrix classes
 # Network for host info etc.
-QT       += network dbus xml multimedia
+QT       += network dbus xml multimedia qml
 
 TARGET = blackcore
 TEMPLATE = lib

@@ -10,11 +10,13 @@
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/matchingscript.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
@@ -26,6 +28,7 @@
 #include <QtGlobal>
 #include <QPair>
 #include <QStringBuilder>
+#include <QJSEngine>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -270,14 +273,69 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, const CAircraftMatcherSetup &setup, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         CLivery livery;
         livery.setAirlineIcaoCode(networkAirlineIcao);
-        CAircraftModel model(networkModelString, type, "", networkAircraftIcao, livery);
+        CAircraftModel model(networkModelString, type, {}, networkAircraftIcao, livery);
         model.setCallsign(callsign);
         model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, log);
         model.setModelType(CAircraftModel::TypeReverseLookup);
+
+        // matching script
+        while (setup.doRunMsNetworkEntryScript())
+        {
+            const QString js = CFileUtils::readFileToString(setup.getMsNetworkEntryFile());
+            if (js.isEmpty()) { break; }
+
+            static const QString logFile = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingSriptEntry.log");
+            QJSEngine engine;
+            // engine.installExtensions(QJSEngine::ConsoleExtension);
+            QJSValue jsMetaObject = engine.newQMetaObject(&MSSwiftValues::staticMetaObject);
+            engine.globalObject().setProperty("SwiftValues", jsMetaObject);
+            MSSwiftValues networkObject(
+                callsign.asString(),
+                networkAircraftIcao.getDesignator(), networkAircraftIcao.getDbKey(),
+                networkAirlineIcao.getDesignator(),  networkAirlineIcao.getDbKey(),
+                networkLiveryInfo, -1
+            );
+            MSSwiftValues reverseModel(
+                model.getCallsign().asString(),
+                model.getAircraftIcaoCode().getDesignator(), model.getAircraftIcaoCode().getDbKey(),
+                model.getAirlineIcaoCode().getDesignator(),  model.getAirlineIcaoCode().getDbKey(),
+                model.getLivery().getCombinedCode(), model.getLivery().getDbKey()
+            );
+            MSSwiftValues returnObject;
+
+            QJSValue jsNetworkObject = engine.newQObject(&networkObject);
+            engine.globalObject().setProperty("networkObject", jsNetworkObject);
+            QJSValue jsReverseObject = engine.newQObject(&networkObject);
+            engine.globalObject().setProperty("reverseObject", jsNetworkObject);
+            QJSValue jsReturnObject = engine.newQObject(&returnObject);
+            engine.globalObject().setProperty("returnObject", jsNetworkObject);
+
+            QJSValue ms = engine.evaluate(js, logFile);
+            ms = ms.call();
+            if (ms.isError())
+            {
+                CLogMessage(getLogCategories()).warning(u"Matching script error: %1 '%2'") << ms.property("lineNumber").toInt() << ms.toString();
+            }
+            else
+            {
+                if (ms.isString())
+                {
+                    const QString r = ms.toString();
+                    if (!r.isEmpty())
+                    {
+                        CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << ms.property("lineNumber").toInt() << ms.toString();
+                    }
+                }
+            }
+
+            // end this
+            break;
+        }
+
         return model;
     }
 

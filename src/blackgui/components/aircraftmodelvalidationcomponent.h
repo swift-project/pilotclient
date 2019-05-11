@@ -35,7 +35,6 @@ namespace BlackGui
     {
         /**
          * Handle validation result
-         * \sa BlackMisc::Views::
          */
         class BLACKGUI_EXPORT CAircraftModelValidationComponent : public COverlayMessagesFrame
         {

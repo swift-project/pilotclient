@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! The network values
-        class BLACKMISC_EXPORT MSNetworkValues : public QObject
+        class BLACKMISC_EXPORT MSSwiftValues : public QObject
         {
             Q_OBJECT
 
@@ -37,7 +37,19 @@ namespace BlackMisc
 
         public:
             //! Ctor
-            Q_INVOKABLE MSNetworkValues() {}
+            Q_INVOKABLE MSSwiftValues() {}
+
+            //! Ctor
+            Q_INVOKABLE MSSwiftValues(const QString &cs,
+                                        const QString &aircraftIcao, int idAircraftIcao,
+                                        const QString &airlineIcao,  int idAirlineIcao,
+                                        const QString &livery, int liveryId) :
+                m_callsign(cs.trimmed().toUpper()),
+                m_aircraftIcao(aircraftIcao.trimmed().toUpper()),
+                m_airlineIcao(airlineIcao.trimmed().toUpper()),
+                m_livery(livery.trimmed().toUpper()),
+                m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId)
+            {}
 
             //! Get callsign
             const QString &getCallsign() const { return m_callsign; }
