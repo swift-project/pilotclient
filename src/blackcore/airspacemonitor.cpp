@@ -837,7 +837,7 @@ namespace BlackCore
 
         CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
         CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-        return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, type, log);
+        return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, m_matchingSettings.get(), type, log);
     }
 
     bool CAirspaceMonitor::addNewAircraftInRange(const CSimulatedAircraft &aircraft)

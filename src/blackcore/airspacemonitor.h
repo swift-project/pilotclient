@@ -13,13 +13,13 @@
 
 #include "blackcore/network.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/matchinglog.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/userlist.h"
@@ -182,10 +182,11 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
         QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
 
         INetwork          *m_network  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
-        bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        bool m_bookingsRequested      = false;    //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
