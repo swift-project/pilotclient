@@ -40,7 +40,7 @@ namespace BlackGui
             m_timerUpdateHistory.setInterval(2 * 1000);
             this->initGui();
             m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CAircraftPartsHistory::callsignEntered);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this, &CAircraftPartsHistory::callsignEntered);
             connect(ui->cb_PartsHistoryEnabled, &QCheckBox::toggled, this, &CAircraftPartsHistory::toggleHistoryEnabled);
 
             if (this->hasContexts())

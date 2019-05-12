@@ -34,7 +34,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CModelMatcherLogComponent::callsignEntered);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CModelMatcherLogComponent::callsignEntered);
         }
 
         CModelMatcherLogComponent::~CModelMatcherLogComponent()

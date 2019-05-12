@@ -91,12 +91,13 @@ namespace BlackGui
         void CCallsignCompleter::onEditingFinished()
         {
             const CCallsign cs = this->getCallsign();
-            if (cs.asString() == m_lastValue) { return; } // avoid unnecessary signals
+            const bool changed = (cs.asString() == m_lastValue);
             m_lastValue = cs.asString();
-            emit this->editingFinished();
+            m_dsEditingFinished.inputSignal();
             if (cs.isValid())
             {
-                emit this->validCallsignEntered();
+                m_dsValidCallsignEntered.inputSignal();
+                if (changed) { emit this->validChangedCallsignEntered(); }
             }
         }
 

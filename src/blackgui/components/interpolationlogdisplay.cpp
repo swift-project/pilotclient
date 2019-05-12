@@ -55,7 +55,7 @@ namespace BlackGui
             ui->tvp_InboundAircraftSituations->setWithMenuRequestElevation(true);
 
             connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinished, this, &CInterpolationLogDisplay::onCallsignEntered);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
