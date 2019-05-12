@@ -58,6 +58,13 @@ namespace BlackMisc
             this->setMatchingMode(m);
         }
 
+        void CAircraftMatcherSetup::setReverseLookup(bool useModelLookup)
+        {
+            MatchingMode m = this->getMatchingMode();
+            m.setFlag(ReverseLookupModelString, useModelLookup);
+            this->setMatchingMode(m);
+        }
+
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -162,9 +169,11 @@ namespace BlackMisc
             static const QString modelFailedAdded("Replace models failed to be added");
             static const QString categoryGlider("glider categories");
             static const QString categoryMilitary("military categories");
+            static const QString revModelString("reverse model lookup");
 
             switch (modeFlag)
             {
+            case ReverseLookupModelString:   return revModelString;
             case ByModelString:              return ms;
             case ByIcaoData:                 return icao;
             case ByFamily:                   return family;
@@ -195,6 +204,7 @@ namespace BlackMisc
         QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
         {
             QStringList modes;
+            if (mode.testFlag(ReverseLookupModelString))   { modes << modeFlagToString(ReverseLookupModelString); }
             if (mode.testFlag(ByModelString))              { modes << modeFlagToString(ByModelString); }
             if (mode.testFlag(ByIcaoData))                 { modes << modeFlagToString(ByIcaoData); }
             if (mode.testFlag(ByIcaoOrderAircraftFirst))   { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }

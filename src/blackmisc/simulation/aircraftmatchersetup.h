@@ -14,7 +14,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
 
-
 namespace BlackMisc
 {
     namespace Simulation
@@ -52,15 +51,21 @@ namespace BlackMisc
                 // --- score based matching ---
                 ScoreIgnoreZeros         = 1 << 11, //!< zero scores are ignored
                 ScorePreferColorLiveries = 1 << 12, //!< prefer color liveries
+
                 // --- exclusion ---
                 ExcludeNoDbData   = 1 << 13,
                 ExcludeNoExcluded = 1 << 14,
                 ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
+
                 // --- model set ---
                 ModelSetRemoveFailedModel        = 1 << 15,
                 ModelVerificationAtStartup       = 1 << 16,
                 ModelVerificationOnlyWarnError   = 1 << 18, // later added, hence 18
                 ModelFailoverIfNoModelCanBeAdded = 1 << 17,
+
+                // --- reverse lookup ---
+                ReverseLookupModelString  = 1 << 19,
+                ReverseLookupDefault = ReverseLookupModelString,
 
                 // --- others ---
                 ModeNone          = 0,
@@ -70,9 +75,9 @@ namespace BlackMisc
                 ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
 
                 // default depending on algorithm
-                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault,
-                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault,
-                ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault,
+                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
+                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault  | ReverseLookupDefault,
+                ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault | ReverseLookupDefault,
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -149,14 +154,17 @@ namespace BlackMisc
             //! Set the strategy
             void setPickStrategy(PickSimilarStrategy strategy) { m_strategy = static_cast<int>(strategy); }
 
+            //! Set reverse lookup flags
+            void setReverseLookup(bool useModelLookup);
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Reset
             void reset();
