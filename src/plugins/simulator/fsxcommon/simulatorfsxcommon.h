@@ -584,6 +584,7 @@ namespace BlackSimPlugin
             bool m_simConnected  = false;        //!< Is simulator connected?
             bool m_simSimulating = false;        //!< Simulator running?
             bool m_useSbOffsets  = true;         //!< with SB offsets
+            bool m_logSbOffsets  = false;        //!< log SB offsets
             bool m_traceSendId   = false;        //!< trace the send ids, meant for debugging
             bool m_useAddSimulatedObj = false;   //!< simulated object use if AI Non ATC object fails
             qint64 m_traceAutoUntilTs = -1;      //!< allows to automatically trace for some time
@@ -594,9 +595,9 @@ namespace BlackSimPlugin
             int m_ownAircraftUpdateCycles = 0;   //!< own aircraft update
 
             // tracing dispatch performance
-            int m_dispatchErrors         = 0;    //!< number of dispatched failed, \sa dispatch
-            int m_dispatchProcCount      = 0;    //!< number of dispatchProc counts
-            int m_dispatchProcEmptyCount = 0;    //!< number dispatchProc doing nothing
+            int m_dispatchErrors           =  0; //!< number of dispatched failed, \sa dispatch
+            int m_dispatchProcCount        =  0; //!< number of dispatchProc counts
+            int m_dispatchProcEmptyCount   =  0; //!< number dispatchProc doing nothing
             qint64 m_dispatchTimeMs        = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
             qint64 m_dispatchMaxTimeMs     = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
             qint64 m_dispatchProcTimeMs    = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
@@ -609,7 +610,7 @@ namespace BlackSimPlugin
 
             // sending via SimConnect
             QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging, latest first
-            int m_receiveExceptionCount = 0;      //!< exceptions
+            int m_receiveExceptionCount      = 0; //!< exceptions
             int m_requestSimObjectDataCount  = 0; //!< requested SimObjects
 
             // settings

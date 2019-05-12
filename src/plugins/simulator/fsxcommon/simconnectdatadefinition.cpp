@@ -12,6 +12,8 @@
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/logmessage.h"
+
+#include <QStringBuilder>
 #include <tuple>
 
 using namespace BlackMisc;
@@ -374,5 +376,14 @@ namespace BlackSimPlugin
                        dtb(lightBeacon), dtb(lightNav), dtb(lightLogo), dtb(lightRecognition),
                        dtb(lightCabin));
         }
+
+        QString DataDefinitionClientAreaSb::toQString() const
+        {
+            return u"0 (running): " % QString::number(data[0]) %
+                   u" 1 (connected): " % QString::number(data[1]) %
+                   u" 17 (standby): " % QString::number(data[17]) %
+                   u" 19 (ident): " % QString::number(data[19]);
+        }
+
     } // namespace
 } // namespace

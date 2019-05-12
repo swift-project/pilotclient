@@ -227,6 +227,9 @@ namespace BlackSimPlugin
                 data[17] = 1; // 1..standby, 0..mode C
                 data[19] = 0; // no ident
             }
+
+            //! Values
+            QString toQString() const;
         };
 
         //! Client areas

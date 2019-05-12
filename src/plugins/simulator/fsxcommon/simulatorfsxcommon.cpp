@@ -208,6 +208,14 @@ namespace BlackSimPlugin
                         this->triggerAutoTraceSendId();
                         CLogMessage(this).warning(u"Setting transponder mode failed (SB offsets)");
                     }
+                    else
+                    {
+                        if (m_logSbOffsets)
+                        {
+                            const QString lm = "SB sent: ident " % QString::number(ident) % u" standby " % QString::number(standby);
+                            CLogMessage(this).info(lm);
+                        }
+                    }
                     changed = true;
                 }
                 else if (m_useFsuipc && m_fsuipc)
@@ -864,6 +872,11 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
         {
             if (m_skipCockpitUpdateCycles > 0) { return; }
+
+            // log SB offset
+            if (m_logSbOffsets) { CLogMessage(this).info(u"SB from sim: " % sbDataArea.toQString()); }
+
+            // SB XPDR mode
             CTransponder::TransponderMode newMode = CTransponder::StateIdent;
             if (!sbDataArea.isIdent())
             {
@@ -875,6 +888,7 @@ namespace BlackSimPlugin
             CTransponder xpdr = myAircraft.getTransponder();
             xpdr.setTransponderMode(newMode);
             this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
+
         }
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
@@ -1344,6 +1358,15 @@ namespace BlackSimPlugin
                 return true;
             }
 
+            // .driver sblog on|off
+            if (parser.matchesPart(1, "sblog") && parser.hasPart(2))
+            {
+                const bool on = parser.toBool(2);
+                m_logSbOffsets = on;
+                CLogMessage(this, CLogCategory::cmdLine()).info(u"SB log. offsets is '%1'") << boolToOnOff(on);
+                return true;
+            }
+
             return CSimulatorFsCommon::parseDetails(parser);
         }
 
@@ -1353,6 +1376,7 @@ namespace BlackSimPlugin
             CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
             CSimpleCommandParser::registerCommand({".drv sendid on|off", "Trace simConnect sendId on|off"});
             CSimpleCommandParser::registerCommand({".drv sboffsets on|off", "SB offsets via simConnect on|off"});
+            CSimpleCommandParser::registerCommand({".drv sblog on|off", "SB offsets logging on|off"});
         }
 
         CCallsign CSimulatorFsxCommon::getCallsignForPendingProbeRequests(DWORD requestId, bool remove)
