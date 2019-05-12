@@ -136,8 +136,15 @@ ${in}${indent}using type = $type;
 EOF
 
             print <<"EOF" if defined $size;
+${in}${indent}//! Is an array dataref
+${in}${indent}static constexpr bool is_array = true;
 ${in}${indent}//! Size of array dataref
 ${in}${indent}static constexpr size_t size = $size;
+EOF
+
+            print <<"EOF" unless defined $size;
+${in}${indent}//! Not an array dataref
+${in}${indent}static constexpr bool is_array = false;
 EOF
 
             print <<"EOF";

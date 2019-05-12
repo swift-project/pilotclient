@@ -85,6 +85,8 @@ namespace XSwiftBus
     template<class DataRefTraits>
     class DataRef : private DataRefImpl
     {
+        static_assert(!DataRefTraits::is_array, "this is an array dataref");
+
     public:
         //! Constructor
         DataRef() : DataRefImpl(DataRefTraits::name()) {}
@@ -116,6 +118,8 @@ namespace XSwiftBus
     template<class DataRefTraits>
     class ArrayDataRef : private ArrayDataRefImpl
     {
+        static_assert(DataRefTraits::is_array, "not an array dataref");
+
     public:
         //! Constructor
         ArrayDataRef() : ArrayDataRefImpl(DataRefTraits::name(), DataRefTraits::size) {}
@@ -147,6 +151,8 @@ namespace XSwiftBus
     template<class DataRefTraits>
     class StringDataRef
     {
+        static_assert(DataRefTraits::is_array, "not an array dataref");
+
     public:
         //! Constructor
         StringDataRef() : m_ref(XPLMFindDataRef(DataRefTraits::name()))
