@@ -2,16 +2,8 @@
 <ui version="4.0">
  <class>CSituationForm</class>
  <widget class="QFrame" name="CSituationForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>362</width>
-    <height>414</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Situation</string>
   </property>
   <layout class="QVBoxLayout" name="vl_SituationForm">
    <property name="leftMargin">
@@ -208,14 +200,8 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>100</height>
+          <height>125</height>
          </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
         </property>
        </widget>
       </item>
