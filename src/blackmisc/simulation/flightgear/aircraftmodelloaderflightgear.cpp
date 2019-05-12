@@ -51,7 +51,7 @@ namespace BlackMisc
                 {
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
-                    if (aircraftIt.filePath().toStdString().find("/AI/Aircraft") != std::string::npos) { continue; }
+                    if (aircraftIt.filePath().contains("/AI/Aircraft")) { continue; }
                     CAircraftModel model;
                     QString modelName = aircraftIt.fileName();
                     modelName = modelName.remove("-set.xml");
@@ -108,11 +108,14 @@ namespace BlackMisc
                 CAircraftModelList allModels;
                 for (const QString &rootDirectory : rootDirectories)
                 {
-                    if (QDir(rootDirectory + "/AI/Aircraft").exists())
+                    QString dir = rootDirectory;
+                    dir.replace('\\','/');
+                    if (dir.contains("/AI/Aircraft"))
                     {
-                        allModels.push_back(parseAIAirplanes(rootDirectory + "/AI/Aircraft", excludeDirectories));
+                        allModels.push_back(parseAIAirplanes(dir, excludeDirectories));
+                    } else {
+                      allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories));
                     }
-                    allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
                 }
 
                 return allModels;

@@ -10,6 +10,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/simulation/flightgear/flightgearutil.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
@@ -18,6 +19,7 @@ using namespace BlackConfig;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
+using namespace BlackMisc::Simulation::Flightgear;
 
 namespace BlackMisc
 {
@@ -497,7 +499,7 @@ namespace BlackMisc
                 QStringList dirs;
                 switch (m_simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG: break;
+                case CSimulatorInfo::FG: dirs = QStringList(CFlightgearUtil::modelDirectoriesFromSimDir(s)); break;
                 case CSimulatorInfo::FS9: dirs = QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)}); break;
                 case CSimulatorInfo::FSX: dirs = QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)}); break;
                 case CSimulatorInfo::P3D:
@@ -570,7 +572,7 @@ namespace BlackMisc
                 {
                 case CSimulatorInfo::FG:
                     {
-                        return e;
+                        return CFlightgearUtil::flightgearModelDirectories();
                     }
                 case CSimulatorInfo::FS9:
                     {
@@ -607,7 +609,7 @@ namespace BlackMisc
                 static const QString empty;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG:  return empty;
+                case CSimulatorInfo::FG:  return CFlightgearUtil::flightgearRootDir();
                 case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
                 case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
                 case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
@@ -625,7 +627,7 @@ namespace BlackMisc
                 static const QStringList empty;
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FG:  return empty;
+                case CSimulatorInfo::FG:  return CFlightgearUtil::flightgearModelExcludeDirectoryPatterns();
                 case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
                 case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
