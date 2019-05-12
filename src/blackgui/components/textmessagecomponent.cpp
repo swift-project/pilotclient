@@ -89,7 +89,7 @@ namespace BlackGui
 
             if (sGui && sGui->getCoreFacade() && sGui->getIContextNetwork() && sGui->getIContextOwnAircraft())
             {
-                c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+                c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
                 c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this, &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");

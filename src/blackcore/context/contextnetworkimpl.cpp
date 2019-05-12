@@ -314,15 +314,17 @@ namespace BlackCore
                 CTextMessage tm;
                 tm.setSenderCallsign(ownAircraft.getCallsign());
 
-                if (receiver.startsWith("c") && receiver.endsWith("1"))
+                // based on the CPZ bug https://discordapp.com/channels/539048679160676382/539486309882789888/576765888401768449
+                // no longer use starts/ends with
+                if (receiver == QStringView(u"c1") || receiver == QStringView(u"com1") || receiver == QStringView(u"comm1"))
                 {
                     tm.setFrequency(ownAircraft.getCom1System().getFrequencyActive());
                 }
-                else if (receiver.startsWith("c") && receiver.endsWith("2"))
+                else if (receiver == QStringView(u"c2") || receiver == QStringView(u"com2") || receiver == QStringView(u"comm2"))
                 {
                     tm.setFrequency(ownAircraft.getCom2System().getFrequencyActive());
                 }
-                else if (receiver == "u" || receiver.startsWith("uni"))
+                else if (receiver == "u" || receiver == QStringView(u"uni") || receiver == QStringView(u"unicom"))
                 {
                     tm.setFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
                 }
