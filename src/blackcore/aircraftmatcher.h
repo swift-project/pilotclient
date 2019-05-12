@@ -58,6 +58,12 @@ namespace BlackCore
         //! \remark saves a log of removed models if any
         virtual ~CAircraftMatcher() override;
 
+        //! Copy constructor
+        CAircraftMatcher(const CAircraftMatcher &) = delete;
+
+        //! Copy assignment operator
+        CAircraftMatcher &operator =(const CAircraftMatcher &) = delete;
+
         //! Set the setup
         bool setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
 
@@ -114,7 +120,7 @@ namespace BlackCore
         //! \ingroup reverselookup
         static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcao(
             const BlackMisc::Aviation::CAircraftIcaoCode &icaoDesignator,
-            const BlackMisc::Aviation::CCallsign &logCallsign = BlackMisc::Aviation::CCallsign(),
+            const BlackMisc::Aviation::CCallsign &logCallsign = {},
             BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of ICAO by id
@@ -127,7 +133,7 @@ namespace BlackCore
         //! \ingroup reverselookup
         static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(
             const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern,
-            const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+            const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of standard livery
         //! \threadsafe
@@ -208,7 +214,7 @@ namespace BlackCore
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
         //! The current statistics
-        BlackMisc::Simulation::CMatchingStatistics getCurrentStatistics() const { return m_statistics; }
+        const BlackMisc::Simulation::CMatchingStatistics &getCurrentStatistics() const { return m_statistics; }
 
         //! Clear the statistics
         void clearMatchingStatistics() { m_statistics.clear(); }
