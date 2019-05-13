@@ -47,6 +47,7 @@ namespace BlackMisc
                 IndexAirlineName,
                 IndexAirlineCountryIso,
                 IndexAirlineCountry,
+                IndexAirlineIconHTML,
                 IndexTelephonyDesignator,
                 IndexGroupId,
                 IndexGroupName,
@@ -215,6 +216,12 @@ namespace BlackMisc
 
             //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const;
+
+            //! Get icon resource path
+            QString getIconResourcePath() const;
+
+            //! Icon has HTML img
+            QString getIconAsHTMLImage() const;
 
             //! Validate data
             CStatusMessageList validate() const;

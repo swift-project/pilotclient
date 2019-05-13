@@ -179,6 +179,26 @@ namespace BlackMisc
             return CIcon::iconByIndex(CIcons::StandardIconEmpty);
         }
 
+        QString CAirlineIcaoCode::getIconResourcePath() const
+        {
+            if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
+            {
+                static const QString p("airlines/%1_%2.png");
+                const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
+                return CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), n);
+            }
+            return {};
+        }
+
+        QString CAirlineIcaoCode::getIconAsHTMLImage() const
+        {
+            if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
+            {
+                return u"<img src=\"" % this->getIconResourcePath() % u"\">";
+            }
+            return {};
+        }
+
         QString CAirlineIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -201,6 +221,7 @@ namespace BlackMisc
             case IndexAirlineCountryIso: return CVariant::fromValue(this->getCountryIso());
             case IndexAirlineCountry: return m_country.propertyByIndex(index.copyFrontRemoved());
             case IndexAirlineName: return CVariant::fromValue(m_name);
+            case IndexAirlineIconHTML: return CVariant::fromValue(this->getIconAsHTMLImage());
             case IndexTelephonyDesignator: return CVariant::fromValue(m_telephonyDesignator);
             case IndexIsVirtualAirline: return CVariant::fromValue(m_isVa);
             case IndexIsOperating: return CVariant::fromValue(m_isOperating);
@@ -242,6 +263,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexAirlineIconHTML:
             case IndexAirlineDesignator: return m_designator.compare(compareValue.getDesignator());
             case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode());
             case IndexAirlineCountry: return m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
