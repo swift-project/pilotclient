@@ -68,7 +68,10 @@ namespace BlackGui
                     m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel}));
 
                     // icon column for airline
-                    CColumn col("airline", { CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon });
+                    CPixmapFormatter *pmf = new CPixmapFormatter();
+                    pmf->setMaxHeight(25);
+                    pmf->setMaxWidth(100);
+                    CColumn col("airline", { CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon }, pmf);
                     col.setSortPropertyIndex({ CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator});
                     m_columns.addColumn(col);
 

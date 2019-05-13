@@ -141,6 +141,20 @@ namespace BlackGui
 
             //! \copydoc CDefaultFormatter::tooltipRole
             virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+
+            //! \copydoc CDefaultFormatter::decorationRole
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+
+            //! Width/height @{
+            int getMaxWidth()  const { return m_maxWidth; }
+            int getMaxHeight() const { return m_maxHeight; }
+            void setMaxWidth(int w)  { m_maxWidth = w; }
+            void setMaxHeight(int h) { m_maxHeight = h; }
+            //! @}
+
+        private:
+            int m_maxWidth  = -1;
+            int m_maxHeight = -1;
         };
 
         //! String formatter, if known the variant already contains the appropriate string

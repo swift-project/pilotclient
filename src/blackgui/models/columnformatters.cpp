@@ -61,7 +61,7 @@ namespace BlackGui
             const QMetaType::Type type = static_cast<QMetaType::Type>(dataCVariant.type());
 
             if (type == QMetaType::QPixmap) { return dataCVariant; }
-            if (type == QMetaType::QIcon) { return dataCVariant; }
+            if (type == QMetaType::QIcon)   { return dataCVariant; }
 
             // convert to pixmap
             if (type == QMetaType::QImage)
@@ -71,9 +71,9 @@ namespace BlackGui
             }
 
             // Our CIcon class
-            if (dataCVariant.canConvert<BlackMisc::CIcon>())
+            if (dataCVariant.canConvert<CIcon>())
             {
-                const CIcon i = dataCVariant.value<BlackMisc::CIcon>();
+                const CIcon i = dataCVariant.value<CIcon>();
                 return CVariant::from(i.toPixmap());
             }
 
@@ -157,18 +157,47 @@ namespace BlackGui
         {
             Q_UNUSED(dataCVariant);
             Q_ASSERT_X(false, "CPixmapFormatter", "this role should be disabled with pixmaps");
-            return CVariant();
+            return {};
         }
 
         CVariant CPixmapFormatter::tooltipRole(const CVariant &dataCVariant) const
         {
-            if (dataCVariant.isNull()) return {};
-            if (dataCVariant.canConvert<BlackMisc::CIcon>())
+            if (dataCVariant.isNull()) { return {}; }
+            if (dataCVariant.canConvert<CIcon>())
             {
-                BlackMisc::CIcon icon = dataCVariant.value<BlackMisc::CIcon>();
+                const CIcon icon = dataCVariant.value<CIcon>();
                 return icon.getDescriptiveText();
             }
             return emptyStringVariant();
+        }
+
+        CVariant CPixmapFormatter::decorationRole(const CVariant &dataCVariant) const
+        {
+            if (dataCVariant.isNull()) { return {}; }
+            if (m_maxWidth < 0 && m_maxHeight < 0) { return CDefaultFormatter::decorationRole(dataCVariant); }
+
+            QPixmap pm;
+            if (dataCVariant.canConvert<CIcon>())
+            {
+                const CIcon icon = dataCVariant.value<CIcon>();
+                pm = icon.toPixmap();
+            }
+
+            if (pm.isNull()) { return {}; }
+            const int pmw = pm.width();
+            const int pmh = pm.height();
+
+            if (m_maxHeight >= 0 && m_maxHeight < pmh)
+            {
+                return CVariant::fromValue(pm.scaledToHeight(m_maxHeight));
+            }
+
+            if (m_maxWidth >= 0 && m_maxWidth < pmw)
+            {
+                return CVariant::fromValue(pm.scaledToWidth(m_maxWidth));
+            }
+
+            return CVariant::fromValue(pm);
         }
 
         CVariant CValueObjectFormatter::displayRole(const CVariant &valueObject) const

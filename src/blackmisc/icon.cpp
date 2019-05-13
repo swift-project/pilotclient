@@ -64,11 +64,11 @@ namespace BlackMisc
         {
             if (this->isGenerated()) { return m_pixmap; }
             if (this->isFileBased()) { return m_pixmap; }
-            return CIcons::pixmapByIndex(getIndex(), m_rotateDegrees);
+            return CIcons::pixmapByIndex(this->getIndex(), m_rotateDegrees);
         }
         else
         {
-            return CIcons::pixmapByIndex(getIndex());
+            return CIcons::pixmapByIndex(this->getIndex());
         }
     }
 
