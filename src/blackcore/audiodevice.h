@@ -41,6 +41,9 @@ namespace BlackCore
 
         //! Set new input device
         virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
+
+        //! Is this a real or dummy device?
+        virtual bool isDummyDevice() const = 0;
     };
 
     //! Dummy inout device
@@ -62,6 +65,9 @@ namespace BlackCore
 
         //! \copydoc IAudioInputDevice::setInputDevice
         virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override { m_currentDevice = device; }
+
+        //! \copydoc IAudioInputDevice::isDummyDevice
+        virtual bool isDummyDevice() const override { return true; }
 
     private:
         BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */

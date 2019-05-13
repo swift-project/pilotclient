@@ -46,6 +46,9 @@ namespace BlackCore
             //! \copydoc IAudioInputDevice::setInputDevice
             virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
 
+            //! \copydoc IAudioInputDevice::isDummyDevice
+            virtual bool isDummyDevice() const override { return false; }
+
             //! Get vatlib input device pointer
             VatLocalInputCodec *getVatLocalInputCodec() { return m_inputCodec.data(); }
 
