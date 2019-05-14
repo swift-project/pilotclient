@@ -147,15 +147,17 @@ namespace XSwiftBus
 
     void CTraffic::findAllCslPackages(const std::string &path)
     {
-        char nameBuffer[65536];
-        char *indices[4096];
+        std::vector<char> nameBuffer(65536, '\0');
+        std::vector<char *> indices(4096, nullptr);
         int returnedFiles;
-        int totalFiles;
 
         // Remove trailing /
         std::string dir = path.substr(0, path.size() - 1);
-        XPLMGetDirectoryContents(dir.c_str(), 0, nameBuffer, sizeof(nameBuffer), indices, sizeof(indices) / sizeof(char*), &totalFiles, &returnedFiles);
-        for (int i = 0; i < returnedFiles; i++)
+        XPLMGetDirectoryContents(dir.c_str(), 0,
+                                 nameBuffer.data(), static_cast<int>(nameBuffer.size()),
+                                 indices.data(), static_cast<int>(indices.size()),
+                                 nullptr, &returnedFiles);
+        for (std::size_t i = 0; i < static_cast<std::size_t>(returnedFiles); i++)
         {
             std::string fileName(indices[i]);
             if (fileName == "xsb_aircraft.txt")
