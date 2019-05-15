@@ -179,6 +179,9 @@ namespace BlackSimPlugin
             void fastTimerTimeout();
             void slowTimerTimeout();
 
+            void loadCslPackages();
+            QString findCslPackage(const QString &modelFileName);
+
             //! Update remote aircraft
             //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();

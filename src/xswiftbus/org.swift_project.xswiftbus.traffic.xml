@@ -9,6 +9,10 @@ R"(<node>
     </method>
     <method name="cleanup">
     </method>
+    <method name="loadPlanesPackage">
+      <arg name="path" type="s" direction="in"/>
+      <arg type="b" direction="out"/>
+    </method>
     <method name="setDefaultIcao">
       <arg name="defaultIcao" type="s" direction="in"/>
     </method>

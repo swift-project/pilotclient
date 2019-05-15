@@ -380,6 +380,7 @@ namespace BlackSimPlugin
             connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
             if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
             m_trafficProxy->removeAllPlanes();
+            this->loadCslPackages();
             this->emitSimulatorCombinedStatus();
 
             this->initSimulatorInternals();
@@ -542,6 +543,53 @@ namespace BlackSimPlugin
 
             //! \fixme KB 8/2017 use SELCAL??
             return false;
+        }
+
+        void CSimulatorXPlane::loadCslPackages()
+        {
+            struct Prefix { QString s; };
+            struct PrefixComparator
+            {
+                bool operator()(const Prefix &a, const QString &b) const { return QStringRef(&a.s) < b.leftRef(a.s.size()); }
+                bool operator()(const QString &a, const Prefix &b) const { return a.leftRef(b.s.size()) < QStringRef(&b.s); }
+            };
+            QList<Prefix> packages;
+
+            Q_ASSERT(isConnected());
+            const CAircraftModelList models = this->getModelSet();
+            for (const auto &model : models)
+            {
+                const QString &modelFile = model.getFileName();
+                if (modelFile.isEmpty() || ! QFile::exists(modelFile)) { continue; }
+                auto it = std::lower_bound(packages.begin(), packages.end(), modelFile, PrefixComparator());
+                if (it != packages.end() && modelFile.startsWith(it->s)) { continue; }
+                QString package = findCslPackage(modelFile);
+                if (package.isEmpty()) { continue; }
+                packages.insert(it, { package.append('/') });
+            }
+            for (auto &package : packages)
+            {
+                Q_ASSERT(package.s.endsWith('/'));
+                package.s.chop(1);
+                m_trafficProxy->loadPlanesPackage(package.s);
+            }
+        }
+
+        QString CSimulatorXPlane::findCslPackage(const QString &modelFile)
+        {
+            //! \todo KB 2018-02 KB when I have removed the CSL dir (acciedently) there was no warning here
+            const QFileInfo info(modelFile);
+            QDir dir = info.isDir() ? QDir(modelFile) : info.dir();
+            do
+            {
+                if (dir.exists(QStringLiteral("xsb_aircraft.txt")))
+                {
+                    if (dir.cdUp()) { return dir.path(); }
+                }
+            }
+            while (dir.cdUp());
+            CLogMessage(this).warning(u"Failed to find CSL package for %1") << modelFile;
+            return {};
         }
 
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
