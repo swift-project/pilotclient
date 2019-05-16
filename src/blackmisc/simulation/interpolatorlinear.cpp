@@ -119,9 +119,13 @@ namespace BlackMisc
             CAircraftSituation oldSituation = m_interpolant.getOldSituation();
             CAircraftSituation newSituation = m_interpolant.getNewSituation();
 
-            const bool recalculated = m_situationsLastModifiedUsed < m_situationsLastModified;
-            m_interpolant.setRecalculated(recalculated);
-            if (recalculated)
+            Q_ASSERT_X(newSituation.getAdjustedMSecsSinceEpoch() >= oldSituation.getAdjustedMSecsSinceEpoch(), Q_FUNC_INFO, "Wrong order");
+
+            const bool updated = m_situationsLastModifiedUsed < m_situationsLastModified;
+            const bool newSplit = newSituation.getAdjustedMSecsSinceEpoch() < m_currentTimeMsSinceEpoch;
+            const bool recalculate = updated || newSplit;
+
+            if (recalculate)
             {
                 m_situationsLastModifiedUsed = m_situationsLastModified;
 
@@ -197,7 +201,13 @@ namespace BlackMisc
             // 1) values > 1 mean extrapolation
             // 2) values > 2 mean no new situations coming in
             const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - m_currentTimeMsSinceEpoch;
-            const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
+            double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
+            if (simulationTimeFraction >= 1.0)
+            {
+                simulationTimeFraction = 1.0;
+                if (qAbs(distanceToSplitTimeMs) > 100) { CLogMessage(this).debug(u"Distance to split: %1") << distanceToSplitTimeMs; }
+            }
+
             const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
             const qint64 interpolatedTime = oldSituation.getMSecsSinceEpoch() + qRound(deltaTimeFractionMs);
 
@@ -216,10 +226,12 @@ namespace BlackMisc
                 log.interpolationSituations.clear();
                 log.interpolationSituations.push_back(oldSituation); // oldest at front
                 log.interpolationSituations.push_back(newSituation); // latest at back
-                log.interpolantRecalc = recalculated;
+                log.interpolantRecalc = recalculate;
             }
 
             m_interpolant = { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
+            m_interpolant.setRecalculated(recalculate);
+
             return m_interpolant;
         }
     } // namespace
