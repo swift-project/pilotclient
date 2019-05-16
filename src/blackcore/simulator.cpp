@@ -548,6 +548,19 @@ namespace BlackCore
             return true;
         }
 
+        // CG override
+        if (part1 == QStringView(u"cg") && parser.hasPart(3))
+        {
+            const QString ms = parser.part(3).toUpper();
+            CLength cg;
+            cg.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
+            if (!ms.isEmpty())
+            {
+                CLogMessage(this).info(u"Setting CG for '%1': %2") << ms << cg.valueRoundedWithUnit();
+                this->insertCGForModelStringOverridden(cg, ms);
+            }
+        }
+
         // driver specific cmd line arguments
         return this->parseDetails(parser);
     }
@@ -824,12 +837,14 @@ namespace BlackCore
             this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
             this->rememberGroundElevation(callsign, elevation);
         }
-        if (!cg.isNull() && !this->hasSameCG(cg, callsign))
+
+        const CLength cgO = this->overriddenCGorDefault(cg, modelString);
+        if (!cgO.isNull() && !this->hasSameCG(cgO, callsign))
         {
-            this->insertCG(cg, modelString, callsign); // per model string and CG
+            this->insertCG(cgO, modelString, callsign); // per model string and CG
 
             // here we know we have a valid model and CG
-            m_autoPublishing.insert(modelString, cg);
+            m_autoPublishing.insert(modelString, cg); // still using CG here, not the overridden value
             m_autoPublishing.insert(modelString, this->getSimulatorInfo());
         }
     }

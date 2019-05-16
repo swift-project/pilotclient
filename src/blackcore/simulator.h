@@ -258,6 +258,7 @@ namespace BlackCore
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
+        //! .drv cg modelstring            set overridden CG for model string      BlackCore::ISimulator
         //! .drv unload                    unload plugin                           BlackCore::ISimulator
         //! .drv limit number              limit the number of updates             BlackCore::ISimulator
         //! .drv logint callsign           log interpolator for callsign           BlackCore::ISimulator
@@ -269,8 +270,7 @@ namespace BlackCore
         //! .drv aircraft readd callsign   re-add (add again) aircraft             BlackCore::ISimulator
         //! .drv aircraft readd all        re-add all aircraft                     BlackCore::ISimulator
         //! .drv aircraft rm callsign      remove aircraft                         BlackCore::ISimulator
-        //! .drv    unload                 unload driver                           BlackCore::ISimulator
-        //! .drv    fsuipc      on|off     enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        //! .drv fsuipc   on|off           enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
         //! </pre>
         //! @}
         //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding ISimulator::parseDetails

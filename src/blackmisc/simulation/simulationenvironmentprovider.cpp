@@ -85,8 +85,35 @@ namespace BlackMisc
             if (modelString.isEmpty()) { return false; }
             QWriteLocker l(&m_lockCG);
             if (!m_enableCG) { return false; }
+            if (cg.isNull())
+            {
+                m_cgsPerModel.remove(modelString.toUpper());
+                return false;
+            }
+
             m_cgsPerModel[modelString.toUpper()] = cg;
             return true;
+        }
+
+        bool ISimulationEnvironmentProvider::insertCGForModelStringOverridden(const CLength &cg, const QString &modelString)
+        {
+            if (modelString.isEmpty()) { return false; }
+            QWriteLocker l(&m_lockCG);
+            if (cg.isNull())
+            {
+                m_cgsPerModelOverridden.remove(modelString.toUpper());
+                return false;
+            }
+            m_cgsPerModelOverridden[modelString.toUpper()] = cg;
+            return true;
+        }
+
+        CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &cg, const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return cg; }
+            QReadLocker l(&m_lockCG);
+            if (!m_cgsPerModelOverridden.contains(modelString.toUpper())) { return cg; }
+            return m_cgsPerModelOverridden[modelString.toUpper()];
         }
 
         int ISimulationEnvironmentProvider::removeCG(const CCallsign &cs)
@@ -258,6 +285,7 @@ namespace BlackMisc
             if (modelString.isEmpty()) { return CLength::null(); }
             const QString ms = modelString.toUpper();
             QReadLocker l(&m_lockCG);
+            if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
             if (!m_enableCG || !m_cgsPerModel.contains(ms)) { return CLength::null(); }
             return m_cgsPerModel.value(ms);
         }

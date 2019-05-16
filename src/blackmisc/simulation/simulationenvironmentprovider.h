@@ -204,6 +204,15 @@ namespace BlackMisc
             //! \threadsafe
             bool insertCGForModelString(const PhysicalQuantities::CLength &cg, const QString &modelString);
 
+            //! Insert or replace a CG (overridden mode)
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
+            bool insertCGForModelStringOverridden(const PhysicalQuantities::CLength &cg, const QString &modelString);
+
+            //! Return the overridden CG value or the given default CG value
+            //! \threadsafe
+            PhysicalQuantities::CLength overriddenCGorDefault(const PhysicalQuantities::CLength &cg, const QString &modelString) const;
+
             //! Remove a CG
             //! \threadsafe
             int removeCG(const Aviation::CCallsign &cs);
@@ -222,6 +231,7 @@ namespace BlackMisc
             Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
             Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
             QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
+            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModelOverridden; //!< CGs per model string manually forced
             qint64 m_statsMaxElevRequestTimeMs     = -1;
             qint64 m_statsCurrentElevRequestTimeMs = -1;
 
