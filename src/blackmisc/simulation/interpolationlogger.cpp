@@ -7,6 +7,7 @@
  */
 
 #include "interpolationlogger.h"
+#include "blackmisc/simulation/kmlutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
@@ -98,6 +99,7 @@ namespace BlackMisc
 
             CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");
+
             const QString htmlInterpolation = CInterpolationLogger::getHtmlInterpolationLog(interpolation);
             if (!htmlInterpolation.isEmpty())
             {
@@ -117,6 +119,31 @@ namespace BlackMisc
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
+
+            QString kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlChangedSituations(interpolation));
+            if (!kml.isEmpty())
+            {
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_changedSituations.kml").arg(ts));
+                const bool s = CFileUtils::writeStringToFile(kml, fn);
+                msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
+            }
+
+            kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlInterpolatedSituations(interpolation));
+            if (!kml.isEmpty())
+            {
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_interpolatedSituations.kml").arg(ts));
+                const bool s = CFileUtils::writeStringToFile(kml, fn);
+                msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
+            }
+
+            kml = CKmlUtils::wrapAsKmlDocument(CInterpolationLogger::getKmlElevations(interpolation));
+            if (!kml.isEmpty())
+            {
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QStringLiteral("%1_elevations.kml").arg(ts));
+                const bool s = CFileUtils::writeStringToFile(kml, fn);
+                msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
+            }
+
             return msgs;
         }
 
@@ -342,12 +369,85 @@ namespace BlackMisc
                     u"<td>" % log.cgAboveGround.valueRoundedWithUnit(ft, 0) % u"</td>" %
                     u"<td>" % boolToYesNo(log.useParts) % u"</td>" %
                     (changedParts ? u"<td class=\"changed\">*</td>" : u"<td></td>") %
-                    u"<td>" % (log.useParts ? log.parts.toQString(true) : QString()) % u"</td>" %
+                    u"<td>" % (!log.useParts || log.parts.isNull() ? QString() : log.parts.toQString(true).toHtmlEscaped()) % u"</td>" %
                     u"</tr>\n";
             }
 
             tableRows += QStringLiteral("</tbody>\n");
             return u"<table class=\"small\">\n" % tableHeader % tableRows % u"</table>\n";
+        }
+
+        QString CInterpolationLogger::getKmlChangedSituations(const QList<SituationLog> &logs)
+        {
+            if (logs.isEmpty()) { return {}; }
+
+            QString kml;
+            qint64 newPosTs = -1;
+            int n = 1;
+            const CKmlUtils::KMLSettings s(true, true);
+
+            for (const SituationLog &log : logs)
+            {
+                const CAircraftSituation situationNew = log.newestInterpolationSituation();
+                const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
+                const bool recalc = log.interpolantRecalc;
+                if (!changedNewPosition && !recalc) { continue; }
+                newPosTs = situationNew.getMSecsSinceEpoch();
+                kml += CKmlUtils::asPlacemark(
+                           QStringLiteral("%1: %2 new pos: %3 recalc: %4").arg(n++).arg(situationNew.getFormattedUtcTimestampHmsz(), boolToYesNo(changedNewPosition), boolToYesNo(recalc)),
+                           situationNew.toQString(true),
+                           situationNew, s) % u"\n";
+            }
+
+            return kml;
+        }
+
+        QString CInterpolationLogger::getKmlElevations(const QList<SituationLog> &logs)
+        {
+            if (logs.isEmpty()) { return {}; }
+
+            QString kml;
+            qint64 newPosTs = -1;
+            int n = 1;
+            const CKmlUtils::KMLSettings s(true, true);
+
+            for (const SituationLog &log : logs)
+            {
+                const CAircraftSituation situationNew = log.newestInterpolationSituation();
+                const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
+                const bool recalc = log.interpolantRecalc;
+                if (!changedNewPosition && !recalc) { continue; }
+                if (!situationNew.hasGroundElevation()) { continue; }
+                newPosTs = situationNew.getMSecsSinceEpoch();
+                kml += CKmlUtils::asPlacemark(
+                           QStringLiteral("%1: %2 %3 %4 alt.cor: %5").arg(n++).arg(
+                               situationNew.getFormattedUtcTimestampHmsz(),
+                               situationNew.getGroundElevationPlane().getAltitude().toQString(true),
+                               log.elevationInfo, log.altCorrection),
+                           situationNew.getGroundElevationPlane().toQString(true),
+                           situationNew.getGroundElevationPlane(), s) % u"\n";
+            }
+
+            return kml;
+        }
+
+        QString CInterpolationLogger::getKmlInterpolatedSituations(const QList<SituationLog> &logs)
+        {
+            if (logs.isEmpty()) { return {}; }
+
+            const CKmlUtils::KMLSettings s(true, false);
+            QString coordinates;
+            for (const SituationLog &log : logs)
+            {
+                const CAircraftSituation situation = log.situationCurrent;
+                coordinates += CKmlUtils::asRawCoordinates(situation, s.withAltitude) % u"\n";
+            }
+
+            return
+                u"<Placemark>\n"
+                u"<name>Interpolation " % QString::number(logs.size()) % u"entries</name>\n" %
+                CKmlUtils::asLineString(coordinates, s) %
+                u"</Placemark>\n";
         }
 
         QString CInterpolationLogger::getHtmlPartsLog(const QList<PartsLog> &logs)

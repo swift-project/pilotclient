@@ -198,6 +198,15 @@ namespace BlackMisc
             //! Get log as HTML table
             static QString getHtmlInterpolationLog(const QList<SituationLog> &logs);
 
+            //! Get log as KML (changed situations)
+            static QString getKmlChangedSituations(const QList<SituationLog> &logs);
+
+            //! Get log as KML (elevations)
+            static QString getKmlElevations(const QList<SituationLog> &logs);
+
+            //! Get log as KML (changed situations)
+            static QString getKmlInterpolatedSituations(const QList<SituationLog> &logs);
+
             //! Get log as HTML table
             static QString getHtmlPartsLog(const QList<PartsLog> &logs);
 
