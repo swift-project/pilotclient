@@ -45,9 +45,9 @@ namespace BlackMisc
                 //! Constructor
                 //! @{
                 CInterpolant() {}
-                CInterpolant(const Aviation::CAircraftSituation &situation);
-                CInterpolant(const Aviation::CAircraftSituation &situation, const CInterpolatorPbh &pbh);
-                CInterpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime);
+                CInterpolant(const Aviation::CAircraftSituation &oldSituation);
+                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh);
+                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
                 //! Perform the interpolation

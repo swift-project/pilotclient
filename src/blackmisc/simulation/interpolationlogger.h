@@ -33,17 +33,18 @@ namespace BlackMisc
             qint64 tsCurrent = -1;          //!< current timestamp
             qint64 tsInterpolated = -1;     //!< timestamp interpolated
             double groundFactor = -1;       //!< current ground factor
-            bool vtolAircraft = false;      //!< VTOL aircraft
             double simTimeFraction = -1;    //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
             bool useParts = false;          //!< supporting aircraft parts
+            bool vtolAircraft = false;      //!< VTOL aircraft
+            bool interpolantRecalc = false; //!< interpolant recalculated
             int noNetworkSituations = 0;    //!< available network situations
             int noInvalidSituations = 0;    //!< invalid situations, missing situations for timestampd
             QString elevationInfo;          //!< info about elevation retrieval
             QString altCorrection;          //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
             Aviation::CCallsign callsign;   //!< current callsign
             Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
-            Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
+            Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (latest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
             Aviation::CAircraftSituationChange change;     //!< change
             PhysicalQuantities::CLength cgAboveGround = PhysicalQuantities::CLength::null(); //!< center of gravity (CG)
@@ -195,13 +196,13 @@ namespace BlackMisc
 
         private:
             //! Get log as HTML table
-            static QString getHtmlInterpolationLog(const QList<SituationLog> &getSituationsLog);
+            static QString getHtmlInterpolationLog(const QList<SituationLog> &logs);
 
             //! Get log as HTML table
-            static QString getHtmlPartsLog(const QList<PartsLog> &getSituationsLog);
+            static QString getHtmlPartsLog(const QList<PartsLog> &logs);
 
             //! Write log to file
-            static CStatusMessageList writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &getPartsLog);
+            static CStatusMessageList writeLogFiles(const QList<SituationLog> &interpolation, const QList<PartsLog> &getPartsLog);
 
             //! Status of file operation
             static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);

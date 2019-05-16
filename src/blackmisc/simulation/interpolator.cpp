@@ -309,6 +309,7 @@ namespace BlackMisc
                 log.groundFactor = currentSituation.getOnGroundFactor();
                 log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
+                log.interpolantRecalc = interpolant.isRecalculated();
                 log.change = m_pastSituationsChange;
                 log.usedSetup = m_currentSetup;
                 log.elevationInfo = this->getElevationsFoundMissedInfo();
@@ -316,7 +317,10 @@ namespace BlackMisc
                 log.sceneryOffset = m_currentSceneryOffset;
                 log.noInvalidSituations = m_invalidSituations;
                 log.noNetworkSituations = m_currentSituations.sizeInt();
+                log.useParts = this->isRemoteAircraftSupportingParts(m_callsign);
                 m_logger->logInterpolation(log);
+
+                // if (log.interpolantRecalc) { CLogMessage(this).debug(u"Recalc %1") << log.callsign.asString(); }
             }
 
             // bye

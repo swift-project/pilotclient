@@ -36,22 +36,22 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation) :
-            IInterpolant(1, CInterpolatorPbh(0, situation, situation)),
-            m_oldSituation(situation)
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation) :
+            IInterpolant(1, CInterpolatorPbh(0, oldSituation, oldSituation)),
+            m_oldSituation(oldSituation)
         { }
 
-        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation, const CInterpolatorPbh &pbh) :
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh) :
             IInterpolant(1, pbh),
-            m_oldSituation(situation)
+            m_oldSituation(oldSituation)
         { }
 
-        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime) :
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime) :
             IInterpolant(interpolatedTime, 2),
-            m_oldSituation(situation1), m_newSituation(situation2),
+            m_oldSituation(oldSituation), m_newSituation(newSituation),
             m_simulationTimeFraction(timeFraction)
         {
-            m_pbh = CInterpolatorPbh(m_simulationTimeFraction, situation1, situation2);
+            m_pbh = CInterpolatorPbh(m_simulationTimeFraction, oldSituation, newSituation);
         }
 
         void CInterpolatorLinear::anchor()
@@ -118,7 +118,9 @@ namespace BlackMisc
             CAircraftSituation oldSituation = m_interpolant.getOldSituation();
             CAircraftSituation newSituation = m_interpolant.getNewSituation();
 
-            if (m_situationsLastModifiedUsed < m_situationsLastModified)
+            const bool recalculated = m_situationsLastModifiedUsed < m_situationsLastModified;
+            m_interpolant.setRecalculated(recalculated);
+            if (recalculated)
             {
                 m_situationsLastModifiedUsed = m_situationsLastModified;
 
@@ -211,8 +213,9 @@ namespace BlackMisc
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
                 log.tsInterpolated = interpolatedTime;
                 log.interpolationSituations.clear();
-                log.interpolationSituations.push_back(newSituation); // newest at front
-                log.interpolationSituations.push_back(oldSituation); // oldest at back
+                log.interpolationSituations.push_back(oldSituation); // oldest at front
+                log.interpolationSituations.push_back(newSituation); // latest at back
+                log.interpolantRecalc = recalculated;
             }
 
             m_interpolant = { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };

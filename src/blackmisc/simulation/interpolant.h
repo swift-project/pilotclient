@@ -36,6 +36,12 @@ namespace BlackMisc
             //! Valid?
             void setValid(bool valid) { m_valid = valid; }
 
+            //! Is recalculated interpolant?
+            bool isRecalculated() const { return m_recalculated; }
+
+            //! Set recalculated interpolant
+            void setRecalculated(bool reCalculated) { m_recalculated = reCalculated; }
+
         protected:
             //! Default ctor
             IInterpolant() {}
@@ -50,6 +56,7 @@ namespace BlackMisc
             int m_situationsAvailable = 0;  //!< used situations
             CInterpolatorPbh m_pbh;         //!< the used PBH interpolator
             bool m_valid = true;            //!< valid?
+            bool m_recalculated = false;    //!< recalculated interpolant
         };
     } // namespace
 } // namespace

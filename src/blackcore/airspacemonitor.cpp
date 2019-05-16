@@ -93,7 +93,7 @@ namespace BlackCore
         connect(m_network, &INetwork::connectionStatusChanged,       this, &CAirspaceMonitor::onConnectionStatusChanged);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
+        Q_ASSERT_X(sApp && sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
 
         // optional readers
         if (sApp->getWebDataServices()->getBookingReader())

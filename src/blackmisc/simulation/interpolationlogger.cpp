@@ -59,7 +59,7 @@ namespace BlackMisc
 
             CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts]()
             {
-                const CStatusMessageList msg = CInterpolationLogger::writeLogFile(situations, parts);
+                const CStatusMessageList msg = CInterpolationLogger::writeLogFiles(situations, parts);
                 CLogMessage::preformatted(msg);
             });
             return worker;
@@ -67,7 +67,7 @@ namespace BlackMisc
 
         QStringList CInterpolationLogger::getLatestLogFiles()
         {
-            QStringList files({ "", ""});
+            QStringList files({ "", "" });
             const QString logDir = CDirectoryUtils::logDirectory();
             QDir logs(logDir);
             if (!logs.exists()) { return files; }
@@ -90,7 +90,7 @@ namespace BlackMisc
             return CDirectoryUtils::logDirectory();
         }
 
-        CStatusMessageList CInterpolationLogger::writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts)
+        CStatusMessageList CInterpolationLogger::writeLogFiles(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts)
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning(u"No data for log"); }
             static const QString html = QStringLiteral("Entries: %1\n\n%2");
@@ -264,8 +264,9 @@ namespace BlackMisc
             if (logs.isEmpty()) { return {}; }
             static const QString tableHeader =
                 QStringLiteral(
-                    "<thead><tr>"
-                    "<th title=\"changed situation\">cs.</th><th>Int</th>"
+                    u"<thead><tr>"
+                    u"<th title=\"changed situation\">cs.</th><th>Int</th>"
+                    u"<th title=\"recalculated interpolant\">recalc</th>"
                     u"<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>"
                     u"<th>ts old</th><th>ts new</th><th>ts cur</th>"
                     u"<th>Interpolation ts.</th><th>Sample &Delta;t</th><th>fraction</th>"
@@ -289,7 +290,7 @@ namespace BlackMisc
             {
                 const CAircraftSituation situationOld = log.oldestInterpolationSituation();
                 const CAircraftSituation situationNew = log.newestInterpolationSituation();
-                const bool changedNewPosition = newPosTs != situationNew.getMSecsSinceEpoch();
+                const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
                 const bool changedParts = (lastParts != log.parts);
                 newPosTs = situationNew.getMSecsSinceEpoch();
                 lastParts = log.parts;
@@ -300,6 +301,7 @@ namespace BlackMisc
                     u"<tr>" %
                     (changedNewPosition ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
                     u"<td>" % log.interpolator % u"</td>" %
+                    u"<td>" % boolToYesNo(log.interpolantRecalc) % u"</td>"
                     u"<td>" % log.callsign.asString() % u"</td>" %
                     u"<td>" % boolToYesNo(log.vtolAircraft) % u"</td>" %
                     u"<td>" % msSinceEpochToTime(log.tsCurrent) % u"</td>" %

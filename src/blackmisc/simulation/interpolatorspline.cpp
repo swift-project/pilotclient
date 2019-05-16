@@ -266,6 +266,7 @@ namespace BlackMisc
                 log.deltaSampleTimesMs = dt2;
                 log.simTimeFraction = timeFraction;
                 log.tsInterpolated = interpolatedTime; // without offsets
+                log.interpolantRecalc = m_interpolant.isRecalculated();
             }
 
             return m_interpolant;

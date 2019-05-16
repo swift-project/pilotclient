@@ -59,6 +59,7 @@ namespace BlackCore
         public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
         public BlackMisc::Network::CClientProvider                 // those data will be provided from the class CAirspaceMonitor
     {
+        // CRemoteAircraftProvider is QObject
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Network::IClientProvider)
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
