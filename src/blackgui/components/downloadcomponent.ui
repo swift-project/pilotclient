@@ -6,114 +6,44 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>310</height>
+    <width>438</width>
+    <height>298</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>450</width>
-    <height>250</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Download files</string>
   </property>
-  <layout class="QGridLayout" name="gl_DownloadComponent" columnstretch="1,3,1,1,1">
-   <item row="0" column="3">
-    <widget class="QToolButton" name="tb_CancelDownload">
-     <property name="toolTip">
-      <string>cancel downloading</string>
+  <layout class="QGridLayout" name="gl_DownloadComponent" columnstretch="1,0,0,0,0">
+   <item row="6" column="0">
+    <widget class="QLabel" name="lbl_Actions">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/diagona/icons/diagona/icons/cross-circle.png</normaloff>:/diagona/icons/diagona/icons/cross-circle.png</iconset>
+      <string>Actions:</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="le_DownloadDir">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_Info">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Info:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="3">
+    <widget class="QLineEdit" name="le_Completed">
      <property name="readOnly">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_Started">
-     <property name="text">
-      <string>Started:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="lbl_Completed">
-     <property name="text">
-      <string>Completed:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_DownloadDirectory">
-     <property name="text">
-      <string>Directory:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <spacer name="vs_DownloadComponent">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="1" colspan="4">
-    <widget class="QProgressBar" name="prb_Current">
-     <property name="maximum">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="4">
-    <widget class="QPushButton" name="pb_OpenDownloadDir">
-     <property name="text">
-      <string>open</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1" colspan="3">
-    <widget class="QLineEdit" name="le_Started">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="lbl_Current">
-     <property name="text">
-      <string>Current:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QToolButton" name="tb_ResetDownloadDir">
-     <property name="toolTip">
-      <string>Reset download directory</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</iconset>
      </property>
     </widget>
    </item>
@@ -134,8 +64,53 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1" colspan="3">
-    <widget class="QLineEdit" name="le_Completed">
+   <item row="0" column="4">
+    <widget class="QPushButton" name="pb_Download">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>93</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>download and install</string>
+     </property>
+     <property name="text">
+      <string>download</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QPushButton" name="pb_Launch">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Launch</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="4">
+    <widget class="QLineEdit" name="le_StartedUrl">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="4">
+    <widget class="QLineEdit" name="le_CompletedUrl">
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -151,27 +126,6 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="4">
-    <widget class="QLineEdit" name="le_CompletedUrl">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lbl_Total">
-     <property name="text">
-      <string>Total:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Info">
-     <property name="text">
-      <string>Info:</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="4">
     <widget class="QLineEdit" name="le_StartedNumber">
      <property name="maxLength">
@@ -182,20 +136,71 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="4">
-    <widget class="QLineEdit" name="le_StartedUrl">
+   <item row="0" column="3">
+    <widget class="QToolButton" name="tb_CancelDownload">
+     <property name="toolTip">
+      <string>cancel downloading</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/diagona/icons/diagona/icons/cross-circle.png</normaloff>:/diagona/icons/diagona/icons/cross-circle.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QPushButton" name="pb_OpenDownloadDir">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>open</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="le_DownloadDir">
      <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
-    <widget class="QPushButton" name="pb_Download">
-     <property name="toolTip">
-      <string>download and install</string>
+   <item row="8" column="0">
+    <widget class="QLabel" name="lbl_Total">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
-      <string>download</string>
+      <string>Total:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="4">
+    <widget class="QProgressBar" name="prb_Current">
+     <property name="maximum">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QToolButton" name="tb_ResetDownloadDir">
+     <property name="toolTip">
+      <string>Reset download directory</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</iconset>
      </property>
     </widget>
    </item>
@@ -206,31 +211,28 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="4">
-    <widget class="QLineEdit" name="le_CompletedNumber">
-     <property name="maxLength">
-      <number>4</number>
-     </property>
+   <item row="2" column="1" colspan="3">
+    <widget class="QLineEdit" name="le_Started">
      <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="lbl_Actions">
+   <item row="7" column="0">
+    <widget class="QLabel" name="lbl_Current">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>Actions:</string>
+      <string>Current:</string>
      </property>
     </widget>
    </item>
    <item row="6" column="1" colspan="3">
     <widget class="QFrame" name="fr_Checkboxes">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
      <layout class="QHBoxLayout" name="hl_Checkboxes">
       <property name="leftMargin">
        <number>0</number>
@@ -246,13 +248,25 @@
       </property>
       <item>
        <widget class="QCheckBox" name="cb_StartAfterDownload">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
-         <string>start after download</string>
+         <string>launch after download</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="cb_Shutdown">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>shutdown</string>
         </property>
@@ -261,10 +275,52 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="4">
-    <widget class="QPushButton" name="pb_DoIt">
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_DownloadDirectory">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>do it</string>
+      <string>Directory:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_Completed">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Completed:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_Started">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Started:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QLineEdit" name="le_CompletedNumber">
+     <property name="maxLength">
+      <number>4</number>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

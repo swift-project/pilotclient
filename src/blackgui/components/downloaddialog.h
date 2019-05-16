@@ -56,9 +56,6 @@ namespace BlackGui
             //! \copydoc QDialog::accept
             virtual void accept() override;
 
-            //! \copydoc QDialog::reject
-            virtual void reject() override;
-
         private:
             QScopedPointer<Ui::CDownloadDialog> ui;
         };

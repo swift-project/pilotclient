@@ -2,20 +2,6 @@
 <ui version="4.0">
  <class>CDownloadDialog</class>
  <widget class="QDialog" name="CDownloadDialog">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>425</width>
-    <height>265</height>
-   </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>425</width>
-    <height>0</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>Download files</string>
   </property>
@@ -33,14 +19,7 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="BlackGui::Components::CDownloadComponent" name="comp_Download">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>225</height>
-      </size>
-     </property>
-    </widget>
+    <widget class="BlackGui::Components::CDownloadComponent" name="comp_Download"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="bb_DownloadDialog">
@@ -48,7 +27,10 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Abort|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Close</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -66,33 +48,17 @@
  <connections>
   <connection>
    <sender>bb_DownloadDialog</sender>
-   <signal>accepted()</signal>
+   <signal>clicked(QAbstractButton*)</signal>
    <receiver>CDownloadDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>102</x>
+     <y>36</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>bb_DownloadDialog</sender>
-   <signal>rejected()</signal>
-   <receiver>CDownloadDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>102</x>
+     <y>28</y>
     </hint>
    </hints>
   </connection>

@@ -54,7 +54,7 @@ namespace BlackGui
             connect(ui->tb_CancelDownload, &QToolButton::pressed, this, &CDownloadComponent::cancelOngoingDownloads);
             connect(ui->pb_Download, &QPushButton::pressed, [ = ] { this->triggerDownloadingOfFiles(); });
             connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CDownloadComponent::openDownloadDir);
-            connect(ui->pb_DoIt, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
+            connect(ui->pb_Launch, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
         }
 
         CDownloadComponent::~CDownloadComponent()
@@ -99,6 +99,8 @@ namespace BlackGui
 
         bool CDownloadComponent::triggerDownloadingOfFiles(int delayMs)
         {
+            ui->pb_Download->setEnabled(false);
+            ui->pb_Launch->setEnabled(false);
             if (m_remoteFiles.isEmpty()) { return false; }
             if (!m_waitingForDownload.isEmpty()) { return false; }
             if (delayMs > 0)
@@ -162,6 +164,7 @@ namespace BlackGui
             ui->le_StartedNumber->clear();
             ui->le_StartedUrl->clear();
             this->showFileInfo();
+            ui->pb_Download->setEnabled(true);
         }
 
         bool CDownloadComponent::triggerDownloadingOfNextFile()
@@ -255,6 +258,8 @@ namespace BlackGui
             QTimer::singleShot(0, this, [ = ]
             {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                myself->ui->pb_Download->setEnabled(true);
+                myself->ui->pb_Launch->setEnabled(true);
                 this->allDownloadsCompleted();
             });
             this->startDownloadedExecutable();

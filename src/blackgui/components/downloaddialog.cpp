@@ -29,6 +29,7 @@ namespace BlackGui
 
         void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
         {
+            setWindowTitle("Downloading " + remoteFile.getName());
             ui->comp_Download->setDownloadFile(remoteFile);
         }
 
@@ -60,13 +61,21 @@ namespace BlackGui
 
         void CDownloadDialog::accept()
         {
-            ui->comp_Download->triggerDownloadingOfFiles();
+            if (! ui->comp_Download->haveAllDownloadsCompleted())
+            {
+                const QString msg = QStringLiteral("Download ongoing. Do you want to abort it?");
+                QMessageBox::StandardButton reply = QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);
+                if (reply == QMessageBox::Yes)
+                {
+                    ui->comp_Download->cancelOngoingDownloads();
+                    this->done(CDownloadDialog::Rejected);
+                }
+            }
+            else
+            {
+                this->done(CDownloadDialog::Accepted);
+            }
         }
 
-        void CDownloadDialog::reject()
-        {
-            ui->comp_Download->cancelOngoingDownloads();
-            this->done(CDownloadDialog::Rejected);
-        }
     } // ns
 } // ns

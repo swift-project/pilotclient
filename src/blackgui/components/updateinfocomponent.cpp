@@ -174,7 +174,7 @@ namespace BlackGui
             {
                 m_downloadDialog->setMode(CDownloadComponent::SwiftInstaller);
                 m_downloadDialog->setDownloadFile(artifact.asRemoteFile());
-                m_downloadDialog->showAndStartDownloading();
+                m_downloadDialog->show();
             }
         }
 
