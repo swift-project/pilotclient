@@ -713,7 +713,7 @@ namespace BlackMisc
                             bool result = it.value()(tokens, package, package.path, lineNum);
                             if (!result)
                             {
-                                package.planes.back().hasErrors = true;
+                                if (! package.planes.empty()) { package.planes.back().hasErrors = true; }
                             }
                         }
                         else
