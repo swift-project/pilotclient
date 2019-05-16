@@ -66,14 +66,15 @@ namespace BlackMisc
             {
                 BLACK_VERIFY_X(CAircraftSituation::isValidVector(oldVec), Q_FUNC_INFO, "Invalid old vector");
                 BLACK_VERIFY_X(CAircraftSituation::isValidVector(newVec), Q_FUNC_INFO, "Invalid new vector");
-                BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Invalid fraction");
+                BLACK_VERIFY_X(isAcceptableTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Invalid fraction");
             }
 
             // Interpolate position: pos = (posB - posA) * t + posA
             CCoordinateGeodetic newPosition;
-            newPosition.setNormalVector((newVec[0] - oldVec[0]) * m_simulationTimeFraction + oldVec[0],
-                                        (newVec[1] - oldVec[1]) * m_simulationTimeFraction + oldVec[1],
-                                        (newVec[2] - oldVec[2]) * m_simulationTimeFraction + oldVec[2]);
+            const double tf = clampValidTimeFraction(m_simulationTimeFraction);
+            newPosition.setNormalVector((newVec[0] - oldVec[0]) * tf + oldVec[0],
+                                        (newVec[1] - oldVec[1]) * tf + oldVec[1],
+                                        (newVec[2] - oldVec[2]) * tf + oldVec[2]);
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
@@ -86,7 +87,7 @@ namespace BlackMisc
             const CAltitude newAlt(m_newSituation.getCorrectedAltitude());
             Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
             const CAltitude altitude((newAlt - oldAlt)
-                                     * m_simulationTimeFraction
+                                     * tf
                                      + oldAlt,
                                      oldAlt.getReferenceDatum());
 
@@ -102,8 +103,8 @@ namespace BlackMisc
                 do
                 {
                     if (CAircraftSituation::isGfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
-                    if (CAircraftSituation::isGfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
-                    const double groundFactor = (newGroundFactor - oldGroundFactor) * m_simulationTimeFraction + oldGroundFactor;
+                    if (CAircraftSituation::isGfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true);  break; }
+                    const double groundFactor = (newGroundFactor - oldGroundFactor) * tf + oldGroundFactor;
                     newSituation.setOnGroundFactor(groundFactor);
                     newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
                 }

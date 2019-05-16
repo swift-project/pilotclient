@@ -32,9 +32,12 @@ namespace BlackMisc
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(isValidTimeFraction(timeFraction0to1), Q_FUNC_INFO, "0..1 fraction needed");
+                BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction0to1), Q_FUNC_INFO, "0..1 fraction needed");
             }
 
+            //! make sure to not end up we extrapolation
+            if (timeFraction0to1 >= 1.0) { return begin + CAngle(deltaDeg, CAngleUnit::deg()); }
+            if (timeFraction0to1 <= 0.0) { return begin; }
             return begin + CAngle(timeFraction0to1 * deltaDeg, CAngleUnit::deg());
         }
 
