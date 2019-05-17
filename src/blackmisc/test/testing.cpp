@@ -50,9 +50,9 @@ namespace BlackMisc
             // from WGS is slow, so static const (only 1 time init)
             // https://dev.vatsim-germany.org/issues/322#note-2
             static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
-            const QString cs = QStringLiteral("%1_TWR").arg(index);
+            const QString cs  = QStringLiteral("%1MI-SNO_TWR").arg(index);
             const QString usr = QStringLiteral("Joe %1").arg(index);
-            const QString id = QStringLiteral("00000%1").arg(index).right(6);
+            const QString id  = QStringLiteral("00000%1").arg(index).right(6);
             const double f = 118.0 + (index % 30) * 0.25;
 
             const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
@@ -78,7 +78,7 @@ namespace BlackMisc
             }
             else
             {
-                station = CAtcStation(CCallsign(cs), user,
+                station = CAtcStation(CCallsign(cs, CCallsign::Atc), user,
                                       CFrequency(f, CFrequencyUnit::MHz()),
                                       geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
                 station.setRelativeDistance(CLength(index + 1, CLengthUnit::NM()));

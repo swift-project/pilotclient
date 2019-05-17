@@ -159,7 +159,7 @@ namespace BlackMisc
             static bool isValidAtcCallsign(const CCallsign &callsign);
 
             //! Unify the callsign by removing illegal characters
-            static QString unifyCallsign(const QString &callsign);
+            static QString unifyCallsign(const QString &callsign, TypeHint hint = NoHint);
 
             //! List of real ATC suffixes (e.g. TWR);
             static const QStringList &atcCallsignSuffixes();

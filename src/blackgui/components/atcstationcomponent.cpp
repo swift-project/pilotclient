@@ -336,6 +336,7 @@ namespace BlackGui
 
         void CAtcStationComponent::testCreateDummyOnlineAtcStations(int number)
         {
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
             if (this->canAccessContext())
             {
                 sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);

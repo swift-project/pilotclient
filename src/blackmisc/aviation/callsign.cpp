@@ -20,15 +20,15 @@ namespace BlackMisc
     namespace Aviation
     {
         CCallsign::CCallsign(const QString &callsign, CCallsign::TypeHint hint)
-            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
+            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign, hint)), m_typeHint(hint)
         {}
 
         CCallsign::CCallsign(const QString &callsign, const QString &telephonyDesignator, CCallsign::TypeHint hint)
-            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
+            : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign, hint)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
         {}
 
         CCallsign::CCallsign(const char *callsign, CCallsign::TypeHint hint)
-            : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
+            : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign, hint)), m_typeHint(hint)
         {}
 
         void CCallsign::registerMetadata()
@@ -68,8 +68,14 @@ namespace BlackMisc
             return std::numeric_limits<int>::max();
         }
 
-        QString CCallsign::unifyCallsign(const QString &callsign)
+        QString CCallsign::unifyCallsign(const QString &callsign, TypeHint hint)
         {
+            // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
+            switch (hint)
+            {
+            case Atc: return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            default: break;
+            }
             return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         }
 
@@ -282,8 +288,9 @@ namespace BlackMisc
 
         bool CCallsign::isValidAtcCallsign(const QString &callsign)
         {
+            // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
-            return !containsChar(callsign, [](QChar c) { return c != '_' && !c.isUpper() && !c.isDigit(); });
+            return !containsChar(callsign, [](QChar c) { return c != '-' && c != '_' && !c.isUpper() && !c.isDigit(); });
         }
 
         bool CCallsign::isValidAtcCallsign(const CCallsign &callsign)
