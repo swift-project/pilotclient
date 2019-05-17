@@ -1273,7 +1273,7 @@ namespace BlackCore
                 offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
             }
 
-            return offsetTime;
+            return m_additionalOffsetTime + offsetTime;
         }
 
         qint64 CNetworkVatlib::currentOffsetTime(const CCallsign &callsign) const

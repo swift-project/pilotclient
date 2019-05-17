@@ -395,6 +395,19 @@ namespace BlackCore
          * \sa metarReplyReceived
          */
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) = 0;
+        //! @}
+
+
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Others
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        //! Additional offset time @{
+        virtual qint64 getAdditionalOffsetTime() const = 0;
+        virtual void setAdditionalOffsetTime(qint64 addOffset) = 0;
+        //! @}
 
     signals:
         //! @}

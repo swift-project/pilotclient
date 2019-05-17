@@ -121,13 +121,18 @@ namespace BlackCore
             virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const override;
             //! @}
 
-            //! Arguments to be passed to another swift appplication
-            static QStringList vatlibArguments();
-
             //! \name Weather functions
             //! @{
             virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
             //! @}
+
+            //! Additional offset time @{
+            virtual qint64 getAdditionalOffsetTime() const override { return m_additionalOffsetTime; }
+            virtual void setAdditionalOffsetTime(qint64 addOffset) override { m_additionalOffsetTime = addOffset; }
+            //! @}
+
+            //! Arguments to be passed to another swift appplication
+            static QStringList vatlibArguments();
 
             //! Command line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
@@ -136,6 +141,7 @@ namespace BlackCore
             static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+            qint64 m_additionalOffsetTime = 0; //!< additional offset time
 
             static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
@@ -186,11 +192,12 @@ namespace BlackCore
             void initializeSession();
             void changeConnectionStatus(VatConnectionStatus newStatus);
             bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
+            void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
+
             static QString convertToUnicodeEscaped(const QString &str);
             static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             static void networkLogHandler(VatSeverityLevel severity, const char *context, const char *message);
             static QString simplifyTextMessage(const QString &msg);
-            void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
             //! Default model string
             static const QString &defaultModelString()

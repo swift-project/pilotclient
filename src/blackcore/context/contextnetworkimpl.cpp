@@ -6,36 +6,37 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackcore/airspaceanalyzer.h"
-#include "blackcore/airspacemonitor.h"
-#include "blackcore/application.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulatorimpl.h"
+#include "blackcore/airspaceanalyzer.h"
+#include "blackcore/airspacemonitor.h"
+#include "blackcore/application.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 #include "contextnetworkimpl.h"
 
 #include <stdbool.h>
@@ -280,7 +281,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore" });
+            static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -393,6 +394,27 @@ namespace BlackCore
                 else       { CLogMessage(this).info(u"Removed altitude offset %1") << cs.asString(); }
 
                 return true;
+            }
+            else if (parser.matchesCommand(".addtimeos", ".addtimeoffset"))
+            {
+                if (!m_airspace) { return false; }
+                if (parser.countParts() < 2) { return false; }
+
+                CTime os(CTime::null());
+                if (parser.hasPart(2))
+                {
+                    os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
+                }
+
+                if (!os.isNull() && os.isPositiveWithEpsilonConsidered())
+                {
+                    const qint64 ost = os.valueInteger(CTimeUnit::ms());
+                    CLogMessage(this).info(u"Added add offset time %1ms") << ost;
+                }
+                else
+                {
+                    CLogMessage(this).info(u"Reset add. time offset");
+                }
             }
             else if (parser.matchesCommand(".watchdog"))
             {
