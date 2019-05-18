@@ -187,8 +187,18 @@ namespace BlackGui
 
         void COwnModelSetForm::setSimulator(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            m_simulator = simulator;
+            // Ref T663, avoid ASSERT in some weird cases
+            if (simulator.isSingleSimulator())
+            {
+                m_simulator = simulator;
+            }
+            else
+            {
+                const CSimulatorInfo resetSim = m_simulator.isSingleSimulator() ? m_simulator : CSimulatorInfo::guessDefaultSimulator();
+                const QString msg = QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
+                this->showOverlayHTMLMessage(msg);
+                m_simulator = resetSim;
+            }
         }
 
         bool COwnModelSetForm::hasDistributorPreferences() const

@@ -121,8 +121,18 @@ namespace BlackGui
 
         void CDbOwnModelSetFormDialog::setSimulator(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            m_simulatorInfo = simulator;
+            // Ref T663, avoid ASSERT in some weird cases
+            if (simulator.isSingleSimulator())
+            {
+                m_simulatorInfo = simulator;
+            }
+            else
+            {
+                const CSimulatorInfo resetSim = m_simulatorInfo.isSingleSimulator() ? m_simulatorInfo : CSimulatorInfo::guessDefaultSimulator();
+                const QString msg = QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
+                this->showMappingComponentOverlayHtmlMessage(msg);
+                m_simulatorInfo = resetSim;
+            }
             ui->form_OwnModelSet->setSimulator(m_simulatorInfo);
             this->setWindowTitle("Create model set for " + m_simulatorInfo.toQString(true));
         }
