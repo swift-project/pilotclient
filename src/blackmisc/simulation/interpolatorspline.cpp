@@ -146,8 +146,20 @@ namespace BlackMisc
             const CAircraftSituation latest = m_currentSituations.front();
             if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
             const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
-            const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
-            if (!older.isNull()) { m_s[0] = older; }
+
+            // with https://dev.swift-project.org/T668#15841 avoid 2 very close positions
+            // currently done by time, maybe we can also choose distance
+            const qint64 osNotTooClose = qRound64(0.8 * os);
+            const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted - osNotTooClose);
+            if (!older.isNull())
+            {
+                m_s[0] = older;
+            }
+            else
+            {
+                const CAircraftSituation closeOlder = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
+                if (!closeOlder.isNull()) { m_s[0] = closeOlder; }
+            }
             const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
             const qint64 olderAdjusted  = m_s[0].getAdjustedMSecsSinceEpoch();
 
@@ -221,7 +233,7 @@ namespace BlackMisc
 
                 m_prevSampleAdjustedTime = m_s[1].getAdjustedMSecsSinceEpoch();
                 m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
-                m_prevSampleTime = m_s[1].getMSecsSinceEpoch();
+                m_prevSampleTime = m_s[1].getMSecsSinceEpoch(); // last interpolated situation normally
                 m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
                 m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2])); // older, newer
                 Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
@@ -241,20 +253,21 @@ namespace BlackMisc
             //     as long as the offset time is constant, it does not matter
             const double dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
             const double dt2 = static_cast<double>(m_nextSampleAdjustedTime  - m_prevSampleAdjustedTime);
-            const double timeFraction = dt1 / dt2;
+            double timeFraction = dt1 / dt2;
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
                 BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
-                BLACK_VERIFY_X(isValidTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
+                BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
             }
-
-            const qint64 interpolatedTime = m_prevSampleTime + qRound(timeFraction * dt2);
+            timeFraction = clampValidTimeFraction(timeFraction);
+            const qint64 interpolatedTime = m_prevSampleTime + qRound64(timeFraction * dt2);
 
             // time fraction is expected between 0-1
             m_currentInterpolationStatus.setInterpolated(true);
             m_interpolant.setTimes(m_currentTimeMsSinceEpoch, timeFraction, interpolatedTime);
+            m_interpolant.setRecalculated(recalculate);
 
             if (this->doLogging())
             {
