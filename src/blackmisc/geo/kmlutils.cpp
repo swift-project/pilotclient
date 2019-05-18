@@ -15,7 +15,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
-    namespace Simulation
+    namespace Geo
     {
         const CLogCategoryList &CKmlUtils::getLogCategories()
         {

@@ -7,9 +7,9 @@
  */
 
 #include "interpolationlogger.h"
-#include "blackmisc/simulation/kmlutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
+#include "blackmisc/geo/kmlutils.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"

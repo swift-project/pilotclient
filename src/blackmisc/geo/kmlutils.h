@@ -8,8 +8,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_KMLUTILS_H
-#define BLACKMISC_SIMULATION_KMLUTILS_H
+#ifndef BLACKMISC_GEO_KMLUTILS_H
+#define BLACKMISC_GEO_KMLUTILS_H
 
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logcategorylist.h"
@@ -17,7 +17,7 @@
 
 namespace BlackMisc
 {
-    namespace Simulation
+    namespace Geo
     {
         /*!
          * KML utils
