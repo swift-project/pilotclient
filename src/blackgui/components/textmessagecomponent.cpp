@@ -615,6 +615,27 @@ namespace BlackGui
             return m_usedAsOverlayWidget ? true : this->isVisibleWidget();
         }
 
+        CCallsign CTextMessageComponent::getCallsignPropertyForTab(int tabIndex, bool validated) const
+        {
+            if (tabIndex < 0 || tabIndex >= ui->tw_TextMessages->count()) { return {}; }
+            QWidget *tab = ui->tw_TextMessages->widget(tabIndex);
+            if (tab && !tab->property("callsign").toString().isEmpty())
+            {
+                const CCallsign cs(tab->property("callsign").toString());
+                if (!validated) { return cs; }
+                if (!sGui && sGui->getIContextNetwork())
+                {
+                    const CAtcStation atc = sGui->getIContextNetwork()->getOnlineStationForCallsign(cs);
+                    if (atc.hasCallsign()) { return atc.getCallsign(); } // first hand callsign diretcly from network context
+
+                    const CSimulatedAircraft aircraft = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(cs);
+                    if (aircraft.hasCallsign()) { return aircraft.getCallsign(); } // first hand callsign diretcly from network context
+                }
+                return cs;
+            }
+            return {};
+        }
+
         void CTextMessageComponent::emitDisplayInInfoWindow(const CVariant &message, int displayDurationMs)
         {
             if (m_usedAsOverlayWidget) { return; }
@@ -681,7 +702,17 @@ namespace BlackGui
                         }
                         else
                         {
-                            cmd.append(selectedTabText);
+                            // selectedTabText expected to be the callsign
+                            // with T664 we resolve against the callsigns in the context if possible
+                            const CCallsign cs = this->getCallsignPropertyForTab(index, true);
+                            if (cs.isEmpty())
+                            {
+                                cmd.append(selectedTabText);
+                            }
+                            else
+                            {
+                                cmd.append(cs.isAtcCallsign() ? cs.getStringAsSet() : cs.asString());
+                            }
                         }
                     }
                     else

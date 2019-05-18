@@ -235,6 +235,9 @@ namespace BlackGui
             //! Visible widget hack
             bool isVisibleWidgetHack() const;
 
+            //! Callsign from prpoerty of given tab
+            BlackMisc::Aviation::CCallsign getCallsignPropertyForTab(int tabIndex, bool validated) const;
+
             //! Emit the display in info window signal
             void emitDisplayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs);
 
