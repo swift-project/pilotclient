@@ -35,10 +35,16 @@
    </item>
    <item>
     <widget class="QGroupBox" name="gb_Algorithm">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>60</height>
+      </size>
+     </property>
      <property name="title">
       <string>Algorithm</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gl_Algorithm">
       <item row="0" column="1">
        <widget class="QRadioButton" name="rb_ScoreOnly">
         <property name="text">
@@ -72,10 +78,16 @@
    </item>
    <item>
     <widget class="QGroupBox" name="gb_MatchingScript">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>70</height>
+      </size>
+     </property>
      <property name="title">
       <string>Matching script</string>
      </property>
-     <layout class="QGridLayout" name="gl_MatchingSCript" columnstretch="0,1,0,0">
+     <layout class="QGridLayout" name="gl_MatchingScript" columnstretch="0,1,0,0">
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_MsMatching">
         <property name="text">
@@ -170,7 +182,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>145</height>
+       <height>150</height>
       </size>
      </property>
      <property name="title">
@@ -264,7 +276,7 @@
      <property name="title">
       <string>Matching by categories</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gl_MacthingCategories">
       <item row="0" column="0">
        <widget class="QCheckBox" name="cb_CategoryGlider">
         <property name="text">
@@ -284,6 +296,12 @@
    </item>
    <item>
     <widget class="QGroupBox" name="gb_FailureHandling">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>70</height>
+      </size>
+     </property>
      <property name="title">
       <string>Failure handling and verification</string>
      </property>
