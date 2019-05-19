@@ -23,11 +23,12 @@ namespace BlackGui
             ui(new Ui::CSettingsTextMessageInlineComponent)
         {
             ui->setupUi(this);
-            connect(ui->cb_All, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Frequency, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            connect(ui->cb_Private, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_All,        &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Frequency,  &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+            connect(ui->cb_Private,    &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
             connect(ui->cb_Supervisor, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-            settingsChanged();
+            connect(ui->cb_Focus,      &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+            this->settingsChanged();
         }
 
         CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent()
@@ -41,6 +42,7 @@ namespace BlackGui
             ui->cb_Frequency->setChecked(s.getPopupFrequencyMessages());
             ui->cb_Private->setChecked(s.getPopupPrivateMessages());
             ui->cb_Selcal->setChecked(s.getPopupSelcalMessages());
+            ui->cb_Focus->setChecked(s.focusOverlayWindow());
         }
 
         void CSettingsTextMessageInlineComponent::changeSettings()
@@ -51,6 +53,7 @@ namespace BlackGui
             s.setPopupPrivateMessages(ui->cb_Private->isChecked());
             s.setSupervisorMessages(ui->cb_Supervisor->isChecked());
             s.setPopupSelcalMessages(ui->cb_Selcal->isChecked());
+            s.setFocusOverlayWindows(ui->cb_Focus->isChecked());
             const CStatusMessage m = m_settings.setAndSave(s);
             CLogMessage::preformatted(m);
         }

@@ -843,6 +843,8 @@ namespace BlackGui
         void CTextMessageComponent::focusTextEntry()
         {
             if (!ui->lep_TextMessages->isVisible()) { return; }
+            const CTextMessageSettings s = m_messageSettings.get();
+            if (m_usedAsOverlayWidget && !s.focusOverlayWindow()) { return; }
             ui->lep_TextMessages->setFocus();
         }
 

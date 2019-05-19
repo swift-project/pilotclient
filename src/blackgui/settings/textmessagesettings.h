@@ -37,6 +37,7 @@ namespace BlackGui
                 IndexPopupFrequencyMessages,
                 IndexPopupAllMessages,
                 IndexPopupSelcalMessages,
+                IndexFocus,
                 IndexStyle
             };
 
@@ -97,6 +98,12 @@ namespace BlackGui
             //! CSS style sheet
             void setStyleSheet(const QString &styleSheet) { m_styleSheet = styleSheet; }
 
+            //! Focus in the overlay window
+            bool focusOverlayWindow() const { return m_focus; }
+
+            //! Set focus in overlay window
+            void setFocusOverlayWindows(bool focus) { m_focus = focus; }
+
             //! Reset style sheet
             void resetStyleSheet() { m_styleSheet.clear(); }
 
@@ -115,6 +122,7 @@ namespace BlackGui
             bool m_popupFrequencyMessages  = false; //!< show if tuned in
             bool m_popupAllMessages        = false;
             bool m_popupSelcalMessages     = true;
+            bool m_focus                   = true;
             QString m_styleSheet;
 
             BLACK_METACLASS(
