@@ -86,6 +86,11 @@ namespace BlackCore
             const QString &primaryIcao, const QString &secondaryIcao,
             bool airlineFromCallsign, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
 
+        //! Run the network entry script
+        //! \threadsafe
+        //! \ingroup reverselookup
+        static BlackMisc::Simulation::CAircraftModel networkEntryScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
+
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
         //! \ingroup reverselookup

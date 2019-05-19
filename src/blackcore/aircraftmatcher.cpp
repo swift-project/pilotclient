@@ -275,19 +275,35 @@ namespace BlackCore
 
     CAircraftModel CAircraftMatcher::reverseLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, const CAircraftMatcherSetup &setup, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
+        Q_UNUSED(setup);
+
         CLivery livery;
         livery.setAirlineIcaoCode(networkAirlineIcao);
+
         CAircraftModel model(networkModelString, type, {}, networkAircraftIcao, livery);
         model.setCallsign(callsign);
         model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, log);
         model.setModelType(CAircraftModel::TypeReverseLookup);
 
+        return model;
+    }
+
+    CAircraftModel CAircraftMatcher::networkEntryScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
+    {
+        if (!setup.doRunMsNetworkEntryScript()) { return inModel; }
+
         // matching script
+        const CCallsign callsign = inModel.getCallsign();
+        const CAircraftIcaoCode inAircraftIcao = inModel.getAircraftIcaoCode();
+        const CAirlineIcaoCode  inAirlineIcao  = inModel.getAirlineIcaoCode();
+        const CLivery inLivery = inModel.getLivery();
+
         while (setup.doRunMsNetworkEntryScript())
         {
             const QString js = CFileUtils::readFileToString(setup.getMsNetworkEntryFile());
             if (js.isEmpty()) { break; }
 
+            if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script (rev.lookup): '%1'").arg(setup.getMsNetworkEntryFile())); }
             static const QString logFile = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingSriptEntry.log");
             QJSEngine engine;
             // engine.installExtensions(QJSEngine::ConsoleExtension);
@@ -295,15 +311,15 @@ namespace BlackCore
             engine.globalObject().setProperty("SwiftValues", jsMetaObject);
             MSSwiftValues networkObject(
                 callsign.asString(),
-                networkAircraftIcao.getDesignator(), networkAircraftIcao.getDbKey(),
-                networkAirlineIcao.getDesignator(),  networkAirlineIcao.getDbKey(),
-                networkLiveryInfo, -1
+                inAircraftIcao.getDesignator(), inAircraftIcao.getDbKey(),
+                inAirlineIcao.getDesignator(),  inAirlineIcao.getDbKey(),
+                inLivery.getCombinedCode(), inLivery.getDbKey()
             );
             MSSwiftValues reverseModel(
-                model.getCallsign().asString(),
-                model.getAircraftIcaoCode().getDesignator(), model.getAircraftIcaoCode().getDbKey(),
-                model.getAirlineIcaoCode().getDesignator(),  model.getAirlineIcaoCode().getDbKey(),
-                model.getLivery().getCombinedCode(), model.getLivery().getDbKey()
+                inModel.getCallsign().asString(),
+                inModel.getAircraftIcaoCode().getDesignator(), inModel.getAircraftIcaoCode().getDbKey(),
+                inModel.getAirlineIcaoCode().getDesignator(),  inModel.getAirlineIcaoCode().getDbKey(),
+                inModel.getLivery().getCombinedCode(), inModel.getLivery().getDbKey()
             );
             MSSwiftValues returnObject;
 
@@ -318,7 +334,9 @@ namespace BlackCore
             ms = ms.call();
             if (ms.isError())
             {
-                CLogMessage(getLogCategories()).warning(u"Matching script error: %1 '%2'") << ms.property("lineNumber").toInt() << ms.toString();
+                const QString msg = QStringLiteral("Matching script error: %1 '%2'").arg(ms.property("lineNumber").toInt()).arg(ms.toString());
+                CLogMessage(getLogCategories()).warning(msg);
+                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, msg); }
             }
             else
             {
@@ -327,7 +345,7 @@ namespace BlackCore
                     const QString r = ms.toString();
                     if (!r.isEmpty())
                     {
-                        CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << ms.property("lineNumber").toInt() << ms.toString();
+                        CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << r;
                     }
                 }
             }
@@ -336,7 +354,8 @@ namespace BlackCore
             break;
         }
 
-        return model;
+        // not yet using the script model
+        return inModel;
     }
 
     CAircraftModel CAircraftMatcher::reverseLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)

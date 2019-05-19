@@ -746,98 +746,118 @@ namespace BlackCore
         const bool hasAnyId = ids.hasAnyId();
         if (hasAnyId) { this->markAsSwiftClient(callsign); }
 
-        // directly check model string
-        if (!modelString.isEmpty())
+        CAircraftModel lookupModel; // result
+        const CAircraftMatcherSetup setup = m_matchingSettings.get();
+
+        do
         {
-            CAircraftModel model = CAircraftMatcher::reverseLookupModelString(modelString, callsign, log);
-            model.setCallsign(callsign);
-            if (model.hasValidDbKey()) { return model; } // found by model string
-        }
-
-        CLivery livery;
-        CAirlineIcaoCode airlineIcao;
-        CAircraftIcaoCode aircraftIcao;
-
-        if (hasAnyId)
-        {
-            if (ids.model >= 0)
+            // directly check model string
+            if (!modelString.isEmpty())
             {
-                CAircraftModel model = CAircraftMatcher::reverseLookupModelId(ids.model, callsign, log);
-                model.setCallsign(callsign);
-                if (model.hasValidDbKey()) { return model; } // found by model id from livery string
-            };
-
-            CAircraftMatcher::reverseLookupByIds(ids, aircraftIcao, livery, callsign, log);
-            if (livery.hasValidDbKey()) { airlineIcao = livery.getAirlineIcaoCode(); }
-
-            if (aircraftIcao.hasValidDbKey() && livery.hasValidDbKey())
-            {
-                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model").arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()), CAirspaceMonitor::getLogCategories());
-
-                // we have a valid livery from DB + valid aircraft ICAO from DB
-                CAircraftModel model(modelString, type, "By DB livery and aircraft ICAO", aircraftIcao, livery);
-                model.setCallsign(callsign);
-                return model;
-            }
-        }
-
-        // now fuzzy search on aircraft
-        if (!aircraftIcao.hasValidDbKey())
-        {
-            aircraftIcao = CAircraftIcaoCode(aircraftIcaoString);
-            const bool knownAircraftIcao = CAircraftMatcher::isKnowAircraftDesignator(aircraftIcaoString, callsign, log);
-            if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
-            {
-                // we have no valid aircraft ICAO, so we do a fuzzy search among those
-                const CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
-                if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
-            }
-        }
-
-        // if we have a livery, we already know the airline, or the livery is a color livery
-        if (!airlineIcao.hasValidDbKey() && !livery.hasValidDbKey())
-        {
-            const CFlightPlanRemarks fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
-            if (fpRemarks.isEmpty())
-            {
-                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks"));
-            }
-            else
-            {
-                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
-                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+                lookupModel = CAircraftMatcher::reverseLookupModelString(modelString, callsign, log);
+                if (lookupModel.hasValidDbKey()) { break; } // found by model string
             }
 
-            airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao().getDesignator(), true, true, log);
-            if (!airlineIcao.isLoadedFromDb() && fpRemarks.hasParsedAirlineRemarks())
+            CLivery livery;
+            CAirlineIcaoCode airlineIcao;
+            CAircraftIcaoCode aircraftIcao;
+
+            if (hasAnyId)
             {
-                const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
-                if (!airlineName.isEmpty())
+                if (ids.model >= 0)
                 {
-                    const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineName);
-                    airlineIcao.setName(resolvedAirlineName);
-                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineName), CAirspaceMonitor::getLogCategories());
-                }
+                    lookupModel = CAircraftMatcher::reverseLookupModelId(ids.model, callsign, log);
+                    if (lookupModel.hasValidDbKey()) { break; } // found by model id from livery string
+                };
 
-                const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
-                if (!telephony.isEmpty())
+                CAircraftMatcher::reverseLookupByIds(ids, aircraftIcao, livery, callsign, log);
+                if (livery.hasValidDbKey()) { airlineIcao = livery.getAirlineIcaoCode(); }
+
+                if (aircraftIcao.hasValidDbKey() && livery.hasValidDbKey())
                 {
-                    const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephony);
-                    airlineIcao.setTelephonyDesignator(resolvedTelephony);
-                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephony), CAirspaceMonitor::getLogCategories());
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model").arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()), CAirspaceMonitor::getLogCategories());
+
+                    // we have a valid livery from DB + valid aircraft ICAO from DB
+                    lookupModel = CAircraftModel(modelString, type, "By DB livery and aircraft ICAO", aircraftIcao, livery);
+                    break;
                 }
             }
 
-            if (!airlineIcao.isLoadedFromDb())
+            // now fuzzy search on aircraft
+            if (!aircraftIcao.hasValidDbKey())
             {
-                // already try to resolve at this stage by a smart lookup with all the filled data from above
-                airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
+                aircraftIcao = CAircraftIcaoCode(aircraftIcaoString);
+                const bool knownAircraftIcao = CAircraftMatcher::isKnowAircraftDesignator(aircraftIcaoString, callsign, log);
+                if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
+                {
+                    // we have no valid aircraft ICAO, so we do a fuzzy search among those
+                    const CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
+                    if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
+                }
             }
+
+            // if we have a livery, we already know the airline, or the livery is a color livery
+            if (!airlineIcao.hasValidDbKey() && !livery.hasValidDbKey())
+            {
+                const CFlightPlanRemarks fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
+                if (fpRemarks.isEmpty())
+                {
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks"));
+                }
+                else
+                {
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+                }
+
+                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao().getDesignator(), true, true, log);
+                if (!airlineIcao.isLoadedFromDb() && fpRemarks.hasParsedAirlineRemarks())
+                {
+                    const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
+                    if (!airlineName.isEmpty())
+                    {
+                        const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineName);
+                        airlineIcao.setName(resolvedAirlineName);
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineName), CAirspaceMonitor::getLogCategories());
+                    }
+
+                    const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
+                    if (!telephony.isEmpty())
+                    {
+                        const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephony);
+                        airlineIcao.setTelephonyDesignator(resolvedTelephony);
+                        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephony), CAirspaceMonitor::getLogCategories());
+                    }
+                }
+
+                if (!airlineIcao.isLoadedFromDb())
+                {
+                    // already try to resolve at this stage by a smart lookup with all the filled data from above
+                    airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
+                }
+            }
+
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+            lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, type, log);
+        }
+        while (false);
+
+        // model found
+        lookupModel.setCallsign(callsign);
+
+        // Script
+        if (setup.doRunMsNetworkEntryScript())
+        {
+            lookupModel = CAircraftMatcher::networkEntryScript(lookupModel, setup, log);
+        }
+        else
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No entry script used"));
         }
 
-        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-        CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-        return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, m_matchingSettings.get(), type, log);
+        // done
+        return lookupModel;
     }
 
     bool CAirspaceMonitor::addNewAircraftInRange(const CSimulatedAircraft &aircraft)
