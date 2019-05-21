@@ -151,6 +151,9 @@ namespace BlackMisc
             //! Find by aircraft and livery
             CAircraftModelList findByAircraftAndLivery(const Aviation::CAircraftIcaoCode &aircraftIcaoCode, const Aviation::CLivery &livery) const;
 
+            //! Find by the corresponding airline group
+            CAircraftModelList findByAirlineGroup(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
+
             //! Find by livery code
             CAircraftModelList findByLiveryCode(const Aviation::CLivery &livery) const;
 
@@ -435,6 +438,12 @@ namespace BlackMisc
 
             //! All combined types as string
             QString getCombinedTypesAsString(const QString &separator = ", ") const;
+
+            //! A set of all Aircraft/Airline ICAO codes
+            QSet<QString> getAicraftAndAirlineDesignators(bool withDbId) const;
+
+            //! A set of all Aircraft/Airline ICAO codes
+            QString getAicraftAndAirlineDesignatorsAsString(bool withDbId, const QString &separator = ", ") const;
 
             //! Update aircraft ICAO
             void updateAircraftIcao(const Aviation::CAircraftIcaoCode &icao);

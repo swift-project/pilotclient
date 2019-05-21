@@ -291,11 +291,11 @@ namespace BlackCore
 
         //! Reduce by airline ICAO
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirline(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByAirline(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const QString &info, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedType(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedType(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! By military flag
         //! \threadsafe

@@ -180,6 +180,16 @@ namespace BlackMisc
             return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getLivery, livery);
         }
 
+        CAircraftModelList CAircraftModelList::findByAirlineGroup(const CAirlineIcaoCode &airline) const
+        {
+            const int id = airline.getGroupId();
+            if (id < 0) return {};
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                return model.getAirlineIcaoCode().getGroupId() == id;
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByLiveryCode(const CLivery &livery) const
         {
             if (!livery.hasCombinedCode()) { return CAircraftModelList(); }
@@ -1181,7 +1191,31 @@ namespace BlackMisc
 
         QString CAircraftModelList::getCombinedTypesAsString(const QString &separator) const
         {
-            return this->getCombinedTypes().values().join(separator);
+            if (this->isEmpty()) { return {}; }
+            return joinStringSet(this->getCombinedTypes(), separator);
+        }
+
+        QSet<QString> CAircraftModelList::getAicraftAndAirlineDesignators(bool withDbId) const
+        {
+            QSet<QString> str;
+            for (const CAircraftModel &model : *this)
+            {
+                const QString s = (model.hasAircraftDesignator() ?
+                                   (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() : model.getAircraftIcaoCodeDesignator()) :
+                                   "no aircraft") %
+                                  u"/" %
+                                  (model.hasAircraftDesignator() ?
+                                   (withDbId ? model.getAirlineIcaoCode().getDesignatorDbKey() : model.getAirlineIcaoCodeVDesignator()) :
+                                   "no airline");
+                str.insert(s);
+            }
+            return str;
+        }
+
+        QString CAircraftModelList::getAicraftAndAirlineDesignatorsAsString(bool withDbId, const QString &separator) const
+        {
+            if (this->isEmpty()) { return {}; }
+            return joinStringSet(this->getAicraftAndAirlineDesignators(withDbId), separator);
         }
 
         void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)
@@ -1550,6 +1584,9 @@ namespace BlackMisc
                 u" | civilian: " % QString::number(this->countCivilianAircraft()) % separator %
                 u"Different airlines: " % QString::number(this->countDifferentAirlines()) % separator %
                 u"Combined types: '" % this->getCombinedTypesAsString() % u'\'' % separator %
+                (this->size() <= 25 ?
+                 (u"Aircraft/airlines: " % this->getAicraftAndAirlineDesignatorsAsString(true) % separator) :
+                 QString()) %
                 u"Simulators: " % this->countPerSimulator().toQString();
         }
 
