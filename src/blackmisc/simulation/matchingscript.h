@@ -33,6 +33,9 @@ namespace BlackMisc
             Q_PROPERTY(QString aircraftIcao     READ getAircraftIcao     WRITE setAircraftIcao     NOTIFY aircraftIcaoChanged)
             Q_PROPERTY(QString airlineIcao      READ getAirlineIcao      WRITE setAirlineIcao      NOTIFY airlineIcaoChanged)
             Q_PROPERTY(QString livery           READ getLivery           WRITE setLivery           NOTIFY liveryChanged)
+            Q_PROPERTY(QString logMessage       READ getLogMessage       WRITE setLogMessage       NOTIFY logMessageChanged)
+            Q_PROPERTY(bool    modified         READ isModified          WRITE setModified         NOTIFY modifiedChanged)
+            Q_PROPERTY(bool    rerun            READ isRerun             WRITE setRerun            NOTIFY rerunChanged)
             //! @}
 
         public:
@@ -41,9 +44,9 @@ namespace BlackMisc
 
             //! Ctor
             Q_INVOKABLE MSSwiftValues(const QString &cs,
-                                        const QString &aircraftIcao, int idAircraftIcao,
-                                        const QString &airlineIcao,  int idAirlineIcao,
-                                        const QString &livery, int liveryId) :
+                                      const QString &aircraftIcao, int idAircraftIcao,
+                                      const QString &airlineIcao,  int idAirlineIcao,
+                                      const QString &livery, int liveryId) :
                 m_callsign(cs.trimmed().toUpper()),
                 m_aircraftIcao(aircraftIcao.trimmed().toUpper()),
                 m_airlineIcao(airlineIcao.trimmed().toUpper()),
@@ -60,10 +63,10 @@ namespace BlackMisc
             //! Values found in DB? @{
             bool isFoundDbAircraftIcao() const { return m_dbAircraftIcaoId >= 0; }
             bool isFoundDbAirlineIcao()  const { return m_dbAirlineIcaoId  >= 0; }
-            bool isFoundDbLivery() const       { return m_dbLiveryId       >= 0; }
+            bool isFoundDbLivery()       const { return m_dbLiveryId       >= 0; }
             int getDbAircraftIcaoId() const { return m_dbAircraftIcaoId; }
-            int getDbAirlineIcaoId() const  { return m_dbAirlineIcaoId; }
-            int getDbLiveryId() const       { return m_dbLiveryId; }
+            int getDbAirlineIcaoId()  const { return m_dbAirlineIcaoId; }
+            int getDbLiveryId()       const { return m_dbLiveryId; }
             void setDbAircraftIcaoId(int id);
             void setDbAirlineIcaoId(int id);
             void setDbLiveryId(int id);
@@ -71,11 +74,26 @@ namespace BlackMisc
 
             //! Livery, airline, aircraft @{
             const QString &getAircraftIcao() const { return m_aircraftIcao; }
-            const QString &getAirlineIcao() const { return m_airlineIcao; }
-            const QString &getLivery() const { return m_livery; }
+            const QString &getAirlineIcao()  const { return m_airlineIcao; }
+            const QString &getLivery()       const { return m_livery; }
             void setAircraftIcao(const QString &aircraftIcao);
             void setAirlineIcao(const QString &airlineIcao);
             void setLivery(const QString &livery);
+            //! @}
+
+            //! Log. message @{
+            const QString &getLogMessage() const { return m_logMessage; }
+            void setLogMessage(const QString &msg);
+            //! @}
+
+            //! Modified flag @{
+            bool isModified() const { return m_modified; }
+            void setModified(bool modified);
+            //! @}
+
+            //! Request re-run @{
+            bool isRerun() const { return m_rerun; }
+            void setRerun(bool rerun);
             //! @}
 
         signals:
@@ -94,14 +112,26 @@ namespace BlackMisc
             void dbLiveryIdChanged();
             //! @}
 
+            //! Log. message has been changed
+            void logMessageChanged();
+
+            //! Modified changed
+            void modifiedChanged();
+
+            //! Re-run changed
+            void rerunChanged();
+
         private:
             QString m_callsign;
             QString m_aircraftIcao;
             QString m_airlineIcao;
             QString m_livery;
+            QString m_logMessage;
             int m_dbAircraftIcaoId = -1;
             int m_dbAirlineIcaoId  = -1;
             int m_dbLiveryId       = -1;
+            bool m_modified = false;
+            bool m_rerun    = false;
         };
     } // namespace
 } // namespace

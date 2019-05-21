@@ -60,5 +60,27 @@ namespace BlackMisc
             m_livery = livery;
             emit this->liveryChanged();
         }
+
+        void MSSwiftValues::setLogMessage(const QString &msg)
+        {
+            if (msg == m_logMessage) { return; }
+            m_logMessage = msg;
+            emit this->logMessageChanged();
+        }
+
+        void MSSwiftValues::setModified(bool modified)
+        {
+            if (modified == m_modified) { return; }
+            m_modified = modified;
+            emit this->modifiedChanged();
+        }
+
+        void MSSwiftValues::setRerun(bool rerun)
+        {
+            if (rerun == m_rerun) { return; }
+            m_rerun = rerun;
+            emit this->rerunChanged();
+        }
+
     } // namespace
 } // namespace

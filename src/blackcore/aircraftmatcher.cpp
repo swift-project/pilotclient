@@ -340,13 +340,19 @@ namespace BlackCore
             }
             else
             {
-                if (ms.isString())
+                QString logMessage;
+                if (ms.isQObject())
                 {
-                    const QString r = ms.toString();
-                    if (!r.isEmpty())
-                    {
-                        CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << r;
-                    }
+                    // reverseModel = ms.toQ
+                }
+                else if (ms.isString())
+                {
+                    logMessage = ms.toString();
+                }
+
+                if (!logMessage.isEmpty())
+                {
+                    CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << logMessage;
                 }
             }
 
