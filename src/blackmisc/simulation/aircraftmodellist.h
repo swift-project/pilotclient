@@ -418,6 +418,15 @@ namespace BlackMisc
             //! Airline virtual designators
             QSet<QString> getAirlineVDesignators() const;
 
+            //! Airline ICAO codes for given group, without duplicates
+            Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForGroup(int groupId) const;
+
+            //! Airline designators
+            QSet<QString> getAirlineDesignatorsForGroup(int groupId) const;
+
+            //! Airline virtual designators
+            QSet<QString> getAirlineVDesignatorsForGroup(int groupId) const;
+
             //! All combined types
             QSet<QString> getCombinedTypes() const;
 

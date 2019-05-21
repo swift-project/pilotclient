@@ -392,6 +392,8 @@ namespace BlackMisc
 
     QString joinStringSet(const QSet<QString> &set, const QString &separator)
     {
+        if (set.isEmpty()) { return {}; }
+        if (set.size() == 1) { return *set.begin(); }
         return set.toList().join(separator);
     }
 
@@ -444,6 +446,12 @@ namespace BlackMisc
         if (removeDoubleSlash) { copy.remove(re2); }
 
         return copy;
+    }
+
+    const QString &defaultIfEmpty(const QString &candidate, const QString &defaultIfEmpty)
+    {
+        if (candidate.isEmpty()) { return defaultIfEmpty; }
+        return candidate;
     }
 
 } // ns

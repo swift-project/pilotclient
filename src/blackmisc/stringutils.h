@@ -292,6 +292,9 @@ namespace BlackMisc
     //! Remove comments such as /** **/ or //
     BLACKMISC_EXPORT QString removeComments(const QString &in, bool removeSlash, bool removeDoubleSlash);
 
+    //! Default string if string is empty
+    BLACKMISC_EXPORT const QString &defaultIfEmpty(const QString &candidate, const QString &defaultIfEmpty);
+
     namespace Mixin
     {
         /*!

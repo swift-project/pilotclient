@@ -1131,6 +1131,30 @@ namespace BlackMisc
             return designators;
         }
 
+        CAirlineIcaoCodeList CAircraftModelList::getAirlineIcaoCodesForGroup(int groupId) const
+        {
+            if (groupId < 0) { return {}; }
+            CAirlineIcaoCodeList icaos;
+            for (const CAircraftModel &model : *this)
+            {
+                if (model.getAirlineIcaoCode().getGroupId() == groupId)
+                {
+                    icaos.push_back(model.getAirlineIcaoCode());
+                }
+            }
+            return icaos;
+        }
+
+        QSet<QString> CAircraftModelList::getAirlineDesignatorsForGroup(int groupId) const
+        {
+            return this->getAirlineIcaoCodesForGroup(groupId).allDesignators();
+        }
+
+        QSet<QString> CAircraftModelList::getAirlineVDesignatorsForGroup(int groupId) const
+        {
+            return this->getAirlineIcaoCodesForGroup(groupId).allVDesignators();
+        }
+
         QSet<QString> CAircraftModelList::getCombinedTypes() const
         {
             QSet<QString> combinedCodes;
