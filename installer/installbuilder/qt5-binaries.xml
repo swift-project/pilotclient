@@ -38,6 +38,10 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/Qt5Qml*.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/Qt5Svg*.dll</origin>
                 </distributionFile>
                 <distributionFile>
@@ -107,6 +111,9 @@
                     <origin>../../dist/lib/libQt5OpenGL.so.5</origin>
                 </distributionFile>
                 <distributionFile>
+                    <origin>../../dist/lib/libQt5Qml.so.5</origin>
+                </distributionFile>
+                <distributionFile>
                     <origin>../../dist/lib/libQt5Svg.so.5</origin>
                 </distributionFile>
                 <distributionFile>
@@ -149,6 +156,9 @@
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtOpenGL.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtQml.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtPrintSupport.framework</origin>

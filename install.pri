@@ -15,6 +15,7 @@ win32 {
     QT5_LIBRARIES *= Qt5Multimedia$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Network$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5OpenGL$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Qml$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Svg$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Widgets$${DLL_DEBUG_SUFFIX}.dll
     QT5_LIBRARIES *= Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
@@ -32,6 +33,7 @@ else:macx {
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtMultimedia.framework/ $${PREFIX}/lib/QtMultimedia.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/lib/QtNetwork.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtOpenGL.framework/ $${PREFIX}/lib/QtOpenGL.framework/ &&
+    qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtQml.framework/ $${PREFIX}/lib/QtQml.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtPrintSupport.framework/ $${PREFIX}/lib/QtPrintSupport.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtSvg.framework/ $${PREFIX}/lib/QtSvg.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/lib/QtWidgets.framework/ &&
@@ -45,6 +47,7 @@ else:unix: {
     QT5_LIBRARIES *= libQt5MultimediaWidgets.so.5
     QT5_LIBRARIES *= libQt5Network.so.5
     QT5_LIBRARIES *= libQt5OpenGL.so.5
+    QT5_LIBRARIES *= libQt5Qml.so.5
     QT5_LIBRARIES *= libQt5Svg.so.5
     QT5_LIBRARIES *= libQt5Widgets.so.5
     QT5_LIBRARIES *= libQt5XcbQpa.so.5
