@@ -34,28 +34,4 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::ReverseLookupLogging)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::ReverseLookupLoggingFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::ReverseLookupLogging)
 
-/*!
- * Operator for streaming enums to QDBusArgument.
- */
-inline QDBusArgument &operator <<(QDBusArgument &arg, const BlackMisc::Simulation::ReverseLookupLogging &value)
-{
-    arg.beginStructure();
-    arg << static_cast<int>(value);
-    arg.endStructure();
-    return arg;
-}
-
-/*!
- * Operator for streaming enums from QDBusArgument.
- */
-inline const QDBusArgument &operator >>(const QDBusArgument &arg, BlackMisc::Simulation::ReverseLookupLogging &value)
-{
-    int temp;
-    arg.beginStructure();
-    arg >> temp;
-    arg.endStructure();
-    value = static_cast<BlackMisc::Simulation::ReverseLookupLogging>(temp);
-    return arg;
-}
-
 #endif // guard

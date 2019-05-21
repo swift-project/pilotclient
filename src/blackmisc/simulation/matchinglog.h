@@ -46,28 +46,4 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::MatchingLog)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::MatchingLogFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::MatchingLog)
 
-/*!
- * Operator for streaming enums to QDBusArgument.
- */
-inline QDBusArgument &operator <<(QDBusArgument &arg, const BlackMisc::Simulation::MatchingLog &value)
-{
-    arg.beginStructure();
-    arg << static_cast<int>(value);
-    arg.endStructure();
-    return arg;
-}
-
-/*!
- * Operator for streaming enums from QDBusArgument.
- */
-inline const QDBusArgument &operator >>(const QDBusArgument &arg, BlackMisc::Simulation::MatchingLog &value)
-{
-    int temp;
-    arg.beginStructure();
-    arg >> temp;
-    arg.endStructure();
-    value = static_cast<BlackMisc::Simulation::MatchingLog>(temp);
-    return arg;
-}
-
 #endif // guard
