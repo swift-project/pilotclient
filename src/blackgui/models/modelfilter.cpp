@@ -7,7 +7,10 @@
  */
 
 #include "blackgui/models/modelfilter.h"
+#include "blackmisc/logmessage.h"
 #include <QtGlobal>
+
+using namespace BlackMisc;
 
 namespace BlackGui
 {
@@ -48,8 +51,17 @@ namespace BlackGui
                 return v.endsWith(filterNoWildcard, cs);
             }
 
+            // wildcard in middle
+            if (f.contains('*'))
+            {
+                const QStringList parts = v.split('*');
+                if (parts.size() < 2) { return false; }
+                const bool s = v.startsWith(parts.front(), cs) && v.endsWith(parts.back());
+                return s;
+            }
+
             // should never happen
-            qFatal("Illegal state");
+            CLogMessage(this).error(u"Illegal search pattern : '%1'") << f;
             return false;
         }
 
