@@ -27,12 +27,18 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(ui->rb_Reduction,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-            connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-            connect(ui->rb_ScoreOnly,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+
             connect(ui->pb_ResetAlgorithm,    &QPushButton::released,  this, &CMatchingForm::resetByAlgorithm,   Qt::QueuedConnection);
             connect(ui->pb_ResetAll,          &QPushButton::released,  this, &CMatchingForm::resetAll,           Qt::QueuedConnection);
             connect(ui->pb_MsNetwork,         &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
             connect(ui->pb_MsMatching,        &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
+
+            connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+            connect(ui->rb_ScoreOnly,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+
+            connect(ui->rb_AirlineGroupIfNoAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
+            connect(ui->rb_AirlineGroupAsAirline,   &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
+            connect(ui->rb_AirlineGroupNo,          &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
         }
 
         CMatchingForm::~CMatchingForm()
@@ -62,7 +68,10 @@ namespace BlackGui
             ui->rb_ScoreOnly->setEnabled(enabled);
             ui->rb_ByIcaoDataAircraft1st->setEnabled(enabled);
             ui->rb_ByIcaoDataAirline1st->setEnabled(enabled);
-            ui->rb_PickFirst->setEnabled(enabled);
+            ui->rb_AirlineGroupAsAirline->setEnabled(enabled);            ui->rb_PickFirst->setEnabled(enabled);
+            ui->rb_AirlineGroupNo->setEnabled(enabled);
+            ui->rb_AirlineGroupIfNoAirline->setEnabled(enabled);
+
             ui->rb_PickByOrder->setEnabled(enabled);
             ui->rb_PickRandom->setEnabled(enabled);
 
@@ -83,8 +92,21 @@ namespace BlackGui
             const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
             ui->cb_ByModelString->setChecked(mode.testFlag(CAircraftMatcherSetup::ByModelString));
             ui->cb_ByCombinedCode->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCombinedType));
+
             ui->rb_ByIcaoDataAircraft1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAircraftFirst));
             ui->rb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
+
+            const bool nag = !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline) && !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupIfNoAirline);
+            if (nag)
+            {
+                ui->rb_AirlineGroupNo->setChecked(nag);
+            }
+            else
+            {
+                ui->rb_AirlineGroupAsAirline->setChecked(mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline));
+                ui->rb_AirlineGroupIfNoAirline->setChecked(mode.testFlag(CAircraftMatcherSetup::CAircraftMatcherSetup::ByAirlineGroupIfNoAirline));
+            }
+
             ui->cb_ByLivery->setChecked(mode.testFlag(CAircraftMatcherSetup::ByLivery));
             ui->cb_ByFamily->setChecked(mode.testFlag(CAircraftMatcherSetup::ByFamily));
             ui->cb_ByForceMilitary->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceMilitary));
@@ -113,6 +135,7 @@ namespace BlackGui
         CAircraftMatcherSetup CMatchingForm::value() const
         {
             CAircraftMatcherSetup setup(algorithm(), matchingMode(), pickStrategy());
+            setup.setAirlineGroupBehaviour(ui->rb_AirlineGroupIfNoAirline->isChecked(), ui->rb_AirlineGroupAsAirline->isChecked());
             setup.setMsNetworkEntryFile(ui->le_MsNetwork->text());
             setup.setMsMatchingStageFile(ui->le_MsMatching->text());
             setup.setMsNetworkEntryEnabled(ui->cb_MsNetwork->isChecked());
@@ -224,6 +247,12 @@ namespace BlackGui
         }
 
         void CMatchingForm::onAlgorithmChanged()
+        {
+            const CAircraftMatcherSetup setup = this->value();
+            this->setValue(setup);
+        }
+
+        void CMatchingForm::onAirlineGroupChanged()
         {
             const CAircraftMatcherSetup setup = this->value();
             this->setValue(setup);

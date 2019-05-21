@@ -75,6 +75,16 @@ namespace BlackMisc
             this->setMatchingMode(m);
         }
 
+        void CAircraftMatcherSetup::setAirlineGroupBehaviour(bool ifNoAirline, bool sameAsAirline)
+        {
+            MatchingMode m = this->getMatchingMode();
+            const bool icao = m.testFlag(ByIcaoData);
+            m.setFlag(ByAirlineGroupIfNoAirline, ifNoAirline);
+            m.setFlag(ByAirlineGroupSameAsAirline, sameAsAirline);
+            m.setFlag(ByIcaoData, icao);
+            this->setMatchingMode(m);
+        }
+
         QString CAircraftMatcherSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -192,6 +202,8 @@ namespace BlackMisc
             static const QString categoryGlider("glider categories");
             static const QString categoryMilitary("military categories");
             static const QString revModelString("reverse model lookup");
+            static const QString agSameAsAirline("group as airline");
+            static const QString agIfNoAirline("group if no airline");
 
             switch (modeFlag)
             {
@@ -214,6 +226,8 @@ namespace BlackMisc
             case ExcludeNoExcluded:          return exExcl;
             case ModelSetRemoveFailedModel:  return removeFromModelSet;
             case ModelVerificationAtStartup: return verification;
+            case ByAirlineGroupIfNoAirline:  return agIfNoAirline;
+            case ByAirlineGroupSameAsAirline:      return agSameAsAirline;
             case ModelVerificationOnlyWarnError:   return verificationWarn;
             case ModelFailoverIfNoModelCanBeAdded: return modelFailedAdded;
             default: break;
@@ -243,9 +257,10 @@ namespace BlackMisc
             if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
             if (mode.testFlag(ModelSetRemoveFailedModel))  { modes << modeFlagToString(ModelSetRemoveFailedModel); }
             if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
+            if (mode.testFlag(ByAirlineGroupIfNoAirline))  { modes << modeFlagToString(ByAirlineGroupIfNoAirline); }
+            if (mode.testFlag(ByAirlineGroupSameAsAirline))      { modes << modeFlagToString(ByAirlineGroupSameAsAirline); }
             if (mode.testFlag(ModelVerificationOnlyWarnError))   { modes << modeFlagToString(ModelVerificationOnlyWarnError); }
             if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
-
             return modes.join(", ");
         }
 

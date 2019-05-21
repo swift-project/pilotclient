@@ -43,8 +43,10 @@ namespace BlackMisc
                 ByForceCivilian  = 1 << 7, //!< civilian (in) will only search in civilian
                 ByMilitary       = ByForceCivilian | ByForceMilitary,
                 ByVtol           = 1 << 8,
-                ByIcaoOrderAircraftFirst = (1 << 9)  | ByIcaoData,
-                ByIcaoOrderAirlineFirst  = (1 << 10) | ByIcaoData,
+                ByIcaoOrderAircraftFirst    = (1 << 9)  | ByIcaoData,
+                ByIcaoOrderAirlineFirst     = (1 << 10) | ByIcaoData,
+                ByAirlineGroupSameAsAirline = (1 << 11) | ByIcaoData,
+                ByAirlineGroupIfNoAirline   = (1 << 12) | ByIcaoData,
                 ByCategoryGlider   = 1 << 20,
                 ByCategoryMilitary = 1 << 21,
 
@@ -76,8 +78,8 @@ namespace BlackMisc
 
                 // default depending on algorithm
                 ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
-                ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByLivery | ExcludeDefault  | ReverseLookupDefault,
-                ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ModeDefaultScore | ExcludeDefault | ReverseLookupDefault,
+                ModeDefaultReduce =          ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
+                ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ModeDefaultScore,
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -185,6 +187,9 @@ namespace BlackMisc
 
             //! Set reverse lookup flags
             void setReverseLookup(bool useModelLookup);
+
+            //! Airline group behaviour
+            void setAirlineGroupBehaviour(bool ifNoAirline, bool sameAsAirline);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

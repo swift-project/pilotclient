@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>293</width>
-    <height>647</height>
+    <width>323</width>
+    <height>667</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -182,34 +182,28 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>150</height>
+       <height>165</height>
       </size>
      </property>
      <property name="title">
       <string>Reduction</string>
      </property>
      <layout class="QGridLayout" name="gl_Mode">
-      <item row="3" column="1" colspan="2">
-       <widget class="QCheckBox" name="cb_ByVtol">
-        <property name="toolTip">
-         <string>Vertical Takeoff or Landing</string>
-        </property>
-        <property name="text">
-         <string>VTOL (helicopters and such)</string>
+      <item row="2" column="0" colspan="2">
+       <widget class="Line" name="line_Reduction">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="cb_ByForceMilitary">
-        <property name="toolTip">
-         <string>inbound military force matched military</string>
-        </property>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_ByLivery">
         <property name="text">
-         <string>force military</string>
+         <string> livery</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QCheckBox" name="cb_ByForceCivilian">
         <property name="toolTip">
          <string>inbound civilian force matched civilian</string>
@@ -219,17 +213,44 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="cb_ByLivery">
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="cb_ByFamily">
         <property name="text">
-         <string> livery</string>
+         <string>family</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cb_ByCombinedCode">
+        <property name="text">
+         <string>combined code</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QCheckBox" name="cb_ByVtol">
+        <property name="toolTip">
+         <string>Vertical Takeoff or Landing</string>
+        </property>
+        <property name="text">
+         <string>VTOL (helicopters and such)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QCheckBox" name="cb_ByModelString">
         <property name="text">
          <string>model string</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="cb_ByForceMilitary">
+        <property name="toolTip">
+         <string>inbound military force matched military</string>
+        </property>
+        <property name="text">
+         <string>force military</string>
         </property>
        </widget>
       </item>
@@ -238,27 +259,9 @@
         <property name="text">
          <string>by ICAO: airline first</string>
         </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="cb_ByCombinedCode">
-        <property name="text">
-         <string>combined code</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="cb_ByFamily">
-        <property name="text">
-         <string>family</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="Line" name="line_Reduction">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_ICAOfirst</string>
+        </attribute>
        </widget>
       </item>
       <item row="0" column="0">
@@ -266,6 +269,39 @@
         <property name="text">
          <string>by ICAO: aircraft first</string>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_ICAOfirst</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_AirlineGroupNo">
+        <property name="text">
+         <string>no airline group</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_AirlineGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="rb_AirlineGroupIfNoAirline">
+        <property name="text">
+         <string>group if no airline</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_AirlineGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="rb_AirlineGroupAsAirline">
+        <property name="text">
+         <string>group=airline</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bg_AirlineGroup</string>
+        </attribute>
        </widget>
       </item>
      </layout>
@@ -411,6 +447,9 @@
   <tabstop>rb_PickByOrder</tabstop>
   <tabstop>rb_ByIcaoDataAircraft1st</tabstop>
   <tabstop>rb_ByIcaoDataAirline1st</tabstop>
+  <tabstop>rb_AirlineGroupNo</tabstop>
+  <tabstop>rb_AirlineGroupIfNoAirline</tabstop>
+  <tabstop>rb_AirlineGroupAsAirline</tabstop>
   <tabstop>cb_ByModelString</tabstop>
   <tabstop>cb_ByLivery</tabstop>
   <tabstop>cb_ByFamily</tabstop>
@@ -431,4 +470,8 @@
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="bg_AirlineGroup"/>
+  <buttongroup name="bg_ICAOfirst"/>
+ </buttongroups>
 </ui>

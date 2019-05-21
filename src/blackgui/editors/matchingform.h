@@ -66,6 +66,9 @@ namespace BlackGui
             //! Algorithm has been toggled
             void onAlgorithmChanged();
 
+            //! Airline group changed
+            void onAirlineGroupChanged();
+
             //! Reset @{
             void resetByAlgorithm();
             void resetAll();
