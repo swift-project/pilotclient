@@ -161,6 +161,32 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
 }
 
 /*!
+ * Operator for streaming QFlags to QDBusArgument.
+ */
+template <class T>
+QDBusArgument &operator <<(QDBusArgument &arg, const QFlags<T> &value)
+{
+    arg.beginStructure();
+    arg << static_cast<typename QFlags<T>::Int>(value);
+    arg.endStructure();
+    return arg;
+}
+
+/*!
+ * Operator for streaming QFlags from QDBusArgument.
+ */
+template <class T>
+const QDBusArgument &operator >>(const QDBusArgument &arg, QFlags<T> &value)
+{
+    typename QFlags<T>::Int temp = 0;
+    arg.beginStructure();
+    arg >> temp;
+    arg.endStructure();
+    value = static_cast<QFlags<T>>(temp);
+    return arg;
+}
+
+/*!
  * Operator for streaming pairs to QDBusArgument.
  */
 template <class A, class B>
