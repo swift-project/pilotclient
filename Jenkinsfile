@@ -1,9 +1,10 @@
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 
 regexDevBranch = /develop\/\d+\.\d+\.\d+/
-regexReleaseBranch = /release\/\d+\.\d+/
+regexStableBranch = /stable\/\d+\.\d+/
+regexTestingBranch = /testing\/.+/
 regexNocacheBranch = /nocache\/.+/
-regexRecacheBranches = [regexDevBranch, regexReleaseBranch]
+regexRecacheBranches = [regexDevBranch]
 
 if (env.BRANCH_NAME && regexRecacheBranches.any{ env.BRANCH_NAME ==~ it }) {
     env.CCACHE_RECACHE = 1
@@ -271,7 +272,7 @@ node('master') {
 node('master') {
     try {
         if (env.BRANCH_NAME && (env.BRANCH_NAME ==~ regexDevBranch
-                             || env.BRANCH_NAME ==~ regexReleaseBranch)) {
+                             || env.BRANCH_NAME ==~ regexTestingBranch)) {
             stage('Publish') {
                 unstash name: 'swift-linux-64'
                 unstash name: 'swift-macos-64'
@@ -407,8 +408,11 @@ def getEolInMonth() {
     if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         // 6 month for dev builds
         return 6
-    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexReleaseBranch) {
-        // 12 month currently for release builds. That will be removed in future.
+    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexTestingBranch) {
+        // 6 month for testing builds
+        return 6
+    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexStableBranch) {
+        // 12 month currently for stable builds. That will be removed in future.
         return 12
     } else {
         // 3 month for everything else
@@ -419,7 +423,7 @@ def getEolInMonth() {
 def shouldUploadSymbols() {
     if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexDevBranch) {
         return '-u'
-    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexReleaseBranch) {
+    } else if (env.BRANCH_NAME && env.BRANCH_NAME ==~ regexTestingBranch) {
         return '-u'
     } else {
         return ''
