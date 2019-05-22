@@ -545,19 +545,20 @@ namespace BlackSimPlugin
                     CSimulatedAircraft aircraft = m_pendingToBeAddedAircraft.findFirstByCallsign(callsign);
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
-                }}
+                }
+            }
 
-                if (m_addingInProgressAircraft.contains(callsign))
+            if (m_addingInProgressAircraft.contains(callsign))
+            {
+                // we are just about to add that aircraft
+                QPointer<CSimulatorFlightgear> myself(this);
+                QTimer::singleShot(TimeoutAdding, this, [ = ]
                 {
-                    // we are just about to add that aircraft
-                    QPointer<CSimulatorFlightgear> myself(this);
-                    QTimer::singleShot(TimeoutAdding, this, [ = ]
-                    {
-                        if (!myself) { return; }
-                        m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
-                        this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
-                    });
-                    return false;
+                    if (!myself) { return; }
+                    m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
+                    this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
+                });
+                return false;
             }
 
             m_trafficProxy->removePlane(callsign.asString());
@@ -603,14 +604,14 @@ namespace BlackSimPlugin
             {
                 const CCallsign callsign(flightgearAircraft.getCallsign());
                 const bool hasCallsign = !callsign.isEmpty();
-                if(!hasCallsign)
+                if (!hasCallsign)
                 {
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
                     continue;
                 }
 
                 // skip no longer in range
-                if(!callsingsInRange.contains(callsign)) { continue; }
+                if (!callsingsInRange.contains(callsign)) { continue; }
 
                 planesTransponders.callsigns.push_back(callsign.asString());
                 planesTransponders.codes.push_back(flightgearAircraft.getAircraft().getTransponderCode());
@@ -803,7 +804,7 @@ namespace BlackSimPlugin
         {
 
             BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-            if(callsign.isEmpty()) { return; }
+            if (callsign.isEmpty()) { return; }
             const CCallsign cs(callsign);
             CSimulatedAircraft failedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
 
@@ -1000,7 +1001,8 @@ namespace BlackSimPlugin
             QString flightgearVersion = service.getVersionNumber();
             QString flightgearVersionMinimum = "2019.2.0";
 
-            if(flightgearVersion < flightgearVersionMinimum){
+            if (flightgearVersion < flightgearVersionMinimum)
+            {
                 CLogMessage(this).error(u"You are using Flightgear %1. This version of swift is only compatible with Flightgear %2 or newer. Consider upgrading!") << flightgearVersion << flightgearVersionMinimum;
                 return;
             }
