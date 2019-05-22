@@ -385,7 +385,7 @@ namespace BlackGui
             const SelectionMode sm = this->selectionMode();
             if (sm == MultiSelection || sm == ExtendedSelection)
             {
-                menuActions.addAction("Select all", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::selectAll }, Qt::CTRL + Qt::Key_A);
+                menuActions.addAction("Select all", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::selectAll }, CShortcut::keySelectAll());
             }
             if (sm != NoSelection)
             {
