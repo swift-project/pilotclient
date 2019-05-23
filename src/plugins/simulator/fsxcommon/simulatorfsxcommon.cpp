@@ -2045,7 +2045,7 @@ namespace BlackSimPlugin
             const HRESULT hr1 = simObjectAircraftType ?
                                 S_OK :
                                 this->logAndTraceSendId(
-                                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
+                                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
                                             static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                             sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
                                     traceId, simObject, "Failed so set parts", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");

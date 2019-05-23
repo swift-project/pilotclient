@@ -248,7 +248,7 @@ namespace BlackSimPlugin
                 DataOwnAircraft,
                 DataOwnAircraftTitle,
                 DataRemoteAircraftLights,
-                DataRemoteAircraftParts,
+                DataRemoteAircraftPartsWithoutLights,
                 DataRemoteAircraftSetPosition, //!< the position which will be set
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
