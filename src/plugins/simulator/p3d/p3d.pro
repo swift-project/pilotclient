@@ -32,5 +32,4 @@ win32 {
     INSTALLS += target
 }
 
-
 load(common_post)

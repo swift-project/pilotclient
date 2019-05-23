@@ -23,7 +23,9 @@ enum P3DSimConnectVersion
     P3DSimConnectv40,
     P3DSimConnectv41,
     P3DSimConnectv42,
-    P3DSimConnectv43
+    P3DSimConnectv43,
+    P3DSimConnectv44,
+    P3DSimConnectv45
 };
 
 //! String to the enum
