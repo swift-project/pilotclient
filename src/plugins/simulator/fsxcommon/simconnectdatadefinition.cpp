@@ -151,20 +151,20 @@ namespace BlackSimPlugin
             // default data type is SIMCONNECT_DATATYPE_FLOAT64 -> double
 
             // Flaps
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "TRAILING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "TRAILING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "LEADING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "LEADING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "TRAILING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "TRAILING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
 
             // Gear & Spoiler
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GEAR HANDLE POSITION", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "SPOILERS HANDLE POSITION", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GEAR HANDLE POSITION", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "SPOILERS HANDLE POSITION", "Percent Over 100");
 
             // Engines
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:1", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:2", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:3", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:4", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GENERAL ENG COMBUSTION:1", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GENERAL ENG COMBUSTION:2", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GENERAL ENG COMBUSTION:3", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GENERAL ENG COMBUSTION:4", "Bool");
 
             // Lights (other definition)
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
@@ -329,15 +329,15 @@ namespace BlackSimPlugin
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetAllFlaps()
         {
-            flapsLeadingEdgeLeftPercent   = 0;
-            flapsLeadingEdgeRightPercent  = 0;
-            flapsTrailingEdgeLeftPercent  = 0;
-            flapsTrailingEdgeRightPercent = 0;
+            flapsLeadingEdgeLeftPercent   = 0.0;
+            flapsLeadingEdgeRightPercent  = 0.0;
+            flapsTrailingEdgeLeftPercent  = 0.0;
+            flapsTrailingEdgeRightPercent = 0.0;
         }
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetSpoilers()
         {
-            spoilersHandlePosition = 0;
+            spoilersHandlePosition = 0.0;
         }
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetToInvalid()
