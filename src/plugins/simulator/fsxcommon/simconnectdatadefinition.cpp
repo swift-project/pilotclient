@@ -359,10 +359,10 @@ namespace BlackSimPlugin
             gearHandlePosition = parts.isGearDown() ? 1.0 : 0.0;
             const double trail = parts.getFlapsPercent() / 100.0;
             const double lead  = trail;
-            flapsTrailingEdgeLeftPercent = trail;
-            flapsLeadingEdgeRightPercent = trail;
-            flapsLeadingEdgeLeftPercent  = lead;
-            flapsLeadingEdgeRightPercent = lead;
+            flapsTrailingEdgeLeftPercent  = trail;
+            flapsTrailingEdgeRightPercent = trail;
+            flapsLeadingEdgeLeftPercent   = lead;
+            flapsLeadingEdgeRightPercent  = lead;
             spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
             this->setAllEngines(false); // init
 
