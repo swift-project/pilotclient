@@ -1862,6 +1862,8 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleTaxiLights, "TOGGLE_TAXI_LIGHTS");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleWingLights, "TOGGLE_WING_LIGHTS");
 
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFlapsSet, "FLAPS_SET");
+
             if (isFailure(hr))
             {
                 CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
@@ -1920,7 +1922,11 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
-            if (this->isUpdateAircraftLimitedWithStats(currentTimestamp)) { return; }
+            if (this->isUpdateAircraftLimitedWithStats(currentTimestamp))
+            {
+                this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp, true);
+                return;
+            }
             m_updateRemoteAircraftInProgress = true;
 
             // interpolation for all remote aircraft
@@ -1946,11 +1952,13 @@ namespace BlackSimPlugin
 
                 // Interpolated situation
                 // simObjectNumber is passed to equally distributed steps like guessing parts
+                const bool slowUpdate = (((m_statsUpdateAircraftRuns + simObjectNumber) % 40) == 0);
                 const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup, simObjectNumber++);
+                const bool forceUpdate = slowUpdate || updateAllAircraft || setup.isForcingFullInterpolation();
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    if (updateAllAircraft || setup.isForcingFullInterpolation() || !this->isEqualLastSent(result.getInterpolatedSituation()))
+                    if (forceUpdate || !this->isEqualLastSent(result.getInterpolatedSituation()))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         const HRESULT hr = this->logAndTraceSendId(
@@ -1971,7 +1979,7 @@ namespace BlackSimPlugin
                 }
 
                 // Interpolated parts
-                const bool updatedParts = this->updateRemoteAircraftParts(simObject, result);
+                const bool updatedParts = this->updateRemoteAircraftParts(simObject, result, forceUpdate);
                 Q_UNUSED(updatedParts);
 
             } // all callsigns
@@ -1980,7 +1988,7 @@ namespace BlackSimPlugin
             this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp);
         }
 
-        bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result)
+        bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result, bool forcedUpdate)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (!simObject.isConfirmedAdded()) { return false; }
@@ -1990,10 +1998,9 @@ namespace BlackSimPlugin
             if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
 
             const CCallsign cs = simObject.getCallsign();
-            if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, cs)) { return true; }
+            if (!forcedUpdate && (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, cs))) { return true; }
 
-            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // all values will be set
-            const bool ok = this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
+            const bool ok = this->sendRemoteAircraftPartsToSimulator(simObject, parts);
             if (ok) { this->rememberLastSent(parts, cs); }
             return ok;
         }
@@ -2032,16 +2039,19 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
+        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, const CAircraftParts &parts)
         {
             Q_ASSERT(m_hSimConnect);
             if (!simObject.isReadyToSend()) { return false; }
 
             const DWORD objectId = simObject.getObjectId();
             const bool traceId = this->isTracingSendId();
-            const bool simObjectAircraftType = simObject.isAircraftSimulatedObject(); // no real aircraft type
+
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts);
+            const CAircraftLights lights = parts.getAdjustedLights();
 
             // in case we sent, we sent everything
+            const bool simObjectAircraftType = simObject.isAircraftSimulatedObject(); // no real aircraft type
             const HRESULT hr1 = simObjectAircraftType ?
                                 S_OK :
                                 this->logAndTraceSendId(
@@ -2050,14 +2060,21 @@ namespace BlackSimPlugin
                                             sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
                                     traceId, simObject, "Failed so set parts", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
 
-            // lights we can set directly
+            // Sim variable version, not working, setting the value, but flaps retracting to 0 again
+            // Sets flap handle to closest increment (0 to 16383)
+            const DWORD flapsDw = static_cast<DWORD>(qMin(16383, qRound((parts.getFlapsPercent() / 100.0) * 16383)));
             const HRESULT hr2 = this->logAndTraceSendId(
+                                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFlapsSet, flapsDw,
+                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed so set flaps", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventFlapsSet");
+
+            // lights we can set directly
+            const HRESULT hr3 = this->logAndTraceSendId(
                                     SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet, lights.isLandingOn() ? 1.0 : 0.0,
                                             SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
                                     traceId, simObject, "Failed so set landing lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventLandingLightsSet");
 
-
-            const HRESULT hr3 = this->logAndTraceSendId(
+            const HRESULT hr4 = this->logAndTraceSendId(
                                     SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0,
                                             SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
                                     traceId, simObject, "Failed to set strobe lights", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventStrobesSet");
@@ -2067,7 +2084,7 @@ namespace BlackSimPlugin
             this->sendToggledLightsToSimulator(simObject, lights);
 
             // done
-            return isOk(hr1, hr2, hr3);
+            return isOk(hr1, hr2, hr3, hr4);
         }
 
         bool CSimulatorFsxCommon::sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject)

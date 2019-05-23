@@ -934,7 +934,6 @@ namespace BlackCore
     bool ISimulator::isUpdateAircraftLimitedWithStats(qint64 startTime)
     {
         const bool limited = this->isUpdateAircraftLimited(startTime);
-        this->finishUpdateRemoteAircraftAndSetStatistics(startTime, limited);
         return limited;
     }
 
