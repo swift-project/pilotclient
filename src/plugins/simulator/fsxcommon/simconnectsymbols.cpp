@@ -189,8 +189,10 @@ P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
         if (p.contains("41")) { return P3DSimConnectv41; }
         if (p.contains("42")) { return P3DSimConnectv42; }
         if (p.contains("43")) { return P3DSimConnectv43; }
+        if (p.contains("44")) { return P3DSimConnectv44; }
+        if (p.contains("45")) { return P3DSimConnectv45; }
     }
-    return P3DSimConnectv42; // default
+    return P3DSimConnectv44; // default
 }
 
 bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
@@ -206,6 +208,8 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
     case P3DSimConnectv41: simConnectFileName += "v4.1"; break;
     case P3DSimConnectv42: simConnectFileName += "v4.2"; break;
     case P3DSimConnectv43: simConnectFileName += "v4.3"; break;
+    case P3DSimConnectv44: simConnectFileName += "v4.4"; break;
+    case P3DSimConnectv45: simConnectFileName += "v4.5"; break;
     }
 
     QLibrary simConnectDll(simConnectFileName);
