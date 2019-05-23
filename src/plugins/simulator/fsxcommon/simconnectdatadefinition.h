@@ -118,10 +118,10 @@ namespace BlackSimPlugin
         //! Data struct of remote aircraft parts
         struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftPartsWithoutLights
         {
-            double flapsLeadingEdgeLeftPercent;   //!< Leading edge left in percent
-            double flapsLeadingEdgeRightPercent;  //!< Leading edge right in percent
-            double flapsTrailingEdgeLeftPercent;  //!< Trailing edge left in percent
-            double flapsTrailingEdgeRightPercent; //!< Trailing edge right in percent
+            double flapsLeadingEdgeLeftPercent;   //!< Leading edge  left in percent  0..1
+            double flapsLeadingEdgeRightPercent;  //!< Leading edge  right in percent 0..1
+            double flapsTrailingEdgeLeftPercent;  //!< Trailing edge left in percent  0..1
+            double flapsTrailingEdgeRightPercent; //!< Trailing edge right in percent 0..1
             double gearHandlePosition;            //!< Gear handle position
             double spoilersHandlePosition;        //!< Spoilers out?
             double engine1Combustion;             //!< Engine 1 combustion flag

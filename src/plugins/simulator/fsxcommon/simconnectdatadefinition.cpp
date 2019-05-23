@@ -357,8 +357,12 @@ namespace BlackSimPlugin
         void DataDefinitionRemoteAircraftPartsWithoutLights::initFromParts(const CAircraftParts &parts)
         {
             gearHandlePosition = parts.isGearDown() ? 1.0 : 0.0;
-            flapsTrailingEdgeLeftPercent = flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            flapsLeadingEdgeLeftPercent  = flapsLeadingEdgeRightPercent  = parts.getFlapsPercent() * 0.2 / 100.0;
+            const double trail = parts.getFlapsPercent() / 100.0;
+            const double lead  = trail;
+            flapsTrailingEdgeLeftPercent = trail;
+            flapsLeadingEdgeRightPercent = trail;
+            flapsLeadingEdgeLeftPercent  = lead;
+            flapsLeadingEdgeRightPercent = lead;
             spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
             this->setAllEngines(false); // init
 

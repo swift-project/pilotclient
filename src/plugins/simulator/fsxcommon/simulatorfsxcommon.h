@@ -82,6 +82,9 @@ namespace BlackSimPlugin
             EventToggleRecognitionLights,
             EventToggleTaxiLights,
             EventToggleWingLights,
+            // ------------- flaps -------------
+            EventFlapsSet,
+            // ---------- end marker -----------
             EventFSXEndMarker
         };
 
@@ -431,7 +434,7 @@ namespace BlackSimPlugin
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to FSX)
-            bool updateRemoteAircraftParts(const CSimConnectObject &simObject, const BlackMisc::Simulation::CInterpolationResult &result);
+            bool updateRemoteAircraftParts(const CSimConnectObject &simObject, const BlackMisc::Simulation::CInterpolationResult &result, bool forcedUpdate);
 
             //! Calling CSimulatorFsxCommon::updateAirports
             void triggerUpdateAirports(const BlackMisc::Aviation::CAirportList &airports);
@@ -441,7 +444,7 @@ namespace BlackSimPlugin
 
             //! Send parts to simulator
             //! \remark does not send if there is no change
-            bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
+            bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Send ATC data (callsign etc.) to simulator
             bool sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject);
