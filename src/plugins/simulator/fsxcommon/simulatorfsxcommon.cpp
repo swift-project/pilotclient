@@ -1745,7 +1745,7 @@ namespace BlackSimPlugin
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     if (!myself) { return; }
-                    CLogMessage(this).info(u"Next trail to remove '%1'") << callsign.asString();
+                    CLogMessage(this).info(u"Next trial to remove '%1'") << callsign.asString();
                     myself->physicallyRemoveRemoteAircraft(callsign);
                 });
                 return false; // not yet deleted
@@ -1785,7 +1785,7 @@ namespace BlackSimPlugin
             this->physicallyRemoveAircraftNotInProviderAsync();
 
             // bye
-            return true;
+            return CSimulatorPluginCommon::physicallyRemoveRemoteAircraft(callsign);
         }
 
         int CSimulatorFsxCommon::physicallyRemoveAllRemoteAircraft()
@@ -1992,7 +1992,7 @@ namespace BlackSimPlugin
             const CCallsign cs = simObject.getCallsign();
             if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, cs)) { return true; }
 
-            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // all values will be set
             const bool ok = this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
             if (ok) { this->rememberLastSent(parts, cs); }
             return ok;
@@ -2039,7 +2039,7 @@ namespace BlackSimPlugin
 
             const DWORD objectId = simObject.getObjectId();
             const bool traceId = this->isTracingSendId();
-            const bool simObjectAircraftType = simObject.isAircraftSimulatedObject();
+            const bool simObjectAircraftType = simObject.isAircraftSimulatedObject(); // no real aircraft type
 
             // in case we sent, we sent everything
             const HRESULT hr1 = simObjectAircraftType ?

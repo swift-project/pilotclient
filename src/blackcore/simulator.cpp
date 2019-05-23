@@ -172,8 +172,7 @@ namespace BlackCore
         // rendering related stuff
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
-        m_lastSentParts.clear();
-        m_lastSentSituations.clear();
+        this->resetLastSentValues(); // clear all last sent values
         m_updateRemoteAircraftInProgress = false;
 
         this->clearInterpolationSetupsPerCallsign();
@@ -757,6 +756,12 @@ namespace BlackCore
         {
             emit this->airspaceSnapshotHandled();
         }
+    }
+
+    bool ISimulator::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
+    {
+        this->resetLastSentValues(callsign);
+        return true;
     }
 
     int ISimulator::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
