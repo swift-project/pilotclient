@@ -316,6 +316,7 @@ namespace BlackSimPlugin
             m_interpolators.remove(callsign);
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             this->updateAircraftRendered(callsign, false); // in provider
+            CSimulatorPluginCommon::physicallyRemoveRemoteAircraft(callsign);
             return c > 0;
         }
 

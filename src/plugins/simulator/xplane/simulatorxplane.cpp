@@ -641,7 +641,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
-            Q_ASSERT(isConnected());
+            Q_ASSERT(this->isConnected());
 
             // only remove from sim
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
@@ -692,7 +692,7 @@ namespace BlackSimPlugin
             m_pendingToBeAddedAircraft.removeByCallsign(callsign);
 
             // bye
-            return true;
+            return CSimulatorPluginCommon::physicallyRemoveRemoteAircraft(callsign);
         }
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()

@@ -566,7 +566,7 @@ namespace BlackSimPlugin
             m_pendingToBeAddedAircraft.removeByCallsign(callsign);
 
             // bye
-            return true;
+            return CSimulatorPluginCommon::physicallyRemoveRemoteAircraft(callsign);
         }
 
         int CSimulatorFlightgear::physicallyRemoveAllRemoteAircraft()
