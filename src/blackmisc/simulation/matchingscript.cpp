@@ -8,10 +8,42 @@
 
 #include "matchingscript.h"
 
+using namespace BlackMisc::Aviation;
+
 namespace BlackMisc
 {
     namespace Simulation
     {
+        MSSwiftValues::MSSwiftValues(
+            const QString &cs,
+            const CAircraftIcaoCode aircraftIcao,
+            const CAirlineIcaoCode airlineIcao,
+            const QString &livery, int liveryId) :
+            MSSwiftValues(cs,
+                          aircraftIcao.getDesignator(), aircraftIcao.getDbKey(),
+                          airlineIcao.getDesignator(),  airlineIcao.getVDesignator(), airlineIcao.getDbKey(),
+                          livery, liveryId)
+        { }
+
+        MSSwiftValues::MSSwiftValues(
+            const QString &cs,
+            const CAircraftIcaoCode aircraftIcao,
+            const CLivery livery) :
+            MSSwiftValues(cs,
+                          aircraftIcao,
+                          livery.getAirlineIcaoCode(),
+                          livery.getCombinedCode(), livery.getDbKey())
+        { }
+
+        MSSwiftValues::MSSwiftValues(const MSSwiftValues &sv) :
+            MSSwiftValues(sv.m_callsign,
+                          sv.getAircraftIcao(), sv.getDbAircraftIcaoId(),
+                          sv.getAirlineIcao(), sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
+                          sv.getLivery(), sv.getDbLiveryId(),
+                          sv.m_logMessage,
+                          sv.isModified(), sv.isRerun())
+        { }
+
         void MSSwiftValues::setCallsign(const QString &callsign)
         {
             if (m_callsign == callsign) { return; }
@@ -54,6 +86,13 @@ namespace BlackMisc
             emit this->airlineIcaoChanged();
         }
 
+        void MSSwiftValues::setVirtualAirlineIcao(const QString &virtualAirlineIcao)
+        {
+            if (virtualAirlineIcao == m_vAirlineIcao) { return; }
+            m_vAirlineIcao = virtualAirlineIcao;
+            emit this->virtualAirlineIcaoChanged();
+        }
+
         void MSSwiftValues::setLivery(const QString &livery)
         {
             if (livery == m_livery) { return; }
@@ -80,6 +119,21 @@ namespace BlackMisc
             if (rerun == m_rerun) { return; }
             m_rerun = rerun;
             emit this->rerunChanged();
+        }
+
+        bool MSSwiftValues::hasChangedAircraftIcao(const Aviation::CAircraftIcaoCode &aircraftIcao) const
+        {
+            if (aircraftIcao.hasValidDbKey() && aircraftIcao.getDbKey() != m_dbAircraftIcaoId)  { return true; }
+            if (aircraftIcao.hasDesignator() && aircraftIcao.getDesignator() != m_aircraftIcao) { return true; }
+            return true;
+        }
+
+        bool MSSwiftValues::hasChangedAirlineIcao(const Aviation::CAirlineIcaoCode &airlineIcao) const
+        {
+            if (airlineIcao.hasValidDbKey() && airlineIcao.getDbKey() != m_dbAirlineIcaoId)  { return true; }
+            if (airlineIcao.hasValidDesignator() && airlineIcao.getDesignator()  != m_airlineIcao)  { return true; }
+            if (airlineIcao.hasValidDesignator() && airlineIcao.getVDesignator() != m_vAirlineIcao) { return true; }
+            return true;
         }
 
     } // namespace

@@ -311,20 +311,10 @@ namespace BlackCore
             static const QString logFile = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), "logMatchingSriptEntry.log");
             QJSEngine engine;
             // engine.installExtensions(QJSEngine::ConsoleExtension);
-            QJSValue jsMetaObject = engine.newQMetaObject(&MSSwiftValues::staticMetaObject);
+            static const QJSValue jsMetaObject = engine.newQMetaObject(&MSSwiftValues::staticMetaObject);
             engine.globalObject().setProperty("SwiftValues", jsMetaObject);
-            MSSwiftValues networkObject(
-                callsign.asString(),
-                inAircraftIcao.getDesignator(), inAircraftIcao.getDbKey(),
-                inAirlineIcao.getDesignator(),  inAirlineIcao.getDbKey(),
-                inLivery.getCombinedCode(), inLivery.getDbKey()
-            );
-            MSSwiftValues reverseModel(
-                inModel.getCallsign().asString(),
-                inModel.getAircraftIcaoCode().getDesignator(), inModel.getAircraftIcaoCode().getDbKey(),
-                inModel.getAirlineIcaoCode().getDesignator(),  inModel.getAirlineIcaoCode().getDbKey(),
-                inModel.getLivery().getCombinedCode(), inModel.getLivery().getDbKey()
-            );
+            MSSwiftValues networkObject(callsign.asString(), inAircraftIcao, inLivery);
+            MSSwiftValues reverseModel(callsign.asString(), inAircraftIcao, inLivery);
             MSSwiftValues returnObject;
 
             QJSValue jsNetworkObject = engine.newQObject(&networkObject);
@@ -334,6 +324,7 @@ namespace BlackCore
             QJSValue jsReturnObject = engine.newQObject(&returnObject);
             engine.globalObject().setProperty("returnObject", jsNetworkObject);
 
+            QString logMessage;
             QJSValue ms = engine.evaluate(js, logFile);
             ms = ms.call();
             if (ms.isError())
@@ -344,21 +335,32 @@ namespace BlackCore
             }
             else
             {
-                QString logMessage;
                 if (ms.isQObject())
                 {
-                    // reverseModel = ms.toQ
+                    const MSSwiftValues *reverseModelProcessed = qobject_cast<const MSSwiftValues *>(ms.toQObject());
+                    logMessage = reverseModelProcessed->getLogMessage();
+                    if (!reverseModelProcessed->isModified()) { break; }
+
+                    // changed
+                    if (reverseModel.hasChangedAircraftIcao(inAircraftIcao))
+                    {
+                        CAircraftIcaoCode icao;
+                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: '%1' -> '%2'").arg(inAircraftIcao.getDesignatorDbKey(), icao.getDesignatorDbKey())); }
+                    }
+
+                    if (reverseModel.hasChangedAirlineIcao(inAirlineIcao))
+                    {
+
+                    }
                 }
                 else if (ms.isString())
                 {
                     logMessage = ms.toString();
                 }
-
-                if (!logMessage.isEmpty())
-                {
-                    CLogMessage(getLogCategories()).info(u"Matching script: '%1'") << logMessage;
-                }
             }
+
+            // log message
+            if (log && !logMessage.isEmpty()) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: '%1'").arg(logMessage)); }
 
             // end this
             break;
