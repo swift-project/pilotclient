@@ -1942,8 +1942,11 @@ namespace BlackSimPlugin
                 if (!simObject.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
 
                 const CCallsign callsign(simObject.getCallsign());
-                Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
-                Q_ASSERT_X(simObject.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
+                const bool hasCs = !callsign.isEmpty();
+                const bool hasValidIds = simObject.hasValidRequestAndObjectId();
+                BLACK_VERIFY_X(hasCs, Q_FUNC_INFO, "missing callsign");
+                BLACK_AUDIT_X(hasValidIds, Q_FUNC_INFO, "Missing ids");
+                if (!hasCs || !hasValidIds) { continue; } // not supposed to happen
                 const DWORD objectId = simObject.getObjectId();
 
                 // setup
