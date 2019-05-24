@@ -131,7 +131,7 @@ namespace BlackGui
             int  m_currentColumns = 1;
             QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
             CMarginsInput *m_input = nullptr; //!< margins widget
-            QTimer m_watchdog;
+            QTimer         m_watchdog;        //!< navigator watchdog
             BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
         };
     } // ns

@@ -223,7 +223,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigatorVisibility);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_MovingMap,     &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed);
+    connect(m_navigator.data(),     &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
 
     // settings (GUI component), styles
     connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);
@@ -270,7 +270,7 @@ void SwiftGuiStd::initGuiSignals()
     });
 
     // on top
-    connect(sGui, &CGuiApplication::alwaysOnTop, this, &SwiftGuiStd::onToggledWindowsOnTop);
+    connect(sGui, &CGuiApplication::alwaysOnTop, this, &SwiftGuiStd::onToggledWindowsOnTop, Qt::QueuedConnection);
 
     // main info area
     connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::onChangedMainInfoAreaFloating, Qt::QueuedConnection);

@@ -393,7 +393,7 @@ namespace BlackGui
         if (Qt::WindowStaysOnTopHint & flags)
         {
             flags &= ~Qt::WindowStaysOnTopHint;
-            flags |= Qt::WindowStaysOnBottomHint;
+            // flags |= Qt::WindowStaysOnBottomHint;
         }
         else
         {
