@@ -424,9 +424,9 @@ namespace BlackGui
 
             // when not set to auto, then lets set how we want to resize rows
             // for auto this is too slow
-            const bool ww = this->wordWrap();
+            // const bool ww = this->wordWrap();
             QAction *resizeRowsAction = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::resizeRowsToContents });
-            resizeRowsAction->setEnabled(ww);
+            resizeRowsAction->setEnabled(true); // as changing from word wraap to none word wrap can leave to high columns, we always enable this
 
             /**
             QAction *a1 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content (auto), can be slow", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
