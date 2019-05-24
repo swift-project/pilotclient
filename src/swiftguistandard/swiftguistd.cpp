@@ -380,7 +380,8 @@ void SwiftGuiStd::onToggledWindowsOnTop(bool onTop)
 {
     if (onTop)
     {
-        if (m_navigator) { m_navigator->showNavigator(true); }
+        // here we could automatically display the navigator
+        // if (m_navigator) { m_navigator->showNavigator(true); }
         ui->comp_MainInfoArea->allFloatingOnTop();
     }
 }
@@ -418,7 +419,7 @@ void SwiftGuiStd::showNormal()
 
 void SwiftGuiStd::onNavigatorClosed()
 {
-    // this->showNormal();
+    // void
 }
 
 void SwiftGuiStd::verifyPrerequisites()

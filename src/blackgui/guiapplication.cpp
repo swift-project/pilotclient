@@ -1118,7 +1118,7 @@ namespace BlackGui
 
     bool CGuiApplication::toggleStayOnTop()
     {
-        QWidget *w = CGuiApplication::mainApplicationWidget();
+        QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return false; }
         const bool onTop = CGuiUtility::toggleStayOnTop(w);
         CLogMessage(w).info(onTop ? QStringLiteral("Window on top") : QStringLiteral("Window not always on top"));
