@@ -21,6 +21,7 @@
 #include "blackgui/guiutility.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
@@ -175,9 +176,23 @@ namespace BlackGui
             ui->te_Results->clear();
             CStatusMessageList msgs;
             m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
+
+            const CAircraftMatcherSetup setup = m_matcher.getSetup();
             const CSimulatedAircraft remoteAircraft(createAircraft());
             const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
             const CAircraftModel matched = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), livery, &msgs);
+
+            // Script
+            CAircraftModel matchedWithScript = matched;
+            if (setup.doRunMsNetworkEntryScript())
+            {
+                matchedWithScript = CAircraftMatcher::networkEntryScript(matched, setup, &msgs);
+            }
+            else
+            {
+                CMatchingUtils::addLogDetailsToList(&msgs, remoteAircraft.getCallsign(), QStringLiteral("No entry script used"));
+            }
+
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
