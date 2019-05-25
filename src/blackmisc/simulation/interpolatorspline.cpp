@@ -100,7 +100,6 @@ namespace BlackMisc
                 {
                     BLACK_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
                     BLACK_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
-
                 }
                 return y;
             }

@@ -359,7 +359,7 @@ namespace BlackCore
             CVoiceRoom newRoomCom1 = newRooms[0];
             CVoiceRoom newRoomCom2 = newRooms[1];
             const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-            QString id = this->getIContextOwnAircraft()->getOwnAircraft().getPilotId();
+            const QString id = this->getIContextOwnAircraft()->getOwnAircraft().getPilotId();
 
             bool changed = false;
 
