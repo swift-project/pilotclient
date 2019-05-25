@@ -447,7 +447,20 @@ namespace BlackCore
             this->setRemoteAircraftProvider(renderedAircraftProvider);
 
             // use simulator info from ISimulator as it can access the emulated driver settings
-            const CSimulatorInfo simInfo = simulator->getSimulatorInfo();
+            CSimulatorInfo simInfo = simulator->getSimulatorInfo();
+            if (!simInfo.isSingleSimulator())
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Invalid simulator from plugin");
+                simInfo = CSimulatorInfo::p3d();
+                if (simulator->isEmulatedDriver())
+                {
+                    CLogMessage(this).error(u"Emulated driver does NOT provide valid simulator, using default '%1', plugin: '%2'") << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
+                }
+                else
+                {
+                    CLogMessage(this).error(u"Invalid driver using default '%1', plugin: '%2'") << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
+                }
+            }
             Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
 
             m_modelSetSimulator.set(simInfo);
