@@ -164,12 +164,12 @@ namespace BlackCore
                             }
                             else if (name == "time_end")
                             {
-                                QDateTime t = fromStringUtc(value, timestampFormat);
+                                const QDateTime t = fromStringUtc(value, timestampFormat);
                                 bookedStation.setBookedUntilUtc(t);
                             }
                             else if (name == "time_start")
                             {
-                                QDateTime t = fromStringUtc(value, timestampFormat);
+                                const QDateTime t = fromStringUtc(value, timestampFormat);
                                 bookedStation.setBookedFromUtc(t);
                             }
                         }
@@ -180,6 +180,7 @@ namespace BlackCore
                         bookedStation.setController(user);
                         bookedStations.push_back(bookedStation);
                     }
+                    m_failures = 0;
                     this->setUpdateTimestamp(updateTimestamp); // thread safe update
                     emit this->atcBookingsRead(bookedStations);
                     emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFinished, bookedStations.size());
@@ -188,16 +189,24 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning(u"Reading bookings failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning(u"Reading bookings failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
+                m_failures++;
+                if (m_failures > 3)
+                {
+                    // slow updates from now on
+                    const CReaderSettings s = m_settings.get();
+                    this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), 10 * s.getPeriodicTime().toMs());
+                    CLogMessage(this).warning(u"Too many booking reader failures %1, slower updates") << m_failures;
+                }
                 emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
             }
         } // method
 
         void CVatsimBookingReader::settingsChanged()
         {
-            CReaderSettings s = m_settings.get();
-            setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+            const CReaderSettings s = m_settings.get();
+            this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
     } // ns
 } // ns

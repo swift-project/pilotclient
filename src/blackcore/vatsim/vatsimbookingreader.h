@@ -66,6 +66,7 @@ namespace BlackCore
             //! Settings changed
             void settingsChanged();
 
+            int m_failures = 0;
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this, &CVatsimBookingReader::settingsChanged };
         };
     } // ns
