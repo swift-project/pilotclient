@@ -384,7 +384,11 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).validationError(u"No valid plugin for '%1'") << simulator.toQString();
+                // not all drivers are installed
+                CLogMessage(this).validationError(u"No valid plugin in emulated driver for '%1'") << simulator.toQString();
+                const QString sn = simulator.toQString(true);
+                const CSimulatorPluginInfo fakedPlugin = CSimulatorPluginInfo(simulator.toPluginIdentifier(), sn, sn, QStringLiteral("Emulated, but uninstalled '%1'").arg(sn), false);
+                this->setNewPluginInfo(fakedPlugin, settings.getDefaultModel());
             }
 
             // update provider, own name, title
