@@ -1006,9 +1006,9 @@ namespace BlackSimPlugin
 
                 if (simObject.isConfirmedAdded() && simObject.getType() == CSimConnectObject::AircraftSimulatedObject)
                 {
-                    const CStatusMessage soMsg = CLogMessage(this).warning(u"Confirm added model '%1' '%2', but as '%3'") << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString() << simObject.getTypeAsString();
-                    this->triggerAutoTraceSendId(); // trace for some time (issues regarding this workaround)
-                    Q_UNUSED(soMsg);
+                    CLogMessage(this).warning(u"Confirm added model '%1' '%2', but as '%3'") << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString() << simObject.getTypeAsString();
+                    this->triggerAutoTraceSendId(); // trace for some time (issues regarding this workaround?)
+                    simObject.decreaseAddingExceptions(); // if previously increased and now working, reset
                 }
             }
             while (false);
