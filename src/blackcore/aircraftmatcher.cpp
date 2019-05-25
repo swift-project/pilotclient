@@ -1383,7 +1383,7 @@ namespace BlackCore
             {
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
                                                     groupModels.isEmpty() ?
-                                                    QStringLiteral("No group models found by using airline group '%1'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
+                                                    QStringLiteral("No group models found by using airline group '%1'").arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
                                                     QStringLiteral("Added %1 model(s) by using airline group '%2', all members: '%3'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator(), joinStringSet(groupModels.getAirlineVDesignators(), ", ")),
                                                     getLogCategories());
             }
