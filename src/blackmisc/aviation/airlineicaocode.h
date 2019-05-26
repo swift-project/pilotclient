@@ -136,6 +136,9 @@ namespace BlackMisc
             //! Group id
             void setGroupId(int id) { m_groupId = id; }
 
+            //! Are we a member of a group?
+            bool hasGroupMembership() const { return m_groupId >= 0 && !m_groupDesignator.isEmpty(); }
+
             //! Virtual airline
             bool isVirtualAirline() const { return m_isVa; }
 

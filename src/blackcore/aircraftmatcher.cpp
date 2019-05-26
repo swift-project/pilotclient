@@ -403,8 +403,11 @@ namespace BlackCore
 
             // lookup if model is not yet from DB
             const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(networkLiveryInfo);
-            if (ids.model >= 0)
+            if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Livery string with ids: '%1'").arg(ids.toQString())); }
+
+            if (ids.model >= 0 && !modelToLookup.hasModelString())
             {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Model lookup with id %1 from triple ids '%2'").arg(ids.model).arg(ids.toQString())); }
                 const CAircraftModel modelFromDb = CAircraftMatcher::reverseLookupModelId(ids.model, callsign, log);
                 if (modelFromDb.hasValidDbKey())
                 {
@@ -416,6 +419,7 @@ namespace BlackCore
             // no direct resolution of model, try livery and aircraft ICAO
             if (!modelToLookup.getAircraftIcaoCode().hasValidDbKey() && ids.aircraft >= 0)
             {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Aircraft ICAO lookup with id %1 from triple ids '%2'").arg(ids.aircraft).arg(ids.toQString())); }
                 const CAircraftIcaoCode icaoFromDb = CAircraftMatcher::reverseLookupAircraftIcaoId(ids.aircraft, callsign, log);
                 if (icaoFromDb.hasValidDbKey())
                 {
@@ -425,6 +429,7 @@ namespace BlackCore
 
             if (!modelToLookup.getLivery().hasValidDbKey() && ids.livery >= 0)
             {
+                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Livery lookup with id %1 from triple ids '%2'").arg(ids.livery).arg(ids.toQString())); }
                 const CLivery liveryFromDb = CAircraftMatcher::reverseLookupLiveryId(ids.livery, callsign, log);
                 if (liveryFromDb.hasValidDbKey())
                 {
@@ -489,12 +494,25 @@ namespace BlackCore
                 // if no DB livery yet, create own livery
                 if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
                 {
-                    // create a pseudo livery, try to find airline first
                     if (airlineIcaoCode.hasValidDesignator())
                     {
-                        const CLivery liveryDummy(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Generated");
-                        model.setLivery(liveryDummy);
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Generated livery, set livery `%1`").arg(liveryDummy.getCombinedCodePlusInfo())); }
+                        if (airlineIcaoCode.hasValidDbKey())
+                        {
+                            const CLivery stdLivery(sApp->getWebDataServices()->getStdLiveryForAirlineCode(airlineIcaoCode));
+                            if (stdLivery.hasValidDbKey())
+                            {
+                                model.setLivery(stdLivery);
+                                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Set standardlivery `%1`").arg(stdLivery.getCombinedCodePlusInfo())); }
+                            }
+                        }
+
+                        if (!model.getLivery().hasValidDbKey())
+                        {
+                            // create a pseudo livery, try to find airline first
+                            const CLivery liveryDummy(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Generated");
+                            model.setLivery(liveryDummy);
+                            if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Generated livery, set livery `%1`").arg(liveryDummy.getCombinedCodePlusInfo())); }
+                        }
                     }
                 } // pseudo livery
             } // livery from DB
@@ -1377,15 +1395,22 @@ namespace BlackCore
             mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline) ||
             (outList.isEmpty() || mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupIfNoAirline)))
         {
-            const CAircraftModelList groupModels = inList.findByAirlineGroup(remoteAircraft.getAirlineIcaoCode());
-            outList.replaceOrAddModelsWithString(groupModels, Qt::CaseInsensitive);
-            if (log)
+            if (remoteAircraft.getAirlineIcaoCode().hasGroupMembership())
             {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
-                                                    groupModels.isEmpty() ?
-                                                    QStringLiteral("No group models found by using airline group '%1'").arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
-                                                    QStringLiteral("Added %1 model(s) by using airline group '%2', all members: '%3'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator(), joinStringSet(groupModels.getAirlineVDesignators(), ", ")),
-                                                    getLogCategories());
+                const CAircraftModelList groupModels = inList.findByAirlineGroup(remoteAircraft.getAirlineIcaoCode());
+                outList.replaceOrAddModelsWithString(groupModels, Qt::CaseInsensitive);
+                if (log)
+                {
+                    CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
+                                                        groupModels.isEmpty() ?
+                                                        QStringLiteral("No group models found by using airline group '%1'").arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
+                                                        QStringLiteral("Added %1 model(s) by using airline group '%2', all members: '%3'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator(), joinStringSet(groupModels.getAirlineVDesignators(), ", ")),
+                                                        getLogCategories());
+                }
+            }
+            else
+            {
+
             }
         }
 
