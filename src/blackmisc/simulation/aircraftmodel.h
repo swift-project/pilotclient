@@ -60,6 +60,12 @@ namespace BlackMisc
             {
                 return model >= 0 || livery >= 0 || aircraft >= 0;
             }
+
+            //! Return as string
+            QString toQString() const
+            {
+                return QStringLiteral("Model: %1 Livery: %2 Aircraft: %3").arg(model).arg(livery).arg(aircraft);
+            }
         };
 
         //! Aircraft model (used by another pilot, my models on disk)
