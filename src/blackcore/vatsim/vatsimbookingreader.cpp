@@ -16,6 +16,7 @@
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QByteArray>
 #include <QDateTime>
@@ -99,15 +100,30 @@ namespace BlackCore
                 const QString xmlData = nwReply->readAll();
                 nwReply->close(); // close asap
 
+                if (xmlData.isEmpty() || !xmlData.contains("<bookings>", Qt::CaseInsensitive))
+                {
+                    CLogMessage(this).warning(u"Reading bookings wrong XML format for '%1'") << nwReply->url().toString();
+                    m_failures++;
+                    emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
+                    return;
+                }
+
                 QDomDocument doc;
                 QDateTime updateTimestamp = QDateTime::currentDateTimeUtc(); // default
                 if (doc.setContent(xmlData))
                 {
                     const QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
                     const QString ts = timestamp.toElement().text().trimmed();
-                    Q_ASSERT(!ts.isEmpty());
+                    BLACK_AUDIT_X(!ts.isEmpty(), Q_FUNC_INFO, "Wrong timestamp format");
 
-                    if (!ts.isEmpty())
+                    if (ts.isEmpty())
+                    {
+                        CLogMessage(this).warning(u"Reading bookings wrong XML timestamp format for '%1'") << nwReply->url().toString();
+                        m_failures++;
+                        emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
+                        return;
+                    }
+                    else
                     {
                         // normally the timestamp is always updated from backend
                         // if this changes in the future we're prepared
