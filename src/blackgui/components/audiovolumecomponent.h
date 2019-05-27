@@ -53,6 +53,9 @@ namespace BlackGui
             //! Requested windows mixer
             void onWindowsMixerRequested();
 
+            //! slider value
+            static int volumeToSliderValue(int volume);
+
             QScopedPointer<Ui::CAudioVolumeComponent> ui;
         };
     } // namespace

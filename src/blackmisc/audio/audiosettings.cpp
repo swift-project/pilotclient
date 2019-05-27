@@ -62,6 +62,13 @@ namespace BlackMisc
             else if (m_notificationVolume > 100) { m_notificationVolume = 100; }
         }
 
+        void CSettings::setAudioVolume(int volume)
+        {
+            m_audioVolume = volume;
+            if (m_audioVolume < 0) { m_audioVolume = 0; }
+            else if (m_audioVolume > MaxAudioVolume) { m_audioVolume = MaxAudioVolume; }
+        }
+
         QString CSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

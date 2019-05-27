@@ -33,6 +33,12 @@ namespace BlackGui
             ui(new Ui::CAudioVolumeComponent)
         {
             ui->setupUi(this);
+            const int volume = sGui && sGui->getIContextAudio() ?
+                               sGui->getIContextAudio()->getVoiceOutputVolume() :
+                               100;
+            ui->hs_Volume->setValue(volumeToSliderValue(volume));
+            ui->sb_Volume->setValue(volume);
+
             bool c = connect(ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::onWindowsMixerRequested);
             Q_ASSERT(c);
             Q_UNUSED(c);
@@ -68,7 +74,7 @@ namespace BlackGui
             }
 
             // init volume
-            this->changeOutputVolumeFromSlider(sGui->getIContextAudio()->getVoiceOutputVolume()); // init volume
+            this->changeOutputVolumeFromSpinBox(volume); // init volume
         }
 
         CAudioVolumeComponent::~CAudioVolumeComponent()
@@ -92,17 +98,18 @@ namespace BlackGui
                 ui->sb_Volume->setToolTip(v);
             }
 
-            if (volume > 100)
-            {
-                int vol = volume - 100;
-                volume = 100 + vol / 5;
-            }
-
             if (volume != ui->hs_Volume->value())
             {
-                ui->hs_Volume->setValue(volume);
+                ui->hs_Volume->setValue(volumeToSliderValue(volume));
                 ui->hs_Volume->setToolTip(v);
             }
+        }
+
+        int CAudioVolumeComponent::volumeToSliderValue(int volume)
+        {
+            if (volume <= 100) { return volume; }
+            const int vol = volume - 100;
+            return 100 + vol / 5;
         }
 
         void CAudioVolumeComponent::setVolume100()

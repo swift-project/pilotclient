@@ -59,8 +59,7 @@ namespace BlackCore
             initOutputDevice();
             initAudioMixer();
 
-            this->setVoiceOutputVolume(90);
-
+            this->setVoiceOutputVolume(m_audioSettings.getThreadLocal().getAudioVolume());
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
 
             this->changeDeviceSettings();
@@ -101,26 +100,26 @@ namespace BlackCore
 
         void CContextAudio::initInputDevice()
         {
-        #ifdef Q_OS_MAC
-           CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
-           if (status == CMacOSMicrophoneAccess::Authorized)
-           {
-               m_voiceInputDevice = m_voice->createInputDevice();
-           }
-           else if (status == CMacOSMicrophoneAccess::NotDetermined)
-           {
-               m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
-               connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CContextAudio::delayedInitMicrophone);
-               m_micAccess.requestAccess();
-           }
-           else
-           {
-               m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
-               CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
-           }
-        #else
-           m_voiceInputDevice = m_voice->createInputDevice();
-        #endif
+#ifdef Q_OS_MAC
+            CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
+            if (status == CMacOSMicrophoneAccess::Authorized)
+            {
+                m_voiceInputDevice = m_voice->createInputDevice();
+            }
+            else if (status == CMacOSMicrophoneAccess::NotDetermined)
+            {
+                m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
+                connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CContextAudio::delayedInitMicrophone);
+                m_micAccess.requestAccess();
+            }
+            else
+            {
+                m_voiceInputDevice.reset(new CAudioInputDeviceDummy(this));
+                CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
+            }
+#else
+            m_voiceInputDevice = m_voice->createInputDevice();
+#endif
         }
 
         void CContextAudio::initOutputDevice()
@@ -132,7 +131,7 @@ namespace BlackCore
         {
             m_audioMixer = m_voice->createAudioMixer();
 
-            if(! m_voiceInputDevice->isDummyDevice())
+            if (! m_voiceInputDevice->isDummyDevice())
             {
                 m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
             }
@@ -291,16 +290,25 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
             bool wasMuted = isMuted();
-            bool changed = m_voiceOutputDevice->getOutputVolume() != volume;
-            if (!changed) { return; }
-            m_voiceOutputDevice->setOutputVolume(volume);
-            m_outVolumeBeforeMute = m_voiceOutputDevice->getOutputVolume();
-
-            emit changedAudioVolume(volume);
-            if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
+            bool changedVoiceOutput = m_voiceOutputDevice->getOutputVolume() != volume;
+            if (changedVoiceOutput)
             {
-                // inform about muted
-                emit changedMute(volume < 1);
+                m_voiceOutputDevice->setOutputVolume(volume);
+                m_outVolumeBeforeMute = m_voiceOutputDevice->getOutputVolume();
+
+                emit this->changedAudioVolume(volume);
+                if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
+                {
+                    // inform about muted
+                    emit this->changedMute(volume < 1);
+                }
+            }
+
+            CSettings as(m_audioSettings.getThreadLocal());
+            if (as.getAudioVolume() != volume)
+            {
+                as.setAudioVolume(volume);
+                m_audioSettings.set(as);
             }
         }
 
@@ -571,9 +579,9 @@ namespace BlackCore
             else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
             {
                 int v = parser.toInt(1);
-                if (v >= 0 && v <= 300)
+                if (v >= 0 && v <= CSettings::MaxAudioVolume)
                 {
-                    setVoiceOutputVolume(v);
+                    this->setVoiceOutputVolume(v);
                     return true;
                 }
             }
@@ -663,8 +671,10 @@ namespace BlackCore
 
         void CContextAudio::onChangedAudioSettings()
         {
-            const QString dir = m_audioSettings.get().getNotificationSoundDirectory();
+            const CSettings s = m_audioSettings.get();
+            const QString dir = s.getNotificationSoundDirectory();
             m_notificationPlayer.updateDirectory(dir);
+            this->setVoiceOutputVolume(s.getAudioVolume());
         }
 
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
@@ -686,12 +696,12 @@ namespace BlackCore
         }
 
 
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
         void CContextAudio::delayedInitMicrophone()
         {
             m_voiceInputDevice = m_voice->createInputDevice();
             m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
         }
-    #endif
+#endif
     } // namespace
 } // namespace

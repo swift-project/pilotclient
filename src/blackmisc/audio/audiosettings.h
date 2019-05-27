@@ -63,11 +63,17 @@ namespace BlackMisc
             //! Notification directory
             const QString &getNotificationSoundDirectory() const { return m_notificationSoundDir; }
 
-            //! Set volume
+            //! Set volume (notifications)
             void setNotificationVolume(int volume);
 
-            //! Get volume
+            //! Get volume (notifications)
             int getNotificationVolume() const { return m_notificationVolume; }
+
+            //! Set volume (audio)
+            void setAudioVolume(int volume);
+
+            //! Get volume (audio)
+            int getAudioVolume() const { return m_audioVolume; }
 
             //! Init with meaningful default values
             void initDefaultValues();
@@ -75,17 +81,21 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            static constexpr int MaxAudioVolume = 300; //!< Max.audio volume 0..300
+
         private:
             QString m_notificationSoundDir;
             int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
-            int m_notificationVolume = 90; //!< 0-100;
+            int m_notificationVolume = 90; //!< 0-100
+            int m_audioVolume = 100;       //!< 0-300
             void initNotificationFlags();  //!< init flags
 
             BLACK_METACLASS(
                 CSettings,
                 BLACK_METAMEMBER(notificationSoundDir),
                 BLACK_METAMEMBER(notification),
-                BLACK_METAMEMBER(notificationVolume)
+                BLACK_METAMEMBER(notificationVolume),
+                BLACK_METAMEMBER(audioVolume)
             );
         };
 
