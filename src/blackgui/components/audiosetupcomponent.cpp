@@ -104,7 +104,9 @@ namespace BlackGui
                 Q_ASSERT(c);
                 c = connect(ui->pb_SoundDir,   &QPushButton::released, this, &CAudioSetupComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
                 Q_ASSERT(c);
-                c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioSetupComponent::onVolumeChanged);
+
+                // volumes
+                c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioSetupComponent::onNotificationVolumeChanged);
                 Q_ASSERT(c);
             }
             Q_UNUSED(c);
@@ -152,7 +154,7 @@ namespace BlackGui
             return sGui && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
         }
 
-        void CAudioSetupComponent::onVolumeChanged(int volume)
+        void CAudioSetupComponent::onNotificationVolumeChanged(int volume)
         {
             volume = qMax(25, qMin(100, volume));
             CSettings as(m_audioSettings.getThreadLocal());
