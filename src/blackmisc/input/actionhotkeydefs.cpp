@@ -22,5 +22,39 @@ namespace BlackMisc
         {
             return CIcons::radio16();
         }
+
+        const QString &pttCom1HotkeyAction()
+        {
+            static const QString s("/Voice/Activate push-to-talk COM1");
+            return s;
+        }
+
+        const QString &pttCom2HotkeyAction()
+        {
+            static const QString s("/Voice/Activate push-to-talk COM2");
+            return s;
+        }
+
+        const QPixmap &audioVolumeDecreaseHotkeyIcon()
+        {
+            return CIcons::volumeLow16();
+        }
+
+        const QPixmap &audioVolumeIncreaseHotkeyIcon()
+        {
+            return CIcons::volumeHigh16();
+        }
+
+        const QString &audioVolumeDecreaseHotkeyAction()
+        {
+            static const QString s("/Audio/Volume decrease");
+            return s;
+        }
+
+        const QString &audioVolumeIncreaseHotkeyAction()
+        {
+            static const QString s("/Audio/Volume increase");
+            return s;
+        }
     } // ns
 } // ns
