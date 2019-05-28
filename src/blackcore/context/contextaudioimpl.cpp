@@ -290,6 +290,8 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
 
             bool wasMuted = isMuted();
+            volume = qMin(CSettings::MaxAudioVolume, volume);
+
             bool changedVoiceOutput = m_voiceOutputDevice->getOutputVolume() != volume;
             if (changedVoiceOutput)
             {
@@ -588,9 +590,11 @@ namespace BlackCore
             return false;
         }
 
-        void CContextAudio::setVoiceTransmission(bool enable)
+        void CContextAudio::setVoiceTransmission(bool enable, COM com)
         {
             // FIXME: Use the 'active' channel instead of hardcoded COM1
+            // FIXME: Use com
+            Q_UNUSED(com);
             if (!m_voiceChannelMapping.contains(CComSystem::Com1)) { return; }
             QSharedPointer<IVoiceChannel> voiceChannelCom1 = m_voiceChannelMapping.value(CComSystem::Com1);
             IAudioMixer::OutputPort mixerOutputPort = m_voiceChannelOutputPortMapping.value(voiceChannelCom1);
@@ -604,6 +608,21 @@ namespace BlackCore
                 m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
                 m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel2);
             }
+        }
+
+        void CContextAudio::setVoiceTransmissionCom1(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COM1);
+        }
+
+        void CContextAudio::setVoiceTransmissionCom2(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COM2);
+        }
+
+        void CContextAudio::setVoiceTransmissionComActive(bool enabled)
+        {
+            this->setVoiceTransmission(enabled, COMActive);
         }
 
         void CContextAudio::onConnectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
@@ -675,6 +694,20 @@ namespace BlackCore
             const QString dir = s.getNotificationSoundDirectory();
             m_notificationPlayer.updateDirectory(dir);
             this->setVoiceOutputVolume(s.getAudioVolume());
+        }
+
+        void CContextAudio::audioIncreaseVolume(bool enabled)
+        {
+            if (!enabled) { return; }
+            const int v = qRound(this->getVoiceOutputVolume() * 1.2);
+            this->setVoiceOutputVolume(v);
+        }
+
+        void CContextAudio::audioDecreaseVolume(bool enabled)
+        {
+            if (!enabled) { return; }
+            const int v = qRound(this->getVoiceOutputVolume() / 1.2);
+            this->setVoiceOutputVolume(v);
         }
 
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)

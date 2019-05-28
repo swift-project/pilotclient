@@ -23,8 +23,27 @@ namespace BlackMisc
         //! PTT key
         BLACKMISC_EXPORT const QString &pttHotkeyAction();
 
+        //! PTT key COM1 only
+        BLACKMISC_EXPORT const QString &pttCom1HotkeyAction();
+
+        //! PTT key COM2 only
+        BLACKMISC_EXPORT const QString &pttCom2HotkeyAction();
+
         //! PTT key
         BLACKMISC_EXPORT const QPixmap &pttHotkeyIcon();
+
+        //! Audio volume + key
+        BLACKMISC_EXPORT const QString &audioVolumeIncreaseHotkeyAction();
+
+        //! Audio volume - key
+        BLACKMISC_EXPORT const QString &audioVolumeDecreaseHotkeyAction();
+
+        //! Audio icon volume +
+        BLACKMISC_EXPORT const QPixmap &audioVolumeIncreaseHotkeyIcon();
+
+        //! Audio icon volume -
+        BLACKMISC_EXPORT const QPixmap &audioVolumeDecreaseHotkeyIcon();
+
     } // ns
 } // ns
 

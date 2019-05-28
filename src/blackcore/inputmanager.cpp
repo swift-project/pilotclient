@@ -35,7 +35,7 @@ namespace BlackCore
         if (!m_availableActions.contains(action))
         {
             m_availableActions.insert(action, icon);
-            emit hotkeyActionRegistered({ action });
+            emit this->hotkeyActionRegistered({ action });
         }
     }
 
@@ -46,7 +46,7 @@ namespace BlackCore
             if (!m_availableActions.contains(action))
             {
                 m_availableActions.insert(action, {});
-                emit hotkeyActionRegistered({ action });
+                emit this->hotkeyActionRegistered({ action });
             }
         }
     }

@@ -176,7 +176,7 @@ namespace BlackGui
         CIdentifierList CSettingsHotkeyComponent::getAllIdentifiers() const
         {
             CIdentifierList identifiers;
-            if (!sGui) { return identifiers; }
+            if (!sGui || !sGui->getIContextApplication()) { return identifiers; }
             if (sGui->getIContextApplication()) { identifiers = sGui->getIContextApplication()->getRegisteredApplications(); }
 
             // add local application
@@ -188,7 +188,7 @@ namespace BlackGui
         {
             if (keyDown)
             {
-                QMessageBox* msgBox = new QMessageBox(this);
+                QMessageBox *msgBox = new QMessageBox(this);
                 msgBox->setAttribute(Qt::WA_DeleteOnClose);
                 msgBox->setStandardButtons(QMessageBox::Ok);
                 msgBox->setWindowTitle("Test");

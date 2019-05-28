@@ -46,7 +46,7 @@
 namespace BlackMisc
 {
     class CDBusServer;
-    namespace Audio { class CAudioDeviceInfo; }
+    namespace Audio    { class CAudioDeviceInfo; }
     namespace Aviation { class CCallsign; }
 }
 
@@ -121,6 +121,15 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
+            // Voice COM channel
+            enum COM
+            {
+                COM1,
+                COM2,
+                COMActive,
+                COMUnspecified
+            };
+
             void initVoiceChannels();
             void initInputDevice();
             void initOutputDevice();
@@ -131,8 +140,12 @@ namespace BlackCore
             //! \sa IContextAudio::changedVoiceRooms
             void onConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
-            //! Enable/disable voice transmission
-            void setVoiceTransmission(bool enable);
+            //! Enable/disable voice transmission @{
+            void setVoiceTransmission(bool enable, COM com);
+            void setVoiceTransmissionCom1(bool enabled);
+            void setVoiceTransmissionCom2(bool enabled);
+            void setVoiceTransmissionComActive(bool enabled);
+            //! @}
 
             //! User joined the room
             void onUserJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
@@ -149,20 +162,29 @@ namespace BlackCore
             //! Changed audio settings
             void onChangedAudioSettings();
 
+            //! Audio increase/decrease @{
+            void audioIncreaseVolume(bool enabled);
+            void audioDecreaseVolume(bool enabled);
+            //! @}
+
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmission };
+            CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionComActive };
+            CActionBind m_actionPttCom1 { BlackMisc::Input::pttCom1HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionCom1 };
+            CActionBind m_actionPttCom2 { BlackMisc::Input::pttCom2HotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudio::setVoiceTransmissionCom2 };
+            CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudio::audioIncreaseVolume };
+            CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudio::audioDecreaseVolume };
 
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;
-            const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
             int m_outVolumeBeforeMute = 90;
+            static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 
-        #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
             BlackMisc::CMacOSMicrophoneAccess m_micAccess;
             void delayedInitMicrophone();
-            #endif
+#endif
 
             // For easy access.
             QSharedPointer<IVoiceChannel> m_channel1;
