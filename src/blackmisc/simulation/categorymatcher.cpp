@@ -59,7 +59,7 @@ namespace BlackMisc
             }
         }
 
-        CAircraftModelList CCategoryMatcher::reduceByCategories(const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log) const
+        CAircraftModelList CCategoryMatcher::reduceByCategories(const CAircraftModelList &alreadyMatchedModels, const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log) const
         {
             Q_UNUSED(shortLog);
 
@@ -67,23 +67,25 @@ namespace BlackMisc
             if (!setup.useCategoryMatching())
             {
                 if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"), getLogCategories()); }
-                return modelSet;
+                return alreadyMatchedModels;
             }
             if (m_all.isEmpty())
             {
+                // no categories?
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"), getLogCategories());
-                return modelSet;
+                return alreadyMatchedModels;
             }
             if (!remoteAircraft.getAircraftIcaoCode().hasCategory())
             {
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No category in remote aircraft"), getLogCategories());
-                return modelSet;
+                return alreadyMatchedModels;
             }
 
             if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Remote aircraft has category '%1'").arg(remoteAircraft.getAircraftIcaoCode().getCategory().getNameDbKey()), getLogCategories()); }
             if (!m_gliders.isEmpty() && setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByCategoryGlider) && this->isGlider(remoteAircraft.getAircraftIcaoCode()))
             {
                 // we have a glider
+                // and we search in the whole set: this is a special case
                 const int firstLevel = this->gliderFirstLevel();
                 const CAircraftModelList gliders = modelSet.findByCategoryFirstLevel(firstLevel); // all gliders from model set
                 if (!gliders.isEmpty())
@@ -131,10 +133,10 @@ namespace BlackMisc
                     static const QStringList substituteIcaos({ "UHEL", "GLID", "ULAC" }); // maybe also GYRO
                     static const QString substituteIcaosStr = substituteIcaos.join(", ");
 
-                    CAircraftModelList substitutes = modelSet.findByDesignatorsOrFamilyWithColorLivery(substituteIcaos);
+                    CAircraftModelList substitutes = alreadyMatchedModels.findByDesignatorsOrFamilyWithColorLivery(substituteIcaos);
                     if (substitutes.isEmpty())
                     {
-                        substitutes = modelSet.findByCombinedType(QStringLiteral("L1P"));
+                        substitutes = alreadyMatchedModels.findByCombinedType(QStringLiteral("L1P"));
                         if (!substitutes.isEmpty())
                         {
                             reduced = true;
@@ -151,7 +153,7 @@ namespace BlackMisc
                 }
             }
 
-            return modelSet;
+            return alreadyMatchedModels;
         }
 
         bool CCategoryMatcher::isGlider(const CAircraftIcaoCode &icao) const
