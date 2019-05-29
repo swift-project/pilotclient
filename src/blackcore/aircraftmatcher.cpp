@@ -1008,7 +1008,7 @@ namespace BlackCore
 
             if (setup.useCategoryMatching())
             {
-                matchedModels = categoryMatcher.reduceByCategories(modelSet, setup, remoteAircraft, reduced, whatToLog, log);
+                matchedModels = categoryMatcher.reduceByCategories(matchedModels, modelSet, setup, remoteAircraft, reduced, whatToLog, log);
                 // ?? break here ??
             }
             else if (reduceLog)
