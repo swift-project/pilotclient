@@ -125,6 +125,9 @@ namespace BlackGui
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const override;
         //! @}
 
+        //! Window size reset mode set
+        bool isCmdWindowSizeResetSet() const;
+
         //! \name direct access to main application window
         //! @{
         virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
