@@ -95,7 +95,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
-                static const BlackCore::Vatsim::CReaderSettings reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+                static const BlackCore::Vatsim::CReaderSettings reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {600.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };

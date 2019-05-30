@@ -47,7 +47,7 @@ namespace BlackCore
             CThreadedReader(owner, "CVatsimBookingReader"),
             CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
         {
-            settingsChanged();
+            this->settingsChanged();
         }
 
         void CVatsimBookingReader::readInBackgroundThread()
@@ -93,6 +93,7 @@ namespace BlackCore
                 return; // stop, terminate straight away, ending thread
             }
 
+            const CReaderSettings settings = m_settings.get();
             this->logNetworkReplyReceived(nwReplyPtr);
             if (nwReply->error() == QNetworkReply::NoError)
             {
@@ -191,13 +192,15 @@ namespace BlackCore
                         }
                         // time checks
                         const QDateTime now = QDateTime::currentDateTimeUtc();
-                        if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15))     { continue; } // until n mins in past
-                        if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
+                        if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15))      { continue; } // until n mins in past
+                        if (now.msecsTo(bookedStation.getBookedFromUtc())  > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
                         bookedStation.setController(user);
                         bookedStations.push_back(bookedStation);
                     }
                     m_failures = 0;
                     this->setUpdateTimestamp(updateTimestamp); // thread safe update
+                    this->setInitialAndPeriodicTime(settings.getInitialTime().toMs(), 3 * settings.getPeriodicTime().toMs()); // slow down, we have some bookings now
+
                     emit this->atcBookingsRead(bookedStations);
                     emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFinished, bookedStations.size());
                 } // node
@@ -211,8 +214,7 @@ namespace BlackCore
                 if (m_failures > 3)
                 {
                     // slow updates from now on
-                    const CReaderSettings s = m_settings.get();
-                    this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), 10 * s.getPeriodicTime().toMs());
+                    this->setInitialAndPeriodicTime(settings.getInitialTime().toMs(), 10 * settings.getPeriodicTime().toMs()); // massively slow down
                     CLogMessage(this).warning(u"Too many booking reader failures %1, slower updates") << m_failures;
                 }
                 emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
