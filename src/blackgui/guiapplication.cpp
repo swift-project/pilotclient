@@ -562,6 +562,11 @@ namespace BlackGui
         return (r == QMessageBox::Retry);
     }
 
+    bool CGuiApplication::isCmdWindowSizeResetSet() const
+    {
+        return this->isParserOptionSet(m_cmdWindowSizeReset);
+    }
+
     bool CGuiApplication::displayInStatusBar(const CStatusMessage &message)
     {
         IMainWindowAccess *m = mainWindowAccess();
