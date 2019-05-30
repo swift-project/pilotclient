@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CMarginsInput(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CMarginsInput();
+            virtual ~CMarginsInput() override;
 
             //! Set margins
             void setMargins(const QMargins &margins);
@@ -45,11 +45,10 @@ namespace BlackGui
             //! Margins changed
             void changedMargins(const QMargins &margins);
 
-        private slots:
-            //! Ok
-            void ps_Confirmed();
-
         private:
+            //! Ok
+            void confirmed();
+
             QScopedPointer<Ui::CMarginsInput> ui;
         };
     } // ns
