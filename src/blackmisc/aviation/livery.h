@@ -207,7 +207,7 @@ namespace BlackMisc
             //! Standard livery marker string
             static const QString &standardLiveryMarker();
 
-            //! Standard code for
+            //! Standard code for airline
             static QString getStandardCode(const Aviation::CAirlineIcaoCode &airline);
 
             //! Color livery marker
@@ -218,8 +218,8 @@ namespace BlackMisc
 
         private:
             CAirlineIcaoCode m_airline; //!< corresponding airline, if any
-            QString m_combinedCode;     //!< livery code and pseudo airline ICAO code
-            QString m_description;      //!< describes the livery
+            QString   m_combinedCode;   //!< livery code and pseudo airline ICAO code
+            QString   m_description;    //!< describes the livery
             CRgbColor m_colorFuselage;  //!< color of fuselage
             CRgbColor m_colorTail;      //!< color of tail
             bool m_military = false;    //!< military livery?

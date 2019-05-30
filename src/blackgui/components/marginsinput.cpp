@@ -20,11 +20,11 @@ namespace BlackGui
             ui(new Ui::CMarginsInput)
         {
             ui->setupUi(this);
-            connect(ui->pb_Ok, &QPushButton::clicked, this, &CMarginsInput::ps_Confirmed);
-            connect(ui->le_Bottom, &QLineEdit::returnPressed, this, &CMarginsInput::ps_Confirmed);
-            connect(ui->le_Left, &QLineEdit::returnPressed, this, &CMarginsInput::ps_Confirmed);
-            connect(ui->le_Right, &QLineEdit::returnPressed, this, &CMarginsInput::ps_Confirmed);
-            connect(ui->le_Top, &QLineEdit::returnPressed, this, &CMarginsInput::ps_Confirmed);
+            connect(ui->pb_Ok,     &QPushButton::clicked,     this, &CMarginsInput::confirmed);
+            connect(ui->le_Bottom, &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
+            connect(ui->le_Left,   &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
+            connect(ui->le_Right,  &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
+            connect(ui->le_Top,    &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
 
             QIntValidator *v = new QIntValidator(0, 100, this);
             ui->le_Bottom->setValidator(v);
@@ -65,7 +65,7 @@ namespace BlackGui
             return m;
         }
 
-        void CMarginsInput::ps_Confirmed()
+        void CMarginsInput::confirmed()
         {
             const QMargins m(this->getMargins());
             emit this->changedMargins(m);
