@@ -63,7 +63,7 @@ namespace BlackGui
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this,    &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu,   Qt::QueuedConnection);
-        connect(m_input, &CMarginsInput::changedMargins,           this, &CDockWidget::menuChangeMargins, Qt::QueuedConnection);
+        connect(m_input, &CMarginsInput::changedMargins,           this, &CDockWidget::menuChangeMargins); // only works direct, as QMargins is not registered:  'QMargins' is registered using qRegisterMetaTyp
 
         // connect
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
@@ -392,10 +392,10 @@ namespace BlackGui
         }
 
         // State actions (windows state)
-        contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CDockWidget::restoreFromSettings);
-        contextMenu->addAction(CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
-        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
-        contextMenu->addAction(CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
+        contextMenu->addAction(CIcons::load16(),    "Restore from settings", this, &CDockWidget::restoreFromSettings,        Qt::QueuedConnection);
+        contextMenu->addAction(CIcons::save16(),    "Save state",            this, &CDockWidget::saveCurrentStateToSettings, Qt::QueuedConnection);
+        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults",     this, &CDockWidget::resetSettings,              Qt::QueuedConnection);
+        contextMenu->addAction(CIcons::refresh16(), "Reset position",        this, &CDockWidget::resetPosition,              Qt::QueuedConnection);
 
         m_input->setMargins(this->contentsMargins());
         contextMenu->addAction(CIcons::tableSheet16(), "Margins", this, &CDockWidget::dummy);
@@ -417,6 +417,9 @@ namespace BlackGui
 
         // and move
         this->resetPosition();
+
+        // deferred int from settings
+        this->restoreFloatingSizeAndPositionDeferred();
     }
 
     QString CDockWidget::windowTitleOrBackup() const
@@ -441,6 +444,9 @@ namespace BlackGui
                 QDockWidget::setWindowTitle(m_windowTitleBackup);
             }
             this->setNullTitleBarWidget();
+            if (m_wasFrameless) { this->setFrameless(true); }
+
+            /**
             if (!m_wasAlreadyFloating)
             {
                 this->initialFloating();
@@ -448,9 +454,10 @@ namespace BlackGui
             }
             else
             {
-                if (m_wasFrameless) { this->setFrameless(true); }
                 this->restoreFloatingSizeAndPositionDeferred(); // after everything was applied move and resize
             }
+            **/
+
             m_statusBar.show();
             m_wasAlreadyFloating = true;
         }
@@ -605,11 +612,17 @@ namespace BlackGui
 
     void CDockWidget::restoreFloatingSizeAndPositionDeferred()
     {
-        if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
+        // if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
         QPointer<CDockWidget> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
+        QTimer::singleShot(2500, this, [ = ]
         {
-            if (myself) { myself->restoreFloatingSizeAndPosition(); }
+            if (!myself) { return; }
+            const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+            const bool shift = km.testFlag(Qt::ShiftModifier);
+            if (shift) { return; }
+
+            if (!sGui || sGui->isCmdWindowSizeResetSet()) { return; }
+            myself->restoreFromSettings();
         });
     }
 

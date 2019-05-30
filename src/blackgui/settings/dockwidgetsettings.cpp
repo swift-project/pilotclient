@@ -33,6 +33,8 @@ namespace BlackGui
         {
             this->resetMarginsToDefault();
             m_geometry = "";
+            m_frameless = false;
+            m_floating  = false;
         }
 
         void CDockWidgetSettings::setMarginsWhenFramelessFloating(const QMargins &margins)
