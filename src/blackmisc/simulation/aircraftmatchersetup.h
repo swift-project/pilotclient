@@ -125,27 +125,27 @@ namespace BlackMisc
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
 
             //! Get matching files @{
-            const QString &getMsNetworkEntryFile()  const { return m_msNetworkEntryFile; }
+            const QString &getMsReverseLookupFile() const { return m_msReverseLookupFile; }
             const QString &getMsMatchingStageFile() const { return m_msMatchingStageFile; }
             //! @}
 
             //! Set matching files @{
-            void setMsNetworkEntryFile(const QString &file)  { m_msNetworkEntryFile = file; }
+            void setMsReverseLookupFile(const QString &file) { m_msReverseLookupFile = file; }
             void setMsMatchingStageFile(const QString &file) { m_msMatchingStageFile = file; }
             //! @}
 
             //! Is matching script enabled @{
-            bool isMsNetworkEntryEnabled()  const { return m_msNetworkEnabled; }
+            bool isMsReverseLookupEnabled() const { return m_msReverseEnabled; }
             bool isMsMatchingStageEnabled() const { return m_msMatchingEnabled; }
             //! @}
 
             //! Run the scripts @{
-            bool doRunMsNetworkEntryScript() const;
+            bool doRunMsReverseLookupScript() const;
             bool doRunMsMatchingStageScript() const;
             //! @}
 
             //! Is matching script enabled @{
-            void setMsNetworkEntryEnabled(bool enabled)  { m_msNetworkEnabled  = enabled; }
+            void setMsReverseLookupEnabled(bool enabled) { m_msReverseEnabled  = enabled; }
             void setMsMatchingStageEnabled(bool enabled) { m_msMatchingEnabled = enabled; }
             //! @}
 
@@ -226,16 +226,16 @@ namespace BlackMisc
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
                                              bool byVtol, bool byGliderCategory, bool byMilitaryCategory,
-                                             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,  bool excludeNoDbData, bool excludeNoExcluded,
+                                             bool scoreIgnoreZeros,  bool scorePreferColorLiveries,   bool excludeNoDbData, bool excludeNoExcluded,
                                              bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
 
         private:
             int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
             int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
             int m_strategy  = static_cast<int>(PickByOrder);
-            QString m_msNetworkEntryFile;  //!< network entry matching script file
-            QString m_msMatchingStageFile; //!< matching stage matching script file
-            bool m_msNetworkEnabled  = false; //!< enable network matching script
+            QString m_msReverseLookupFile;    //!< network entry matching script file
+            QString m_msMatchingStageFile;    //!< matching stage matching script file
+            bool m_msReverseEnabled  = false; //!< enable network matching script
             bool m_msMatchingEnabled = false; //!< enable matching stage matching script
 
             BLACK_METACLASS(
@@ -243,9 +243,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(algorithm),
                 BLACK_METAMEMBER(mode),
                 BLACK_METAMEMBER(strategy),
-                BLACK_METAMEMBER(msNetworkEntryFile),
+                BLACK_METAMEMBER(msReverseLookupFile),
                 BLACK_METAMEMBER(msMatchingStageFile),
-                BLACK_METAMEMBER(msNetworkEnabled),
+                BLACK_METAMEMBER(msReverseEnabled),
                 BLACK_METAMEMBER(msMatchingEnabled)
             );
         };

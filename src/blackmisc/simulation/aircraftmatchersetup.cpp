@@ -44,9 +44,9 @@ namespace BlackMisc
             return true;
         }
 
-        bool CAircraftMatcherSetup::doRunMsNetworkEntryScript() const
+        bool CAircraftMatcherSetup::doRunMsReverseLookupScript() const
         {
-            return m_msNetworkEnabled && !m_msNetworkEntryFile.isEmpty();
+            return m_msReverseEnabled && !m_msReverseLookupFile.isEmpty();
         }
 
         bool CAircraftMatcherSetup::doRunMsMatchingStageScript() const
@@ -91,7 +91,7 @@ namespace BlackMisc
             return u"algorithm: '" % this->getMatchingAlgorithmAsString() %
                    u"' mode: '" % this->getMatchingModeAsString() %
                    u"' strategy: '" % this->getPickStrategyAsString() %
-                   u"\' matching script: " % boolToOnOff(m_msNetworkEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
+                   u"\' matching script: " % boolToOnOff(m_msReverseEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
         }
 
         CVariant CAircraftMatcherSetup::propertyByIndex(const CPropertyIndex &index) const
@@ -103,9 +103,9 @@ namespace BlackMisc
             case IndexMatchingAlgorithm:   return CVariant::fromValue(m_algorithm);
             case IndexMatchingMode:        return CVariant::fromValue(m_mode);
             case IndexPickStrategy:        return CVariant::fromValue(m_strategy);
-            case IndexMsNetworkEntryFile:  return CVariant::fromValue(m_msNetworkEntryFile);
+            case IndexMsNetworkEntryFile:  return CVariant::fromValue(m_msReverseLookupFile);
             case IndexMsMatchingStageFile: return CVariant::fromValue(m_msMatchingStageFile);
-            case IndexMsNetworkEnabled:    return CVariant::fromValue(m_msNetworkEnabled);
+            case IndexMsNetworkEnabled:    return CVariant::fromValue(m_msReverseEnabled);
             case IndexMsMatchingStageEnabled: return CVariant::fromValue(m_msMatchingEnabled);
             default: break;
             }
@@ -121,10 +121,10 @@ namespace BlackMisc
             case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
             case IndexMatchingMode:      m_mode = variant.toInt(); break;
             case IndexPickStrategy:      m_strategy = variant.toInt(); break;
-            case IndexMsNetworkEntryFile:     m_msNetworkEntryFile  = variant.toQString(); break;
+            case IndexMsNetworkEntryFile:     m_msReverseLookupFile  = variant.toQString(); break;
             case IndexMsMatchingStageFile:    m_msMatchingStageFile = variant.toQString(); break;
-            case IndexMsNetworkEnabled:       m_msNetworkEnabled = variant.toBool(); break;
-            case IndexMsMatchingStageEnabled: m_msNetworkEnabled = variant.toBool(); break;
+            case IndexMsNetworkEnabled:       m_msReverseEnabled = variant.toBool(); break;
+            case IndexMsMatchingStageEnabled: m_msReverseEnabled = variant.toBool(); break;
             default: break;
             }
             CValueObject::setPropertyByIndex(index, variant);
@@ -133,9 +133,9 @@ namespace BlackMisc
         void CAircraftMatcherSetup::reset()
         {
             this->reset(MatchingStepwiseReducePlusScoreBased);
-            m_msNetworkEntryFile.clear();
+            m_msReverseLookupFile.clear();
             m_msMatchingStageFile.clear();
-            m_msNetworkEnabled  = false;
+            m_msReverseEnabled  = false;
             m_msMatchingEnabled = false;
         }
 
