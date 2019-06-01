@@ -345,7 +345,7 @@ namespace BlackMisc
 
                 //! Non virtual version (can be used in ctor)
                 //! \threadsafe
-                void admitCacheImpl(const CSimulatorInfo &simulator);
+                bool admitCacheImpl(const CSimulatorInfo &simulator);
             };
 
             //! Bundle of caches for model sets of all simulators
@@ -386,7 +386,7 @@ namespace BlackMisc
 
                 //! Non virtual version (can be used in ctor)
                 //! \threadsafe
-                void admitCacheImpl(const CSimulatorInfo &simulator);
+                bool admitCacheImpl(const CSimulatorInfo &simulator);
             };
 
             //! One central instance of the caches base class
