@@ -103,9 +103,9 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="le_MsNetwork">
+       <widget class="QLineEdit" name="le_MsReverseLookup">
         <property name="placeholderText">
-         <string>network entry matching script file</string>
+         <string>reverse lookup matching script file</string>
         </property>
        </widget>
       </item>
@@ -117,21 +117,21 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pb_MsNetwork">
+       <widget class="QPushButton" name="pb_MsReverseLookup">
         <property name="text">
          <string>[...]</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="lbl_MsNetwork">
+       <widget class="QLabel" name="lbl_MsReverseLookup">
         <property name="text">
-         <string>Network:</string>
+         <string>Lookup:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QCheckBox" name="cb_MsNetwork">
+       <widget class="QCheckBox" name="cb_MsReverseLookup">
         <property name="text">
          <string/>
         </property>
@@ -436,9 +436,9 @@
   <tabstop>rb_ScoreOnly</tabstop>
   <tabstop>rb_ScoreAndReduction</tabstop>
   <tabstop>pb_ResetAlgorithm</tabstop>
-  <tabstop>le_MsNetwork</tabstop>
-  <tabstop>cb_MsNetwork</tabstop>
-  <tabstop>pb_MsNetwork</tabstop>
+  <tabstop>le_MsReverseLookup</tabstop>
+  <tabstop>cb_MsReverseLookup</tabstop>
+  <tabstop>pb_MsReverseLookup</tabstop>
   <tabstop>le_MsMatching</tabstop>
   <tabstop>cb_MsMatching</tabstop>
   <tabstop>pb_MsMatching</tabstop>
