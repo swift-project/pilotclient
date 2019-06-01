@@ -285,7 +285,7 @@ namespace BlackMisc
             const QDateTime deadline = QDateTime::currentDateTimeUtc().addDays(-30);
             for (const QString &fn : fileList)
             {
-                QFileInfo fi(fn);
+                const QFileInfo fi(fn.contains(dir.absolutePath()) ? fn : CFileUtils::appendFilePathsAndFixUnc(dir.absolutePath(), fn));
                 if (!fi.exists()) { continue; }
                 const QDateTime created = fi.created().toUTC();
                 if (deadline < created)
