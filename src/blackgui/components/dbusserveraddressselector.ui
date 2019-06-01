@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CDBusServerAddressSelector</class>
  <widget class="QFrame" name="CDBusServerAddressSelector">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>158</width>
+    <height>118</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>DBus selector</string>
   </property>
@@ -24,7 +32,7 @@
       <string>swift peer to peer setup, setup to run swift on 2 computers</string>
      </property>
      <property name="text">
-      <string>DBus P2P server (2 computers)</string>
+      <string>DBus P2P server (1/2 computers)</string>
      </property>
      <property name="checked">
       <bool>true</bool>
