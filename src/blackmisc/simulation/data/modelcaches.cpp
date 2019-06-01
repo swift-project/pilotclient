@@ -185,8 +185,10 @@ namespace BlackMisc
                 }
                 else
                 {
-                    this->admitCacheImpl(sim);
-                    CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    if (this->admitCacheImpl(sim))
+                    {
+                        CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    }
                 }
             }
 
@@ -371,11 +373,11 @@ namespace BlackMisc
                 this->emitCacheChanged(simulator); // sync
             }
 
-            void CModelCaches::admitCacheImpl(const CSimulatorInfo &simulator)
+            bool CModelCaches::admitCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-                if (this->isCacheAlreadySynchronized(simulator)) { return; }
+                if (this->isCacheAlreadySynchronized(simulator)) { return false; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9:    m_modelCacheFs9.admit(); break;
@@ -387,6 +389,7 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     break;
                 }
+                return true;
             }
 
             CModelSetCaches::CModelSetCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
@@ -401,8 +404,10 @@ namespace BlackMisc
                 }
                 else
                 {
-                    this->admitCacheImpl(simulator);
-                    CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    if (this->admitCacheImpl(simulator))
+                    {
+                        CLogMessage(this).info(u"Admit model (%1) caches for %2") << this->getDescription() << simStr;
+                    }
                 }
             }
 
@@ -556,11 +561,11 @@ namespace BlackMisc
                 this->emitCacheChanged(simulator); // sync
             }
 
-            void CModelSetCaches::admitCacheImpl(const CSimulatorInfo &simulator)
+            bool CModelSetCaches::admitCacheImpl(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-                if (this->isCacheAlreadySynchronized(simulator)) { return; }
+                if (this->isCacheAlreadySynchronized(simulator)) { return false; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9:    m_modelCacheFs9.admit(); break;
@@ -572,6 +577,7 @@ namespace BlackMisc
                     Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
                     break;
                 }
+                return true;
             }
         } // ns
     } // ns
