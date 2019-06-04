@@ -692,6 +692,11 @@ namespace BlackCore
         return CAircraftIcaoCode();
     }
 
+    int CWebDataServices::getAircraftIcaoCodesForDesignatorCount(const QString &designator) const
+    {
+        return this->getAircraftIcaoCodesForDesignator(designator).size();
+    }
+
     QSet<QString> CWebDataServices::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &airline) const
     {
         if (!airline.hasValidDesignator()) { return QSet<QString>(); }
@@ -946,6 +951,11 @@ namespace BlackCore
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesForDesignator(designator); }
         return CAirlineIcaoCodeList();
+    }
+
+    int CWebDataServices::getAirlineIcaoCodesForDesignatorCount(const QString &designator) const
+    {
+        return this->getAirlineIcaoCodesForDesignator(designator).size();
     }
 
     void CWebDataServices::gracefulShutdown()

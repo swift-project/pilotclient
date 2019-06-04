@@ -8,33 +8,33 @@
 
 //! \file
 
-#ifndef BLACKCORE_WEB_DATASERVICES_H
-#define BLACKCORE_WEB_DATASERVICES_H
+#ifndef BLACKCORE_WEBDATASERVICES_H
+#define BLACKCORE_WEBDATASERVICES_H
 
-#include "blackcore/blackcoreexport.h"
-#include "blackcore/webreaderflags.h"
 #include "blackcore/db/databasereader.h"
+#include "blackcore/webreaderflags.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/countrylist.h"
 #include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/restricted.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metarlist.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/restricted.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/countrylist.h"
 
 #include <QDateTime>
 #include <QList>
@@ -257,6 +257,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
+        //! ICAO code for designator count
+        //! \threadsafe
+        int getAircraftIcaoCodesForDesignatorCount(const QString &designator) const;
+
         //! Aircraft ICAO designators for airline
         //! \threadsafe
         QSet<QString> getAircraftDesignatorsForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
@@ -317,9 +321,13 @@ namespace BlackCore
         //! \threadsafe
         int getAirlineIcaoCodesCount() const;
 
-        //! ICAO codes for designator
+        //! Airline ICAO codes for designator
         //! \threadsafe
         BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
+
+        //! Airline ICAO codes for designator count
+        //! \threadsafe
+        int getAirlineIcaoCodesForDesignatorCount(const QString &designator) const;
 
         //! ICAO code for id
         //! \threadsafe
