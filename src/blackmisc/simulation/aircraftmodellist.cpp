@@ -347,6 +347,34 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findClosestColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const
+        {
+            double distance = 2.0;
+            CAircraftModelList models;
+            for (const CAircraftModel &m : (*this))
+            {
+                const CLivery &l = m.getLivery();
+                if (!l.hasColorTail() || !l.hasColorFuselage()) { continue; }
+                const double d = l.getColorDistance(fuselage, tail);
+                if (qFuzzyCompare(d, distance))
+                {
+                    models.push_back(m);
+                }
+                else if (distance > d)
+                {
+                    models.clear();
+                    models.push_back(m);
+                    distance = d;
+                }
+            }
+            return models;
+        }
+
+        CAircraftModelList CAircraftModelList::findClosestFuselageColorDistance(const CRgbColor &color) const
+        {
+            return this->findClosestColorDistance(color, color);
+        }
+
         CAircraftModelList CAircraftModelList::findColorLiveries() const
         {
             return this->findBy([ = ](const CAircraftModel & model)
