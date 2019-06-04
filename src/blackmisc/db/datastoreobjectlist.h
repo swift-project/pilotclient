@@ -84,6 +84,9 @@ namespace BlackMisc
             //! Any object without key?
             bool containsAnyObjectWithoutKey() const;
 
+            //! Contains object with key?
+            bool containsDbKey(KEYTYPE key) const;
+
             //! From multiple JSON formats
             //! \remark supports native swift C++ format, DB format, and cache format
             static CONTAINER fromMultipleJsonFormats(const QJsonObject &jsonObject);

@@ -262,6 +262,17 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
+        bool IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::containsDbKey(KEYTYPE key) const
+        {
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!obj.hasValidDbKey())  { continue; }
+                if (obj.getDbKey() == key) { return true; }
+            }
+            return false;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
         CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromMultipleJsonFormats(const QJsonObject &jsonObject)
         {
             // also accept cache format

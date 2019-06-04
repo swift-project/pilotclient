@@ -210,8 +210,13 @@ namespace BlackMisc
             //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar aircraft
             CAircraftModelList findByCombinedAndManufacturer(const QString &combinedType, const QString &manufacturer) const;
 
-            //! Find models with color liveries
+            //! Find color liveries
             CAircraftModelList findColorLiveries() const;
+
+            //! Find models with the closest color distance @{
+            CAircraftModelList findClosestColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const;
+            CAircraftModelList findClosestFuselageColorDistance(const CRgbColor &color) const;
+            //! @}
 
             //! Find by military flag, \c false returns civilian models
             CAircraftModelList findByMilitaryFlag(bool military) const;
