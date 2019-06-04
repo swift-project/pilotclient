@@ -13,10 +13,12 @@
 
 #include "blackcore/aircraftmatcher.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/settings/modelmatchersettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/settingscache.h"
 
 #include <QFrame>
 #include <QObject>
@@ -91,11 +93,14 @@ namespace BlackGui
             //! Pseudo default aircraft
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
-            QScopedPointer<Ui::CModelMatcherComponent> ui;
+            //! Run matching script
+            static BlackMisc::Simulation::MSReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList &msgs);
 
+            QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc
-            CSettingsMatchingDialog    *m_settingsDialog = nullptr; //!< matching settings as dialog
-            BlackCore::CAircraftMatcher m_matcher { this };         //!< used matcher
+            CSettingsMatchingDialog *m_settingsDialog = nullptr; //!< matching settings as dialog
+            BlackCore::CAircraftMatcher m_matcher { this };      //!< used matcher
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings  { this }; //!< settings
         };
     } // ns
 } // ns
