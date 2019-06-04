@@ -73,13 +73,16 @@ namespace BlackGui
             ui->le_Callsign->setValidator(validator);
 
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead,  this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
 
             connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
-            connect(ui->pb_Settings, &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
+            connect(ui->pb_Settings,      &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
 
             connect(ui->cb_UseWorkbench, &QCheckBox::toggled, this, &CModelMatcherComponent::onWorkbenchToggled);
+
+            // initial settings
+            m_matcher.setSetup(m_matchingSettings.get());
 
             this->redisplay();
             ui->cb_UseWorkbench->setVisible(false);
@@ -153,18 +156,22 @@ namespace BlackGui
         void CModelMatcherComponent::testModelMatching()
         {
             ui->te_Results->clear();
-            CStatusMessageList msgs;
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue()); // update model set to latest version
-            CSimulatedAircraft remoteAircraft(createAircraft());
+            CStatusMessageList msgs;
+            CSimulatedAircraft remoteAircraft(this->createAircraft());
+            m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
+
             if (ui->cb_withReverseLookup->isChecked())
             {
                 const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
-                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), liveryString, &msgs);
+                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), liveryString, m_matcher.getSetup(), &msgs);
                 remoteAircraft.setModel(reverseModel); // current model
             }
 
-            m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
-            const CAircraftModel matched = m_matcher.getClosestMatch(remoteAircraft, MatchingLogAll, &msgs); // test model matching
+            CStatusMessageList matchingMsgs;
+            const CAircraftModel matched = m_matcher.getClosestMatch(remoteAircraft, MatchingLogAll, &matchingMsgs, true); // test model matching
+            msgs.push_back(matchingMsgs);
+
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
             ui->tvp_ResultMessages->fullResizeToContents();
@@ -180,19 +187,7 @@ namespace BlackGui
             const CAircraftMatcherSetup setup = m_matcher.getSetup();
             const CSimulatedAircraft remoteAircraft(createAircraft());
             const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
-            const CAircraftModel matched = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), livery, &msgs);
-
-            // Script
-            CAircraftModel matchedWithScript = matched;
-            if (setup.doRunMsNetworkEntryScript())
-            {
-                matchedWithScript = CAircraftMatcher::networkEntryScript(matched, setup, &msgs);
-            }
-            else
-            {
-                CMatchingUtils::addLogDetailsToList(&msgs, remoteAircraft.getCallsign(), QStringLiteral("No entry script used"));
-            }
-
+            const CAircraftModel matched = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), livery, setup, &msgs);
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
@@ -275,6 +270,29 @@ namespace BlackGui
             CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft, livery);
             if (model.getCallsign().isEmpty()) { model.setCallsign("SWIFT"); }
             return model;
+        }
+
+        MSReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList &msgs)
+        {
+            // Script
+            if (setup.doRunMsReverseLookupScript())
+            {
+                const MSReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, &msgs);
+                if (rv.runScriptAndModified())
+                {
+                    return rv;
+                }
+                else
+                {
+                    CMatchingUtils::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("Matching script, no modification"));
+                }
+            }
+            else
+            {
+                CMatchingUtils::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("No reverse lookup script used"));
+            }
+
+            return inModel;
         }
     } // ns
 } // ns
