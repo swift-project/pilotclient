@@ -270,7 +270,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModel reverseLookupModelWithFlightplanData(
             const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao,
             const QString &airlineIcao, const QString &liveryString, const QString &modelString,
-            BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log);
+            BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log, bool runMatchinScript = true);
 
         bool isCopilotAircraft(const BlackMisc::Aviation::CCallsign &callsign) const;
 

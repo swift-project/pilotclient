@@ -737,10 +737,9 @@ namespace BlackCore
         emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
     }
 
-    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
-        const CCallsign &callsign, const QString &aircraftIcaoString,
-        const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
-        CAircraftModel::ModelType type, CStatusMessageList *log)
+    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(const CCallsign &callsign, const QString &aircraftIcaoString,
+            const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
+            CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
     {
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
@@ -748,7 +747,6 @@ namespace BlackCore
 
         CAircraftModel lookupModel; // result
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
-
         do
         {
             // directly check model string
@@ -847,16 +845,32 @@ namespace BlackCore
         lookupModel.setCallsign(callsign);
 
         // Script
-        if (setup.doRunMsNetworkEntryScript())
+        if (runMatchinScript && setup.doRunMsReverseLookupScript())
         {
-            lookupModel = CAircraftMatcher::networkEntryScript(lookupModel, setup, log);
+            const MSReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, log);
+            if (rv.runScriptAndModified())
+            {
+                if (rv.runScriptAndRerun())
+                {
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"), CAirspaceMonitor::getLogCategories());
+                    return CAirspaceMonitor::reverseLookupModelWithFlightplanData(callsign,
+                            rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(), rv.model.getLivery().getCombinedCode(),
+                            modelString, type, log, false);
+                }
+                else
+                {
+                    lookupModel = rv.model;
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Using model from matching script"), CAirspaceMonitor::getLogCategories());
+                }
+            }
         }
         else
         {
-            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No entry script used"));
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used"));
         }
 
         // done
+        lookupModel.setCallsign(callsign); // set again just in case modified by script
         return lookupModel;
     }
 

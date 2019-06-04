@@ -11,11 +11,13 @@
 #ifndef BLACKCORE_AIRCRAFTMATCHER_H
 #define BLACKCORE_AIRCRAFTMATCHER_H
 
+#include "blackcore/webdataservicesms.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/matchinglog.h"
+#include "blackmisc/simulation/matchingscriptmisc.h"
 #include "blackmisc/simulation/matchingstatistics.h"
+#include "blackmisc/simulation/matchinglog.h"
 #include "blackmisc/simulation/categorymatcher.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valueobject.h"
@@ -77,7 +79,8 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModel getClosestMatch(
             const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
             BlackMisc::Simulation::MatchingLog whatToLog,
-            BlackMisc::CStatusMessageList *log = nullptr) const;
+            BlackMisc::CStatusMessageList *log,
+            bool useMatchingScript) const;
 
         //! Return an valid airline ICAO code
         //! \threadsafe
@@ -86,14 +89,26 @@ namespace BlackCore
             const QString &primaryIcao, const QString &secondaryIcao,
             bool airlineFromCallsign, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
 
-        //! Run the network entry script
+        //! Run the network reverse lookup script
         //! \threadsafe
         //! \ingroup reverselookup
-        static BlackMisc::Simulation::CAircraftModel networkEntryScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::MSReturnValues reverseLookupScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
+
+        //! Run the matching stage lookup script
+        //! \threadsafe
+        static BlackMisc::Simulation::MSReturnValues matchingStageScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList *log);
+
+        //! Run the matching script
+        //! \threadsafe
+        static BlackMisc::Simulation::MSReturnValues matchingScript(const QString &js,
+                const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+                const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::Simulation::MatchingScript ms,
+                BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
         //! \ingroup reverselookup
+        //! \remark NOT running matching script
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
                 const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
@@ -104,9 +119,20 @@ namespace BlackCore
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
         //! \ingroup reverselookup
+        //! \remark NOT running matching script
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Try to find the corresponding data in DB and get best information for following matching
+        //! \threadsafe
+        //! \ingroup reverselookup
+        //! \remark Running matching script
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
+            const BlackMisc::Simulation::CAircraftModel &modelToLookup,
+            const QString &networkLiveryInfo,
+            const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+            BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find model by model string
         //! \threadsafe
