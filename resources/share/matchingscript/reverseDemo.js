@@ -1,16 +1,14 @@
 (function() {
   // inObject
-  // returnObject
+  // outObject
   // modelSet, not available in reverse lookup
-  returnObject.aircraftIcao = "C172";
-  returnObject.modified     = true;
-  returnObject.rerun        = true;
-  returnObject.logMessage   = "Changed to C172";
+  outObject.aircraftIcao = "C172";
+  outObject.modified     = true;
+  outObject.rerun        = true;
+  outObject.logMessage   = "Changed to C172";
 	
-  return returnObject;
+  return outObject;
   
   // string return is possible
   // return "Changed ICAO to C172";
 })
-
-
