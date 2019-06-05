@@ -215,10 +215,10 @@ namespace BlackMisc
                 return dir;
             }
 
-            QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir)
+            QStringList CFsCommonUtil::p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir, const QString &versionHint)
             {
                 // finding the user settings only works on P3D machine
-                const QSet<QString> allP3dAddOnSimObjectPaths = CFsCommonUtil::allP3dAddOnSimObjectPaths("v4");
+                const QSet<QString> allP3dAddOnSimObjectPaths = CFsCommonUtil::allP3dAddOnSimObjectPaths(versionHint);
                 QStringList all(allP3dAddOnSimObjectPaths.toList());
                 all.push_front(simObjectsDir.isEmpty() ? p3dSimObjectsDir() : simObjectsDir);
                 all.sort(Qt::CaseInsensitive);
@@ -542,13 +542,13 @@ namespace BlackMisc
                 return paths;
             }
 
-            CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
             {
                 CAircraftModelList sorted(models);
                 CStatusMessage m;
                 sorted.sortByFileName();
                 stopped = false;
-                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, "", true);
+                CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped, "", true);
                 if (stopped || validModels.isEmpty()) { return msgs; }
 
                 const CAircraftModelList nonFsModels = validModels.findNonFsFamilyModels();
@@ -602,6 +602,11 @@ namespace BlackMisc
 
                 // finished
                 return msgs;
+            }
+
+            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            {
+                return {};
             }
         } // namespace
     } // namespace

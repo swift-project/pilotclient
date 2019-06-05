@@ -1395,7 +1395,7 @@ namespace BlackMisc
             return msgs;
         }
 
-        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn) const
+        CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn) const
         {
             invalidModels.clear();
             validModels.clear();
@@ -1430,7 +1430,7 @@ namespace BlackMisc
 
                     if (!model.hasFileName())
                     {
-                        if (ignoreEmpty) { continue; }
+                        if (ignoreEmptyFileNames) { continue; }
                         msgs.push_back(CStatusMessage(this).validationError(u"'%1', no file name") << model.getModelStringAndDbKey());
                         break;
                     }

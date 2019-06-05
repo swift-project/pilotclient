@@ -478,7 +478,7 @@ namespace BlackMisc
             CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! Validate files (file exists etc.)
-            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn = false) const;
+            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn = false) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;
