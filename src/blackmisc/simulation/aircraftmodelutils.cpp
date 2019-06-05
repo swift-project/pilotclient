@@ -166,7 +166,10 @@ namespace BlackMisc
             CStatusMessageList specificTests;
             if (models.isLikelyFsFamilyModelList())
             {
-                specificTests = FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                specificTests.push_back(specificTests1);
+                specificTests.push_back(specificTests2);
             }
             else if (models.isLikelyXPlaneModelList())
             {

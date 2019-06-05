@@ -65,7 +65,7 @@ namespace BlackMisc
                 static const QString &p3dSimObjectsDir();
 
                 //! P3D's simObject dir and the add on dirs
-                static QStringList p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir = "");
+                static QStringList p3dSimObjectsDirPlusAddOnSimObjectsDirs(const QString &simObjectsDir = "", const QString &versionHint = "v4");
 
                 //! P3D aircraft dir, relative to simulator directory
                 static QString p3dSimObjectsDirFromSimDir(const QString &simDir);
@@ -101,7 +101,7 @@ namespace BlackMisc
                 static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
 
                 //! Find the config files (add-ons.cfg)
-                //! \note C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
+                //! \note "C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4"
                 //! \param versionHint like "v4"
                 static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint = "v4");
 
@@ -128,7 +128,11 @@ namespace BlackMisc
 
                 //! Validate aircraft.cfg entries
                 //! \remark only for FSX/P3D/FS9 models
-                static CStatusMessageList validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped);
+                static CStatusMessageList validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+
+                //! Validate if known SimObjects path
+                //! \remark only for P3D
+                static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
             };
         } // namespace
     } // namespace
