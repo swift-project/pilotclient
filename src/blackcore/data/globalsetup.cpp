@@ -54,14 +54,27 @@ namespace BlackCore
             {
                 "https://datastore.swift-project.net/shared/",
                 "http://www.siliconmind.de/datastore/shared/",
-                "http://download.swift-project.org/shared/"
+                "http://download.swift-project.org/shared/",
+                "https://swift.fir-berlin.de/shared"
             });
 
-            m_newsUrls = CUrlList({ "http://swift-project.org/" });
-            m_onlineHelpUrls = CUrlList({ "https://datastore.swift-project.org/page/swifthelpdispatcher.html" });
+            m_newsUrls = CUrlList(
+            {
+                "https://blog.swift-project.net/?__print__=1",
+                "https://dev.swift-project.org/phame/blog/view/1/?__print__=1"
+            });
+            m_onlineHelpUrls = CUrlList(
+            {
+                "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
+                "https://datastore.swift-project.net/page/swifthelpdispatcher.html"
+            });
             m_mapUrls = CUrlList({ "map.swift-project.org/" });
-            m_ncepGlobalForecastSystemUrl = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
+            m_ncepGlobalForecastSystemUrl   = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
             m_ncepGlobalForecastSystemUrl25 = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl");
+
+            // hardcoded based on RR's information
+            // https://discordapp.com/channels/539048679160676382/539925070550794240/586879411002015756
+            m_crashReportServerUrl = CUrl();
         }
 
         CUrl CGlobalSetup::getDbIcaoReaderUrl() const

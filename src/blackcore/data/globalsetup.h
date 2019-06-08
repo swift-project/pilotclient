@@ -109,6 +109,7 @@ namespace BlackCore
             bool hasSameType(const CGlobalSetup &otherSetup) const;
 
             //! Crash report server url
+            //! \deprecated NOT used anymore as by RR's info: https://discordapp.com/channels/539048679160676382/539925070550794240/586879411002015756
             BlackMisc::Network::CUrl getCrashReportServerUrl() const { return m_crashReportServerUrl; }
 
             //! Root directory of DB
