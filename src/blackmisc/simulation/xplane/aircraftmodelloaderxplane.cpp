@@ -6,21 +6,23 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/xplane/qtfreeutils.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <string.h>
 #include <QChar>
@@ -39,6 +41,7 @@
 #include <algorithm>
 #include <functional>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -216,8 +219,8 @@ namespace BlackMisc
                     addUniqueModel(model, installedModels);
 
                     const QString baseModelString = model.getModelString();
-                    QDirIterator liveryIt(aircraftIt.fileInfo().canonicalPath() + "/liveries", QDir::Dirs | QDir::NoDotAndDotDot);
-                    emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable liveries in '%1'").arg(aircraftIt.fileInfo().canonicalPath()), -1);
+                    QDirIterator liveryIt(CFileUtils::appendFilePaths(aircraftIt.fileInfo().canonicalPath(), QStringLiteral("liveries")), QDir::Dirs | QDir::NoDotAndDotDot);
+                    emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable liveries in '%1'").arg(aircraftIt.fileInfo().canonicalPath()), -1);
                     while (liveryIt.hasNext())
                     {
                         liveryIt.next();
@@ -260,7 +263,7 @@ namespace BlackMisc
                 // Now we do a full run
                 for (auto &package : m_cslPackages)
                 {
-                    const QString packageFile = CFileUtils::appendFilePaths(package.path, "/xsb_aircraft.txt");
+                    const QString packageFile = CFileUtils::appendFilePaths(package.path, QStringLiteral("xsb_aircraft.txt"));
                     emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing CSL '%1'").arg(packageFile), -1);
 
                     QFile file(packageFile);
@@ -286,6 +289,10 @@ namespace BlackMisc
                         const QFileInfo modelFileInfo(plane.filePath);
                         model.setFileDetailsAndTimestamp(modelFileInfo);
                         model.setAircraftIcaoCode(icao);
+                        if (CBuildConfig::isLocalDeveloperDebugBuild())
+                        {
+                            BLACK_VERIFY_X(modelFileInfo.exists(), Q_FUNC_INFO, "Model does NOT exist");
+                        }
 
                         CLivery livery;
                         livery.setCombinedCode(plane.livery);
