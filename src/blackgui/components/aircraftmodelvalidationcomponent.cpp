@@ -87,7 +87,7 @@ namespace BlackGui
             ui->pb_TempDisableSelected->setEnabled(!invalid.isEmpty());
 
             const QString msg = stopped ?
-                                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible").arg(simulator.toQString(true)) :
+                                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible or too many issues").arg(simulator.toQString(true)) :
                                 QStringLiteral("Validated for '%1'. Valid: %2 Invalid: %3").arg(simulator.toQString(true)).arg(valid.size()).arg(invalid.size());
             ui->lbl_Summay->setText(msg);
             if (stopped)
