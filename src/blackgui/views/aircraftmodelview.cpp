@@ -322,7 +322,7 @@ namespace BlackGui
                     QDialog *parentDialog = CGuiUtility::findParentDialog(this);
                     if (!(parentDialog && (qobject_cast<CAircraftModelValidationDialog *>(parentDialog))))
                     {
-                        menuActions.addAction(CIcons::disk16(), "Model validation", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
+                        menuActions.addAction(CIcons::disk16(), "Model validation (selected)", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
                     }
                 }
                 if (CAircraftModelList::hasInvalidModelFile())
@@ -389,22 +389,22 @@ namespace BlackGui
 
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
         {
-            if (m_loadingRequiresSimulator.isNoSimulator()) { return {}; }
+            if (m_correspondingSimulator.isNoSimulator()) { return {}; }
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Empty models", true); }
 
             // multiple sims with same count
-            const int removed = models.removeIfNotMatchingSimulator(m_loadingRequiresSimulator);
+            const int removed = models.removeIfNotMatchingSimulator(m_correspondingSimulator);
             if (removed < 1) { return {}; }
-            return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models", true) << removed << m_loadingRequiresSimulator.toQString(true);
+            return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models", true) << removed << m_correspondingSimulator.toQString(true);
         }
 
         CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
         {
             if (models.isEmpty()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
-            if (m_loadingRequiresSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
-            if (models.containsNotMatchingSimulator(m_loadingRequiresSimulator))
+            if (m_correspondingSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+            if (models.containsNotMatchingSimulator(m_correspondingSimulator))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, u"Found entry not matching %1 in model data", true) << m_loadingRequiresSimulator.toQString();
+                return CStatusMessage(this, CStatusMessage::SeverityError, u"Found entry not matching %1 in model data", true) << m_correspondingSimulator.toQString();
             }
             return COrderableViewWithDbObjects::validateLoadedJsonData(models);
         }
@@ -473,7 +473,7 @@ namespace BlackGui
         void CAircraftModelView::displayModelValidationDialog()
         {
             if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
-            m_fileValidationDialog->setModels(this->selectedObjects());
+            m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator);
             m_fileValidationDialog->triggerValidation(1000);
             m_fileValidationDialog->exec();
         }

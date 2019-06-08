@@ -112,8 +112,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModels
             bool highlightModels() const;
 
-            //! Loading data will be restricted to simulator
-            void setSimulatorForLoading(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_loadingRequiresSimulator = simulator; }
+            //! Corresponding simulator
+            //! \remark used for validation or loading data will be restricted to simulator
+            void setCorrespondingSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_correspondingSimulator = simulator; }
 
             //! Enable the validation context menu
             void setValidationContextMenu(const bool enabled) { m_withValidationContextMenu = enabled; }
@@ -171,9 +172,9 @@ namespace BlackGui
 
             bool m_stashingClearsSelection   = true; //!< stashing unselects
             bool m_withValidationContextMenu = true; //!< validation didalog context menu
-            CAircraftModelStatisticsDialog       *m_statisticsDialog = nullptr;
+            CAircraftModelStatisticsDialog       *m_statisticsDialog     = nullptr;
             CAircraftModelValidationDialog       *m_fileValidationDialog = nullptr;
-            BlackMisc::Simulation::CSimulatorInfo m_loadingRequiresSimulator; //!< simulator required when loading
+            BlackMisc::Simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
         };
     } // ns
 } // ns

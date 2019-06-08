@@ -1325,7 +1325,7 @@ namespace BlackMisc
         {
             CAircraftModelList invalidModels;
             CAircraftModelList validModels;
-            return validateForPublishing(validModels, invalidModels);
+            return this->validateForPublishing(validModels, invalidModels);
         }
 
         CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
@@ -1351,7 +1351,7 @@ namespace BlackMisc
                 CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());
                 if (!singleMsg.isWarningOrAbove())
                 {
-                    validModels.push_back(model);
+                    CAircraftModelList::addAsValidOrInvalidModel(model, true, validModels, invalidModels);
                     continue;
                 }
                 if (model.hasModelString())
@@ -1359,7 +1359,7 @@ namespace BlackMisc
                     singleMsg.prependMessage(model.getModelString() % u": ");
                 }
                 msgs.push_back(singleMsg);
-                invalidModels.push_back(model);
+                CAircraftModelList::addAsValidOrInvalidModel(model, false, validModels, invalidModels);
             }
             return msgs;
         }
@@ -1375,21 +1375,18 @@ namespace BlackMisc
             {
                 const CStatusMessage msg = CStatusMessage(this).validationError(u"No DB distributors for validation");
                 msgs.push_back(msg);
-                invalidModels.push_back(*this);
+                CAircraftModelList::addAsValidOrInvalidModels(*this, false, validModels, invalidModels);
                 return msgs;
             }
 
             for (const CAircraftModel &model : *this)
             {
-                if (model.hasDbDistributor() || model.matchesAnyDbDistributor(distributorsFromDb))
-                {
-                    validModels.push_back(model);
-                }
-                else
+                const bool valid = (model.hasDbDistributor() || model.matchesAnyDbDistributor(distributorsFromDb));
+                CAircraftModelList::addAsValidOrInvalidModel(model, valid, validModels, invalidModels);
+                if (!valid)
                 {
                     const CStatusMessage msg = CStatusMessage(this).validationError(u"No valid distributor for '%1', was '%2'") << model.getModelString() << model.getDistributor().getDbKey();
                     msgs.push_back(msg);
-                    invalidModels.push_back(model);
                 }
             }
             return msgs;
@@ -1397,8 +1394,6 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &rootDirectory, bool alreadySortedByFn) const
         {
-            invalidModels.clear();
-            validModels.clear();
             stopped = false;
 
             CStatusMessageList msgs;
@@ -1466,15 +1461,7 @@ namespace BlackMisc
                 }
                 while (false);
 
-                if (ok)
-                {
-                    validModels.push_back(model);
-                }
-                else
-                {
-                    invalidModels.push_back(model);
-                }
-
+                CAircraftModelList::addAsValidOrInvalidModel(model, ok, validModels, invalidModels);
                 if (stopAtFailedFiles > 0 && failedFilesCount >= stopAtFailedFiles)
                 {
                     stopped = true;
@@ -1717,5 +1704,26 @@ namespace BlackMisc
             return fi.exists();
         }
 
+        void CAircraftModelList::addAsValidOrInvalidModel(const CAircraftModel &model, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels)
+        {
+            if (valid)
+            {
+                validModels.push_back(model);
+                invalidModels.removeModelWithString(model.getModelString(), Qt::CaseInsensitive);
+            }
+            else
+            {
+                invalidModels.push_back(model);
+                validModels.removeModelWithString(model.getModelString(), Qt::CaseInsensitive);
+            }
+        }
+
+        void CAircraftModelList::addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels)
+        {
+            for (const CAircraftModel &model : models)
+            {
+                CAircraftModelList::addAsValidOrInvalidModel(model, valid, validModels, invalidModels);
+            }
+        }
     } // namespace
 } // namespace

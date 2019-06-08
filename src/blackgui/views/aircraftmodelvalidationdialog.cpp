@@ -36,6 +36,12 @@ namespace BlackGui
         CAircraftModelValidationDialog::~CAircraftModelValidationDialog()
         { }
 
+        void CAircraftModelValidationDialog::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            m_models = models;
+            m_simulator = simulator;
+        }
+
         void CAircraftModelValidationDialog::triggerValidation(int delayMs)
         {
             QPointer<CAircraftModelValidationDialog> myself(this);
@@ -57,7 +63,7 @@ namespace BlackGui
             const bool ignoreEmpty = false;
             const int  maxFailedFiles = 25;
             bool wasStopped = false;
-            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, "");
+            const CStatusMessageList msgs = CAircraftModelUtilities::validateModelFiles(m_simulator, m_models, valid, invalid, ignoreEmpty, maxFailedFiles, wasStopped, "");
             ui->comp_StatusMessage->clear();
             ui->comp_StatusMessage->setNoSorting(); // we use the pre-sorted list
             ui->comp_StatusMessage->appendStatusMessagesToList(msgs);

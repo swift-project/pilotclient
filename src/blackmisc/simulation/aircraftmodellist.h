@@ -512,6 +512,11 @@ namespace BlackMisc
             static bool hasInvalidModelFile();
             //! @}
 
+            //! Add as valid or invalid model (mutual exclusive) @{
+            static void addAsValidOrInvalidModel(const CAircraftModel &model, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
+            static void addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
+            //! @}
+
             //! Newer version
             static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array,
                     const Aviation::CAircraftIcaoCodeList &aircraftIcaos = {},

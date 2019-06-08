@@ -130,19 +130,22 @@ namespace BlackMisc
 
                 onlyErrorsAndWarnings = setup.onlyShowVerificationWarningsAndErrors();
                 const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                validated = true;
+
                 if (models.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, QStringLiteral("No models in set for  '%1'").arg(simulator.toQString(true))));
-                    break;
                 }
-                msgs = CAircraftModelUtilities::validateModelFiles(models, valid, invalid, false, 25, wasStopped, m_simDirectory);
+                else
+                {
+                    msgs = CAircraftModelUtilities::validateModelFiles(simulator, models, valid, invalid, false, 25, wasStopped, m_simDirectory);
+                }
 
-                const qint64 now = QDateTime::currentMSecsSinceEpoch();
                 const qint64 deltaTimeMs = now - started;
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
                 msgs.sortBySeverityHighestFirst();
                 msgs.freezeOrder();
-                validated = true;
 
                 QWriteLocker l(&m_lock);
                 m_lastResultValid      = valid;

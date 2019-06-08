@@ -140,7 +140,7 @@ namespace BlackMisc
             return ok ? dir.absoluteFilePath(fn) : "";
         }
 
-        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
+        CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
         {
             // some generic tests
             CStatusMessageList msgs;
@@ -164,14 +164,23 @@ namespace BlackMisc
 
             // specific checks for FSX/XPlane/FG
             CStatusMessageList specificTests;
-            if (models.isLikelyFsFamilyModelList())
+            if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
             {
                 const CStatusMessageList specificTests1 = FsCommon::CFsCommonUtil::validateConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
-                const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
                 specificTests.push_back(specificTests1);
-                specificTests.push_back(specificTests2);
+
+                if (simulator.isP3D())
+                {
+                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
+                    specificTests.push_back(specificTests2);
+                }
+                else if (simulator.isFSX())
+                {
+                    const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped);
+                    specificTests.push_back(specificTests2);
+                }
             }
-            else if (models.isLikelyXPlaneModelList())
+            else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())
             {
                 specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, stopped, simulatorDir);
             }

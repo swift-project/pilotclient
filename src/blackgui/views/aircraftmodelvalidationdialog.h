@@ -33,10 +33,12 @@ namespace BlackGui
             explicit CAircraftModelValidationDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelValidationDialog();
+            virtual ~CAircraftModelValidationDialog() override;
 
             //! Models
-            void setModels(const BlackMisc::Simulation::CAircraftModelList &models) { m_models = models; }
+            void setModels(
+                const BlackMisc::Simulation::CAircraftModelList &models,
+                const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Trigger a validation
             void triggerValidation(int delayMs = 2500);
@@ -47,6 +49,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CAircraftModelValidationDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_models;
+            BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::None };
         };
     } // ns
 } // ns
