@@ -457,6 +457,9 @@ namespace BlackMisc
             //! Directory path if any
             QString getFileDirectoryPath() const;
 
+            //! Is the file in the give path
+            bool isInPath(const QString &path, Qt::CaseSensitivity cs) const;
+
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 

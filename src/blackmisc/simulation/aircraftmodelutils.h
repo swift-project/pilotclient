@@ -36,7 +36,7 @@ namespace BlackMisc
             static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
 
             //! Validate aircraft.cfg entries
-            static CStatusMessageList validateModelFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
+            static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
         };
     } //namespace
 } // namespace

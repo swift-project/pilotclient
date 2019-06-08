@@ -766,6 +766,19 @@ namespace BlackMisc
             return this->getFileDirectory().absolutePath();
         }
 
+        bool CAircraftModel::isInPath(const QString &path, Qt::CaseSensitivity cs) const
+        {
+            const QString p(this->getFileDirectoryPath());
+            if (path.isEmpty() || p.isEmpty()) { return false; }
+            if (path.startsWith('/'))
+            {
+                if (path.endsWith('/')) { return p.contains(path.mid(1, path.length() - 2), cs); }
+                return p.contains(path.mid(1));
+            }
+            if (path.endsWith('/')) { return p.contains(path.left(path.length() - 1), cs); }
+            return (p.contains(path, cs));
+        }
+
         bool CAircraftModel::hasExistingIconFile() const
         {
             if (m_iconFile.isEmpty()) { return false; }
