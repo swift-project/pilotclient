@@ -105,8 +105,13 @@ namespace BlackMisc
                 //! \param versionHint like "v4"
                 static QSet<QString> findP3dAddOnConfigFiles(const QString &versionHint = "v4");
 
-                //! All add-on paths from the config files
-                static QSet<QString> allP3dAddOnPaths(const QStringList &addOnConfigsFiles, bool checked);
+                //! Find the config files (simobjects.cfg)
+                //! \note "C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4"
+                //! \param versionHint like "v4"
+                static QSet<QString> findP3dSimObjectsConfigFiles(const QString &versionHint = "v4");
+
+                //! All PATH values from the config files
+                static QSet<QString> allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix);
 
                 //! All add-on paths from the config files
                 static QSet<QString> allP3dAddOnSimObjectPaths(const QStringList &addOnPaths, bool checked);
@@ -114,11 +119,17 @@ namespace BlackMisc
                 //! All add-on paths from the config files
                 static QSet<QString> allP3dAddOnSimObjectPaths(const QString &versionHint = "v4");
 
+                //! All paths from the simobjects.cfg files
+                static QSet<QString> allP3dSimObjectsConfigPaths(const QString &simulatorDir, const QString &versionHint = "v4");
+
+                //! All add-on paths from the config files and the simobjects.cfg files
+                static QSet<QString> allP3dSimObjectPaths(const QString &simulatorDir, const QString &versionHint = "v4");
+
                 //! Find the config files (fsx.cfg)
                 // C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4
                 static QStringList findFsxConfigFiles();
 
-                //! Get all the SimObjects files from fsx.cfg
+                //! Get all the SimObjects paths from fsx.cfg
                 // SimObjectPaths.0=SimObjects\Airplanes
                 static QSet<QString> fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked);
 
@@ -130,9 +141,22 @@ namespace BlackMisc
                 //! \remark only for FSX/P3D/FS9 models
                 static CStatusMessageList validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
 
-                //! Validate if known SimObjects path
+                //! Validate if known SimObjects path are used
                 //! \remark only for P3D
-                static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+                static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir);
+
+                //! Validate if known SimObjects path are used
+                //! \remark only for FSX
+                static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
+
+            private:
+                //! Utility functions @{
+                static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v4");
+                //! @}
+
+                //! Validate if known SimObjects path are used
+                //! \remark only for P3D
+                static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped);
             };
         } // namespace
     } // namespace

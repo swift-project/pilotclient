@@ -206,7 +206,7 @@ namespace BlackMisc
             {
                 QString dir(CFsCommonUtil::p3dDir());
                 if (dir.isEmpty()) { return {}; }
-                return CFsCommonUtil::fsxSimObjectsDirFromSimDir(dir);
+                return CFsCommonUtil::p3dSimObjectsDirFromSimDir(dir);
             }
 
             const QString &CFsCommonUtil::p3dSimObjectsDir()
@@ -405,6 +405,18 @@ namespace BlackMisc
 
             QSet<QString> CFsCommonUtil::findP3dAddOnConfigFiles(const QString &versionHint)
             {
+                static const QString cfgFile("add-ons.cfg");
+                return CFsCommonUtil::findP3dConfigFiles(cfgFile, versionHint);
+            }
+
+            QSet<QString> CFsCommonUtil::findP3dSimObjectsConfigFiles(const QString &versionHint)
+            {
+                static const QString cfgFile("simobjects.cfg");
+                return CFsCommonUtil::findP3dConfigFiles(cfgFile, versionHint);
+            }
+
+            QSet<QString> CFsCommonUtil::findP3dConfigFiles(const QString &configFile, const QString &versionHint)
+            {
                 const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
                 QSet<QString> files;
                 for (const QString &path : locations)
@@ -413,16 +425,15 @@ namespace BlackMisc
                     const QDir d(pathUp);
                     if (!d.exists()) { continue; }
 
-                    // all version sub directories
-                    // looking for "add-ons.cfg"
-                    static const QString cfgFile("add-ons.cfg");
+                    // all versions sub directories
+                    // looking for "add-ons.cfg" or simobjects.cfg
                     const QStringList entries = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
                     for (const QString &entry : entries)
                     {
                         // right version or just one file
                         if (entry.contains(versionHint, Qt::CaseInsensitive))
                         {
-                            const QString f = CFileUtils::appendFilePaths(d.absolutePath(), entry, cfgFile);
+                            const QString f = CFileUtils::appendFilePaths(d.absolutePath(), entry, configFile);
                             const QFileInfo fi(f);
                             if (fi.exists()) { files.insert(f); }
                         }
@@ -431,11 +442,11 @@ namespace BlackMisc
                 return files;
             }
 
-            QSet<QString> CFsCommonUtil::allP3dAddOnPaths(const QStringList &addOnConfigsFiles, bool checked)
+            QSet<QString> CFsCommonUtil::allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix)
             {
-                if (addOnConfigsFiles.isEmpty()) { return QSet<QString>(); }
+                if (configFiles.isEmpty()) { return QSet<QString>(); }
                 QSet<QString> paths;
-                for (const QString &configFile : addOnConfigsFiles)
+                for (const QString &configFile : configFiles)
                 {
                     // manually parsing because QSettings did not work properly
                     const QString fileContent = CFileUtils::readFileToString(configFile);
@@ -444,10 +455,10 @@ namespace BlackMisc
                     static const QString p("PATH=");
                     for (const QStringRef &line : lines)
                     {
-                        const int i = line.lastIndexOf(p, Qt::CaseInsensitive);
+                        const int i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                         if (i < 0 || line.endsWith('=')) { continue; }
                         const QStringRef path = line.mid(i + p.length());
-                        const QDir dir(QDir::fromNativeSeparators(path.toString()));
+                        const QDir dir(QDir::fromNativeSeparators(pathPrefix.isEmpty() ? path.toString() : CFileUtils::appendFilePathsAndFixUnc(pathPrefix, path.toString())));
                         if (!checked || dir.exists()) { paths.insert(dir.absolutePath()); }
                     }
                 }
@@ -483,9 +494,23 @@ namespace BlackMisc
             QSet<QString> CFsCommonUtil::allP3dAddOnSimObjectPaths(const QString &versionHint)
             {
                 const QStringList configFiles = CFsCommonUtil::findP3dAddOnConfigFiles(versionHint).toList();
-                const QStringList addOnPaths = CFsCommonUtil::allP3dAddOnPaths(configFiles, true).toList();
+                const QStringList addOnPaths = CFsCommonUtil::allConfigFilesPathValues(configFiles, true, {}).toList();
                 const QSet<QString> all = CFsCommonUtil::allP3dAddOnSimObjectPaths(addOnPaths, true);
                 return all;
+            }
+
+            QSet<QString> CFsCommonUtil::allP3dSimObjectsConfigPaths(const QString &simulatorDir, const QString &versionHint)
+            {
+                const QStringList configFiles = CFsCommonUtil::findP3dSimObjectsConfigFiles(versionHint).toList();
+                return CFsCommonUtil::allConfigFilesPathValues(configFiles, true, simulatorDir);
+            }
+
+            QSet<QString> CFsCommonUtil::allP3dSimObjectPaths(const QString &simulatorDir, const QString &versionHint)
+            {
+                const QSet<QString> configFiles = CFsCommonUtil::allP3dSimObjectsConfigPaths(simulatorDir, versionHint);
+                const QSet<QString> addOnFiles  = CFsCommonUtil::allP3dAddOnSimObjectPaths(versionHint);
+                QSet<QString> all(configFiles);
+                return all.unite(addOnFiles);
             }
 
             QStringList CFsCommonUtil::findFsxConfigFiles()
@@ -521,7 +546,7 @@ namespace BlackMisc
                 QSet<QString> paths;
                 for (const QStringRef &line : lines)
                 {
-                    const int i1 = line.lastIndexOf(p, Qt::CaseInsensitive);
+                    const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                     if (i1 < 0) { continue; }
                     const int i2 = line.lastIndexOf('=');
                     if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
@@ -544,8 +569,8 @@ namespace BlackMisc
 
             CStatusMessageList CFsCommonUtil::validateConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
             {
-                CAircraftModelList sorted(models);
                 CStatusMessage m;
+                CAircraftModelList sorted(models);
                 sorted.sortByFileName();
                 stopped = false;
                 CStatusMessageList msgs = sorted.validateFiles(validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped, "", true);
@@ -579,8 +604,8 @@ namespace BlackMisc
                         removedCfgEntries++;
                         m = CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, QStringLiteral("'%1' removed because no longer in '%2'").arg(removedModel.getModelStringAndDbKey(), removedModel.getFileName()), true);
                         msgs.push_back(m);
+                        CAircraftModelList::addAsValidOrInvalidModel(removedModel, false, validModels, invalidModels);
                     }
-                    invalidModels.push_back(removedModels);
                 }
 
                 if (removedCfgEntries < 1)
@@ -604,9 +629,72 @@ namespace BlackMisc
                 return msgs;
             }
 
-            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            CStatusMessageList CFsCommonUtil::validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped, const QString &simulatorDir)
             {
-                return {};
+                const QSet<QString> simObjectDirs = CFsCommonUtil::allP3dSimObjectPaths(simulatorDir, "v4");
+                return CFsCommonUtil::validateSimObjectsPath(simObjectDirs, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+            }
+
+            CStatusMessageList CFsCommonUtil::validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            {
+                const QSet<QString> simObjectDirs = CFsCommonUtil::fsxSimObjectsPaths(CFsCommonUtil::findFsxConfigFiles(), true);
+                return CFsCommonUtil::validateSimObjectsPath(simObjectDirs, models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
+            }
+
+            CStatusMessageList CFsCommonUtil::validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, bool &stopped)
+            {
+                CAircraftModelList sorted(models);
+                sorted.sortByFileName();
+                CStatusMessageList msgs;
+                if (sorted.isEmpty())
+                {
+                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No models to validate"));
+                    return msgs;
+                }
+                if (simObjectDirs.isEmpty())
+                {
+                    msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"No SimObject directories from cfg files, skipping validation"));
+                    return msgs;
+                }
+
+                // info
+                msgs.push_back(CStatusMessage(getLogCategories()).validationInfo(u"Validating %1 models against %2 SimObject paths: %3") << models.size() << simObjectDirs.size() << joinStringSet(simObjectDirs, ", "));
+
+                // validate
+                int failed = 0;
+                for (const CAircraftModel &model : models)
+                {
+                    if (!model.hasFileName())
+                    {
+                        if (ignoreEmptyFileNames) { continue; }
+                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"No file name for model '%1'") << model.getModelString());
+                        CAircraftModelList::addAsValidOrInvalidModel(model, false, validModels, invalidModels);
+                        continue;
+                    }
+
+                    bool ok = false;
+                    for (const QString &path : simObjectDirs)
+                    {
+                        if (!model.isInPath(path, CFileUtils::osFileNameCaseSensitivity())) { continue; }
+                        ok = true;
+                        break;
+                    }
+                    CAircraftModelList::addAsValidOrInvalidModel(model, ok, validModels, invalidModels);
+                    if (!ok)
+                    {
+                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Model '%1' '%2' in none of the %3 paths") << model.getModelString() << model.getFileName() << simObjectDirs.size());
+                        failed++;
+                    }
+
+                    if (stopAtFailedFiles > 0 && failed >= stopAtFailedFiles)
+                    {
+                        stopped = true;
+                        msgs.push_back(CStatusMessage(getLogCategories()).validationWarning(u"Stopping after %1 failed models") << failed);
+                        break;
+                    }
+                } // models
+
+                return msgs;
             }
         } // namespace
     } // namespace
