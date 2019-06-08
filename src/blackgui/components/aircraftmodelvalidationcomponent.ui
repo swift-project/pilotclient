@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>298</height>
+    <width>532</width>
+    <height>344</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -130,15 +130,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CAircraftModelView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/aircraftmodelview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CLogComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/logcomponent.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/aircraftmodelview.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CSimulatorSelector</class>
