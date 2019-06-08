@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>431</height>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -229,10 +229,16 @@
       </property>
       <item>
        <widget class="BlackGui::Editors::CCoordinateForm" name="comp_Coordinate">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>135</height>
+          <height>175</height>
          </size>
         </property>
        </widget>
