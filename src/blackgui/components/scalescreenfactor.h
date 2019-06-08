@@ -32,7 +32,7 @@ namespace BlackGui
             explicit CScaleScreenFactor(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CScaleScreenFactor();
+            virtual ~CScaleScreenFactor() override;
 
             //! Minimum/maximum values
             void setMinMax(int min, int max);

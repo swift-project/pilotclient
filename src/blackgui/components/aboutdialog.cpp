@@ -8,7 +8,9 @@
 
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
+
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 
 namespace BlackGui
 {
@@ -27,10 +29,13 @@ namespace BlackGui
 
         void CAboutDialog::init()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionDetailed());
             ui->pte_Info->setPlainText(sGui->getInfoString("\n"));
             ui->pte_Info->appendPlainText("\nSetup follows:\n----");
             ui->pte_Info->appendPlainText(sGui->getGlobalSetup().convertToQString("\n", true));
+            ui->pte_Info->appendPlainText("\nScreen info follows:\n----");
+            ui->pte_Info->appendPlainText(CGuiUtility::screenInformation("\n"));
         }
     } // ns
 } // ns

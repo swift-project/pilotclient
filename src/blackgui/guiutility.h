@@ -69,6 +69,19 @@ namespace BlackGui
         //! Is main window frameless?
         static bool isMainWindowFrameless();
 
+        //! Info about screens
+        static QString screenInformation(const QString &separator = "\n");
+
+        //! Orientation as string
+        static const QString &orientationAsString(Qt::ScreenOrientation orientation);
+
+        //! QRect, QSize as string @{
+        static const QString rectAsString(const QRect &rect);
+        static const QString rectAsString(const QRectF &rect);
+        static const QString sizeAsString(const QSize &size);
+        static const QString sizeAsString(const QSizeF &size);
+        //! @}
+
         //! Top level widgets with names
         static QWidgetList topLevelApplicationWidgetsWithName();
 

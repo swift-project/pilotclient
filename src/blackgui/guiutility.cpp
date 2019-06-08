@@ -32,11 +32,13 @@
 #include <QThreadStorage>
 #include <QWidget>
 #include <QWizard>
+#include <QScreen>
 #include <QLabel>
 #include <QTimer>
 #include <Qt>
 #include <QPointer>
 #include <QtGlobal>
+#include <QStringBuilder>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 #include <QDesktopWidget>
@@ -116,6 +118,81 @@ namespace BlackGui
     {
         const CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
         return (mw && mw->isFrameless());
+    }
+
+    QString CGuiUtility::screenInformation(const QString &separator)
+    {
+        QString i = u"Number of screens: " % QString::number(QGuiApplication::screens().size()) % separator %
+                    u"Primary screen: " % QGuiApplication::primaryScreen()->name();
+
+        for (const QScreen *screen : QGuiApplication::screens())
+        {
+            i += separator %
+                 u"Information for screen: " % screen->name() % separator %
+                 u"Available geometry: " % rectAsString(screen->availableGeometry()) % separator %
+                 u"Available size: " % sizeAsString(screen->availableSize()) % separator %
+                 u"Available virtual geometry: " %  rectAsString(screen->availableVirtualGeometry()) % separator %
+                 u"Available virtual size: " % sizeAsString(screen->availableVirtualSize()) % separator %
+                 u"Device ratio: " % QString::number(screen->devicePixelRatio()) % separator %
+                 u"Depth: " % QString::number(screen->depth()) % u"bits" % separator %
+                 u"Geometry: " % rectAsString(screen->geometry()) % separator %
+                 u"Logical DPI: " % QString::number(screen->logicalDotsPerInch()) % separator %
+                 u"Logical DPI X: " % QString::number(screen->logicalDotsPerInchX()) % separator %
+                 u"Logical DPI Y: " % QString::number(screen->logicalDotsPerInchY()) % separator %
+                 u"Orientation: " % orientationAsString(screen->orientation()) % separator %
+                 u"Physical DPI: " % QString::number(screen->physicalDotsPerInch()) % separator %
+                 u"Physical DPI X: " % QString::number(screen->physicalDotsPerInchX()) % separator %
+                 u"Physical DPI Y: " % QString::number(screen->physicalDotsPerInchY()) % separator %
+                 u"Physical size: " % sizeAsString(screen->physicalSize()) % u"mm" % separator %
+                 u"Primary orientation: " % orientationAsString(screen->primaryOrientation()) % separator %
+                 u"Refresh rate: " % QString::number(screen->refreshRate()) % u"Hz" %
+                 u"Size: " % sizeAsString(screen->size()) % separator %
+                 u"Virtual geometry: " % rectAsString(screen->virtualGeometry()) % separator %
+                 u"Virtual size: " % sizeAsString(screen->virtualSize());
+        }
+        return i;
+    }
+
+    const QString &CGuiUtility::orientationAsString(Qt::ScreenOrientation orientation)
+    {
+        static const QString pr("Primary");
+        static const QString la("Landscape");
+        static const QString po("Portrait");
+        static const QString il("Inverted landscape");
+        static const QString ip("Inverted portrait");
+
+        switch (orientation)
+        {
+        case Qt::PrimaryOrientation           : return pr;
+        case Qt::LandscapeOrientation         : return la;
+        case Qt::PortraitOrientation          : return po;
+        case Qt::InvertedLandscapeOrientation : return il;
+        case Qt::InvertedPortraitOrientation  : return ip;
+        default                               : break;
+        }
+
+        static const QString unknown("Unknown");
+        return unknown;
+    }
+
+    const QString CGuiUtility::rectAsString(const QRect &rect)
+    {
+        return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+    }
+
+    const QString CGuiUtility::rectAsString(const QRectF &rect)
+    {
+        return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+    }
+
+    const QString CGuiUtility::sizeAsString(const QSize &size)
+    {
+        return QStringLiteral("w: %1 h: %2").arg(size.width()).arg(size.height());
+    }
+
+    const QString CGuiUtility::sizeAsString(const QSizeF &size)
+    {
+        return QStringLiteral("w: %1 h: %2").arg(size.width()).arg(size.height());
     }
 
     static QThreadStorage<QRegularExpression> tsRegex;
