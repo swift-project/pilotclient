@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>593</height>
+    <width>700</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>500</height>
+    <width>650</width>
+    <height>625</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -590,8 +590,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>535</width>
-               <height>339</height>
+               <width>619</width>
+               <height>343</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
