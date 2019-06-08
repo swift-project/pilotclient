@@ -303,7 +303,11 @@ namespace BlackCore
         QByteArray CNetworkVatlib::toFSDnoColon(const QString &qstr) const
         {
             if (!qstr.contains(':')) { return toFSD(qstr); }
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Illegal char :");
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                // so we can investigate
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Illegal char :");
+            }
             QString copy(qstr);
             return toFSD(copy.remove(':'));
         }
@@ -719,7 +723,7 @@ namespace BlackCore
 
         void CNetworkVatlib::replyToNameQuery(const CCallsign &callsign) // private
         {
-            QStringList response { m_server.getUser().getRealNameAndHomeBase(), "" };
+            QStringList response { removeColon(m_server.getUser().getRealNameAndHomeBase()), "" };
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
         }
 
@@ -729,7 +733,7 @@ namespace BlackCore
             config.insert(CAircraftParts::attributeNameIsFullJson(), true);
             QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
-            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
+            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSDnoColon(data));
         }
 
         void CNetworkVatlib::sendIcaoCodesQuery(const CCallsign &callsign)
@@ -1340,6 +1344,10 @@ namespace BlackCore
         {
             QPointer<CNetworkVatlib> self(cbvar_cast(cbvar));
             const CCallsign callsign(self->fromFSD(callsignString));
+            const bool valid = !callsign.isEmpty();
+            BLACK_AUDIT_X(valid, Q_FUNC_INFO, "No callsign");
+            if (!valid) { return; }
+
             switch (type)
             {
             case vatClientQueryFreq:
