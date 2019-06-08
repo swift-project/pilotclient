@@ -6,61 +6,83 @@
     "dbHttpPort": 80,
     "dbHttpsPort": 443,
     "dbRootDirectoryUrl": {
-        "url": "https://datastore.swift-project.net"
+        "url": "https://datastore.swift-project.org/"
     },
     "development": false,
-    "mappingMinimumVersion" : "0.8.7",
-    "fsdTestServers": {
-        "containerbase": []
+    "mapUrls": {
+        "containerbase": [
+            {
+                "url": "http://map.swift-project.org"
+            }
+        ]
+    },
+    "mappingMinimumVersion": "0.9.0",
+    "ncepGlobalForecastSystemUrl": {
+        "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl"
+    },
+    "ncepGlobalForecastSystemUrl25": {
+        "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
     },
     "newsUrls": {
         "containerbase": [
-            { "url": "https://blog.swift-project.net/?__print__=1" },
-            { "url": "https://dev.swift-project.org/phame/blog/view/1/?__print__=1" }]
+			{ "url": "https://blog.swift-project.net/?__print__=1" },
+			{ "url": "https://dev.swift-project.org/phame/blog/view/1/?__print__=1" }]
     },
     "onlineHelpUrls": {
         "containerbase": [
-            { "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html" },
-            { "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html" }]
+            {
+                "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
+            },
+            {
+                "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html"
+            }
+        ]
     },
-    "mapUrls": {
-        "containerbase": [{
-            "url": "http://map.swift-project.org"
-        }]
+    "predefinedServers": {
+        "containerbase": [
+        ]
     },
     "sharedUrls": {
         "containerbase": [
-            { "url": "https://datastore.swift-project.net/shared" },
-            { "url": "https://datastore.swift-project.org/shared" },
-            { "url": "http://www.siliconmind.de/datastore/shared" },
-            { "url": "https://swift.fir-berlin.de/shared" },
-            { "url": "https://swift.jarvum.de/shared" },
-            { "url": "http://swift-project.org/datastore/shared"  }]
+            {
+                "url": "https://datastore.swift-project.net/shared/"
+            },
+            {
+                "url": "http://www.siliconmind.de/datastore/shared/"
+            },
+            {
+                "url": "http://download.swift-project.org/shared/"
+            },
+            {
+                "url": "https://swift.fir-berlin.de/shared"
+            }
+        ]
     },
-    "timestampMSecsSinceEpoch": 1476907647000,
+    "timestampMSecsSinceEpoch": 1559602257000,
     "vatsimBookingsUrl": {
         "url": "http://vatbook.euroutepro.com/xml2.php"
     },
     "vatsimDataFileUrls": {
-        "containerbase": [{
-            "url": "http://info.vroute.net/vatsim-data.txt"
-        }]
+        "containerbase": [
+            {
+                "url": "http://info.vroute.net/vatsim-data.txt"
+            }
+        ]
     },
     "vatsimMetarsUrls": {
-        "containerbase": [{
-            "url": "http://metar.vatsim.net/metar.php"
-        }]
+        "containerbase": [
+            {
+                "url": "http://metar.vatsim.net/metar.php"
+            }
+        ]
     },
     "vatsimStatusFileUrls": {
-        "containerbase": [{
-            "url": "https://status.vatsim.net"
-        }]
+        "containerbase": [
+            {
+                "url": "https://status.vatsim.net"
+            }
+        ]
     },
-    "wasLoaded": true,
-    "ncepGlobalForecastSystemUrl": {
-        "url": "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl"
-    },
-	"ncepGlobalForecastSystemUrl25": {
-        "url": "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
-    }
+    "wasLoadedFromFile": false,
+    "wasLoadedFromWeb": false
 }

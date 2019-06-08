@@ -18,6 +18,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QByteArray>
@@ -29,6 +30,7 @@
 #include <QUrl>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -357,6 +359,7 @@ namespace BlackCore
         {
             CGlobalSetup s;
             s.convertFromJson(content);
+            s.markAsLoadedFromWeb(false);
             s.markAsLoadedFromFile(true);
             const CStatusMessage setMsg = m_setup.set(s);
             const CStatusMessage setInfo = CStatusMessage(this).info(u"Setup cache updated from local file '%1'") << fn;
@@ -394,8 +397,19 @@ namespace BlackCore
                 {
                     const CGlobalSetup currentSetup = m_setup.get();
                     CGlobalSetup loadedSetup;
-                    loadedSetup.convertFromJson(setupJson);
-                    loadedSetup.markAsLoadedFromWeb(true);
+                    loadedSetup.convertFromJson(setupJson, false);
+                    loadedSetup.markAsLoadedFromFile(false);
+
+                    // make sure the file is not broken
+                    const bool loadedFileBroken = (loadedSetup.getMappingMinimumVersionString() == CBuildConfig::getVersionString()) || loadedSetup.getMappingMinimumVersionString().isEmpty();
+                    loadedSetup.markAsLoadedFromWeb(!loadedFileBroken);
+                    BLACK_VERIFY_X(!loadedFileBroken, Q_FUNC_INFO, "Appears that the bootstrap file is not really parsed");
+                    if (loadedFileBroken)
+                    {
+                        CLogMessage(this).warning(u"Setup file downloaded from '%1' seems to be broken! Ignoring it.") << urlString;
+                        return;
+                    }
+
                     const CUrl sharedUrl(loadedSetup.getCorrespondingSharedUrl(url));
                     if (!sharedUrl.isEmpty()) { emit this->successfullyReadSharedUrl(sharedUrl); }
 
