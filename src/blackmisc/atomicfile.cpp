@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <errno.h>
 #elif defined(Q_OS_WIN32)
-#include <windows.h>
+#include <Windows.h>
 #include <io.h>
 #endif
 

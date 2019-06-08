@@ -308,7 +308,7 @@ namespace BlackMisc
             {
                 for (auto i = m_cslPackages.cbegin(); i != m_cslPackages.cend(); ++i)
                 {
-                    if (strncmp(qPrintable(i->name), qPrintable(ioPath), i->name.size()) == 0)
+                    if (strncmp(qPrintable(i->name), qPrintable(ioPath), static_cast<size_t>(i->name.size())) == 0)
                     {
                         ioPath.remove(0, i->name.size());
                         ioPath.insert(0, i->path);
