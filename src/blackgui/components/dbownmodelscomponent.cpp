@@ -51,7 +51,7 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this));
-            ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
+            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(ui->comp_SimulatorSelector->getValue());
 
             bool c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -67,14 +67,16 @@ namespace BlackGui
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
             c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+            c = connect(ui->pb_ForceReload, &QPushButton::released, this, &CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator, Qt::QueuedConnection);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
             // Last selection isPinned -> no sync needed
             ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
             if (simulator.isSingleSimulator())
             {
-                ui->le_Simulator->setText(simulator.toQString(true));
                 m_simulator = simulator;
+                this->setUiSimulatorString(simulator);
                 const bool success = this->initModelLoader(simulator, IAircraftModelLoader::CacheOnly);
                 if (!success)
                 {
@@ -152,8 +154,8 @@ namespace BlackGui
             m_simulator = simulator;
             this->requestSimulatorModelsWithCacheInBackground(simulator);
             ui->comp_SimulatorSelector->setValue(simulator);
-            ui->le_Simulator->setText(simulator.toQString());
-            ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
+            this->setUiSimulatorString(simulator);
+            ui->tvp_OwnAircraftModels->setCorrespondingSimulator(simulator);
             return true;
         }
 
@@ -253,6 +255,31 @@ namespace BlackGui
                 CLogMessage::preformatted(m);
             }
             return dir;
+        }
+
+        void CDbOwnModelsComponent::setUiSimulatorString(const CSimulatorInfo &simulatorInfo)
+        {
+            const QString s = simulatorInfo.toQString(true);
+            ui->le_Simulator->setText(s);
+            ui->pb_ForceReload->setText(QStringLiteral("force reload '%1'").arg(s));
+        }
+
+        void CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator()
+        {
+            this->confirmedForcedReload(m_simulator);
+        }
+
+        void CDbOwnModelsComponent::confirmedForcedReload(const CSimulatorInfo &simulator)
+        {
+            QMessageBox msgBox(QMessageBox::Question, "Reload models from disk",
+                               QStringLiteral("Completely reload '%1' models from disk?").arg(simulator.toQString(true)),
+                               QMessageBox::Ok | QMessageBox::Cancel, this);
+            msgBox.setDefaultButton(QMessageBox::Cancel);
+            const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
+            if (reply != QMessageBox::Ok) { return; }
+
+            QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
+            ownModelsComp->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
         }
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)

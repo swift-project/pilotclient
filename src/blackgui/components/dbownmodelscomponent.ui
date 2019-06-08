@@ -90,6 +90,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_ForceReload">
+        <property name="text">
+         <string>force reload</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="lbl_Simulator">
         <property name="text">
          <string>Simulator:</string>
@@ -103,6 +110,9 @@
           <width>100</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
         <property name="placeholderText">
          <string>Simulator</string>

@@ -175,6 +175,15 @@ namespace BlackGui
             //! Directory selector for given simulator
             QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
 
+            //! Simulator string
+            void setUiSimulatorString(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
+
+            //! Confirmed forced reload
+            void confirmedForcedReloadCurrentSimulator();
+
+            //! Confirmed forced reload
+            void confirmedForcedReload(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
             //! \fixme MS 2018-12 Move to namespace scope and add Q_OBJECT
