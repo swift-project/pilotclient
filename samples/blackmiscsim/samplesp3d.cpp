@@ -23,7 +23,7 @@ namespace BlackSample
         const QSet<QString> configFiles = CFsCommonUtil::findP3dAddOnConfigFiles("v4");
         streamOut << BlackMisc::joinStringSet(configFiles, ", ") << endl;
 
-        const QSet<QString> addOnPaths = CFsCommonUtil::allP3dAddOnPaths(configFiles.toList(), false);
+        const QSet<QString> addOnPaths = CFsCommonUtil::allConfigFilesPathValues(configFiles.toList(), false, {});
         streamOut << BlackMisc::joinStringSet(addOnPaths, ", ") << endl;
 
         const QSet<QString> simObjectPaths = CFsCommonUtil::fsxSimObjectsPaths("B:/fsx.cfg", false);
