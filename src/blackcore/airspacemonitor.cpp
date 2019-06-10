@@ -885,12 +885,21 @@ namespace BlackCore
         newAircraft.setRendered(false); // reset rendering
         newAircraft.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); // distance from myself
 
-        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
         if (this->getConnectedServer().getEcosystem() == CEcosystem::vatsim())
         {
             sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
         }
-        return CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
+        const bool added = CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
+        if (added && aircraft.hasModelString())
+        {
+            // most likely I could take the CG at this time from aircraft
+            // to make sure it is really the DB value i query again
+            const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(aircraft.getModelString());
+            const CLength cg = model.hasValidDbKey() ? model.getCG() : CLength::null();
+            this->rememberCGFromDB(cg, aircraft.getModelString());
+            this->rememberCGFromDB(cg, aircraft.getCallsign());
+        }
+        return added;
     }
 
     void CAirspaceMonitor::asyncAddNewAircraftInRange(const CSimulatedAircraftList &aircraft, bool readyForModelMatching)
@@ -1184,7 +1193,7 @@ namespace BlackCore
         }
 
         // CG from provider
-        const CLength cg = this->getCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
+        const CLength cg = this->getSimulatorCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
         if (!cg.isNull()) { correctedSituation.setCG(cg); }
 
         // store corrected situation

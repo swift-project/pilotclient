@@ -638,7 +638,7 @@ namespace BlackCore
             CStatusMessageList *pMatchingMessages = m_logMatchingMessages > 0 ? &matchingMessages : nullptr;
             CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages, true);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
-            const CLength cg = m_simulatorPlugin.second->getCGPerModelString(aircraftModel.getModelString());
+            const CLength cg = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
             if (!cg.isNull()) { aircraftModel.setCG(cg); }
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());
 

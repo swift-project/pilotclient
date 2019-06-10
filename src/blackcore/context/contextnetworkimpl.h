@@ -109,6 +109,10 @@ namespace BlackCore
             virtual int updateMultipleAircraftEnabled(const BlackMisc::Aviation::CCallsignSet &callsigns, bool enabled) override;
             virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual void updateMarkAllAsNotRendered() override;
+            virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
+            virtual void rememberCGFromDB(const BlackMisc::PhysicalQuantities::CLength &cgFromDB, const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void rememberCGFromDB(const BlackMisc::PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             virtual BlackMisc::Geo::CElevationPlane averageElevationOfNonMovingAircraft(const BlackMisc::Aviation::CAircraftSituation &reference, const BlackMisc::PhysicalQuantities::CLength &range, int minValues = 1) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(

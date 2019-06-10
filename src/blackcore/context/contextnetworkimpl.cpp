@@ -970,6 +970,26 @@ namespace BlackCore
             m_airspace->updateMarkAllAsNotRendered();
         }
 
+        CLength CContextNetwork::getCGFromDB(const CCallsign &callsign) const
+        {
+            return m_airspace->getCGFromDB(callsign);
+        }
+
+        CLength CContextNetwork::getCGFromDB(const QString &modelString) const
+        {
+            return m_airspace->getCGFromDB(modelString);
+        }
+
+        void CContextNetwork::rememberCGFromDB(const CLength &cgFromDB, const CCallsign &callsign)
+        {
+            m_airspace->rememberCGFromDB(cgFromDB, callsign);
+        }
+
+        void CContextNetwork::rememberCGFromDB(const CLength &cgFromDB, const QString &modelString)
+        {
+            m_airspace->rememberCGFromDB(cgFromDB, modelString);
+        }
+
         int CContextNetwork::reInitializeAllAircraft()
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

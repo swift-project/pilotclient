@@ -195,7 +195,7 @@ namespace BlackCore
         void reloadWeatherSettings();
 
         //! Settings for current simulator
-        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings() const { return m_settings.getSpecializedSettings(this->getSimulatorInfo()); }
+        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings() const { return m_multiSettings.getSpecializedSettings(this->getSimulatorInfo()); }
 
         //! Driver will be unloaded
         virtual void unload();
@@ -574,7 +574,7 @@ namespace BlackCore
         bool m_limitUpdateAircraft = false; //!< limit the update frequency by using BlackMisc::CTokenBucket
 
         // general settings
-        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this }; //!< simulator settings for all simulators
+        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSettings { this }; //!< simulator settings for all simulators
 
         // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?

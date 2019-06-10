@@ -170,6 +170,7 @@ namespace BlackSimPlugin
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;  //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CConnectionGuard m_connectionGuard;                    //!< connected with provider
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSettings { this };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
         };
 
