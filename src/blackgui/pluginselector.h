@@ -28,16 +28,6 @@ namespace BlackGui
     {
         Q_OBJECT
 
-    signals:
-        //! Emitted when user enables/disables the particular plugin
-        void pluginStateChanged(const QString &identifier, bool enabled);
-
-        //! Emitted when user clicks the "Details" button
-        void pluginDetailsRequested(const QString &identifier);
-
-        //! Emitted when user clicks the "Settings" button
-        void pluginConfigRequested(const QString &identifier);
-
     public:
         //! Constructor
         explicit CPluginSelector(QWidget *parent = nullptr);
@@ -51,6 +41,16 @@ namespace BlackGui
 
         //! Enables/disabled the given plugin.
         void setEnabled(const QString &identifier, bool enabled);
+
+    signals:
+        //! Emitted when user enables/disables the particular plugin
+        void pluginStateChanged(const QString &identifier, bool enabled);
+
+        //! Emitted when user clicks the "Details" button
+        void pluginDetailsRequested(const QString &identifier);
+
+        //! Emitted when user clicks the "Settings" button
+        void pluginConfigRequested(const QString &identifier);
 
     private:
         void handlePluginStateChange();

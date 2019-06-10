@@ -28,7 +28,7 @@ namespace BlackGui
         setLayout(layout);
 
         connect(m_detailsButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
-        connect(m_configButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
+        connect(m_configButtonMapper,  qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
     }
 
     void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)
@@ -94,6 +94,6 @@ namespace BlackGui
         const QString identifier = cb->property("pluginIdentifier").toString();
         Q_ASSERT(!identifier.isEmpty());
 
-        emit pluginStateChanged(identifier, enabled);
+        emit this->pluginStateChanged(identifier, enabled);
     }
 } // ns
