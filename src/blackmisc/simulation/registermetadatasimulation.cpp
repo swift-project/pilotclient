@@ -50,25 +50,28 @@ namespace BlackMisc
             CVPilotModelRuleSet::registerMetadata();
             CAircraftMatcherSetup::registerMetadata();
 
+            qRegisterMetaType<CSimulatorSettings::CGSource>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingMode>();
             qRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qRegisterMetaType<MatchingLog>();
             qRegisterMetaType<MatchingLogFlag>();
-            qRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qRegisterMetaType<ReverseLookupLoggingFlag>();
             qRegisterMetaType<ReverseLookupLogging>();
 
             // the ones generate with Q_DECLARE_FLAGS and no streamin operator fail here
+            qDBusRegisterMetaType<CSimulatorSettings::CGSource>();
             qDBusRegisterMetaType<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();
             qDBusRegisterMetaType<CAircraftMatcherSetup::MatchingModeFlag>();
+            qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qDBusRegisterMetaType<MatchingLogFlag>();
             qDBusRegisterMetaType<MatchingLog>();
-            qDBusRegisterMetaType<CAircraftMatcherSetup::PickSimilarStrategy>();
             qDBusRegisterMetaType<ReverseLookupLoggingFlag>();
             qDBusRegisterMetaType<ReverseLookupLogging>();
 
+            qRegisterMetaTypeStreamOperators<CSimulatorSettings::CGSource>();
             qRegisterMetaTypeStreamOperators<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingAlgorithm>();
             qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingModeFlag>();
