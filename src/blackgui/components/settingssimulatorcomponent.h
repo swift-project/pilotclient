@@ -13,8 +13,9 @@
 
 #include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/settingscache.h"
 
 #include <QFrame>
 #include <QObject>
@@ -59,6 +60,12 @@ namespace BlackGui
             //! Apply COM sync
             void onApplyComSync();
 
+            //! Apply CG source
+            void onApplyCGSource();
+
+            //! Record GND
+            void onApplyRecordGnd();
+
             //! Clear restricted rendering
             void clearRestricedRendering();
 
@@ -82,6 +89,12 @@ namespace BlackGui
 
             //! Available plugins, auto pseudo plugin added
             BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins() const;
+
+            //! Get the simulator settings
+            static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
+
+            //! Get the simulator settings
+            static void setSimulatorSettings(BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded?

@@ -2,11 +2,19 @@
 <ui version="4.0">
  <class>CSettingsComponent</class>
  <widget class="QTabWidget" name="CSettingsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>211</width>
+    <height>378</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>7</number>
   </property>
   <widget class="QWidget" name="tb_SettingsOverview">
    <attribute name="title">
@@ -479,7 +487,7 @@
     <property name="bottomMargin">
      <number>1</number>
     </property>
-    <item alignment="Qt::AlignTop">
+    <item>
      <widget class="BlackGui::Components::CSettingsSimulatorComponent" name="comp_SettingsSimulator">
       <property name="minimumSize">
        <size>

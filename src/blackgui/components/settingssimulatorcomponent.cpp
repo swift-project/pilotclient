@@ -18,11 +18,11 @@
 #include "blackgui/pluginselector.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
 #include "ui_settingssimulatorcomponent.h"
@@ -74,9 +74,11 @@ namespace BlackGui
             connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested,  this, &CSettingsSimulatorComponent::showPluginConfig);
 
             connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
-            connect(ui->pb_ApplyTimeSync,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync, Qt::QueuedConnection);
+            connect(ui->pb_ApplyTimeSync,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync,            Qt::QueuedConnection);
             connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
             connect(ui->pb_ApplyComSync,     &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,             Qt::QueuedConnection);
+            connect(ui->pb_ApplyCGSource,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource,            Qt::QueuedConnection);
+            connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd,       Qt::QueuedConnection);
 
             connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
             connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
@@ -120,6 +122,13 @@ namespace BlackGui
             ui->pb_ApplyComSync->setEnabled(m_pluginLoaded);
             ui->cb_ComSync->setEnabled(m_pluginLoaded);
 
+            // CG
+            ui->comp_CGSourceSelector->setEnabled(m_pluginLoaded);
+
+            // record GND
+            ui->pb_ApplyRecordOwnAircraftGnd->setEnabled(m_pluginLoaded);
+            ui->cb_RecordOwnGndPositions->setEnabled(m_pluginLoaded);
+
             // led
             ui->led_RestrictedRendering->setOn(m_pluginLoaded ? setup.isRenderingRestricted() : false);
             ui->lbl_RestrictionText->setText(m_pluginLoaded ? setup.getRenderRestrictionText() : "");
@@ -131,6 +140,7 @@ namespace BlackGui
             ui->pb_ClearRestrictedRendering->setEnabled((m_pluginLoaded));
             ui->pb_DisableRendering->setEnabled(m_pluginLoaded);
             ui->pb_Check->setEnabled(!m_pluginLoaded);
+            ui->pb_ApplyCGSource->setEnabled(m_pluginLoaded);
 
             if (m_pluginLoaded)
             {
@@ -143,6 +153,9 @@ namespace BlackGui
                 // settings
                 const CSimulatorSettings settings = sim->getSimulatorSettings();
                 ui->cb_ComSync->setChecked(settings.isComIntegrated());
+
+                // CG
+                ui->comp_CGSourceSelector->setValue(settings);
 
                 // rendering
                 const int maxAircraft = setup.getMaxRenderedAircraft();
@@ -278,17 +291,49 @@ namespace BlackGui
             }
         }
 
-        void CSettingsSimulatorComponent::onApplyComSync()
+        CSimulatorSettings  CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)
+        {
+            ok = false;
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return {}; }
+            const IContextSimulator *sim = sGui->getIContextSimulator();
+            const CSimulatorInfo simulator = sim->getSimulatorPluginInfo().getSimulatorInfo();
+            if (!simulator.isSingleSimulator()) { return {}; }
+            ok = true;
+            const CSimulatorSettings settings = sim->getSimulatorSettings();
+            return settings;
+        }
+
+        void CSettingsSimulatorComponent::setSimulatorSettings(CSimulatorSettings &settings)
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-
             IContextSimulator *sim = sGui->getIContextSimulator();
             const CSimulatorInfo simulator = sim->getSimulatorPluginInfo().getSimulatorInfo();
-            if (!simulator.isSingleSimulator()) { return; }
-            CSimulatorSettings settings = sim->getSimulatorSettings();
-            if (settings.isComIntegrated() == ui->cb_ComSync->isChecked()) { return; }
-            settings.setComIntegrated(ui->cb_ComSync->isChecked());
             sim->setSimulatorSettings(settings, simulator);
+        }
+
+        void CSettingsSimulatorComponent::onApplyComSync()
+        {
+            bool ok = false;
+            CSimulatorSettings settings = getSimulatorSettings(ok);
+            if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked())) { return; }
+            setSimulatorSettings(settings);
+        }
+
+        void CSettingsSimulatorComponent::onApplyCGSource()
+        {
+            bool ok = false;
+            const CSimulatorSettings::CGSource source = ui->comp_CGSourceSelector->getValue();
+            CSimulatorSettings settings = getSimulatorSettings(ok);
+            if (!ok || !settings.setCGSource(source)) { return; }
+            setSimulatorSettings(settings);
+        }
+
+        void CSettingsSimulatorComponent::onApplyRecordGnd()
+        {
+            bool ok = false;
+            CSimulatorSettings settings = getSimulatorSettings(ok);
+            if (!ok || !settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked())) { return; }
+            setSimulatorSettings(settings);
         }
 
         void CSettingsSimulatorComponent::clearRestricedRendering()
