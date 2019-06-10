@@ -1193,7 +1193,7 @@ namespace BlackCore
         }
 
         // CG from provider
-        const CLength cg = this->getSimulatorCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
+        const CLength cg = this->getSimulatorOrDbCG(callsign, this->getCGFromDB(callsign)); // always x-check against simulator to override guessed values and reflect changed CGs
         if (!cg.isNull()) { correctedSituation.setCG(cg); }
 
         // store corrected situation

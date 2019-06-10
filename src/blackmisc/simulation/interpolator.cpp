@@ -58,7 +58,8 @@ namespace BlackMisc
         template<typename Derived>
         CLength CInterpolator<Derived>::getAndFetchModelCG()
         {
-            const CLength cg = this->getSimulatorCG(m_callsign); // simulation environment
+            const CLength cgDB = this->getRemoteAircraftProvider() ? this->getRemoteAircraftProvider()->getCGFromDB(m_callsign) : CLength::null();
+            const CLength cg = this->getSimulatorOrDbCG(m_callsign, cgDB); // simulation environment
             m_model.setCG(cg);
             m_model.setCallsign(m_callsign);
             return cg;
