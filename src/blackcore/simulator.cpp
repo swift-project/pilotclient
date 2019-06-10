@@ -649,11 +649,11 @@ namespace BlackCore
     }
 
     ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
-                           IOwnAircraftProvider *ownAircraftProvider,
-                           IRemoteAircraftProvider *remoteAircraftProvider,
-                           IWeatherGridProvider *weatherGridProvider,
-                           IClientProvider *clientProvider,
-                           QObject *parent) :
+                           IOwnAircraftProvider       *ownAircraftProvider,
+                           IRemoteAircraftProvider    *remoteAircraftProvider,
+                           IWeatherGridProvider       *weatherGridProvider,
+                           IClientProvider            *clientProvider,
+                           QObject                    *parent) :
         QObject(parent),
         COwnAircraftAware(ownAircraftProvider),
         CRemoteAircraftAware(remoteAircraftProvider),
@@ -688,8 +688,10 @@ namespace BlackCore
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
-
         connect(sApp, &CApplication::aboutToShutdown, this, &ISimulator::unload, Qt::QueuedConnection);
+
+        // provider
+        this->setNewPluginInfo(pluginInfo, m_multiSettings.getSettings(pluginInfo.getSimulatorInfo()));
 
         // info data
         m_simulatorInternals.setSimulatorName(this->getSimulatorName());
@@ -833,7 +835,7 @@ namespace BlackCore
         m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
-    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const Geo::CElevationPlane &elevation, const CLength &cg)
+    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const CElevationPlane &elevation, const CLength &cg)
     {
         if (callsign.isEmpty()) { return; }
         if (!elevation.isNull())
@@ -844,7 +846,7 @@ namespace BlackCore
         }
 
         const CLength cgO = this->overriddenCGorDefault(cg, modelString);
-        if (!cgO.isNull() && !this->hasSameCG(cgO, callsign))
+        if (!cgO.isNull() && !this->hasSameSimulatorCG(cgO, callsign))
         {
             this->insertCG(cgO, modelString, callsign); // per model string and CG
 

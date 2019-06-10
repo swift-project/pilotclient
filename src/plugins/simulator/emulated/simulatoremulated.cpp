@@ -380,15 +380,15 @@ namespace BlackSimPlugin
             if (plugin.isValid())
             {
                 // ? restart driver, disconnect/reconnect
-                this->setNewPluginInfo(plugin, settings.getDefaultModel());
+                this->setNewPluginInfo(plugin, m_multiSettings.getSettings(simulator), settings.getDefaultModel());
             }
             else
             {
-                // not all drivers are installed
+                // not all drivers are installed, like FS9/FSX on x64
                 CLogMessage(this).validationError(u"No valid plugin in emulated driver for '%1'") << simulator.toQString();
                 const QString sn = simulator.toQString(true);
                 const CSimulatorPluginInfo fakedPlugin = CSimulatorPluginInfo(simulator.toPluginIdentifier(), sn, sn, QStringLiteral("Emulated, but uninstalled '%1'").arg(sn), false);
-                this->setNewPluginInfo(fakedPlugin, settings.getDefaultModel());
+                this->setNewPluginInfo(fakedPlugin, m_multiSettings.getSettings(simulator), settings.getDefaultModel());
             }
 
             // update provider, own name, title

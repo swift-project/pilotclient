@@ -13,6 +13,7 @@
 
 #include "simulatorplugininfo.h"
 #include "aircraftmodel.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/percallsign.h"
 #include "blackmisc/geo/coordinategeodeticlist.h"
@@ -37,11 +38,11 @@ namespace BlackMisc
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinates() const;
 
-            //! Find closest elevation
+            //! Find closest elevation (or return NULL)
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
 
-            //! Find closest elevation
+            //! Find closest elevation or request elevation
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
 
@@ -87,19 +88,27 @@ namespace BlackMisc
 
             //! Get CG per callsign, NULL if not found
             //! \threadsafe
-            PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
+            PhysicalQuantities::CLength getSimulatorCG(const Aviation::CCallsign &callsign) const;
+
+            //! Get CG per callsign, NULL if not found
+            //! \threadsafe
+            PhysicalQuantities::CLength getSimulatorOrDbCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &dbCG) const;
 
             //! Get CG per model string, NULL if not found
             //! \threadsafe
-            PhysicalQuantities::CLength getCGPerModelString(const QString &modelString) const;
+            PhysicalQuantities::CLength getSimulatorCGPerModelString(const QString &modelString) const;
+
+            //! Get CG per model string, NULL if not found
+            //! \threadsafe
+            PhysicalQuantities::CLength getSimulatorOrDbCGPerModelString(const QString &modelString, const PhysicalQuantities::CLength &dbCG) const;
 
             //! Has a CG?
             //! \threadsafe
-            bool hasCG(const Aviation::CCallsign &callsign) const;
+            bool hasSimulatorCG(const Aviation::CCallsign &callsign) const;
 
             //! Has the same CG?
             //! \threadsafe
-            bool hasSameCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &callsign) const;
+            bool hasSameSimulatorCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &callsign) const;
 
             //! Set number of elevations kept
             //! \threadsafe
@@ -118,7 +127,7 @@ namespace BlackMisc
             ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
 
             //! Ctor
-            ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, bool supportElevation, bool supportCG);
+            ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const Settings::CSimulatorSettings &settings, bool supportElevation, bool supportCG);
 
             //! Provider enabled
             //! \threadsafe
@@ -137,7 +146,11 @@ namespace BlackMisc
             //! New plugin info and default model
             //! \remark normally only used by emulated driver
             //! \threadsafe
-            void setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel);
+            void setNewPluginInfo(const CSimulatorPluginInfo &info, const Settings::CSimulatorSettings &settings, const CAircraftModel &defaultModel);
+
+            //! New plugin info and default model
+            //! \threadsafe
+            void setNewPluginInfo(const CSimulatorPluginInfo &info, const Settings::CSimulatorSettings &settings);
 
             //! Set version and simulator details from running simulator
             //! \threadsafe
@@ -215,16 +228,17 @@ namespace BlackMisc
 
             //! Remove a CG
             //! \threadsafe
-            int removeCG(const Aviation::CCallsign &cs);
+            int removeSimulatorCG(const Aviation::CCallsign &cs);
 
             //! Min.range considered as single point
             static PhysicalQuantities::CLength minRange(const PhysicalQuantities::CLength &range);
 
         private:
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
+            Settings::CSimulatorSettings m_settings;    //!< simulator settings
             QString m_simulatorName;       //!< name of simulator
             QString m_simulatorDetails;    //!< describes version etc.
-            QString m_simulatorVersion;    //!< Simulator version
+            QString m_simulatorVersion;    //!< simulator version
             CAircraftModel m_defaultModel; //!< default model
             int m_maxElevations = 100;     //!< How many elevations we keep
             Geo::CCoordinateGeodeticList    m_elvCoordinates; //!< elevation cache
@@ -292,11 +306,14 @@ namespace BlackMisc
             //! \copydoc ISimulationEnvironmentProvider::getDefaultModel
             CAircraftModel getDefaultModel() const;
 
-            //! \copydoc ISimulationEnvironmentProvider::getCG
-            PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
+            //! \copydoc ISimulationEnvironmentProvider::getSimulatorCG
+            PhysicalQuantities::CLength getSimulatorCG(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc ISimulationEnvironmentProvider::hasCG
-            bool hasCG(const Aviation::CCallsign &callsign) const;
+            //! \copydoc ISimulationEnvironmentProvider::getSimulatorOrDbCG
+            PhysicalQuantities::CLength getSimulatorOrDbCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &dbCG) const;
+
+            //! \copydoc ISimulationEnvironmentProvider::hasSimulatorCG
+            bool hasSimulatorCG(const Aviation::CCallsign &callsign) const;
 
         protected:
             //! Default constructor

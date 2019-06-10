@@ -9,6 +9,7 @@
 #include "simulationenvironmentprovider.h"
 #include <QStringBuilder>
 
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -116,7 +117,7 @@ namespace BlackMisc
             return m_cgsPerModelOverridden[modelString.toUpper()];
         }
 
-        int ISimulationEnvironmentProvider::removeCG(const CCallsign &cs)
+        int ISimulationEnvironmentProvider::removeSimulatorCG(const CCallsign &cs)
         {
             QWriteLocker l(&m_lockCG);
             return m_cgsPerCallsign.remove(cs);
@@ -124,7 +125,7 @@ namespace BlackMisc
 
         CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
         {
-            return (range < CElevationPlane::singlePointRadius()) ?
+            return (range.isNull() || range < CElevationPlane::singlePointRadius()) ?
                    CElevationPlane::singlePointRadius() :
                    range;
         }
@@ -271,16 +272,25 @@ namespace BlackMisc
             return m_defaultModel;
         }
 
-        CLength ISimulationEnvironmentProvider::getCG(const Aviation::CCallsign &callsign) const
+        CLength ISimulationEnvironmentProvider::getSimulatorCG(const Aviation::CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CLength::null(); }
-
             QReadLocker l(&m_lockCG);
             if (!m_enableCG || !m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
             return m_cgsPerCallsign.value(callsign);
         }
 
-        CLength ISimulationEnvironmentProvider::getCGPerModelString(const QString &modelString) const
+        CLength ISimulationEnvironmentProvider::getSimulatorOrDbCG(const CCallsign &callsign, const CLength &dbCG) const
+        {
+            if (callsign.isEmpty()) { return CLength::null(); }
+            const CSimulatorSettings::CGSource source = m_settings.getCGSource();
+            if (source == CSimulatorSettings::CGFromDBOnly || (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst)) { return dbCG; }
+            const CLength simCG = this->getSimulatorCG(callsign);
+            if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && simCG.isNull())) { return simCG; }
+            return dbCG;
+        }
+
+        CLength ISimulationEnvironmentProvider::getSimulatorCGPerModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return CLength::null(); }
             const QString ms = modelString.toUpper();
@@ -290,14 +300,29 @@ namespace BlackMisc
             return m_cgsPerModel.value(ms);
         }
 
-        bool ISimulationEnvironmentProvider::hasCG(const Aviation::CCallsign &callsign) const
+        CLength ISimulationEnvironmentProvider::getSimulatorOrDbCGPerModelString(const QString &modelString, const CLength &dbCG) const
+        {
+            if (modelString.isEmpty()) { return CLength::null(); }
+            const CSimulatorSettings::CGSource source = m_settings.getCGSource();
+            const QString ms = modelString.toUpper();
+            {
+                QReadLocker l(&m_lockCG);
+                if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
+            }
+            if (source == CSimulatorSettings::CGFromDBOnly || (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst)) { return dbCG; }
+            const CLength simCG = this->getSimulatorCGPerModelString(modelString);
+            if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && simCG.isNull())) { return simCG; }
+            return dbCG;
+        }
+
+        bool ISimulationEnvironmentProvider::hasSimulatorCG(const Aviation::CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
             return m_enableCG && m_cgsPerCallsign.contains(callsign);
         }
 
-        bool ISimulationEnvironmentProvider::hasSameCG(const CLength &cg, const CCallsign &callsign) const
+        bool ISimulationEnvironmentProvider::hasSameSimulatorCG(const CLength &cg, const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
@@ -326,11 +351,12 @@ namespace BlackMisc
             m_elvFound = m_elvMissed = 0;
         }
 
-        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)
+        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) :
+            m_simulatorPluginInfo(pluginInfo)
         { }
 
-        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, bool supportElevation, bool supportCG) :
-            m_simulatorPluginInfo(pluginInfo), m_enableElevation(supportElevation), m_enableCG(supportCG)
+        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const CSimulatorSettings &settings, bool supportElevation, bool supportCG) :
+            m_simulatorPluginInfo(pluginInfo), m_settings(settings), m_enableElevation(supportElevation), m_enableCG(supportCG)
         { }
 
         bool ISimulationEnvironmentProvider::isCgProviderEnabled() const
@@ -363,13 +389,17 @@ namespace BlackMisc
             setCgProviderEnabled(cgEnabled);
         }
 
-        void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
+        void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CSimulatorSettings &settings, const CAircraftModel &defaultModel)
         {
-            {
-                QWriteLocker l1(&m_lockSimInfo);
-                m_simulatorPluginInfo = info;
-            }
+            this->setNewPluginInfo(info, settings);
             this->setDefaultModel(defaultModel);
+        }
+
+        void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CSimulatorSettings &settings)
+        {
+            QWriteLocker l(&m_lockSimInfo);
+            m_simulatorPluginInfo = info;
+            m_settings = settings;
         }
 
         void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details, const QString &version)
@@ -416,7 +446,7 @@ namespace BlackMisc
             m_elvCoordinates.clear();
             m_pendingElevationRequests.clear();
             m_statsCurrentElevRequestTimeMs = -1;
-            m_statsMaxElevRequestTimeMs = -1;
+            m_statsMaxElevRequestTimeMs     = -1;
             m_elvFound = m_elvMissed = 0;
         }
 
@@ -510,16 +540,22 @@ namespace BlackMisc
             return this->provider()->getDefaultModel();
         }
 
-        CLength CSimulationEnvironmentAware::getCG(const CCallsign &callsign) const
+        CLength CSimulationEnvironmentAware::getSimulatorCG(const CCallsign &callsign) const
         {
             if (!this->hasProvider()) { return CLength::null(); }
-            return this->provider()->getCG(callsign);
+            return this->provider()->getSimulatorCG(callsign);
         }
 
-        bool CSimulationEnvironmentAware::hasCG(const CCallsign &callsign) const
+        CLength CSimulationEnvironmentAware::getSimulatorOrDbCG(const CCallsign &callsign, const CLength &dbCG) const
+        {
+            if (!this->hasProvider()) { return CLength::null(); }
+            return this->provider()->getSimulatorOrDbCG(callsign, dbCG);
+        }
+
+        bool CSimulationEnvironmentAware::hasSimulatorCG(const CCallsign &callsign) const
         {
             if (!this->hasProvider()) { return false; }
-            return this->provider()->hasCG(callsign);
+            return this->provider()->hasSimulatorCG(callsign);
         }
     } // namespace
 } // namespace

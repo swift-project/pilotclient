@@ -192,7 +192,11 @@ namespace BlackMisc
 
             { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsMessages.clear(); }
             { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
-            { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
+            {
+                QWriteLocker l(&m_lockAircraft);
+                m_aircraftInRange.clear();
+                m_dbCGPerCallsign.clear();
+            }
 
             for (const CCallsign &cs : callsigns)
             {
@@ -603,6 +607,30 @@ namespace BlackMisc
             return true;
         }
 
+        CLength CRemoteAircraftProvider::getCGFromDB(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockAircraft);
+            return m_dbCGPerCallsign.contains(callsign) ? m_dbCGPerCallsign[callsign] : CLength::null();
+        }
+
+        CLength CRemoteAircraftProvider::getCGFromDB(const QString &modelString) const
+        {
+            QReadLocker l(&m_lockAircraft);
+            return m_dbCGPerCallsign.contains(modelString) ? m_dbCGPerCallsign[modelString] : CLength::null();
+        }
+
+        void CRemoteAircraftProvider::rememberCGFromDB(const CLength &cgFromDB, const CCallsign &callsign)
+        {
+            QWriteLocker l(&m_lockAircraft);
+            m_dbCGPerCallsign[callsign] = cgFromDB;
+        }
+
+        void CRemoteAircraftProvider::rememberCGFromDB(const CLength &cgFromDB, const QString &modelString)
+        {
+            QWriteLocker l(&m_lockAircraft);
+            m_dbCGPerModelString[modelString] = cgFromDB;
+        }
+
         void CRemoteAircraftProvider::updateMarkAllAsNotRendered()
         {
             const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
@@ -816,6 +844,7 @@ namespace BlackMisc
             bool removedCallsign = false;
             {
                 QWriteLocker l(&m_lockAircraft);
+                m_dbCGPerCallsign.remove(callsign);
                 const int c = m_aircraftInRange.remove(callsign);
                 removedCallsign = c > 0;
             }

@@ -127,7 +127,7 @@ namespace BlackGui
             }
             else if (ui->tw_LogTabs->currentWidget() == ui->tb_DataFlow)
             {
-                ui->le_CG->setText(m_airspaceMonitor->getCG(m_callsign).valueRoundedWithUnit(CLengthUnit::ft(), 1));
+                ui->le_CG->setText(m_airspaceMonitor->getSimulatorCG(m_callsign).valueRoundedWithUnit(CLengthUnit::ft(), 1));
                 ui->le_CG->home(false);
                 ui->le_Parts->setText(boolToYesNo(m_airspaceMonitor->isRemoteAircraftSupportingParts(m_callsign)));
 

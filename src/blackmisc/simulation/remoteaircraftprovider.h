@@ -50,7 +50,7 @@ namespace BlackMisc
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
 
             //! Destructor
-            virtual ~IRemoteAircraftProvider();
+            virtual ~IRemoteAircraftProvider() override;
 
             //! Copy constructor
             IRemoteAircraftProvider(const IRemoteAircraftProvider &) = delete;
@@ -200,6 +200,14 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) = 0;
 
+            //! CG values from DB @{
+            //! \threadsafe
+            virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const = 0;
+            virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const = 0;
+            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) = 0;
+            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const QString &modelString) = 0;
+            //! @}
+
             //! Get reverse lookup meesages
             //! \threadsafe
             virtual CStatusMessageList getReverseLookupMessages(const Aviation::CCallsign &callsign) const = 0;
@@ -323,6 +331,10 @@ namespace BlackMisc
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
+            virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const override;
+            virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
+            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) override;
+            virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
@@ -467,15 +479,17 @@ namespace BlackMisc
             Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
             Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
-            int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
+            int m_partsAdded      = 0; //!< total number of parts added, thread safe access required
 
             ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo;     //!< shall we log. information about the matching process
-            Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;     //!< aircraft, thread safe access required
-            Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
-            Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages; //!< status messages for parts history
-            Aviation::CTimestampPerCallsign m_situationsLastModified;        //!< when situations last modified
-            Aviation::CTimestampPerCallsign m_partsLastModified;             //!< when parts last modified
-            Aviation::CLengthPerCallsign    m_testOffset;                    //!< offsets
+            Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;      //!< aircraft, thread safe access required
+            Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages;  //!< reverse lookup messages
+            Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages;  //!< status messages for parts history
+            Aviation::CTimestampPerCallsign m_situationsLastModified;         //!< when situations last modified
+            Aviation::CTimestampPerCallsign m_partsLastModified;              //!< when parts last modified
+            Aviation::CLengthPerCallsign    m_testOffset;                     //!< offsets
+            Aviation::CLengthPerCallsign    m_dbCGPerCallsign;                //!< DB CG per callsign
+            QHash<QString, PhysicalQuantities::CLength> m_dbCGPerModelString; //!< DB CG per model string
 
             bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
 
@@ -483,7 +497,7 @@ namespace BlackMisc
             mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
             mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
             mutable QReadWriteLock m_lockChanges;      //!< lock for changes: m_changesByCallsign
-            mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange
+            mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange, m_dbCGPerCallsign
             mutable QReadWriteLock m_lockMessages;     //!< lock for messages
             mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
         };
@@ -493,7 +507,7 @@ namespace BlackMisc
         {
         public:
             //! Destructor
-            virtual ~CRemoteAircraftAware();
+            virtual ~CRemoteAircraftAware() override;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
             CSimulatedAircraftList getAircraftInRange() const;
