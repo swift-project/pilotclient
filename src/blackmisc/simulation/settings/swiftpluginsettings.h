@@ -11,11 +11,11 @@
 #ifndef BLACKMISC_SIMULATION_SETTINGS_SWIFTPLUGINSETTINGS_H
 #define BLACKMISC_SIMULATION_SETTINGS_SWIFTPLUGINSETTINGS_H
 
-#include "blackmisc/settingscache.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {
@@ -24,14 +24,13 @@ namespace BlackMisc
         namespace Settings
         {
             //! Settings for models
-            class BLACKMISC_EXPORT CSwiftPluginSettings :
-                public BlackMisc::CValueObject<CSwiftPluginSettings>
+            class BLACKMISC_EXPORT CSwiftPluginSettings : public BlackMisc::CValueObject<CSwiftPluginSettings>
             {
             public:
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexEmulatedSimulator = BlackMisc::CPropertyIndex::GlobalIndexCSwiftPluignSettings,
+                    IndexEmulatedSimulator = CPropertyIndex::GlobalIndexCSwiftPluignSettings,
                     IndexOwnModel,
                     IndexDefaultModel,
                     IndexLoggingFunctionCalls
@@ -41,22 +40,22 @@ namespace BlackMisc
                 CSwiftPluginSettings();
 
                 //! Emulated simualtor
-                BlackMisc::Simulation::CSimulatorInfo getEmulatedSimulator() const { return m_emulatedSimulator; }
+                CSimulatorInfo getEmulatedSimulator() const { return m_emulatedSimulator; }
 
                 //! Emulated simualtor
-                void setEmulatedSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                void setEmulatedSimulator(const CSimulatorInfo &simulator);
 
                 //! Get own model
-                const BlackMisc::Simulation::CAircraftModel &getOwnModel() const { return m_ownModel; }
+                const CAircraftModel &getOwnModel() const { return m_ownModel; }
 
                 //! Set own model
-                void setOwnModel(const BlackMisc::Simulation::CAircraftModel &ownModel) { m_ownModel = ownModel; }
+                void setOwnModel(const CAircraftModel &ownModel) { m_ownModel = ownModel; }
 
                 //! Get default model
-                const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const { return m_defaultModel; }
+                const CAircraftModel &getDefaultModel() const { return m_defaultModel; }
 
                 //! Set default model
-                void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel) { m_defaultModel = defaultModel; }
+                void setDefaultModel(const CAircraftModel &defaultModel) { m_defaultModel = defaultModel; }
 
                 //! Log function calls?
                 bool isLoggingFunctionCalls() const { return m_logFunctionCalls; }
@@ -68,15 +67,15 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+                BlackMisc::CVariant propertyByIndex(const CPropertyIndex &index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                BlackMisc::Simulation::CSimulatorInfo m_emulatedSimulator { BlackMisc::Simulation::CSimulatorInfo::P3D }; // simulator with default value
-                BlackMisc::Simulation::CAircraftModel m_ownModel;
-                BlackMisc::Simulation::CAircraftModel m_defaultModel;
+                CSimulatorInfo m_emulatedSimulator { CSimulatorInfo::P3D }; // simulator with default value
+                CAircraftModel m_ownModel;
+                CAircraftModel m_defaultModel;
                 bool m_logFunctionCalls = true;
 
                 BLACK_METACLASS(
