@@ -40,8 +40,22 @@ namespace BlackMisc
                     IndexSimulatorDirectory = CPropertyIndex::GlobalIndexCSimulatorSettings,
                     IndexModelDirectories,
                     IndexModelExcludeDirectoryPatterns,
-                    IndexComIntegration //!< COM unit integration
+                    IndexComIntegration, //!< COM unit integration
+                    IndexRecordOwnAircraftGnd,
+                    IndexCGSource
                 };
+
+                //! Where we get the CG (aka vertical offset) from
+                enum CGSource
+                {
+                    CGFromSimulatorFirst,
+                    CGFromDBFirst,
+                    CGFromSimulatorOnly,
+                    CGFromDBOnly
+                };
+
+                //! CG source as string
+                static const QString &cgSourceAsString(CGSource source);
 
                 //! Default constructor
                 CSimulatorSettings();
@@ -89,7 +103,19 @@ namespace BlackMisc
                 bool isComIntegrated() const { return m_comIntegration; }
 
                 //! COM unit integration
-                void setComIntegrated(bool integrated) { m_comIntegration = integrated; }
+                bool setComIntegrated(bool integrated);
+
+                //! CG source
+                CGSource getCGSource() const { return static_cast<CGSource>(m_cgSource); }
+
+                //! CG source
+                bool setCGSource(CGSource source);
+
+                //! Record GND values (of own aircraft)
+                bool isRecordOwnAircraftGnd() const { return m_recordGnd; }
+
+                //! Record GND values (of own aircraft)
+                bool setRecordOwnAircraftGnd(bool record);
 
                 //! Reset the paths
                 void resetPaths();
@@ -111,6 +137,8 @@ namespace BlackMisc
                 QStringList m_modelDirectories;         //!< Model directory
                 QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
                 bool        m_comIntegration = false;   //!< COM integration
+                bool        m_recordGnd = false;        //!< Record GND values (of own aircraft)
+                int         m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
 
                 BLACK_METACLASS(
                     CSimulatorSettings,
@@ -599,6 +627,7 @@ namespace BlackMisc
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSimulatorSettings)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CFsxP3DSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CSimulatorSettings>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CSimulatorSettings>)

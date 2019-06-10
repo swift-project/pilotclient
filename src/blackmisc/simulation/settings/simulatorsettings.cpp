@@ -27,6 +27,25 @@ namespace BlackMisc
     {
         namespace Settings
         {
+            const QString &CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGSource source)
+            {
+                static const QString sf("simulator 1st");
+                static const QString dbf("DB 1st");
+                static const QString so("simulator only");
+                static const QString dbo("DB only");
+
+                switch (source)
+                {
+                case CGFromSimulatorFirst: return sf;
+                case CGFromDBFirst: return dbf;
+                case CGFromSimulatorOnly: return so;
+                case CGFromDBOnly: return dbo;
+                default: break;
+                }
+                static const QString u("unknown");
+                return u;
+            }
+
             CSimulatorSettings::CSimulatorSettings()
             { }
 
@@ -84,6 +103,28 @@ namespace BlackMisc
                 return m_excludeDirectoryPatterns;
             }
 
+            bool CSimulatorSettings::setComIntegrated(bool integrated)
+            {
+                if (integrated == m_comIntegration) { return false; }
+                m_comIntegration = integrated;
+                return true;
+            }
+
+            bool CSimulatorSettings::setCGSource(CSimulatorSettings::CGSource source)
+            {
+                const int s = static_cast<int>(source);
+                if (m_cgSource == s) { return false; }
+                m_cgSource = s;
+                return true;
+            }
+
+            bool CSimulatorSettings::setRecordOwnAircraftGnd(bool record)
+            {
+                if (record == m_recordGnd) { return false; }
+                m_recordGnd = record;
+                return true;
+            }
+
             void CSimulatorSettings::resetPaths()
             {
                 m_excludeDirectoryPatterns.clear();
@@ -112,9 +153,12 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexSimulatorDirectory: return CVariant::fromValue(m_simulatorDirectory);
-                case IndexModelDirectories: return CVariant::fromValue(m_modelDirectories);
+                case IndexSimulatorDirectory:            return CVariant::fromValue(m_simulatorDirectory);
+                case IndexModelDirectories:              return CVariant::fromValue(m_modelDirectories);
                 case IndexModelExcludeDirectoryPatterns: return CVariant::fromValue(m_excludeDirectoryPatterns);
+                case IndexComIntegration:                return CVariant::fromValue(m_comIntegration);
+                case IndexRecordOwnAircraftGnd:          return CVariant::fromValue(m_recordGnd);
+                case IndexCGSource:                      return CVariant::fromValue(m_cgSource);
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
@@ -125,9 +169,12 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexSimulatorDirectory: this->setSimulatorDirectory(variant.toQString()); break;
-                case IndexModelDirectories: this->setSimulatorDirectory(variant.toQString()); break;
+                case IndexSimulatorDirectory:   this->setSimulatorDirectory(variant.toQString()); break;
+                case IndexModelDirectories:     this->setSimulatorDirectory(variant.toQString()); break;
                 case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
+                case IndexComIntegration:       this->setComIntegrated(variant.toBool()); break;
+                case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
+                case IndexCGSource:             m_cgSource = variant.toInt(); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
             }
