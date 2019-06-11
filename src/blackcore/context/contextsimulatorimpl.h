@@ -282,7 +282,7 @@ namespace BlackCore
             BlackMisc::CSettingReadOnly<Application::TEnabledSimulators>           m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching>   m_matchingSettings  { this }; //!< matching settings (all simulators)
             BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetSimulator { this }; //!< current simulator used for model set
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings               m_simulatorSettings { this }; //!< individual for simulator, for validation of models
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings               m_multiSimulatorSettings               { this }; //!< individual for simulator, for validation of models
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TInterpolationAndRenderingSetupGlobal> m_renderSettings  { this }; //!< rendering/interpolation settings (all simulators)
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages>            m_messageSettings { this }; //!< settings for messages (all simulators)
         };

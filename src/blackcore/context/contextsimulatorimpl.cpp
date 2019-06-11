@@ -106,7 +106,7 @@ namespace BlackCore
         {
             if (simulator.isSingleSimulator())
             {
-                const QString simDir = m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator);
+                const QString simDir = m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator);
                 m_validator->setCurrentSimulator(simulator, simDir);
             }
             else
@@ -149,15 +149,15 @@ namespace BlackCore
             if (!p.isValid()) { return {}; }
             const CSimulatorInfo sim = p.getSimulatorInfo();
             if (!sim.isSingleSimulator()) { return {}; }
-            return m_simulatorSettings.getSettings(sim);
+            return m_multiSimulatorSettings.getSettings(sim);
         }
 
         bool CContextSimulator::setSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
         {
             if (!simulator.isSingleSimulator()) { return false; }
-            CSimulatorSettings simSettings = m_simulatorSettings.getSettings(simulator);
+            CSimulatorSettings simSettings = m_multiSimulatorSettings.getSettings(simulator);
             if (simSettings == settings) { return false; }
-            const CStatusMessage msg = m_simulatorSettings.setSettings(settings, simulator);
+            const CStatusMessage msg = m_multiSimulatorSettings.setSettings(settings, simulator);
             CLogMessage::preformatted(msg);
             return true;
         }
@@ -323,7 +323,7 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!m_validator) { return false; }
-            const QString simDir = simulator.isSingleSimulator() ? m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator) : "";
+            const QString simDir = simulator.isSingleSimulator() ? m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator) : "";
             return m_validator->triggerValidation(simulator, simDir);
         }
 
@@ -933,7 +933,7 @@ namespace BlackCore
                 return msgs;
             }
 
-            const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(simulator);
+            const QStringList modelDirs = m_multiSimulatorSettings.getModelDirectoriesOrDefault(simulator);
             if (modelDirs.isEmpty() || modelDirs.front().isEmpty())
             {
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No model directory"));

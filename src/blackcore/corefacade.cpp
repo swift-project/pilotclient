@@ -256,7 +256,7 @@ namespace BlackCore
 
                 // this is used if the value in own aircraft is changed, to callback simulator
                 c = connect(this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedModel,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedOwnAircraftModel);
+                            this->getCContextSimulator(),   &CContextSimulator::xCtxChangedOwnAircraftModel);
                 Q_ASSERT(c);
             }
 
