@@ -565,19 +565,19 @@ namespace BlackMisc
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default
             Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
-            Aviation::CAltitude m_pressureAltitude { 0, nullptr };
-            CHeading m_heading { 0, nullptr };
-            PhysicalQuantities::CAngle m_pitch { 0, nullptr };
-            PhysicalQuantities::CAngle m_bank  { 0, nullptr };
-            PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
-            PhysicalQuantities::CLength m_cg { 0, nullptr };
+            Aviation::CAltitude m_pressureAltitude      { 0, nullptr };
+            CHeading m_heading                          { 0, nullptr };
+            PhysicalQuantities::CAngle  m_pitch         { 0, nullptr };
+            PhysicalQuantities::CAngle  m_bank          { 0, nullptr };
+            PhysicalQuantities::CSpeed  m_groundSpeed   { 0, nullptr };
+            PhysicalQuantities::CLength m_cg            { 0, nullptr };
             PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
             bool m_isInterim = false; //!< interim situation?
             bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
-            double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
+            double m_onGroundFactor = -1;      //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
             QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
 
             //! Equal double values?

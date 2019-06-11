@@ -835,7 +835,7 @@ namespace BlackCore
         m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
-    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const CElevationPlane &elevation, const CLength &cg)
+    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const QString &modelString, const CElevationPlane &elevation, const CLength &simulatorCG)
     {
         if (callsign.isEmpty()) { return; }
         if (!elevation.isNull())
@@ -845,13 +845,13 @@ namespace BlackCore
             this->rememberGroundElevation(callsign, elevation);
         }
 
-        const CLength cgO = this->overriddenCGorDefault(cg, modelString);
+        const CLength cgO = this->overriddenCGorDefault(simulatorCG, modelString);
         if (!cgO.isNull() && !this->hasSameSimulatorCG(cgO, callsign))
         {
             this->insertCG(cgO, modelString, callsign); // per model string and CG
 
             // here we know we have a valid model and CG
-            m_autoPublishing.insert(modelString, cg); // still using CG here, not the overridden value
+            m_autoPublishing.insert(modelString, simulatorCG); // still using CG here, not the overridden value
             m_autoPublishing.insert(modelString, this->getSimulatorInfo());
         }
     }

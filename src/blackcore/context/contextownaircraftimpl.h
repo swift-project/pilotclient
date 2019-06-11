@@ -116,6 +116,7 @@ namespace BlackCore
         signals:
             //! Changed aircraft model
             //! \private Use ISimulatorContext::ownAircraftModelChanged
+            //! \remark used for cross context updates
             void ps_changedModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
 
         public slots:
