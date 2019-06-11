@@ -16,11 +16,11 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/actionbind.h"
-#include "blackmisc/network/settings/serversettings.h"
-#include "blackmisc/network/user.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/network/settings/serversettings.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -30,6 +30,7 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/identifiable.h"
@@ -213,8 +214,8 @@ namespace BlackCore
             QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
             mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
-            CActionBind m_actionToggleXpdr { "/Own aircraft/Toggle XPDR state", BlackMisc::CIcons::radio16(), this, &CContextOwnAircraft::actionToggleTransponder };
-            CActionBind m_actionIdent { "/Own aircraft/XPDR ident", BlackMisc::CIcons::radio16(), this, &CContextOwnAircraft::actionIdent };
+            CActionBind m_actionToggleXpdr { BlackMisc::Input::toggleXPDRStateHotkeyAction(), BlackMisc::Input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
+            CActionBind m_actionIdent      { BlackMisc::Input::toggleXPDRIdentHotkeyAction(), BlackMisc::Input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
 
             static constexpr qint64 MinHistoryDeltaMs = 1000;
             static constexpr int MaxHistoryElements   = 20;
