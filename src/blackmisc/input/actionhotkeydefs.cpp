@@ -56,5 +56,28 @@ namespace BlackMisc
             static const QString s("/Audio/Volume increase");
             return s;
         }
+
+        const QPixmap &toggleXPDRStateHotkeyIcon()
+        {
+            return CIcons::radio16();
+        }
+
+        const QPixmap &toggleXPDRIdentHotkeyIcon()
+        {
+            return CIcons::radio16();
+        }
+
+        const QString &toggleXPDRStateHotkeyAction()
+        {
+            static const QString s("/Own aircraft/Toggle XPDR state");
+            return s;
+        }
+
+        const QString &toggleXPDRIdentHotkeyAction()
+        {
+            static const QString s("/Own aircraft/XPDR ident");
+            return s;
+        }
+
     } // ns
 } // ns

@@ -44,6 +44,18 @@ namespace BlackMisc
         //! Audio icon volume -
         BLACKMISC_EXPORT const QPixmap &audioVolumeDecreaseHotkeyIcon();
 
+        //! XPDR state
+        BLACKMISC_EXPORT const QString &toggleXPDRStateHotkeyAction();
+
+        //! XPDR state
+        BLACKMISC_EXPORT const QPixmap &toggleXPDRStateHotkeyIcon();
+
+        //! XPDR state
+        BLACKMISC_EXPORT const QString &toggleXPDRIdentHotkeyAction();
+
+        //! XPDR ident
+        BLACKMISC_EXPORT const QPixmap &toggleXPDRIdentHotkeyIcon();
+
     } // ns
 } // ns
 
