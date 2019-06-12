@@ -105,6 +105,12 @@ namespace BlackMisc
             return this->provider()->updateOwnParts(parts);
         }
 
+        bool COwnAircraftAware::updateOwnCG(const CLength &cg)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->updateOwnCG(cg);
+        }
+
         bool COwnAircraftAware::updateOwnCallsign(const CCallsign &callsign)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");

@@ -290,6 +290,15 @@ namespace BlackCore
             return true;
         }
 
+        bool CContextOwnAircraft::updateOwnCG(const CLength &cg)
+        {
+            QWriteLocker l(&m_lockAircraft);
+            const bool changed = (m_ownAircraft.getModel().getCG() != cg);
+            if (!changed) { return false; }
+            m_ownAircraft.setCG(cg);
+            return true;
+        }
+
         bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }

@@ -92,6 +92,9 @@ namespace BlackMisc
             //! Update own parts
             virtual bool updateOwnParts(const Aviation::CAircraftParts &parts) = 0;
 
+            //! Update own aircraft's CG (aka vertical offset)
+            virtual bool updateOwnCG(const PhysicalQuantities::CLength &cg) = 0;
+
             // ------------------------------------------------------------------------
             // cockpit / aircraft related updates, which can come from multiple sources
             // and are subject of roundtrips -> originator
@@ -167,6 +170,9 @@ namespace BlackMisc
 
             //! \copydoc IOwnAircraftProvider::updateOwnParts
             bool updateOwnParts(const Aviation::CAircraftParts &parts);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnCG
+            bool updateOwnCG(const PhysicalQuantities::CLength &cg);
 
         protected:
             //! Constructor

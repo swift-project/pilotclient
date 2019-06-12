@@ -110,6 +110,10 @@ namespace BlackCore
             //! \ingroup ownaircraftprovider
             virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
 
+            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnParts
+            //! \ingroup ownaircraftprovider
+            virtual bool updateOwnCG(const BlackMisc::PhysicalQuantities::CLength &cg) override;
+
             //! \copydoc BlackMisc::IProvider::asQObject
             virtual QObject *asQObject() override { return this; }
 
