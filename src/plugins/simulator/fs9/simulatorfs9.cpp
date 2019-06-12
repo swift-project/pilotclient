@@ -396,9 +396,17 @@ namespace BlackSimPlugin
                         requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
                     }
                 }
-            }
+            } // weather
 
-            reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
+            // slow updates
+            if (m_ownAircraftUpdateCycles % 25 == 0)
+            {
+                this->reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
+                const CLength cg = simDataOwnAircraft.getCG();
+                if (!cg.isNull()) { this->updateOwnCG(cg); }
+            } // slow updates
+
+            m_ownAircraftUpdateCycles++;
         }
 
         void CSimulatorFs9::disconnectAllClients()
