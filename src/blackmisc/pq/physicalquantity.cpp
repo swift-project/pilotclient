@@ -454,7 +454,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexValue: return CVariant::from(m_value);
-            case IndexUnit: return CVariant::from(m_unit);
+            case IndexUnit:  return CVariant::from(m_unit);
             case IndexValueRounded0DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(0));
             case IndexValueRounded1DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(1));
             case IndexValueRounded2DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(2));

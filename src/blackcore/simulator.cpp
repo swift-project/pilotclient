@@ -845,10 +845,10 @@ namespace BlackCore
             this->rememberGroundElevation(callsign, elevation);
         }
 
-        const CLength cgO = this->overriddenCGorDefault(simulatorCG, modelString);
-        if (!cgO.isNull() && !this->hasSameSimulatorCG(cgO, callsign))
+        const CLength cgOvr = this->overriddenCGorDefault(simulatorCG, modelString);
+        if (!cgOvr.isNull() && !this->hasSameSimulatorCG(cgOvr, callsign))
         {
-            this->insertCG(cgO, modelString, callsign); // per model string and CG
+            this->insertCG(cgOvr, modelString, callsign); // per model string and CG
 
             // here we know we have a valid model and CG
             m_autoPublishing.insert(modelString, simulatorCG); // still using CG here, not the overridden value
@@ -1210,7 +1210,7 @@ namespace BlackCore
 
     void ISimulator::reverseLookupAndUpdateOwnAircraftModel(const QString &modelString)
     {
-        CAircraftModel model = getOwnAircraftModel();
+        CAircraftModel model = this->getOwnAircraftModel();
         model.setModelString(modelString);
         this->reverseLookupAndUpdateOwnAircraftModel(model);
     }
