@@ -75,10 +75,14 @@ namespace BlackSimPlugin
             //! @}
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
+            //! \copydoc BlackCore::ISimulator::reset
+            virtual void reset() override;
+
             //! Register help
             static void registerHelp();
 
             CFsuipc *m_fsuipc = nullptr;                            //!< FSUIPC
+            int m_ownAircraftUpdateCycles = 0;                      //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
             bool m_useFsuipc  = false;                              //!< use FSUIPC
             bool m_simPaused  = false;                              //!< simulator paused?
             bool m_simTimeSynced = false;                           //!< time synchronized?
