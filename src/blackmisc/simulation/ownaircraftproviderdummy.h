@@ -102,6 +102,9 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::updateOwnParts
             virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
 
+            //! \copydoc IOwnAircraftProvider::updateOwnCG
+            virtual bool updateOwnCG(const BlackMisc::PhysicalQuantities::CLength &cg) override;
+
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;
             mutable QReadWriteLock m_lock; //!< lock for m_ownAircraft

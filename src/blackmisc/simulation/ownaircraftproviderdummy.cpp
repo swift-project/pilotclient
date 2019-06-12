@@ -113,6 +113,12 @@ namespace BlackMisc
             return true;
         }
 
+        bool COwnAircraftProviderDummy::updateOwnCG(const CLength &cg)
+        {
+            QWriteLocker l(&m_lock);
+            return m_ownAircraft.setCG(cg);
+        }
+
         bool COwnAircraftProviderDummy::updateOwnCallsign(const CCallsign &callsign)
         {
             QWriteLocker l(&m_lock);
