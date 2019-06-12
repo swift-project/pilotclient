@@ -68,6 +68,12 @@ namespace BlackSimPlugin
             return CSimulatorPluginCommon::parseDetails(parser);
         }
 
+        void CSimulatorFsCommon::reset()
+        {
+            m_ownAircraftUpdateCycles = 0;
+            ISimulator::reset();
+        }
+
         void CSimulatorFsCommon::registerHelp()
         {
             if (CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
