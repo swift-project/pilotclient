@@ -386,6 +386,9 @@ namespace BlackMisc
             //! Get model string
             const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
 
+            //! Get CG from model
+            const PhysicalQuantities::CLength &getCG() const { return m_models[CurrentModel].getCG(); }
+
             //! Set model string
             void setModelString(const QString &modelString);
 
