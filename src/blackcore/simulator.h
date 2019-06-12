@@ -431,6 +431,7 @@ namespace BlackCore
         virtual int physicallyRemoveAllRemoteAircraft();
 
         //! Set elevation and CG in the providers and for auto publishing
+        //! \sa ISimulator::updateOwnSituationAndGroundElevation
         void rememberElevationAndSimulatorCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &simulatorCG);
 
         //! Emit the combined status
@@ -535,6 +536,9 @@ namespace BlackCore
         //! Own model has been changed
         virtual void onOwnModelChanged(const BlackMisc::Simulation::CAircraftModel &newModel);
 
+        //! Update own aircraft position and if suitable use it to update ground elevation
+        bool updateOwnSituationAndGroundElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
         //! Get the model set
         BlackMisc::Simulation::CAircraftModelList getModelSet() const;
 
@@ -554,6 +558,7 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs       = 0;      //!< statistics current update time
         qint64 m_statsMaxUpdateTimeMs           = 0;      //!< statistics max.update time
+        qint64 m_lastRecordedGndElevationMs     = 0;      //!< when gnd.elevation was last modified
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 

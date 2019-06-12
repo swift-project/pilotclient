@@ -251,7 +251,7 @@ namespace BlackSimPlugin
                 }
             }
 
-            return this->updateOwnSituation(situation);
+            return this->updateOwnSituationAndGroundElevation(situation);
         }
 
         bool CSimulatorEmulated::changeInternalParts(const CAircraftParts &parts)

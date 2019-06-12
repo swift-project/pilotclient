@@ -1100,6 +1100,39 @@ namespace BlackCore
         // can be overridden
     }
 
+    bool ISimulator::updateOwnSituationAndGroundElevation(const CAircraftSituation &situation)
+    {
+        const bool updated = this->updateOwnSituation(situation);
+
+        // do not use every situation, but every deltaMs and only on ground
+        constexpr qint64 deltaMs = 5000;
+        if (situation.isOnGround() && situation.getTimeDifferenceAbsMs(m_lastRecordedGndElevationMs) > deltaMs)
+        {
+            m_lastRecordedGndElevationMs = situation.getMSecsSinceEpoch();
+            const CSimulatorSettings settings = m_multiSettings.getSettings(this->getSimulatorInfo());
+            if (settings.isRecordOwnAircraftGnd())
+            {
+                const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+                CAltitude elevation = situation.getGroundElevation();
+                if (elevation.isNull())
+                {
+                    const CLength cg = ownAircraft.getModel().getCG();
+                    elevation = (cg.isNull() || situation.getAltitude().isNull()) ? CAltitude::null() : (situation.getAltitude().withOffset(cg * -1.0));
+                }
+
+                if (!elevation.isNull())
+                {
+                    const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
+                    const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
+                    const CElevationPlane ep(situation, radius);
+                    const bool remembered = this->rememberGroundElevation(cs, ep, radius);
+                    Q_UNUSED(remembered); // false means it was already in that cache, or something else is wrong
+                }
+            }
+        }
+        return updated;
+    }
+
     CAircraftModelList ISimulator::getModelSet() const
     {
         const CSimulatorInfo simulator = this->getSimulatorInfo();
