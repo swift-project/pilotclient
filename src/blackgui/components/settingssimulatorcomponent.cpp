@@ -128,6 +128,7 @@ namespace BlackGui
             // record GND
             ui->pb_ApplyRecordOwnAircraftGnd->setEnabled(m_pluginLoaded);
             ui->cb_RecordOwnGndPositions->setEnabled(m_pluginLoaded);
+            ui->le_RecordOwnGndPositionsRadius->setEnabled(m_pluginLoaded);
 
             // led
             ui->led_RestrictedRendering->setOn(m_pluginLoaded ? setup.isRenderingRestricted() : false);
@@ -156,6 +157,10 @@ namespace BlackGui
 
                 // CG
                 ui->comp_CGSourceSelector->setValue(settings);
+
+                // record
+                ui->le_RecordOwnGndPositionsRadius->setText(settings.getRecordedGndRadius().valueRoundedWithUnit(CLengthUnit::m(), 1, false, true));
+                ui->cb_RecordOwnGndPositions->setChecked(settings.isRecordOwnAircraftGnd());
 
                 // rendering
                 const int maxAircraft = setup.getMaxRenderedAircraft();
@@ -291,7 +296,7 @@ namespace BlackGui
             }
         }
 
-        CSimulatorSettings  CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)
+        CSimulatorSettings CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)
         {
             ok = false;
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return {}; }
@@ -331,9 +336,14 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyRecordGnd()
         {
             bool ok = false;
-            CSimulatorSettings settings = getSimulatorSettings(ok);
-            if (!ok || !settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked())) { return; }
-            setSimulatorSettings(settings);
+            CSimulatorSettings settings = this->getSimulatorSettings(ok);
+            if (!ok) { return; }
+            CLength radius;
+            radius.parseFromString(ui->le_RecordOwnGndPositionsRadius->text());
+            const bool c1 = settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked());
+            const bool c2 = settings.setRecordedGndRadius(radius);
+            if (!c1 && !c2) { return; }
+            this->setSimulatorSettings(settings);
         }
 
         void CSettingsSimulatorComponent::clearRestricedRendering()

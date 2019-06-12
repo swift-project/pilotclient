@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>352</width>
-    <height>343</height>
+    <width>368</width>
+    <height>281</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Simulator settings</string>
   </property>
-  <layout class="QGridLayout" name="gl_SettingsSimulator" columnstretch="0,0,0">
+  <layout class="QGridLayout" name="gl_SettingsSimulator" columnstretch="0,1,0">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -69,11 +69,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>346</width>
-        <height>269</height>
+        <width>362</width>
+        <height>207</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gl_SimulatorSettings" columnstretch="0,10,3">
+      <layout class="QGridLayout" name="gl_SimulatorSettings" columnstretch="0,0,0">
        <property name="leftMargin">
         <number>4</number>
        </property>
@@ -86,10 +86,13 @@
        <property name="bottomMargin">
         <number>4</number>
        </property>
-       <item row="7" column="2">
-        <widget class="QPushButton" name="pb_ApplyMaxDistance">
+       <item row="4" column="2">
+        <widget class="QPushButton" name="pb_DisableRendering">
+         <property name="toolTip">
+          <string>disable all rendering</string>
+         </property>
          <property name="text">
-          <string>apply</string>
+          <string>dis.</string>
          </property>
         </widget>
        </item>
@@ -100,29 +103,26 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="pb_ApplyCGSource">
+       <item row="7" column="2">
+        <widget class="QPushButton" name="pb_ApplyMaxDistance">
          <property name="text">
           <string>apply</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="2">
-        <widget class="QPushButton" name="pb_ApplyMaxAircraft">
-         <property name="text">
-          <string>apply</string>
+       <item row="7" column="1">
+        <layout class="QHBoxLayout" name="hl_MaxDistance">
+         <property name="spacing">
+          <number>4</number>
          </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="BlackGui::CLedWidget" name="led_RenderingEnabled" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>10</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
+         <item>
+          <widget class="QLineEdit" name="le_MaxDistance">
+           <property name="placeholderText">
+            <string>no restrictions</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="lbl_RestrictedRendering">
@@ -137,50 +137,12 @@
        <item row="3" column="0">
         <widget class="QLabel" name="lbl_RecordOwnGndPositions">
          <property name="text">
-          <string>Record gnd.</string>
+          <string>Record gnd.pos.</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbl_MaxDistance">
-         <property name="text">
-          <string>Max.dist.(NM)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="BlackGui::Components::CCGSourceSelector" name="comp_CGSourceSelector"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_CGSource">
-         <property name="text">
-          <string>CG (vert offset):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QCheckBox" name="cb_RecordOwnGndPositions">
-         <property name="text">
-          <string>record own gnd positions</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QPushButton" name="pb_DisableRendering">
-         <property name="text">
-          <string>disable</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="cb_ComSync">
-         <property name="text">
-          <string>use COM sync.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="pb_ApplyComSync">
+       <item row="6" column="2">
+        <widget class="QPushButton" name="pb_ApplyMaxAircraft">
          <property name="text">
           <string>apply</string>
          </property>
@@ -252,23 +214,6 @@
          </layout>
         </widget>
        </item>
-       <item row="5" column="2">
-        <widget class="QPushButton" name="pb_ClearRestrictedRendering">
-         <property name="text">
-          <string>clear</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_TimeSync">
-         <property name="toolTip">
-          <string>Time synchronization</string>
-         </property>
-         <property name="text">
-          <string>Time synch.</string>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="1">
         <layout class="QHBoxLayout" name="hl_RestrictedRendering">
          <property name="spacing">
@@ -286,6 +231,38 @@
          </item>
         </layout>
        </item>
+       <item row="3" column="1">
+        <widget class="QWidget" name="wi_RecordOwnGndPositions" native="true">
+         <layout class="QHBoxLayout" name="hl_RecordOwnGndPositions">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="cb_RecordOwnGndPositions">
+            <property name="text">
+             <string>record pos.radius</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="le_RecordOwnGndPositionsRadius">
+            <property name="placeholderText">
+             <string>e.g. 250m</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
        <item row="6" column="0">
         <widget class="QLabel" name="lbl_MaxAircraft">
          <property name="text">
@@ -293,30 +270,51 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_ComSync">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_TimeSync">
          <property name="toolTip">
-          <string>Synchronize COM unit with simulator</string>
+          <string>Time synchronization</string>
          </property>
          <property name="text">
-          <string>COM synch.</string>
+          <string>Time synch.</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
-        <widget class="QPushButton" name="pb_ApplyRecordOwnAircraftGnd">
+       <item row="2" column="2">
+        <widget class="QPushButton" name="pb_ApplyComSync">
          <property name="text">
           <string>apply</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="lbl_RenderingEnabled">
-         <property name="toolTip">
-          <string>Rendering enabled</string>
+       <item row="4" column="1">
+        <widget class="BlackGui::CLedWidget" name="led_RenderingEnabled" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>10</width>
+           <height>0</height>
+          </size>
          </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="pb_ApplyCGSource">
          <property name="text">
-          <string>Rendering enabled</string>
+          <string>apply</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="2">
+        <widget class="QPushButton" name="pb_ClearRestrictedRendering">
+         <property name="text">
+          <string>clear</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="lbl_MaxDistance">
+         <property name="text">
+          <string>Max.dist.(NM)</string>
          </property>
         </widget>
        </item>
@@ -334,19 +332,49 @@
          </item>
         </layout>
        </item>
-       <item row="7" column="1">
-        <layout class="QHBoxLayout" name="hl_MaxDistance">
-         <property name="spacing">
-          <number>4</number>
+       <item row="3" column="2">
+        <widget class="QPushButton" name="pb_ApplyRecordOwnAircraftGnd">
+         <property name="text">
+          <string>apply</string>
          </property>
-         <item>
-          <widget class="QLineEdit" name="le_MaxDistance">
-           <property name="placeholderText">
-            <string>no restrictions</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="cb_ComSync">
+         <property name="text">
+          <string>use COM sync.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lbl_RenderingEnabled">
+         <property name="toolTip">
+          <string>Rendering enabled</string>
+         </property>
+         <property name="text">
+          <string>Rendering enabled</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_CGSource">
+         <property name="text">
+          <string>CG (vert offset):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="BlackGui::Components::CCGSourceSelector" name="comp_CGSourceSelector"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_ComSync">
+         <property name="toolTip">
+          <string>Synchronize COM unit with simulator</string>
+         </property>
+         <property name="text">
+          <string>COM synch.</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -375,10 +403,23 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>pb_Check</tabstop>
+  <tabstop>sa_Settings</tabstop>
   <tabstop>cb_TimeSync</tabstop>
   <tabstop>le_TimeSyncOffset</tabstop>
+  <tabstop>pb_ApplyTimeSync</tabstop>
+  <tabstop>pb_ApplyCGSource</tabstop>
+  <tabstop>cb_ComSync</tabstop>
+  <tabstop>pb_ApplyComSync</tabstop>
+  <tabstop>cb_RecordOwnGndPositions</tabstop>
+  <tabstop>le_RecordOwnGndPositionsRadius</tabstop>
+  <tabstop>pb_ApplyRecordOwnAircraftGnd</tabstop>
+  <tabstop>pb_DisableRendering</tabstop>
+  <tabstop>pb_ClearRestrictedRendering</tabstop>
   <tabstop>le_MaxAircraft</tabstop>
+  <tabstop>pb_ApplyMaxAircraft</tabstop>
   <tabstop>le_MaxDistance</tabstop>
+  <tabstop>pb_ApplyMaxDistance</tabstop>
  </tabstops>
  <resources/>
  <connections/>
