@@ -521,7 +521,7 @@ namespace BlackSimPlugin
                     situation.setAltitude(altitude);
                     situation.setPressureAltitude(pressureAltitude);
                     aircraft.setSituation(situation);
-
+                    aircraft.setCG(altitude-groundAltitude); // calculate the CG
                 } // situation
 
                 // model
