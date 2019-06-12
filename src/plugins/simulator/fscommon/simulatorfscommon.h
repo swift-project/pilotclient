@@ -80,8 +80,8 @@ namespace BlackSimPlugin
 
             CFsuipc *m_fsuipc = nullptr;                            //!< FSUIPC
             bool m_useFsuipc  = false;                              //!< use FSUIPC
-            bool m_simPaused  = false;                              //!< Simulator paused?
-            bool m_simTimeSynced = false;                           //!< Time synchronized?
+            bool m_simPaused  = false;                              //!< simulator paused?
+            bool m_simTimeSynced = false;                           //!< time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;  //!< time offset
             BlackMisc::Aviation::CAirportList    m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
 

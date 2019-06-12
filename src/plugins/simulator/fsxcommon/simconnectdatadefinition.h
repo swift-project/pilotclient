@@ -29,17 +29,17 @@ namespace BlackSimPlugin
         //! \sa SimConnect events http://msdn.microsoft.com/en-us/library/cc526980.aspx
         struct DataDefinitionOwnAircraft
         {
-            double latitude;          //!< Latitude (deg)
-            double longitude;         //!< Longitude (deg)
-            double altitude;          //!< Altitude (ft)
-            double altitudeAGL;       //!< Altitude above ground (ft)
-            double pressureAltitude;  //!< Pressure altitude (m)
-            double cgToGround;        //!< Static CG to ground (ft)
-            double trueHeading;       //!< True heading (deg)
-            double pitch;             //!< Pitch (deg)
-            double bank;              //!< Bank (deg)
+            double latitudeDeg;       //!< Latitude (deg)
+            double longitudeDeg;      //!< Longitude (deg)
+            double altitudeFt;        //!< Altitude (ft)
+            double altitudeAGLFt;     //!< Altitude above ground (ft)
+            double pressureAltitudeM; //!< Pressure altitude (m)
+            double cgToGroundFt;      //!< Static CG to ground (ft)
+            double trueHeadingDeg;    //!< True heading (deg)
+            double pitchDeg;          //!< Pitch (deg)
+            double bankDeg;           //!< Bank (deg)
             double velocity;          //!< Ground velocity
-            double elevation;         //!< Elevation (ft)
+            double elevationFt;       //!< Elevation (ft)
             double simOnGround;       //!< Is aircraft on ground?
             // 12
             double lightStrobe;       //!< Is strobe light on?

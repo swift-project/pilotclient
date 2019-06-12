@@ -90,8 +90,10 @@ namespace BlackSimPlugin
             int bank = qRound(std::floor(pbhstrct.bank / CFs9Sdk::bankMultiplier()));
 
             // MSFS has inverted pitch and bank angles
+            // ~ and NOT -: https://dev.swift-project.org/rSWIFTPILOTCLIENT7f90652b
+            // The problem with - is that -(-512) is 512 but the maximum is 511 so this overflows back to -512 and causes a visual glitch.
             pitch = ~pitch;
-            bank = ~bank;
+            bank  = ~bank;
             situation.setPitch(CAngle(pitch, CAngleUnit::deg()));
             situation.setBank(CAngle(bank, CAngleUnit::deg()));
             situation.setHeading(CHeading(pbhstrct.hdg / CFs9Sdk::headingMultiplier(), CHeading::Magnetic, CAngleUnit::deg()));
@@ -233,9 +235,9 @@ namespace BlackSimPlugin
             const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive()) { changed = true; }
+            if (newCom1.getFrequencyActive()  != m_simCom1.getFrequencyActive())  { changed = true; }
             if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby()) { changed = true; }
-            if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive()) { changed = true; }
+            if (newCom2.getFrequencyActive()  != m_simCom2.getFrequencyActive())  { changed = true; }
             if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby()) { changed = true; }
             if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode()) { changed = true; }
             if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode()) { changed = true; }
@@ -258,7 +260,7 @@ namespace BlackSimPlugin
             if (selcal != m_selcal)
             {
                 //! KB 2018-11 that would need to go to updateOwnAircraftFromSimulator if the simulator ever supports SELCAL
-                //! KB 2018-11 als we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
+                //! KB 2018-11 as we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
                 m_selcal = selcal;
                 changed = true;
             }
@@ -378,7 +380,7 @@ namespace BlackSimPlugin
                 m_skipCockpitUpdateCycles--;
             }
 
-            CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
+            const CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
             this->updateOwnSituation(aircraftSituation);
 
             if (m_isWeatherActivated)

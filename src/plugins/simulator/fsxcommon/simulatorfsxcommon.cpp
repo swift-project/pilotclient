@@ -54,10 +54,10 @@ namespace BlackSimPlugin
     namespace FsxCommon
     {
         CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
-                IOwnAircraftProvider *ownAircraftProvider,
+                IOwnAircraftProvider    *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
-                IWeatherGridProvider *weatherGridProvider,
-                IClientProvider *clientProvider,
+                IWeatherGridProvider    *weatherGridProvider,
+                IClientProvider         *clientProvider,
                 QObject *parent) :
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
@@ -373,9 +373,9 @@ namespace BlackSimPlugin
             m_dispatchTimeMs = -1;
             m_dispatchProcTimeMs = -1;
             m_requestSimObjectDataCount = 0;
-            m_dispatchReceiveIdLast = SIMCONNECT_RECV_ID_NULL;
+            m_dispatchReceiveIdLast    = SIMCONNECT_RECV_ID_NULL;
             m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL;
-            m_dispatchRequestIdLast = CSimConnectDefinitions::RequestEndMarker;
+            m_dispatchRequestIdLast    = CSimConnectDefinitions::RequestEndMarker;
             m_dispatchRequestIdMaxTime = CSimConnectDefinitions::RequestEndMarker;
             CSimulatorPluginCommon::resetAircraftStatistics();
         }
@@ -632,24 +632,24 @@ namespace BlackSimPlugin
 
             CSimulatedAircraft myAircraft(getOwnAircraft());
             CCoordinateGeodetic position;
-            position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
-            position.setLongitude(CLongitude(simulatorOwnAircraft.longitude, CAngleUnit::deg()));
+            position.setLatitude(CLatitude(simulatorOwnAircraft.latitudeDeg, CAngleUnit::deg()));
+            position.setLongitude(CLongitude(simulatorOwnAircraft.longitudeDeg, CAngleUnit::deg()));
 
-            if (simulatorOwnAircraft.pitch < -90.0 || simulatorOwnAircraft.pitch >= 90.0)
+            if (simulatorOwnAircraft.pitchDeg < -90.0 || simulatorOwnAircraft.pitchDeg >= 90.0)
             {
-                CLogMessage(this).warning(u"FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
+                CLogMessage(this).warning(u"FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitchDeg;
             }
             CAircraftSituation aircraftSituation;
             aircraftSituation.setMSecsSinceEpoch(ts);
             aircraftSituation.setPosition(position);
             // MSFS has inverted pitch and bank angles
-            aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitch, CAngleUnit::deg()));
-            aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bank, CAngleUnit::deg()));
-            aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
+            aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitchDeg, CAngleUnit::deg()));
+            aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bankDeg, CAngleUnit::deg()));
+            aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeadingDeg, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundSpeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
-            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAircraftSituation::FromProvider);
-            aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-            aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitude, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
+            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevationFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAircraftSituation::FromProvider);
+            aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+            aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitudeM, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
             // set on ground also in situation for consistency and future usage
             // it is duplicated in parts
             aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
@@ -765,11 +765,16 @@ namespace BlackSimPlugin
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3"), boolToEnabledDisabled(m_useSbOffsets));
                 m_simulatorInternals.setValue(QStringLiteral("fsx/sb3packets"), m_useSbOffsets ? QString::number(m_sbDataReceived) : QStringLiteral("disabled"));
 
+                // CG
+                const CLength cg(simulatorOwnAircraft.cgToGroundFt, CLengthUnit::ft());
+                this->updateOwnCG(cg);
+
                 // Simulated objects instead of NON ATC
                 m_simulatorInternals.setValue(QStringLiteral("fsx/addAsSimulatedObject"), boolToEnabledDisabled(m_useAddSimulatedObj));
-            }
 
-            m_ownAircraftUpdateCycles++; // with 50updates/sec long enough even for 32bit
+            } // slow updates
+
+            m_ownAircraftUpdateCycles++; // with 50 updates/sec long enough even for 32bit
         }
 
         void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData)
@@ -2488,16 +2493,15 @@ namespace BlackSimPlugin
 
             // reset values
             m_simulatingChangedTs = -1;
-            m_simConnected = false;
+            m_simConnected  = false;
             m_simSimulating = false;
             m_sbDataReceived = 0;
-            m_syncTimeDeferredCounter =  0;
+            m_syncTimeDeferredCounter = 0;
             m_skipCockpitUpdateCycles = 0;
-            m_ownAircraftUpdateCycles = 0;
             m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
-            m_addedProbes = 0;
+            m_addedProbes    = 0;
             m_initFsxTerrainProbes = false;
             m_sendIdTraces.clear();
         }

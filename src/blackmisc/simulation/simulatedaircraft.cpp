@@ -534,6 +534,7 @@ namespace BlackMisc
         bool CSimulatedAircraft::setCG(const CLength &cg)
         {
             if (cg.isNull()) { return false; }
+            // ???? set to both models, or only the matched model ????
             const int c = m_models.setCG(cg);
             return c > 0;
         }

@@ -284,7 +284,7 @@ namespace BlackCore
         bool CContextOwnAircraft::updateOwnParts(const CAircraftParts &parts)
         {
             QWriteLocker l(&m_lockAircraft);
-            bool changed = (m_ownAircraft.getParts() != parts);
+            const bool changed = (m_ownAircraft.getParts() != parts);
             if (!changed) { return false; }
             m_ownAircraft.setParts(parts);
             return true;

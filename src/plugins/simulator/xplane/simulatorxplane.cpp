@@ -230,7 +230,7 @@ namespace BlackSimPlugin
                 // Updates
                 // Do not update ICAO codes, as this overrides reverse lookups
                 // updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
-                updateOwnSituation(situation);
+                this->updateOwn(situation);
 
                 // defaults
                 CSimulatedAircraft myAircraft(getOwnAircraft());

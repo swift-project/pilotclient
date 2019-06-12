@@ -490,9 +490,9 @@ namespace BlackSimPlugin
                     const double lonCorrectionFactor = 360.0 / (65536.0 * 65536.0 * 65536.0 * 65536.0);
                     CAircraftSituation situation = aircraft.getSituation();
                     CCoordinateGeodetic position = situation.getPosition();
-                    CLatitude lat(latitudeRaw * latCorrectionFactor, CAngleUnit::deg());
+                    CLatitude  lat(latitudeRaw  * latCorrectionFactor, CAngleUnit::deg());
                     CLongitude lon(longitudeRaw * lonCorrectionFactor, CAngleUnit::deg());
-                    CAltitude groundAltitude(groundAltitudeRaw / 256.0, CLengthUnit::m());
+                    CAltitude  groundAltitude(groundAltitudeRaw / 256.0, CLengthUnit::m());
                     position.setLatitude(lat);
                     position.setLongitude(lon);
                     position.setGeodeticHeight(groundAltitude);
@@ -509,7 +509,7 @@ namespace BlackSimPlugin
 
                     // speeds, situation
                     CAngle pitch = CAngle(pitchRaw, CAngleUnit::deg());
-                    CAngle bank = CAngle(bankRaw, CAngleUnit::deg());
+                    CAngle bank  = CAngle(bankRaw, CAngleUnit::deg());
                     CHeading heading = CHeading(headingRaw * angleCorrectionFactor, CHeading::True, CAngleUnit::deg());
                     CSpeed groundspeed(groundspeedRaw / 65536.0, CSpeedUnit::m_s());
                     CAltitude altitude(altitudeRaw / (65536.0 * 65536.0), CAltitude::MeanSeaLevel, CLengthUnit::m());

@@ -113,7 +113,7 @@ namespace BlackSimPlugin
             positionSlewMode.lat_f = static_cast<quint16>(qAbs((latitude - positionSlewMode.lat_i) * 65536));
 
             // Longitude - integer and decimal places
-            const double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
+            const double longitude  = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionSlewMode.lon_hi = static_cast<qint32>(longitude);
             positionSlewMode.lon_lo = static_cast<quint16>(qAbs((longitude - positionSlewMode.lon_hi) * 65536));
 
@@ -129,7 +129,7 @@ namespace BlackSimPlugin
             pbhstrct.bank  = qRound(std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
-            pbhstrct.bank = ~pbhstrct.bank;
+            pbhstrct.bank  = ~pbhstrct.bank;
 
             pbhstrct.onground = situation.isOnGround() ? 1 : 0;
             positionSlewMode.pbh = pbhstrct.pbh;

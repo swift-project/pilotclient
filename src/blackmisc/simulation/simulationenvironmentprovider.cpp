@@ -347,8 +347,8 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockElvCoordinates);
             m_statsCurrentElevRequestTimeMs = -1;
-            m_statsMaxElevRequestTimeMs = -1;
-            m_elvFound = m_elvMissed = 0;
+            m_statsMaxElevRequestTimeMs     = -1;
+            m_elvFound = m_elvMissed        =  0;
         }
 
         ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) :
@@ -447,7 +447,7 @@ namespace BlackMisc
             m_pendingElevationRequests.clear();
             m_statsCurrentElevRequestTimeMs = -1;
             m_statsMaxElevRequestTimeMs     = -1;
-            m_elvFound = m_elvMissed = 0;
+            m_elvFound = m_elvMissed        =  0;
         }
 
         void ISimulationEnvironmentProvider::clearCGs()

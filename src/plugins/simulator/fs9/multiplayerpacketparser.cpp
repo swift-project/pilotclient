@@ -31,7 +31,6 @@ namespace BlackSimPlugin
                 data.append(qPrintable(value), value.size() + 1);
                 return data;
             }
-
-        }
-    }
-}
+        } // ns
+    } // ns
+} // ns
