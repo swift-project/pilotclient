@@ -678,7 +678,7 @@ namespace BlackSimPlugin
                                        ts);
 
             // set values
-            this->updateOwnSituation(aircraftSituation);
+            this->updateOwnSituationAndGroundElevation(aircraftSituation);
             this->updateOwnParts(parts);
 
             // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)

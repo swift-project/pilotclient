@@ -381,7 +381,7 @@ namespace BlackSimPlugin
             }
 
             const CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
-            this->updateOwnSituation(aircraftSituation);
+            this->updateOwnSituationAndGroundElevation(aircraftSituation);
 
             if (m_isWeatherActivated)
             {

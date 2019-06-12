@@ -48,6 +48,9 @@ namespace BlackMisc
         //! Time difference in ms
         qint64 getTimeDifferenceMs(qint64 compareTime) const { return compareTime - this->getMSecsSinceEpoch(); }
 
+        //! Time difference in ms
+        qint64 getTimeDifferenceAbsMs(qint64 compareTime) const { return qAbs(compareTime - this->getMSecsSinceEpoch()); }
+
         //! Time difference to now
         qint64 getTimeDifferenceToNowMs() const { return this->getTimeDifferenceMs(QDateTime::currentMSecsSinceEpoch()); }
 
