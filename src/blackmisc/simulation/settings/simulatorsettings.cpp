@@ -125,6 +125,13 @@ namespace BlackMisc
                 return true;
             }
 
+            bool CSimulatorSettings::setRecordedGndRadius(CLength &radius)
+            {
+                if (radius == m_recordedGndRadius) { return false; }
+                m_recordedGndRadius = radius;
+                return true;
+            }
+
             void CSimulatorSettings::resetPaths()
             {
                 m_excludeDirectoryPatterns.clear();
@@ -159,6 +166,7 @@ namespace BlackMisc
                 case IndexComIntegration:                return CVariant::fromValue(m_comIntegration);
                 case IndexRecordOwnAircraftGnd:          return CVariant::fromValue(m_recordGnd);
                 case IndexCGSource:                      return CVariant::fromValue(m_cgSource);
+                case IndexRecordOwnAircraftGndRadius:    return m_recordedGndRadius.propertyByIndex(index.copyFrontRemoved());
                 default: return CValueObject::propertyByIndex(index);
                 }
             }
@@ -174,7 +182,8 @@ namespace BlackMisc
                 case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
                 case IndexComIntegration:       this->setComIntegrated(variant.toBool()); break;
                 case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
-                case IndexCGSource:             m_cgSource = variant.toInt(); break;
+                case IndexCGSource:                    m_cgSource = variant.toInt(); break;
+                case IndexRecordOwnAircraftGndRadius:  m_recordedGndRadius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
             }

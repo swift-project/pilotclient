@@ -15,10 +15,11 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/weather/weatherscenario.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QStringList>
 #include <QObject>
@@ -41,8 +42,9 @@ namespace BlackMisc
                     IndexModelDirectories,
                     IndexModelExcludeDirectoryPatterns,
                     IndexComIntegration, //!< COM unit integration
+                    IndexCGSource,
                     IndexRecordOwnAircraftGnd,
-                    IndexCGSource
+                    IndexRecordOwnAircraftGndRadius
                 };
 
                 //! Where we get the CG (aka vertical offset) from
@@ -117,6 +119,12 @@ namespace BlackMisc
                 //! Record GND values (of own aircraft)
                 bool setRecordOwnAircraftGnd(bool record);
 
+                //! Record GND values with radius
+                BlackMisc::PhysicalQuantities::CLength getRecordedGndRadius() const { return m_recordedGndRadius; }
+
+                //! Record GND values with radius
+                bool setRecordedGndRadius(BlackMisc::PhysicalQuantities::CLength &radius);
+
                 //! Reset the paths
                 void resetPaths();
 
@@ -139,6 +147,7 @@ namespace BlackMisc
                 bool        m_comIntegration = false;   //!< COM integration
                 bool        m_recordGnd = false;        //!< Record GND values (of own aircraft)
                 int         m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
+                PhysicalQuantities::CLength m_recordedGndRadius { 250.0, PhysicalQuantities::CLengthUnit::m() };
 
                 BLACK_METACLASS(
                     CSimulatorSettings,
@@ -146,7 +155,9 @@ namespace BlackMisc
                     BLACK_METAMEMBER(modelDirectories),
                     BLACK_METAMEMBER(excludeDirectoryPatterns),
                     BLACK_METAMEMBER(comIntegration),
-                    BLACK_METAMEMBER(cgSource)
+                    BLACK_METAMEMBER(cgSource),
+                    BLACK_METAMEMBER(recordGnd),
+                    BLACK_METAMEMBER(recordedGndRadius)
                 );
             };
 
