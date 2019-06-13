@@ -112,18 +112,18 @@ namespace BlackGui
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
             if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) return;
 
-            ISimulator::SimulatorStatus simulatorStatus = static_cast<ISimulator::SimulatorStatus>(sGui->getIContextSimulator()->getSimulatorStatus());
+            const ISimulator::SimulatorStatus simulatorStatus = static_cast<ISimulator::SimulatorStatus>(sGui->getIContextSimulator()->getSimulatorStatus());
             if (simulatorStatus == ISimulator::Unspecified || simulatorStatus == ISimulator::Disconnected)
             {
                 static const QString s("No simulator available");
-                this->addOrUpdateLiveDataByName("info", s, CIcons::StandardIconWarning16);
+                this->addOrUpdateLiveDataByName(QStringLiteral("info"), s, CIcons::StandardIconWarning16);
                 return;
             }
 
             if (!simulatorStatus.testFlag(ISimulator::Simulating))
             {
                 static const QString s("Simulator (%1) not yet running");
-                this->addOrUpdateLiveDataByName("info", s.arg(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()), CIcons::StandardIconWarning16);
+                this->addOrUpdateLiveDataByName(QStringLiteral("info"), s.arg(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()), CIcons::StandardIconWarning16);
                 return;
             }
 
@@ -141,37 +141,54 @@ namespace BlackGui
             static const CIcon iconLatLng(s.latitude().toIcon());
             static const CIcon iconRadio(CIcon::iconByIndex(CIcons::StandardIconRadio16));
             static const CIcon iconAttitude(CIcon::iconByIndex(CIcons::AviationAttitudeIndicator));
+            static const CIcon iconPlane(CIcon::iconByIndex(CIcons::StandardIconPaperPlane16));
 
             if (m_simulator.isAnySimulator())
             {
                 this->addOrUpdateLiveDataByName("simulator", m_simulator.toQString(true), m_simulator.toIcon());
             }
-            this->addOrUpdateLiveDataByName("latitude",  s.latitude().toQString(),  iconLatLng);
-            this->addOrUpdateLiveDataByName("longitude", s.longitude().toQString(), iconLatLng);
-            this->addOrUpdateLiveDataByName("altitude, true (ft)", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-            this->addOrUpdateLiveDataByName("altitude, true (m)",  s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
-            this->addOrUpdateLiveDataByName("altitude, pressure (ft)", s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-            this->addOrUpdateLiveDataByName("altitude, pressure (m)",  s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+            this->addOrUpdateLiveDataByName(QStringLiteral("latitude"),  s.latitude().toQString(),  iconLatLng);
+            this->addOrUpdateLiveDataByName(QStringLiteral("longitude"), s.longitude().toQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (ft)"), s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+            this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (m)"),  s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+            this->addOrUpdateLiveDataByName(QStringLiteral("altitude, pressure (ft)"), s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+            this->addOrUpdateLiveDataByName(QStringLiteral("altitude, pressure (m)"),  s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
 
             if (s.hasGroundElevation())
             {
-                this->addOrUpdateLiveDataByName("elevation", s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
+                this->addOrUpdateLiveDataByName(QStringLiteral("elevation (ft)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
+                this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
             }
-            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toQString(), iconAttitude);
-            this->addOrUpdateLiveDataByName("bank", s.getBank().toQString(), iconAttitude);
+            else
+            {
+                this->addOrUpdateLiveDataByName(QStringLiteral("elevation"), QStringLiteral("N/A"), iconAlt);
+            }
+
+            if (ownAircraft.hasCG())
+            {
+                this->addOrUpdateLiveDataByName(QStringLiteral("CG (ft)"), ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconPlane);
+                this->addOrUpdateLiveDataByName(QStringLiteral("CG (m)"),  ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::m(),  2), iconPlane);
+            }
+            else
+            {
+                this->addOrUpdateLiveDataByName(QStringLiteral("CG"), QStringLiteral("N/A"), iconPlane);
+            }
+
+            this->addOrUpdateLiveDataByName(QStringLiteral("pitch"), s.getPitch().toQString(), iconAttitude);
+            this->addOrUpdateLiveDataByName(QStringLiteral("bank"), s.getBank().toQString(), iconAttitude);
 
             const CHeading heading = s.getHeading().normalizedTo360Degrees();
-            this->addOrUpdateLiveDataByName("heading", heading.valueRoundedWithUnit(CAngleUnit::deg(), 1), s.getHeading().toIcon());
+            this->addOrUpdateLiveDataByName(QStringLiteral("heading"), heading.valueRoundedWithUnit(CAngleUnit::deg(), 1), s.getHeading().toIcon());
 
             const CSpeed gs = s.getGroundSpeed();
-            this->addOrUpdateLiveDataByName("ground speed (kts)", gs.valueRoundedWithUnit(CSpeedUnit::kts(), 1), gs.toIcon());
-            this->addOrUpdateLiveDataByName("ground speed (km/h)", gs.valueRoundedWithUnit(CSpeedUnit::km_h(), 1), gs.toIcon());
+            this->addOrUpdateLiveDataByName(QStringLiteral("ground speed (kts)"), gs.valueRoundedWithUnit(CSpeedUnit::kts(), 1), gs.toIcon());
+            this->addOrUpdateLiveDataByName(QStringLiteral("ground speed (km/h)"), gs.valueRoundedWithUnit(CSpeedUnit::km_h(), 1), gs.toIcon());
 
-            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM1 active"), c1.getFrequencyActive().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM2 active"), c2.getFrequencyActive().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM1 standby"), c1.getFrequencyStandby().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("COM2 standby"), c2.getFrequencyStandby().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName(QStringLiteral("Transponder"), ownAircraft.getTransponderCodeFormatted(), iconRadio);
         }
 
         void CSimulatorComponent::onSimulatorStatusChanged(int status)
