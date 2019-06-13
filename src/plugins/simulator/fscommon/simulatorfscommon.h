@@ -83,6 +83,7 @@ namespace BlackSimPlugin
 
             CFsuipc *m_fsuipc = nullptr;                            //!< FSUIPC
             int m_ownAircraftUpdateCycles = 0;                      //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
+            int m_skipCockpitUpdateCycles = 0;                      //!< skip some update cycles to allow changes in simulator cockpit to be set
             bool m_useFsuipc  = false;                              //!< use FSUIPC
             bool m_simPaused  = false;                              //!< simulator paused?
             bool m_simTimeSynced = false;                           //!< time synchronized?

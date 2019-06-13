@@ -2497,7 +2497,6 @@ namespace BlackSimPlugin
             m_simSimulating = false;
             m_sbDataReceived = 0;
             m_syncTimeDeferredCounter = 0;
-            m_skipCockpitUpdateCycles = 0;
             m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;

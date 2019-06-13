@@ -377,7 +377,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_skipCockpitUpdateCycles--;
+                --m_skipCockpitUpdateCycles;
             }
 
             const CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
