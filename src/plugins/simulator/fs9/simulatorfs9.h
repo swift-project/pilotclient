@@ -104,11 +104,10 @@ namespace BlackSimPlugin
             void synchronizeTime();
 
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
-            QMetaObject::Connection m_connectionHostMessages;
-            bool m_simConnected = false; //!< Is simulator connected?
-            QSharedPointer<CFs9Host> m_fs9Host;
+            QMetaObject::Connection      m_connectionHostMessages;
+            bool                         m_simConnected = false; //!< Is simulator connected?
+            QSharedPointer<CFs9Host>     m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
-            int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
 
             static constexpr int SkipUpdateCyclesForCockpit = 10;
         };

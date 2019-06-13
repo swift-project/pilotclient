@@ -71,6 +71,8 @@ namespace BlackSimPlugin
         void CSimulatorFsCommon::reset()
         {
             m_ownAircraftUpdateCycles = 0;
+            m_skipCockpitUpdateCycles = 0;
+
             ISimulator::reset();
         }
 
