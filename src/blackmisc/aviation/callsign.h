@@ -107,8 +107,16 @@ namespace BlackMisc
             //! Get the callsign suffix ("TWR", "ATIS" ...) if any ("_" is removed)
             QString getSuffix() const;
 
-            //! Airline suffix (e.g. DLH1234 -> DLH) if applicable
+            //! Airline suffix (e.g. DLH1234 -> DLH) if applicable @{
             QString getAirlineSuffix() const;
+            QString getAirlineSuffix(QString &flightNumber) const;
+            // @}
+
+            //! Flight number (e.g. DLH1234 -> 1234) if applicable
+            QString getFlightNumber() const;
+
+            //! Flight number as integer
+            int getFlightNumberInt() const;
 
             //! Suffix such as "_TWR"?
             bool hasSuffix() const;

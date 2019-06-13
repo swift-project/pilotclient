@@ -15,21 +15,19 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        MSInOutValues::MSInOutValues(
-            const QString &cs,
-            const CAircraftIcaoCode aircraftIcao,
-            const CAirlineIcaoCode airlineIcao,
-            const QString &livery, int liveryId) :
-            MSInOutValues(cs,
+        MSInOutValues::MSInOutValues(const CCallsign &cs,
+                                     const CAircraftIcaoCode aircraftIcao,
+                                     const CAirlineIcaoCode airlineIcao,
+                                     const QString &livery, int liveryId) :
+            MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
                           aircraftIcao.getDesignator(), aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
                           airlineIcao.getDesignator(),  airlineIcao.getVDesignator(),   airlineIcao.getDbKey(),
                           livery, liveryId)
         { }
 
-        MSInOutValues::MSInOutValues(
-            const QString &cs,
-            const CAircraftIcaoCode aircraftIcao,
-            const CLivery livery) :
+        MSInOutValues::MSInOutValues(const CCallsign &cs,
+                                     const CAircraftIcaoCode aircraftIcao,
+                                     const CLivery livery) :
             MSInOutValues(cs,
                           aircraftIcao,
                           livery.getAirlineIcaoCode(),
@@ -37,14 +35,14 @@ namespace BlackMisc
         { }
 
         MSInOutValues::MSInOutValues(const CAircraftModel &model) :
-            MSInOutValues(model.getCallsign().asString(), model.getAircraftIcaoCode(), model.getLivery())
+            MSInOutValues(model.getCallsign(), model.getAircraftIcaoCode(), model.getLivery())
         { }
 
         MSInOutValues::MSInOutValues(const MSInOutValues &sv) :
-            MSInOutValues(sv.m_callsign,
-                          sv.getAircraftIcao(), sv.getCombinedType(), sv.getDbAircraftIcaoId(),
-                          sv.getAirlineIcao(), sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
-                          sv.getLivery(), sv.getDbLiveryId(),
+            MSInOutValues(sv.m_callsign,        sv.m_callsignAsSet,         sv.m_flightNumber,
+                          sv.getAircraftIcao(), sv.getCombinedType(),       sv.getDbAircraftIcaoId(),
+                          sv.getAirlineIcao(),  sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
+                          sv.getLivery(),       sv.getDbLiveryId(),
                           sv.m_logMessage,
                           sv.isModified(), sv.isRerun())
         { }

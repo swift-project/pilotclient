@@ -31,6 +31,8 @@ namespace BlackMisc
 
             //! MSNetworkValues properties @{
             Q_PROPERTY(QString callsign           READ getCallsign           WRITE setCallsign           NOTIFY callsignChanged)
+            Q_PROPERTY(QString callsignAsSet      READ getCallsignAsSet)
+            Q_PROPERTY(QString flightNumber       READ getFlightNumber)
             Q_PROPERTY(int     dbAircraftIcaoId   READ getDbAircraftIcaoId   WRITE setDbAircraftIcaoId   NOTIFY dbAircraftIcaoIdChanged)
             Q_PROPERTY(int     dbAirlineIcaoId    READ getDbAirlineIcaoId    WRITE setDbAirlineIcaoId    NOTIFY dbAirlineIcaoIdChanged)
             Q_PROPERTY(int     dbLiveryId         READ getDbLiveryId         WRITE setDbLiveryId         NOTIFY dbLiveryIdChanged)
@@ -57,13 +59,13 @@ namespace BlackMisc
             Q_INVOKABLE MSInOutValues() {}
 
             //! Ctor
-            Q_INVOKABLE MSInOutValues(const QString &cs,
+            Q_INVOKABLE MSInOutValues(const QString &cs,           const QString &csAsSet,            const QString &flightNumber,
                                       const QString &aircraftIcao, const QString &combinedType,       int idAircraftIcao,
                                       const QString &airlineIcao,  const QString &virtualAirlineIcao, int idAirlineIcao,
                                       const QString &livery,       int liveryId,
                                       const QString &logMsg = {},
                                       bool  modified = false, bool rerun = false) :
-                m_callsign(cs.trimmed().toUpper()),
+                m_callsign(cs.trimmed().toUpper()), m_callsignAsSet(csAsSet), m_flightNumber(flightNumber),
                 m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
                 m_airlineIcao(airlineIcao.trimmed().toUpper()),   m_vAirlineIcao(virtualAirlineIcao),
                 m_livery(livery.trimmed().toUpper()),
@@ -73,13 +75,13 @@ namespace BlackMisc
             {}
 
             //! Ctor
-            MSInOutValues(const QString &cs,
+            MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
                           const BlackMisc::Aviation::CAircraftIcaoCode aircraftIcao,
                           const BlackMisc::Aviation::CAirlineIcaoCode airlineIcao,
                           const QString &livery, int liveryId);
 
             //! Ctor
-            MSInOutValues(const QString &cs,
+            MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
                           const BlackMisc::Aviation::CAircraftIcaoCode aircraftIcao,
                           const BlackMisc::Aviation::CLivery livery);
 
@@ -89,11 +91,12 @@ namespace BlackMisc
             //! Ctor
             MSInOutValues(const MSInOutValues &sv);
 
-            //! Get callsign
-            const QString &getCallsign() const { return m_callsign; }
-
-            //! Set callsign
+            //! Callsign values @{
+            const QString &getCallsign()      const { return m_callsign; }
+            const QString &getCallsignAsSet() const { return m_callsignAsSet; }
+            const QString &getFlightNumber()  const { return m_flightNumber; }
             void setCallsign(const QString &callsign);
+            //! @}
 
             //! Values found in DB? @{
             bool isFoundDbAircraftIcao() const { return m_dbAircraftIcaoId >= 0; }
@@ -149,9 +152,6 @@ namespace BlackMisc
             bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
             bool hasModifiedAirlineIcaoDesignator()  const { return m_modifiedAirlineDesignator;  }
             bool hasUnmodifiedDesignators()  const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator();  }
-            //! }
-
-            //! Changed values @{
             bool hasChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
             bool hasChangedAircraftIcaoId(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
             bool hasChangedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao) const;
@@ -193,6 +193,8 @@ namespace BlackMisc
 
         private:
             QString m_callsign;
+            QString m_callsignAsSet;
+            QString m_flightNumber;
             QString m_aircraftIcao;
             QString m_combinedType;
             QString m_airlineIcao;

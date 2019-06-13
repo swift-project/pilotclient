@@ -178,23 +178,47 @@ namespace BlackMisc
 
         QString CCallsign::getAirlineSuffix() const
         {
+            QString flightNumber;
+            return this->getAirlineSuffix(flightNumber);
+        }
+
+        QString CCallsign::getAirlineSuffix(QString &flightNumber) const
+        {
+            flightNumber.clear();
             if (m_callsign.length() < 3) { return {}; }
-            if (this->isAtcCallsign()) { return {}; }
+            if (this->isAtcCallsign())   { return {}; }
 
             thread_local const QRegularExpression regExp("^[A-Z]{3,}");
             QRegularExpressionMatch match = regExp.match(m_callsign);
-            if (!match.hasMatch()) { return QString(); }
+            if (!match.hasMatch()) { return {}; }
             const QString airline = match.captured(0);
+            flightNumber = match.captured(1);
 
             // hard facts
             if (airline.length() == 3) { return airline; } // we allow 3 letters
             if (airline.length() == 4 && airline.startsWith('V')) { return airline; } // we allow virtual 4 letter codes, e.g. VDLD
 
             // some people use callsigns like UPSE123
-            const QString number = match.captured(1);
-            if (number.length() >= 3 && airline.length() == 4) { return airline.left(3); }
+            flightNumber = match.captured(1);
+            if (flightNumber.length() >= 3 && airline.length() == 4) { return airline.left(3); }
 
             return {}; // invalid
+        }
+
+        QString CCallsign::getFlightNumber() const
+        {
+            if (this->isAtcCallsign()) { return {}; }
+            QString flightNumber;
+            const QString airline = this->getAirlineSuffix(flightNumber);
+            return airline.isEmpty() ? QString() : flightNumber;
+        }
+
+        int CCallsign::getFlightNumberInt() const
+        {
+            if (this->isAtcCallsign()) { return -1; }
+            bool ok;
+            const int fn = this->getFlightNumber().toInt(&ok);
+            return ok ? fn : -1;
         }
 
         bool CCallsign::hasSuffix() const
