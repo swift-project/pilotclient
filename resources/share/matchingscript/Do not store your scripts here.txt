@@ -1,0 +1,2 @@
+Use your own directory to store your scripts!
+This directory will be overridden.
