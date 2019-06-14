@@ -43,16 +43,10 @@ namespace BlackMisc
                 ByForceCivilian  = 1 << 7, //!< civilian (in) will only search in civilian
                 ByMilitary       = ByForceCivilian | ByForceMilitary,
                 ByVtol           = 1 << 8,
-                ByIcaoOrderAircraftFirst    = (1 << 9)  | ByIcaoData,
+                ByIcaoOrderAircraftFirst    = (1 <<  9) | ByIcaoData,
                 ByIcaoOrderAirlineFirst     = (1 << 10) | ByIcaoData,
                 ByAirlineGroupSameAsAirline = (1 << 11) | ByIcaoData,
                 ByAirlineGroupIfNoAirline   = (1 << 12) | ByIcaoData,
-                ByCategoryGlider   = 1 << 20,
-                ByCategoryMilitary = 1 << 21,
-
-                // --- score based matching ---
-                ScoreIgnoreZeros         = 1 << 11, //!< zero scores are ignored
-                ScorePreferColorLiveries = 1 << 12, //!< prefer color liveries
 
                 // --- exclusion ---
                 ExcludeNoDbData   = 1 << 13,
@@ -62,12 +56,22 @@ namespace BlackMisc
                 // --- model set ---
                 ModelSetRemoveFailedModel        = 1 << 15,
                 ModelVerificationAtStartup       = 1 << 16,
-                ModelVerificationOnlyWarnError   = 1 << 18, // later added, hence 18
                 ModelFailoverIfNoModelCanBeAdded = 1 << 17,
+                ModelVerificationOnlyWarnError   = 1 << 18, // later added, hence 18
+
+                // --- categories ---
+                ByCategoryGlider            =  1 << 20,
+                ByCategoryMilitary          =  1 << 21,
+                ByCategorySmallAircraft     =  1 << 22,
 
                 // --- reverse lookup ---
-                ReverseLookupModelString  = 1 << 19,
-                ReverseLookupDefault = ReverseLookupModelString,
+                ReverseLookupModelString    = 1 << 25,
+                ReverseLookupSwiftLiveryIds = 1 << 26,
+                ReverseLookupDefault = ReverseLookupModelString | ReverseLookupSwiftLiveryIds,
+
+                // --- score based matching ---
+                ScoreIgnoreZeros         = 1 << 28, //!< zero scores are ignored
+                ScorePreferColorLiveries = 1 << 29, //!< prefer color liveries
 
                 // --- others ---
                 ModeNone          = 0,
@@ -77,7 +81,7 @@ namespace BlackMisc
                 ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
 
                 // default depending on algorithm
-                ModeDefaultScore  = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
+                ModeDefaultScore  =     ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
                 ModeDefaultReduce =          ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
                 ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ModeDefaultScore,
             };
@@ -185,9 +189,6 @@ namespace BlackMisc
             //! Set the strategy
             void setPickStrategy(PickSimilarStrategy strategy) { m_strategy = static_cast<int>(strategy); }
 
-            //! Set reverse lookup flags
-            void setReverseLookup(bool useModelLookup);
-
             //! Airline group behaviour
             void setAirlineGroupBehaviour(bool ifNoAirline, bool sameAsAirline);
 
@@ -222,10 +223,11 @@ namespace BlackMisc
             static const QString &strategyToString(PickSimilarStrategy strategy);
 
             //! Mode by flags
-            static MatchingMode matchingMode(bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
+            static MatchingMode matchingMode(bool revModelString, bool revLiveryIds,
+                                             bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
                                              bool byFamily, bool byLivery, bool byCombinedType,
                                              bool byForceMilitary, bool byForceCivilian,
-                                             bool byVtol, bool byGliderCategory, bool byMilitaryCategory,
+                                             bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
                                              bool scoreIgnoreZeros,  bool scorePreferColorLiveries,   bool excludeNoDbData, bool excludeNoExcluded,
                                              bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
 

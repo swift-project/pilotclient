@@ -68,13 +68,6 @@ namespace BlackMisc
             this->setMatchingMode(m);
         }
 
-        void CAircraftMatcherSetup::setReverseLookup(bool useModelLookup)
-        {
-            MatchingMode m = this->getMatchingMode();
-            m.setFlag(ReverseLookupModelString, useModelLookup);
-            this->setMatchingMode(m);
-        }
-
         void CAircraftMatcherSetup::setAirlineGroupBehaviour(bool ifNoAirline, bool sameAsAirline)
         {
             MatchingMode m = this->getMatchingMode();
@@ -118,11 +111,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;
-            case IndexMatchingMode:      m_mode = variant.toInt(); break;
-            case IndexPickStrategy:      m_strategy = variant.toInt(); break;
+            case IndexMatchingAlgorithm:      m_algorithm = variant.toInt(); break;
+            case IndexMatchingMode:           m_mode = variant.toInt(); break;
+            case IndexPickStrategy:           m_strategy = variant.toInt(); break;
             case IndexMsNetworkEntryFile:     m_msReverseLookupFile  = variant.toQString(); break;
-            case IndexMsMatchingStageFile:    m_msMatchingStageFile = variant.toQString(); break;
+            case IndexMsMatchingStageFile:    m_msMatchingStageFile  = variant.toQString(); break;
             case IndexMsNetworkEnabled:       m_msReverseEnabled = variant.toBool(); break;
             case IndexMsMatchingStageEnabled: m_msReverseEnabled = variant.toBool(); break;
             default: break;
@@ -201,32 +194,36 @@ namespace BlackMisc
             static const QString modelFailedAdded("Replace models failed to be added");
             static const QString categoryGlider("glider categories");
             static const QString categoryMilitary("military categories");
+            static const QString categorySmallAircraft("small aircraft categories");
             static const QString revModelString("reverse model lookup");
+            static const QString revLiveryIds("reverse livery ids");
             static const QString agSameAsAirline("group as airline");
             static const QString agIfNoAirline("group if no airline");
 
             switch (modeFlag)
             {
-            case ReverseLookupModelString:   return revModelString;
-            case ByModelString:              return ms;
-            case ByIcaoData:                 return icao;
-            case ByFamily:                   return family;
-            case ByLivery:                   return livery;
-            case ByCombinedType:             return combined;
-            case ByIcaoOrderAircraftFirst:   return icaoAircraft;
-            case ByIcaoOrderAirlineFirst:    return icaoAirline;
-            case ByForceCivilian:            return forceCiv;
-            case ByForceMilitary:            return forceMil;
-            case ByVtol:                     return vtol;
-            case ByCategoryGlider:           return categoryGlider;
-            case ByCategoryMilitary:         return categoryMilitary;
-            case ScoreIgnoreZeros:           return noZeros;
-            case ScorePreferColorLiveries:   return preferColorLiveries;
-            case ExcludeNoDbData:            return exNoDb;
-            case ExcludeNoExcluded:          return exExcl;
-            case ModelSetRemoveFailedModel:  return removeFromModelSet;
-            case ModelVerificationAtStartup: return verification;
-            case ByAirlineGroupIfNoAirline:  return agIfNoAirline;
+            case ReverseLookupModelString:    return revModelString;
+            case ReverseLookupSwiftLiveryIds: return revLiveryIds;
+            case ByModelString:               return ms;
+            case ByIcaoData:                  return icao;
+            case ByFamily:                    return family;
+            case ByLivery:                    return livery;
+            case ByCombinedType:              return combined;
+            case ByIcaoOrderAircraftFirst:    return icaoAircraft;
+            case ByIcaoOrderAirlineFirst:     return icaoAirline;
+            case ByForceCivilian:             return forceCiv;
+            case ByForceMilitary:             return forceMil;
+            case ByVtol:                      return vtol;
+            case ByCategoryGlider:            return categoryGlider;
+            case ByCategoryMilitary:          return categoryMilitary;
+            case ByCategorySmallAircraft:     return categorySmallAircraft;
+            case ScoreIgnoreZeros:            return noZeros;
+            case ScorePreferColorLiveries:    return preferColorLiveries;
+            case ExcludeNoDbData:             return exNoDb;
+            case ExcludeNoExcluded:           return exExcl;
+            case ModelSetRemoveFailedModel:   return removeFromModelSet;
+            case ModelVerificationAtStartup:  return verification;
+            case ByAirlineGroupIfNoAirline:   return agIfNoAirline;
             case ByAirlineGroupSameAsAirline:      return agSameAsAirline;
             case ModelVerificationOnlyWarnError:   return verificationWarn;
             case ModelFailoverIfNoModelCanBeAdded: return modelFailedAdded;
@@ -240,25 +237,27 @@ namespace BlackMisc
         QString CAircraftMatcherSetup::modeToString(MatchingMode mode)
         {
             QStringList modes;
-            if (mode.testFlag(ReverseLookupModelString))   { modes << modeFlagToString(ReverseLookupModelString); }
-            if (mode.testFlag(ByModelString))              { modes << modeFlagToString(ByModelString); }
-            if (mode.testFlag(ByIcaoData))                 { modes << modeFlagToString(ByIcaoData); }
-            if (mode.testFlag(ByIcaoOrderAircraftFirst))   { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
-            if (mode.testFlag(ByIcaoOrderAirlineFirst))    { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
-            if (mode.testFlag(ByFamily))                   { modes << modeFlagToString(ByFamily); }
-            if (mode.testFlag(ByLivery))                   { modes << modeFlagToString(ByLivery); }
-            if (mode.testFlag(ByCombinedType))             { modes << modeFlagToString(ByCombinedType); }
-            if (mode.testFlag(ByForceCivilian))            { modes << modeFlagToString(ByForceCivilian); }
-            if (mode.testFlag(ByForceMilitary))            { modes << modeFlagToString(ByForceMilitary); }
-            if (mode.testFlag(ByCategoryGlider))           { modes << modeFlagToString(ByCategoryGlider); }
-            if (mode.testFlag(ByCategoryMilitary))         { modes << modeFlagToString(ByCategoryMilitary); }
-            if (mode.testFlag(ByVtol))                     { modes << modeFlagToString(ByVtol); }
-            if (mode.testFlag(ScoreIgnoreZeros))           { modes << modeFlagToString(ScoreIgnoreZeros); }
-            if (mode.testFlag(ScorePreferColorLiveries))   { modes << modeFlagToString(ScorePreferColorLiveries); }
-            if (mode.testFlag(ModelSetRemoveFailedModel))  { modes << modeFlagToString(ModelSetRemoveFailedModel); }
-            if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
-            if (mode.testFlag(ByAirlineGroupIfNoAirline))  { modes << modeFlagToString(ByAirlineGroupIfNoAirline); }
-            if (mode.testFlag(ByAirlineGroupSameAsAirline))      { modes << modeFlagToString(ByAirlineGroupSameAsAirline); }
+            if (mode.testFlag(ReverseLookupModelString))    { modes << modeFlagToString(ReverseLookupModelString); }
+            if (mode.testFlag(ReverseLookupSwiftLiveryIds)) { modes << modeFlagToString(ReverseLookupSwiftLiveryIds); }
+            if (mode.testFlag(ByModelString))               { modes << modeFlagToString(ByModelString); }
+            if (mode.testFlag(ByIcaoData))                  { modes << modeFlagToString(ByIcaoData); }
+            if (mode.testFlag(ByIcaoOrderAircraftFirst))    { modes << modeFlagToString(ByIcaoOrderAircraftFirst); }
+            if (mode.testFlag(ByIcaoOrderAirlineFirst))     { modes << modeFlagToString(ByIcaoOrderAirlineFirst); }
+            if (mode.testFlag(ByFamily))                    { modes << modeFlagToString(ByFamily); }
+            if (mode.testFlag(ByLivery))                    { modes << modeFlagToString(ByLivery); }
+            if (mode.testFlag(ByCombinedType))              { modes << modeFlagToString(ByCombinedType); }
+            if (mode.testFlag(ByForceCivilian))             { modes << modeFlagToString(ByForceCivilian); }
+            if (mode.testFlag(ByForceMilitary))             { modes << modeFlagToString(ByForceMilitary); }
+            if (mode.testFlag(ByCategoryGlider))            { modes << modeFlagToString(ByCategoryGlider); }
+            if (mode.testFlag(ByCategoryMilitary))          { modes << modeFlagToString(ByCategoryMilitary); }
+            if (mode.testFlag(ByCategorySmallAircraft))     { modes << modeFlagToString(ByCategorySmallAircraft); }
+            if (mode.testFlag(ByVtol))                      { modes << modeFlagToString(ByVtol); }
+            if (mode.testFlag(ScoreIgnoreZeros))            { modes << modeFlagToString(ScoreIgnoreZeros); }
+            if (mode.testFlag(ScorePreferColorLiveries))    { modes << modeFlagToString(ScorePreferColorLiveries); }
+            if (mode.testFlag(ModelSetRemoveFailedModel))   { modes << modeFlagToString(ModelSetRemoveFailedModel); }
+            if (mode.testFlag(ModelVerificationAtStartup))  { modes << modeFlagToString(ModelVerificationAtStartup); }
+            if (mode.testFlag(ByAirlineGroupIfNoAirline))   { modes << modeFlagToString(ByAirlineGroupIfNoAirline); }
+            if (mode.testFlag(ByAirlineGroupSameAsAirline)) { modes << modeFlagToString(ByAirlineGroupSameAsAirline); }
             if (mode.testFlag(ModelVerificationOnlyWarnError))   { modes << modeFlagToString(ModelVerificationOnlyWarnError); }
             if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
             return modes.join(", ");
@@ -283,35 +282,39 @@ namespace BlackMisc
         }
 
         CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
-            bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-            bool byForceMilitary, bool byForceCivilian, bool byVtol,
-            bool byGliderCategory, bool byMilitaryCategory,
-            bool scoreIgnoreZeros, bool scorePreferColorLiveries,
-            bool excludeNoDbData, bool excludeNoExcluded,
+            bool revModelString,    bool revLiveryIds,
+            bool byModelString,     bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
+            bool byForceMilitary,   bool byForceCivilian, bool byVtol,
+            bool byGliderCategory,  bool byMilitaryCategory, bool bySmallAircraftCategory,
+            bool scoreIgnoreZeros,  bool scorePreferColorLiveries,
+            bool excludeNoDbData,   bool excludeNoExcluded,
             bool modelVerification, bool modelVerificationWarnError,
             bool modelSetRemoveFailedModel, bool modelFailover)
         {
             if (modelFailover) { modelSetRemoveFailedModel = true; } // otherwise this does not make sense
 
             MatchingMode mode = byModelString ? ByModelString : ModeNone;
-            if (byIcaoDataAircraft1st)     { mode |= ByIcaoOrderAircraftFirst; }
-            if (byIcaoDataAirline1st)      { mode |= ByIcaoOrderAirlineFirst; }
-            if (byFamily)                  { mode |= ByFamily; }
-            if (byLivery)                  { mode |= ByLivery; }
-            if (byCombinedType)            { mode |= ByCombinedType; }
-            if (byForceMilitary)           { mode |= ByForceMilitary; }
-            if (byForceCivilian)           { mode |= ByForceCivilian; }
-            if (byVtol)                    { mode |= ByVtol; }
-            if (byGliderCategory)          { mode |= ByCategoryGlider; }
-            if (byMilitaryCategory)        { mode |= ByCategoryMilitary; }
-            if (scoreIgnoreZeros)          { mode |= ScoreIgnoreZeros; }
-            if (scorePreferColorLiveries)  { mode |= ScorePreferColorLiveries; }
-            if (excludeNoDbData)           { mode |= ExcludeNoDbData; }
-            if (excludeNoExcluded)         { mode |= ExcludeNoExcluded; }
-            if (modelSetRemoveFailedModel) { mode |= ModelSetRemoveFailedModel; }
-            if (modelVerification)         { mode |= ModelVerificationAtStartup; }
+            if (byIcaoDataAircraft1st)      { mode |= ByIcaoOrderAircraftFirst; }
+            if (byIcaoDataAirline1st)       { mode |= ByIcaoOrderAirlineFirst; }
+            if (byFamily)                   { mode |= ByFamily; }
+            if (byLivery)                   { mode |= ByLivery; }
+            if (byCombinedType)             { mode |= ByCombinedType; }
+            if (byForceMilitary)            { mode |= ByForceMilitary; }
+            if (byForceCivilian)            { mode |= ByForceCivilian; }
+            if (byVtol)                     { mode |= ByVtol; }
+            if (byGliderCategory)           { mode |= ByCategoryGlider; }
+            if (byMilitaryCategory)         { mode |= ByCategoryMilitary; }
+            if (bySmallAircraftCategory)    { mode |= ByCategorySmallAircraft; }
+            if (scoreIgnoreZeros)           { mode |= ScoreIgnoreZeros; }
+            if (scorePreferColorLiveries)   { mode |= ScorePreferColorLiveries; }
+            if (excludeNoDbData)            { mode |= ExcludeNoDbData; }
+            if (excludeNoExcluded)          { mode |= ExcludeNoExcluded; }
+            if (modelSetRemoveFailedModel)  { mode |= ModelSetRemoveFailedModel; }
+            if (modelVerification)          { mode |= ModelVerificationAtStartup; }
             if (modelVerificationWarnError) { mode |= ModelVerificationOnlyWarnError; }
             if (modelFailover)              { mode |= ModelFailoverIfNoModelCanBeAdded; }
+            if (revModelString)             { mode |= ReverseLookupModelString; }
+            if (revLiveryIds)               { mode |= ReverseLookupSwiftLiveryIds; }
             return mode;
         }
     } // namespace
