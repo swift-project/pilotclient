@@ -1,6 +1,6 @@
-// this is a demo file demonstrating some capabilities of the
+// This is a demo file demonstrating some capabilities of the
 // matching script engine
-// this script runs after(!) the matching has been completed
+// This script runs after(!) the matching has been completed
 //
 // inObject      values as from network
 // outObject     to be returned back to matching engine
@@ -17,7 +17,7 @@
 
   // the logic we implement
   var lm = "";	
-  if (inObject.callsign == 'DAMBZ') {
+  if (inObject.callsign === 'DAMBZ') {
     var ms = "PIPER CHEROKEE 180"; // must exist in model set
 	if (modelSet.containsModelString(ms)) {
       lm = "Model set contains ";
