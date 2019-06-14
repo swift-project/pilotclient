@@ -61,6 +61,10 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ModelSetVerificationOnlyErrorWarning, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_CategoryGlider, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_CategoryMilitaryAircraft, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ReverseUseModelString, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_ReverseUseSwiftLiveryIds, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_MsReverseLookup, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_MsMatching, readonly);
 
             const bool enabled = !readonly;
             ui->rb_Reduction->setEnabled(enabled);
@@ -68,17 +72,16 @@ namespace BlackGui
             ui->rb_ScoreOnly->setEnabled(enabled);
             ui->rb_ByIcaoDataAircraft1st->setEnabled(enabled);
             ui->rb_ByIcaoDataAirline1st->setEnabled(enabled);
-            ui->rb_AirlineGroupAsAirline->setEnabled(enabled);            ui->rb_PickFirst->setEnabled(enabled);
+            ui->rb_AirlineGroupAsAirline->setEnabled(enabled);
             ui->rb_AirlineGroupNo->setEnabled(enabled);
             ui->rb_AirlineGroupIfNoAirline->setEnabled(enabled);
 
+            ui->rb_PickFirst->setEnabled(enabled);
             ui->rb_PickByOrder->setEnabled(enabled);
             ui->rb_PickRandom->setEnabled(enabled);
 
             ui->le_MsReverseLookup->setEnabled(enabled);
             ui->le_MsMatching->setEnabled(enabled);
-            CGuiUtility::checkBoxReadOnly(ui->cb_MsReverseLookup, readonly);
-            CGuiUtility::checkBoxReadOnly(ui->cb_MsMatching, readonly);
         }
 
         CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
@@ -113,6 +116,7 @@ namespace BlackGui
             ui->cb_ByForceCivilian->setChecked(mode.testFlag(CAircraftMatcherSetup::ByForceCivilian));
             ui->cb_CategoryGlider->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCategoryGlider));
             ui->cb_CategoryMilitaryAircraft->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCategoryMilitary));
+            ui->cb_CategorySmallAircraft->setChecked(mode.testFlag(CAircraftMatcherSetup::ByCategorySmallAircraft));
             ui->cb_ByVtol->setChecked(mode.testFlag(CAircraftMatcherSetup::ByVtol));
             ui->cb_ScoreIgnoreZeros->setChecked(mode.testFlag(CAircraftMatcherSetup::ScoreIgnoreZeros));
             ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
@@ -122,6 +126,8 @@ namespace BlackGui
             ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
             ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
             ui->cb_ModelSetVerificationOnlyErrorWarning->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationOnlyWarnError));
+            ui->cb_ReverseUseModelString->setChecked(mode.testFlag(CAircraftMatcherSetup::ReverseLookupModelString));
+            ui->cb_ReverseUseSwiftLiveryIds->setChecked(mode.testFlag(CAircraftMatcherSetup::ReverseLookupSwiftLiveryIds));
 
             this->setMatchingAlgorithm(setup);
             this->setPickStrategy(setup);
@@ -187,6 +193,7 @@ namespace BlackGui
         CAircraftMatcherSetup::MatchingMode CMatchingForm::matchingMode() const
         {
             return CAircraftMatcherSetup::matchingMode(
+                       ui->cb_ReverseUseModelString->isChecked(), ui->cb_ReverseUseSwiftLiveryIds->isChecked(),
                        ui->cb_ByModelString->isChecked(),
                        ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
                        ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
@@ -196,6 +203,7 @@ namespace BlackGui
                        ui->cb_ByVtol->isChecked(),
                        ui->cb_CategoryGlider->isChecked(),
                        ui->cb_CategoryMilitaryAircraft->isChecked(),
+                       ui->cb_CategorySmallAircraft->isChecked(),
                        ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
                        ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
                        ui->cb_ModelSetVerification->isChecked(),  ui->cb_ModelSetVerificationOnlyErrorWarning->isChecked(),
@@ -206,7 +214,7 @@ namespace BlackGui
 
         CAircraftMatcherSetup::PickSimilarStrategy CMatchingForm::pickStrategy() const
         {
-            if (ui->rb_PickRandom->isChecked()) { return CAircraftMatcherSetup::PickRandom; }
+            if (ui->rb_PickRandom->isChecked())  { return CAircraftMatcherSetup::PickRandom; }
             if (ui->rb_PickByOrder->isChecked()) { return CAircraftMatcherSetup::PickByOrder; }
             return CAircraftMatcherSetup::PickFirst;
         }
@@ -216,7 +224,7 @@ namespace BlackGui
             switch (setup.getPickStrategy())
             {
             case CAircraftMatcherSetup::PickByOrder: ui->rb_PickByOrder->setChecked(true); break;
-            case CAircraftMatcherSetup::PickRandom: ui->rb_PickRandom->setChecked(true); break;
+            case CAircraftMatcherSetup::PickRandom:  ui->rb_PickRandom->setChecked(true);  break;
             case CAircraftMatcherSetup::PickFirst:
             default:
                 ui->rb_PickFirst->setChecked(true); break;
