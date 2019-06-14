@@ -29,10 +29,10 @@ namespace BlackMisc
         BLACKMISC_EXPORT const QString &msToString(MatchingScript ms);
 
         //! Return values
-        struct MSReturnValues
+        struct MatchingScriptReturnValues
         {
             //! Ctor
-            MSReturnValues(const BlackMisc::Simulation::CAircraftModel &model) : model(model) {}
+            MatchingScriptReturnValues(const BlackMisc::Simulation::CAircraftModel &model) : model(model) {}
 
             BlackMisc::Simulation::CAircraftModel model; //!< the model
             bool modified  = false; //!< modified?
