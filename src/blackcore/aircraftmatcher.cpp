@@ -261,7 +261,7 @@ namespace BlackCore
         if (useMatchingScript && setup.doRunMsMatchingStageScript())
         {
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Matching script: Matching stage script used"));
-            const MSReturnValues rv = CAircraftMatcher::matchingStageScript(remoteAircraft.getModel(), matchedModel, setup, modelSet, log);
+            const MatchingScriptReturnValues rv = CAircraftMatcher::matchingStageScript(remoteAircraft.getModel(), matchedModel, setup, modelSet, log);
             if (rv.runScriptAndModified())
             {
                 matchedModel = rv.model;
@@ -325,28 +325,28 @@ namespace BlackCore
         return model;
     }
 
-    MSReturnValues CAircraftMatcher::reverseLookupScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
+    MatchingScriptReturnValues CAircraftMatcher::reverseLookupScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList *log)
     {
-        if (!setup.doRunMsReverseLookupScript()) { return MSReturnValues(inModel); }
+        if (!setup.doRunMsReverseLookupScript()) { return MatchingScriptReturnValues(inModel); }
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return inModel; }
         const QString js = CFileUtils::readFileToString(setup.getMsReverseLookupFile());
         static const CAircraftModelList noModelSet;
-        const MSReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, inModel, setup, noModelSet, ReverseLookup, log);
+        const MatchingScriptReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, inModel, setup, noModelSet, ReverseLookup, log);
         return rv;
     }
 
-    MSReturnValues CAircraftMatcher::matchingStageScript(const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList *log)
+    MatchingScriptReturnValues CAircraftMatcher::matchingStageScript(const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
-        if (!setup.doRunMsMatchingStageScript()) { return MSReturnValues(inModel); }
+        if (!setup.doRunMsMatchingStageScript()) { return MatchingScriptReturnValues(inModel); }
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return inModel; }
         const QString js = CFileUtils::readFileToString(setup.getMsMatchingStageFile());
-        const MSReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, matchedModel, setup, modelSet, MatchingStage, log);
+        const MatchingScriptReturnValues rv = CAircraftMatcher::matchingScript(js, inModel, matchedModel, setup, modelSet, MatchingStage, log);
         return rv;
     }
 
-    MSReturnValues CAircraftMatcher::matchingScript(const QString &js, const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, MatchingScript ms, CStatusMessageList *log)
+    MatchingScriptReturnValues CAircraftMatcher::matchingScript(const QString &js, const CAircraftModel &inModel, const CAircraftModel &matchedModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, MatchingScript ms, CStatusMessageList *log)
     {
-        MSReturnValues rv(inModel);
+        MatchingScriptReturnValues rv(inModel);
         QString logMessage;
         const CCallsign callsign = inModel.getCallsign();
 
@@ -668,7 +668,7 @@ namespace BlackCore
         CAircraftModel reverseModel = reverseLookupModel(modelToLookup, networkLiveryInfo, log);
         if (!setup.doRunMsReverseLookupScript()) { return reverseModel; }
         const CCallsign cs = modelToLookup.getCallsign();
-        const MSReturnValues rv = reverseLookupScript(reverseModel, setup, log);
+        const MatchingScriptReturnValues rv = reverseLookupScript(reverseModel, setup, log);
         if (rv.runScriptModifiedAndRerun())
         {
             CMatchingUtils::addLogDetailsToList(log, cs, QStringLiteral("Matching script: Modified value and requested rerun"));

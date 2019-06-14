@@ -847,7 +847,7 @@ namespace BlackCore
         // Script
         if (runMatchinScript && setup.doRunMsReverseLookupScript())
         {
-            const MSReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, log);
+            const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, log);
             if (rv.runScriptAndModified())
             {
                 if (rv.runScriptAndRerun())

@@ -94,7 +94,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             //! Run matching script
-            static BlackMisc::Simulation::MSReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList &msgs);
+            static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList &msgs);
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc

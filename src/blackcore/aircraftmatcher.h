@@ -92,15 +92,15 @@ namespace BlackCore
         //! Run the network reverse lookup script
         //! \threadsafe
         //! \ingroup reverselookup
-        static BlackMisc::Simulation::MSReturnValues reverseLookupScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::MatchingScriptReturnValues reverseLookupScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, BlackMisc::CStatusMessageList *log);
 
         //! Run the matching stage lookup script
         //! \threadsafe
-        static BlackMisc::Simulation::MSReturnValues matchingStageScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::MatchingScriptReturnValues matchingStageScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList *log);
 
         //! Run the matching script
         //! \threadsafe
-        static BlackMisc::Simulation::MSReturnValues matchingScript(const QString &js,
+        static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const QString &js,
                 const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
                 const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::Simulation::MatchingScript ms,
                 BlackMisc::CStatusMessageList *log);

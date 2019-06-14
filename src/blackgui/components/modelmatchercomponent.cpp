@@ -272,12 +272,12 @@ namespace BlackGui
             return model;
         }
 
-        MSReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList &msgs)
+        MatchingScriptReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, CStatusMessageList &msgs)
         {
             // Script
             if (setup.doRunMsReverseLookupScript())
             {
-                const MSReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, &msgs);
+                const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, &msgs);
                 if (rv.runScriptAndModified())
                 {
                     return rv;
