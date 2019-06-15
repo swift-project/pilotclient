@@ -30,11 +30,11 @@ namespace BlackSimPlugin
     namespace Emulated
     {
         CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
-                                               IOwnAircraftProvider *ownAircraftProvider,
+                                               IOwnAircraftProvider    *ownAircraftProvider,
                                                IRemoteAircraftProvider *remoteAircraftProvider,
-                                               IWeatherGridProvider *weatherGridProvider,
-                                               IClientProvider *clientProvider,
-                                               QObject *parent) :
+                                               IWeatherGridProvider    *weatherGridProvider,
+                                               IClientProvider         *clientProvider,
+                                               QObject                 *parent) :
             CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
@@ -45,8 +45,8 @@ namespace BlackSimPlugin
             m_myAircraft = this->getOwnAircraft(); // sync with provider
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget()));
 
-            connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
-            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
+            connect(qApp, &QApplication::aboutToQuit,            this, &CSimulatorEmulated::closeMonitor);
+            connect(sGui, &CGuiApplication::aboutToShutdown,     this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
             connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::updateRemoteAircraft);
 
             // connect own signals for monitoring
@@ -281,7 +281,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::isConnected() const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return m_connected;
         }
 

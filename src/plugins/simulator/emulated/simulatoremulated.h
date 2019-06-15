@@ -43,10 +43,10 @@ namespace BlackSimPlugin
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorEmulated(
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                BlackMisc::Network::IClientProvider *clientProvider,
+                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
+                BlackMisc::Network::IClientProvider            *clientProvider,
                 QObject *parent = nullptr);
 
             // functions implemented
@@ -125,7 +125,7 @@ namespace BlackSimPlugin
         protected:
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual int physicallyRemoveAllRemoteAircraft() override;
+            virtual int  physicallyRemoveAllRemoteAircraft() override;
 
             //! \copydoc BlackCore::ISimulator::parseDetails
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
@@ -170,7 +170,6 @@ namespace BlackSimPlugin
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;  //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CConnectionGuard m_connectionGuard;                    //!< connected with provider
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSettings { this };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
         };
 
