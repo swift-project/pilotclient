@@ -11,6 +11,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/flightgear/flightgearutil.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
@@ -195,7 +196,12 @@ namespace BlackMisc
 
             CSimulatorSettings CMultiSimulatorSettings::getSettings(const CSimulatorInfo &simulator) const
             {
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                if (!simulator.isSingleSimulator())
+                {
+                    // mostly happening with emulated driver, VERIFY for better debugging
+                    BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    return CSimulatorSettings();
+                }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FG:  return m_simSettingsFG.get();

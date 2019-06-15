@@ -684,14 +684,23 @@ namespace BlackCore
         // swift data
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead,  this, &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
         connect(sApp, &CApplication::aboutToShutdown, this, &ISimulator::unload, Qt::QueuedConnection);
 
         // provider
-        this->setNewPluginInfo(pluginInfo, m_multiSettings.getSettings(pluginInfo.getSimulatorInfo()));
+        if (pluginInfo.isEmulatedPlugin() && !pluginInfo.getSimulatorInfo().isSingleSimulator())
+        {
+            // emulated driver with NO info yet
+            CLogMessage(this).info(u"Plugin '%1' with no simulator info yet, hope it will be set later") << pluginInfo.getIdentifier();
+        }
+        else
+        {
+            // NORMAL CASE or plugin with info already set
+            this->setNewPluginInfo(pluginInfo, m_multiSettings.getSettings(pluginInfo.getSimulatorInfo()));
+        }
 
         // info data
         m_simulatorInternals.setSimulatorName(this->getSimulatorName());
