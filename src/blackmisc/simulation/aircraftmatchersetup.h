@@ -128,6 +128,12 @@ namespace BlackMisc
             //! Matching mode
             MatchingMode getMatchingMode() const { return static_cast<MatchingMode>(m_mode); }
 
+            //! Reverse lookup @{
+            bool isReverseLookupModelString() const;
+            bool isReverseLookupSwiftLiveryIds() const;
+            void resetReverseLookup();
+            //! @}
+
             //! Get matching files @{
             const QString &getMsReverseLookupFile() const { return m_msReverseLookupFile; }
             const QString &getMsMatchingStageFile() const { return m_msMatchingStageFile; }

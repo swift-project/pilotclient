@@ -164,7 +164,7 @@ namespace BlackGui
             if (ui->cb_withReverseLookup->isChecked())
             {
                 const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
-                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), liveryString, m_matcher.getSetup(), &msgs);
+                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), liveryString, m_matcher.getSetup(), &msgs);
                 remoteAircraft.setModel(reverseModel); // current model
             }
 
@@ -187,7 +187,7 @@ namespace BlackGui
             const CAircraftMatcherSetup setup = m_matcher.getSetup();
             const CSimulatedAircraft remoteAircraft(createAircraft());
             const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
-            const CAircraftModel matched = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), livery, setup, &msgs);
+            const CAircraftModel matched = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), livery, setup, &msgs);
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }

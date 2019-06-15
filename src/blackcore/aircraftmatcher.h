@@ -114,7 +114,7 @@ namespace BlackCore
                 const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
                 const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
                 BlackMisc::Simulation::CAircraftModel::ModelType type,
-                BlackMisc::CStatusMessageList *log = nullptr);
+                BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
@@ -122,29 +122,32 @@ namespace BlackCore
         //! \remark NOT running matching script
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
-            const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+            const QString &networkLiveryInfo,
+            const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+            BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
         //! \ingroup reverselookup
         //! \remark Running matching script
-        static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelMs(
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo,
             const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
-            BlackMisc::CStatusMessageList *log = nullptr);
+            BlackMisc::CStatusMessageList *log);
 
         //! Try to find model by model string
         //! \threadsafe
         //! \ingroup reverselookup
         static BlackMisc::Simulation::CAircraftModel reverseLookupModelString(
-            const QString &modelString, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+            const QString &modelString,
+            const BlackMisc::Aviation::CCallsign &callsign,
+            bool doLookupString, BlackMisc::CStatusMessageList *log);
 
         //! Try to find model by id
         //! \threadsafe
         //! \ingroup reverselookup
-        static BlackMisc::Simulation::CAircraftModel reverseLookupModelId(
-            int id, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModelId(int id, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
