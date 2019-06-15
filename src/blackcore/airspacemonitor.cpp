@@ -752,7 +752,7 @@ namespace BlackCore
             // directly check model string
             if (!modelString.isEmpty())
             {
-                lookupModel = CAircraftMatcher::reverseLookupModelString(modelString, callsign, log);
+                lookupModel = CAircraftMatcher::reverseLookupModelString(modelString, callsign, setup.isReverseLookupModelString(), log);
                 if (lookupModel.hasValidDbKey()) { break; } // found by model string
             }
 
@@ -986,7 +986,7 @@ namespace BlackCore
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign)) { return; }
+        if (this->isCopilotAircraft(callsign)) { return; }
 
         // update client info
         this->autoAdjustCientGndCapability(situation);

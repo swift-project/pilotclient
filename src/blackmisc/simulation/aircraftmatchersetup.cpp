@@ -44,6 +44,23 @@ namespace BlackMisc
             return true;
         }
 
+        bool CAircraftMatcherSetup::isReverseLookupModelString() const
+        {
+            return this->getMatchingMode().testFlag(ReverseLookupModelString);
+        }
+
+        bool CAircraftMatcherSetup::isReverseLookupSwiftLiveryIds() const
+        {
+            return this->getMatchingMode().testFlag(ReverseLookupSwiftLiveryIds);
+        }
+
+        void CAircraftMatcherSetup::resetReverseLookup()
+        {
+            MatchingMode m = this->getMatchingMode();
+            m.setFlag(ReverseLookupDefault);
+            this->setMatchingMode(m);
+        }
+
         bool CAircraftMatcherSetup::doRunMsReverseLookupScript() const
         {
             return m_msReverseEnabled && !m_msReverseLookupFile.isEmpty();
