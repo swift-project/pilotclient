@@ -733,7 +733,7 @@ namespace BlackCore
             config.insert(CAircraftParts::attributeNameIsFullJson(), true);
             QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
-            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSDnoColon(data));
+            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
         }
 
         void CNetworkVatlib::sendIcaoCodesQuery(const CCallsign &callsign)
