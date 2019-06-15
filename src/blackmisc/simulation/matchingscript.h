@@ -152,9 +152,6 @@ namespace BlackMisc
             bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
             bool hasModifiedAirlineIcaoDesignator()  const { return m_modifiedAirlineDesignator;  }
             bool hasUnmodifiedDesignators()  const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator();  }
-            //! }
-
-            //! Changed values @{
             bool hasChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
             bool hasChangedAircraftIcaoId(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
             bool hasChangedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao) const;
