@@ -192,7 +192,7 @@ namespace BlackMisc
         CAirlineIcaoCode CAirlineIcaoCodeList::findBestMatchByCallsign(const CCallsign &callsign) const
         {
             if (this->isEmpty() || callsign.isEmpty()) { return CAirlineIcaoCode(); }
-            const QString airline = callsign.getAirlineSuffix().toUpper();
+            const QString airline = callsign.getAirlinePrefix().toUpper();
             if (airline.isEmpty()) { return CAirlineIcaoCode(); }
             const CAirlineIcaoCode airlineCode = (airline.length() == 3) ?
                                                  this->findFirstByOrDefault(&CAirlineIcaoCode::getDesignator, airline) :

@@ -331,7 +331,7 @@ namespace BlackMisc
         {
             if (this->hasValidDbKey()) { return *this; }
             if (callsign.isEmpty()) { return *this; }
-            const QString callsignAirline = callsign.getAirlineSuffix();
+            const QString callsignAirline = callsign.getAirlinePrefix();
             if (callsignAirline.isEmpty()) { return *this; }
             if (callsignAirline == m_designator) { return *this; }
 

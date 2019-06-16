@@ -176,13 +176,13 @@ namespace BlackMisc
             return s;
         }
 
-        QString CCallsign::getAirlineSuffix() const
+        QString CCallsign::getAirlinePrefix() const
         {
             QString flightNumber;
-            return this->getAirlineSuffix(flightNumber);
+            return this->getAirlinePrefix(flightNumber);
         }
 
-        QString CCallsign::getAirlineSuffix(QString &flightNumber) const
+        QString CCallsign::getAirlinePrefix(QString &flightNumber) const
         {
             flightNumber.clear();
             if (m_callsign.length() < 3) { return {}; }
@@ -209,7 +209,7 @@ namespace BlackMisc
         {
             if (this->isAtcCallsign()) { return {}; }
             QString flightNumber;
-            const QString airline = this->getAirlineSuffix(flightNumber);
+            const QString airline = this->getAirlinePrefix(flightNumber);
             return airline.isEmpty() ? QString() : flightNumber;
         }
 
