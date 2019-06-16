@@ -1389,8 +1389,9 @@ namespace BlackCore
         void CNetworkVatlib::onAtisReplyReceived(VatFsdClient *, const char *callsign, const VatControllerAtis *atis, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
-            emit self->atisVoiceRoomReplyReceived(self->fromFSD(callsign), self->fromFSD(atis->voiceRoom));
-            emit self->atisLogoffTimeReplyReceived(self->fromFSD(callsign), self->fromFSD(atis->zuluLogoff));
+            const CCallsign cs(self->fromFSD(callsign), CCallsign::Atc);
+            emit self->atisVoiceRoomReplyReceived(cs, self->fromFSD(atis->voiceRoom));
+            emit self->atisLogoffTimeReplyReceived(cs, self->fromFSD(atis->zuluLogoff));
 
             CInformationMessage atisMessage;
             atisMessage.setType(CInformationMessage::ATIS);
@@ -1413,7 +1414,7 @@ namespace BlackCore
                 }
             }
 
-            emit self->atisReplyReceived(CCallsign(self->fromFSD(callsign), CCallsign::Atc), atisMessage);
+            emit self->atisReplyReceived(cs, atisMessage);
         }
 
         void CNetworkVatlib::onFlightPlanReceived(VatFsdClient *, const char *callsignChar, const VatFlightPlan *fp, void *cbvar)

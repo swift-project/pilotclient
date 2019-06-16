@@ -73,23 +73,29 @@ namespace BlackMisc
             // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
             switch (hint)
             {
-            case Atc: return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            // ATC allows "-", aircraft not
+            case Atc:      return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            case Aircraft: return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
             default: break;
             }
+
+            // no hint
+            if (CCallsign::looksLikeAtcCallsign(callsign))
+            {
+                return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            }
+
+            // strict check
             return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         }
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
             if (callsign.m_callsign.startsWith(QStringView(u"VATGOV"))) { return CIcon::iconByIndex(CIcons::NetworkRolePilot); }
-            if (callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix())
-            {
-                return CIcon::iconByIndex(CIcons::NetworkRolePilot);
-            }
-            else
-            {
-                return atcSuffixToIcon(callsign.getSuffix());
-            }
+            const bool pilot = callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix();
+            return pilot ?
+                   CIcon::iconByIndex(CIcons::NetworkRolePilot) :
+                   CCallsign::atcSuffixToIcon(callsign.getSuffix());
         }
 
         const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)
@@ -131,6 +137,11 @@ namespace BlackMisc
             return  m_callsign.startsWith(pilotCallsign.asString()) &&
                     m_callsign.size() == pilotCallsign.asString().size() + 1 &&
                     m_callsign.at(m_callsign.size() - 1) >= 'A' && m_callsign.at(m_callsign.size() - 1) <= 'Z';
+        }
+
+        bool CCallsign::isSameAsSet() const
+        {
+            return m_callsign == m_callsignAsSet;
         }
 
         QString CCallsign::getIcaoCode() const
@@ -332,6 +343,16 @@ namespace BlackMisc
         {
             static const QStringList a({ "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS", "INS" });
             return a;
+        }
+
+        bool CCallsign::looksLikeAtcCallsign(const QString &callsign)
+        {
+            if (!callsign.contains("_")) { return false; }
+            for (const QString &r : CCallsign::atcAlikeCallsignSuffixes())
+            {
+                if (callsign.endsWith(r)) { return true; }
+            }
+            return false;
         }
     } // namespace
 } // namespace
