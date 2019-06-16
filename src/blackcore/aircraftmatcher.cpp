@@ -76,7 +76,7 @@ namespace BlackCore
     {
         CMatchingUtils::addLogDetailsToList(log, callsign,
                                             QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, use web service: %5").
-                                            arg(primaryIcao, secondaryIcao, callsign.getAirlineSuffix(), boolToYesNo(airlineFromCallsign), boolToYesNo(useWebServices)), getLogCategories());
+                                            arg(primaryIcao, secondaryIcao, callsign.getAirlinePrefix(), boolToYesNo(airlineFromCallsign), boolToYesNo(useWebServices)), getLogCategories());
         CAirlineIcaoCode code;
         do
         {
@@ -95,7 +95,7 @@ namespace BlackCore
             CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Two invalid airline ICAO codes (primary/secondary) '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
             if (airlineFromCallsign)
             {
-                const QString airlineSuffix = callsign.getAirlineSuffix();
+                const QString airlineSuffix = callsign.getAirlinePrefix();
                 if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlineSuffix, useWebServices))
                 {
                     CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());

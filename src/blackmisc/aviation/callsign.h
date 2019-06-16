@@ -108,8 +108,8 @@ namespace BlackMisc
             QString getSuffix() const;
 
             //! Airline suffix (e.g. DLH1234 -> DLH) if applicable @{
-            QString getAirlineSuffix() const;
-            QString getAirlineSuffix(QString &flightNumber) const;
+            QString getAirlinePrefix() const;
+            QString getAirlinePrefix(QString &flightNumber) const;
             // @}
 
             //! Flight number (e.g. DLH1234 -> 1234) if applicable
