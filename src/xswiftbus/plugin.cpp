@@ -66,10 +66,15 @@ namespace XSwiftBus
         // Delay the start of XSwiftBus.
         // http://www.xsquawkbox.net/xpsdk/mediawiki/DeferredInitialization
         XPLMRegisterFlightLoopCallback(startServerDeferred, -1, this);
+
+        m_atisSaved = m_atisEnabled.get();
+        m_atisEnabled.set(0);
     }
 
     CPlugin::~CPlugin()
     {
+        m_atisEnabled.set(m_atisSaved);
+
         XPLMUnregisterFlightLoopCallback(flightLoopCallback, this);
         m_dbusConnection->close();
         m_shouldStop = true;
