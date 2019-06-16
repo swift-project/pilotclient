@@ -72,6 +72,9 @@ namespace XSwiftBus
         CMenu m_planeViewSubMenu;
         CMenuItem planeViewOwnAircraftMenuItem;
 
+        DataRef<xplane::data::sim::atc::atis_enabled> m_atisEnabled;
+        decltype(m_atisEnabled.get()) m_atisSaved = 0;
+
         std::thread m_dbusThread;
         bool m_isRunning = false;
         bool m_shouldStop = false;
