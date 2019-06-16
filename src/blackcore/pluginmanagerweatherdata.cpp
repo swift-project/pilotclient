@@ -17,12 +17,11 @@
 
 namespace BlackCore
 {
-
     using namespace BlackMisc;
+    using namespace BlackMisc::Weather;
 
     CPluginManagerWeatherData::CPluginManagerWeatherData(QObject *parent) : IPluginManager(parent)
-    {
-    }
+    { }
 
     IWeatherDataFactory *CPluginManagerWeatherData::getFactory(const QString &pluginId)
     {
@@ -31,7 +30,7 @@ namespace BlackCore
 
     Weather::CWeatherDataPluginInfoList CPluginManagerWeatherData::getAvailableWeatherDataPlugins() const
     {
-        BlackMisc::Weather::CWeatherDataPluginInfoList list;
+        CWeatherDataPluginInfoList list;
         for (const auto &i : m_plugins)
         {
             list.push_back(i.info);
