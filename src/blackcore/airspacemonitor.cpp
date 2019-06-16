@@ -584,7 +584,7 @@ namespace BlackCore
 
             emit this->changedAtcStationsOnline();
             // Remark: this->changedAtcStationOnlineConnectionStatus
-            // will be sent in psFsdAtisVoiceRoomReceived
+            // will be triggered in onAtisVoiceRoomReceived
         }
         else
         {

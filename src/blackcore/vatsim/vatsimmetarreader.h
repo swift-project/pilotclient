@@ -28,7 +28,7 @@ namespace BlackCore
 {
     namespace Vatsim
     {
-        //! Read bookings from VATSIM
+        //! Read METARs from VATSIM
         class BLACKCORE_EXPORT CVatsimMetarReader :
             public BlackCore::CThreadedReader,
             public BlackMisc::Network::CEcosystemAware
