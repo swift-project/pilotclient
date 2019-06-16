@@ -284,9 +284,9 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return CLength::null(); }
             const CSimulatorSettings::CGSource source = m_settings.getCGSource();
-            if (source == CSimulatorSettings::CGFromDBOnly || (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst)) { return dbCG; }
+            if (source == CSimulatorSettings::CGFromDBOnly || (source == CSimulatorSettings::CGFromDBFirst && !dbCG.isNull())) { return dbCG; }
             const CLength simCG = this->getSimulatorCG(callsign);
-            if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && simCG.isNull())) { return simCG; }
+            if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && !simCG.isNull())) { return simCG; }
             return dbCG;
         }
 
