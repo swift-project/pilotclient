@@ -89,6 +89,9 @@ namespace BlackMisc
             //! Get callsign.
             const QString &getStringAsSet() const { return m_callsignAsSet; }
 
+            //! Same as set callsign?
+            bool isSameAsSet() const;
+
             //! Get callsign telephony designator (how callsign is pronounced)
             const QString &getTelephonyDesignator() const { return m_telephonyDesignator; }
 
@@ -174,6 +177,9 @@ namespace BlackMisc
 
             //! List of real ("TWR") and treated like ATC suffixes (e.g. OBS);
             static const QStringList &atcAlikeCallsignSuffixes();
+
+            //! Does this look like an ATC callsign
+            static bool looksLikeAtcCallsign(const QString &callsign);
 
             //! Suffix to icon
             static const CIcon &atcSuffixToIcon(const QString &suffix);
