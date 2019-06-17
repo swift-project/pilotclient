@@ -20,7 +20,7 @@ namespace BlackMisc
                                      const CAirlineIcaoCode airlineIcao,
                                      const QString &livery, int liveryId) :
             MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
-                          aircraftIcao.getDesignator(), aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
+                          aircraftIcao.getDesignator(), aircraftIcao.getFamily(),       aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
                           airlineIcao.getDesignator(),  airlineIcao.getVDesignator(),   airlineIcao.getDbKey(),
                           livery, liveryId)
         { }
@@ -40,7 +40,7 @@ namespace BlackMisc
 
         MSInOutValues::MSInOutValues(const MSInOutValues &sv) :
             MSInOutValues(sv.m_callsign,        sv.m_callsignAsSet,         sv.m_flightNumber,
-                          sv.getAircraftIcao(), sv.getCombinedType(),       sv.getDbAircraftIcaoId(),
+                          sv.getAircraftIcao(), sv.getCombinedType(),       sv.getAircraftFamily(),  sv.getDbAircraftIcaoId(),
                           sv.getAirlineIcao(),  sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
                           sv.getLivery(),       sv.getDbLiveryId(),
                           sv.m_logMessage,
@@ -148,6 +148,7 @@ namespace BlackMisc
         void MSInOutValues::evaluateChanges(const CAircraftIcaoCode &aircraft, const CAirlineIcaoCode &airline)
         {
             m_modifiedAircraftDesignator = aircraft.getDesignator() != m_aircraftIcao;
+            m_modifiedAircraftFamily     = aircraft.getFamily() != m_aircraftFamily;
             if (airline.isVirtualAirline())
             {
                 m_modifiedAirlineDesignator  = airline.getVDesignator()  != m_vAirlineIcao;
@@ -246,9 +247,30 @@ namespace BlackMisc
 
         QString MSModelSet::findCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const
         {
-            if (rgbColor.isEmpty()) { return {}; }
+            if (combinedType.isEmpty() || rgbColor.isEmpty()) { return QString(); }
             CAircraftModelList models = m_modelSet.findByCombinedTypeWithColorLivery(combinedType);
-            if (models.isEmpty()) { return {}; }
+            if (models.isEmpty()) { return QString(); }
+            const CRgbColor color(rgbColor);
+            models = models.findClosestFuselageColorDistance(color);
+            return models.isEmpty() ? QString() : models.front().getModelString();
+        }
+
+        QString MSModelSet::findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const
+        {
+            QString ms = this->findCombinedTypeWithClosestColorLivery(combinedType, rgbColor);
+            if (!ms.isEmpty()) { return ms; }
+            if (combinedType.size() != 3) { return ms; }
+            QString wildCard(combinedType);
+            if (wildCard.size() != 3) { return QString(); }
+            wildCard[1] = '*';
+            return this->findCombinedTypeWithClosestColorLivery(wildCard, rgbColor);
+        }
+
+        QString MSModelSet::findAircraftFamilyWithClosestColorLivery(const QString &family, const QString &rgbColor) const
+        {
+            if (family.isEmpty() || rgbColor.isEmpty()) { return QString(); }
+            CAircraftModelList models = m_modelSet.findByFamilyWithColorLivery(family);
+            if (models.isEmpty()) { return QString(); }
             const CRgbColor color(rgbColor);
             models = models.findClosestFuselageColorDistance(color);
             return models.isEmpty() ? QString() : models.front().getModelString();
