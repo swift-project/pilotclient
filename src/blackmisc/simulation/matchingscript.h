@@ -38,18 +38,21 @@ namespace BlackMisc
             Q_PROPERTY(int     dbLiveryId         READ getDbLiveryId         WRITE setDbLiveryId         NOTIFY dbLiveryIdChanged)
             Q_PROPERTY(int     dbModelId          READ getDbModelId          WRITE setDbModelId          NOTIFY dbModelIdChanged)
             Q_PROPERTY(QString aircraftIcao       READ getAircraftIcao       WRITE setAircraftIcao       NOTIFY aircraftIcaoChanged)
+            Q_PROPERTY(QString aircraftFamily     READ getAircraftFamily)
             Q_PROPERTY(QString airlineIcao        READ getAirlineIcao        WRITE setAirlineIcao        NOTIFY airlineIcaoChanged)
             Q_PROPERTY(QString virtualAirlineIcao READ getVirtualAirlineIcao WRITE setVirtualAirlineIcao NOTIFY virtualAirlineIcaoChanged)
             Q_PROPERTY(QString livery             READ getLivery             WRITE setLivery             NOTIFY liveryChanged)
             Q_PROPERTY(QString modelString        READ getModelString        WRITE setModelString        NOTIFY modelStringChanged)
             Q_PROPERTY(QString combinedType       READ getCombinedType       WRITE setCombinedType       NOTIFY combinedTypeChanged)
             Q_PROPERTY(QString logMessage         READ getLogMessage         WRITE setLogMessage         NOTIFY logMessageChanged)
+            Q_PROPERTY(bool    hasAircraftFamily  READ hasAircraftFamily)
             Q_PROPERTY(bool    modified           READ isModified            WRITE setModified           NOTIFY modifiedChanged)
             Q_PROPERTY(bool    rerun              READ isRerun               WRITE setRerun              NOTIFY rerunChanged)
             // ----- status values -------
             Q_PROPERTY(bool    hasAirlineIcao     READ hasAirlineIcao)
             Q_PROPERTY(bool    hasAircraftIcao    READ hasAircraftIcao)
             Q_PROPERTY(bool    hasModifiedAircraftIcaoDesignator READ hasModifiedAircraftIcaoDesignator)
+            Q_PROPERTY(bool    hasModifiedAircraftFamily         READ hasModifiedAircraftFamily)
             Q_PROPERTY(bool    hasModifiedAirlineIcaoDesignator  READ hasModifiedAirlineIcaoDesignator)
             Q_PROPERTY(bool    hasUnmodifiedDesignators          READ hasUnmodifiedDesignators)
             //! @}
@@ -60,13 +63,13 @@ namespace BlackMisc
 
             //! Ctor
             Q_INVOKABLE MSInOutValues(const QString &cs,           const QString &csAsSet,            const QString &flightNumber,
-                                      const QString &aircraftIcao, const QString &combinedType,       int idAircraftIcao,
+                                      const QString &aircraftIcao, const QString &aircraftFamily,     const QString &combinedType,       int idAircraftIcao,
                                       const QString &airlineIcao,  const QString &virtualAirlineIcao, int idAirlineIcao,
                                       const QString &livery,       int liveryId,
                                       const QString &logMsg = {},
                                       bool  modified = false, bool rerun = false) :
-                m_callsign(cs.trimmed().toUpper()), m_callsignAsSet(csAsSet), m_flightNumber(flightNumber),
-                m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
+                m_callsign(cs.trimmed().toUpper()),               m_callsignAsSet(csAsSet),                              m_flightNumber(flightNumber),
+                m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftFamily(aircraftFamily.trimmed().toUpper()),  m_combinedType(combinedType.trimmed().toUpper()),
                 m_airlineIcao(airlineIcao.trimmed().toUpper()),   m_vAirlineIcao(virtualAirlineIcao),
                 m_livery(livery.trimmed().toUpper()),
                 m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId),
@@ -115,6 +118,7 @@ namespace BlackMisc
 
             //! Livery, airline, aircraft, model string @{
             const QString &getAircraftIcao()       const { return m_aircraftIcao; }
+            const QString &getAircraftFamily()     const { return m_aircraftFamily; }
             const QString &getAirlineIcao()        const { return m_airlineIcao; }
             const QString &getVirtualAirlineIcao() const { return m_vAirlineIcao; }
             const QString &getLivery()             const { return m_livery; }
@@ -126,8 +130,9 @@ namespace BlackMisc
             void setLivery(const QString &livery);
             void setModelString(const QString &modelString);
             void setCombinedType(const QString &type);
-            bool hasAircraftIcao() const { return !m_aircraftIcao.isEmpty(); }
-            bool hasAirlineIcao() const  { return !m_airlineIcao.isEmpty(); }
+            bool hasAircraftIcao()   const { return !m_aircraftIcao.isEmpty();   }
+            bool hasAirlineIcao()    const { return !m_airlineIcao.isEmpty();    }
+            bool hasAircraftFamily() const { return !m_aircraftFamily.isEmpty(); }
             //! @}
 
             //! Log. message @{
@@ -151,6 +156,7 @@ namespace BlackMisc
             //! Changed values @{
             bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
             bool hasModifiedAirlineIcaoDesignator()  const { return m_modifiedAirlineDesignator;  }
+            bool hasModifiedAircraftFamily() const { return m_modifiedAircraftFamily; }
             bool hasUnmodifiedDesignators()  const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator();  }
             bool hasChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
             bool hasChangedAircraftIcaoId(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
@@ -196,6 +202,7 @@ namespace BlackMisc
             QString m_callsignAsSet;
             QString m_flightNumber;
             QString m_aircraftIcao;
+            QString m_aircraftFamily;
             QString m_combinedType;
             QString m_airlineIcao;
             QString m_vAirlineIcao;
@@ -207,6 +214,7 @@ namespace BlackMisc
             int m_dbModelId        = -1;
             QString m_logMessage;
             bool m_modifiedAircraftDesignator = false;
+            bool m_modifiedAircraftFamily     = false;
             bool m_modifiedAirlineDesignator  = false;
             bool m_modified = false;
             bool m_rerun    = false;
@@ -268,6 +276,12 @@ namespace BlackMisc
 
             //! Model string of model with closest color distance
             Q_INVOKABLE QString findCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const;
+
+            //! Model string of model with closest color distance
+            Q_INVOKABLE QString findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const;
+
+            //! Model string of model with closest color distance
+            Q_INVOKABLE QString findAircraftFamilyWithClosestColorLivery(const QString &family, const QString &rgbColor) const;
 
             // ------- NOT EXPOSED TO JAVASCRIPT -------
 

@@ -350,6 +350,7 @@ namespace BlackCore
         QString logMessage;
         const CCallsign callsign = inModel.getCallsign();
 
+        if (js.isEmpty() && log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script is empty")); }
         while (!js.isEmpty() && sApp && !sApp->isShuttingDown())
         {
             rv.runScript = true;
@@ -363,16 +364,19 @@ namespace BlackCore
             if (log)
             {
                 CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script (%1): '%2'").arg(msToString(ms), lf));
+                CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script input model (%1): '%2'").arg(inModel.toQString(true)));
             }
 
             QJSEngine engine;
             // engine.installExtensions(QJSEngine::ConsoleExtension);
-            static const QJSValue jsInMetaObject = engine.newQMetaObject(&MSInOutValues::staticMetaObject);
-            engine.globalObject().setProperty("SwiftInObject", jsInMetaObject);
-            static const QJSValue jsSetMetaObject = engine.newQMetaObject(&MSModelSet::staticMetaObject);
-            engine.globalObject().setProperty("SwiftModelSet", jsSetMetaObject);
-            static const QJSValue jsWebServicesMetaObject = engine.newQMetaObject(&MSWebServices::staticMetaObject);
-            engine.globalObject().setProperty("SwiftWebServices", jsWebServicesMetaObject);
+
+            // Meta objects to create new JS objects, here causing JSValue can't be reassigned to another engine.
+            // static const QJSValue jsInOutMetaObject = engine.newQMetaObject(&MSInOutValues::staticMetaObject);
+            // engine.globalObject().setProperty("SwiftInOutObject", jsInOutMetaObject); // JS: new SwiftInOutObject();
+            // static const QJSValue jsSetMetaObject = engine.newQMetaObject(&MSModelSet::staticMetaObject);
+            // engine.globalObject().setProperty("SwiftModelSet", jsSetMetaObject); // JS: new SwiftModelSet
+            // static const QJSValue jsWebServicesMetaObject = engine.newQMetaObject(&MSWebServices::staticMetaObject);
+            // engine.globalObject().setProperty("SwiftWebServices", jsWebServicesMetaObject); // JS: new SwiftWebServices
 
             // init models and set
             MSInOutValues inObject(inModel);
@@ -429,7 +433,7 @@ namespace BlackCore
                         if (model.hasValidDbKey())
                         {
                             // found full model from DB
-                            rv.model = model;
+                            rv.model    = model;
                             rv.modified = true;
                             break;
                         }
@@ -495,7 +499,7 @@ namespace BlackCore
         }
 
         // log message
-        if (log && !logMessage.isEmpty()) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: '%1'").arg(logMessage)); }
+        if (log && !logMessage.isEmpty()) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Matching script log: '%1'").arg(logMessage)); }
 
         // end
         return rv;
@@ -536,7 +540,7 @@ namespace BlackCore
             const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(networkLiveryInfo);
             if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Livery string with ids: '%1'").arg(ids.toQString())); }
 
-            if (setup.isReverseLookupSwiftLiveryIds())
+            if (!setup.isReverseLookupSwiftLiveryIds())
             {
                 if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("Ignoring livery ids '%1', because of setup").arg(ids.toQString())); }
             }

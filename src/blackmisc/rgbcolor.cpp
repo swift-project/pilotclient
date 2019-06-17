@@ -146,7 +146,7 @@ namespace BlackMisc
         {
             const QString c(color.trimmed());
             QColor q(c);
-            if (setQColor(q)) { return; }
+            if (this->setQColor(q)) { return; }
             if (c.startsWith("#")) { this->setInvalid(); return; }
             q.setNamedColor("#" + c);
             this->setQColor(q);
@@ -241,7 +241,7 @@ namespace BlackMisc
     double CRgbColor::colorRange() const
     {
         if (!this->isValid()) { return 255; }
-        if (m_b < 256 && m_g < 256 && m_r < 256) { return 255; }
+        if (m_b < 256  && m_g < 256  && m_r < 256) { return 255; }
         if (m_b < 4096 && m_g < 4096 && m_r < 4096) { return 4095; }
         return 65535;
     }
