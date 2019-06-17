@@ -78,7 +78,7 @@ namespace BlackMisc
             const QString &getTextCodec() const { return m_textCodec; }
 
             //! Set codec
-            void setTextCodec(const QString &codec) { m_textCodec = codec.trimmed().toLower(); }
+            void setTextCodec(const QString &codec) { m_textCodec = codec.trimmed(); }
 
             //! Get send / receive details
             SendReceiveDetails getSendReceiveDetails() const;

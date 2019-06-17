@@ -37,7 +37,7 @@ namespace BlackGui
         CFsdSetup CFsdSetupForm::getValue() const
         {
             if (!this->isEnabled()) { return this->getDisabledValue(); }
-            CFsdSetup s(ui->le_TextCodec->text().trimmed().toLower());
+            CFsdSetup s(ui->le_TextCodec->text().trimmed());
             s.setSendReceiveDetails(
                 ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
                 ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
