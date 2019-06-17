@@ -18,6 +18,7 @@
 
 #include <QTest>
 #include <QTime>
+#include <QTextCodec>
 
 using namespace BlackMisc;
 
@@ -34,6 +35,7 @@ namespace BlackMiscTest
         void testIndexOf();
         void testSplit();
         void testTimestampParsing();
+        void testCodecs();
     };
 
     void CTestStringUtils::testRemove()
@@ -137,6 +139,23 @@ namespace BlackMiscTest
 
         qDebug() << "Parsing date/time, optimized" << elapsedOptimized << "vs. QDateTime: " << elapsedQt;
         QVERIFY2(elapsedOptimized < elapsedQt, "Expect optimized being faster as QDateTim::fromString");
+    }
+
+    void CTestStringUtils::testCodecs()
+    {
+        QTextCodec *latin1 = QTextCodec::codecForName("latin1");
+        QTextCodec *cp1251 = QTextCodec::codecForName("windows-1251");
+        QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");
+        const QString testEnglish = QStringLiteral(u"test");
+        const QString testRussian = QStringLiteral(u"тест");
+        bool okEn1 = latin1->toUnicode(latin1->fromUnicode(testEnglish)) == testEnglish;
+        bool okEn2 = utf8->toUnicode(utf8->fromUnicode(testEnglish)) == testEnglish;
+        bool okRu1 = cp1251->toUnicode(cp1251->fromUnicode(testRussian)) == testRussian;
+        bool okRu2 = utf8->toUnicode(utf8->fromUnicode(testRussian)) == testRussian;
+        QVERIFY2(okEn1, "English \"test\" equal after round-trip with latin1");
+        QVERIFY2(okEn2, "English \"test\" equal after round-trip with utf8");
+        QVERIFY2(okRu1, "Russian \"test\" equal after round-trip with cp1251");
+        QVERIFY2(okRu2, "Russian \"test\" equal after round-trip with utf8");
     }
 }
 
