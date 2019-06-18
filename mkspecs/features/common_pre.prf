@@ -62,6 +62,12 @@ swiftConfig(ccache) {
     msvc:       QMAKE_CXX = clcache
     else:macx:  QMAKE_CXX = /usr/local/bin/ccache $$QMAKE_CXX
     else:gcc:   QMAKE_CXX = ccache $$QMAKE_CXX
+    unix {
+        QMAKE_CFLAGS_DEBUG                      *= -fdebug-prefix-map=$$(CCACHE_BASEDIR)=.
+        QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO     *= -fdebug-prefix-map=$$(CCACHE_BASEDIR)=.
+        QMAKE_CXXFLAGS_DEBUG                    *= -fdebug-prefix-map=$$(CCACHE_BASEDIR)=.
+        QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO   *= -fdebug-prefix-map=$$(CCACHE_BASEDIR)=.
+    }
 }
 
 ################################

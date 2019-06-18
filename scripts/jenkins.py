@@ -55,6 +55,7 @@ class Builder:
         os.environ['CLCACHE_DIR'] = 'C:\\clcache' # workaround https://github.com/frerich/clcache/issues/342
         os.environ['CLCACHE_BASEDIR'] = os.environ['WORKSPACE']
         os.environ['CCACHE_BASEDIR'] = os.environ['WORKSPACE']
+        os.environ['CCACHE_NOHASHDIR'] = '1'
 
     def build(self, jobs, qmake_args, dev_build, eolInMonth):
         """
