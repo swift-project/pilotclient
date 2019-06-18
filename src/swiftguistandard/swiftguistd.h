@@ -45,8 +45,15 @@ class QEvent;
 class QMouseEvent;
 class QTimer;
 
-namespace BlackMisc { namespace Aviation { class CAltitude; } }
-namespace BlackGui { namespace Components { class CDbLoadDataDialog; }}
+namespace BlackMisc { namespace Aviation   { class CAltitude; } }
+namespace BlackGui
+{
+    namespace Components
+    {
+        class CDbLoadDataDialog;
+        class CAutoPublishDialog;
+    }
+}
 namespace Ui { class SwiftGuiStd; }
 
 //! swift GUI
@@ -102,8 +109,9 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<BlackGui::Components::CNavigatorDialog>  m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
-    QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
+    QScopedPointer<BlackGui::Components::CNavigatorDialog>   m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<BlackGui::Components::CDbLoadDataDialog>  m_dbLoadDialog;      //!< load DB data, lazy init UI component
+    QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
@@ -282,6 +290,9 @@ private:
 
     //! Copy the XSwiftBus files from build directory
     void copyXSwiftBusDialog(bool checkFileTimestamp);
+
+    //! Auto publish diloag
+    void autoPublishDialog();
 
     //! Request overlay inline text message @{
     void onShowOverlayVariant(const BlackMisc::CVariant &variant, int durationMs);

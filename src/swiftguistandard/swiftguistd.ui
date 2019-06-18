@@ -274,16 +274,17 @@
     <addaction name="menu_WindowToggleNavigator"/>
     <addaction name="separator"/>
    </widget>
-   <widget class="QMenu" name="menu_Map">
+   <widget class="QMenu" name="menu_Tools">
     <property name="title">
-     <string>Map</string>
+     <string>Tools</string>
     </property>
     <addaction name="menu_MovingMap"/>
+    <addaction name="menu_AutoPublish"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
    <addaction name="menu_InfoAreas"/>
-   <addaction name="menu_Map"/>
+   <addaction name="menu_Tools"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Test"/>
   </widget>
@@ -500,6 +501,15 @@
     <string>Moving map</string>
    </property>
   </action>
+  <action name="menu_AutoPublish">
+   <property name="icon">
+    <iconset resource="../blackmisc/blackmisc.qrc">
+     <normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Auto-publish</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -546,7 +556,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
  <slots>
   <slot>setMainPage()</slot>

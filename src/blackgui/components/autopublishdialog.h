@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CAutoPublishDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAutoPublishDialog();
+            virtual ~CAutoPublishDialog() override;
 
             //! \copydoc CAutoPublishComponent::readFiles
             int readFiles();

@@ -6,6 +6,14 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackgui/components/infobarstatuscomponent.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/dbloaddatadialog.h"
+#include "blackgui/components/autopublishdialog.h"
+#include "blackgui/components/settingscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
@@ -13,13 +21,6 @@
 #include "blackcore/network.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackgui/components/infobarstatuscomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/dbloaddatadialog.h"
-#include "blackgui/components/settingscomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logcategory.h"
