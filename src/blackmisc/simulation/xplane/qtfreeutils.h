@@ -29,7 +29,7 @@ namespace BlackMisc
             namespace QtFreeUtils
             {
                 //! Get filename (including all extensions) from a filePath
-                std::string getFileName(const std::string &filePath)
+                inline std::string getFileName(const std::string &filePath)
                 {
                     const std::string seperator = "/\\";
                     const std::size_t sepPos = filePath.find_last_of(seperator);
@@ -44,7 +44,7 @@ namespace BlackMisc
                 }
 
                 //! Get the name of the parent directory
-                std::string getDirName(const std::string &filePath)
+                inline std::string getDirName(const std::string &filePath)
                 {
                     const std::string seperator = "/\\";
                     const std::size_t sepPos = filePath.find_last_of(seperator);
@@ -60,7 +60,7 @@ namespace BlackMisc
                 }
 
                 //! Get the base name of the file
-                std::string getBaseName(const std::string &filePath)
+                inline std::string getBaseName(const std::string &filePath)
                 {
                     const std::string seperator = ".";
                     const std::string fileName = getFileName(filePath);
@@ -76,7 +76,7 @@ namespace BlackMisc
                 }
 
                 //! Split string by delimiter and maxSplitCount times
-                std::vector<std::string> split(const std::string &str, size_t maxSplitCount = 0, const std::string &delimiter = " ")
+                inline std::vector<std::string> split(const std::string &str, size_t maxSplitCount = 0, const std::string &delimiter = " ")
                 {
                     std::string s(str);
                     size_t pos = 0;
@@ -102,7 +102,7 @@ namespace BlackMisc
                 };
 
                 //! Get the model string for a flyable aircraft
-                std::string stringForFlyableModel(const AcfProperties &acfProperties, const std::string &acfFile)
+                inline std::string stringForFlyableModel(const AcfProperties &acfProperties, const std::string &acfFile)
                 {
                     if (! acfProperties.author.empty())
                     {
@@ -120,7 +120,7 @@ namespace BlackMisc
                 }
 
                 //! String to lower case
-                std::string toLower(std::string s)
+                inline std::string toLower(std::string s)
                 {
                     std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c)
                     {
@@ -130,7 +130,7 @@ namespace BlackMisc
                 }
 
                 //! Extract ACF properties from an aircraft file
-                AcfProperties extractAcfProperties(const std::string &filePath)
+                inline AcfProperties extractAcfProperties(const std::string &filePath)
                 {
                     std::ifstream fs(filePath, std::ios::in);
                     if (!fs.is_open()) { return {}; }
