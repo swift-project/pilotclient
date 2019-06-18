@@ -129,6 +129,22 @@ namespace BlackMisc
                     return s;
                 }
 
+                //! Trim whitespace from the beginning and end, and replace sequences of whitespace with single space characters
+                inline std::string simplifyWhitespace(const std::string &s)
+                {
+                    std::string result;
+                    for (char c : s)
+                    {
+                        if (std::isspace(c))
+                        {
+                            if (!result.empty() && result.back() != ' ') { result.push_back(' '); }
+                        }
+                        else { result.push_back(c); }
+                    }
+                    while (!result.empty() && result.back() == ' ') { result.pop_back(); }
+                    return result;
+                }
+
                 //! Extract ACF properties from an aircraft file
                 inline AcfProperties extractAcfProperties(const std::string &filePath)
                 {
@@ -184,7 +200,7 @@ namespace BlackMisc
                     }
 
                     fs.close();
-                    acfProperties.modelString = stringForFlyableModel(acfProperties, filePath);
+                    acfProperties.modelString = simplifyWhitespace(stringForFlyableModel(acfProperties, filePath));
                     return acfProperties;
                 }
             }
