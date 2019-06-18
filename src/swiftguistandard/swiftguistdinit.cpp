@@ -217,13 +217,14 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
 
+    connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigatorVisibility);
     connect(ui->menu_WindowFont,        &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowMinimize,    &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigatorVisibility);
-    connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(ui->menu_MovingMap,     &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
-    connect(m_navigator.data(),     &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
+    connect(ui->menu_InternalsPage,     &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_AutoPublish,       &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(ui->menu_MovingMap,         &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::onNavigatorClosed, Qt::QueuedConnection);
 
     // settings (GUI component), styles
     connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);

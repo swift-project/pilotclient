@@ -8,6 +8,7 @@
 
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/settingscomponent.h"
+#include "blackgui/components/autopublishdialog.h"
 #include "blackgui/guiactionbind.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/foreignwindows.h"
@@ -31,6 +32,7 @@
 
 using namespace BlackConfig;
 using namespace BlackGui;
+using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -79,6 +81,10 @@ void SwiftGuiStd::onMenuClicked()
     else if (sender == ui->menu_InternalsPage)
     {
         ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
+    }
+    else if (sender == ui->menu_AutoPublish)
+    {
+        this->autoPublishDialog();
     }
     else if (sender == ui->menu_MovingMap && sGui && !sGui->getGlobalSetup().getSwiftMapUrls().isEmpty())
     {
@@ -173,4 +179,13 @@ void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
 
     const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, checkFileTimestamp, this);
     if (c > 0) { CLogMessage(this).info(u"Copied %1 files from build directory") << c; }
+}
+
+void SwiftGuiStd::autoPublishDialog()
+{
+    if (!m_autoPublishDialog)
+    {
+        m_autoPublishDialog.reset(new CAutoPublishDialog(this));
+    }
+    m_autoPublishDialog->show();
 }
