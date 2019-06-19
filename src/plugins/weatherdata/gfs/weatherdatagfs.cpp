@@ -732,22 +732,22 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                static const g2float minimumLayer = 0.0;
+                static const g2float minimumLevel = 1000.0;
                 float levelPressure = std::numeric_limits<float>::quiet_NaN();
                 g2float fieldValue = fld[gridPoint.fieldPosition];
                 // A value of 9.999e20 is undefined. Check that the pressure value is below
-                if (fieldValue < 9.998e20f) { levelPressure = fld[gridPoint.fieldPosition]; }
+                if (fieldValue < 9.998e20f && fieldValue > minimumLevel) { levelPressure = fld[gridPoint.fieldPosition]; }
                 switch (surfaceType)
                 {
                 case LowCloudBottomLevel:
                 case MiddleCloudBottomLevel:
                 case HighCloudBottomLevel:
-                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].bottomLevelPressure = levelPressure; }
+                    gridPoint.cloudLayers[level].bottomLevelPressure = levelPressure;
                     break;
                 case LowCloudTopLevel:
                 case MiddleCloudTopLevel:
                 case HighCloudTopLevel:
-                    if (fieldValue > minimumLayer) { gridPoint.cloudLayers[level].topLevelPressure = levelPressure; }
+                    gridPoint.cloudLayers[level].topLevelPressure = levelPressure;
                     break;
                 default:
                     Q_ASSERT(false);
