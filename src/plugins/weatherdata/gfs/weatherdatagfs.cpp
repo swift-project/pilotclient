@@ -16,6 +16,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
+#include <QStringBuilder>
 #include <cmath>
 
 using namespace BlackMisc;
@@ -284,13 +285,10 @@ namespace BlackWxPlugin
             // The 0 hour forecast, does not contain all required parameters. Hence use 1 hour forecast instead.
             if (forecast == 0) { forecast = 1; }
 
-            QString filename("gfs.t%1z.pgrb2.0p25.f%2");
-            filename = filename.arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
-            filename = filename.arg(forecast, 3, 10, QLatin1Char('0'));
-
-            QString directory("gfs.%1%2");
-            directory = directory.arg(cnow.toString("yyyyMMdd"));
-            directory = directory.arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
+            const QString filename = u"gfs." % QStringLiteral("t%1z").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'))
+                                             % u".pgrb2.0p25."
+                                             % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
+            const QString directory = u"/gfs." % cnow.toString("yyyyMMdd") % u"/" % QStringLiteral("%1").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
 
             downloadUrl.appendQuery("file", filename);
             for (const auto &level : grib2Levels)
@@ -305,7 +303,7 @@ namespace BlackWxPlugin
             downloadUrl.appendQuery("rightlon", "360");
             downloadUrl.appendQuery("toplat", "90");
             downloadUrl.appendQuery("bottomlat", "-90");
-            downloadUrl.appendQuery("dir", "%2F" + directory);
+            downloadUrl.appendQuery("dir", directory);
             return downloadUrl;
         }
 
