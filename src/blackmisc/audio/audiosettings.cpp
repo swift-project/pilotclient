@@ -20,6 +20,8 @@ namespace BlackMisc
 {
     namespace Audio
     {
+        constexpr int CSettings::MaxAudioVolume;
+
         CSettings::CSettings()
         {
             this->initDefaultValues();
