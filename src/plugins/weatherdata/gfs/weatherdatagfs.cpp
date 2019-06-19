@@ -12,6 +12,7 @@
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/temperature.h"
+
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
@@ -85,7 +86,7 @@ namespace BlackWxPlugin
             float windV = 0.0;
         };
 
-        inline bool operator==(const GfsIsobaricLayer& lhs, const GfsIsobaricLayer& rhs)
+        inline bool operator==(const GfsIsobaricLayer &lhs, const GfsIsobaricLayer &rhs)
         {
             return qFuzzyCompare(lhs.temperature, rhs.temperature) &&
                    qFuzzyCompare(lhs.relativeHumidity, rhs.relativeHumidity) &&
@@ -618,7 +619,7 @@ namespace BlackWxPlugin
 
             float level = 0.0;
 
-            switch(typeFirstFixedSurface)
+            switch (typeFirstFixedSurface)
             {
             case GroundOrWaterSurface: level = 0.0; break;
             case IsobaricSurface: level = valueFirstFixedSurface; break;
