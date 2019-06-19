@@ -898,6 +898,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFlightgear::canAddAircraft() const
         {
+            if (this->getModelSet().isEmpty()) { return false; }
             if (m_addingInProgressAircraft.isEmpty()) { return true; }
 
             // check
