@@ -634,6 +634,10 @@ namespace BlackWxPlugin
             case VGRD: setWindV(gfld->fld, level); break;
             case PRMSL: setPressureAtMsl(gfld->fld); break;
             case PRES: /* Do nothing */ break;
+            case TCDC: /* Do nothing */ break;
+            case PRATE: /* Do nothing */ break;
+            case CSNOW: break;
+            case CRAIN: break;
             default: CLogMessage(this).error(u"Unexpected parameterValue in Template 4.0: %1 (%2)") << parameterValue.code << parameterValue.name; return;
             }
         }
