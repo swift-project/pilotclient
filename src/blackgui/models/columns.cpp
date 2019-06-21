@@ -7,6 +7,7 @@
  */
 
 #include "blackgui/models/columns.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/compare.h"
 
 #include <QByteArray>
@@ -37,6 +38,14 @@ namespace BlackGui
         {
             Q_ASSERT(!propertyIndex.isEmpty());
             m_sortPropertyIndex = propertyIndex;
+        }
+
+        const CDefaultFormatter *CColumn::getFormatter() const
+        {
+            const bool incogntio = this->isIncognito() && sGui && sGui->isIncognito();
+            return incogntio ?
+                   CColumn::incongitoFormatter() :
+                   m_formatter.data();
         }
 
         CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex) :
@@ -80,6 +89,12 @@ namespace BlackGui
             return col;
         }
 
+        const CIncognitoFormatter *CColumn::incongitoFormatter()
+        {
+            static const CIncognitoFormatter incognito;
+            return &incognito;
+        }
+
         // --------------- columns ----------------------------------------------
 
         CColumns::CColumns(const QString &translationContext, QObject *parent) :
@@ -88,16 +103,24 @@ namespace BlackGui
             // void
         }
 
-        void CColumns::addColumn(CColumn column)
+        void CColumns::addColumn(const CColumn &column)
         {
             Q_ASSERT(!m_translationContext.isEmpty());
-            column.setTranslationContext(m_translationContext);
-            m_columns.push_back(column);
+            CColumn copy(column);
+            copy.setTranslationContext(m_translationContext);
+            m_columns.push_back(copy);
+        }
+
+        void CColumns::addColumnIncognito(const CColumn &column)
+        {
+            CColumn copy(column);
+            copy.setIncognito(true);
+            this->addColumn(copy);
         }
 
         QString CColumns::propertyIndexToColumnName(const CPropertyIndex &propertyIndex, bool i18n) const
         {
-            int column = this->propertyIndexToColumn(propertyIndex);
+            const int column = this->propertyIndexToColumn(propertyIndex);
             Q_UNUSED(i18n); // not implemented
             return m_columns.at(column).getColumnName();
         }
@@ -258,8 +281,9 @@ namespace BlackGui
 
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const
         {
-            if (!isValidColumn(index)) { return nullptr; }
-            return m_columns.at(index.column()).getFormatter();
+            if (!this->isValidColumn(index)) { return nullptr; }
+            const CColumn c = m_columns.at(index.column());
+            return c.getFormatter();
         }
-    }
+    } // namespace
 } // namespace

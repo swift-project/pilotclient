@@ -179,6 +179,17 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
+        //! Just returns a empty "" value
+        class CIncognitoFormatter : public CDefaultFormatter
+        {
+        public:
+            //! Constructor
+            CIncognitoFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
+
+            //! \copydoc CDefaultFormatter::displayRole
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        };
+
         //! Layout will be defined by a delegate
         class CDelegateFormatter : public CDefaultFormatter
         {
