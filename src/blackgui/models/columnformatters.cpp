@@ -458,5 +458,12 @@ namespace BlackGui
             return empty;
         }
 
+        CVariant CIncognitoFormatter::displayRole(const CVariant &dataCVariant) const
+        {
+            Q_UNUSED(dataCVariant);
+            static const CVariant masked("******");
+            return masked;
+        }
+
     } // namespace
 } // namespace

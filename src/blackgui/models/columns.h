@@ -74,7 +74,7 @@ namespace BlackGui
             void setFormatter(CDefaultFormatter *formatter) { Q_ASSERT(formatter); m_formatter.reset(formatter); }
 
             //! Formatter
-            const CDefaultFormatter *getFormatter() const { return m_formatter.data(); }
+            const CDefaultFormatter *getFormatter() const;
 
             //! Aligment as CVariant
             BlackMisc::CVariant getAlignment() const;
@@ -99,6 +99,12 @@ namespace BlackGui
 
             //! Width percentage
             void setWidthPercentage(int width) { m_widthPercentage = width; }
+
+            //! If incognito mode, do NOT display daza
+            bool isIncognito() const { return m_incognito; }
+
+            //! Mark as incognito enabled
+            void setIncognito(bool incognito) { m_incognito = incognito; }
 
             //! Get a standard value object formatted column
             static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
@@ -130,8 +136,12 @@ namespace BlackGui
             BlackMisc::CPropertyIndex m_propertyIndex;     //!< Property index for column
             BlackMisc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
 
-            bool m_editable = false;
-            bool m_sortable = true;
+            //! Incognito formatter
+            static const CIncognitoFormatter *incongitoFormatter();
+
+            bool m_editable  = false;
+            bool m_sortable  = true;
+            bool m_incognito = false;
         };
 
         /*!
@@ -150,7 +160,10 @@ namespace BlackGui
             CColumns(const QString &translationContext, QObject *parent = nullptr);
 
             //! Add a column
-            void addColumn(CColumn column);
+            void addColumn(const CColumn &column);
+
+            //! Add a column as incognito enabled
+            void addColumnIncognito(const CColumn &column);
 
             //! Property index to name
             QString propertyIndexToColumnName(const BlackMisc::CPropertyIndex &propertyIndex, bool i18n = false) const;
@@ -230,10 +243,10 @@ namespace BlackGui
             bool endsWithEmptyColumn() const;
 
         private:
-            QList<CColumn> m_columns;
+            QList<CColumn> m_columns;     //!< all columns
             QString m_translationContext; //!< for future usage
         };
-    }
-} // namespace BlackGui
+    } // ns
+} // ns
 
 #endif // guard
