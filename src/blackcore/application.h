@@ -106,7 +106,7 @@ namespace BlackCore
         CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
 
         //! Destructor
-        virtual ~CApplication();
+        virtual ~CApplication() override;
 
         //! Information about all running apps (including this one only if exec() has already been called)
         static BlackMisc::CApplicationInfoList getRunningApplications();
@@ -123,6 +123,18 @@ namespace BlackCore
         //! Is application shutting down?
         //! \threadsafe
         bool isShuttingDown() const;
+
+        //! Is incognito mode?
+        //! \threadsafe
+        bool isIncognito() const;
+
+        //! Set incognito mode
+        //! \threadsafe
+        void setIncognito(bool incognito);
+
+        //! Toggle incognito mode
+        //! \threadsafe
+        void toggleIncognito();
 
         //! swift application running
         const BlackMisc::CApplicationInfo &getApplicationInfo() const { return m_applicationInfo; }
@@ -405,9 +417,9 @@ namespace BlackCore
 
         // ------------------------- network -----------------------------------------------
 
-        static constexpr int NoRedirects = -1;        //!< network request not allowing redirects
-        static constexpr int NoLogRequestId = -1;     //!< network request without logging
-        static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
+        static constexpr int NoRedirects         = -1; //!< network request not allowing redirects
+        static constexpr int NoLogRequestId      = -1; //!< network request without logging
+        static constexpr int DefaultMaxRedirects =  2; //!< network request, default for max.redirects
 
         //! The network reply callback when request is completed
         using CallbackSlot = BlackMisc::CSlot<void(QNetworkReply *)>;
@@ -605,11 +617,12 @@ namespace BlackCore
         QCommandLineOption m_cmdClearCache    {"clearcache"};   //!< Clear cache
         QCommandLineOption m_cmdTestCrashpad  {"testcrashpad"}; //!< Test a crasphpad upload
         QCommandLineOption m_cmdSkipSingleApp {"skipsa"};       //!< Skip test for single application
-        bool               m_parsed  = false;                   //!< Parsing accomplished?
-        bool               m_started = false;                   //!< Started with success?
+        bool               m_parsed    = false;                 //!< Parsing accomplished?
+        bool               m_started   = false;                 //!< Started with success?
         bool               m_singleApplication = true;          //!< Only one instance of that application
-        bool               m_alreadyRunning = false;            //!< Application already running
-        std::atomic_bool   m_shutdown { false };                //!< Is being shutdown?
+        bool               m_alreadyRunning    = false;         //!< Application already running
+        std::atomic_bool   m_shutdown  { false };               //!< Is being shutdown?
+        std::atomic_bool   m_incognito { false };               //!< Incognito mode?
         std::atomic_bool   m_shutdownInProgress { false };      //!< shutdown in progress?
 
     private:

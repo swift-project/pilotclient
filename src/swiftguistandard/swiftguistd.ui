@@ -280,6 +280,7 @@
     </property>
     <addaction name="menu_MovingMap"/>
     <addaction name="menu_AutoPublish"/>
+    <addaction name="menu_ToggleIncognito"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
@@ -508,6 +509,11 @@
    </property>
    <property name="text">
     <string>Auto-publish</string>
+   </property>
+  </action>
+  <action name="menu_ToggleIncognito">
+   <property name="text">
+    <string>Toggle incognito mode</string>
    </property>
   </action>
  </widget>

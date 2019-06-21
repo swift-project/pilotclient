@@ -86,6 +86,14 @@ void SwiftGuiStd::onMenuClicked()
     {
         this->autoPublishDialog();
     }
+    else if (sender == ui->menu_ToggleIncognito)
+    {
+        if (sGui)
+        {
+            sGui->toggleIncognito();
+            this->displayInOverlayWindow(QStringLiteral("Incognito mode is %1").arg(boolToOnOff(sGui->isIncognito())), 5000);
+        }
+    }
     else if (sender == ui->menu_MovingMap && sGui && !sGui->getGlobalSetup().getSwiftMapUrls().isEmpty())
     {
         const CUrlList urls = sGui->getGlobalSetup().getSwiftMapUrls();
