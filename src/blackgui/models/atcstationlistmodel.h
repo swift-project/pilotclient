@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CAtcStationListModel(AtcStationMode stationMode, QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAtcStationListModel() {}
+            virtual ~CAtcStationListModel() override {}
 
             //! Set station mode
             void setStationMode(AtcStationMode stationMode);
@@ -62,4 +62,5 @@ namespace BlackGui
         };
     }
 } // ns
+
 #endif // guard

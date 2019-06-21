@@ -72,7 +72,7 @@ namespace BlackGui
                     m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
                     m_columns.addColumn(CColumn("r.", "in range", CAtcStation::IndexIsInRange, new CBoolIconFormatter("in range", "outside range")));
                     m_columns.addColumn(CColumn("range", CAtcStation::IndexRange, new CAirspaceDistanceFormatter()));
-                    m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
+                    m_columns.addColumnIncognito(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                     m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
                     m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
                     m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
@@ -90,7 +90,7 @@ namespace BlackGui
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     m_columns.addColumn(col);
                     m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
-                    m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
+                    m_columns.addColumnIncognito(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                     m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
                     m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
                     m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
