@@ -245,6 +245,21 @@ namespace BlackCore
         return m_shutdown;
     }
 
+    bool CApplication::isIncognito() const
+    {
+        return m_incognito;
+    }
+
+    void CApplication::setIncognito(bool incognito)
+    {
+        m_incognito = incognito;
+    }
+
+    void CApplication::toggleIncognito()
+    {
+        m_incognito = !m_incognito;
+    }
+
     const QString &CApplication::getApplicationNameAndVersion() const
     {
         static const QString s(m_applicationName % u" " % CBuildConfig::getVersionString());
