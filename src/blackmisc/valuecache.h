@@ -444,7 +444,10 @@ namespace BlackMisc
 
     private:
         template <typename F>
-        static Private::CValuePage::Validator wrap(F func) { return [func](const CVariant &value)->bool { return func(value.to<T>()); }; }
+        static Private::CValuePage::Validator wrap(F func)
+        {
+            return [func](const CVariant &value, QString &reason) -> bool { return func(value.to<T>(), reason); };
+        }
         static Private::CValuePage::Validator wrap(std::nullptr_t) { return {}; }
 
         template <typename F>

@@ -72,7 +72,7 @@ namespace BlackMisc
             struct Element;
 
             //! Functor used for validating values.
-            using Validator = std::function<bool(const CVariant &)>;
+            using Validator = std::function<bool(const CVariant &, QString &)>;
 
             //! Functor used to notify parent of changes.
             using NotifySlot = std::pair<std::function<void(QObject *)>, void (QObject::*)()>;

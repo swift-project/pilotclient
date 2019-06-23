@@ -92,7 +92,7 @@ namespace BlackGui
             static const QString &humanReadable() { static const QString name("Background consolidation"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
+            static bool isValid(const int &valueInSeconds, QString &) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const int &defaultValue() { static const int i = 60; return i; }

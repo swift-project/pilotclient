@@ -314,7 +314,7 @@ namespace BlackMiscTest
     }
 
     //! Is value between 0 - 100?
-    bool validator(int value)
+    bool validator(int value, QString &)
     {
         return value >= 0 && value <= 100;
     }

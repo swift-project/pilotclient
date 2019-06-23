@@ -106,7 +106,7 @@ namespace BlackGui
             static const QString &humanReadable() { static const QString name("View update"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const CViewUpdateSettings &settings) { return settings.isValid(); }
+            static bool isValid(const CViewUpdateSettings &settings, QString &) { return settings.isValid(); }
         };
     } // ns
 } // ns
