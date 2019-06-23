@@ -20,6 +20,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/directoryutils.h"
 
 #include <QStringList>
 #include <QObject>
@@ -386,6 +387,22 @@ namespace BlackMisc
 
                 //! \copydoc BlackMisc::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
+
+                //! \copydoc BlackMisc::TSettingTrait::isValid
+                static bool isValid(const CSimulatorSettings &value, QString &reason)
+                {
+                    const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory()
+                                         : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
+                    for (const QString &modelDir : value.getModelDirectories())
+                    {
+                        if (!CDirectoryUtils::isSubDirectoryOf(modelDir, simDir))
+                        {
+                            reason = QStringLiteral("Model directory must be within the simulator directory structure");
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             };
 
             //! Trait for simulator settings

@@ -571,7 +571,14 @@ namespace BlackSimPlugin
             {
                 Q_ASSERT(package.s.endsWith('/'));
                 package.s.chop(1);
-                m_trafficProxy->loadPlanesPackage(package.s);
+                if (CDirectoryUtils::isSubDirectoryOf(package.s, getSimulatorSettings().getSimulatorDirectoryOrDefault()))
+                {
+                    m_trafficProxy->loadPlanesPackage(package.s);
+                }
+                else
+                {
+                    CLogMessage(this).validationError(u"CSL package '%1' can not be loaded as it is outside the X-Plane installation directory") << package.s;
+                }
             }
         }
 

@@ -525,6 +525,17 @@ namespace BlackMisc
         return d1.absolutePath() == d2.absolutePath();
     }
 
+    bool CDirectoryUtils::isSubDirectoryOf(const QString &dir1, const QString &dir2)
+    {
+        QDir d1(dir1);
+        const QDir d2(dir2);
+        do
+        {
+            if (d1 == d2) { return true; }
+        } while (d1.cdUp());
+        return false;
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;
