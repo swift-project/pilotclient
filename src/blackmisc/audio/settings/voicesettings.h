@@ -31,7 +31,7 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("Voice setup"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const CVoiceSetup &setup) { return setup.validate().isSuccess(); }
+                static bool isValid(const CVoiceSetup &setup, QString &) { return setup.validate().isSuccess(); }
             };
         } // ns
     } // ns

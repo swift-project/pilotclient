@@ -637,9 +637,11 @@ namespace BlackMisc
         key.replace("%OwnerClass%", QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
         key.replace("%OwnerName%", parent()->objectName(), Qt::CaseInsensitive);
 
+        QString unused;
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
-        Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
+        Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue, unused) : true, "CValuePage", "Validator rejects default value");
+        Q_UNUSED(unused);
 
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue)));
         std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);
@@ -839,6 +841,7 @@ namespace BlackMisc
 
     CStatusMessage CValuePage::validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const
     {
+        QString reason;
         if (! value.isValid())
         {
             return CStatusMessage(this, invalidSeverity, u"Empty cache value %1", true) << element.m_nameWithKey;
@@ -847,9 +850,16 @@ namespace BlackMisc
         {
             return CStatusMessage(this).error(u"Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
         }
-        else if (element.m_validator && ! element.m_validator(value))
+        else if (element.m_validator && ! element.m_validator(value, reason))
         {
-            return CStatusMessage(this).error(u"%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
+            if (reason.isEmpty())
+            {
+                return CStatusMessage(this).error(u"%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
+            }
+            else
+            {
+                return CStatusMessage(this).error(u"%1 (%2 for %3)") << reason << value.toQString() << element.m_nameWithKey;
+            }
         }
         else
         {

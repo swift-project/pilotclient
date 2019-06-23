@@ -52,7 +52,7 @@ namespace BlackMisc
                 static const char *key() { return "mapping/modelconverterxbin"; }
 
                 //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const QString &value)
+                static bool isValid(const QString &value, QString &)
                 {
                     if (value.isEmpty()) { return true; }
                     const QFile f(value);

@@ -35,8 +35,8 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static QString defaultValue() { return "tcp:host=127.0.0.1,port=45001"; }
 
-                //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static bool isValid(const QString &dBusAddress) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
+                //! \copydoc BlackMisc::TSettingTrait::isValid
+                static bool isValid(const QString &dBusAddress, QString &) { return BlackMisc::CDBusServer::isSessionOrSystemAddress(dBusAddress) || BlackMisc::CDBusServer::isQtDBusAddress(dBusAddress); }
             };
         } // ns
     } // ns

@@ -97,7 +97,7 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("swift plugin"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::isValid
-                static bool isValid(const CSwiftPluginSettings &value) { return value.getEmulatedSimulator().isSingleSimulator(); }
+                static bool isValid(const CSwiftPluginSettings &value, QString &) { return value.getEmulatedSimulator().isSingleSimulator(); }
             };
         } // ns
     } // ns

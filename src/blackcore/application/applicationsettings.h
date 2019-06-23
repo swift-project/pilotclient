@@ -33,7 +33,7 @@ namespace BlackCore
             static const QString &humanReadable() { static const QString name("Hotkeys"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const BlackMisc::Input::CActionHotkeyList &value)
+            static bool isValid(const BlackMisc::Input::CActionHotkeyList &value, QString &)
             {
                 for (const auto &actionHotkey : value)
                 {
@@ -63,7 +63,7 @@ namespace BlackCore
             }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const QStringList &pluginIdentifiers)
+            static bool isValid(const QStringList &pluginIdentifiers, QString &)
             {
                 for (const QString &pluginIdentifier : pluginIdentifiers)
                 {

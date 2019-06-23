@@ -202,7 +202,7 @@ namespace BlackCore
             static const QString &humanReadable() { static const QString name("FSD message Logging"); return name; }
 
             /* //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const CRawFsdMessageSettings &setting)
+            static bool isValid(const CRawFsdMessageSettings &setting, QString &)
             {
                 if (setting.areRawFsdMessagesEnabled()) { return !setting.getFileDir().isEmpty(); }
                 return true;

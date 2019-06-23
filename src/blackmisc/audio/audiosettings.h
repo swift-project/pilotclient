@@ -109,7 +109,7 @@ namespace BlackMisc
             static const QString &humanReadable() { static const QString name("Audio"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
+            static bool isValid(const BlackMisc::Audio::CSettings &value, QString &) { Q_UNUSED(value); return true; }
         };
     } // namespace
 } // namespace

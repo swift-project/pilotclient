@@ -144,7 +144,7 @@ namespace BlackMisc
 
         //! Validator function. Return true if the argument is valid, false otherwise. Default
         //! implementation just returns true. Reimplemented in derived class to support validation of the value.
-        static bool isValid(const T &) { return true; }
+        static bool isValid(const T &value, QString &reason) { Q_UNUSED(value); Q_UNUSED(reason); return true; }
 
         //! Return the value to use in case the supplied value does not satisfy the validator.
         //! Default implementation returns a default-constructed value.
