@@ -283,12 +283,27 @@ namespace BlackCore
                             const CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                             const QString clientType = clientPartsMap["clienttype"].toLower();
                             if (clientType.isEmpty()) { break; } // sometimes type is empty
-                            const double lat = clientPartsMap["latitude"].toDouble();
-                            const double lng = clientPartsMap["longitude"].toDouble();
-                            const double alt = clientPartsMap["altitude"].toDouble();
+
+                            bool ok;
+                            bool validPos = true;
+                            const double lat = clientPartsMap["latitude"].toDouble(&ok);
+                            QStringList posMsg;
+                            if (!ok) { validPos = false; posMsg << QStringLiteral("latitude: '%1'").arg(clientPartsMap["latitude"]); }
+
+                            const double lng = clientPartsMap["longitude"].toDouble(&ok);
+                            if (!ok) { validPos = false; posMsg << QStringLiteral("longitude: '%1'").arg(clientPartsMap["longitude"]); }
+
+                            const double alt = clientPartsMap["altitude"].toDouble(&ok);
+                            if (!ok) { validPos = false; posMsg << QStringLiteral("altitude: '%1'").arg(clientPartsMap["altitude"]); }
+                            CCoordinateGeodetic position = validPos ? CCoordinateGeodetic(lat, lng, alt) : CCoordinateGeodetic::null();
+
+                            Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsisten data");
+                            if (!posMsg.isEmpty())
+                            {
+                                CLogMessage(this).validationWarning(u"Callsign '%1' %2") << callsign << posMsg.join(", ");
+                            }
+
                             const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
-                            CCoordinateGeodetic position(lat, lng, alt);
-                            const CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
                             const QString flightPlanRemarks = clientPartsMap["planned_remarks"].trimmed();
 
                             // Voice capabilities
@@ -326,7 +341,8 @@ namespace BlackCore
                             {
                                 // ATC section
                                 CLength range;
-                                position.setGeodeticHeight(altitude); // the altitude is elevation for a station
+                                // should be alread have alt/height position.setGeodeticHeight(altitude);
+                                // the altitude is elevation for a station
                                 CAtcStation station(user.getCallsign().getStringAsSet(), user, frequency, position, range);
                                 station.setOnline(true);
                                 atcStations.push_back(station);

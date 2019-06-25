@@ -314,6 +314,9 @@ namespace BlackMisc
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});
 
+            //! null coordinate
+            static const CCoordinateGeodetic &null();
+
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 

@@ -251,9 +251,17 @@ namespace BlackMisc
         template <class MU, class PQ>
         PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
         {
+            // NULL check: https://discordapp.com/channels/539048679160676382/539925070550794240/593151683698229258
             if (m_unit == newUnit || this->isNull()) { return *derived(); }
-            m_value = newUnit.convertFrom(m_value, m_unit);
-            m_unit = newUnit;
+            if (newUnit.isNull())
+            {
+                this->setNull();
+            }
+            else
+            {
+                m_value = newUnit.convertFrom(m_value, m_unit);
+                m_unit = newUnit;
+            }
             return *derived();
         }
 

@@ -40,6 +40,12 @@ namespace BlackMisc
             return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
 
+        const CCoordinateGeodetic &CCoordinateGeodetic::null()
+        {
+            static const CCoordinateGeodetic n;
+            return n;
+        }
+
         CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
@@ -177,10 +183,10 @@ namespace BlackMisc
             const CLatitude lat = this->latitude();
             const CLongitude lng = this->longitude();
             return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}").arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                         lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                         lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                         lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                         this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
+                    lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                    lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                    lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                    this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
         }
 
         bool ICoordinateGeodetic::isNaNVector() const
