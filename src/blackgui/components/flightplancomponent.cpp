@@ -83,6 +83,10 @@ namespace BlackGui
             this->setForceSmall(true);
             this->showKillButton(false);
 
+            // rules
+            ui->cb_FlightRule->clear();
+            ui->cb_FlightRule->addItems(CFlightPlan::flightRules());
+
             // validators
             ui->le_Callsign->setValidator(new CUpperCaseValidator(ui->le_Callsign));
             ui->le_AircraftType->setValidator(new CUpperCaseValidator(ui->le_AircraftType));
@@ -249,11 +253,18 @@ namespace BlackGui
             const CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
             ui->lep_CrusingAltitude->setAltitude(cruiseAlt);
 
-            switch (flightPlan.getFlightRulesAsVFRorIFR())
+            const QString r = flightPlan.getFlightRulesAsString();
+            if (CFlightPlan::flightRules().contains(r, Qt::CaseInsensitive))
             {
-            case CFlightPlan::VFR: ui->cb_FlightRule->setCurrentText("VFR"); break;
-            default: ui->cb_FlightRule->setCurrentText("IFR"); break;
+                ui->cb_FlightRule->setCurrentText(r);
             }
+            else if (flightPlan.getFlightRules() == CFlightPlan::UNKNOWN)
+            {
+                ui->cb_FlightRule->setCurrentText(CFlightPlan::flightRulesToString(CFlightPlan::IFR));
+                const CStatusMessage m = CStatusMessage(this).validationWarning(u"Unknown fligh rule, setting to default");
+                this->showOverlayMessage(m);
+            }
+
         }
 
         const CLogCategoryList &CFlightPlanComponent::getLogCategories()
@@ -270,8 +281,8 @@ namespace BlackGui
             const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
             messages.push_back(CStatusMessage(this).validationInfo(strict ? QStringLiteral("Strict validation") : QStringLiteral("Lenient validation")));
 
-            const CFlightPlan::FlightRules rule = ui->cb_FlightRule->currentText().startsWith("I") ? CFlightPlan::IFR : CFlightPlan::VFR;
-            flightPlan.setFlightRule(rule);
+            const CFlightPlan::FlightRules rules = this->getFlightRules();
+            flightPlan.setFlightRule(rules);
 
             // callsign
             QString v;
@@ -789,8 +800,14 @@ namespace BlackGui
 
         bool CFlightPlanComponent::isVfr() const
         {
-            const bool vfr = ui->cb_FlightRule->currentText().startsWith("V", Qt::CaseInsensitive);
+            const bool vfr = CFlightPlan::isVFRRules(ui->cb_FlightRule->currentText());
             return vfr;
+        }
+
+        CFlightPlan::FlightRules CFlightPlanComponent::getFlightRules() const
+        {
+            const CFlightPlan::FlightRules r = CFlightPlan::stringToFlightRules(ui->cb_FlightRule->currentText());
+            return r;
         }
 
         bool CFlightPlanComponent::overrideRemarks()

@@ -42,7 +42,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-137</y>
+         <y>0</y>
          <width>383</width>
          <height>480</height>
         </rect>
@@ -721,6 +721,16 @@
             <item>
              <property name="text">
               <string>VFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SVFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>DVFR</string>
              </property>
             </item>
            </widget>

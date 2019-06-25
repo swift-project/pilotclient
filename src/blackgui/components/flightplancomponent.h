@@ -90,7 +90,7 @@ namespace BlackGui
         private:
             static constexpr int OverlayTimeoutMs = 5000;
             QScopedPointer<Ui::CFlightPlanComponent> ui;
-            CAltitudeDialog *m_altitudeDialog = nullptr;
+            CAltitudeDialog   *m_altitudeDialog  = nullptr;
             CStringListDialog *m_fpRemarksDialog = nullptr;
             BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model;     //!< currently used model
@@ -199,6 +199,9 @@ namespace BlackGui
 
             //! VFR rules?
             bool isVfr() const;
+
+            //! Get the FP flight rules
+            BlackMisc::Aviation::CFlightPlan::FlightRules getFlightRules() const;
 
             //! Override remarks message dialog
             bool overrideRemarks();
