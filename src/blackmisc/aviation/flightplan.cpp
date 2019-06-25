@@ -186,6 +186,12 @@ namespace BlackMisc
             m_equipmentSuffix = parts[2];
         }
 
+        void CFlightPlan::setFlightRule(const QString &flightRule)
+        {
+            const CFlightPlan::FlightRules r = CFlightPlan::stringToFlightRules(flightRule);
+            this->setFlightRule(r);
+        }
+
         void CFlightPlan::setRoute(const QString &route)
         {
             QString r = route;
@@ -508,7 +514,7 @@ namespace BlackMisc
             return CFlightPlan();
         }
 
-        const QString &CFlightPlan::flightRuleToString(CFlightPlan::FlightRules rule)
+        const QString &CFlightPlan::flightRulesToString(CFlightPlan::FlightRules rules)
         {
             static const QString v("VFR");
             static const QString i("IFR");
@@ -516,7 +522,7 @@ namespace BlackMisc
             static const QString d("DVFR");
             static const QString unknown("???");
 
-            switch (rule)
+            switch (rules)
             {
             case VFR:  return v;
             case IFR:  return i;
@@ -602,6 +608,34 @@ namespace BlackMisc
             if (fr.startsWith("VFR"))  { return VFR; }
             if (fr.startsWith("IFR"))  { return IFR; }
             return UNKNOWN;
+        }
+
+        const QStringList &CFlightPlan::flightRules()
+        {
+            static const QStringList r({"VFR", "IFR", "SVFR", "DVFR" });
+            return r;
+        }
+
+        bool CFlightPlan::isVFRRules(CFlightPlan::FlightRules rule)
+        {
+            return rule == CFlightPlan::VFR || rule == CFlightPlan::DVFR || rule == CFlightPlan::SVFR;
+        }
+
+        bool CFlightPlan::isVFRRules(const QString &rule)
+        {
+            const CFlightPlan::FlightRules r = CFlightPlan::stringToFlightRules(rule);
+            return CFlightPlan::isVFRRules(r);
+        }
+
+        bool CFlightPlan::isIFRRules(CFlightPlan::FlightRules rule)
+        {
+            return rule == CFlightPlan::IFR;
+        }
+
+        bool CFlightPlan::isIFRRules(const QString &rule)
+        {
+            const CFlightPlan::FlightRules r = CFlightPlan::stringToFlightRules(rule);
+            return CFlightPlan::isIFRRules(r);
         }
 
         const QStringList &CFlightPlan::faaEquipmentCodes()

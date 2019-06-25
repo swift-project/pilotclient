@@ -241,7 +241,10 @@ namespace BlackMisc
             void setCruiseTrueAirspeed(const PhysicalQuantities::CSpeed &cruiseTrueAirspeed) { m_cruiseTrueAirspeed = cruiseTrueAirspeed; }
 
             //! Set flight rules (VFR or IFR)
-            void setFlightRule(FlightRules flightRules) { m_flightRules = flightRules; }
+            void setFlightRule(FlightRules flightRule) { m_flightRules = flightRule; }
+
+            //! Set flight rules (VFR or IFR)
+            void setFlightRule(const QString &flightRule);
 
             //! Set route string
             void setRoute(const QString &route);
@@ -310,7 +313,7 @@ namespace BlackMisc
             FlightRules getFlightRulesAsVFRorIFR() const;
 
             //! Get flight rules as in FlightRules as string
-            QString getFlightRulesAsString() const { return CFlightPlan::flightRuleToString(this->getFlightRules()); }
+            QString getFlightRulesAsString() const { return CFlightPlan::flightRulesToString(this->getFlightRules()); }
 
             //! Get route string
             const QString &getRoute() const { return m_route; }
@@ -385,10 +388,23 @@ namespace BlackMisc
             static CFlightPlan loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs = nullptr);
 
             //! Rules to string
-            static const QString &flightRuleToString(FlightRules rule);
+            static const QString &flightRulesToString(FlightRules rules);
 
             //! String to flight rules
             static FlightRules stringToFlightRules(const QString &flightRules);
+
+            //! All rules as string
+            static const QStringList &flightRules();
+
+            //! Is rule a VFR rule? @[
+            static bool isVFRRules(FlightRules rule);
+            static bool isVFRRules(const QString &rule);
+            //! @
+
+            //! Is rule a IFR rule? @{
+            static bool isIFRRules(FlightRules rule);
+            static bool isIFRRules(const QString &rule);
+            //! @
 
             //! Get aircraft ICAO code from equipment code like
             //! \remark we expect something like "H/B772/F" "B773" "B773/F"
