@@ -1505,13 +1505,14 @@ namespace BlackCore
             case vatServerErrorNone:            CLogMessage(self).info(u"OK"); break;
             case vatServerErrorSyntax:          CLogMessage(self).info(u"Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
             case vatServerErrorSrcInvalid:      CLogMessage(self).info(u"Server: source invalid %1") << self->fromFSD(data); break;
-            case vatServerErrorNoSuchCs:        CLogMessage(self).info(u"Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
+            case vatServerErrorNoSuchCs:        CLogMessage(self).info(u"FSD message was using an invalid callsign: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
             case vatServerErrorNoFP:            CLogMessage(self).info(u"Server: no flight plan"); break;
             case vatServerErrorNoWeather:       CLogMessage(self).info(u"Server: requested weather profile does not exist"); break;
 
             // we have no idea what these mean
-            case vatServerErrorRegistered:
-            case vatServerErrorInvalidCtrl:     CLogMessage(self).info(u"Server: ") << self->fromFSD(msg); break;
+            case vatServerErrorRegistered:      CLogMessage(self).info(u"vatServerErrorRegistered: ") << self->fromFSD(msg); break;
+            case vatServerErrorInvalidCtrl:     CLogMessage(self).info(u"vatServerErrorInvalidCtrl: ") << self->fromFSD(msg); break;
+            case vatServerWrongType:            CLogMessage(self).info(u"vatServerWrongType: ") << self->fromFSD(msg); break;
 
             // default:                         qFatal("vatlib: %s (error %d)", msg, error); emit self->terminate();
             // KB: Why the hard termination?
