@@ -105,7 +105,7 @@ namespace BlackGui
         //! Toggle visibility
         void toggleVisibility();
 
-        //! Toggle frameless mode (EXPERIMENTAL)
+        //! Toggle frameless mode
         void toggleFrameless();
 
         //! Window always on top

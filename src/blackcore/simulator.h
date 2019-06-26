@@ -258,7 +258,7 @@ namespace BlackCore
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .drv cg modelstring            set overridden CG for model string      BlackCore::ISimulator
+        //! .drv cg length modelstring     set overridden CG for model string      BlackCore::ISimulator
         //! .drv unload                    unload plugin                           BlackCore::ISimulator
         //! .drv limit number              limit the number of updates             BlackCore::ISimulator
         //! .drv logint callsign           log interpolator for callsign           BlackCore::ISimulator

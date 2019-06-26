@@ -19,8 +19,6 @@
 
 #include <QString>
 
-namespace BlackMisc { namespace Aviation { class CAltitude; } }
-
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -45,6 +43,7 @@ bool SwiftGuiStd::reloadOwnAircraft()
 
 void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude, const CAltitude &pressureAltitude)
 {
+    if (!sGui) { return; }
     CCoordinateGeodetic coordinate(
         CLatitude::fromWgs84(wgsLatitude),
         CLongitude::fromWgs84(wgsLongitude),

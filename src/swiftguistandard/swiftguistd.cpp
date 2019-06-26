@@ -200,7 +200,7 @@ QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window on top", parent);
-    connect(a, &QAction::triggered, this, &SwiftGuiStd::toogleWindowStayOnTop);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowStayOnTop);
     return a;
 }
 
@@ -361,7 +361,7 @@ void SwiftGuiStd::onChangedWindowOpacity(int opacity)
     ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
 }
 
-void SwiftGuiStd::toogleWindowStayOnTop()
+void SwiftGuiStd::toggleWindowStayOnTop()
 {
     if (sGui) { sGui->toggleStayOnTop(); }
 }
@@ -448,6 +448,7 @@ void SwiftGuiStd::verifyPrerequisites()
 
 void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
 {
+    // will NOT be called if no errors and setting is "only on errors"
     if (!sGui || sGui->isShuttingDown()) { return; }
     this->displayValidationDialog();
     m_validationDialog->validatedModelSet(simulator, valid, invalid, stopped, msgs);

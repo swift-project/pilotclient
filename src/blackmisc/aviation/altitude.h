@@ -130,13 +130,13 @@ namespace BlackMisc
             CAltitude switchedUnit(const PhysicalQuantities::CLengthUnit &newUnit) const;
 
             //! AGL Above ground level?
-            bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
+            bool isAboveGroundLevel() const { return AboveGround == m_datum; }
 
             //! MSL Mean sea level?
-            bool isMeanSeaLevel() const { return MeanSeaLevel == this->m_datum; }
+            bool isMeanSeaLevel() const { return MeanSeaLevel == m_datum; }
 
             //! Flight level?
-            bool isFlightLevel() const { return FlightLevel == this->m_datum; }
+            bool isFlightLevel() const { return FlightLevel == m_datum; }
 
             //! Get reference datum (MSL or AGL)
             ReferenceDatum getReferenceDatum() const { return m_datum; }
