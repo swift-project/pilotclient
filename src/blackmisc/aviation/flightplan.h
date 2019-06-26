@@ -396,15 +396,17 @@ namespace BlackMisc
             //! All rules as string
             static const QStringList &flightRules();
 
-            //! Is rule a VFR rule? @[
+            //! Is rule a VFR rule?
+            //! @{
             static bool isVFRRules(FlightRules rule);
             static bool isVFRRules(const QString &rule);
-            //! @
+            //! @}
 
-            //! Is rule a IFR rule? @{
+            //! Is rule a IFR rule?
+            //! @{
             static bool isIFRRules(FlightRules rule);
             static bool isIFRRules(const QString &rule);
-            //! @
+            //! @}
 
             //! Get aircraft ICAO code from equipment code like
             //! \remark we expect something like "H/B772/F" "B773" "B773/F"
