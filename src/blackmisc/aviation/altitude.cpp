@@ -373,7 +373,8 @@ namespace BlackMisc
 
             // as feed, as none of the other clients
             const CAltitude a = this->roundedToNearest100ft(false);
-            return a.valueRoundedWithUnit(CLengthUnit::ft(), 0);
+            // return a.valueRoundedWithUnit(CLengthUnit::ft(), 0);
+            return a.valueIntegerAsString(CLengthUnit::ft());
         }
 
         const QRegularExpression &CAltitude::fpAltitudeRegExp()

@@ -660,8 +660,8 @@ namespace BlackCore
             const QString route = flightPlan.getRoute();
             const QString remarks = QString(flightPlan.getRemarks());
 
-            const QString alt = flightPlan.getCruiseAltitude().asFpVatsimAltitudeString();
             //! \fixme that would be the official string, can this be used?
+            const QString alt = flightPlan.getCruiseAltitude().asFpVatsimAltitudeString();
             // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
             QString act = flightPlan.getCombinedPrefixIcaoSuffix();

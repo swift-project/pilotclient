@@ -96,7 +96,8 @@ namespace BlackMiscTest
         QVERIFY2(a.asFpVatsimAltitudeString() == "FL125", "Expect FL125");
         a = CAltitude(15000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
         QVERIFY2(a.asFpICAOAltitudeString() == "A150", "Expect A150");
-        QVERIFY2(a.asFpVatsimAltitudeString() == "15000ft", "Expect 15000");
+        // QVERIFY2(a.asFpVatsimAltitudeString() == "15000ft", "Expect 15000");
+        QVERIFY2(a.asFpVatsimAltitudeString() == "15000", "Expect 15000");
         a = CAltitude(1500, CAltitude::FlightLevel, CLengthUnit::m());
         QVERIFY2(a.asFpICAOAltitudeString() == "S0150", "Expect S0150");
         a = CAltitude(1600, CAltitude::MeanSeaLevel, CLengthUnit::m());
