@@ -246,7 +246,7 @@ private:
 
     //! Toggle if windows stays on top
     //! \remark mostly used with navigator
-    void toogleWindowStayOnTop();
+    void toggleWindowStayOnTop();
 
     //! Toggle window visibility
     //! \remark mostly used with navigator

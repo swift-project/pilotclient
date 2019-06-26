@@ -60,9 +60,9 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
-        WindowMode nonFrameLessMode = m_originalWindowMode;
+        WindowMode nonFrameLessMode = m_originalWindowMode; // Tool/Normal Window
         if (nonFrameLessMode == WindowFrameless) { nonFrameLessMode = WindowNormal; }
-        setMode(frameless ? WindowFrameless : nonFrameLessMode);
+        this->setMode(frameless ? WindowFrameless : nonFrameLessMode);
     }
 
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
@@ -121,7 +121,7 @@ namespace BlackGui
         Q_ASSERT_X(m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
         Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
 
-        bool frameless = (mode == WindowFrameless);
+        const bool frameless = (mode == WindowFrameless);
 
         // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
         // https://bugreports.qt.io/browse/QTBUG-52206
@@ -130,7 +130,7 @@ namespace BlackGui
         {
             m_widget->setAttribute(Qt::WA_NativeWindow);
 
-            // causeing a BLACK background
+            // causing a BLACK background
             m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
             m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless); // causing QTBUG-52206
         }

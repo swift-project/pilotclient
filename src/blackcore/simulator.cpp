@@ -569,6 +569,7 @@ namespace BlackCore
         if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
         CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
         CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
+        CSimpleCommandParser::registerCommand({".drv cg length modelstring", "override CG"});
         CSimpleCommandParser::registerCommand({".drv limit number/secs.", "limit updates to number per second (0..off)"});
         CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
         CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});

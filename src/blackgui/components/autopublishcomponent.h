@@ -32,7 +32,7 @@ namespace BlackGui
             explicit CAutoPublishComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAutoPublishComponent();
+            virtual ~CAutoPublishComponent() override;
 
             //! Read the files
             int readFiles();
@@ -61,4 +61,5 @@ namespace BlackGui
         };
     } // ns
 } // ns
+
 #endif // guard

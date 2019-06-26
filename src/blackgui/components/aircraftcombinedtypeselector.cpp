@@ -32,8 +32,8 @@ namespace BlackGui
             connect(ui->le_CombinedType, &QLineEdit::returnPressed,   this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
 
             connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
-            connect(ui->cb_EngineType, &QComboBox::currentTextChanged,  this, &CAircraftCombinedTypeSelector::changedComboBox);
-            connect(ui->cb_Type, &QComboBox::currentTextChanged,        this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_EngineType,  &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_Type,        &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
 
             ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
         }

@@ -101,7 +101,7 @@ namespace BlackGui
             BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::reloadPluginConfig };
         };
-    }
+    } // namespace
 } // namespace
 
 #endif // guard
