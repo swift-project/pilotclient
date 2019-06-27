@@ -375,6 +375,9 @@ namespace BlackCore
         //! A requested elevation has been received
         void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Auto publish data written for simulator
+        void autoPublishDataWritten(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
     protected:
         //! Constructor with all the providers
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,

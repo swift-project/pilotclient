@@ -142,6 +142,9 @@ namespace BlackCore
                                    const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
                                    bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
+            //! Auto publish data written for simulator
+            void autoPublishDataWritten(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         public slots:
             //! Simulator info, currently loaded plugin
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
