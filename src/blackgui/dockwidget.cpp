@@ -280,6 +280,15 @@ namespace BlackGui
         this->setFrameless(!frameless);
     }
 
+    void CDockWidget::toggleFramelessDeferred(int delayMs)
+    {
+        QPointer<CDockWidget> myself(this);
+        QTimer::singleShot(delayMs, this, [ = ]
+        {
+            if (myself) { myself->toggleFrameless(); }
+        });
+    }
+
     void CDockWidget::windowAlwaysOnTop()
     {
         if (this->isFloating())
@@ -317,15 +326,16 @@ namespace BlackGui
         {
             this->toggleFloating();
         }
-        if (s.isFramless() != this->isFrameless())
-        {
-            this->toggleFrameless();
-        }
         const QByteArray geo(s.getGeometry());
         if (!geo.isEmpty())
         {
             const bool ok = this->restoreGeometry(geo);
             if (ok) { this->rememberFloatingSizeAndPosition(); }
+        }
+        if (s.isFramless() != this->isFrameless())
+        {
+            // not working if directly called
+            this->toggleFramelessDeferred();
         }
         this->setMargins();
         return true;
