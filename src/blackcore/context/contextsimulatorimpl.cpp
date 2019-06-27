@@ -486,6 +486,8 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::requestUiConsoleMessage, this, &IContextSimulator::requestUiConsoleMessage);
             Q_ASSERT(c);
+            c = connect(simulator, &ISimulator::autoPublishDataWritten, this, &IContextSimulator::autoPublishDataWritten);
+            Q_ASSERT(c);
 
             // log from context to simulator
             c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);

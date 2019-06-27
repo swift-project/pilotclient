@@ -997,7 +997,8 @@ namespace BlackCore
     void ISimulator::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
-        m_autoPublishing.writeJsonToFile();
+        const bool saved = m_autoPublishing.writeJsonToFile();
+        if (saved) { emit this->autoPublishDataWritten(this->getSimulatorInfo()); }
         m_autoPublishing.clear();
         m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
