@@ -108,6 +108,9 @@ namespace BlackGui
         //! Toggle frameless mode
         void toggleFrameless();
 
+        //! Toggle frameless deferred
+        void toggleFramelessDeferred(int delayMs = 1000);
+
         //! Window always on top
         void windowAlwaysOnTop();
 
