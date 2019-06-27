@@ -26,6 +26,7 @@
 #include "blackcore/actionbind.h"
 #include "blackcore/network.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/identifiable.h"
@@ -113,11 +114,13 @@ private:
     QScopedPointer<BlackGui::Components::CDbLoadDataDialog>  m_dbLoadDialog;      //!< load DB data, lazy init UI component
     QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
+    BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
     BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::radio16(), this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
     bool                        m_init = false;
+
 
     // contexts
     static constexpr int MaxCoreFailures = 5;  //!< Failures counted before reconnecting
@@ -293,6 +296,9 @@ private:
 
     //! Auto publish diloag
     void autoPublishDialog();
+
+    //! Show auto publish dialog if appropriate
+    bool triggerAutoPublishDialog();
 
     //! Request overlay inline text message @{
     void onShowOverlayVariant(const BlackMisc::CVariant &variant, int durationMs);

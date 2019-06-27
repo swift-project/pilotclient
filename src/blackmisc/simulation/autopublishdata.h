@@ -14,6 +14,7 @@
 #include "aircraftmodellist.h"
 #include "simulatorinfo.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/blackmiscexport.h"
@@ -25,6 +26,22 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        namespace Data
+        {
+            //! Last selection
+            struct TLastAutoPublish : public TDataTrait<qint64>
+            {
+                //! First load is synchronous
+                static constexpr bool isPinned() { return true; }
+
+                //! Default simulator
+                static const qint64 &defaultValue() { static constexpr qint64 d = -1; return d; }
+
+                //! Key
+                static const char *key() { return "autopublishlast"; }
+            };
+        }
+
         //! Objects that can be use for auto-publishing.
         //! Auto publishing means we sent those data to the DB.
         class BLACKMISC_EXPORT CAutoPublishData
