@@ -15,6 +15,7 @@
 #include "blackcore/db/databasewriter.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
+#include <QDateTime>
 #include <QPushButton>
 #include <QPointer>
 #include <QTimer>
@@ -122,6 +123,7 @@ namespace BlackGui
                         myself->closeParentDialog();
                     });
                 });
+                m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
             }
             else
             {

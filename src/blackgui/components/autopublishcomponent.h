@@ -40,6 +40,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CAutoPublishComponent> ui;
             BlackMisc::Simulation::CAutoPublishData m_data;
+            BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
 
             //! Analyze against DB data
             void analyzeAgainstDBData();

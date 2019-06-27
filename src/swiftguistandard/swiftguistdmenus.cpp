@@ -195,5 +195,6 @@ void SwiftGuiStd::autoPublishDialog()
     {
         m_autoPublishDialog.reset(new CAutoPublishDialog(this));
     }
+    m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
     m_autoPublishDialog->show();
 }
