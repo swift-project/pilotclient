@@ -19,6 +19,7 @@
 
 #include <QFile>
 #include <QDateTime>
+#include <QTimeZone>
 #include <QStringBuilder>
 #include <QRegularExpression>
 #include <QDomDocument>
@@ -125,6 +126,31 @@ namespace BlackMisc
             }
         }
 
+        void CFlightPlanRemarks::setIcaoEquipmentCodes(const QString &eq)
+        {
+            // https://en.wikipedia.org/wiki/Equipment_codes
+            const QString r = eq.toUpper().trimmed();
+            QStringList remarks;
+            if (r.isEmpty()) { return; }
+            if (r.contains('W'))
+            {
+                if (r.contains('G')) { remarks << "/L"; }
+                else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "/Z"; }
+                else if (r.contains('A')) { remarks << "/W"; }
+            }
+            else
+            {
+                if (r.contains('G')) { remarks << "/G"; }
+                else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "/I"; }
+            }
+
+            if (r.contains('G')) { remarks << "NAV/GPSRNAV"; }
+            else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "NAV/VORNDB"; }
+
+            m_remarks = remarks.join(" ");
+            this->parseFlightPlanRemarks(true);
+        }
+
         QString CFlightPlanRemarks::cut(const QString &remarks, const QString &marker)
         {
             const int maxIndex = remarks.size() - 1;
@@ -186,6 +212,16 @@ namespace BlackMisc
             m_equipmentSuffix = parts[2];
         }
 
+        void CFlightPlan::setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned)
+        {
+            m_takeoffTimePlanned = takeoffTimePlanned.toUTC();
+        }
+
+        void CFlightPlan::setTakeoffTimeActual(const QDateTime &takeoffTimeActual)
+        {
+            m_takeoffTimeActual = takeoffTimeActual.toUTC();
+        }
+
         void CFlightPlan::setFlightRule(const QString &flightRule)
         {
             const CFlightPlan::FlightRules r = CFlightPlan::stringToFlightRules(flightRule);
@@ -208,6 +244,16 @@ namespace BlackMisc
         {
             const CVoiceCapabilities vc = CVoiceCapabilities::fromText(capabilities);
             m_remarks.setVoiceCapabilities(vc);
+        }
+
+        QString CFlightPlan::getTakeoffTimePlannedHourMin() const
+        {
+            return m_takeoffTimePlanned.toString("hh:mm");
+        }
+
+        QString CFlightPlan::getTakeoffTimeActualHourMin() const
+        {
+            return m_takeoffTimeActual.toString("hh:mm");
         }
 
         CFlightPlan::FlightRules CFlightPlan::getFlightRulesAsVFRorIFR() const
@@ -404,20 +450,112 @@ namespace BlackMisc
             return fp;
         }
 
-        CFlightPlan CFlightPlan::fromMultipleFormats(const QString &data)
+        CFlightPlan CFlightPlan::fromSimBriefFormat(const QString &simBrief)
+        {
+            if (simBrief.isEmpty()) { return CFlightPlan(); }
+            CFlightPlan fp;
+            QDomDocument doc;
+            doc.setContent(simBrief);
+            const QDomNodeList originList = doc.elementsByTagName("origin");
+            if (!originList.isEmpty())
+            {
+                const QDomNode origin = originList.at(0);
+                const QString icao = origin.firstChildElement("icao_code").text();
+                fp.setOriginAirportIcao(icao);
+            }
+            const QDomNodeList destList = doc.elementsByTagName("destination");
+            if (!destList.isEmpty())
+            {
+                const QDomNode dest = destList.at(0);
+                const QString icao = dest.firstChildElement("icao_code").text();
+                fp.setDestinationAirportIcao(icao);
+            }
+            const QDomNodeList altList = doc.elementsByTagName("alternate");
+            if (!altList.isEmpty())
+            {
+                const QDomNode alternate = altList.at(0);
+                const QString icao = alternate.firstChildElement("icao_code").text();
+                fp.setAlternateAirportIcao(icao);
+            }
+            const QDomNodeList generalList = doc.elementsByTagName("general");
+            if (!generalList.isEmpty())
+            {
+                bool ok;
+                const QDomNode general = generalList.at(0);
+                QString route = general.firstChildElement("route").text();
+                fp.setRoute(route.remove("DCT").simplified().trimmed());
+                const QString airline = general.firstChildElement("icao_airline").text();
+                const QString flightNumber = general.firstChildElement("flight_number").text();
+                fp.setCallsign(CCallsign(airline + flightNumber, CCallsign::Aircraft));
+                const QString cruiseAlt = general.firstChildElement("initial_altitude").text();
+                fp.setCruiseAltitudeString(cruiseAlt);
+                const QString tas = general.firstChildElement("cruise_tas").text();
+                const int tasKts = tas.toInt(&ok);
+                if (ok) { fp.setCruiseTrueAirspeed(CSpeed(tasKts, CSpeedUnit::kts())); }
+            }
+
+            const QDomNodeList timeList = doc.elementsByTagName("times");
+            if (!timeList.isEmpty())
+            {
+                bool ok;
+                const QDomNode times = timeList.at(0);
+                const QString enroute = times.firstChildElement("est_time_enroute").text();
+                const int enrouteSecs = enroute.toInt(&ok);
+                if (ok) { fp.setEnrouteTime(CTime(enrouteSecs, CTimeUnit::s())); }
+                const QString endurance = times.firstChildElement("endurance").text();
+                const int enduranceSecs = endurance.toInt(&ok);
+                if (ok) { fp.setFuelTime(CTime(enduranceSecs, CTimeUnit::s())); }
+                const QString depTime = times.firstChildElement("sched_out").text();
+                const int depTimeUnixTs = depTime.toInt(&ok);
+                if (ok)
+                {
+                    QDateTime depTs = QDateTime::fromSecsSinceEpoch(depTimeUnixTs, QTimeZone::utc());
+                    depTs.setTimeZone(QTimeZone::utc());
+                    fp.setTakeoffTimePlanned(depTs);
+                }
+            }
+
+            const QDomNodeList aircraftList = doc.elementsByTagName("aircraft");
+            if (!aircraftList.isEmpty())
+            {
+                const QDomNode aircraft = aircraftList.at(0);
+                const QString equipment = aircraft.firstChildElement("equip").text();
+                // H-SDE2E3GHIJ1J3J4J5LM1ORWXY/LB1D1
+                const int b = equipment.indexOf('-');
+                const int e = equipment.indexOf('/');
+
+                if (e > b && e >= 0 && b >= 0 && equipment.size() > e)
+                {
+                    CFlightPlanRemarks r = fp.getFlightPlanRemarks();
+                    const QString icao = equipment.mid(b + 1, e - b - 1);
+                    r.setIcaoEquipmentCodes(icao);
+                    fp.setFlightPlanRemarks(r);
+                }
+            }
+
+            // read FP
+            return fp;
+        }
+
+        CFlightPlan CFlightPlan::fromMultipleFormats(const QString &data, const QString &fileSuffix)
         {
             if (data.isEmpty()) { return CFlightPlan(); }
+            if (fileSuffix.contains("xml", Qt::CaseInsensitive))
+            {
+                if (data.contains("<OFP>", Qt::CaseInsensitive) && data.contains("<general>", Qt::CaseInsensitive)) { return CFlightPlan::fromSimBriefFormat(data); }
+            }
+
             if (data.contains("[SBFlightPlan]", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
             if (data.contains("<FlightPlan", Qt::CaseInsensitive) && data.contains("<?xml", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
             return CFlightPlan::fromJson(data);
         }
 
-        CFlightPlan CFlightPlan::fromMultipleFormatsNoThrow(const QString &data)
+        CFlightPlan CFlightPlan::fromMultipleFormatsNoThrow(const QString &data, const QString &fileSuffix)
         {
             CFlightPlan fp;
             try
             {
-                fp = CFlightPlan::fromMultipleFormats(data);
+                fp = CFlightPlan::fromMultipleFormats(data, fileSuffix);
             }
             catch (const CJsonException &ex)
             {
@@ -431,6 +569,7 @@ namespace BlackMisc
         {
             try
             {
+                QFileInfo fi(fileName);
                 if (fileName.isEmpty())
                 {
                     if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"No file name")); }
@@ -438,8 +577,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    QFile f(fileName);
-                    if (!f.exists())
+                    if (!fi.exists())
                     {
                         if (msgs) { msgs->push_back(CStatusMessage(getLogCategories()).validationError(u"File '%1' does not exist") << fileName); }
                         return CFlightPlan();
@@ -502,7 +640,7 @@ namespace BlackMisc
                     while (false);
                 }
 
-                return CFlightPlan::fromMultipleFormats(data);
+                return CFlightPlan::fromMultipleFormats(data, fi.suffix());
             }
             catch (const CJsonException &ex)
             {
