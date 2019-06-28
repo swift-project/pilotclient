@@ -99,6 +99,9 @@ namespace BlackMisc
             //! Empty remarks?
             bool isEmpty() const { return m_remarks.isEmpty(); }
 
+            //! Equipment codes (ICAO)
+            void setIcaoEquipmentCodes(const QString &eq);
+
             //! Already parsed?
             bool isParsed() const { return m_isParsed; }
 
@@ -211,13 +214,13 @@ namespace BlackMisc
             void setAlternateAirportIcao(const CAirportIcaoCode &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
 
             //! Set planned takeoff time
-            void setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned) { m_takeoffTimePlanned = takeoffTimePlanned; }
+            void setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned);
 
             //! Set planned takeoff time hh:mm
             void setTakeoffTimePlanned(const QString &time) { m_takeoffTimePlanned = QDateTime::currentDateTimeUtc(); m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));}
 
             //! Set actual takeoff time (reserved for ATC use)
-            void setTakeoffTimeActual(const QDateTime &takeoffTimeActual) { m_takeoffTimeActual = takeoffTimeActual; }
+            void setTakeoffTimeActual(const QDateTime &takeoffTimeActual);
 
             //! Set actual takeoff time hh:mm
             void setTakeoffTimeActual(const QString &time) { m_takeoffTimeActual = QDateTime::currentDateTimeUtc(); m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));}
@@ -277,13 +280,13 @@ namespace BlackMisc
             const QDateTime &getTakeoffTimePlanned() const { return m_takeoffTimePlanned; }
 
             //! Get planned takeoff time (planned)
-            QString getTakeoffTimePlannedHourMin() const { return m_takeoffTimePlanned.toString("hh:mm"); }
+            QString getTakeoffTimePlannedHourMin() const;
 
             //! Get actual takeoff time (actual)
             const QDateTime &getTakeoffTimeActual() const { return m_takeoffTimeActual; }
 
             //! Get actual takeoff time (actual)
-            QString getTakeoffTimeActualHourMin() const { return m_takeoffTimeActual.toString("hh:mm"); }
+            QString getTakeoffTimeActualHourMin() const;
 
             //! Get planned enroute flight time
             const PhysicalQuantities::CTime &getEnrouteTime() const { return m_enrouteTime; }
@@ -333,6 +336,9 @@ namespace BlackMisc
             //! Get the parsable remarks
             const CFlightPlanRemarks &getFlightPlanRemarks() const { return m_remarks; }
 
+            //! Set FP remarks
+            void setFlightPlanRemarks(const CFlightPlanRemarks &remarks) { m_remarks = remarks; }
+
             //! Get ICAO aircraft equipment prefix H/B737/F "H"
             const QString &getPrefix() const { return m_prefix; }
 
@@ -378,11 +384,14 @@ namespace BlackMisc
             //! From SB4 data
             static CFlightPlan fromSB4Format(const QString &sbData);
 
-            //! From multiple formats
-            static CFlightPlan fromMultipleFormats(const QString &data);
+            //! From SimBrief format (XML)
+            static CFlightPlan fromSimBriefFormat(const QString &simBrief);
 
             //! From multiple formats
-            static CFlightPlan fromMultipleFormatsNoThrow(const QString &data);
+            static CFlightPlan fromMultipleFormats(const QString &data, const QString &fileSuffix);
+
+            //! From multiple formats
+            static CFlightPlan fromMultipleFormatsNoThrow(const QString &data, const QString &fileSuffix);
 
             //! Load from multiple formats
             static CFlightPlan loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs = nullptr);
