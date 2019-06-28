@@ -345,6 +345,9 @@
               <height>75</height>
              </size>
             </property>
+            <property name="tabChangesFocus">
+             <bool>true</bool>
+            </property>
             <property name="placeholderText">
              <string>enter remarks here or use &quot;generator&quot;</string>
             </property>
@@ -593,6 +596,9 @@
               <width>16777215</width>
               <height>75</height>
              </size>
+            </property>
+            <property name="tabChangesFocus">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
