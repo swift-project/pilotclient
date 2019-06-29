@@ -96,7 +96,7 @@ namespace BlackCore
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
 
-        //! Get the setup (simulator environment)
+        //! Get the simulator current internal state
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const { return m_simulatorInternals; }
 
         //! Connect to simulator
@@ -391,7 +391,7 @@ namespace BlackCore
         virtual void onSwiftDbAirportsRead();
         //! @}
 
-        //! Init the internals info
+        //! Init the internals info from the simulator
         virtual void initSimulatorInternals();
 
         //! Parsed in derived classes
@@ -562,7 +562,7 @@ namespace BlackCore
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
-        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
+        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup read from the sim
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
         BlackMisc::Simulation::CAutoPublishData     m_autoPublishing;      //!< for the DB
         BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
