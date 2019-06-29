@@ -31,6 +31,7 @@
 #include <QTabWidget>
 #include <QtGlobal>
 #include <QFileDialog>
+#include <QNetworkReply>
 
 namespace Ui { class CFlightPlanComponent; }
 namespace BlackGui
@@ -62,6 +63,7 @@ namespace BlackGui
 
         class CStringListDialog;
         class CAltitudeDialog;
+        class CSimBriefDownloadDialog;
 
         //! Flight plan widget
         class BLACKGUI_EXPORT CFlightPlanComponent : public COverlayMessagesTabWidget
@@ -90,9 +92,10 @@ namespace BlackGui
         private:
             static constexpr int OverlayTimeoutMs = 5000;
             QScopedPointer<Ui::CFlightPlanComponent> ui;
-            CAltitudeDialog   *m_altitudeDialog  = nullptr;
-            CStringListDialog *m_fpRemarksDialog = nullptr;
-            BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
+            CAltitudeDialog         *m_altitudeDialog  = nullptr;
+            CStringListDialog       *m_fpRemarksDialog = nullptr;
+            CSimBriefDownloadDialog *m_simBriefDialog  = nullptr;
+            BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< my flight plan
             BlackMisc::Simulation::CAircraftModel m_model;     //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings>       m_directories    { this }; //!< the swift directories
@@ -220,6 +223,12 @@ namespace BlackGui
 
             //! Update the remarks histories
             void updateRemarksHistories();
+
+            //! Load from SimBrief
+            void loadFromSimBrief();
+
+            //! Response from SimBrief
+            void handleSimBriefResponse(QNetworkReply *nwReplyPtr);
 
             //! Consolidate the new remarks list, latest on front
             static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);
