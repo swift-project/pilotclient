@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus testlib
+QT += core dbus testlib network
 
 TARGET = testweather
 CONFIG   -= app_bundle

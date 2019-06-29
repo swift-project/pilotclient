@@ -14,6 +14,7 @@
 #include <tuple>
 #include "blackmisc/typetraits.h"
 #include "blackmisc/integersequence.h"
+#include <QtGlobal>
 
 namespace BlackMisc
 {
@@ -23,17 +24,17 @@ namespace BlackMisc
 
         // Our own version of C++17 std::invoke().
         template <typename F, typename T, typename = std::enable_if_t<std::is_member_object_pointer<F>::value>>
-        decltype(auto) invoke(F ptr, T &&object)
+        decltype(auto) invoke(F ptr, T && object)
         {
             return std::forward<T>(object).*ptr;
         }
         template <typename F, typename T, typename... Ts, typename = std::enable_if_t<std::is_member_function_pointer<F>::value>>
-        decltype(auto) invoke(F ptr, T &&object, Ts &&... args)
+        decltype(auto) invoke(F ptr, T && object, Ts && ... args)
         {
             return (std::forward<T>(object).*ptr)(std::forward<Ts>(args)...);
         }
-        template <typename F, typename... Ts, typename = std::enable_if_t<! std::is_member_pointer<std::decay_t<F>>::value>>
-        decltype(auto) invoke(F &&func, Ts &&... args)
+        template < typename F, typename... Ts, typename = std::enable_if_t < ! std::is_member_pointer<std::decay_t<F>>::value >>
+        decltype(auto) invoke(F && func, Ts && ... args)
         {
             return std::forward<F>(func)(std::forward<Ts>(args)...);
         }
@@ -54,7 +55,7 @@ namespace BlackMisc
         template <typename F, typename T, typename... Ts>
         decltype(auto) invokeSlot(F &&func, T *object, Ts &&... args)
         {
-            using seq = MaskSequence<std::make_index_sequence<sizeof...(Ts)>, ! TIsQPrivateSignal<std::decay_t<Ts>>::value...>;
+            using seq = MaskSequence < std::make_index_sequence<sizeof...(Ts)>, ! TIsQPrivateSignal<std::decay_t<Ts>>::value... >;
             return invokeSlotImpl(std::forward<F>(func), object, std::forward_as_tuple(std::forward<Ts>(args)...), seq(), std::is_member_pointer<std::decay_t<F>>());
         }
 

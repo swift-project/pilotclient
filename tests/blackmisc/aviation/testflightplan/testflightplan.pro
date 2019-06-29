@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus testlib
+QT += core dbus testlib network
 
 TARGET = testflightplan
 CONFIG   -= app_bundle

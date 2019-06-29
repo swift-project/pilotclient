@@ -11,11 +11,11 @@
 #ifndef BLACKMISC_NETWORK_URL_H
 #define BLACKMISC_NETWORK_URL_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QJsonObject>
 #include <QMetaType>
