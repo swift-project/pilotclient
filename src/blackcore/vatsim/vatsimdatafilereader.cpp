@@ -300,7 +300,8 @@ namespace BlackCore
                             Q_ASSERT_X((validPos && posMsg.isEmpty()) || (!validPos && !posMsg.isEmpty()), Q_FUNC_INFO, "Inconsisten data");
                             if (!posMsg.isEmpty())
                             {
-                                CLogMessage(this).validationWarning(u"Callsign '%1' %2") << callsign << posMsg.join(", ");
+                                // Only info not to flood lof with warning
+                                CLogMessage(this).validationInfo(u"Callsign '%1' %2") << callsign << posMsg.join(", ");
                             }
 
                             const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
