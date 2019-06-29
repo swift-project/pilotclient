@@ -488,7 +488,21 @@ namespace BlackMisc
                 const QString flightNumber = general.firstChildElement("flight_number").text();
                 fp.setCallsign(CCallsign(airline + flightNumber, CCallsign::Aircraft));
                 const QString cruiseAlt = general.firstChildElement("initial_altitude").text();
-                fp.setCruiseAltitudeString(cruiseAlt);
+                const int cruiseAltFt = cruiseAlt.toInt(&ok);
+                if (ok)
+                {
+                    CAltitude ca(cruiseAltFt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                    if (cruiseAlt.endsWith("00") && cruiseAltFt > 5000)
+                    {
+                        ca.toFlightLevel();
+                    }
+                    fp.setCruiseAltitude(ca);
+                    if (cruiseAltFt >= 10000) { fp.setFlightRule(CFlightPlan::IFR); } // good guess
+                }
+                else
+                {
+                    fp.setCruiseAltitudeString(cruiseAlt);
+                }
                 const QString tas = general.firstChildElement("cruise_tas").text();
                 const int tasKts = tas.toInt(&ok);
                 if (ok) { fp.setCruiseTrueAirspeed(CSpeed(tasKts, CSpeedUnit::kts())); }
@@ -863,5 +877,6 @@ namespace BlackMisc
         {
             return CIcon::iconByIndex(CIcons::StandardIconAppFlightPlan16);
         }
+
     } // namespace
 } // namespace

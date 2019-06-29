@@ -8,8 +8,9 @@
 
 #include "flightplancomponent.h"
 #include "altitudedialog.h"
-#include "selcalcodeselector.h"
 #include "stringlistdialog.h"
+#include "simbriefdownloaddialog.h"
+#include "selcalcodeselector.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/eventfilter.h"
 #include "blackgui/guiapplication.h"
@@ -120,8 +121,9 @@ namespace BlackGui
             connect(ui->pb_Load, &QPushButton::pressed,  this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
             connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
             connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
-            connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator, Qt::QueuedConnection);
-            connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues, Qt::QueuedConnection);
+            connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator,  Qt::QueuedConnection);
+            connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues,  Qt::QueuedConnection);
+            connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
 
             connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
             connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
@@ -926,6 +928,52 @@ namespace BlackGui
                     CStatusMessage m = m_remarksHistoryAdditional.setAndSave(h);
                     CLogMessage::preformatted(m);
                 }
+            }
+        }
+
+        void CFlightPlanComponent::loadFromSimBrief()
+        {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!m_simBriefDialog)
+            {
+                m_simBriefDialog = new CSimBriefDownloadDialog(this);
+            }
+            const int rv = m_simBriefDialog->exec();
+            if (rv != QDialog::Accepted) { return; }
+
+            const CUrl url = m_simBriefDialog->getSimBriefData().getUrlAndUsername();
+            sApp->getFromNetwork(url.toNetworkRequest(), { this, &CFlightPlanComponent::handleSimBriefResponse });
+        }
+
+        void CFlightPlanComponent::handleSimBriefResponse(QNetworkReply *nwReplyPtr)
+        {
+            // wrap pointer, make sure any exit cleans up reply
+            // required to use delete later as object is created in a different thread
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
+            const QUrl url(nwReply->url());
+            const QString urlString(url.toString());
+
+            if (nwReply->error() == QNetworkReply::NoError)
+            {
+                // const qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
+                const QString simBriefFP(nwReplyPtr->readAll());
+                nwReplyPtr->close();
+                if (simBriefFP.isEmpty())
+                {
+                    this->showOverlayHTMLMessage("No SimBrief data from " % urlString);
+                }
+                else
+                {
+                    CFlightPlan fp = CFlightPlan::fromSimBriefFormat(simBriefFP);
+                    this->fillWithFlightPlanData(fp);
+                }
+            } // no error
+            else
+            {
+                // network error, try next URL
+                nwReply->abort();
             }
         }
 

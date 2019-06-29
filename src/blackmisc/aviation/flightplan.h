@@ -18,6 +18,7 @@
 #include "callsign.h"
 #include "selcal.h"
 #include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
