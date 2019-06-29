@@ -41,6 +41,7 @@
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/flightplanlist.h"
+#include "blackmisc/aviation/simbriefdata.h"
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
