@@ -53,8 +53,8 @@ namespace BlackMisc
 
         QString CUrl::appendPath(const QString &pathToAppend)
         {
-            QString p(getPath());
-            p = p.append("/").append(pathToAppend.trimmed()).replace("//", "/");
+            if (pathToAppend.isEmpty()) { return m_path; }
+            const QString p = CFileUtils::appendFilePaths(this->getPath(), pathToAppend);
             this->setPath(p);
             return m_path;
         }

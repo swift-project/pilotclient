@@ -26,6 +26,7 @@
 #include <QtGlobal>
 #include <QMap>
 #include <algorithm>
+#include <QStringBuilder>
 
 using namespace BlackConfig;
 using namespace BlackMisc::Math;
@@ -115,7 +116,13 @@ namespace BlackMisc
     {
         if (path1.isEmpty()) { return QDir::cleanPath(path2); }
         if (path2.isEmpty()) { return QDir::cleanPath(path1); }
-        return QDir::cleanPath(path1 + QChar('/') + path2);
+        if (path1.endsWith('/'))
+        {
+            // avoid double /
+            if (path2.startsWith('/')) { return QDir::cleanPath(path1 % path2.mid(1)); }
+            return QDir::cleanPath(path1 % path2);
+        }
+        return QDir::cleanPath(path1 % QChar('/') % path2);
     }
 
     QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2)
